@@ -11,13 +11,13 @@ The plugin can be easily modified to work for *all* users, not just moderators.
 
 == Installation ==
 
-Add the display-name.php file to bbPress' my-plugins/ directory.
+Add the `display-name.php` file to bbPress' `my-plugins/` directory.
 
 == Configuration ==
 
 No configuration is necessary if you only want to use display name for moderators.
 If you want to use display names for *all* users, delete all of the lines in
-display-names.php that end with `// mod`.
+`display-names.php` that end with `// mod`.
 
 == Frequently Asked Questions ==
 

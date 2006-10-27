@@ -5,7 +5,7 @@ Requires at least: 0.72
 Tested up to: 0.73
 Stable Tag: 0.7.2
 
-This plugin uses a moderator's display name (as set in WordPress) as the name of the moderator rather than the moderator's login name.
+Use a moderator's display name as the name of the moderator rather than the moderator's login name.
 
 == Description ==
 
@@ -24,6 +24,9 @@ If you want to use display names for *all* users, delete all of the lines in
 `display-names.php` that end with `// mod`.
 
 == Frequently Asked Questions ==
+
+= Where do I set a user's display name? =
+In Wordpress' Users admin panel.
 
 = Does this *completely* replace the username? =
 For all display purposes, yes.  Users must still log in with their user logins.

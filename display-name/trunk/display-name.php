@@ -5,10 +5,7 @@ Plugin URI: http://trac.bbpress.org/ticket/430
 Description: Uses the display name as set by WordPress for a bbPress moderator's name instead of the login name.
 Author: Michael D Adams
 Author URI: http://blogwaffe.com/
-Version: 0.7.1
-
-Requires at least: 0.72
-Tested up to: 0.73
+Version: 0.7.2
 */
 
 function bb_use_display_name( $name, $id ) {

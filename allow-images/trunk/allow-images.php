@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/#
 Description: Allows <img /> tags to be posted in your forums.  The image must be a png, gif or jpeg.
 Author: Michael D Adams
 Author URI: http://blogwaffe.com/
-Version: 0.7
+Version: 0.7.1
 */
 
 // You can add more tags here
@@ -16,11 +16,14 @@ function allow_images_allowed_tags( $tags ) {
 
 function allow_images_encode_bad( $text ) {
 	$text = wp_specialchars( $text );
+	$text = preg_replace('|&lt;br /&gt;|', '<br />', $text);
 	foreach ( bb_allowed_tags() as $tag => $args ) {
+		if ( 'br' == $tag )
+			continue;
 		if ( $args )
 			$text = preg_replace("|&lt;(/?$tag.*?)&gt;|", '<$1>', $text);
 		else
-			$text = preg_replace('|&lt;(/?$tag)&gt;|', '<$1>', $text);
+			$text = preg_replace("|&lt;(/?$tag)&gt;|", '<$1>', $text);
 	}
 
 	$text = preg_replace("|`(.*?)`|se", "'<code>' . encodeit('$1') . '</code>'", $text);

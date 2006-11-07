@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/#
 Description: Allows users to rate topics on a 1-5 star scale.
 Author: Michael D Adams
 Author URI: http://blogwaffe.com/
-Version: 0.7
+Version: 0.7.1
 */
 
 /* Template Functions */
@@ -72,7 +72,7 @@ function bb_top_topics() {
 		return get_latest_topics();
 
 	$top = join(',', $top);
-	$topics = $bbdb->get_results("SELECT * FROM $bbdb->topics WHERE topic_id IN ($top) AND topic_status = 0");
+	$topics = $bbdb->get_results("SELECT * FROM $bbdb->topics WHERE topic_id IN ($top) AND topic_status = 0 ORDER BY FIELD(topic_id, $top)");
 	return bb_append_meta( $topics, 'topic' );
 }
 
@@ -147,7 +147,7 @@ function bb_rate_topic( $topic_id, $user_id, $rating ) {
 	else
 		$topic->rating = array($user_id => $rating);
 
-	$avg = (int) round(array_sum($topic->rating) / count($topic->rating));
+	$avg = number_format(array_sum($topic->rating) / count($topic->rating), 2);
 	bb_update_topicmeta( $topic_id, 'rating', $topic->rating );
 	bb_update_topicmeta( $topic_id, 'avg_rating', $avg );
 
@@ -184,8 +184,6 @@ function bb_display_rating( $rating, $current_user = false ) { ?>
 }
 
 function bb_rating_stylesheet() {
-	if ( !is_topic() )
-		return;
 	echo "<link rel='stylesheet' href='" . bb_get_option( 'uri' ) . BBPLUGINDIR . "/bb-ratings.css' type='text/css' />\n";
 }
 

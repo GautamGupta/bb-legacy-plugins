@@ -3,7 +3,7 @@ Tags: rating, rate, vote
 Contributors: mdawaffe
 Requires at least: 0.74
 Tested up to: 0.74
-Stable Tag: 0.7
+Stable Tag: 0.7.1
 
 Allows users to rate topics on a simple 1-5 star scale.
 

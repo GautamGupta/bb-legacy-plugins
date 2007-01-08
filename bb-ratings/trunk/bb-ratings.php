@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/#
 Description: Allows users to rate topics on a 1-5 star scale.
 Author: Michael D Adams
 Author URI: http://blogwaffe.com/
-Version: 0.7.1
+Version: 0.7.2
 */
 
 /* Template Functions */
@@ -169,7 +169,7 @@ function bb_rating_bb_delete_topic( $topic_id, $new_status, $old_status ) {
 		$avg = (int) round(array_sum($topic->rating) / count($topic->rating));
 		bb_update_topicmeta( $topic_id, 'avg_rating', $avg );
 	} elseif ( 0 != $new_status ) {
-		$bbdb->query("DELETE FROM $bbdb->topic_meta WHERE topic_id = '$topic_id' AND meta_key = 'avg_rating'");
+		bb_delete_topicmeta( $topic_id, 'avg_rating' );
 	}
 }
 

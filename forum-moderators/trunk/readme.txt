@@ -1,8 +1,9 @@
 === Plugin Name ===
 Contributors: so1o
-Tags: moderators
+Tags: moderators, forums
 Requires at least: 0.74
 Tested up to: 0.74
+Stable tag: 1.0
 
 Give forum specific moderator privileges 
 

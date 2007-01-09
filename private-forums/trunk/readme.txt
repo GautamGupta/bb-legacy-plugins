@@ -21,7 +21,7 @@ forums can either be completely hidden or shown with a text prefix like
 &quot;private&quot;. the prefix is customizable through the options.
 
 The admin menu can accessed by keymaster from 
-<br/><strong>Admin > User > Forum Moderators</strong>
+<br/><strong>Admin > Site Management > Private Forums</strong>
 
 == Installation ==
 

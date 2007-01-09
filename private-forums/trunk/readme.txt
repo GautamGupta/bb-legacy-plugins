@@ -18,7 +18,7 @@ access is denied.
 
 The administrator can choose how the forum handles the private forums. the 
 forums can either be completely hidden or shown with a text prefix like 
-‘private’. the prefix is customizable through the options.
+&quot;private&quot;. the prefix is customizable through the options.
 
 The admin menu can accessed by keymaster from 
 <br/><strong>Admin > User > Forum Moderators</strong>
@@ -28,8 +28,6 @@ The admin menu can accessed by keymaster from
 1. Upload the file into /my-plugins/ directory 
 1. If you don't have a /my-plugins/ directory in your bbpress installaltion, 
    create it on the same level as config.php.
-
-== Frequently Asked Questions ==
 
 == Screenshots ==
 
@@ -42,11 +40,14 @@ customizable using the Error Options.
 
 == Version History ==
 
-Version History:
-1.0 : Initial Release
-1.1 : bug fix for empty private forums
-	: Added failsafe for installation.
-2.0 : Added choice to hide private forums or show them with private prefix
-	: Added selectable prefix text
-	: Removed redundant forum_access_update_option
-2.1	: Created Common Submit for all options
+* 1.0 : 
+  <br/>Initial Release
+* 1.1 :
+  <br/>bug fix for empty private forums
+  <br/>Added failsafe for installation.
+* 2.0 : 
+  <br/>Added choice to hide private forums or show them with private prefix
+  <br/>Added selectable prefix text
+  <br/>Removed redundant forum_access_update_option
+* 2.1 : 
+  <br/>Created Common Submit for all options

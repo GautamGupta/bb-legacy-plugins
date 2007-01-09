@@ -32,24 +32,24 @@ The template for the search will need to be modified to display the posts
 * 2.0 : 
   <br/>Added choice to hide private forums or show them with private prefix
   <br/>Added selectable prefix text
-  <br/>Removed redundant forum_access_update_option
+  <br/>Removed redundant forum\_access\_update\_option
 * 2.1 :
   <br/>Created Common Submit for all options
 
 == Function ==
 
-* bb_search_wp(
+* bb\_search\_wp(
   <br/>  $q // text that needs to be searched
   <br/>)
-  <br/>bb_search_wp function performs the search on the wordpress tables and populates 
-  <br/>the variable $wp_posts.
+  <br/>bb\_search\_wp function performs the search on the wordpress tables and populates 
+  <br/>the variable $wp\_posts.
 
-* bb_wp_post_link(
+* bb\_wp\_post\_link(
   <br/>  $row // row from the result set from the wordpress post search.
   <br/>)
-  <br/>bb_wp_post_link returns the link for the post with the settings in the config.php. 
+  <br/>bb\_wp\_post\_link returns the link for the post with the settings in the config.php. 
   <br/>The text shown is the title of the post.
 
-* bb_wp_search_default_display()
-  <br/>bb_wp_search_default_display function displays the posts from the wordpress for 
+* bb\_wp\_search\_default\_display()
+  <br/>bb\_wp\_search\_default\_display function displays the posts from the wordpress for 
   <br/>the default bbpress theme. this can be used as a reference to code custom templates. 

@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== Forums Moderators ===
 Contributors: so1o
 Tags: moderators, forums
 Requires at least: 0.74

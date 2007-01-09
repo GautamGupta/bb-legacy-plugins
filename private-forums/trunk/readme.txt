@@ -1,11 +1,11 @@
-=== Plugin Name ===
+=== Private Forums ===
 Contributors: so1o
 Tags: private, forums, hide
 Requires at least: 0.74
 Tested up to: 0.74
 Stable tag: 2.1
 
-Give forum specific moderator privileges 
+Regulate Access to forums in bbPress
 
 == Description ==
 

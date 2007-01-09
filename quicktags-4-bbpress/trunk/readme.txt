@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== Comment Quicktags for bbPress ===
 Contributors: Stefano Aglietti
 Tags: quicktags, textarea
 Requires at least: 0.74

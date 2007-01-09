@@ -18,10 +18,6 @@ The template for the search will need to be modified to display the posts
 1. If you don't have a /my-plugins/ directory in your bbpress installaltion, 
    create it on the same level as config.php.
 
-== Frequently Asked Questions ==
-
-== Screenshots ==
-
 == Version History ==
 
 * 1.0 : 

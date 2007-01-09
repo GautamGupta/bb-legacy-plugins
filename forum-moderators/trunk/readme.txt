@@ -15,7 +15,7 @@ moderator by default and will need to be given explicit privileges
 for each forum he needs access to.
 
 The admin menu can accessed by keymaster from 
-Admin > User > Forum Moderators
+<br/><strong>Admin > User > Forum Moderators</strong>
 
 == Installation ==
 

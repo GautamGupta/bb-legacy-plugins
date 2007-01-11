@@ -1,6 +1,7 @@
 === Front Page Topics ===
 Tags: page_topics, pagination
 Contributors: mdawaffe
+Stable Tag: 0.7.2
 
 Front Page Topics allows you to change the number of topics shown on the front
 page without effecting other pages in bbPress.

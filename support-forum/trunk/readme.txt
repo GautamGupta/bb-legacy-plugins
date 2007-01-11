@@ -3,13 +3,17 @@ Contributors: so1o, mdawaffe
 Tags: support, forums
 Requires at least: 0.74 Changeset #581
 Tested up to: 0.74 Changeset #581
-Stable tag: 1.0
 
 Change the forum into a support forum
 
 == Description ==
 
-This plugin converts Forum into a support forum. 
+Changes the forum to a support and adds functionality to mark topics resolved, not resolved or not a support question
+
+The plugin gives option to convert a forum installation into a support forum where the users can mark
+the topics as resolved or not resolved. The administrator can also set the default status of the topics.
+
+Please Note: the plugin will needed after ticket #496 is implemented and released.
 for details please look at http://trac.bbpress.org/ticket/496
 
 == Installation ==
@@ -22,3 +26,4 @@ for details please look at http://trac.bbpress.org/ticket/496
 
 * 1.0 : 
   <br/>Initial Release
+ 

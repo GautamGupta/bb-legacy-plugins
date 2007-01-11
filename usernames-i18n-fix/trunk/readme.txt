@@ -7,8 +7,6 @@ Stable tag: 0.0
 
 Allow users to use I18N non-English  names.
 
-== Description ==
-
 == Installation ==
 
 Add `usernames_i18n_fix.php` to your `/my-plugins/` directory.

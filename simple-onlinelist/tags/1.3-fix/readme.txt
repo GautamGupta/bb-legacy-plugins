@@ -9,13 +9,13 @@ Shows the current online users.
 
 == Description ==
 
-This plugin displays all users which were online over the past 5 minutes. It can also display when a user was last online on hin profile page.
+This plugin displays all users which were online over the past 5 minutes. It can also display when a user was last online on his profile page.
 
 == Installation ==
 
 Add `onlinelist.php` to your `/my-plugins/` directory.
 
-Add `<?php show_online_users(); ?>` wherever you want in your template. I suggest adding it to `front-page.php` to the hottags like this:
+Add `<?php show_online_users(); ?>` wherever you want in your template. I suggest adding it to `my-templates/front-page.php` to the hottags like this:
 
 `<div id="hottags">
 <h2><?php _e('Hot Tags'); ?></h2>
@@ -25,7 +25,7 @@ Add `<?php show_online_users(); ?>` wherever you want in your template. I sugges
 <p><?php show_online_users(); ?></p>
 </div>`
 
-Add `<?php profile_last_online(); ?>` to `profile.php`. I suggest adding it under line 14 like this:
+Add `<?php profile_last_online(); ?>` to `my-templates/profile.php`. I suggest adding it under line 14 like this:
 `<?php bb_profile_data(); ?>
 <?php profile_last_online(); ?>`.
 

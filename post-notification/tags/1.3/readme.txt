@@ -1,4 +1,4 @@
-=== post notification ===
+=== Post Notification ===
 Tags: favorites, notification
 Contributors: thomasklaiber
 Requires at least: 0.73

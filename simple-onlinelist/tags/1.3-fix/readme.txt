@@ -1,4 +1,4 @@
-=== simple onlinelist ===
+=== Simple Onlinelist ===
 Tags: onlinelist, online, activity
 Contributors: thomasklaiber
 Requires at least: 0.74

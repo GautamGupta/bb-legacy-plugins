@@ -1,0 +1,505 @@
+/*
+Theme Name: bbPress Mobile
+Theme URI: http://bbpress.org/
+Description: The "mobile" face of bbPress.
+Author: Trent Adams
+Author URI: http://trentadams.ca
+*/
+
+/* Globals 
+=================================== */
+
+* { margin: 0; padding: 0; }
+
+body {
+	background-color: #fff;
+
+		background-repeat: repeat-x;
+
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', verdana, arial, helvetica, sans-serif;
+  font-size: 6px;
+  margin: 0;
+  padding: 0;
+  text-align: center; /* IE 5.5 hack */
+}
+
+a {
+	font-weight: normal;
+	color: blue;
+}
+
+a:hover {
+	border-bottom: 1px solid #999;
+		color: blue;
+
+}
+
+.alt {
+	background: #eee;
+}
+
+a:visited {
+	font-weight: normal;
+	color: blue;
+
+}
+
+
+code { font: 1.0em Monaco, 'Courier New', monospace; }
+
+
+p {
+	margin-bottom: 1.0em;
+}
+
+/* Structure
+=================================== */
+
+#wrapper {
+
+  background-color: #fff;
+  margin: auto;
+  	width: 100%;
+
+  margin-top: 0px;
+  border: 1px double #fff;
+  text-align: left;  /* IE 5.5 hack part II */
+}
+#header { 
+	background-position: top left;
+	background-color: #fff;
+	padding-left: 5px;
+	height: 30px;
+	border-bottom: 1px double #999;
+}
+
+#header h1 {
+  margin: 0px;
+  padding-top: 5px;
+  padding-left: 5px;
+  padding-bottom: 5px;
+  text-align: center;
+font: 205% "Book Antiqua", "Times New Roman", georgia, times, serif;
+}
+
+
+#header p { margin-bottom: 0; }
+
+
+
+#navigation { 
+	margin-left: 0px;
+		width: 100%;
+		  border-top: 1px double #999;
+		  border-bottom: 1px double #999;
+
+
+}
+
+
+
+#loginformbox { 
+	margin-left: 0px;
+		width: 100%;
+		  border-top: 1px double #999;
+		  border-bottom: 1px double #999;
+
+
+}
+
+
+#searchform { 
+	margin-top: 5px;
+	margin-left: 0px;
+		width: 100%;
+		  border-top: 1px double #999;
+		  border-bottom: 1px double #999;
+
+}
+
+
+
+#main { 
+	font-size: 6px;
+	width: 100%;
+	padding-left: 5px;
+	  margin: auto;
+
+}
+
+.bbcrumb {
+	text-transform: uppercase;
+	font-size: 0.9em;
+	letter-spacing: 1px;
+	padding: 5px 0 20px;
+}
+
+#footer { 
+	margin: auto;
+	color: #000;
+	background: #999;
+	border-top: double 3px #c00;
+	font-size: 1.0em;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	clear: both; 
+	text-align: center;
+	  margin-bottom: 0;
+	
+}
+
+.notice { 
+	border: 2px solid #4c9545; 
+	background: #abd8a2; 
+	color: #4c9545; 
+	font-size: 1.1em; 
+	font-weight: bold;
+	padding: 10px 15px; 
+	margin: 0 0 1.1em; 
+}
+
+.notice p { margin-bottom: 0; }
+
+/* Login Form
+=================================== */
+
+blockquote {
+	border-left: 1px solid #aa3300;
+	border-right: 1px solid #aa3300;
+	border-top: 1px solid #aa3300;
+	border-bottom: 1px solid #aa3300;
+	background: #999;
+	margin-left: 1.5em;
+	padding: 5 5 5 5px;
+}
+
+
+
+.login { 
+	margin-top: 5px;
+	margin-left: 0px;
+	font-weight: bold;
+	color: #444;
+}
+
+.login p { padding: 0 0 5px; }
+.login label { display: block; float: left; padding-right: 2px; }
+.login #submit { font-size: 0.9em; margin-top: 5px; float: left; }
+
+p.login { font-weight: normal; font-size: 1.2em; }
+
+form.login input { 
+	margin-top: 3px;
+		margin-bottom: 3px;
+	border: 1px solid #999;
+}
+
+
+/* Front Page
+=================================== */
+
+#front-page #hottags { 
+	width: 100%;
+	margin-left: 0px;
+	overflow-x: hidden;
+}
+
+#front-page #hottags ul {
+	padding: 0 0 0 0px;
+	font-size: 10px;
+}
+
+#front-page #discussions { 
+	margin-left: 0px;
+		width: 100%;
+
+}
+
+.frontpageheatmap {
+	font-weight: normal;
+	line-height: 15px;
+	padding-bottom: 5px;
+}
+
+#front-page #main h2, h2.post-form, #userlogin, 
+#currentfavorites, #register {
+	color: #333;
+	border-bottom: 1px solid #ddd;
+	margin: 0 0 0px;
+	padding: 0 0 5px;
+}
+
+#front-page #discussions ul {
+	padding: 0 0 0 5px;
+}
+
+.sticky {
+	background: #ffddbb;
+}
+
+
+/* Topic Page
+=================================== */
+
+.infobox {
+	border: 1px solid #ccc;
+	border-width: 1px 0;
+	margin: 10px;
+	padding: 1em;
+}
+
+.infobox ul {
+	margin: 10px 0 10px 12px;
+	padding: 0;
+}
+
+.infobox ul li { 
+	padding-bottom: 3px;
+}
+
+#topic-tags {
+	border-left: 1px solid #ccc;
+	float: right;
+	margin-top: -2em;
+	margin: 10px;
+	padding: 0 1em 1em;
+}
+
+.nav {
+	margin: 15px 0;
+	padding: 12px 0;
+}
+
+.nav span {
+	font-weight: bold;
+}
+
+.nav span,.nav a {
+	padding: 6px;
+}
+
+#thread {
+	background: #fff;
+	width: 100%;
+	list-style: none;
+	margin: 0 0 0 0px;
+	padding: 0;
+}
+
+#thread li {
+	padding: 1.1em 1.0em;
+	line-height: 1.1em;
+}
+
+#thread li ol, #thread li ul { 
+	margin-left: 0px;
+}
+
+#thread li ol li, #thread li ul li { 
+	padding: 5;
+}
+
+.threadauthor {
+	overflow: hidden;
+	position: absolute;
+	width: 95px;
+}
+
+.threadauthor small {
+	font: 8px Verdana, Arial, Helvetica, sans-serif;
+}
+
+.threadpost {
+	font: 8px Verdana, Arial, Helvetica, sans-serif;
+		width: 300px;
+}
+
+.poststuff {
+	border-top: 1px dotted #ccc;
+	margin-right: 5px;
+	padding: 5px 0 0;
+	font: 8px Verdana, Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+}
+
+.num, #forumlist small {
+	font: 8px Verdana,Arial,Helvetica,sans-serif;
+	text-align: center;
+}
+
+.postform {
+	background: #ddd;
+	padding: 1em;
+	margin-right: 5px;
+}
+
+.postform textarea {
+	height: 12em;
+	margin: 5px 0;
+	padding: 5px;
+	width: 400px;
+	display: block;
+}
+
+.postform label {
+	display: block;
+}
+
+.admin { 
+	padding: 10px 0 0;
+}
+
+#manage-tags { 
+	margin: 10px 0; 
+	list-style: none; 
+}
+
+#manage-tags li {
+	float: left;
+	width: 300px;
+	padding-bottom: 10px;
+}
+
+.submit {
+	text-align: right;
+}
+
+.topiclink {
+	display: block;
+}
+
+.topictitle {
+	font-size: 12px;
+	font-weight: normal;
+	display: inline;
+}
+
+/* Other
+=================================== */
+
+#content .frontpageheatmap a {
+	font-weight: normal;
+	text-decoration: none;
+}
+
+#content .infobox li {
+	margin-bottom: 2px;
+}
+
+#content .nav a {
+	border: 1px solid #ccc;
+	font-weight: normal;
+}
+
+#content .nav a:hover {
+	border: 1px solid #999;
+}
+
+#content a:visited {
+	font-weight: normal;
+}
+
+#front-search {
+	float: right;
+	margin-top: -8px;
+}
+
+#latest td, #forumlist td, #favorites td {
+	padding: 5px 10px;
+	overflow: hidden;
+
+}
+
+#latest tr:hover, #forumlist tr:hover, #favorites tr:hover { 
+	background: #ffddbb;
+}
+
+#latest th, #forumlist th, #favorites th {
+	border-bottom: 1px solid #aaa;
+	background: #ddd;
+	font: 8px Verdana,Arial,Helvetica,sans-serif;
+	padding: 5px 5px;
+	text-transform: uppercase;
+}
+
+#latest, #forumlist, #favorites {
+	background: #fff;
+	margin-bottom: 2em;
+	width: 95%;
+}
+
+.bozo {
+	background: #eeee88;
+}
+
+.bozo.alt {
+	background: #ffff99;
+}
+
+.deleted {
+	background: #ee8888;
+}
+.deleted.alt {
+	background: #ff9999;
+}
+
+
+/* Profile Page
+=================================== */
+
+#profile-menu {
+
+}
+
+#profile-menu li {
+	font-size: 1.1em;
+	background-color: #ddd;
+	padding: 4px 7px;
+	display: inline;
+	border-top: 3px double #9e9e9e;
+	position: relative;
+}
+
+#profile-menu li.current {
+	background-color: #ddd;
+}
+
+#userinfo { margin-top: 10px; }
+#userinfo dt { font-weight: bold; }
+#userinfo dd { margin: 0 0 5px; } 
+
+#useractivity { margin: 15px 0 5px; }
+
+.user-recent { margin: 0 0 10px; width: 300px;}
+.user-recent ol { margin: 5px 0 0 5px; }
+.user-recent ol li { margin: 0 0 3px; }
+
+/* Profile Edit
+=================================== */
+
+fieldset { 
+	border-top: 3px double #ccc;
+	border-bottom: 1px solid #ccc;
+	border-left: none;
+	border-right: none;
+	padding: 10px 0 10px 10px; 
+	margin-bottom: 15px;
+	width: 300px;
+}
+
+legend { 
+	font-weight: bold;
+	padding: 0 15px;
+}
+
+fieldset table { 
+	text-align: left;
+	margin: 0 15px;
+}
+
+fieldset table td { padding: 2px 0; }
+
+fieldset p { 
+	font-size: 8px;
+	margin: 10px 16px;
+}

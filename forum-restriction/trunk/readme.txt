@@ -18,6 +18,10 @@ This plugin will add an admin/Site Management/Forum Restriction submenu.
 Go there and simply add the user names (or display names: see below) to each forum listed.
 Leave the field blank to allow everyone.
 
+If you have display-name.php by Michael D Adams which can be found here:
+http://trac.bbpress.org/ticket/430
+you will have to use the display name instead of the user name in the configuration.
+
 == Screenshots ==
 
 

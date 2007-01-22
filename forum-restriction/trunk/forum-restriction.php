@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Forum Restriction
-Plugin URI:
+Plugin URI:  http://bbpress.org/forums/topic/591
 Description: This is intended to restrict access to any forum to specifically listed individuals.
 Author: David Bessler
 Author URI: http://davidbessler.com

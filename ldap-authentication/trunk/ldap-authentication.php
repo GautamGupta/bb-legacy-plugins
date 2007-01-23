@@ -1,14 +1,15 @@
 <?php
 /*
 Plugin Name: LDAP authentication
-Plugin URI: http://www.network.net.au/bbpress/plugins/ldap/ldap-authentication.zip
+Plugin URI: http://www.network.net.au/bbpress/plugins/ldap/ldap-authentication.latest.zip
 Description: Allows users to authenticate against an LDAP service
 Author: Sam Bauers
-Version: 1.0
+Version: 1.0.1
 Author URI: http://www.network.net.au/
 
 Version History:
 1.0 	: Initial Release
+1.0.1 	: Small non-critical fixes to ldap_remove_password_capability()
 */
 
 /*
@@ -178,14 +179,14 @@ if ($LDAP_enabled) {
 		global $LDAP_enabled, $bb, $bb_current_user;
 		
 		if ($LDAP_enabled && (($_SERVER['PHP_SELF'] == $bb->path . 'profile.php' && $_GET['tab'] == 'edit') || $_SERVER['PHP_SELF'] == $bb->path . 'profile-edit.php')) {
-			add_filter( 'bb_user_has_cap' , 'ldap_remove_password_capability' , 10, 3);
+			add_filter( 'bb_user_has_cap' , 'ldap_remove_password_capability' , 10, 2);
 		}
 	}
 	
-	function ldap_remove_password_capability($allcaps, $caps, $args) {
-		global $cap, $user;
+	function ldap_remove_password_capability($allcaps, $caps) {
+		global $user;
 		
-		if ($caps[0] = 'change_password' && substr($user->user_pass, 0, 5) == '^LDAP') {
+		if ($caps[0] == 'change_password' && substr($user->user_pass, 0, 5) == '^LDAP') {
 			unset($allcaps['change_password']);
 		}
 		

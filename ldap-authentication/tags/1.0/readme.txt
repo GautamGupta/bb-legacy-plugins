@@ -1,8 +1,8 @@
 === LDAP authentication for bbPress ===
 Contributors: sambauers
 Tags: ldap, authentication, user management, users
-Requires at least: 0.80a build 631
-Tested up to: 0.80a build 631
+Requires at least: 0.75
+Tested up to: 0.80a build 641
 Stable tag: 1.0
 
 Allows authentication via an LDAP service

@@ -2,14 +2,14 @@
 Contributors: SamBauers
 Tags: ldap authentication user management users
 Requires at least: 0.75
-Tested up to: 0.80a build 642
-Stable tag: 1.0.1
+Tested up to: 0.80a build 646
+Stable tag: 1.0.2
 
 Allows authentication via an LDAP service
 
 == License ==
 
-LDAP authentication for bbPress version 1.0.1
+LDAP authentication for bbPress version 1.0.2
 Copyright (C) 2007 Sam Bauers (sam@viveka.net.au)
 
 LDAP authentication for bbPress comes with ABSOLUTELY NO WARRANTY

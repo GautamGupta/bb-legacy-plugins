@@ -4,12 +4,15 @@ Plugin Name: LDAP authentication
 Plugin URI: http://www.network.net.au/bbpress/plugins/ldap/ldap-authentication.latest.zip
 Description: Allows users to authenticate against an LDAP service
 Author: Sam Bauers
-Version: 1.0.1
+Version: 1.0.2
 Author URI: http://www.network.net.au/
 
 Version History:
 1.0 	: Initial Release
 1.0.1 	: Small non-critical fixes to ldap_remove_password_capability()
+1.0.2	: Cookie hacking vulnerability fixed
+		  Disabled password reseting function for LDAP users
+		  Added option to disable automatic registration of LDAP users
 */
 
 /*
@@ -46,6 +49,9 @@ function ldap_admin_page() {
 	if ( bb_get_option('LDAP_enable') ) {
 		$enable_checked = ' checked="checked"';
 	}
+	if ( bb_get_option('LDAP_disable_automatic_registration') ) {
+		$disable_automatic_registration_checked = ' checked="checked"';
+	}
 	if ( bb_get_option('LDAP_disable_registration') ) {
 		$disable_registration_checked = ' checked="checked"';
 	}
@@ -57,13 +63,21 @@ function ldap_admin_page() {
 	<h3>Enable</h3>
 	<form method="post">
 	<p>
-		Enable LDAP authentication here, all users who can authenticate against the
-		LDAP server specified below will automatically be able to login to the forums
-		as a member. The first time an LDAP user logs in, a local user is created for
-		them, no password is sent to them:
+		Enable LDAP authentication here:
 	</p>
 	<p>
 		<input type="checkbox" name="LDAP_enable" value="1" tabindex="10"<?php echo $enable_checked; ?> /> Enable LDAP authentication<br />
+		&nbsp;
+	</p>
+	<h3>Disable automatic registration of LDAP users</h3>
+	<p>
+		In normal use, LDAP users are registered in bbPress on their first successful
+		login. If automatic registration is disabled here, then LDAP users will have
+		to be added manually in the database, they cannot be created through the normal
+		registration process:
+	</p>
+	<p>
+		<input type="checkbox" name="LDAP_disable_automatic_registration" value="1" tabindex="20"<?php echo $disable_automatic_registration_checked; ?> /> Disable automatic registration of LDAP users<br />
 		&nbsp;
 	</p>
 	<h3>Disable normal registration</h3>
@@ -72,7 +86,7 @@ function ldap_admin_page() {
 		allowed to login normally with this option activated:
 	</p>
 	<p>
-		<input type="checkbox" name="LDAP_disable_registration" value="1" tabindex="20"<?php echo $disable_registration_checked; ?> /> Disable normal registration<br />
+		<input type="checkbox" name="LDAP_disable_registration" value="1" tabindex="30"<?php echo $disable_registration_checked; ?> /> Disable normal registration<br />
 		&nbsp;
 	</p>
 	<h3>Server settings</h3>
@@ -82,11 +96,11 @@ function ldap_admin_page() {
 	<table>
 		<tr>
 			<th scope="row">Host:</th>
-			<td><input type="text" name="LDAP_host" tabindex="30" value="<?php echo bb_get_option('LDAP_host'); ?>" /> required</td>
+			<td><input type="text" name="LDAP_host" tabindex="40" value="<?php echo bb_get_option('LDAP_host'); ?>" /> required</td>
 		</tr>
 		<tr>
 			<th scope="row">Port:</th>
-			<td><input type="text" name="LDAP_port" tabindex="40" value="<?php echo bb_get_option('LDAP_port'); ?>" /> defaults to 389</td>
+			<td><input type="text" name="LDAP_port" tabindex="50" value="<?php echo bb_get_option('LDAP_port'); ?>" /> defaults to 389</td>
 		</tr>
 		<tr>
 			<th scope="row">Domain:</th>
@@ -94,15 +108,15 @@ function ldap_admin_page() {
 		</tr>
 		<tr>
 			<th scope="row">TLS:</th>
-			<td><input type="checkbox" name="LDAP_tls" value="1" tabindex="50"<?php echo $tls_checked; ?> /> use TLS encryption to connect (sets LDAP protocol to version 3)</td>
+			<td><input type="checkbox" name="LDAP_tls" value="1" tabindex="70"<?php echo $tls_checked; ?> /> use TLS encryption to connect (sets LDAP protocol to version 3)</td>
 		</tr>
 		<tr>
 			<th scope="row">Options:</th>
-			<td><input type="text" name="LDAP_options" tabindex="70" value="<?php echo bb_get_option('LDAP_options'); ?>" /> e.g.: option1:value1|option2:value2|...</td>
+			<td><input type="text" name="LDAP_options" tabindex="80" value="<?php echo bb_get_option('LDAP_options'); ?>" /> e.g.: option1:value1|option2:value2|...</td>
 		</tr>
 	</table>
 	<p class="submit alignleft">
-		<input name="submit" type="submit" value="<?php _e('Update'); ?>" tabindex="80" />
+		<input name="submit" type="submit" value="<?php _e('Update'); ?>" tabindex="90" />
 		<input type="hidden" name="action" value="LDAP_update" />
 	</p>
 	</form>
@@ -118,6 +132,14 @@ function ldap_admin_page_process() {
 			} else {
 				bb_delete_option('LDAP_enable');
 			}
+			
+			// Disable automatic registration
+			if ( $_POST['LDAP_disable_automatic_registration'] ) {
+				bb_update_option( 'LDAP_disable_automatic_registration', $_POST['LDAP_disable_automatic_registration'] );
+			} else {
+				bb_delete_option('LDAP_disable_automatic_registration');
+			}
+			
 			// Disable normal registration
 			if ( $_POST['LDAP_disable_registration'] ) {
 				bb_update_option( 'LDAP_disable_registration', $_POST['LDAP_disable_registration'] );
@@ -165,8 +187,9 @@ function ldap_admin_page_process() {
 
 if ($LDAP_enabled) {
 	
-	add_action( 'bb_init','ldap_disable_registration');
-	add_action( 'bb_init','ldap_disable_password_editing');
+	add_action('bb_init', 'ldap_disable_registration');
+	add_action('bb_init', 'ldap_disable_ldap_password_recovery');
+	add_action('bb_init', 'ldap_disable_password_editing');
 	
 	function ldap_disable_registration() {
 		global $LDAP_enabled, $bb;
@@ -175,9 +198,21 @@ if ($LDAP_enabled) {
 		}
 	}
 	
+	function ldap_disable_ldap_password_recovery() {
+		global $LDAP_enabled, $bb;
+		if ($LDAP_enabled && $_SERVER['PHP_SELF'] == $bb->path . 'bb-reset-password.php') {
+			$user_login = user_sanitize($_POST['user_login']);
+			if (!empty($user_login)) {
+				$user = bb_get_user_by_name($user_login);
+				if (substr($user->user_pass, 0, 5) == '^LDAP') {
+					bb_die(__('Password recovery is not possible for this account because it uses an LDAP username and password to login. To change your LDAP password, please contact your system administrator.'));
+				}
+			}
+		}
+	}
+	
 	function ldap_disable_password_editing() {
 		global $LDAP_enabled, $bb, $bb_current_user;
-		
 		if ($LDAP_enabled && (($_SERVER['PHP_SELF'] == $bb->path . 'profile.php' && $_GET['tab'] == 'edit') || $_SERVER['PHP_SELF'] == $bb->path . 'profile-edit.php')) {
 			add_filter( 'bb_user_has_cap' , 'ldap_remove_password_capability' , 10, 2);
 		}
@@ -200,22 +235,24 @@ if ($LDAP_enabled) {
 			$user_exists = bb_user_exists( $user );
 			if ( !$user_exists ) {
 				// Check using LDAP
-				if ( ldap_connect_user( $user, $pass ) ) {
+				if ( !bb_get_option('LDAP_disable_automatic_registration') && ldap_connect_user( $user, $pass ) ) {
 					// Create the new user in the local database
-					if ( $user_id = ldap_new_user( $user ) ) {
+					if ( $user_id = ldap_new_user( $user, $pass ) ) {
 						return $bbdb->get_row("SELECT * FROM $bbdb->users WHERE `ID` = $user_id");
 					} else {
 						bb_die(__('Failed to add new LDAP user to local database.'));
 					}
-				
 				} else {
 					return FALSE;
 				}
 			} else {
 				if ( substr($user_exists->user_pass, 0, 5) == '^LDAP' ) {
 					if ( ldap_connect_user( $user, $pass ) ) {
+						// Update their MD5 hash in case their password has changed
+						$bbdb->query("UPDATE $bbdb->users SET user_pass = '^LDAP-" . md5($pass) . "' WHERE user_login = '$user'");
+						
 						// Get their record from the local database
-						return $bbdb->get_row("SELECT * FROM $bbdb->users WHERE user_login = '$user' AND SUBSTRING_INDEX( user_pass, '---', 1 ) = '^LDAP'");
+						return $bbdb->get_row("SELECT * FROM $bbdb->users WHERE user_login = '$user' AND SUBSTRING(SUBSTRING_INDEX( user_pass, '---', 1 ), 1, 5) = '^LDAP'");
 					} else {
 						return FALSE;
 					}
@@ -275,10 +312,10 @@ if ($LDAP_enabled) {
 		}
 	}
 	
-	function ldap_new_user( $user_login ) {
+	function ldap_new_user( $user_login, $user_pass ) {
 		global $bbdb, $bb_table_prefix;
 		$now       = bb_current_time('mysql');
-		$password  = '^LDAP';
+		$password  = '^LDAP-' . md5($user_pass);
 		
 		$bbdb->query("INSERT INTO $bbdb->users (user_login, user_pass, user_registered) VALUES ('$user_login', '$password', '$now')");
 		

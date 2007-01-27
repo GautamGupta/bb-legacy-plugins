@@ -38,7 +38,7 @@ function get_post_count ( $id ) {
 /* End bb-post-count code. Thank you Joshua! */
 
 $path_to_subdirectory= bb_get_option('uri') . "my-plugins/ranks/";
-$get_config = $path_to_subdirectory . "config.php";
+$get_config = $path_to_subdirectory . "gdr_config.php";
 
 include($get_config);
 

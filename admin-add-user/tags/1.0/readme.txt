@@ -9,7 +9,7 @@ Allows the Keymaster to add users through the Administration panel.
 
 == Description ==
 
-This plugin adds a new Function called `Add User` to the adminpanel. There the keymaster is able to add new users to the board.
+This plugin adds a new Function called `Add User` to the Administration. There the keymaster is able to add new users to the board.
 
 == Installation ==
 
@@ -21,11 +21,6 @@ not needed.
 
 == Frequently Asked Questions ==
 
-= I'm using bbpress 0.73? =
+= I'm using bbpress & Wordpress together? =
 
-It's not tested, but it should work also there.
-
-= I'm using bbpress & wordpress together? =
-
-So then, you don't really need this plugin, because wordpress already has this feature!
-
+So then, you don't really need this plugin, because Wordpress already has this feature!

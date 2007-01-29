@@ -5,49 +5,55 @@ Plugin URI:  http://bbpress.org/forums/topic/591
 Description: This is intended to restrict access to any forum to specifically listed individuals.
 Author: David Bessler
 Author URI: http://davidbessler.com
-Version: 1.3
+Version: 1.4
 */
 
 $forum_restriction_allowed_in_forum = bb_get_option('forum_restriction_db');
 
-
 //  ADMIN GUI
-add_action( 'bb_admin_menu_generator', 'forum_restriction_add_admin_page' );
+// Add submenu **stolen from Thomas Klaiber's Admin-add-user
 
-function forum_restriction_add_admin_page() {
+function forum_restriction_adminnav() {
 	global $bb_submenu;
-	$forum_func = (forum_restriction_check_requirements()) ? 'forum_restriction_admin_page' : 'forum_restriction_admin_page_requirement_failed';
-
-	$bb_submenu['site.php'][] = array(__('Forum Restriction'), 'use_keys', $forum_func);
+	$bb_submenu['site.php'][] = array(__('Forum Restriction'), 'use_keys', 'forum_restriction_admin_page');
 }
+add_action( 'bb_admin_menu_generator', 'forum_restriction_adminnav' );
 
-function forum_restriction_check_requirements() {
-	return (function_exists('is_serialized')) ? true :false;
-}
-
-if (forum_restriction_check_requirements()) {
-	add_action( 'bb_admin-header.php','forum_restriction_process_post');
-	$login_page = $bb->path . 'bb-login.php';
-}
-
-function forum_restricition_admin_page_requirement_failed() {
-	?>
-	<h2>Forum Restriction</h2>
-	<p>The bbPress installation you are running does not meet requirements for Forum Restriction. You can do the following to fix this:</p>
-	<ol>
-		<li>Upgrade the installation of bbPress to the <a href="http://trac.bbpress.org/changeset/trunk?old_path=%2F&format=zip" title="latest version of code from the bbPress Development Site">latest version</a> from the code repository</li>
-	</ol>
-	<?php
-}
+// The admin page itself including execution if form was submitted
 
 function forum_restriction_admin_page() {
 	$forums = get_forums();
 	global $forum_restriction_allowed_in_forum;
 	?>
 		<h2>Forum Restriction</h2>
+		<?php
+		if(isset($_POST['forum_restriction_submit'])) {
+			bb_check_admin_referer('admin-forum-restriction');
+			$all_user_IDs = forum_restriction_select_all_user_IDs();
+			foreach ($all_user_IDs as $user_ID) {
+				$users .= get_user_name($user_ID->ID).",";
+			}
+			foreach ($_POST['forum_restriction_for_forum'] as $forum_members) {
+				if (!empty($forum_members)) {
+					$members_allowed_in_forum = split(",",$forum_members);
+					foreach ($members_allowed_in_forum as $forum_member) {
+						$pos = strpos($users,$forum_member);
+						if ($pos == FALSE) {
+							$error_message = "$forum_member is not a valid user name.";
+						}
+					}
+				}
+			}
+				bb_update_option('forum_restriction_db',$_POST['forum_restriction_for_forum']);
+				bb_update_option('forum_restriction_notify',$_POST['forum_restriction_notify']);
+		}
+		if (isset($error_message)) {
+			echo "<b style=\"color: red\">ERROR: $error_message</b><br/>";
+		}
+		?>
 		<form method="post">
-			<input type="hidden" name="action" value="forum_restriction_update">
 			<h3>Current Settings</h3>
+			<?php $forum_restriction_allowed_in_forum = bb_get_option('forum_restriction_db');?>
 			<p>Enter the user names for each user to whom you would like to grant access to a restricted forum.  Separate users in the list with commas and NO SPACES between names.  You may need to use the "display name" for the users if you have the display-names plugin installed.</p>
 			<?php
 			echo "<table><tr> <th>Forum<br/>ID</th> <th>Forum Name</th> <th>Allowed Users</th> </tr>";
@@ -61,24 +67,23 @@ function forum_restriction_admin_page() {
 			?>
 
 			<p><input type="checkbox" name="forum_restriction_notify" <?php echo $forum_restriction_notify_or_not ?>>  Email members for new topics?</p>
-		<p><input type="submit" name="submit" value="Submit"></p>
+		<p><input type="submit" name="forum_restriction_submit" value="Submit"></p>
+		<?php bb_nonce_field( 'admin-forum-restriction' ); ?>
 		</form>
 	<?php
 }
 
-// Process the info posted from the admin page
-function forum_restriction_process_post() {
-	if(isset($_POST['submit'])) {
-		if ('forum_restriction_update' == $_POST['action']) {
-			$forum_restriction_to_add_to_db = (isset($_POST['forum_restriction_for_forum'])) ? $_POST['forum_restriction_for_forum'] : array ();
-			bb_update_option('forum_restriction_db',$forum_restriction_to_add_to_db);
-			$forum_restriction_notify = $_POST['forum_restriction_notify'];
-			bb_update_option('forum_restriction_notify',$forum_restriction_notify);
-		}
-	}
+function forum_restriction_select_all_user_IDs() {
+	global $bbdb;
+	$all_user_IDs = $bbdb->get_results("SELECT ID FROM $bbdb->users WHERE user_status=0");
+	return $all_user_IDs;
 }
 
-//  ENTIRE FORUM HIJACKING
+function forum_restriction_error_message($error_message) {
+	echo "Error: $error_message <br/>";
+}
+
+//  FORUM DISPLAY HIJACKING
 
 function forum_restriction_alter_front_page_forum_list( $forums ) {
 	global $bb_current_user,$forum,$forum_restriction_allowed_in_forum;

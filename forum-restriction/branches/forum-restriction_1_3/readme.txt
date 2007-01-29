@@ -3,7 +3,7 @@ Tags: forum restrict
 Contributors: David Bessler
 Requires at least: 0.73
 Tested up to: 0.75
-Stable Tag: 1.3
+Stable Tag: 1.4
 
 Allows you to restrict access to forums to certain individuals and hide them and their topics from all others.
 

@@ -5,7 +5,7 @@ Plugin URI:  http://bbpress.org/forums/topic/591
 Description: This is intended to restrict access to any forum to specifically listed individuals.
 Author: David Bessler
 Author URI: http://davidbessler.com
-Version: 1.3
+Version: 1.4
 */
 
 $forum_restriction_allowed_in_forum = bb_get_option('forum_restriction_db');

@@ -3,13 +3,13 @@ Tags: forum restrict
 Contributors: David Bessler
 Requires at least: 0.73
 Tested up to: 0.75
-Stable Tag: 1.2
+Stable Tag: 1.3
 
-Allows you to restrict access to forums to certain individuals and hide them and their topics from all others.
+Allows you to restrict access to forums to certain individuals and hide them and their topics from all others.  It also allows you to send notification to members of those restricted forums when a new topic is started.
 
 == Description ==
 
-Allows you to restrict access to forums to certain individuals and hide them and their topics from all others.
+Allows you to restrict access to forums to certain individuals and hide them and their topics from all others.  It also allows you to send notification to members of those restricted forums when a new topic is started.
 
 == Installation ==
 Add `forum-restriction.php`  to your `/my-plugins/` directory.
@@ -23,10 +23,17 @@ If you have display-name.php by Michael D Adams which can be found here:
 http://trac.bbpress.org/ticket/430
 you will have to use the display name instead of the user name in the configuration.
 
+Check/uncheck the option to "Email members for new topic."
+
 == Screenshots ==
 
 
 == Version History ==
+version 1.3
+
+* Added yellow hilighted listing of authorized users in forum description.
+* Added option to email members of forums when new topic is started.
+
 version 1.2
 
 * Finally figure out how to hide non-accessible forums and topics

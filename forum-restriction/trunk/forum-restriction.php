@@ -5,7 +5,7 @@ Plugin URI:  http://bbpress.org/forums/topic/591
 Description: This is intended to restrict access to any forum to specifically listed individuals.
 Author: David Bessler
 Author URI: http://davidbessler.com
-Version: 1.2
+Version: 1.3
 */
 
 $forum_restriction_allowed_in_forum = bb_get_option('forum_restriction_db');
@@ -48,13 +48,19 @@ function forum_restriction_admin_page() {
 		<form method="post">
 			<input type="hidden" name="action" value="forum_restriction_update">
 			<h3>Current Settings</h3>
+			<p>Enter the user names for each user to whom you would like to grant access to a restricted forum.  Separate users in the list with commas and NO SPACES between names.  You may need to use the "display name" for the users if you have the display-names plugin installed.</p>
 			<?php
 			echo "<table><tr> <th>Forum<br/>ID</th> <th>Forum Name</th> <th>Allowed Users</th> </tr>";
 			foreach($forums as $forum) {
 				echo "<tr><td style=\"text-align: center\">$forum->forum_id</td><td>$forum->forum_name</td><td><input type=\"text\" name=\"forum_restriction_for_forum[$forum->forum_id]\" value=\"{$forum_restriction_allowed_in_forum[$forum->forum_id]}\" size=\"75\"></td></tr>";
 			}
+			if (bb_get_option('forum_restriction_notify') == "on") {
+				$forum_restriction_notify_or_not = "CHECKED";
+			}
 			echo "</table>";
 			?>
+
+			<p><input type="checkbox" name="forum_restriction_notify" <?php echo $forum_restriction_notify_or_not ?>>  Email members for new topics?</p>
 		<p><input type="submit" name="submit" value="Submit"></p>
 		</form>
 	<?php
@@ -66,6 +72,8 @@ function forum_restriction_process_post() {
 		if ('forum_restriction_update' == $_POST['action']) {
 			$forum_restriction_to_add_to_db = (isset($_POST['forum_restriction_for_forum'])) ? $_POST['forum_restriction_for_forum'] : array ();
 			bb_update_option('forum_restriction_db',$forum_restriction_to_add_to_db);
+			$forum_restriction_notify = $_POST['forum_restriction_notify'];
+			bb_update_option('forum_restriction_notify',$forum_restriction_notify);
 		}
 	}
 }
@@ -94,6 +102,29 @@ function forum_restriction_alter_front_page_forum_list( $forums ) {
 }
 
 add_filter('get_forums', 'forum_restriction_alter_front_page_forum_list');
+
+// Add allowed users to description so you know who can see what you're writing
+
+function forum_restriction_alter_front_page_forum_description( $r ) {
+	global $bb_current_user,$forum,$forum_restriction_allowed_in_forum;
+	if (is_front()){
+		if ($bb_current_user){
+			$pos = strpos($forum_restriction_allowed_in_forum[$forum->forum_id],get_user_name($bb_current_user->ID));
+		} else {
+			$pos = FALSE;
+		}
+		if ($pos === FALSE && !empty($forum_restriction_allowed_in_forum[$forum->forum_id])) {
+			return $r;
+		} elseif (!empty($forum_restriction_allowed_in_forum[$forum->forum_id])) {
+			$r .= '<p style="background-color: yellow;">Users with access to this forum:  '.$forum_restriction_allowed_in_forum[$forum->forum_id].'</p>';
+			return $r;
+		} else {
+			return $r;
+		}
+	}
+}
+
+add_filter('forum_description', 'forum_restriction_alter_front_page_forum_description');
 
 //  FOR TOPICS ON FRONT PAGE
 
@@ -158,3 +189,29 @@ function forum_restriction_hijack_topic_page() {
 }
 
 add_action('bb_topic.php_pre_db', 'forum_restriction_hijack_topic_page');
+
+// Email forum members
+
+function forum_restriction_send_email ($topic_id){
+	if (bb_get_option('forum_restriction_notify') == "on") {
+		global $forum_restriction_allowed_in_forum, $bbdb, $bb_current_user;
+		$topic = get_topic($topic_id);
+		$forum = $topic->forum_id;
+		$mailing_list = split(",",$forum_restriction_allowed_in_forum[$forum]);
+		$message = __("There is a new topic called: %1\$s.  You can see it here %3\$s.  You got this email because Bessler decided to turn on the option to notify all members of restricted forums when there are new TOPICS started in each FORUM.  However, don't forget to click on \"Add this topic to your favorites\" so that you get an email when someone adds a POST to this TOPIC.  This will keep you involved in that particular discussion.  Kapish?");
+		foreach ($mailing_list as $member) {
+			$userdata = $bbdb->get_var("SELECT ID FROM $bbdb->users WHERE `display_name` = '$member'");
+			$email_address .= $bbdb->get_var("SELECT user_email FROM $bbdb->users WHERE ID='$userdata'").",";
+		}
+		mail( $email_address, '['.bb_get_option('name') . '] ' . __('New Topic In Private Forum:').get_forum_name($forum),
+			sprintf( $message, $topic->topic_title, get_user_name($bb_current_user->ID), get_topic_link($topic_id) ),
+			'From: ' . bb_get_option('admin_email')
+		);
+	}
+}
+
+add_action('bb_new_topic', 'forum_restriction_send_email');
+
+/*
+
+*/

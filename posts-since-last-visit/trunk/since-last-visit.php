@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: Since last visit
- * Plugin Description: Displays all new posts since user's last visit.
+ * Plugin Name: Posts since last visit
+ * Plugin Description: Displays all new posts since user's last visit as view. This is still beta, fell free to try it out. Requires Simple Onlinelist 1.4!
  * Author: Thomas Klaiber
  * Author URI: http://www.la-school.com
- * Plugin URI: http://www.la-school.com/2006/
- * Version: 0.5
+ * Plugin URI: http://www.la-school.com/2006/bbpress/
+ * Version: 0.5-beta
  */
 
 function user_last_online_init() {
@@ -21,7 +21,7 @@ function user_last_online_init() {
 		endif;		
 	endif;
 }
-add_action('bb_init', 'user_last_online_init', 1);
+add_action('bb_init', 'user_last_online_init', 1); // load before online init
 
 function since_last_visit_views( $views ) {
 	global $views;

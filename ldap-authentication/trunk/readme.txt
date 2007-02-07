@@ -2,7 +2,7 @@
 Contributors: SamBauers
 Tags: ldap authentication user management users
 Requires at least: 0.75
-Tested up to: 0.80a build 646
+Tested up to: 0.80-RC3 build 687
 Stable tag: 1.0.2
 
 Allows authentication via an LDAP service

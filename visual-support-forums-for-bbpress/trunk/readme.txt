@@ -2,7 +2,7 @@
 Contributors: SamBauers
 Tags: support forums pretty
 Requires at least: 0.75
-Tested up to: 0.80a build 670
+Tested up to: 0.80-RC3 build 687
 Stable tag: 1.0
 
 Adds an icon to topic titles to indicate support and closed status, looks pretty

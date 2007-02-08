@@ -59,10 +59,10 @@ function bb_user_rating( $user_id = 0 ) {
 
 /* Query Functions */
 
-function bb_top_topics() {
+function bb_top_topics( $number = 0 ) {
 	global $bbdb, $page, $bb_last_countable_query;
 
-	$limit = bb_get_option('page_topics');
+	$limit = $number ? $number : bb_get_option('page_topics');
         if ( 1 < $page )
                 $limit = ($limit * ($page - 1)) . ", $limit";
 

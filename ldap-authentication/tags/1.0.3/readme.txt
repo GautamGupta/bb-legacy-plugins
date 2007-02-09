@@ -9,7 +9,7 @@ Allows authentication via an LDAP service
 
 == License ==
 
-LDAP authentication for bbPress version 1.0.2
+LDAP authentication for bbPress version 1.0.3
 Copyright (C) 2007 Sam Bauers (sam@viveka.net.au)
 
 LDAP authentication for bbPress comes with ABSOLUTELY NO WARRANTY

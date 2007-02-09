@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/#
 Description: Allows users to rate topics on a 1-5 star scale.
 Author: Michael D Adams
 Author URI: http://blogwaffe.com/
-Version: 0.7.2
+Version: 0.8
 */
 
 /* Template Functions */
@@ -17,11 +17,11 @@ function bb_rating( $topic_id = 0 ) {
 	bb_display_rating( $topic->avg_rating );
 }
 
-function bb_rating_count( $topic_id = 0 ) {
+function bb_rating_count( $topic_id = 0, $show_zero = false ) {
 	global $topic;
 	if ( $topic_id )
 		$topic = get_topic( $topic_id );
-	echo is_array($topic->rating) ? count($topic->rating) : 0;
+	echo is_array($topic->rating) ? count($topic->rating) : ( $show_zero ? 0 : '' );
 }
 
 function bb_rating_dingus() {
@@ -40,8 +40,7 @@ function bb_rating_dingus() {
 	<div class="star-holder select">
 		<div class="star star-rating select" style="width: <?php echo ( 85 * $rating / 5 ); ?>px"></div>
 <?php for ( $r = 5; $r > 0; $r-- ) : ?>
-		<div class="star star<?php echo $r; ?> select"><a href="<?php echo bb_nonce_url( add_query_arg( 'rate', $r ), 'rate-topic_' . $topic->topic_id ); ?>" title="<?php echo $title_array[$r]; ?>"><img src="<?php bb_option( 'uri' ); echo BBPLUGINDIR; ?>/star.gif" /></a></div>
-<?php endfor; ?>
+		<div class="star star<?php echo $r; ?> select"><a href="<?php echo bb_nonce_url( add_query_arg( 'rate', $r ), 'rate-topic_' . $topic->topic_id ); ?>" title="<?php echo $title_array[$r]; ?>"><img src="<?php echo bb_path_to_url( dirname(__FILE__) . '/star.gif'); ?>" /></a></div> <?php endfor; ?>
 	</div>
 <?php
 }
@@ -102,7 +101,7 @@ function bb_get_user_rating( $user_id = 0 ) {
 function bb_do_rating() {
 	global $topic, $bb_current_user;
 
-	bb_enqueue_script( 'bb_rating', bb_get_option( 'uri' ) . BBPLUGINDIR . '/bb-ratings.js', array('wp-ajax') );
+	bb_enqueue_script( 'bb_rating', bb_path_to_url( dirname(__FILE__) . '/bb-ratings.js' ), array('wp-ajax') );
 
 	if ( !isset($_GET['rate']) )
 		return;
@@ -177,14 +176,14 @@ function bb_display_rating( $rating, $current_user = false ) { ?>
 	<div class="star-holder">
 		<div class="star star-rating<?php if ( $current_user ) echo ' select'; ?>" style="width: <?php echo ( 85 * $rating / 5 ); ?>px"></div>
 <?php for ( $r = 5; $r > 0; $r-- ) : ?>
-		<div class="star star<?php echo $r; ?>"><img src="<?php bb_option( 'uri' ); echo BBPLUGINDIR; ?>/star.gif" /></div>
+		<div class="star star<?php echo $r; ?>"><img src="<?php echo bb_path_to_url( dirname(__FILE__) . '/star.gif' ); ?>" /></div>
 <?php endfor; ?>
 	</div>
 <?php
 }
 
 function bb_rating_stylesheet() {
-	echo "<link rel='stylesheet' href='" . bb_get_option( 'uri' ) . BBPLUGINDIR . "/bb-ratings.css' type='text/css' />\n";
+	echo "<link rel='stylesheet' href='" . bb_path_to_url( dirname(__FILE__) . '/bb-ratings.css' ) . "' type='text/css' />\n";
 }
 
 add_action( 'bb_topic.php_pre_db', 'bb_do_rating' );

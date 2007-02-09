@@ -1,9 +1,9 @@
 === bbRatings ===
 Tags: rating, rate, vote
 Contributors: mdawaffe
-Requires at least: 0.74
-Tested up to: 0.74
-Stable Tag: 0.7.2
+Requires at least: 0.8
+Tested up to: 0.8
+Stable Tag: 0.8
 
 Allows users to rate topics on a simple 1-5 star scale.
 
@@ -45,7 +45,7 @@ the inner pixels as they are (those inner pixels should be transparent).
 = How do I change the size of the stars? =
 
 The size of the `star.gif` image file is 17px by 17px.  It is displayed at 16px by 16px to help round off the sharp edges
-(an old Web 1.0 trick).
+(an old Web 1.0 trick - that doesn't play nice with internet explorer, it seems).
 
 To change the size, find all the places in `bb-ratings.css` that say "`16px`" and change it to the size you want.
 

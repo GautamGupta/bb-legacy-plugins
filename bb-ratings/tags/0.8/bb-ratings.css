@@ -1,0 +1,46 @@
+div.star-holder {
+	position: relative;
+	height: 16px;
+	width: 85px;
+	font-size: 16px;
+}
+
+div.star {
+	height: 100%;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	background-color: transparent;
+	letter-spacing: 1ex;
+	border: none;
+}
+
+div.star.select:hover { background-color: #d00; }
+
+.star1 { width: 20%; }
+
+.star2 { width: 40%; }
+
+.star3 { width: 60%; }
+
+.star4 { width: 80%; }
+
+.star5 { width: 100%; }
+
+.star-average, .star.star-rating { background-color: #fc0; }
+
+.star img, div.star a, div.star a:hover, div.star a:visited {
+	display: block;
+	position: absolute;
+	right: 0px;
+	border: none;
+	text-decoration: none;
+}
+
+div.star img {
+	width: 16px;
+	height: 16px;
+	border-left: 1px solid #fff;
+	border-right: 1px solid #fff;
+}
+

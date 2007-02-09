@@ -17,6 +17,8 @@ Install Instructions:
 
 Version History:
 1.0  	- Initial Release
+1.1  	- Use topic_resolved meta key
+		- by default the support forums are switched on
 */
 
 function support_forum_add_admin_page() {
@@ -60,10 +62,11 @@ function support_forum_admin_page() {
 }
 
 function support_forum_check() {
-	return ("Y" == bb_get_option('support_forum_check')) ? true : false;
+	return ("N" == bb_get_option('support_forum_check')) ? false : true;
 }
 
 add_action( 'bb_admin_menu_generator', 'support_forum_add_admin_page' );
+add_action( 'bb_plugins_loaded', 'upgrade_1_1' );
 
 if (support_forum_check()) {
 
@@ -123,7 +126,7 @@ if (support_forum_check()) {
 		global $topic;
 		if ( $id )
 			$topic = get_topic( $id );
-		return ($topic->support_forum_resolved) ? $topic->support_forum_resolved : support_forum_get_default_status();
+		return ($topic->topic_resolved) ? $topic->topic_resolved : support_forum_get_default_status();
 	}
 
 	function support_forum_resolve_topic( $topic_id, $resolved = 'yes' ) {
@@ -135,7 +138,7 @@ if (support_forum_check()) {
 
 		$bb_cache->flush_one( 'topic', $topic_id );
 
-		bb_update_topicmeta( $topic_id, 'support_forum_resolved', $resolved );
+		bb_update_topicmeta( $topic_id, 'topic_resolved', $resolved );
 
 		return true;
 	}
@@ -156,7 +159,7 @@ if (support_forum_check()) {
 	function support_forums_get_latest_topics_where_unresolved($where){
 		global $bbdb;
 
-		$topicids = $bbdb->get_col("SELECT topic_id FROM $bbdb->topicmeta WHERE meta_key = 'support_forum_resolved' AND meta_value = 'no'");
+		$topicids = $bbdb->get_col("SELECT topic_id FROM $bbdb->topicmeta WHERE meta_key = 'topic_resolved' AND meta_value = 'no'");
 		if ($topicids) {
 			$topics_in = join(',',$topicids);
 			return $where . " AND topic_id IN ($topics_in)";
@@ -172,9 +175,6 @@ if (support_forum_check()) {
 		?>
 		<script type="text/javascript">
 		addLoadEvent( function() { // TopicMeta
-			theTopicMeta = new listMan('topicmeta');
-			theTopicMeta.showLink = false;
-			theTopicMeta.inputData = '&user_id=' + currentUserId + '&topic_id=' + topicId;
 
 			var resolvedSub = $('resolvedformsub');
 			if ( !resolvedSub )
@@ -205,7 +205,7 @@ if (support_forum_check()) {
 			die('0');
 
 		if ( support_forum_resolve_topic( $topic_id, $resolved ) ) {
-			$topic->support_forum_resolved = $resolved;
+			$topic->topic_resolved = $resolved;
 			ob_start();
 				echo '<li id="resolution-flipper">' . __('This topic is') . ' ';
 				support_forum_topic_resolved();
@@ -227,12 +227,25 @@ if (support_forum_check()) {
 
 		global $topic;
 
-		if ( 'yes' == $topic->support_forum_resolved )
+		if ( 'yes' == $topic->topic_resolved )
 			$class[] = 'resolved';
 
 		return $class;
 
 	}
+
+}
+
+function upgrade_1_1() {
+	global $bbdb;
+
+	$rows = $bbdb->get_results("SELECT * FROM $bbdb->topicmeta WHERE meta_key = 'support_forum_resolved'");
+	if ($rows) :
+		foreach($rows as $row) :
+			bb_update_topicmeta($row->topic_id, 'topic_resolved', $row->meta_value);
+			bb_delete_topicmeta($row->topic_id, 'support_forum_resolved');
+		endforeach;
+	endif;
 
 }
 

@@ -43,3 +43,8 @@ Also copy the PNG images into the my-plugins directory. There is an alternative
 icon for the "no" status which is orange instead of red, rename as required.
 
 No further configuration is required.
+
+== Version History ==
+`
+1.0  : Initial Release
+`

@@ -2,8 +2,8 @@
 Contributors: SamBauers
 Tags: ldap authentication user management users
 Requires at least: 0.75
-Tested up to: 0.80-RC3 build 687
-Stable tag: 1.0.2
+Tested up to: 0.80 build 701
+Stable tag: 1.0.3
 
 Allows authentication via an LDAP service
 
@@ -37,6 +37,12 @@ disabled.
 
 LDAP users cannot edit their passwords in the profile area.
 
+LDAP users login using their unique id, IE the value in their records
+"uid" attribute.
+
+The email that is optionally retrieved will be the first email address
+listed in their "mail" attribute.
+
 == Installation ==
 
 Unzip the file and copy the ldap-authentication.php file into the
@@ -44,3 +50,13 @@ my-plugins directory.
 
 If the my-plugins directory is not present you need to create it under
 the root directory of your forum.
+
+== Version History ==
+{{{
+1.0   : Initial Release
+1.0.1 : Small non-critical fixes to ldap_remove_password_capability()
+1.0.2 : Cookie hacking vulnerability fixed
+        Disabled password reseting function for LDAP users
+        Added option to disable automatic registration of LDAP users
+1.0.3 : Added option to retrieve LDAP users email address on registration
+}}}

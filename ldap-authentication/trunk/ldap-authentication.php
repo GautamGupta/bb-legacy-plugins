@@ -4,7 +4,7 @@ Plugin Name: LDAP authentication
 Plugin URI: http://www.network.net.au/bbpress/plugins/ldap/ldap-authentication.latest.zip
 Description: Allows users to authenticate against an LDAP service
 Author: Sam Bauers
-Version: 1.0.2
+Version: 1.0.3
 Author URI: http://www.network.net.au/
 
 Version History:
@@ -13,6 +13,7 @@ Version History:
 1.0.2	: Cookie hacking vulnerability fixed
 		  Disabled password reseting function for LDAP users
 		  Added option to disable automatic registration of LDAP users
+1.0.3	: Added option to retrieve LDAP users email address on registration
 */
 
 /*
@@ -49,6 +50,9 @@ function ldap_admin_page() {
 	if ( bb_get_option('LDAP_enable') ) {
 		$enable_checked = ' checked="checked"';
 	}
+	if ( bb_get_option('LDAP_enable_email_retrieval') ) {
+		$enable_email_retrieval_checked = ' checked="checked"';
+	}
 	if ( bb_get_option('LDAP_disable_automatic_registration') ) {
 		$disable_automatic_registration_checked = ' checked="checked"';
 	}
@@ -67,6 +71,15 @@ function ldap_admin_page() {
 	</p>
 	<p>
 		<input type="checkbox" name="LDAP_enable" value="1" tabindex="10"<?php echo $enable_checked; ?> /> Enable LDAP authentication<br />
+		&nbsp;
+	</p>
+	<h3>Retrieve email address when LDAP users register</h3>
+	<p>
+		If checked, the LDAP registration process will attempt to retrieve the LDAP
+		users email address from the LDAP repository:
+	</p>
+	<p>
+		<input type="checkbox" name="LDAP_enable_email_retrieval" value="1" tabindex="20"<?php echo $enable_email_retrieval_checked; ?> /> Retrieve email address when LDAP users register<br />
 		&nbsp;
 	</p>
 	<h3>Disable automatic registration of LDAP users</h3>
@@ -131,6 +144,13 @@ function ldap_admin_page_process() {
 				bb_update_option( 'LDAP_enable', $_POST['LDAP_enable'] );
 			} else {
 				bb_delete_option('LDAP_enable');
+			}
+			
+			// Enable email retrieval
+			if ( $_POST['LDAP_enable_email_retrieval'] ) {
+				bb_update_option( 'LDAP_enable_email_retrieval', $_POST['LDAP_enable_email_retrieval'] );
+			} else {
+				bb_delete_option('LDAP_enable_email_retrieval');
 			}
 			
 			// Disable automatic registration
@@ -235,9 +255,9 @@ if ($LDAP_enabled) {
 			$user_exists = bb_user_exists( $user );
 			if ( !$user_exists ) {
 				// Check using LDAP
-				if ( !bb_get_option('LDAP_disable_automatic_registration') && ldap_connect_user( $user, $pass ) ) {
+				if ( !bb_get_option('LDAP_disable_automatic_registration') && $mail = ldap_connect_user( $user, $pass, true ) ) {
 					// Create the new user in the local database
-					if ( $user_id = ldap_new_user( $user, $pass ) ) {
+					if ( $user_id = ldap_new_user( $user, $pass, $mail ) ) {
 						return $bbdb->get_row("SELECT * FROM $bbdb->users WHERE `ID` = $user_id");
 					} else {
 						bb_die(__('Failed to add new LDAP user to local database.'));
@@ -266,7 +286,7 @@ if ($LDAP_enabled) {
 		}
 	}
 	
-	function ldap_connect_user($user, $pass) {
+	function ldap_connect_user($user, $pass, $register = false) {
 		$host = bb_get_option('LDAP_host');
 		$port = bb_get_option('LDAP_port');
 		$tls = bb_get_option('LDAP_tls');
@@ -296,13 +316,27 @@ if ($LDAP_enabled) {
 		}
 		
 		if ($connection && $tlsStart) {
-			$bindString = 'uid=' . stripslashes(addslashes($user)) . ',' . $domain;
+			$uid = 'uid=' . stripslashes(addslashes($user));
+			$bindString = $uid . ',' . $domain;
 			
-			$result = ldap_bind($connection,$bindString, stripslashes(addslashes($pass)));
+			$result = ldap_bind($connection, $bindString, stripslashes(addslashes($pass)));
 			
 			if ($result) {
+				$mail = true;
+				
+				if ($register && bb_get_option('LDAP_enable_email_retrieval')) {
+					if ($search = ldap_search($connection, $domain, '(' . $uid . ')', array('mail'))) {
+						if ($entry = ldap_first_entry($connection, $search)) {
+							$attributes = ldap_get_attributes($connection, $entry);
+							$mail = $attributes['mail'][0];
+						}
+					}
+				}
+				
+				ldap_unbind($result);
 				ldap_close($connection);
-				return TRUE;
+				
+				return $mail;
 			} else {
 				ldap_close($connection);
 				return FALSE;
@@ -312,12 +346,15 @@ if ($LDAP_enabled) {
 		}
 	}
 	
-	function ldap_new_user( $user_login, $user_pass ) {
+	function ldap_new_user( $user_login, $user_pass, $user_email ) {
 		global $bbdb, $bb_table_prefix;
 		$now       = bb_current_time('mysql');
 		$password  = '^LDAP-' . md5($user_pass);
+		if ($user_email !== true) {
+			$email = $user_email;
+		}
 		
-		$bbdb->query("INSERT INTO $bbdb->users (user_login, user_pass, user_registered) VALUES ('$user_login', '$password', '$now')");
+		$bbdb->query("INSERT INTO $bbdb->users (user_login, user_pass, user_email, user_registered) VALUES ('$user_login', '$password', '$email', '$now')");
 		
 		$user_id = $bbdb->insert_id;
 		

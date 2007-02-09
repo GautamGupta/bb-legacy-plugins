@@ -4,7 +4,7 @@ Plugin Name: Support Forums
 Plugin URI: http://www.adityanaik.com/projects/
 Description: Changes the forum to a support and adds functionality to mark topics resolved, not resolved or not a support question
 Author: Aditya Naik
-Version: 1.0
+Version: 1.1
 Author URI: http://www.adityanaik.com/
 
 Description: The plugin gives option to convert a forum installation into a support forum where the users can mark

@@ -7,7 +7,7 @@ Author: Joshua Hutchins
 Change Log: .80 - Added template functionality
 				- Fixed WPMU support
 Author URI: http://ardentfrost.rayd.org/
-Version: 0.73
+Version: 0.80
 */
 
 function pm_install_check() {

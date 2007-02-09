@@ -2,7 +2,7 @@
 Contributors: SamBauers
 Tags: support forums pretty
 Requires at least: 0.75
-Tested up to: 0.80-RC3 build 687
+Tested up to: 0.80 build 701
 Stable tag: 1.0
 
 Adds an icon to topic titles to indicate support and closed status, looks pretty
@@ -43,3 +43,8 @@ Also copy the PNG images into the my-plugins directory. There is an alternative
 icon for the "no" status which is orange instead of red, rename as required.
 
 No further configuration is required.
+
+== Version History ==
+{{{
+1.0  : Initial Release
+}}}

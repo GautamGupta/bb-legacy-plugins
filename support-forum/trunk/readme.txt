@@ -1,8 +1,8 @@
 === Support Forum ===
 Contributors: so1o, mdawaffe 
 Tags: support, forums
-Requires at least: 0.74 Changeset #581
-Tested up to: 0.74 Changeset #581
+Requires at least: 0.8
+Tested up to: 0.8
 
 Change the forum into a support forum
 
@@ -26,4 +26,7 @@ for details please look at http://trac.bbpress.org/ticket/496
 
 * 1.0 : 
   <br/>Initial Release
- 
+* 1.1 : 
+  <br/>Use topic_resolved meta key
+  <br/>By default the support forums are switched on
+

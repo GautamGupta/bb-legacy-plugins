@@ -1,4 +1,4 @@
-=== bbRatings ===
+=== MediaWiki wikitext Filter ===
 Tags: mediawiki, wikitext, filter
 Contributors: jefgodesky
 Requires at least: 0.8

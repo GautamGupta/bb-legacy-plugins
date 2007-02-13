@@ -50,8 +50,9 @@ function front_page_topics_admin_page() {
 <?php }
 	
 function front_page_topics_admin_page_pre_head() {
-	$allowed = front_page_topics_allowed();
 	if ( isset($_POST['fpt']) ) :
+		bb_check_admin_referer( 'frontpagetopics' );
+		$allowed = front_page_topics_allowed();
 		$array = array();
 		foreach ( array_keys($allowed) as $page )
 			$array[$page] = (int) $_POST['fpt'][$page];

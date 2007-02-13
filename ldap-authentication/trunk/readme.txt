@@ -52,11 +52,14 @@ If the my-plugins directory is not present you need to create it under
 the root directory of your forum.
 
 == Version History ==
-`
-1.0   : Initial Release
-1.0.1 : Small non-critical fixes to ldap_remove_password_capability()
-1.0.2 : Cookie hacking vulnerability fixed
-        Disabled password reseting function for LDAP users
-        Added option to disable automatic registration of LDAP users
-1.0.3 : Added option to retrieve LDAP users email address on registration
-`
+
+* 1.0 :
+  <br/>Initial Release
+* 1.0.1 :
+  <br/>Small non-critical fixes to ldap_remove_password_capability()
+* 1.0.2 :
+  <br/>Cookie hacking vulnerability fixed
+  <br/>Disabled password reseting function for LDAP users
+  <br/>Added option to disable automatic registration of LDAP users
+* 1.0.3 :
+  <br/>Added option to retrieve LDAP users email address on registration

@@ -2,24 +2,22 @@
 /*
 Plugin Name: Support Forums
 Plugin URI: http://www.adityanaik.com/projects/
-Description: Changes the forum to a support and adds functionality to mark topics resolved, not resolved or not a support question
-Author: Aditya Naik
-Version: 1.1
+Description: Changes the forum to a support forum and adds functionality to mark topics resolved, not resolved or not a support question
+Author: Aditya Naik, Sam Bauers
 Author URI: http://www.adityanaik.com/
-
-Description: The plugin gives option to convert a forum installation into a support forum where the users can mark
-the topics as resolved or not resolved. The administrator can also set the default status of the topics.
-
-Please Note: the plugin will needed after ticket #496 is implemented and released.
-
-Install Instructions:
-- If you don't have a /my-plugins/ directory in your bbpress installaltion, create it on the same level as config.php.
+Version: 1.2
 
 Version History:
-1.0  	- Initial Release
-1.1  	- Use topic_resolved meta key
-		- by default the support forums are switched on
+1.0  	- Initial Release (Aditya Naik)
+1.1  	- Use topic_resolved meta key (Aditya Naik)
+		- by default the support forums are switched on (Aditya Naik)
+1.2		- Integrated visual-support-forum plugin features as options in admin (Sam Bauers)
+		- Added admin action to upgrade database instead of running on plugin load (Sam Bauers)
+		- When default status is "unresolved" topics with no status set now show in the "unresolved" view (Sam Bauers)
+		- Sticky topics that are unresolved now show in the "unresolved" view (Sam Bauers)
 */
+
+$icon_path = str_replace(BBPATH, '', BBPLUGINDIR);
 
 function support_forum_add_admin_page() {
 	global $bb_submenu;
@@ -34,29 +32,70 @@ function support_forum_get_default_status() {
 }
 
 function support_forum_admin_page() {
+	global $icon_path;
 	if ('support_forum_post' == $_POST['action']) {
 		$support_forum_check = (isset($_POST['support_forum'])) ? "Y" : "N";
 		bb_update_option('support_forum_check',$support_forum_check);
-
+		
 		$support_forum_default_resolved_status = $_POST['default_resolved_status'];
 		bb_update_option('support_forum_default_resolved_status',$support_forum_default_resolved_status);
+		
+		$support_forum_status_icons_check = (isset($_POST['support_forum_status_icons'])) ? "Y" : "N";
+		bb_update_option('support_forum_status_icons_check',$support_forum_status_icons_check);
+		
+		$support_forum_closed_icon_check = (isset($_POST['support_forum_closed_icon'])) ? "Y" : "N";
+		bb_update_option('support_forum_closed_icon_check',$support_forum_closed_icon_check);
+	} elseif ('support_forum_post_upgrade' == $_POST['action']) {
+		$upgrade_alert = support_forum_upgrade_1_1();
 	}
 	$support_forum_default_resolved_status = support_forum_get_default_status();
-	$support_forum_check = (support_forum_check()) ? "checked " : "";
+	$support_forum_checked = (support_forum_check()) ? "checked=\"checked\" " : "";
+	$support_forum_status_icons_checked = (support_forum_status_icons_check()) ? "checked=\"checked\" " : "";
+	$support_forum_closed_icon_checked = (support_forum_closed_icon_check()) ? "checked=\"checked\" " : "";
 	?>
 	<h2>Support Forum Option</h2>
 	<form method="post">
-		<p><input type="checkbox" name="support_forum" value="Y" <?php echo $support_forum_check;?>/> Make the forum a Support Forum, Baby!</p>
+		<p><input type="checkbox" name="support_forum" value="Y" <?php echo $support_forum_checked;?>/> Make the forum a Support Forum, Baby!</p>
 		<p>
 			<select name="default_resolved_status" >
 				<option value="yes" <?php if ('yes' == $support_forum_default_resolved_status) echo 'selected';?>>resolved</option>
 				<option value="no" <?php if ('no' == $support_forum_default_resolved_status) echo 'selected';?>>not resolved</option>
 				<option value="mu" <?php if ('mu' == $support_forum_default_resolved_status) echo 'selected';?>>not a support question</option>
 			</select>
+			Set the default status for topics, Cool!
+		</p>
+		<p>
+			<input type="checkbox" name="support_forum_status_icons" value="Y" <?php echo $support_forum_status_icons_checked;?>/> Use pretty status icons on topics, Dude!
+			<blockquote>
+				<img src="<?php bb_option('uri'); ?><?php echo($icon_path); ?>support-forum-yes.png" alt="" style="vertical-align:top; width:14px; height:14px; border-width:0;" />
+				- <?php _e('resolved'); ?><br />
+				<img src="<?php bb_option('uri'); ?><?php echo($icon_path); ?>support-forum-no.png" alt="" style="vertical-align:top; width:14px; height:14px; border-width:0;" />
+				- <?php _e('not resolved'); ?><br />
+				<img src="<?php bb_option('uri'); ?><?php echo($icon_path); ?>support-forum-mu.png" alt="" style="vertical-align:top; width:14px; height:14px; border-width:0;" />
+				- <?php _e('not a support question'); ?>
+			</blockquote>
+		</p>
+		<p>
+			<input type="checkbox" name="support_forum_closed_icon" value="Y" <?php echo $support_forum_closed_icon_checked;?>/> Use clichéd lock icon on closed topics, Right on!
+			<blockquote>
+				<img src="<?php bb_option('uri'); ?><?php echo($icon_path); ?>support-forum-closed.png" alt="" style="vertical-align:top; width:14px; height:14px; border-width:0;" />
+				- <?php _e('closed'); ?>
+			</blockquote>
 		</p>
 	
 		<input name="action" type="hidden" value="support_forum_post"/>
 		<p class="submit"><input type="submit" name="submit" value="Submit" /></p>		
+	</form>
+	<hr />
+	<form method="post">
+		<p>
+			<?php echo($upgrade_alert); ?>
+		</p>
+		<p>
+			If you used support forum plugin version 1.0, you will need to update existing topics to work with 1.1, um... Cowabunga!
+		</p>
+		<input name="action" type="hidden" value="support_forum_post_upgrade"/>
+		<p class="submit"><input type="submit" name="submit_upgrade" value="Update topics to version 1.1" /></p>
 	</form>
 	<?php
 }
@@ -65,12 +104,17 @@ function support_forum_check() {
 	return ("N" == bb_get_option('support_forum_check')) ? false : true;
 }
 
+function support_forum_status_icons_check() {
+	return ("Y" == bb_get_option('support_forum_status_icons_check')) ? true : false;
+}
+
+function support_forum_closed_icon_check() {
+	return ("Y" == bb_get_option('support_forum_closed_icon_check')) ? true : false;
+}
+
 add_action( 'bb_admin_menu_generator', 'support_forum_add_admin_page' );
-add_action( 'bb_plugins_loaded', 'upgrade_1_1' );
 
 if (support_forum_check()) {
-
-
 	add_filter('bb_views','support_forum_add_view');
 
 	function support_forum_add_view($views) {
@@ -81,12 +125,22 @@ if (support_forum_check()) {
 	add_action('topicmeta','support_forum_show_support_dropdown');
 
 	function support_forum_show_support_dropdown() {
-		?>
+		global $icon_path;
+?>
 		<li id="resolution-flipper"><?php _e('This topic is') ?> <?php support_forum_topic_resolved(); ?></li>
-		<?php
+<?php
+		if (support_forum_closed_icon_check()) {
+			global $topic;
+			if ( '0' === $topic->topic_open ) {
+?>
+		<li><?php _e('This topic is') ?> <img src="<?php bb_option('uri') ?><?php echo($icon_path); ?>support-forum-closed.png" alt="" style="vertical-align:top; width:14px; height:14px; border-width:0;" /> <?php _e('closed'); ?></li>
+<?php
+			}
+		}
 	}
 
 	function support_forum_topic_resolved( $yes = '', $no = '', $mu = '', $id = 0 ) {
+		global $icon_path;
 		global $bb_current_user, $topic;
 		if ( empty($yes) )
 			$yes = __('resolved');
@@ -95,7 +149,7 @@ if (support_forum_check()) {
 		if ( empty($mu) )
 			$mu = __('not a support question');
 		if ( bb_current_user_can( 'edit_topic', $topic->topic_id ) ) :
-			$resolved_form  = '<form id="resolved" method="post" ><div>' . "\n";
+			$resolved_form  = '<form id="resolved" method="post" style="display:inline;"><div style="display:inline;">' . "\n";
 			$resolved_form .= '<input type="hidden" name="action" value="support_forum_post_process" />' . "\n";
 			$resolved_form .= '<input type="hidden" name="id" value="' . $topic->topic_id . "\" />\n";
 			$resolved_form .= '<select name="resolved" id="resolvedformsel" tabindex="2">' . "\n";
@@ -114,11 +168,11 @@ if (support_forum_check()) {
 			bb_nonce_field( 'support-forum-resolve-topic_' . $topic->topic_id );
 			echo "\n</form>";
 		else:
-			switch ( support_forum_get_topic_resolved( $id ) ) {
-				case 'yes' : echo $yes; break;
-				case 'no'  : echo $no;  break;
-				case 'mu'  : echo $mu;  break;
+			$status = support_forum_get_topic_resolved( $id );
+			if (support_forum_status_icons_check()) {
+				echo '<img src="' . bb_get_option('uri') . $icon_path . 'support-forum-' . $status . '.png" alt="" style="vertical-align:top; width:14px; height:14px; border-width:0;" /> ';
 			}
+			echo $$status;
 		endif;
 	}
 
@@ -158,11 +212,17 @@ if (support_forum_check()) {
 
 	function support_forums_get_latest_topics_where_unresolved($where){
 		global $bbdb;
-
-		$topicids = $bbdb->get_col("SELECT topic_id FROM $bbdb->topicmeta WHERE meta_key = 'topic_resolved' AND meta_value = 'no'");
+		
+		if (support_forum_get_default_status() == 'no') {
+			$query = "SELECT $bbdb->topics.topic_id FROM $bbdb->topics LEFT JOIN $bbdb->topicmeta ON $bbdb->topics.topic_id = $bbdb->topicmeta.topic_id AND meta_key = 'topic_resolved' WHERE meta_value = 'no' OR meta_value IS NULL";
+		} else {
+			$query = "SELECT topic_id FROM $bbdb->topicmeta WHERE meta_key = 'topic_resolved' AND meta_value = 'no'";
+		}
+		
+		$topicids = $bbdb->get_col($query);
 		if ($topicids) {
 			$topics_in = join(',',$topicids);
-			return $where . " AND topic_id IN ($topics_in)";
+			return "WHERE topic_status = 0 AND topic_open = 1 AND topic_id IN ($topics_in)";
 		} else {
 			return "WHERE 0";
 		}
@@ -233,20 +293,71 @@ if (support_forum_check()) {
 		return $class;
 
 	}
+	
+	// Just in case you dont have the categories patch installed - that's most people BTW
+	if (!function_exists('bb_is_category')) {
+		function bb_is_category() {
+			return false;
+		}
+	}
+	
+	if (support_forum_status_icons_check()) {
+		add_filter( 'topic_title', 'support_forum_topic_title', 40);
+	}
+	
+	function support_forum_topic_title($title) {
+		global $icon_path;
+		if ( is_forum() || bb_is_category() || is_front() || is_view() ) :
+			if ( empty($yes) )
+				$yes = __('resolved');
+			if ( empty($no) )
+				$no = __('not resolved');
+			if ( empty($mu) )
+				$mu = __('not a support question');
+			// Gets the status of the topic, or the defualt if none
+			$status = support_forum_get_topic_resolved( $id );
+			// If status is not one of the three above or the default, then make it the default
+			if (!$$status) {
+				$status = support_forum_get_default_status();
+			}
+			$status_image = '<img src="' . bb_get_option('uri') . $icon_path . 'support-forum-' . $status . '.png" alt="[' . $$status . ']" style="vertical-align:top; margin-right:0.3em; width:14px; height:14px; border-width:0;" />';
+			$title = $status_image . $title;
+		endif;
+	
+		return $title;
+	}
+	
+	if (support_forum_closed_icon_check()) {
+		remove_filter('topic_title', 'closed_title', 30);
+		add_filter('topic_title', 'support_forum_closed_title', 30);
+	}
+	
+	function support_forum_closed_title( $title ) {
+		global $icon_path;
+		if ( is_forum() || bb_is_category() || is_front() || is_view() ) {
+			global $topic;
+			if ( '0' === $topic->topic_open ) {
+				return sprintf(__('<img src="' . bb_get_option('uri') . $icon_path . 'support-forum-closed.png" alt="[' . __('closed') . ']" style="vertical-align:top; margin-right:0.3em; width:14px; height:14px; border-width:0;" />%s'), $title);
+			}
+		}
+		
+		return $title;
+	}
 
 }
 
-function upgrade_1_1() {
+function support_forum_upgrade_1_1() {
 	global $bbdb;
-
 	$rows = $bbdb->get_results("SELECT * FROM $bbdb->topicmeta WHERE meta_key = 'support_forum_resolved'");
-	if ($rows) :
+	if ($rows) {
 		foreach($rows as $row) :
 			bb_update_topicmeta($row->topic_id, 'topic_resolved', $row->meta_value);
 			bb_delete_topicmeta($row->topic_id, 'support_forum_resolved');
 		endforeach;
-	endif;
-
+		return __('Update performed');
+	} else {
+		return __('No update required');
+	}
 }
 
 ?>

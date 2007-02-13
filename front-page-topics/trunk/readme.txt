@@ -1,10 +1,11 @@
 === Front Page Topics ===
 Tags: page_topics, pagination
 Contributors: mdawaffe
-Stable Tag: 0.7.2
+Requires at least: 0.8
+Stable Tag: 0.8
 
-Front Page Topics allows you to change the number of topics shown on the front
-page without effecting other pages in bbPress.
+Front Page Topics allows you to change the number of topics or posts shown on 
+most of your bbPress pages.
 
 == Installation ==
 
@@ -12,16 +13,17 @@ Add the front-page-topics.php file to bbPress' my-plugins/ directory.
 
 == Configuration ==
 
-Where front-page-topics.php reads
+1. Log in as the key master.
+2. In your admin panels, go to Site Management -> Front Page Topics
+3. Enter the number of topics (or posts) you want displayed on each page.
+   If you enter a `0` for any item, the default number (as defined by
+   `$bb->page_topics` in your `config.php` file) will be used.
 
-    $bb->page_topics = 2;
-
-change the `2` to however many topics you'd like to display on the front page.
 
 == Frequently Asked Questions ==
 
-= Where is the number of topics per page set globally? =
+= It says I can adjust the number of items in my feeds, but I can't.  Is it lying? =
 
-In bbPress' config.php file.  `$bb->page_topics` sets how many topics should be
-shown per page. This plugin lets you specify how many topics to show on the
-front page and use that global value for everything else.
+A little bit, yes.  You can adjust the number of topics or posts in your all of your
+feeds except the main feed.  That feed shows the 35 most recent topics from any forum
+and cannot be customized with this plugin.

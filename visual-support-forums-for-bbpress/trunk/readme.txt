@@ -3,33 +3,14 @@ Contributors: SamBauers
 Tags: support forums pretty
 Requires at least: 0.75
 Tested up to: 0.80 build 701
-Stable tag: 1.0
+Stable tag: 1.0.1
 
-Adds an icon to topic titles to indicate support and closed status, looks pretty
-
-== License ==
-
-Visual Support Forums for bbPress version 1.0
-Copyright (C) 2007 Sam Bauers (sam@viveka.net.au)
-
-Visual Support Forums for bbPress comes with ABSOLUTELY NO WARRANTY
-This is free software, and you are welcome to redistribute
-it under certain conditions.
-
-See accompanying license.txt file for details.
+This plugin has been merged into the <a href="http://bbpress.org/plugins/topic/16">Support Forum</a> plugin
 
 == Description ==
 
-This plugin adds a visual marker to each topic to indicate it's support/locked
-status.
-
- * Not a support question = empty slot
- * Unresolved = red ball (alternative orange ball also provided)
- * Resolved = green ball
- * Locked = padlock
-
-This plugin is an extension for the Support Forums plugin by Aditya Naik and
-requires it to be installed to work.
+This plugin was an extension for the Support Forums plugin by Aditya Naik. It's
+functionality has now been merged into that plugin as of version 1.2.
 
 == Installation ==
 
@@ -45,6 +26,8 @@ icon for the "no" status which is orange instead of red, rename as required.
 No further configuration is required.
 
 == Version History ==
-`
-1.0  : Initial Release
-`
+
+* 1.0 :
+  <br/>Initial Release
+* 1.0.1 :
+  <br/>Merged with the Support Forum plugin version 1.2

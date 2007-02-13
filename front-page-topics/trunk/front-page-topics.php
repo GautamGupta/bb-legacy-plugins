@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Front Page Topics
-Plugin URI: http://bbpress.org/forums/topic/65#post-333
+Plugin URI: http://bbpress.org/plugins/topic/3
 Description: Changes the number of topics displafed on the front page only.
 Author: Michael D Adams
 Author URI: http://blogwaffe.com/

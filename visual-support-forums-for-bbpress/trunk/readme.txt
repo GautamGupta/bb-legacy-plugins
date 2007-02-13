@@ -14,16 +14,7 @@ functionality has now been merged into that plugin as of version 1.2.
 
 == Installation ==
 
-This plugin requires the Support Forums plugin by Aditya Naik. So go
-and install that first.
-
-Download and unzip the file and copy the visual-support-forum.php file into the
-my-plugins directory.
-
-Also copy the PNG images into the my-plugins directory. There is an alternative
-icon for the "no" status which is orange instead of red, rename as required.
-
-No further configuration is required.
+Not applicable.
 
 == Version History ==
 

@@ -5,22 +5,20 @@ Plugin URI:  http://bbpress.org/forums/topic/591
 Description: This is intended to restrict access to any forum to specifically listed individuals.
 Author: David Bessler
 Author URI: http://davidbessler.com
-Version: 1.4
+Version: 1.5
 */
 
+// READ THE LIST FROM THE DATABASE FOR ALL FUNCTIONS TO USE
 $forum_restriction_allowed_in_forum = bb_get_option('forum_restriction_db');
 
-//  ADMIN GUI
-// Add submenu **stolen from Thomas Klaiber's Admin-add-user
-
+// ADD SUBMENU **STOLEN FROM THOMAS KLAIBER'S ADMIN-ADD-USER
 function forum_restriction_adminnav() {
 	global $bb_submenu;
 	$bb_submenu['site.php'][] = array(__('Forum Restriction'), 'use_keys', 'forum_restriction_admin_page');
 }
 add_action( 'bb_admin_menu_generator', 'forum_restriction_adminnav' );
 
-// The admin page itself including execution if form was submitted
-
+// GENERATE THE ADMIN PAGE ITSELF INCLUDING EXECUTION IF FORM WAS SUBMITTED
 function forum_restriction_admin_page() {
 	$forums = get_forums();
 	global $forum_restriction_allowed_in_forum;
@@ -46,6 +44,8 @@ function forum_restriction_admin_page() {
 			}
 				bb_update_option('forum_restriction_db',$_POST['forum_restriction_for_forum']);
 				bb_update_option('forum_restriction_notify',$_POST['forum_restriction_notify']);
+				bb_update_option('forum_restriction_list_members',$_POST['forum_restriction_list_members']);
+				bb_update_option('forum_restriction_highlight',$_POST['forum_restriction_highlight']);
 		}
 		if (isset($error_message)) {
 			echo "<b style=\"color: red\">ERROR: $error_message</b><br/>";
@@ -63,10 +63,19 @@ function forum_restriction_admin_page() {
 			if (bb_get_option('forum_restriction_notify') == "on") {
 				$forum_restriction_notify_or_not = "CHECKED";
 			}
+			if (bb_get_option('forum_restriction_list_members') == "on") {
+				$forum_restriction_list_members_or_not = "CHECKED";
+			}
+			$forum_restriction_highlight = bb_get_option('forum_restriction_highlight');
 			echo "</table>";
 			?>
 
-			<p><input type="checkbox" name="forum_restriction_notify" <?php echo $forum_restriction_notify_or_not ?>>  Email members for new topics?</p>
+		<p><input type="checkbox" name="forum_restriction_notify" <?php echo $forum_restriction_notify_or_not ?>>  Email members for new topics?</p>
+
+		<p><input type="checkbox" name="forum_restriction_list_members" <?php echo $forum_restriction_list_members_or_not ?>>  List members in forum description?</p>
+
+		<p>Style for members in forum description ( eg. "background-color: yellow;" -- blank for none)?<br/> <textarea type="text" cols="100" rows="10" name="forum_restriction_highlight"><?php echo $forum_restriction_highlight ?></textarea></p>
+
 		<p><input type="submit" name="forum_restriction_submit" value="Submit"></p>
 		<?php bb_nonce_field( 'admin-forum-restriction' ); ?>
 		</form>
@@ -79,12 +88,7 @@ function forum_restriction_select_all_user_IDs() {
 	return $all_user_IDs;
 }
 
-function forum_restriction_error_message($error_message) {
-	echo "Error: $error_message <br/>";
-}
-
-//  FORUM DISPLAY HIJACKING
-
+//  FILTER FORUMS ON FIRST PAGE
 function forum_restriction_alter_front_page_forum_list( $forums ) {
 	global $bb_current_user,$forum,$forum_restriction_allowed_in_forum;
 	$new_forums = array();
@@ -108,11 +112,14 @@ function forum_restriction_alter_front_page_forum_list( $forums ) {
 
 add_filter('get_forums', 'forum_restriction_alter_front_page_forum_list');
 
-// Add allowed users to description so you know who can see what you're writing
-
+// ADD LIST OF MEMBERS TO DESCRIPTIONS OF FORUMS SO YOU KNOW WHO CAN SEE WHAT YOU'RE WRITING
 function forum_restriction_alter_front_page_forum_description( $r ) {
 	global $bb_current_user,$forum,$forum_restriction_allowed_in_forum;
 	if (is_front()){
+		if (bb_get_option('forum_restriction_highlight') != '') {
+			$forum_restriction_highlight_style = bb_get_option('forum_restriction_highlight');
+		}
+		$forum_restriction_list_members = bb_get_option('forum_restriction_list_members');
 		if ($bb_current_user){
 			$pos = strpos($forum_restriction_allowed_in_forum[$forum->forum_id],get_user_name($bb_current_user->ID));
 		} else {
@@ -120,8 +127,8 @@ function forum_restriction_alter_front_page_forum_description( $r ) {
 		}
 		if ($pos === FALSE && !empty($forum_restriction_allowed_in_forum[$forum->forum_id])) {
 			return $r;
-		} elseif (!empty($forum_restriction_allowed_in_forum[$forum->forum_id])) {
-			$r .= '<p style="background-color: yellow;">Users with access to this forum:  '.$forum_restriction_allowed_in_forum[$forum->forum_id].'</p>';
+		} elseif (!empty($forum_restriction_allowed_in_forum[$forum->forum_id]) && $forum_restriction_list_members == 'on' ) {
+			$r .= '<p style="'.$forum_restriction_highlight_style.'">Users with access to this forum:  '.$forum_restriction_allowed_in_forum[$forum->forum_id].'</p>';
 			return $r;
 		} else {
 			return $r;
@@ -131,8 +138,7 @@ function forum_restriction_alter_front_page_forum_description( $r ) {
 
 add_filter('forum_description', 'forum_restriction_alter_front_page_forum_description');
 
-//  FOR TOPICS ON FRONT PAGE
-
+//  FILTER TOPICS ON FRONT PAGE
 function break_up_forum_array( $forums ) {
 	global $forums;
 	forum_restriction_alter_front_page_forum_list( $forums );
@@ -155,9 +161,7 @@ function forum_restriction_get_topics_where_plugin( $where ) {
 
  add_filter ( 'get_latest_topics_where', 'forum_restriction_get_topics_where_plugin' );
 
-
-//  PAGE HIJACKINGS
-//  FOR FORUM.PHP
+//  HIJACK PAGE IF USER TRIES TO GO DIRECTLY TO FORUM.PHP
 function forum_restriction_hijack_forum_page() {
 		global $bb_current_user,$forum,$forum_restriction_allowed_in_forum;
 	if (is_forum()){
@@ -176,7 +180,7 @@ function forum_restriction_hijack_forum_page() {
 
 add_action('bb_forum.php_pre_db', 'forum_restriction_hijack_forum_page');
 
-//  FOR TOPIC.PHP
+//  HIJACK PAGE IF USER TRIES TO GO DIRECTLY TO TOPIC.PHP
 function forum_restriction_hijack_topic_page() {
 		global $bb_current_user,$topic,$forum_restriction_allowed_in_forum;
 	if (is_topic()){
@@ -195,21 +199,20 @@ function forum_restriction_hijack_topic_page() {
 
 add_action('bb_topic.php_pre_db', 'forum_restriction_hijack_topic_page');
 
-// Email forum members
-
+// EMAIL FORUM MEMBERS WHEN NEW TOPIC IS STARTED IN FORUM
 function forum_restriction_send_email ($topic_id){
 	if (bb_get_option('forum_restriction_notify') == "on") {
 		global $forum_restriction_allowed_in_forum, $bbdb, $bb_current_user;
 		$topic = get_topic($topic_id);
 		$forum = $topic->forum_id;
 		$mailing_list = split(",",$forum_restriction_allowed_in_forum[$forum]);
-		$message = __("There is a new topic called: %1\$s.  You can see it here %3\$s.  You got this email because Bessler decided to turn on the option to notify all members of restricted forums when there are new TOPICS started in each FORUM.  However, don't forget to click on \"Add this topic to your favorites\" so that you get an email when someone adds a POST to this TOPIC.  This will keep you involved in that particular discussion.  Kapish?");
+		$message = __("There is a new topic called: %1\$s.  The text is %4\$s.  You can see it here %3\$s.  You got this email because Bessler decided to turn on the option to notify all members of restricted forums when there are new TOPICS started in each FORUM.  However, don't forget to click on \"Add this topic to your favorites\" so that you get an email when someone adds a POST to this TOPIC.  This will keep you involved in that particular discussion.  Kapish?");
 		foreach ($mailing_list as $member) {
 			$userdata = $bbdb->get_var("SELECT ID FROM $bbdb->users WHERE `display_name` = '$member'");
 			$email_address .= $bbdb->get_var("SELECT user_email FROM $bbdb->users WHERE ID='$userdata'").",";
 		}
 		mail( $email_address, '['.bb_get_option('name') . '] ' . __('New Topic In Private Forum:').get_forum_name($forum),
-			sprintf( $message, $topic->topic_title, get_user_name($bb_current_user->ID), get_topic_link($topic_id) ),
+			sprintf( $message, $topic->topic_title, get_user_name($bb_current_user->ID), get_topic_link($topic_id)),
 			'From: ' . bb_get_option('admin_email')
 		);
 	}

@@ -4,7 +4,7 @@ Plugin Name: Censor
 Description: Filter posts for bad words
 Author: Michael Nolan
 Author URI: http://www.michaelnolan.co.uk/
-Version: 0.0.1
+Version: 0.1
 */
 
 add_action('bb_admin_menu_generator', 'censor_add_admin_page');

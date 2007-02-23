@@ -11,7 +11,7 @@ Author URI: http://blogwaffe.com/
 class User_Timezone {
 
 	function get_user_offset( $user_id ) {
-		$user = bb_get_user( $user_id );
+		$user = bb_get_user( (int) $user_id );
 
 		if ( isset( $user->time_offset ) )
 			return $user->time_offset;

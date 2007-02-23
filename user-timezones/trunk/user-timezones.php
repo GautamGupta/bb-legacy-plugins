@@ -3,7 +3,7 @@
 Plugin Name: User Timezones
 Description: Allow users to set their own timezone.
 Plugin URI: http://bbpress.org/plugins/topic/32
-Version: 0.1
+Version: 0.2
 Author: Michael D Adams
 Author URI: http://blogwaffe.com/
 */

@@ -1,4 +1,4 @@
-=== bbRatings ===
+=== bb-myAvatars ===
 Tags: myavatars, mybloglog, avatars
 Contributors: jcorless
 Requires at least: 0.8

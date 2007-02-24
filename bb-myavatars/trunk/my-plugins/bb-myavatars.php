@@ -2,10 +2,10 @@
 
 /*
 Plugin Name: bb-myAvatars
-Plugin URI: http://www.purpledragonslair.co.uk/bb
+Plugin URI: http://www.purpledragonslair.co.uk
 Description: This plugin allows you to add MyBlogLog.com avatars to bbpress posts .
 Version: 0.1
-Author: <a href="http://www.purpledragonslair.co.uk/">Joanne Corless</a>
+Author: Joanne Corless
 
 2006-12-13 "Hey, What about getting rid of Gravatar?"
 */

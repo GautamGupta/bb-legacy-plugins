@@ -5,25 +5,17 @@ Requires at least: 0.8
 Tested up to: 0.8
 Stable Tag: 0.8
 
-== License and Warranty ==
-
-This plugin is licensed under the GPL. Because the plugin is licensed free of charge, I do not accept any responsibility for any damages, direct or indirect, that may arise from using the plugin. This software is provided “AS IS” without warranty of any kind. Please refer to the full version of the GPL for more details.
+This plugin will generates Latest Discussion list from your bbpress forum into your wordpress page.
 
 == Description ==
 
-This plugin will generates Latest Discussion list from your bbpress forum into your wordpress page.
+This plugin will generates Latest Discussion list from your bbpress forum into your wordpress. It has the ability to generate latest discussion on sidebar also.
 
-== Requirements ==
-
-This plugin requires Wordpress 2.0.5 or better. If you are using an older version, I strongly recommend you to upgrade to the latest version. You can get it at the WordPress Download Page.
+The administrator can also set the behavior for this plugin. Even if your bbpress is not intergrated with your wordpress. U still can use this plugin with a little change on the option page.
 
 == Installation ==
 
 Simply download the Zip-Archive and extract all files into your wp-content/plugins/ directory. Open the `BBpress.php` file using editor program and adjust the path to suit your bbpress location. Then go into your WordPress administration page, click on Plugins and activate it.
-
-== Update ==
-
-Simply download the Zip-Archive, deactivate Bbpress Latest Discussion, extract all files into your wp-content/plugins/ directory and reactivate Bbpress Latest Discussion. That’s all
 
 == Configuration ==
 
@@ -38,7 +30,7 @@ Examples of use:
 
 `<?php wp_bb_get_discuss_sidebar(); ?>`
 
-== Changelog ==
+== Version History ==
 
 Version 0.7 (2007-03-09):
 
@@ -74,5 +66,3 @@ Version 0.2 (2006-11-11):
 Version 0.1 (2006-11-05):
 
 * Initial Release.
-
-== Frequently Asked Questions ==

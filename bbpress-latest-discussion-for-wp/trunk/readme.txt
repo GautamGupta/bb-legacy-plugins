@@ -32,6 +32,10 @@ Examples of use:
 
 == Version History ==
 
+Version 0.7.1 (2007-03-11):
+
+* Add Multi Lang Support.
+
 Version 0.7 (2007-03-09):
 
 * Fix custom wp table prefix problem.

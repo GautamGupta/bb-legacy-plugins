@@ -221,14 +221,14 @@ function wp_bb_get_discuss_sidebar() {
 				if ($wpuid) {
 					$user_forum_data = "$bbtopic->topic_last_poster_name";
 					$user_forum_data = get_userdata($wpuid->ID);
-					echo '<small>' . __("Last Post By: $user_forum_data->display_name") . '</small></li>';
+					echo '<small>' . __('Last Post By: ') . $user_forum_data->display_name . '</small></li>';
 				}
 				else {
-					echo '<small>' . __("Last Post By: $bbtopic->topic_last_poster_name") . '</small></li>';
+					echo '<small>' . __('Last Post By: ') . $bbtopic->topic_last_poster_name . '</small></li>';
 				}
 			}
 			else {	
-				echo '<small>' . __("Last Post By: $bbtopic->topic_last_poster_name") . '</small></li>';
+				echo '<small>' . __('Last Post By: ') . $bbtopic->topic_last_poster_name . '</small></li>';
 			}
 		}
 		echo "</ul>";

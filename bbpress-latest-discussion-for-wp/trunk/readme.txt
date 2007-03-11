@@ -1,9 +1,9 @@
 === Bbpress Latest Discussion ===
 Tags: bbpress, wordpress, latest, discussion
-Contributors: Atsutane Shirane
+Contributors: Atsutane
 Requires at least: 0.8
 Tested up to: 0.8
-Stable Tag: 0.8
+Stable Tag: 0.7
 
 This plugin will generates Latest Discussion list from your bbpress forum into your wordpress page.
 

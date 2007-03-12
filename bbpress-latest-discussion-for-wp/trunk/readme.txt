@@ -7,6 +7,8 @@ Stable Tag: 0.7
 
 This plugin will generates Latest Discussion list from your bbpress forum into your wordpress page.
 
+Discuss about option to exclude or include forum at http://www.atsutane.net/bbpress/topic/4
+
 == Description ==
 
 This plugin will generates Latest Discussion list from your bbpress forum into your wordpress. It has the ability to generate latest discussion on sidebar also.
@@ -31,6 +33,11 @@ Examples of use:
 `<?php wp_bb_get_discuss_sidebar(); ?>`
 
 == Version History ==
+
+Version 0.7.2 (2007-03-12):
+
+* Add Category link in sidebar list.
+* Optimize the code a little.
 
 Version 0.7.1 (2007-03-11):
 

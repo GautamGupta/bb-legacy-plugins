@@ -4,9 +4,12 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/
 Description: Put bbpress Latest Discussions on your wp page.
 Author: Atsutane Shirane
-Version: 0.7.1
+Version: 0.7.2
 Author URI: http://www.atsutane.net/
 */
+
+### BBpress Latest Discussions Version Number
+$BbLD_version = '0.7.2';
 
 if (!defined('ABSPATH')) die("Aren't you supposed to come here via WP-Admin?");
 
@@ -18,7 +21,7 @@ function wpbb_add_pages() {
 
 ### Function: BBpress Latest Discussions Option
 function wp_bb_option() {
-	global $wpdb;
+	global $wpdb,$BbLD_version;
 	$ori_url = $_SERVER['REQUEST_URI'];
 	if ($_POST['wpbb_save']){
 		$test = $_POST['bburl'];
@@ -35,7 +38,7 @@ function wp_bb_option() {
 		$update_msg = "<div id='message' class='updated fade'><p>BBpress Latest Discussions options saved successfully.</p></div>";
 	}
 	elseif (get_option('wpbb_path') == FALSE) {
-		$bbpath   = '/bbpress'; // Adjust the path to suit your bbpress location. Example: '/forums'
+		$bbpath = '/bbpress'; // Adjust the path to suit your bbpress location. Example: '/forums'
 		$wpbburl = get_settings('home') . $bbpath;
 		update_option('wpbb_path', $wpbburl);
 	}
@@ -75,10 +78,10 @@ function wp_bb_option() {
 	<p><strong><?php _e('Plugin Name:'); ?></strong> <?php _e('BBpress Latest Discussions'); ?><br />
 	<strong><?php _e('Plugin URI:'); ?></strong> <a href="http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/">http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/</a><br />
 	<strong><?php _e('Author:'); ?></strong> <a href="http://www.atsutane.net/">Atsutane Shirane</a><br />
-	<strong><?php _e('Version:'); ?></strong> 0.7.1</p>
+	<strong><?php _e('Version:'); ?></strong> <?php echo $BbLD_version; ?></p>
 	<p><strong><?php _e('ToDo List:'); ?></strong></p>
 	<ul>
-		<li><?php _e('Add option to exclude some forum.'); ?></li>
+		<li><?php _e('Add option to exclude some forum.'); ?> <a href="http://www.atsutane.net/bbpress/topic/4"><?php _e('Discuss here.'); ?></a></li>
 	</ul>
 	<p><?php _e('If you have any suggestion or feedback. Feel free to post it'); ?> <a href="http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/"><?php _e('here'); ?></a>.</p>
 	<h2><?php _e('BBpress Option'); ?></h2>
@@ -139,14 +142,12 @@ function wp_bb_option() {
 function wp_bb_get_discuss() {
 	global $table_prefix,$wpdb;
 	$forum_slimit = get_option('wpbb_limit');
-	$bbpress_table = get_option('wpbb_bbprefix') . "topics";
-	$wordpress_table = $table_prefix . "users";
 	if (get_option('wpbb_exdb')) {
 		$exbbdb = new wpdb(get_option('wpbb_dbuser'), get_option('wpbb_dbpass'), get_option('wpbb_dbname'), get_option('wpbb_dbhost'));
-		$bbtopic = $exbbdb->get_results("SELECT * FROM $bbpress_table WHERE topic_status = 0 ORDER BY topic_time DESC LIMIT $forum_slimit");
+		$bbtopic = $exbbdb->get_results("SELECT * FROM ".get_option('wpbb_bbprefix')."topics WHERE topic_status = 0 ORDER BY topic_time DESC LIMIT $forum_slimit");
 	}
 	else {
-		$bbtopic = $wpdb->get_results("SELECT * FROM $bbpress_table WHERE topic_status = 0 ORDER BY topic_time DESC LIMIT $forum_slimit");
+		$bbtopic = $wpdb->get_results("SELECT * FROM ".get_option('wpbb_bbprefix')."topics WHERE topic_status = 0 ORDER BY topic_time DESC LIMIT $forum_slimit");
 	}
 	if ($bbtopic) {
 		echo '
@@ -171,7 +172,7 @@ function wp_bb_get_discuss() {
 			}
 			echo '<td class="num">' . __("$bbtopic->topic_posts") . '</td>';
 			if (get_option('wpbb_intergrated')) {
-				$wpuid = $wpdb->get_row("SELECT * FROM $wordpress_table WHERE user_login = '$bbtopic->topic_last_poster_name'");
+				$wpuid = $wpdb->get_row("SELECT * FROM ".$table_prefix."users WHERE user_login = '$bbtopic->topic_last_poster_name'");
 				if ($wpuid) {
 					$user_forum_data = "$bbtopic->topic_last_poster_name";
 					$user_forum_data = get_userdata($wpuid->ID);
@@ -194,15 +195,13 @@ function wp_bb_get_discuss() {
 
 function wp_bb_get_discuss_sidebar() {
 	global $table_prefix,$wpdb;
-	$bbpress_table = get_option('wpbb_bbprefix') . "topics";
-	$wordpress_table = $table_prefix . "users";
 	$forum_slimit = get_option('wpbb_limit');
 	if (get_option('wpbb_exdb')) {
 		$exbbdb = new wpdb(get_option('wpbb_dbuser'), get_option('wpbb_dbpass'), get_option('wpbb_dbname'), get_option('wpbb_dbhost'));
-		$bbtopic = $exbbdb->get_results("SELECT * FROM $bbpress_table WHERE topic_status = 0 ORDER BY topic_time DESC LIMIT $forum_slimit");
+		$bbtopic = $exbbdb->get_results("SELECT * FROM ".get_option('wpbb_bbprefix')."topics WHERE topic_status = 0 ORDER BY topic_time DESC LIMIT $forum_slimit");
 	}
 	else {
-		$bbtopic = $wpdb->get_results("SELECT * FROM $bbpress_table WHERE topic_status = 0 ORDER BY topic_time DESC LIMIT $forum_slimit");
+		$bbtopic = $wpdb->get_results("SELECT * FROM ".get_option('wpbb_bbprefix')."topics WHERE topic_status = 0 ORDER BY topic_time DESC LIMIT $forum_slimit");
 	}
 	if ($bbtopic) {
 		echo '
@@ -210,25 +209,33 @@ function wp_bb_get_discuss_sidebar() {
 			<ul>
 		';
 		foreach ( $bbtopic as $bbtopic ) {
+			if (get_option('wpbb_exdb')) {
+				$bbforum = $exbbdb->get_row("SELECT * FROM ".get_option('wpbb_bbprefix')."forums WHERE forum_id = '$bbtopic->forum_id'");
+			}
+			else {
+				$bbforum = $wpdb->get_row("SELECT * FROM ".get_option('wpbb_bbprefix')."forums WHERE forum_id = '$bbtopic->forum_id'");
+			}
 			if (get_option('wpbb_permalink')) {
 				echo '<li><a href="' . get_option('wpbb_path') . '/topic/' . $bbtopic->topic_id . '">' . __("$bbtopic->topic_title") . '</a><br />';
+				$forum_url = get_option('wpbb_path') . '/forum/' . $bbtopic->forum_id;
 			}
 			else {
 				echo '<li><a href="' . get_option('wpbb_path') . '/topic.php?id=' . $bbtopic->topic_id . '">' . __("$bbtopic->topic_title") . '</a><br />';
+				$forum_url = get_option('wpbb_path') . '/forum.php?id=/' . $bbtopic->forum_id;
 			}
 			if (get_option('wpbb_intergrated')) {
-				$wpuid = $wpdb->get_row("SELECT * FROM $wordpress_table WHERE user_login = '$bbtopic->topic_last_poster_name'");
+				$wpuid = $wpdb->get_row("SELECT * FROM ".$table_prefix."users WHERE user_login = '$bbtopic->topic_last_poster_name'");
 				if ($wpuid) {
 					$user_forum_data = "$bbtopic->topic_last_poster_name";
 					$user_forum_data = get_userdata($wpuid->ID);
-					echo '<small>' . __('Last Post By: ') . $user_forum_data->display_name . '</small></li>';
+					echo '<small>' . __('Last Post By: ') . $user_forum_data->display_name . '<br />' . __('Inside: ') . '<a href="'.$forum_url.'">' . __("$bbforum->forum_name") . '</a></small></li>';
 				}
 				else {
-					echo '<small>' . __('Last Post By: ') . $bbtopic->topic_last_poster_name . '</small></li>';
+					echo '<small>' . __('Last Post By: ') . $bbtopic->topic_last_poster_name . '<br />' . __('Inside: ') . '<a href="'.$forum_url.'">' . __("$bbforum->forum_name") . '</a></small></li>';
 				}
 			}
 			else {	
-				echo '<small>' . __('Last Post By: ') . $bbtopic->topic_last_poster_name . '</small></li>';
+				echo '<small>' . __('Last Post By: ') . $bbtopic->topic_last_poster_name . '<br />' . __('Inside: ') . '<a href="'.$forum_url.'">' . __("$bbforum->forum_name") . '</a></small></li>';
 			}
 		}
 		echo "</ul>";

@@ -26,3 +26,10 @@ And modify post-form.php to include the quote text in textarea:
 == Configuration ==
 
 None necessary.
+
+== Change Log ==
+
+ * Fix problem with Swedish characters
+ * Add argument to change link text
+ * Strip out paragraph tags
+ 

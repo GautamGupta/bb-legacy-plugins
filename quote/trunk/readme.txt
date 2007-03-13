@@ -3,7 +3,7 @@ Tags: quote, reply, post
 Contributors: Michael Nolan
 Requires at least: 0.8
 Tested up to: 0.8.1
-Stable Tag: 0.1
+Stable Tag: 0.2
 
 Allows quoting of existing messages when quoting.
 

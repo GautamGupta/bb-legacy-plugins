@@ -4,12 +4,12 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/
 Description: Put bbpress Latest Discussions on your wp page.
 Author: Atsutane Shirane
-Version: 0.7.2
+Version: 0.7.3
 Author URI: http://www.atsutane.net/
 */
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '0.7.2';
+$BbLD_version = '0.7.3';
 
 if (!defined('ABSPATH')) die("Aren't you supposed to come here via WP-Admin?");
 
@@ -139,6 +139,7 @@ function wp_bb_option() {
 <?php
 }
 
+### Function: BBpress Latest Discussions Page Display
 function wp_bb_get_discuss() {
 	global $table_prefix,$wpdb;
 	$forum_slimit = get_option('wpbb_limit');
@@ -193,6 +194,7 @@ function wp_bb_get_discuss() {
 	}
 }
 
+### Function: BBpress Latest Discussions Sidebar Display
 function wp_bb_get_discuss_sidebar() {
 	global $table_prefix,$wpdb;
 	$forum_slimit = get_option('wpbb_limit');
@@ -205,7 +207,7 @@ function wp_bb_get_discuss_sidebar() {
 	}
 	if ($bbtopic) {
 		echo '
-			<h2>' . __("Last $forum_slimit Discussions") . '</h2>
+			<h2>' . __("Forum Last $forum_slimit Discussions") . '</h2>
 			<ul>
 		';
 		foreach ( $bbtopic as $bbtopic ) {
@@ -241,5 +243,66 @@ function wp_bb_get_discuss_sidebar() {
 		echo "</ul>";
 	}
 }
+
+### Function: BBpress Latest Discussions Sidebar Widget
+function bbld_widget($args) {
+	global $table_prefix,$wpdb;
+	$forum_slimit = get_option('wpbb_limit');
+	if (get_option('wpbb_exdb')) {
+		$exbbdb = new wpdb(get_option('wpbb_dbuser'), get_option('wpbb_dbpass'), get_option('wpbb_dbname'), get_option('wpbb_dbhost'));
+		$bbtopic = $exbbdb->get_results("SELECT * FROM ".get_option('wpbb_bbprefix')."topics WHERE topic_status = 0 ORDER BY topic_time DESC LIMIT $forum_slimit");
+	}
+	else {
+		$bbtopic = $wpdb->get_results("SELECT * FROM ".get_option('wpbb_bbprefix')."topics WHERE topic_status = 0 ORDER BY topic_time DESC LIMIT $forum_slimit");
+	}
+	if ($bbtopic) {
+		extract($args);
+		echo $before_widget;
+		echo $before_title . __("Forum Last $forum_slimit Discussions") . $after_title;
+		echo '<ul>';
+		foreach ( $bbtopic as $bbtopic ) {
+			if (get_option('wpbb_exdb')) {
+				$bbforum = $exbbdb->get_row("SELECT * FROM ".get_option('wpbb_bbprefix')."forums WHERE forum_id = '$bbtopic->forum_id'");
+			}
+			else {
+				$bbforum = $wpdb->get_row("SELECT * FROM ".get_option('wpbb_bbprefix')."forums WHERE forum_id = '$bbtopic->forum_id'");
+			}
+			if (get_option('wpbb_permalink')) {
+				echo '<li><a href="' . get_option('wpbb_path') . '/topic/' . $bbtopic->topic_id . '">' . __("$bbtopic->topic_title") . '</a><br />';
+				$forum_url = get_option('wpbb_path') . '/forum/' . $bbtopic->forum_id;
+			}
+			else {
+				echo '<li><a href="' . get_option('wpbb_path') . '/topic.php?id=' . $bbtopic->topic_id . '">' . __("$bbtopic->topic_title") . '</a><br />';
+				$forum_url = get_option('wpbb_path') . '/forum.php?id=/' . $bbtopic->forum_id;
+			}
+			if (get_option('wpbb_intergrated')) {
+				$wpuid = $wpdb->get_row("SELECT * FROM ".$table_prefix."users WHERE user_login = '$bbtopic->topic_last_poster_name'");
+				if ($wpuid) {
+					$user_forum_data = "$bbtopic->topic_last_poster_name";
+					$user_forum_data = get_userdata($wpuid->ID);
+					echo '<small>' . __('Last Post By: ') . $user_forum_data->display_name . '<br />' . __('Inside: ') . '<a href="'.$forum_url.'">' . __("$bbforum->forum_name") . '</a></small></li>';
+				}
+				else {
+					echo '<small>' . __('Last Post By: ') . $bbtopic->topic_last_poster_name . '<br />' . __('Inside: ') . '<a href="'.$forum_url.'">' . __("$bbforum->forum_name") . '</a></small></li>';
+				}
+			}
+			else {	
+				echo '<small>' . __('Last Post By: ') . $bbtopic->topic_last_poster_name . '<br />' . __('Inside: ') . '<a href="'.$forum_url.'">' . __("$bbforum->forum_name") . '</a></small></li>';
+			}
+		}
+		echo "</ul>";
+		echo $after_widget;
+	}
+}
+
+### Function: Register BbLD Widget
+function bbld_add_widget() {
+	if (function_exists('register_sidebar_widget')) {
+		register_sidebar_widget('BbLD Widget','bbld_widget');
+	}
+}
+
+### Function: Add BbLD Widget
+add_action('init', 'bbld_add_widget');
 
 ?>

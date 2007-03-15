@@ -4,12 +4,12 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/
 Description: Put bbpress Latest Discussions on your wp page.
 Author: Atsutane Shirane
-Version: 0.7.3
+Version: 0.7.4
 Author URI: http://www.atsutane.net/
 */
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '0.7.3';
+$BbLD_version = '0.7.4';
 
 if (!defined('ABSPATH')) die("Aren't you supposed to come here via WP-Admin?");
 
@@ -223,7 +223,7 @@ function wp_bb_get_discuss_sidebar() {
 			}
 			else {
 				echo '<li><a href="' . get_option('wpbb_path') . '/topic.php?id=' . $bbtopic->topic_id . '">' . __("$bbtopic->topic_title") . '</a><br />';
-				$forum_url = get_option('wpbb_path') . '/forum.php?id=/' . $bbtopic->forum_id;
+				$forum_url = get_option('wpbb_path') . '/forum.php?id=' . $bbtopic->forum_id;
 			}
 			if (get_option('wpbb_intergrated')) {
 				$wpuid = $wpdb->get_row("SELECT * FROM ".$table_prefix."users WHERE user_login = '$bbtopic->topic_last_poster_name'");
@@ -273,7 +273,7 @@ function bbld_widget($args) {
 			}
 			else {
 				echo '<li><a href="' . get_option('wpbb_path') . '/topic.php?id=' . $bbtopic->topic_id . '">' . __("$bbtopic->topic_title") . '</a><br />';
-				$forum_url = get_option('wpbb_path') . '/forum.php?id=/' . $bbtopic->forum_id;
+				$forum_url = get_option('wpbb_path') . '/forum.php?id=' . $bbtopic->forum_id;
 			}
 			if (get_option('wpbb_intergrated')) {
 				$wpuid = $wpdb->get_row("SELECT * FROM ".$table_prefix."users WHERE user_login = '$bbtopic->topic_last_poster_name'");

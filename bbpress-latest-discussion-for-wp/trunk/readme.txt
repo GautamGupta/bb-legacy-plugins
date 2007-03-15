@@ -32,6 +32,10 @@ Examples of use:
 
 == Version History ==
 
+Version 0.7.4 (2007-03-15):
+
+* Fix typo in line 226. Props wittmania.
+
 Version 0.7.3 (2007-03-14):
 
 * Add Widget Support :).

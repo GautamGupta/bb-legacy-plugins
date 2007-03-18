@@ -2,8 +2,8 @@
 Contributors: so1o, mdawaffe, SamBauers
 Tags: support, forums
 Requires at least: 0.80 build 701
-Tested up to: 0.80 build 701
-Stable tag: 1.2
+Tested up to: 1.0alpha build 782
+Stable tag: 1.2.1
 
 Adds the ability to set a support status on topics and thus turn the forum into a support forum.
 
@@ -52,3 +52,6 @@ bbPress 0.75, for details please look at http://trac.bbpress.org/ticket/496
   <br/>Added admin action to upgrade database instead of running on plugin load
   <br/>When default status is "unresolved" topics with no status set now show in the "unresolved" view
   <br/>Sticky topics that are unresolved now show in the "unresolved" view
+* 1.2.1 :
+  <br/>Added support for new admin menu structure introduced in build 740
+  <br/>Text based labels in topic lists now show again when icons not used

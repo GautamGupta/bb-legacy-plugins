@@ -5,7 +5,7 @@ Plugin URI: http://www.adityanaik.com/projects/
 Description: Changes the forum to a support forum and adds functionality to mark topics resolved, not resolved or not a support question
 Author: Aditya Naik, Sam Bauers
 Author URI: http://www.adityanaik.com/
-Version: 1.2
+Version: 1.2.1
 
 Version History:
 1.0  	- Initial Release (Aditya Naik)
@@ -15,13 +15,19 @@ Version History:
 		- Added admin action to upgrade database instead of running on plugin load (Sam Bauers)
 		- When default status is "unresolved" topics with no status set now show in the "unresolved" view (Sam Bauers)
 		- Sticky topics that are unresolved now show in the "unresolved" view (Sam Bauers)
+1.2.1	- Added support for new admin menu structure introduced in build 740 (Sam Bauers)
+		- Text based labels in topic lists now show again when icons not used (Sam Bauers)
 */
 
 $icon_path = str_replace(BBPATH, '', BBPLUGINDIR);
 
 function support_forum_add_admin_page() {
 	global $bb_submenu;
-	$bb_submenu['site.php'][] = array(__('Support Forum'), 'use_keys', 'support_forum_admin_page');
+	if (isset($bb_submenu['plugins.php'])) {
+		$bb_submenu['plugins.php'][] = array(__('Support Forum'), 'use_keys', 'support_forum_admin_page');
+	} else {
+		$bb_submenu['site.php'][] = array(__('Support Forum'), 'use_keys', 'support_forum_admin_page');
+	}
 }
 
 function support_forum_get_default_status() {
@@ -301,9 +307,7 @@ if (support_forum_check()) {
 		}
 	}
 	
-	if (support_forum_status_icons_check()) {
-		add_filter( 'topic_title', 'support_forum_topic_title', 40);
-	}
+	add_filter( 'topic_title', 'support_forum_topic_title', 40);
 	
 	function support_forum_topic_title($title) {
 		global $icon_path;
@@ -320,7 +324,11 @@ if (support_forum_check()) {
 			if (!$$status) {
 				$status = support_forum_get_default_status();
 			}
-			$status_image = '<img src="' . bb_get_option('uri') . $icon_path . 'support-forum-' . $status . '.png" alt="[' . $$status . ']" style="vertical-align:top; margin-right:0.3em; width:14px; height:14px; border-width:0;" />';
+			if (support_forum_status_icons_check()) {
+				$status_image = '<img src="' . bb_get_option('uri') . $icon_path . 'support-forum-' . $status . '.png" alt="[' . $$status . ']" style="vertical-align:top; margin-right:0.3em; width:14px; height:14px; border-width:0;" />';
+			} elseif ($status != 'mu') {
+				$status_image = '[' . $$status . '] ';
+			}
 			$title = $status_image . $title;
 		endif;
 	

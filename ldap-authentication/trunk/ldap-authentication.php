@@ -18,7 +18,7 @@ Version History:
 */
 
 /*
-LDAP authentication for bbPress version 1.0.3
+LDAP authentication for bbPress version 1.0.4
 Copyright (C) 2007 Sam Bauers (sam@viveka.net.au)
 
 This program is free software; you can redistribute it and/or modify

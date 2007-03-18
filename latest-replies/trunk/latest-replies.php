@@ -7,7 +7,7 @@ Author: Louise Dade
 Author URI: http://www.classical-webdesigns.co.uk/
 Version: 0.2
 
-REQUIRED: the 'reply-titles' plugin is required to use this plugin.
+REQUIRED: the 'Add Titles to Replies' plugin is required to use this plugin.
 http://www.classical-webdesigns.co.uk/articles/36_bbpress-plugin-add-titles-to-replies.html
 */
 

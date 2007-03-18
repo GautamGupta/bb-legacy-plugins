@@ -4,7 +4,7 @@ Plugin Name: LDAP authentication
 Plugin URI: http://www.network.net.au/bbpress/plugins/ldap/ldap-authentication.latest.zip
 Description: Allows users to authenticate against an LDAP service
 Author: Sam Bauers
-Version: 1.0.3
+Version: 1.0.4
 Author URI: http://www.network.net.au/
 
 Version History:
@@ -14,6 +14,7 @@ Version History:
 		  Disabled password reseting function for LDAP users
 		  Added option to disable automatic registration of LDAP users
 1.0.3	: Added option to retrieve LDAP users email address on registration
+1.0.4	: Added support for new admin menu structure introduced in build 740
 */
 
 /*
@@ -42,8 +43,11 @@ $LDAP_enabled = bb_get_option('LDAP_enable');
 
 function ldap_add_admin_page() {
 	global $bb_submenu;
-	
-	$bb_submenu['site.php'][] = array(__('LDAP authentication'), 'use_keys', 'ldap_admin_page');
+	if (isset($bb_submenu['plugins.php'])) {
+		$bb_submenu['plugins.php'][] = array(__('LDAP authentication'), 'use_keys', 'ldap_admin_page');
+	} else {
+		$bb_submenu['site.php'][] = array(__('LDAP authentication'), 'use_keys', 'ldap_admin_page');
+	}
 }
 
 function ldap_admin_page() {

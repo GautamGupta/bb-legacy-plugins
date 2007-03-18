@@ -2,14 +2,14 @@
 Contributors: SamBauers
 Tags: ldap authentication user management users
 Requires at least: 0.75
-Tested up to: 0.80 build 701
-Stable tag: 1.0.3
+Tested up to: 1.0 alpha build 782
+Stable tag: 1.0.4
 
 Allows authentication via an LDAP service
 
 == License ==
 
-LDAP authentication for bbPress version 1.0.3
+LDAP authentication for bbPress version 1.0.4
 Copyright (C) 2007 Sam Bauers (sam@viveka.net.au)
 
 LDAP authentication for bbPress comes with ABSOLUTELY NO WARRANTY
@@ -63,3 +63,5 @@ the root directory of your forum.
   <br/>Added option to disable automatic registration of LDAP users
 * 1.0.3 :
   <br/>Added option to retrieve LDAP users email address on registration
+* 1.0.4 :
+  <br/>Added support for new admin menu structure introduced in build 740

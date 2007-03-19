@@ -4,12 +4,12 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/
 Description: Put bbpress Latest Discussions on your wp page.
 Author: Atsutane Shirane
-Version: 0.7.4
+Version: 0.8
 Author URI: http://www.atsutane.net/
 */
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '0.7.4';
+$BbLD_version = '0.8';
 
 if (!defined('ABSPATH')) die("Aren't you supposed to come here via WP-Admin?");
 
@@ -19,6 +19,18 @@ function wpbb_add_pages() {
 	add_options_page(__("BBpress Latest Discussions Option"), __('BbLD Option'), 8, __FILE__, 'wp_bb_option');
 }
 
+### Function: Trim some text
+function wpbb_trim($paragraph, $limit) {
+	$original = strlen($paragraph);
+	if ($original > $limit) {
+		$text = substr($paragraph, 0, $limit) . " [...]";
+	}
+	else {
+		$text = $paragraph;
+	}
+	return $text;
+}
+
 ### Function: BBpress Latest Discussions Option
 function wp_bb_option() {
 	global $wpdb,$BbLD_version;
@@ -26,6 +38,7 @@ function wp_bb_option() {
 	if ($_POST['wpbb_save']){
 		$test = $_POST['bburl'];
 		update_option('wpbb_path', $test);
+		update_option('wpbb_slimit', $_POST['bbslimit']);
 		update_option('wpbb_limit', $_POST['bblimit']);
 		update_option('wpbb_permalink', $_POST['wpbb_permalink']);
 		update_option('wpbb_intergrated', $_POST['wpbb_intergrated']);
@@ -49,6 +62,10 @@ function wp_bb_option() {
 	elseif (get_option('wpbb_bbprefix') == FALSE) {
 		$bbdb_prefix = 'bb_'; // Set Bbpress Prefix
 		update_option('wpbb_bbprefix', $bbdb_prefix);
+	}
+	elseif (get_option('wpbb_slimit') == FALSE) {
+		$limit = '100';
+		update_option('wpbb_slimit', $limit);
 	}
 	elseif (get_option('wpbb_permalink') == FALSE) {
 		update_option('wpbb_permalink', false);
@@ -97,6 +114,10 @@ function wp_bb_option() {
 			<tr valign="top"> 
 				<th scope="row"><?php _e('Post Limit:'); ?></th> 
 				<td><input name="bblimit" type="text" id="bblimit" value="<?php echo get_option('wpbb_limit'); ?>" size="3" /> <?php _e('posts'); ?></td>
+			</tr>
+			<tr valign="top"> 
+				<th scope="row"><?php _e('Text Limit:'); ?></th> 
+				<td><input name="bbslimit" type="text" id="bbslimit" value="<?php echo get_option('wpbb_slimit'); ?>" size="3" /> <?php _e('chars'); ?><br /><?php _e("Set the length of text you want to show"); ?></td>
 			</tr>
 			<tr valign="top"> 
 				<th scope="row"><?php _e('Bbpress DB Prefix:'); ?></th> 
@@ -162,14 +183,15 @@ function wp_bb_get_discuss() {
 				</tr>
 		';
 		foreach ( $bbtopic as $bbtopic ) {
+			$title_text = wpbb_trim($bbtopic->topic_title, get_option('wpbb_slimit'));
 			echo "
 				<tr class=\"alt\">
 			";
 			if (get_option('wpbb_permalink')) {
-				echo '<td><a href="' . get_option('wpbb_path') . '/topic/' . $bbtopic->topic_id . '">' . __("$bbtopic->topic_title") . '</a></td>';
+				echo '<td><a href="' . get_option('wpbb_path') . '/topic/' . $bbtopic->topic_id . '">' . __("$title_text") . '</a></td>';
 			}
 			else {
-				echo '<td><a href="' . get_option('wpbb_path') . '/topic.php?id=' . $bbtopic->topic_id . '">' . __("$bbtopic->topic_title") . '</a></td>';
+				echo '<td><a href="' . get_option('wpbb_path') . '/topic.php?id=' . $bbtopic->topic_id . '">' . __("$title_text") . '</a></td>';
 			}
 			echo '<td class="num">' . __("$bbtopic->topic_posts") . '</td>';
 			if (get_option('wpbb_intergrated')) {
@@ -211,6 +233,7 @@ function wp_bb_get_discuss_sidebar() {
 			<ul>
 		';
 		foreach ( $bbtopic as $bbtopic ) {
+			$title_text = wpbb_trim($bbtopic->topic_title, get_option('wpbb_slimit'));
 			if (get_option('wpbb_exdb')) {
 				$bbforum = $exbbdb->get_row("SELECT * FROM ".get_option('wpbb_bbprefix')."forums WHERE forum_id = '$bbtopic->forum_id'");
 			}
@@ -218,11 +241,11 @@ function wp_bb_get_discuss_sidebar() {
 				$bbforum = $wpdb->get_row("SELECT * FROM ".get_option('wpbb_bbprefix')."forums WHERE forum_id = '$bbtopic->forum_id'");
 			}
 			if (get_option('wpbb_permalink')) {
-				echo '<li><a href="' . get_option('wpbb_path') . '/topic/' . $bbtopic->topic_id . '">' . __("$bbtopic->topic_title") . '</a><br />';
+				echo '<li><a href="' . get_option('wpbb_path') . '/topic/' . $bbtopic->topic_id . '">' . __("$title_text") . '</a><br />';
 				$forum_url = get_option('wpbb_path') . '/forum/' . $bbtopic->forum_id;
 			}
 			else {
-				echo '<li><a href="' . get_option('wpbb_path') . '/topic.php?id=' . $bbtopic->topic_id . '">' . __("$bbtopic->topic_title") . '</a><br />';
+				echo '<li><a href="' . get_option('wpbb_path') . '/topic.php?id=' . $bbtopic->topic_id . '">' . __("$title_text") . '</a><br />';
 				$forum_url = get_option('wpbb_path') . '/forum.php?id=' . $bbtopic->forum_id;
 			}
 			if (get_option('wpbb_intergrated')) {
@@ -261,6 +284,7 @@ function bbld_widget($args) {
 		echo $before_title . __("Forum Last $forum_slimit Discussions") . $after_title;
 		echo '<ul>';
 		foreach ( $bbtopic as $bbtopic ) {
+			$title_text = wpbb_trim($bbtopic->topic_title, get_option('wpbb_slimit'));
 			if (get_option('wpbb_exdb')) {
 				$bbforum = $exbbdb->get_row("SELECT * FROM ".get_option('wpbb_bbprefix')."forums WHERE forum_id = '$bbtopic->forum_id'");
 			}
@@ -268,11 +292,11 @@ function bbld_widget($args) {
 				$bbforum = $wpdb->get_row("SELECT * FROM ".get_option('wpbb_bbprefix')."forums WHERE forum_id = '$bbtopic->forum_id'");
 			}
 			if (get_option('wpbb_permalink')) {
-				echo '<li><a href="' . get_option('wpbb_path') . '/topic/' . $bbtopic->topic_id . '">' . __("$bbtopic->topic_title") . '</a><br />';
+				echo '<li><a href="' . get_option('wpbb_path') . '/topic/' . $bbtopic->topic_id . '">' . __("$title_text") . '</a><br />';
 				$forum_url = get_option('wpbb_path') . '/forum/' . $bbtopic->forum_id;
 			}
 			else {
-				echo '<li><a href="' . get_option('wpbb_path') . '/topic.php?id=' . $bbtopic->topic_id . '">' . __("$bbtopic->topic_title") . '</a><br />';
+				echo '<li><a href="' . get_option('wpbb_path') . '/topic.php?id=' . $bbtopic->topic_id . '">' . __("$title_text") . '</a><br />';
 				$forum_url = get_option('wpbb_path') . '/forum.php?id=' . $bbtopic->forum_id;
 			}
 			if (get_option('wpbb_intergrated')) {

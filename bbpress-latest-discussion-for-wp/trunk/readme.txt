@@ -3,7 +3,7 @@ Tags: bbpress, wordpress, latest, discussion
 Contributors: Atsutane
 Requires at least: 0.8
 Tested up to: 0.8
-Stable Tag: 0.7
+Stable Tag: 0.8
 
 This plugin will generates Latest Discussion list from your bbpress forum into your wordpress page.
 
@@ -31,6 +31,10 @@ Examples of use:
 `<?php wp_bb_get_discuss_sidebar(); ?>`
 
 == Version History ==
+
+Version 0.8 (2007-03-20):
+
+* Add option to trim text length.
 
 Version 0.7.4 (2007-03-15):
 

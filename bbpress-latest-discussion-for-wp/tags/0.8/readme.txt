@@ -15,7 +15,7 @@ The administrator can also set the behavior for this plugin. Even if your bbpres
 
 == Installation ==
 
-Simply download the Zip-Archive and extract all files into your wp-content/plugins/ directory. Open the `BBpress.php` file using editor program and adjust the path to suit your bbpress location. Then go into your WordPress administration page, click on Plugins and activate it.
+Simply download the Zip-Archive and extract all files into your wp-content/plugins/ directory. Then go into your WordPress administration page, click on Plugins and activate it. Go to BbLD Option page, to setup this plugin.
 
 == Configuration ==
 

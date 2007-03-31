@@ -1,0 +1,151 @@
+=== Add Titles to Replies ===
+
+Plugin URI: http://www.classical-webdesigns.co.uk/articles/36_bbpress-plugin-add-titles-to-replies.html
+
+Description: Allows users to add a title to their replies to topics, and displays the latest replies (by title) to discussions on the front page and a user's profile page.
+
+Author: Louise Dade
+
+Author URI: http://www.classical-webdesigns.co.uk/
+
+Version: 0.2.1
+
+== Installation ==
+
+NB: All examples are based on the kakumei theme.
+    
+1.  Open up your 'post-form.php' template file and find the following section (it's at the top):
+
+    <?php if ( !is_topic() ) : ?>
+    <p>
+        <label for="topic"><?php _e('Topic title: (be brief and descriptive)'); ?>
+            <input name="topic" type="text" id="topic" size="50" maxlength="80" tabindex="1" />
+        </label>
+    </p>
+    <?php endif; do_action( 'post_form_pre_post' ); ?>
+
+Replace it with the following:
+
+    <?php if ( !is_topic() ) { ?>
+
+    <p>
+        <label for="topic"><?php _e('Topic title: (be brief and descriptive)'); ?><br />
+            <input name="topic" type="text" id="topic" size="60" maxlength="80" tabindex="1" />
+        </label>
+    </p>
+
+    <?php } else { ?>
+
+    <p>
+        <label for="replytitle"><?php _e('Message Title: (be brief and descriptive)'); ?><br />
+            <input name="msgtitle" type="text" id="replytitle" size="60" maxlength="80" tabindex="1" value="Re: <?php topic_title(); ?>" />
+        </label>
+    </p>
+
+    <?php } do_action( 'post_form_pre_post' ); ?>
+
+2.  Open up your 'edit-form.php' template file and find the following section (it's at the top):
+
+    <?php if ( $topic_title ) : ?>
+    <p>
+        <label><?php _e('Topic:'); ?><br />
+            <input name="topic" type="text" id="topic" size="50" maxlength="80"  value="<?php echo attribute_escape( get_topic_title() ); ?>" />
+        </label>
+    </p>
+    <?php endif; ?>
+
+Replace it with the following:
+
+    <?php if ( $topic_title ) { ?>
+    <p>
+        <label><?php _e('Topic:'); ?><br />
+            <input name="topic" type="text" id="topic" size="50" maxlength="80"  value="<?php echo wp_specialchars(get_topic_title(), 1); ?>" />
+        </label>
+    </p>
+    <?php } else { ?>
+    <p>
+        <label for="replytitle"><?php _e('Message Title:'); ?><br />
+            <input name="msgtitle" type="text" id="replytitle" size="80" maxlength="80" tabindex="1" value="<?php echo wp_specialchars(ld_get_post_title(), 1); ?>" />
+        </label>
+    </p>
+    <?php } ?>
+
+3.  Open up your 'post.php' template file and add the following code to display the post title (wherever it suits you best):
+
+    <?php ld_post_title(); ?>
+
+For example, in the kakumei theme you might add it like this:
+
+    <div class="threadpost">
+        <h3 class="post_title"><?php ld_post_title(); ?></h3>
+        <div class="post"><?php post_text(); ?></div>
+        <div class="poststuff"><?php printf( __('Posted %s ago'), bb_get_post_time() ); ?> <a href="<?php post_anchor_link(); ?>">#</a> <?php post_ip_link(); ?> <?php post_edit_link(); ?> <?php post_delete_link(); ?></div>
+    </div>
+
+4.  Open up your 'front-page.php' template file and add the following code in a location you like (I replaced the "Latest Discussions" section, but you could place it before or after it):
+
+    <?php if ( $ld_latest_posts = ld_get_latest_posts(20) ) : ?>
+
+    <h2><?php _e('Latest Replies'); ?></h2>
+
+    <table id="latest">
+    <tr>
+        <th><?php _e('Reply'); ?></th>
+        <th><?php _e('Last Poster'); ?></th>
+        <th><?php _e('Freshness'); ?></th>
+    </tr>
+
+    <?php foreach ( $ld_latest_posts as $ldp ) : ?>
+    <tr<?php topic_class(); ?>>
+        <td><a href="<?php ld_reply_link($ldp->topic_id, $ldp->post_id); ?>"><?php echo $ldp->post_title; ?></a>
+        <br /><small>&raquo; Topic: <a href="topic.php?id=<?php echo $ldp->topic_id;?>"><?php echo get_topic_title($ldp->topic_id); ?></a>.</small></td>
+        <td class="num"><?php echo get_user_name( $ldp->poster_id ); ?></td>
+        <td class="num"><?php echo ld_post_time($ldp->post_time, 'since' ); ?></td>
+    </tr>
+    <?php endforeach; ?>
+    </table>
+
+    <?php endif; ?>
+
+You can specify how many relies to display by changing the number in the template function:
+
+    <?php if ( $ld_latest_posts = ld_get_latest_posts(20) ) : ?>
+
+Just change the number 20 for your own preference (the default is 30).
+
+5. Open up your 'profile.php' template and add the following code to it wherever you want the user's latest replies to appear (I replace the existing "Recent Replies" section which actually only shows topic titles and does not link to the reply itself).
+
+    <?php if ( $ld_latest_posts = ld_get_latest_posts(5, $user->ID) ) : ?>
+
+    <ol>
+    <?php foreach ( $ld_latest_posts as $ldp ) : ?>
+        <li><a href="<?php ld_reply_link($ldp->topic_id, $ldp->post_id); ?>"><?php echo $ldp->post_title; ?></a> 
+            <?php printf(__('%s ago.'), ld_post_time($ldp->post_time, 'since' )); ?></li>
+    <?php endforeach; ?>
+    </ol>
+
+    <?php else : ?>
+        <p><?php _e('No replies yet.') ?></p>
+    <?php endif; ?>
+
+The above code prints the last 5 replies made by the user.  As you can see the second argument in the 'ld_get_latest_posts' function specifies the user id.
+
+6.  Now we need to add a field to the database. If you are comfortable with MySQL, just login to your database admin and add the following field to the 'posts' table:  
+
+        post_title  VARCHAR(100)  NOT NULL
+
+Alternatively, we do this by adding a temporary line of the code to your forum templates. Add the following code to the bottom of your 'footer.php' template:
+
+    <?php ld_install_title_field(); ?>
+
+Upload it to your working/test forum and load the forum in your browser.  This should add the new field to the database.
+
+7.  Upload the edited templates ('post-form.php', 'post.php', 'front-page.php' and 'profile.php') to the appropriate templates folder, and upload the 'add-titles-to-replies.php' plugin to your 'my-plugins' folder.
+
+8. Test the forum by adding a message with a title to check that the installation function worked. If it did you'll see the reply title when you view topic replies.  You can then reopen your 'footer.php' file and REMOVE the following line (remembering to re-upload the file afterwards):
+        
+    <?php ld_install_title_field(); ?>
+
+[Note: I made this an 'add/run/remove' function because I really don't like adding unnecessary overhead to the code - once installed, there is no need to keep checking the database!]
+
+That's it, the Add Titles to Replies plugin should now be installed and working.

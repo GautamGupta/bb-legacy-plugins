@@ -1,0 +1,15 @@
+#latest a.page-numbers {
+	border-right: 1px solid #bbbbbb;
+	border-bottom: 1px solid #bbbbbb;
+	padding: 3px 3px 1px 4px;
+	margin-left: 3px;
+	font-size: 0.8em;
+	background-image: url('page-links-background.gif');
+	background-repeat: no-repeat;
+	background-position: 0 0;
+}
+
+#latest a.page-numbers:hover {
+	color: #ffffff;
+	background-position: 0 -100px;
+}

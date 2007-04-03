@@ -40,66 +40,66 @@ the whitelist and/or blacklist.
 
 == Configuration ==
 
-=== How the Lists Work ===
+= How the Lists Work =
 The whitelist and blacklist work based on a ranking system. The domain
 is tested against all possible domains in both the white and the black lists.
 
-=== Whitelist Rank ===
- * If a whitelist exists then the domain starts with a rank of 0
- * If no blacklist exists then the domain receives a rank of 1
- * If a domain matches any wildcard entry then it receives a rank of 2
- * If a domain matches an exact entry then it receives a rank of 3
+= Whitelist Rank =
+* If a whitelist exists then the domain starts with a rank of 0
+* If no blacklist exists then the domain receives a rank of 1
+* If a domain matches any wildcard entry then it receives a rank of 2
+* If a domain matches an exact entry then it receives a rank of 3
 
-=== Blacklist Rank ===
- * If a blacklist exists then the domain starts with a rank of 0
- * If no blacklist exists then the domain receives a rank of 1
- * If a domain matches any wildcard entry then it receives a rank of 2
- * If a domain matches an exact entry then it receives a rank of 3
+= Blacklist Rank =
+* If a blacklist exists then the domain starts with a rank of 0
+* If no blacklist exists then the domain receives a rank of 1
+* If a domain matches any wildcard entry then it receives a rank of 2
+* If a domain matches an exact entry then it receives a rank of 3
 
-=== Resolving Ranks ===
+= Resolving Ranks =
 If the whitelist rank minus the black list rank is less than zero, then
 it is not allowed. This effectively gives the whitelist precedence when
 ranks are the same. The whitelist rank must also be at least 1.
 
-=== Example 1 ===
+= Example 1 =
 whitelist = 'example.org, example.net, example.com'
 blacklist = ''
 
 Will allow only example.org, example.net and example.com domains.
 
-=== Example 2 ===
+= Example 2 =
 whitelist = ''
 blacklist = 'example.com, example.net'
 
 Will allow anything but will deny example.com and example.net
 
-=== Example 3 ===
+= Example 3 =
 whitelist = '*.example.org'
 blacklist = 'internal.example.org'
 
 Will allow only sub-domains of example.org but will deny the specific
 internal.example.org sub-domain.
 
-=== Example 4 ===
+= Example 4 =
 whitelist = '*.org, *.net, *.com'
 blacklist = 'example.com, example.net'
 
 Will allow only .org, .net and .com domains but will also deny
 example.com and example.net
 
-=== Example 5 ===
+= Example 5 =
 whitelist = 'example.org'
 blacklist = '*.org'
 
 Will allow example.org despite denying all .org domains
 
-=== Example 6 ===
+= Example 6 =
 whitelist = 'example.org'
 blacklist = 'example.org'
 
 Will allow example.org as the whitelist takes precedence
 
-=== Example 7 ===
+= Example 7 =
 whitelist = '*.*.org'
 blacklist = '*.example.org'
 

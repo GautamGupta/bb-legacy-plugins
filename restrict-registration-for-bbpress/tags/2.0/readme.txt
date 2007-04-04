@@ -48,7 +48,7 @@ is tested against all possible domains in both the white and the black lists.
 
 = Whitelist Rank =
 * If a whitelist exists then the domain starts with a rank of 0
-* If no blacklist exists then the domain receives a rank of 1
+* If no whitelist exists then the domain receives a rank of 1
 * If a domain matches any wildcard entry then it receives a rank of 2
 * If a domain matches an exact entry then it receives a rank of 3
 

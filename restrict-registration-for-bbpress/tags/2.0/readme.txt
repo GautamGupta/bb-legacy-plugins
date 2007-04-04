@@ -65,18 +65,21 @@ ranks are the same. The whitelist rank must also be at least 1.
 
 = Example 1 =
 whitelist = 'example.org, example.net, example.com'
+
 blacklist = ''
 
 Will allow only example.org, example.net and example.com domains.
 
 = Example 2 =
 whitelist = ''
+
 blacklist = 'example.com, example.net'
 
 Will allow anything but will deny example.com and example.net
 
 = Example 3 =
 whitelist = '*.example.org'
+
 blacklist = 'internal.example.org'
 
 Will allow only sub-domains of example.org but will deny the specific
@@ -84,6 +87,7 @@ internal.example.org sub-domain.
 
 = Example 4 =
 whitelist = '*.org, *.net, *.com'
+
 blacklist = 'example.com, example.net'
 
 Will allow only .org, .net and .com domains but will also deny
@@ -91,18 +95,21 @@ example.com and example.net
 
 = Example 5 =
 whitelist = 'example.org'
+
 blacklist = '*.org'
 
 Will allow example.org despite denying all .org domains
 
 = Example 6 =
 whitelist = 'example.org'
+
 blacklist = 'example.org'
 
 Will allow example.org as the whitelist takes precedence
 
 = Example 7 =
 whitelist = '*.*.org'
+
 blacklist = '*.example.org'
 
 Will allow subdomains of example.org as the whitelist takes

@@ -38,6 +38,8 @@ will need to be logged in as a keymaster.
 See the configuration section below for information of setting up
 the whitelist and/or blacklist.
 
+This plugin requires at least PHP 5
+
 == Configuration ==
 
 = How the Lists Work =

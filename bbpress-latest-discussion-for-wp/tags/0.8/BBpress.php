@@ -4,14 +4,43 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/
 Description: Put bbpress Latest Discussions on your wp page.
 Author: Atsutane Shirane
-Version: 0.8
+Version: 0.8.2
 Author URI: http://www.atsutane.net/
 */
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '0.8';
+$BbLD_version = '0.8.2';
 
 if (!defined('ABSPATH')) die("Aren't you supposed to come here via WP-Admin?");
+
+### Function: Install BbLD Configuration
+$install = (basename($_SERVER['SCRIPT_NAME']) == 'plugins.php' && isset($_GET['activate']));;
+if ($install) {
+	bbld_install();
+}
+
+function bbld_install() {
+	if (get_option('wpbb_status') == FALSE) {
+		$bbpath = '/bbpress'; // Adjust the path to suit your bbpress location. Example: '/forums'
+		$wpbburl = get_settings('home') . $bbpath;
+		update_option('wpbb_path', $wpbburl);
+		$forum_slimit = '10'; // Adjust the limit to show
+		update_option('wpbb_limit', $forum_slimit);
+		$bbdb_prefix = 'bb_'; // Set Bbpress Prefix
+		update_option('wpbb_bbprefix', $bbdb_prefix);
+		$limit = '100';
+		update_option('wpbb_slimit', $limit);
+		update_option('wpbb_permalink', false);
+		update_option('wpbb_intergrated', false);
+		update_option('wpbb_exdb', false);
+		update_option('wpbb_dbuser', DB_USER);
+		update_option('wpbb_dbpass', DB_PASSWORD);
+		update_option('wpbb_dbname', DB_NAME);
+		update_option('wpbb_dbhost', DB_HOST);
+		$install_status = 'install';
+		update_option('wpbb_status', $install_status);
+	}
+}
 
 ### Function: Add Option Page
 add_action('admin_menu', 'wpbb_add_pages');
@@ -49,44 +78,6 @@ function wp_bb_option() {
 		update_option('wpbb_dbname', $_POST['bbname']);
 		update_option('wpbb_dbhost', $_POST['bbhost']);
 		$update_msg = "<div id='message' class='updated fade'><p>BBpress Latest Discussions options saved successfully.</p></div>";
-	}
-	elseif (get_option('wpbb_path') == FALSE) {
-		$bbpath = '/bbpress'; // Adjust the path to suit your bbpress location. Example: '/forums'
-		$wpbburl = get_settings('home') . $bbpath;
-		update_option('wpbb_path', $wpbburl);
-	}
-	elseif (get_option('wpbb_limit') == FALSE) {
-		$forum_slimit = '10'; // Adjust the limit to show
-		update_option('wpbb_limit', $forum_slimit);
-	}
-	elseif (get_option('wpbb_bbprefix') == FALSE) {
-		$bbdb_prefix = 'bb_'; // Set Bbpress Prefix
-		update_option('wpbb_bbprefix', $bbdb_prefix);
-	}
-	elseif (get_option('wpbb_slimit') == FALSE) {
-		$limit = '100';
-		update_option('wpbb_slimit', $limit);
-	}
-	elseif (get_option('wpbb_permalink') == FALSE) {
-		update_option('wpbb_permalink', false);
-	}
-	elseif (get_option('wpbb_intergrated') == FALSE) {
-		update_option('wpbb_intergrated', false);
-	}
-	elseif (get_option('wpbb_exdb') == FALSE) {
-		update_option('wpbb_exdb', false);
-	}
-	elseif (get_option('wpbb_dbuser') == FALSE) {
-		update_option('wpbb_dbuser', DB_USER);
-	}
-	elseif (get_option('wpbb_dbpass') == FALSE) {
-		update_option('wpbb_dbpass', DB_PASSWORD);
-	}
-	elseif (get_option('wpbb_dbname') == FALSE) {
-		update_option('wpbb_dbname', DB_NAME);
-	}
-	elseif (get_option('wpbb_dbhost') == FALSE) {
-		update_option('wpbb_dbhost', DB_HOST);
 	}
 ?>
 <div class="wrap">

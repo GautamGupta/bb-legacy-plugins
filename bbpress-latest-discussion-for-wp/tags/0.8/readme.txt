@@ -32,6 +32,10 @@ Examples of use:
 
 == Version History ==
 
+Version 0.8.2 (2007-04-06):
+
+* Update on active plugin setup.
+
 Version 0.8 (2007-03-20):
 
 * Add option to trim text length.

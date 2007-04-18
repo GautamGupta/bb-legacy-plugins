@@ -19,7 +19,6 @@ Add the `allow-images.php` file to bbPress' `my-plugins/` directory.
 == Frequently Asked Questions ==
 
 = Is allowing images in posts a security risk? =
-
 This plugin only allows certain types of files to be linked to as an image, so
 the security risk is minimal.  Be that as it may, there is always the
 possibility of a security risk when allowing people to post content on your site

@@ -4,12 +4,12 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/
 Description: Put bbpress Latest Discussions on your wp page.
 Author: Atsutane Shirane
-Version: 0.8.2
+Version: 0.9
 Author URI: http://www.atsutane.net/
 */
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '0.8.2';
+$BbLD_version = '0.9';
 
 if (!defined('ABSPATH')) die("Aren't you supposed to come here via WP-Admin?");
 
@@ -39,6 +39,8 @@ function bbld_install() {
 		update_option('wpbb_dbhost', DB_HOST);
 		$install_status = 'install';
 		update_option('wpbb_status', $install_status);
+		update_option('wpbb_lastposter', true);
+		update_option('wpbb_inside', true);
 	}
 }
 
@@ -77,6 +79,9 @@ function wp_bb_option() {
 		update_option('wpbb_dbpass', $_POST['bbpass']);
 		update_option('wpbb_dbname', $_POST['bbname']);
 		update_option('wpbb_dbhost', $_POST['bbhost']);
+		update_option('wpbb_lastposter', $_POST['wpbb_lastposter']);
+		update_option('wpbb_inside', $_POST['wpbb_inside']);
+		update_option('wpbb_exclude', $_POST['wpbb_exclude']);
 		$update_msg = "<div id='message' class='updated fade'><p>BBpress Latest Discussions options saved successfully.</p></div>";
 	}
 ?>
@@ -89,7 +94,7 @@ function wp_bb_option() {
 	<strong><?php _e('Version:'); ?></strong> <?php echo $BbLD_version; ?></p>
 	<p><strong><?php _e('ToDo List:'); ?></strong></p>
 	<ul>
-		<li><?php _e('Add option to exclude some forum.'); ?> <a href="http://www.atsutane.net/bbpress/topic/4"><?php _e('Discuss here.'); ?></a></li>
+		<li>None</li>
 	</ul>
 	<p><?php _e('If you have any suggestion or feedback. Feel free to post it'); ?> <a href="http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/"><?php _e('here'); ?></a>.</p>
 	<h2><?php _e('BBpress Option'); ?></h2>
@@ -111,12 +116,44 @@ function wp_bb_option() {
 				<td><input name="bbslimit" type="text" id="bbslimit" value="<?php echo get_option('wpbb_slimit'); ?>" size="3" /> <?php _e('chars'); ?><br /><?php _e("Set the length of text you want to show"); ?></td>
 			</tr>
 			<tr valign="top"> 
+				<th scope="row"><?php _e('Exclude Forums:'); ?></th>
+				<td><?php _e('Use this option if you want to exclude forum from being display on wordpress.'); ?></td>
+			</tr>
+			<?php
+				$request = $wpdb->get_results("SELECT * FROM ".get_option('wpbb_bbprefix')."forums ORDER BY forum_order ASC");
+				$exclude_chk = get_option('wpbb_exclude');
+				foreach ($request as $request) {
+					if (isset($exclude_chk[$request->forum_id])) {
+						$allowed_forum = $request->forum_id;
+						$exclude_option = "checked=\"checked\"";
+					}
+					echo "
+						<tr valign=\"top\">
+							<th scope=\"row\"></th>
+							<td><label for=\"wpbb_exclude[$request->forum_id]\"><input name=\"wpbb_exclude[$request->forum_id]\" type=\"checkbox\" id=\"wpbb_exclude[$request->forum_id]\" value=\"wpbb_exclude[$request->forum_id]\"
+					";
+					if ($allowed_forum == $request->forum_id) { echo "$exclude_option"; }
+					echo "
+							/> $request->forum_name</label></td>
+						</tr>
+					";
+				}
+			?>
+			<tr valign="top"> 
 				<th scope="row"><?php _e('Bbpress DB Prefix:'); ?></th> 
 				<td><input name="bbprefix" type="text" id="bbprefix" value="<?php echo get_option('wpbb_bbprefix'); ?>" size="3" /> <?php _e('Bbpress table prefix'); ?><br /><?php _e("Enter the table prefix for your bbPress installation above. The table prefix is found in your bbPress installation's config.php file."); ?></td>
 			</tr>
 			<tr valign="top">
 				<th scope="row"><?php _e('Bbpress Permalink:'); ?></th>
 				<td><label for="wpbb_permalink"><input name="wpbb_permalink" type="checkbox" id="wpbb_permalink" value="wpbb_permalink" <?php if (get_option('wpbb_permalink')) { echo('checked="checked"'); } ?> /> <?php _e('Use Bbpress Permalink'); ?></label><br /><?php _e('Only use this if you already enable permalink inside Bbpress config.php'); ?></td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><?php _e('Bbpress Last Poster:'); ?></th>
+				<td><label for="wpbb_lastposter"><input name="wpbb_lastposter" type="checkbox" id="wpbb_lastposter" value="wpbb_lastposter" <?php if (get_option('wpbb_lastposter')) { echo('checked="checked"'); } ?> /> <?php _e('Display last poster'); ?></label><br /><?php _e('Check this option if you want to display the username of the last poster'); ?></td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><?php _e('Bbpress Inside:'); ?></th>
+				<td><label for="wpbb_inside"><input name="wpbb_inside" type="checkbox" id="wpbb_inside" value="wpbb_inside" <?php if (get_option('wpbb_inside')) { echo('checked="checked"'); } ?> /> <?php _e('Display "Inside: Forum Name"'); ?></label><br /><?php _e('Check this option if you want the "inside" link to appear.'); ?></td>
 			</tr>
 			<tr valign="top">
 				<th scope="row"><?php _e('Wordpress/Bbpress Integration:'); ?></th>
@@ -207,16 +244,53 @@ function wp_bb_get_discuss() {
 	}
 }
 
+### Function: BBpress Extra Post Info
+function bbld_extra_info($poster_name, $forum_name, $forum_url) {
+	$lastposter = get_option('wpbb_lastposter');
+	$inside = get_option('wpbb_inside');
+	if ($lastposter || $inside) {
+		echo '<small>';
+		if ($lastposter) {
+			echo __('Last Post By: ') . $poster_name;
+			if ($inside)
+				echo '<br/>';
+		}
+		if ($inside) {
+			echo __('Inside: ') . '<a href="'.$forum_url.'">' . __("$forum_name") . '</a>';
+		}
+		echo '</small>';
+	}
+}
+
+function bbld_filter_forums() {
+	global $wpdb;
+	$request = $wpdb->get_results("SELECT * FROM ".get_option('wpbb_bbprefix')."forums ORDER BY forum_order ASC");
+	$exclude_chk = get_option('wpbb_exclude');
+	if ($request) {
+		foreach($request as $request) {
+			if (isset($exclude_chk[$request->forum_id])) {
+			}
+			else {
+				$forum_ids .= $request->forum_id.'\',\'';
+			}
+		}
+		$forum_ids = rtrim($forum_ids, ',\'\' ');
+		$where = "WHERE topic_status = '0' AND forum_id IN ('$forum_ids')";
+		return $where;
+	}
+}
+
 ### Function: BBpress Latest Discussions Sidebar Display
 function wp_bb_get_discuss_sidebar() {
 	global $table_prefix,$wpdb;
 	$forum_slimit = get_option('wpbb_limit');
+	$filter = bbld_filter_forums();
 	if (get_option('wpbb_exdb')) {
 		$exbbdb = new wpdb(get_option('wpbb_dbuser'), get_option('wpbb_dbpass'), get_option('wpbb_dbname'), get_option('wpbb_dbhost'));
-		$bbtopic = $exbbdb->get_results("SELECT * FROM ".get_option('wpbb_bbprefix')."topics WHERE topic_status = 0 ORDER BY topic_time DESC LIMIT $forum_slimit");
+		$bbtopic = $exbbdb->get_results("SELECT * FROM ".get_option('wpbb_bbprefix')."topics ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
 	}
 	else {
-		$bbtopic = $wpdb->get_results("SELECT * FROM ".get_option('wpbb_bbprefix')."topics WHERE topic_status = 0 ORDER BY topic_time DESC LIMIT $forum_slimit");
+		$bbtopic = $wpdb->get_results("SELECT * FROM ".get_option('wpbb_bbprefix')."topics ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
 	}
 	if ($bbtopic) {
 		echo '
@@ -244,14 +318,17 @@ function wp_bb_get_discuss_sidebar() {
 				if ($wpuid) {
 					$user_forum_data = "$bbtopic->topic_last_poster_name";
 					$user_forum_data = get_userdata($wpuid->ID);
-					echo '<small>' . __('Last Post By: ') . $user_forum_data->display_name . '<br />' . __('Inside: ') . '<a href="'.$forum_url.'">' . __("$bbforum->forum_name") . '</a></small></li>';
+					bbld_extra_info($user_forum_data->display_name,$bbforum->forum_name, $forum_url);
+					echo "</li>";
 				}
 				else {
-					echo '<small>' . __('Last Post By: ') . $bbtopic->topic_last_poster_name . '<br />' . __('Inside: ') . '<a href="'.$forum_url.'">' . __("$bbforum->forum_name") . '</a></small></li>';
+					bbld_extra_info($bbtopic->topic_last_poster_name,$bbforum->forum_name, $forum_url);
+					echo "</li>";
 				}
 			}
 			else {	
-				echo '<small>' . __('Last Post By: ') . $bbtopic->topic_last_poster_name . '<br />' . __('Inside: ') . '<a href="'.$forum_url.'">' . __("$bbforum->forum_name") . '</a></small></li>';
+				bbld_extra_info($bbtopic->topic_last_poster_name,$bbforum->forum_name, $forum_url);
+				echo "</li>";
 			}
 		}
 		echo "</ul>";
@@ -295,14 +372,17 @@ function bbld_widget($args) {
 				if ($wpuid) {
 					$user_forum_data = "$bbtopic->topic_last_poster_name";
 					$user_forum_data = get_userdata($wpuid->ID);
-					echo '<small>' . __('Last Post By: ') . $user_forum_data->display_name . '<br />' . __('Inside: ') . '<a href="'.$forum_url.'">' . __("$bbforum->forum_name") . '</a></small></li>';
+					bbld_extra_info($user_forum_data->display_name,$bbforum->forum_name, $forum_url);
+					echo "</li>";
 				}
 				else {
-					echo '<small>' . __('Last Post By: ') . $bbtopic->topic_last_poster_name . '<br />' . __('Inside: ') . '<a href="'.$forum_url.'">' . __("$bbforum->forum_name") . '</a></small></li>';
+					bbld_extra_info($bbtopic->topic_last_poster_name,$bbforum->forum_name, $forum_url);
+					echo "</li>";
 				}
 			}
 			else {	
-				echo '<small>' . __('Last Post By: ') . $bbtopic->topic_last_poster_name . '<br />' . __('Inside: ') . '<a href="'.$forum_url.'">' . __("$bbforum->forum_name") . '</a></small></li>';
+				bbld_extra_info($bbtopic->topic_last_poster_name,$bbforum->forum_name, $forum_url);
+				echo "</li>";
 			}
 		}
 		echo "</ul>";

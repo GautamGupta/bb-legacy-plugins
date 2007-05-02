@@ -3,55 +3,68 @@ Tags: avatars, avatar, uploads, profile
 Contributors: LouiseDade
 Requires at least: 0.8
 Tested up to: 0.8.1
-Stable Tag: 0.2
+Stable Tag: 0.3
 
 Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress. Admins can configure maximum allowed file size and image dimensions.
 
 == Description ==
 
-Plugin URI: http://www.classical-webdesigns.co.uk/articles/43_bbpress-plugin-avatar-upload.html
+Plugin URI: http://bbpress.org/plugins/topic/46
+Author: Louise Dade
+Author URI: http://www.classical-webdesigns.co.uk/
 
 Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress, and provides template functions to display the uploaded image.
 
 Features:
 * Bozos can not upload avatars.
 * Admins can configure maximum allowed file size (bytes) and dimensions (pixels) of images.
-  - Current done from within the script (no Admin page interface at this time).
+  - Currently done from within the script (no Admin page interface at this time).
 * Anybody with the 'moderate' capability can upload another user's avatar
   - this to ensures that inappropriate images can be removed.
-  - there is no "delete avatar" function at this time, but an inappropriate image can be removed by uploading a 'safe' image (e.g. a blank 1x1 pixel image) to replace it (you could them manually set that user as a bozo to stop them re-uploading inappropriate images.
+  - there is no "delete avatar" function at this time, but an inappropriate image can be removed by uploading a 'safe' image (e.g. a blank 1x1 pixel image) to replace it (you could them manually set that user as a bozo to stop them re-uploading inappropriate images).
+* Option to display a default avatar for users who do not upload their own.
+* Can be extended with fel64's "Identicons" plugin to give users the option of display an identicon instead of uploading an image (becomes their 'default' avatar). http://bbpress.org/forums/topic/1027?replies=25#post-6759
 
 == Installation ==
 
-1. Create a folder to store your avatars. A folder called "avatars" in the root directory of your bbPress installation is probably best (and the default).
+UPGRADING?  If you are using an older version of this plugin, you need to follow these installation instructions because the template functions are incompatible with the older version.
 
-2. Open up the 'avatar-upload.php' file and configure the "configuration Variables" (if desired). At least make sure the '$avatar_dir' path is correct.  Other configurable variables include the maximum allowed width and height of uploaded images and the maximum file size (in bytes).
+1. Open up the 'my-plugins/bb-avatar-upload.php' file and configure the "configuration Setting" (if desired). At least make sure the '$avatar_dir' variable is correct.  Other configurable variables include the maximum allowed width and height of uploaded images and the maximum file size (in bytes).
 
-3. Open up your 'profile-edit.php' template and insert the following "Upload Avatar" link wherever you wish:
+2. The avatar upload page should appear as a tab ("Avatar") on the Profile menu on the user's profile pages.  If you like the link elsewhere, then insert the following "Upload Avatar" link wherever you wish:
 
-    <a href="<?php echo bb_get_option('uri').'avatar-upload.php?id='.$user->ID; ?>">Upload Avatar</a>
+    <a href="<?php profile_tab_link($user->ID, 'avatar'); ?>"><?php _e("Upload Avatar"); ?></a>
 
-4. To display an uploaded avatar, just insert the following template functions.
+   Use the available $user->ID for the page you place the link on.
+
+3. To display an uploaded avatar, just insert the following template function.
 
    a) On the user's profile page ('profile.php' template).
       
-      <?php display_avatar_profile($user->avatar_file); ?>
+      <?php avatarupload_display($user->ID); ?>
 
       This grabs the avatar info file directly from the current user's profile information.
 
    b) On each user's forum posts ('post.php' template)
 
-      <?php display_avatar(get_post_author_id()); ?>
+      <?php avatarupload_display(get_post_author_id()); ?>
 
-      This function queries the database for any user's ID. In this particular case the post author's id.
+   You can include the avatar anywhere else you like, just be sure to have either the current or any user's ID available.
 
-5. This is optional, but you can open up 'my-templates/avatar.php' and edit the template if you wish, but be sure not to mess with the upload form.
+  c) If you just want the URI of the avatar (for your own plugins for example):
 
-6. Upload the plugin scripts to the following locations.
+     <?php avatarupload_get_avatar(ID); ?>
 
-   'avatar-upload.php' - into your bbPress root folder.
-   'my-templates/avatar.php' - into your 'my-templates/my-template-name/' folder (or in the kakumei folder)
-   'my-plugins/bb-avatar-upload.php' - into your 'my-plugins/' folder (and activated).
+     Where ID is a user ID. Returns false if no avatar exists for that user.
+
+4. This is optional, but you can open up 'my-templates/avatar.php' and edit the template if you wish, but be sure not to mess with the upload form.
+
+5. Upload the plugin files to the following locations.
+
+   'avatars/default.png'             - both 'avatars/' dir and image into the bbPress root dir.
+   'avatar-upload.php'               - bbPress root dir.
+   'my-templates/avatar.php'         - your 'my-templates/my-template-name/' (or kakumei) dir.
+   'my-plugins/bb-avatar-upload.php' - your 'my-plugins/' dir (and activated).
 
 That's it, the 'Avatar Upload' plugin should now be working.
 
@@ -69,5 +82,8 @@ However, one can never 100% sure and there is always some security risks when al
 
 == Change Log ==
 
-2007-04-17  Ver. 0.2 reduced DB calls, added filename checks (to stop things like "myavatar.exe.jpg")
-2007-04-07  Ver. 0.1 released.
+2007-05-02 Ver. 0.3 rewritten, config vars moved to plugin script, enabled default avatar,
+                    added profile tab and made it possible to use plugin with other plugins.
+2007-04-17 Ver. 0.2 reduced DB calls, added filename checks (to stop things like
+                    "myavatar.exe.jpg").
+2007-04-07 Ver. 0.1 released.

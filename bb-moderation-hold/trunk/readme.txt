@@ -3,6 +3,7 @@ Contributors: so1o
 Tags: moderation, hold
 Requires at least: 1.0 alpha build 809
 Tested up to: 1.0 alpha build 817
+Stable tag: trunk
 
 Hold posts and topics for moderation
 

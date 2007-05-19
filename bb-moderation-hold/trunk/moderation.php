@@ -1,18 +1,18 @@
 <?php
 /*
-Plugin Name: Moderation Hold
+Plugin Name: BB Moderation Hold
 Plugin URI: http://www.adityanaik.com
 Description: Hold posts and topics for moderation
 Author: Aditya Naik
 Author URI: http://www.adityanaik.com/
-Version: 0.2
+Version: 0.1
 */
 
 /**
  * Add Admin Page
  *
  * @author  Aditya Naik <aditya@adityanaik.com>
- * @version v 0.02 Sun Apr 08 2007 02:12:09 GMT-0400 (Eastern Daylight Time)
+ * @version v 0.01 Sun Apr 08 2007 02:12:09 GMT-0400 (Eastern Daylight Time)
  */
 add_action( 'bb_admin_menu_generator', 'bb_moderation_hold_add_admin_page' );
 function bb_moderation_hold_add_admin_page() {
@@ -27,7 +27,7 @@ function bb_moderation_hold_add_admin_page() {
  * Administration Page for Moderation Options
  *
  * @author  Aditya Naik <aditya@adityanaik.com>
- * @version v 0.02 Sun Apr 08 2007 02:12:05 GMT-0400 (Eastern Daylight Time)
+ * @version v 0.01 Sun Apr 08 2007 02:12:05 GMT-0400 (Eastern Daylight Time)
  */
 function bb_moderation_hold_admin_page() {
 
@@ -207,7 +207,7 @@ function bb_anonymous_default_options($options){
  * Process Admin Page Post
  *
  * @author  Aditya Naik <aditya@adityanaik.com>
- * @version v 0.02 Sun Apr 08 2007 02:11:58 GMT-0400 (Eastern Daylight Time)
+ * @version v 0.01 Sun Apr 08 2007 02:11:58 GMT-0400 (Eastern Daylight Time)
  */
 add_action( 'bb_admin-header.php','bb_moderation_hold_process_post');
 function bb_moderation_hold_process_post() {
@@ -351,7 +351,7 @@ function bb_moderation_hold_approve_posts($postids){
  * Also send mail options are set
  *
  * @author  Aditya Naik <aditya@adityanaik.com>
- * @version v 0.02 Tue Apr 10 2007 23:29:07 GMT-0400 (Eastern Daylight Time)
+ * @version v 0.01 Tue Apr 10 2007 23:29:07 GMT-0400 (Eastern Daylight Time)
  */
 function bb_moderation_hold_after_posting_do_the_magic($post_id){
   global $bbdb, $topic_id, $post_id;
@@ -437,18 +437,16 @@ add_action('bb_post.php','bb_moderation_hold_after_posting_do_the_magic');
 add_filter('pre_post_status','bb_moderation_fix_status_before_post',10,3);
 add_filter('post_delete_link','bb_moderation_fix_delete_link',10,3);
 
+/**
+ * Add a delete/moderate link to posts
+ * 
+ * @author  Aditya Naik <aditya@adityanaik.com>
+ * @version v 0.01 Tue Apr 10 2007 23:30:05 GMT-0400 (Eastern Daylight Time)
+ */
 function bb_moderation_fix_delete_link($r, $post_status, $post_id){
     if (-1 == $post_status)
         $r = "<a href='" . bb_get_option('uri') . 'bb-admin/admin-base.php?plugin=bb_moderation_hold_post_admin_page' . "' >". __('Moderate') ."</a>";
     return $r;
-}
-
-//add_action('bb_new_topic','bb_moderation_fix_topic_count');
-function bb_moderation_fix_topic_count($topic_id) {
-    global $bbdb;
-    $topic = $bbdb->get_results("SELECT * from $bbdb->topics where topic_id = $topic_id");
-    $bbdb->query("UPDATE $bbdb->forums SET topics = topics - 1 WHERE forum_id = $topic->forum_id");
-	$bb_cache->flush_many( 'forum', $forum_id );
 }
 
 ?>

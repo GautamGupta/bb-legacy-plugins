@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: HTTP authentication
-Plugin URI: http://www.network.net.au/bbpress/plugins/http/http-authentication.latest.zip
+Plugin URI: http://bbpress.org/plugins/topic/42
 Description: Allows users to authenticate using basic or digest HTTP authentication
 Author: Sam Bauers
 Version: 0.1.2
-Author URI: http://www.network.net.au/
+Author URI: 
 
 Version History:
 0.1 	: Initial Release - based on LDAP Authentication plugin

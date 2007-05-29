@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Post count titles
-Plugin URI: http://www.network.net.au/bbpress/plugins/post-count-titles/post-count-titles.latest.zip
+Plugin URI: http://bbpress.org/plugins/topic/50
 Description: Adds customisable titles for users based on their post count
 Author: Sam Bauers
 Version: 1.0
-Author URI: http://www.network.net.au/
+Author URI: 
 
 Version History:
 1.0 	: Initial Release

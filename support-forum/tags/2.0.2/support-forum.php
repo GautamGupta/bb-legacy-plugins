@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Support forum
-Plugin URI: http://www.adityanaik.com/projects/
+Plugin URI: http://bbpress.org/plugins/topic/16
 Description: Changes the forum to a support forum and adds functionality to mark topics resolved, not resolved or not a support question
 Author: Aditya Naik, Sam Bauers
 Author URI: http://www.adityanaik.com/

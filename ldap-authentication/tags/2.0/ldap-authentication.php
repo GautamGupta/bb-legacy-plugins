@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: LDAP authentication
-Plugin URI: http://www.network.net.au/bbpress/plugins/ldap/ldap-authentication.latest.zip
+Plugin URI: http://bbpress.org/plugins/topic/26
 Description: Allows users to authenticate against an LDAP service
 Author: Sam Bauers
 Version: 2.0
-Author URI: http://www.network.net.au/
+Author URI: 
 
 Version History:
 1.0 	: Initial Release

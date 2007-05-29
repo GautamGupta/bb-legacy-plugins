@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Visual Support Forums
-Plugin URI: http://www.network.net.au/bbpress/plugins/support-forum/visual-support-forum.latest.zip
+Plugin URI: http://bbpress.org/plugins/topic/31
 Description: This plugin adds some icons before topic names to indicate support/closed status, requires the Support Forums plugin by Aditya Naik.
 Author: Sam Bauers
 Version: 1.0.1
-Author URI: http://www.network.net.au/
+Author URI: 
 
 Version History:
 1.0		: Initial Release

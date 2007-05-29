@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Page links
-Plugin URI: http://www.network.net.au/bbpress/plugins/page-links/page-links.latest.zip
+Plugin URI: http://bbpress.org/plugins/topic/43
 Description: Adds page links to topic lists
 Author: Sam Bauers
 Version: 1.0.2
-Author URI: http://www.network.net.au/
+Author URI: 
 
 Version History:
 1.0 	: Initial Release

@@ -52,7 +52,7 @@ Version History:
  * @author    Sam Bauers <sam@viveka.net.au>
  * @copyright 2007 Sam Bauers
  * @license   http://www.gnu.org/licenses/gpl.txt GNU General Public License v2
- * @version   2.0.1
+ * @version   2.0.2
  **/
 
 
@@ -60,7 +60,7 @@ Version History:
  * The restrict registration class handles all the whitelist and blacklist juggling and email parsing
  *
  * @author  Sam Bauers
- * @version 1.0
+ * @version 1.0.1
  **/
 class Restrict_Registration
 {

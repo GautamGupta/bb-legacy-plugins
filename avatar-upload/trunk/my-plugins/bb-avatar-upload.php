@@ -2,40 +2,41 @@
 /*
 Plugin Name: Avatar Upload
 Plugin URI: http://bbpress.org/plugins/topic/46
-Version: 0.3
+Version: 0.4
 Description: Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress.
 Author: Louise Dade
 Author URI: http://www.classical-webdesigns.co.uk/
 */
 
 // Configuration Settings
-function avatarupload_config()
+class avatarupload_config
 {
-	return array(
-
+	function avatarupload_config()
+	{
 		// Avatar folder location (default is 'avatars' in the bbPress root folder)
 		// You must create the folder before you install this plugin.
-		'avatar_dir' => "avatars/", // remember to include trailing slash
+		$this->avatar_dir = "avatars/"; // remember to include trailing slash
 
 		// Define maximum values allowed
-		'max_width' => 150, // (pixels)
-		'max_height' => 150, // (pixels)
-		'max_bytes' => 51200, // filesize (bytes; 1024 bytes = 1 KB)
+		$this->max_width = 150; // pixels
+		$this->max_height = 150; // pixels
+		$this->max_bytes = 51200; // filesize (1024 bytes = 1 KB)
 
 		// Default avatar - set 'use_default' to '0' to display no image instead of default
-		'default_avatar' => array( 	
+		// The default URI is in the '$this->avatar_dir' folder.
+		$this->default_avatar = array( 	
 			'use_default' => 1,
-			'uri' => bb_get_option('uri').'avatars/default.png', // full uri of image
+			'uri' =>  bb_get_option('uri') . $this->avatar_dir . 'default.png',
 			'width' => 80,
 			'height' => 80,
 			'alt' => "User has not uploaded an avatar"
-		),
+		);
 
 		// Allowed file extensions
-		'file_extns' => array("gif", "jpg", "jpeg", "png"),
+		$this->file_extns = array("gif", "jpg", "jpeg", "png");
 
 		// Mime-Types (list thanks to SamBauers) - you probably want to leave this alone.
-		'mime_types' => array(
+		$this->mime_types = array(
 			'gif' => array(
 				'image/gif',
 				'image/gi_'
@@ -56,8 +57,14 @@ function avatarupload_config()
 				'application/png',
 				'application/x-png'
 			)
-		)
-	);
+		);
+
+		// JPEG == JPG
+		$this->mime_types['jpeg'] = $this->mime_types['jpg'];
+
+		// Just a pretty value (Kilobytes) for output use
+		$this->max_kbytes = round($this->max_bytes / 1024, 2);
+	}
 }
 
 // Display the avatar image
@@ -69,17 +76,18 @@ function avatarupload_display($id, $status='')
 		echo ($status == 'new') ? '?'.time() : '';
 		echo'" width="'.$a[1].'" height="'.$a[2].'" alt="Avatar" />';
 	} else {
-		$config = avatarupload_config();
-		$default = $config['default_avatar'];
-		if ($default['use_default'] == 1)
+		$config = new avatarupload_config();
+
+		if ($config->default_avatar['use_default'] == 1)
 		{
-			echo '<img src="'.$default['uri'].'" width="'.$default['width'].'" height="'.$default['height']
-			.'" alt="'.$d['alt'].'" />';
+			echo '<img src="'.$config->default_avatar['uri'].'" width="'.$config->default_avatar['width']
+			.'" height="'.$config->default_avatar['height'].'" alt="'.$config->default_avatar['alt'].'" />';
 		}
 	}
 }
 
-// Get the avatar URI
+// Get the avatar URI ($id = user->ID, $fulluri = full url to image,
+// $force_db = get avatar from database where 'usermeta' not already available)
 function avatarupload_get_avatar($id, $fulluri=1, $force_db=0)
 {
 	global $bbdb, $user;
@@ -106,8 +114,8 @@ function avatarupload_get_avatar($id, $fulluri=1, $force_db=0)
 	// do we want the full uri?
 	if ($fulluri == 1)
 	{
-		$config = avatarupload_config();
-		$a[0] = bb_get_option('uri') . $config['avatar_dir'] . $a[0];
+		$config = new avatarupload_config();
+		$a[0] = bb_get_option('uri') . $config->avatar_dir . $a[0];
 	}
 	return $a;
 }

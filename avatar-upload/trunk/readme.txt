@@ -3,7 +3,7 @@ Tags: avatars, avatar, uploads, profile
 Contributors: LouiseDade
 Requires at least: 0.8
 Tested up to: 0.8.1
-Stable Tag: 0.3
+Stable Tag: 0.4
 
 Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress. Admins can configure maximum allowed file size and image dimensions.
 
@@ -23,21 +23,21 @@ Features:
   - this to ensures that inappropriate images can be removed.
   - there is no "delete avatar" function at this time, but an inappropriate image can be removed by uploading a 'safe' image (e.g. a blank 1x1 pixel image) to replace it (you could them manually set that user as a bozo to stop them re-uploading inappropriate images).
 * Option to display a default avatar for users who do not upload their own.
-* Can be extended with fel64's "Identicons" plugin to give users the option of display an identicon instead of uploading an image (becomes their 'default' avatar). http://bbpress.org/forums/topic/1027?replies=25#post-6759
+* Can be extended with fel64's "Identicons" plugin to give users the option of displaying an identicon instead of uploading an image (becomes their 'default' avatar). http://bbpress.org/forums/topic/1027?replies=25#post-6759
 
 == Installation ==
 
-UPGRADING?  If you are using an older version of this plugin, you need to follow these installation instructions because the template functions are incompatible with the older version.
+UPGRADING?  If you are using an older version of this plugin, you need to follow these installation instructions because the template functions are incompatible with older versions.
 
-1. Open up the 'my-plugins/bb-avatar-upload.php' file and configure the "configuration Setting" (if desired). At least make sure the '$avatar_dir' variable is correct.  Other configurable variables include the maximum allowed width and height of uploaded images and the maximum file size (in bytes).
+1. Open up the 'my-plugins/bb-avatar-upload.php' file and configure the "Configuration Settings". At least make sure the '$avatar_dir' variable is correct.
 
-2. The avatar upload page should appear as a tab ("Avatar") on the Profile menu on the user's profile pages.  If you like the link elsewhere, then insert the following "Upload Avatar" link wherever you wish:
+2. The avatar upload page should appear as a tab ("Avatar") on the user's Profile menu.  If you'd prefer the link to be elsewhere, insert the following "Upload Avatar" link wherever you wish:
 
     <a href="<?php profile_tab_link($user->ID, 'avatar'); ?>"><?php _e("Upload Avatar"); ?></a>
 
    Use the available $user->ID for the page you place the link on.
 
-3. To display an uploaded avatar, just insert the following template function.
+3. To display an uploaded avatar, insert the following template function.
 
    a) On the user's profile page ('profile.php' template).
       
@@ -49,7 +49,7 @@ UPGRADING?  If you are using an older version of this plugin, you need to follow
 
       <?php avatarupload_display(get_post_author_id()); ?>
 
-   You can include the avatar anywhere else you like, just be sure to have either the current or any user's ID available.
+   You can include the avatar anywhere else you like, just be sure to have the user's ID available.
 
   c) If you just want the URI of the avatar (for your own plugins for example):
 
@@ -57,7 +57,7 @@ UPGRADING?  If you are using an older version of this plugin, you need to follow
 
      Where ID is a user ID. Returns false if no avatar exists for that user.
 
-4. This is optional, but you can open up 'my-templates/avatar.php' and edit the template if you wish, but be sure not to mess with the upload form.
+4. OPTIONAL: open up 'my-templates/avatar.php' and edit the template if you wish, but be sure not to mess with the upload form.
 
 5. Upload the plugin files to the following locations.
 
@@ -80,8 +80,15 @@ The plugin checks the images upon upload to ensure that only gifs, jpegs/jpgs an
 
 However, one can never 100% sure and there is always some security risks when allowing users to upload to your server. USE THIS PLUGIN AT YOUR OWN RISK!
 
+= I get the following error (or similar): move_uploaded_file(/path/to/bbpress/avatars/username.jpg) [function.move-uploaded-file]: failed to open stream: Permission denied in /path/to/bbpress/avatar-upload.php on line XXX =
+
+You need to set the file permissions (chmod) of the 'avatars' folder to 666 to allow the plugin to write to the folder.  You can do this using SHH or alternatively (and more easily) many FTP applications allow permissions setting.  Please refer to your web host for their advice if you do not know how to do this.
+
+
 == Change Log ==
 
+2007-06-02 Ver. 0.4 made config vars into a class, totally overhauled upload script (streamlined),
+                    amended readme instructions and fixed problem with pretty permalinks.
 2007-05-02 Ver. 0.3 rewritten, config vars moved to plugin script, enabled default avatar,
                     added profile tab and made it possible to use plugin with other plugins.
 2007-04-17 Ver. 0.2 reduced DB calls, added filename checks (to stop things like

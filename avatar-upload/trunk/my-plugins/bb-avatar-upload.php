@@ -2,7 +2,7 @@
 /*
 Plugin Name: Avatar Upload
 Plugin URI: http://bbpress.org/plugins/topic/46
-Version: 0.4
+Version: 0.4.1
 Description: Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress.
 Author: Louise Dade
 Author URI: http://www.classical-webdesigns.co.uk/
@@ -74,7 +74,7 @@ function avatarupload_display($id, $status='')
 	{
 		echo '<img src="'.$a[0];
 		echo ($status == 'new') ? '?'.time() : '';
-		echo'" width="'.$a[1].'" height="'.$a[2].'" alt="Avatar" />';
+		echo'" width="'.$a[1].'" height="'.$a[2].'" alt="'.$a[4].'" />';
 	} else {
 		$config = new avatarupload_config();
 
@@ -117,6 +117,10 @@ function avatarupload_get_avatar($id, $fulluri=1, $force_db=0)
 		$config = new avatarupload_config();
 		$a[0] = bb_get_option('uri') . $config->avatar_dir . $a[0];
 	}
+
+	// Add the username for use in 'alt' attribute to end of array
+	$a[] = $user->user_login;
+
 	return $a;
 }
 

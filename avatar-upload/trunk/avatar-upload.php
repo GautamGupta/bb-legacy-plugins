@@ -2,7 +2,7 @@
 /*
 Plugin Name: Avatar Upload
 Plugin URI: http://bbpress.org/plugins/topic/46
-Version: 0.4
+Version: 0.4.1
 Description: Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress.
 Author: Louise Dade
 Author URI: http://www.classical-webdesigns.co.uk/
@@ -49,7 +49,7 @@ if (!empty($_FILES['p_browse']))
 	$img_errs = $img['error'];
 
 	// Grab file extension
-	$img_ext = substr($img_name, strrpos($img_name, ".")+1);
+	$img_ext = strtolower(substr($img_name, strrpos($img_name, ".")+1));
 
 	// Build the user's avatar filename
 	$user_filename = strtolower($user->user_login) . "." . $img_ext;
@@ -64,13 +64,13 @@ if (!empty($_FILES['p_browse']))
 	}
 
 	// Is file uploaded to temp folder?
-	if ($img_errs == 0 && (!file_exists($img_temp) || !is_uploaded_file($img_temp)) )
+	if ($img_errs == 0 && (!@file_exists($img_temp) || !@is_uploaded_file($img_temp)) )
 	{
 		$img_errs = 4;
 	}
 
 	// Is file extension valid and does it match the mime-type?
-	if ($img_errs == 0 && (!in_array($img_type, $config->mime_types[$img_ext]) || !in_array($img_ext, $config->file_extns)) )
+	if ($img_errs == 0 && (!@in_array($img_type, $config->mime_types[$img_ext]) || !@in_array($img_ext, $config->file_extns)) )
 	{
 		$img_errs = 8;
 	}
@@ -85,7 +85,7 @@ if (!empty($_FILES['p_browse']))
 	if  ($img_errs == 0)
 	{
 		// Get the dimensions
-		$dims = getimagesize($img_temp);
+		$dims = @getimagesize($img_temp);
 		$img_w = $dims[0];
 		$img_h = $dims[1];
 
@@ -96,7 +96,7 @@ if (!empty($_FILES['p_browse']))
 	}
 
 	// Did we move the image to the avatar folder successfully?
-	if ($img_errs == 0 && !move_uploaded_file($img_temp, BBPATH . $config->avatar_dir . $user_filename) )
+	if ($img_errs == 0 && !@move_uploaded_file($img_temp, BBPATH . $config->avatar_dir . $user_filename) )
 	{
 		$img_errs = 11;
 	}
@@ -110,7 +110,7 @@ if (!empty($_FILES['p_browse']))
 		{
 			// If different, delete 'current' - this will only occur when
 			// the new and current avatars have different file extensions.
-			unlink(BBPATH . $config->avatar_dir . $current_avatar[0]);
+			@unlink(BBPATH . $config->avatar_dir . $current_avatar[0]);
 		}
 
 		// Add avatar to database as usermeta data.

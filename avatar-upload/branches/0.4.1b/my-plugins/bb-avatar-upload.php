@@ -2,8 +2,8 @@
 /*
 Plugin Name: Avatar Upload
 Plugin URI: http://bbpress.org/plugins/topic/46
-Version: 0.4.1
-Description: Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress.
+Branch: 0.4.1b
+Description: Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress, with Identicon support.
 Author: Louise Dade
 Author URI: http://www.classical-webdesigns.co.uk/
 */
@@ -25,7 +25,7 @@ class avatarupload_config
 		// Default avatar - set 'use_default' to '0' to display no image instead of default
 		// The default URI is in the '$this->avatar_dir' folder.
 		$this->default_avatar = array( 	
-			'use_default' => 1,
+			'use_default' => 0,
 			'uri' =>  bb_get_option('uri') . $this->avatar_dir . 'default.png',
 			'width' => 80,
 			'height' => 80,
@@ -76,12 +76,28 @@ function avatarupload_display($id, $status='')
 		echo ($status == 'new') ? '?'.time() : '';
 		echo'" width="'.$a[1].'" height="'.$a[2].'" alt="'.$a[4].'" />';
 	} else {
+		// no stored avatar was found so we opt for the defaults
+
 		$config = new avatarupload_config();
 
 		if ($config->default_avatar['use_default'] == 1)
 		{
+			// Use a "genric" default avatar
 			echo '<img src="'.$config->default_avatar['uri'].'" width="'.$config->default_avatar['width']
 			.'" height="'.$config->default_avatar['height'].'" alt="'.$config->default_avatar['alt'].'" />';
+		} else {
+			// Or use Identicons instead.  New users will have an identicon automatically
+			// created when they join, but this is for existing users with no avatar.
+
+			felapplyidenticon($id); // create identicon
+
+			// now fetch it from the database
+			if ($a = avatarupload_get_avatar($id))
+			{
+				echo '<img src="'.$a[0];
+				echo ($status == 'new') ? '?'.time() : '';
+				echo'" width="'.$a[1].'" height="'.$a[2].'" alt="'.$a[4].'" />';
+			}
 		}
 	}
 }

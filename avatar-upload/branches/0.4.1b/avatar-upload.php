@@ -2,8 +2,8 @@
 /*
 Plugin Name: Avatar Upload
 Plugin URI: http://bbpress.org/plugins/topic/46
-Version: 0.4.1
-Description: Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress.
+Branch: 0.4.1b
+Description: Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress, with Identicon support.
 Author: Louise Dade
 Author URI: http://www.classical-webdesigns.co.uk/
 */
@@ -160,6 +160,12 @@ if (!empty($_FILES['p_browse']))
 				break;
 		}
 	}
+}
+
+// Has user checked the "Use Identicon" option?
+if( $_POST['identicon'] )
+{
+	felapplyidenticon( $user_id ); // create an identicon
 }
 
 bb_load_template( 'avatar.php', array('success_message', 'config') );

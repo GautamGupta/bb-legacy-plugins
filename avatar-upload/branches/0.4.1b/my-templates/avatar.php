@@ -28,6 +28,11 @@
 <h3><?php _e('Your Current Avatar'); ?></h3>
 <p><?php echo avatarupload_display($user->ID, 'new'); ?></p>
 
+<form method="POST" action="<?php profile_tab_link($user->ID, 'avatar'); ?>">
+<p><label><input type="checkbox" name="identicon" /> Use your Identicon instead.</label></p>
+<p><input type="submit" name="submit" id="submit" value="Use Identicon" /></p>
+</form>
+
 <?php } ?>
 
 <?php bb_get_footer(); ?>

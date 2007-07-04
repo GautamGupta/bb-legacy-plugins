@@ -5,7 +5,7 @@ Plugin URI: http://www.adityanaik.com
 Description: Hold posts and topics for moderation
 Author: Aditya Naik
 Author URI: http://www.adityanaik.com/
-Version: 0.1
+Version: 0.2
 */
 
 /**
@@ -315,7 +315,8 @@ function bb_moderation_hold_approve_posts($postids){
   if ($postids) : foreach($postids as $post_id) :
     $bbdb->query("UPDATE $bbdb->posts SET post_status = '0' WHERE post_id = '$post_id'");
     $bb_post    = bb_get_post ( $post_id );
-    $topic   = get_topic( $bb_post->topic_id );
+    add_filter( 'get_topic_where', 'no_where' );
+    $topic   = get_topic( $bb_post->topic_id , false);
     $topic_id = (int) $topic->topic_id;
 
     if (!$user = bb_get_user( $bb_post->poster_id )){
@@ -359,7 +360,7 @@ function bb_moderation_hold_after_posting_do_the_magic($post_id){
 
   $hold_topics = bb_moderation_check_options('hold_topics', $options);
   $hold_posts = bb_moderation_check_options('hold_posts', $options);
-  //  echo "!" . $hold_topics . "!" . $hold_posts . "!";
+  
   if ( $hold_topics && isset($_POST['topic']) && $forum = (int) $_POST['forum_id'] ) {
     $bbdb->query("UPDATE $bbdb->topics SET topic_status = '-1' WHERE topic_id = '$topic_id'");
     if ('Y' == $options['hold_topics_send_email']) bb_moderation_hold_mail_moderation();

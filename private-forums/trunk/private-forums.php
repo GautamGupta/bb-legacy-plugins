@@ -4,7 +4,7 @@ Plugin Name: Private Forums
 Plugin URI: http://www.adityanaik.com/projects/plugins/bb-private-forums/
 Description: Regulate Access to forums in bbPress
 Author: Aditya Naik
-Version: 2.1
+Version: 3.0
 Author URI: http://www.adityanaik.com/
 
 Version History:
@@ -15,6 +15,8 @@ Version History:
 		: Added selectable prefix text
 		: Removed redundant forum_access_update_option
 2.1		: Created Common Submit for all options
+3.0		: Fixed the submenu generation
+			: Fixed Forum Filter
 */
 
 add_action( 'bb_admin_menu_generator', 'forum_access_add_admin_page' );
@@ -22,25 +24,8 @@ add_action( 'bb_init', 'forum_access_check_private_forum');
 add_action( 'init', 'forum_access_check_private_forum');
 
 function forum_access_add_admin_page() {
-	global $bb_submenu;
+	bb_admin_add_submenu(__('Private Forums'), 'use_keys', 'forum_access_admin_page');
 
-	$forum_func = (forum_access_check_requirements()) ? 'forum_access_admin_page' : 'forum_access_admin_page_requirement_failed';
-
-	$bb_submenu['site.php'][] = array(__('Private Forums'), 'use_keys', $forum_func);
-}
-
-function forum_access_check_requirements() {
-	return (function_exists('is_serialized')) ? true :false;
-}
-
-function forum_access_admin_page_requirement_failed() {
-	?>
-	<h2>Private Forums</h2>
-	<p>The bbPress installation you are running does not meet requirements for Private Forums. You can do the following to fix this:</p>
-	<ol>
-		<li>Upgrade the installation of bbPress to the <a href="http://trac.bbpress.org/changeset/trunk?old_path=%2F&format=zip" title="latest version of code from the bbPress Development Site">latest version</a> from the code repository</li>
-	</ol>
-	<?php
 }
 
 function forum_access_get_option($option) {
@@ -110,27 +95,26 @@ function forum_access_admin_page() {
 function forum_access_check_private_forum() {
 	global $bb,$bb_current_user, $forum_access_failure_msg;
 
-	if (forum_access_check_requirements()) {
-		add_action( 'bb_admin-header.php','forum_access_process_post');
-		$login_page = $bb->path . 'bb-login.php';
+	add_action( 'bb_admin-header.php','forum_access_process_post');
+	$login_page = $bb->path . 'bb-login.php';
 
-		if ($_SERVER['PHP_SELF'] != $login_page) {
-			$priv_forums = forum_access_get_option('forum_access_private_forums');
-			if ( !$bb_current_user && !empty($priv_forums)) {
-				add_action( 'bb_forum.php_pre_db', 'forum_access_forum_init' );
-				add_action( 'bb_topic.php_pre_db', 'forum_access_topic_init' );
-				add_action( 'bb_tag-single.php', 'forum_access_tag_single_init' );
+	if ($_SERVER['PHP_SELF'] != $login_page) {
+		$priv_forums = forum_access_get_option('forum_access_private_forums');
+		if ( !bb_current_user() && !empty($priv_forums)) {
+			add_action( 'bb_forum.php_pre_db', 'forum_access_forum_init' );
+			add_action( 'bb_topic.php_pre_db', 'forum_access_topic_init' );
+			add_action( 'bb_tag-single.php', 'forum_access_tag_single_init' );
 
-				if (bb_get_option('forum_access_private_forums_option') == 'SHOW_PRIVATE') {
-					add_filter( 'get_forum_name', 'forum_access_add_private_name_to_forums', 10,2);
-					add_filter( 'get_topic_title', 'forum_access_add_private_name_to_topics', 10,2);
-				} else {
-					add_action( 'bb_head', 'forum_access_head_init' );
-				}
-
-		 		$forum_access_failure_msg = forum_access_format_error(bb_get_option('forum_access_failure_msg'));
-
+			if (bb_get_option('forum_access_private_forums_option') == 'SHOW_PRIVATE') {
+				add_filter( 'get_forum_name', 'forum_access_add_private_name_to_forums', 10,2);
+				add_filter( 'get_topic_title', 'forum_access_add_private_name_to_topics', 10,2);
+			} else {
+				add_action( 'bb_head', 'forum_access_head_init' );
+				add_filter( 'get_forums','forum_access_filter_forums');
 			}
+
+			$forum_access_failure_msg = forum_access_format_error(bb_get_option('forum_access_failure_msg'));
+
 		}
 	}
 }
@@ -174,7 +158,6 @@ function forum_access_format_error($err_msg){
 
 function forum_access_head_init() {
 	global $forum_access_failure_msg, $forums, $topics, $super_stickies, $stickies, $topic, $topic_id;
-	$forums = forum_access_filter_forums($forums);
 	$topics = forum_access_filter_topics($topics);
 	$stickies = forum_access_filter_topics($stickies);
 	$super_stickies = forum_access_filter_topics($super_stickies);

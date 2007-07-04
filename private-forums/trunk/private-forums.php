@@ -1,10 +1,10 @@
-<?
+<?php
 /*
 Plugin Name: Private Forums
 Plugin URI: http://www.adityanaik.com/projects/plugins/bb-private-forums/
 Description: Regulate Access to forums in bbPress
 Author: Aditya Naik
-Version: 3.0
+Version: 3.0.1
 Author URI: http://www.adityanaik.com/
 
 Version History:
@@ -17,6 +17,7 @@ Version History:
 2.1		: Created Common Submit for all options
 3.0		: Fixed the submenu generation
 			: Fixed Forum Filter
+3.1 	:	Fixed <?
 */
 
 add_action( 'bb_admin_menu_generator', 'forum_access_add_admin_page' );

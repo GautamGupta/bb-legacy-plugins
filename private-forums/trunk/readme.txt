@@ -3,7 +3,7 @@ Contributors: so1o
 Tags: private, forums, hide
 Requires at least: 0.74
 Tested up to: 0.74
-Stable tag: 3.0
+Stable tag: 3.1
 
 Regulate Access to forums in bbPress
 

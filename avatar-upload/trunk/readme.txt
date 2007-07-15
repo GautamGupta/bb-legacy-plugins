@@ -2,8 +2,8 @@
 Tags: avatars, avatar, uploads, profile
 Contributors: LouiseDade
 Requires at least: 0.8
-Tested up to: 0.8.1
-Stable Tag: 0.4.1
+Tested up to: 0.8.2.1
+Stable Tag: 0.5
 
 Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress. Admins can configure maximum allowed file size and image dimensions.
 
@@ -23,6 +23,8 @@ Author URI: http://www.classical-webdesigns.co.uk/
 
   - Currently done from within the script (no Admin page interface at this time).
 
+  - Images that exceed maximum dimensions are automatically resized.
+
 * Anybody with the 'moderate' capability can upload another user's avatar
 
   - this to ensures that inappropriate images can be removed.
@@ -31,7 +33,7 @@ Author URI: http://www.classical-webdesigns.co.uk/
 
 * Option to display a default avatar for users who do not upload their own.
 
-* Can be extended with fel64's "Identicons" plugin to give users the option of displaying an identicon instead of uploading an image (becomes their 'default' avatar). http://bbpress.org/forums/topic/1027?replies=25#post-6759
+* Can be extended with fel64's "Identicons" plugin to give users the option of displaying an identicon instead of uploading an image (becomes their 'default' avatar). Identicons are currently a branch of this plugin.  http://bbpress.org/forums/topic/1027?replies=25#post-6759
 
 == Installation ==
 
@@ -87,7 +89,7 @@ Some variables can be configured.  See 'Installation' instructions.
 
 = Are there security risks when allowing users to upload images to my server? =
 
-The plugin checks the images upon upload to ensure that only gifs, jpegs/jpgs and pngs are allowed. It checks both the file extension (e.g. `.gif`) AND the content-type (e.g. `image/gif`), as well as ensuring the two match.
+The plugin checks the images upon upload to ensure that only gifs, jpegs/jpgs and pngs are allowed. It checks both the file extension (e.g. `.gif`) AND the mime-type (e.g. `image/gif`).
 
 However, one can never 100% sure and there is always some security risks when allowing users to upload to your server. USE THIS PLUGIN AT YOUR OWN RISK!
 
@@ -96,6 +98,9 @@ However, one can never 100% sure and there is always some security risks when al
 You need to set the file permissions (chmod) of the `avatars` folder to `666` to allow the plugin to write to the folder.  You can do this using SHH or alternatively (and more easily) many FTP applications allow permissions setting.  Please refer to your web host for their advice if you do not know how to do this.
 
 == Change Log ==
+
+2007-07-15 Ver. 0.5   added image resizing function, better mime-type checking and a couple of
+                      performance improvements.
 
 2007-06-10 Ver. 0.4.1 minor bug fixes (and made readme more readable in the plugin browser).
 

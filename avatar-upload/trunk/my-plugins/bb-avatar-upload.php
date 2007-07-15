@@ -2,7 +2,7 @@
 /*
 Plugin Name: Avatar Upload
 Plugin URI: http://bbpress.org/plugins/topic/46
-Version: 0.4.1
+Version: 0.5
 Description: Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress.
 Author: Louise Dade
 Author URI: http://www.classical-webdesigns.co.uk/
@@ -20,7 +20,7 @@ class avatarupload_config
 		// Define maximum values allowed
 		$this->max_width = 150; // pixels
 		$this->max_height = 150; // pixels
-		$this->max_bytes = 51200; // filesize (1024 bytes = 1 KB)
+		$this->max_bytes = 1048576; // filesize (1024 bytes = 1 KB / 1048576 bytes = MB)
 
 		// Default avatar - set 'use_default' to '0' to display no image instead of default
 		// The default URI is in the '$this->avatar_dir' folder.
@@ -35,35 +35,9 @@ class avatarupload_config
 		// Allowed file extensions
 		$this->file_extns = array("gif", "jpg", "jpeg", "png");
 
-		// Mime-Types (list thanks to SamBauers) - you probably want to leave this alone.
-		$this->mime_types = array(
-			'gif' => array(
-				'image/gif',
-				'image/gi_'
-			),
-			'jpg' => array(
-				'image/jpeg',
-				'image/jpg',
-				'image/jp_',
-				'image/pjpeg',
-				'image/pjpg',
-				'image/pipeg',
-				'application/jpg',
-				'application/x-jpg'
-			),
-			'png' => array(
-				'image/png',
-				'image/x-png',
-				'application/png',
-				'application/x-png'
-			)
-		);
-
-		// JPEG == JPG
-		$this->mime_types['jpeg'] = $this->mime_types['jpg'];
-
-		// Just a pretty value (Kilobytes) for output use
+		// Just pretty values (Kilobytes/megabytes) for output use
 		$this->max_kbytes = round($this->max_bytes / 1024, 2);
+		$this->max_mbytes = round($this->max_bytes / 1048576, 2);
 	}
 }
 
@@ -127,7 +101,11 @@ function avatarupload_get_avatar($id, $fulluri=1, $force_db=0)
 // Add an "Upload Avatar" tab to the Profile menu
 function add_avatar_tab()
 {
-	add_profile_tab(__('Avatar'), 'edit_profile', 'moderate', 'avatar-upload.php');
+	global $self;
+
+	if ($self != 'avatar-upload.php') {
+		add_profile_tab(__('Avatar'), 'edit_profile', 'moderate', 'avatar-upload.php');
+	}
 }
 add_action( 'bb_profile_menu', 'add_avatar_tab' );
 

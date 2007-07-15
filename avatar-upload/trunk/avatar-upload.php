@@ -2,7 +2,7 @@
 /*
 Plugin Name: Avatar Upload
 Plugin URI: http://bbpress.org/plugins/topic/46
-Version: 0.4.1
+Version: 0.5
 Description: Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress.
 Author: Louise Dade
 Author URI: http://www.classical-webdesigns.co.uk/
@@ -42,8 +42,7 @@ if (!empty($_FILES['p_browse']))
 
 	// Grab the uploaded image
 	$img = $_FILES['p_browse'];
-	$img_name = $img['name'];
-	$img_type = $img['type'];
+	$img_name = basename($img['name']);
 	$img_temp = $img['tmp_name'];
 	$img_size = $img['size'];
 	$img_errs = $img['error'];
@@ -57,42 +56,43 @@ if (!empty($_FILES['p_browse']))
 	// Manual checks - some manual checks duplicate the PHP error codes where
 	// they were introduced in later versions (e.g. PHP 5.x).
 
-	// Does filesize exceeds max_bytes? You can't trust MAX_FILE_SIZE form field.
-	if ($img_errs == 0 && $img_size > $config->max_bytes)
-	{
-		$img_errs = 2;
-	}
-
 	// Is file uploaded to temp folder?
 	if ($img_errs == 0 && (!@file_exists($img_temp) || !@is_uploaded_file($img_temp)) )
 	{
 		$img_errs = 4;
 	}
 
-	// Is file extension valid and does it match the mime-type?
-	if ($img_errs == 0 && (!@in_array($img_type, $config->mime_types[$img_ext]) || !@in_array($img_ext, $config->file_extns)) )
+	// Is file extension and mime-type valid? Use getimagesize() to check mime-type.
+	// Removes need for mime-type array - if it isn't a valid image, it won't work!
+	// (we also grab dimensions for later use)
+	if ($img_errs == 0 && (!@in_array($img_ext, $config->file_extns) || 
+			!list($img_w, $img_h, $img_type) = @getimagesize($img_temp)) )
 	{
 		$img_errs = 8;
 	}
 
 	// Is it a valid filename? Stops things like 'nasty.exe?.jpg'
-	if ($img_errs == 0 && !eregi("^([-a-z0-9_]+)\.([a-z]+)$", $img_name))
+	if ($img_errs == 0 && eregi("\#|\?|\&|\%|\"|\||\'|\*|\`", $img_name))
 	{
 		$img_errs = 9;
 	}
 		
-	// Are file dimensions greater than max_width/max_height allowed?
+	// Are file dimensions greater than max_width/max_height allowed? (Resize if so)
 	if  ($img_errs == 0)
 	{
-		// Get the dimensions
-		$dims = @getimagesize($img_temp);
-		$img_w = $dims[0];
-		$img_h = $dims[1];
-
-		if ($img_w > $config->max_width || $img_h > $config->max_height)
+		if ( !$resized = avatar_resize($img_temp, $img_w, $img_h, $img_type) )
 		{
 			$img_errs = 10;
+		} else {
+			$img_size = @filesize($img_temp);
+			list($img_w, $img_h) = $resized; // overwrite image width / height
 		}
+	}
+
+	// Does filesize exceeds max_bytes? You can't trust MAX_FILE_SIZE form field.
+	if ($img_errs == 0 && $img_size > $config->max_bytes)
+	{
+		$img_errs = 2;
 	}
 
 	// Did we move the image to the avatar folder successfully?
@@ -100,7 +100,6 @@ if (!empty($_FILES['p_browse']))
 	{
 		$img_errs = 11;
 	}
-
 
 	// If we still have no errors add avatar to database, else show errors
 	if ($img_errs == 0)
@@ -117,6 +116,7 @@ if (!empty($_FILES['p_browse']))
 		$meta_avatar = $user_filename . "|" . $img_w . "|" . $img_h . "|avatar-upload";
 		bb_update_usermeta( $user_id, 'avatar_file', $meta_avatar );
 		$success_message = "Your avatar has been uploaded.";
+		sleep(3); // give image a chance to copy from temp area
 	}
 	else
 	{
@@ -126,41 +126,125 @@ if (!empty($_FILES['p_browse']))
 			case 0: // UPLOAD_ERR_OK (no error)
 				break;
 			case 1: // UPLOAD_ERR_INI_SIZE
-				bb_die(__("The file exceeds the maximum filesize of {$config->max_kbytes} KB"));
+				$error_message = __("The file exceeds the maximum filesize of {$config->max_kbytes} KB");
 				break;
 			case 2: // UPLOAD_ERR_FORM_SIZE
-				bb_die(__("The file exceeds the maximum filesize of {$config->max_kbytes} KB"));
+				$error_message = __("The file exceeds the maximum filesize of {$config->max_kbytes} KB");
 				break;
 			case 3: // UPLOAD_ERR_PARTIAL
-				bb_die(__("The file was only partially uploaded. Please try again."));
+				$error_message = __("The file was only partially uploaded. Please try again.");
 				break;
 			case 4: // UPLOAD_ERR_NO_FILE
-				bb_die(__("No file was uploaded - did you select an image to upload?"));
+				$error_message = __("No file was uploaded - did you select an image to upload?");
 				break;
 			case 6: // UPLOAD_ERR_NO_TMP_DIR (since PHP 4.3.10 and PHP 5.0.3)
-				bb_die(__("Could not upload the file - there is no temporary folder."));
+				$error_message = __("Could not upload the file - there is no temporary folder.");
 				break;
 			case 7: // UPLOAD_ERR_CANT_WRITE (since PHP 5.1.0)
-				bb_die(__("Failed to write file to disk - the server settings may not be correct."));
+				$error_message = __("Failed to write file to disk - the server settings may not be correct.");
 				break;
 			case 8: // UPLOAD_ERR_EXTENSION (since PHP 5.2.0)
-				bb_die(__("The file is not a valid GIF, JPG/JPEG or PNG image-type."));
+				$error_message = __("The file is not a valid GIF, JPG/JPEG or PNG image-type.");
 				break;
 			case 9: // custom error code
-				bb_die(__("Filenames may only contain upper/lower case letters, numbers, underscores or dashes."));
+				$error_message = __("Filenames may not include the following: # ? &amp; % \" | ' * `");
 				break;
 			case 10: // custom error code
-				bb_die(__("Image dimensions must not be greater than {$config->max_width} x {$config->max_height} pixels."));
+				$error_message = __("The image could not be resized, please contact your forum admin.");
 				break;
 			case 11: // custom error code
-				bb_die(__("The file could not be saved to the 'avatars' folder."));
+				$error_message = __("The file could not be saved to the 'avatars' folder.");
 				break;
 			default: // unknown error (this probably won't ever happen)
-				bb_die(__("An unknown error has occurred."));
+				$error_message = __("An unknown error has occurred.");
 				break;
 		}
 	}
 }
 
-bb_load_template( 'avatar.php', array('success_message', 'config') );
+bb_load_template( 'avatar.php', array('success_message', 'error_message', 'config') );
+
+
+/* Image Resize */
+
+function avatar_resize($img_temp, $img_w, $img_h, $img_type)
+{
+	global $config;
+
+	// if either the image width or height is greater than the maximums allowed
+	if ($img_w > $config->max_width || $img_h > $config->max_height)
+	{
+		// To maintain aspect ratio we need to resize proportionally
+
+		if ($img_w > $img_h)
+		{
+			// width is greater - make width 'max_width' and proportion height
+			$new_width = $config->max_width;
+			$new_height = round($img_h * ($config->max_width/$img_w));
+		}
+		else if ($img_w < $img_h)
+		{
+			// height is greater - make height 'max_height' and proportion width
+			$new_width = round($img_w * ($config->max_height/$img_h));
+			$new_height = $config->max_height;
+		}
+		else
+		{
+			// equal (square) - make both 'max' values
+			$new_width = $config->max_width;
+			$new_height = $config->max_height;
+		}
+	}
+	else
+	{
+		// image already within maximum limits - do no resize
+		return array($img_w, $img_h);
+	}
+
+	// Resize the image preserving image type
+
+	switch ($img_type)
+	{
+		case 1:
+			// GIF
+			$im1 = @imagecreatefromgif($img_temp);
+			$im2 = @imagecreate($new_width, $new_height) or $error = 1;
+			@imagecopyresampled ($im2, $im1, 0, 0, 0, 0, $new_width, $new_height, $img_w, $img_h);
+			@imagegif($im2, $img_temp);
+			break;
+
+		case 2:
+			// JPEG
+			$im1 = @imagecreatefromjpeg($img_temp);
+			$im2 = @imagecreatetruecolor($new_width, $new_height) or $error = 1;
+			@imagecopyresampled ($im2, $im1, 0, 0, 0, 0, $new_width, $new_height, $img_w, $img_h);
+			@imagejpeg($im2, $img_temp, 100); // quality integer might become config variable
+			break;
+
+		case 3:
+			// PNG
+			$im1 = @imagecreatefrompng($img_temp);
+			$im2 = @imagecreatetruecolor($new_width, $new_height) or $error = 1;
+			@imagecopyresampled ($im2, $im1, 0, 0, 0, 0, $new_width, $new_height, $img_w, $img_h);
+			@imagepng($im2, $img_temp);
+			break;
+
+		default:
+			$error = 1;
+			break;
+	}
+
+	@imagedestroy($im2);
+	@imagedestroy($im1);
+
+	if ($error > 0)
+	{
+		// Something went wrong.
+		return false;
+	} else {
+		// return the new sizes
+		return array($new_width, $new_height);
+	}
+}
+
 ?>

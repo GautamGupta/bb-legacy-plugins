@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=so1oonne
 Tags: private, forums, hide
 Requires at least: 0.74
 Tested up to: 0.74
-Stable tag: 3.1
+Stable tag: 4.0
 
 Regulate Access to forums in bbPress
 

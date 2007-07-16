@@ -59,6 +59,10 @@ function private_forums_upgrade_4_0() {
 	$private_forums_options['private_text'] = bb_get_option('forum_access_private_text');
 	$private_forums_options['version'] = 40;
 	
+	bb_delete_option('forum_access_private_forums');
+	bb_delete_option('forum_access_failure_msg');
+	bb_delete_option('forum_access_private_forums_option');
+	bb_delete_option('forum_access_private_text');
 	bb_update_option('private_forums_options', $private_forums_options);
 }
 

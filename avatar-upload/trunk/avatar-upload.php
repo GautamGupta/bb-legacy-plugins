@@ -2,7 +2,7 @@
 /*
 Plugin Name: Avatar Upload
 Plugin URI: http://bbpress.org/plugins/topic/46
-Version: 0.5
+Version: 0.6
 Description: Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress.
 Author: Louise Dade
 Author URI: http://www.classical-webdesigns.co.uk/
@@ -112,8 +112,8 @@ if (!empty($_FILES['p_browse']))
 			@unlink(BBPATH . $config->avatar_dir . $current_avatar[0]);
 		}
 
-		// Add avatar to database as usermeta data.
-		$meta_avatar = $user_filename . "|" . $img_w . "|" . $img_h . "|avatar-upload";
+		// Add avatar to database as usermeta data (append unix time to help browser caching probs).
+		$meta_avatar = $user_filename . "?" . time() . "|" . $img_w . "|" . $img_h . "|avatar-upload";
 		bb_update_usermeta( $user_id, 'avatar_file', $meta_avatar );
 		$success_message = "Your avatar has been uploaded.";
 		sleep(3); // give image a chance to copy from temp area
@@ -160,6 +160,12 @@ if (!empty($_FILES['p_browse']))
 				break;
 		}
 	}
+}
+
+// Has user checked the "Use Identicon" option?
+if( $_POST['identicon'] )
+{
+	felapplyidenticon( $user_id ); // create an identicon
 }
 
 bb_load_template( 'avatar.php', array('success_message', 'error_message', 'config') );

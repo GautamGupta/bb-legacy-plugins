@@ -6,12 +6,7 @@
 
 <?php
 	echo (!empty($error_message)) ? '<div class="infobox"><strong>'.__("OOPS! ".$error_message).'</strong></div>' : "";
-
-	if (!empty($success_message)) {
-		echo '<div class="notice">'.__($success_message).'<br /><br />If your avatar does not appear to '
-		. 'have changed on the forums, it is because your browser has cached (stored a copy of) your old '
-		. 'avatar - refreshing the page a few times should download the new image.</div>';
-	}
+	echo (!empty($success_message)) ? '<div class="notice">'.__($success_message).'</div>' : "";
 ?>
 
 <h2 id="userlogin">Avatar for <?php echo get_user_name( $user->ID ); ?></h2>
@@ -32,7 +27,22 @@
 </form>
 
 <h3><?php _e('Current Avatar'); ?></h3>
-<p><?php echo avatarupload_display($user->ID, 'new'); ?></p>
+<p><?php echo avatarupload_display($user->ID); ?></p>
+
+<?php if (!usingidenticon($user->ID)) { ?>
+<form method="POST" action="<?php profile_tab_link($user->ID, 'avatar'); ?>">
+<p><label for"useidenticon"><input type="checkbox" name="identicon" value="1" id="useidenticon" /> <?php _e('Use your Identicon instead?'); ?></label></p>
+<p><input type="submit" name="submit" id="submit" value="Use Identicon" /></p>
+</form>
+<?php
+} else {
+	_e('<p>You are currently using your Identicon.</p>');
+} // end if not using identicon
+
+if ($config->default_avatar['use_default'] == 0) {
+	_e("<p>The forum Admin has selected Identicons for user's default avatar. You can change it by uploading your own avatar image (you can always revert back to your Identicon if you wish).</p>");
+}
+?>
 
 <?php } ?>
 

@@ -1,11 +1,11 @@
 === Avatar Upload ===
 Tags: avatars, avatar, uploads, profile
 Contributors: LouiseDade
-Requires at least: 0.8
+Requires at least: 0.8.2
 Tested up to: 0.8.2.1
-Stable Tag: 0.5
+Stable Tag: 0.6
 
-Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress. Admins can configure maximum allowed file size and image dimensions.
+Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress. Admins can configure maximum allowed file size and image dimensions. Includes fel64's code enabling 'Identicons' - default avatars made of abstract patterns unique to each user.
 
 == Description ==
 
@@ -33,13 +33,19 @@ Author URI: http://www.classical-webdesigns.co.uk/
 
 * Option to display a default avatar for users who do not upload their own.
 
-* Can be extended with fel64's "Identicons" plugin to give users the option of displaying an identicon instead of uploading an image (becomes their 'default' avatar). Identicons are currently a branch of this plugin.  http://bbpress.org/forums/topic/1027?replies=25#post-6759
+* fel64's "Identicons" plugin gives users the option of displaying an identicon instead of uploading an image (becomes their 'default' avatar). http://bbpress.org/forums/topic/1027?replies=25#post-6759
+
+Credit to fel64 for providing the bbPress interface for Identicons and Scott Sherrill-Mix for writing the Identicon code at http://scott.sherrillmix.com/blog/blogger/wp_identicon/ 
 
 == Installation ==
 
 UPGRADING?  If you are using an older version of this plugin, you need to follow these installation instructions because the template functions are incompatible with older versions.
 
 1. Open up the `my-plugins/bb-avatar-upload.php` file and configure the "Configuration Settings". At least make sure the `$avatar_dir` variable is correct.
+
+    IMPORTANT: to use Identicons, you must leave the 'use_default' (avatar) option as '0' so that
+    the user's automatically created identicon is displayed and not the generic default image. 
+    Obviously, to go back to using a generic default set the option to '1' again.
 
 2. The avatar upload page should appear as a tab ("Avatar") on the user's Profile menu.  If you'd prefer the link to be elsewhere, insert the following "Upload Avatar" link wherever you wish:
 
@@ -79,6 +85,8 @@ UPGRADING?  If you are using an older version of this plugin, you need to follow
 
    `my-plugins/bb-avatar-upload.php` - your `my-plugins/` dir (and activated).
 
+   `my-plugins/_identicon.php`        - your `my-plugins/` dir (it is automatically activated).
+
 That's it, the 'Avatar Upload' plugin should now be working.
 
 == Configuration ==
@@ -98,6 +106,9 @@ However, one can never 100% sure and there is always some security risks when al
 You need to set the file permissions (chmod) of the `avatars` folder to `666` to allow the plugin to write to the folder.  You can do this using SHH or alternatively (and more easily) many FTP applications allow permissions setting.  Please refer to your web host for their advice if you do not know how to do this.
 
 == Change Log ==
+
+2007-07-16 Ver. 0.6   Integrated Identicons into the core plugin. Added Unix timestamp to filename
+                      in DB (updated when user updates avatar) to combat browser caching problems.
 
 2007-07-15 Ver. 0.5   added image resizing function, better mime-type checking and a couple of
                       performance improvements.

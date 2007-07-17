@@ -1,12 +1,12 @@
 <?php
-/*
-Plugin Name: Identicon
-Version: 0.2
-Plugin URI: http://scott.sherrillmix.com/blog/blogger/wp_identicon/
-Description: [For use with 'Avatar Upload'plugin]  This plugin generates persistent specific geometric icons for each user based on the ideas of <a href="http://www.docuverse.com/blog/donpark/2007/01/18/visual-security-9-block-ip-identification">Don Park</a>. Contains Identicon class only now - fel.
-Author: Scott Sherrill-Mix
-Author URI: http://scott.sherrillmix.com/blog/
-*/
+##  This file is included in bb-avatar-upload.php and is not a standalone plugin ##
+# Plugin Name: Identicon (ver 0.2)
+# URI: http://scott.sherrillmix.com/blog/blogger/wp_identicon/
+# Generates persistent specific geometric icons for each user based on the ideas of Don Park. 
+# http://www.docuverse.com/blog/donpark/2007/01/18/visual-security-9-block-ip-identification
+# Contains Identicon class only now - fel.
+# Original Author: Scott Sherrill-Mix - http://scott.sherrillmix.com/blog/
+###
 
 class identicon {
 	var $identicon_options;
@@ -231,10 +231,14 @@ class identicon {
 	}
 }
 
-function identicon_get_options(){
+function identicon_get_options()
+{
+	// Get Avatar Upload config options:
+	$config = new avatarupload_config();
+
 	//set options
 	$identicon_array = array(
-		'size'=>100,
+		'size'=> $config->identicon_size,
 		'backr'=>array(255,255),
 		'backg'=>array(255,255),
 		'backb'=>array(255,255),

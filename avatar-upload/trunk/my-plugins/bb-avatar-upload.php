@@ -2,7 +2,7 @@
 /*
 Plugin Name: Avatar Upload
 Plugin URI: http://bbpress.org/plugins/topic/46
-Version: 0.6
+Version: 0.6.1
 Description: Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress.
 Author: Louise Dade
 Author URI: http://www.classical-webdesigns.co.uk/
@@ -25,12 +25,15 @@ class avatarupload_config
 		// Default avatar - set 'use_default' to '0' to display Identicon instead of default
 		// The default URI is in the '$this->avatar_dir' folder.
 		$this->default_avatar = array( 	
-			'use_default' => 0,
+			'use_default' => 1,
 			'uri' =>  bb_get_option('uri') . $this->avatar_dir . 'default.png',
 			'width' => 80,
 			'height' => 80,
 			'alt' => "User has not uploaded an avatar"
 		);
+
+		// Identicon dimensions (width/height are equal):
+		$config->identicon_size = 100; // pixels
 
 		// Allowed file extensions
 		$this->file_extns = array("gif", "jpg", "jpeg", "png");
@@ -129,6 +132,9 @@ function felapplyidenticon( $felID )
 	$ifilename = strtolower($user->user_login) . "." . 'png';
 	$ifilepath = BBPATH . $config->avatar_dir . $ifilename;
 
+	// include the Identicon class.
+	require_once("identicon.php");
+
 	if (class_exists("identicon")) { $identicon = new identicon; }
 
 	if( $identicon )
@@ -137,8 +143,7 @@ function felapplyidenticon( $felID )
 
 		if( imagepng( $felidenticon, $ifilepath ) )
 		{
-			$ioptions = identicon_get_options();
-			$meta_avatar = $ifilename."?".time().'|'.$ioptions['size'].'|'.$ioptions['size'].'|identicon';
+			$meta_avatar = $ifilename."?".time().'|'.$config->identicon_size.'|'.$config->identicon_size.'|identicon';
 			bb_update_usermeta( $felID, 'avatar_file', $meta_avatar );
 			$success_message = "Your identicon has been made.";
 		}

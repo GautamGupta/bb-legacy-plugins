@@ -43,7 +43,7 @@ UPGRADING?  If you are using an older version of this plugin, you need to follow
 
 1. Open up the `my-plugins/bb-avatar-upload.php` file and configure the "Configuration Settings". At least make sure the `$avatar_dir` variable is correct.
 
-    IMPORTANT: to use Identicons, you must leave the 'use_default' (avatar) option as '0' so that
+    IMPORTANT: to use Identicons, you must set the 'use_default' (avatar) option to '0' so that
     the user's automatically created identicon is displayed and not the generic default image. 
     Obviously, to go back to using a generic default set the option to '1' again.
 

@@ -4,7 +4,7 @@ Plugin Name: Private Forums
 Plugin URI: http://www.adityanaik.com/projects/plugins/bb-private-forums/
 Description: Regulate Access to forums in bbPress
 Author: Aditya Naik
-Version: 4.0
+Version: 5.0
 Author URI: http://www.adityanaik.com/
 
 Version History:
@@ -23,6 +23,9 @@ Version History:
 			: Changed where the options are stored.
 			: Added Upgrade Function
 			: Options can now be set by role administrator
+5.0		: Access Roles can be set for each forums now
+			: Fixed the results of search
+			: Fixed RSS 
 */
 
 private_forums_upgrade();
@@ -37,15 +40,28 @@ function private_forums_add_admin_page() {
 
 function private_forums_custom_get_options($option) {
 	global $private_forums_options;
-	if(!isset($private_forums_options)) 
+	if(!isset($private_forums_options)) {
 		$private_forums_options = bb_get_option('private_forums_options');
+		$private_forums = $private_forums_options['private_forums'];
+		$private_forums_for_user = array();
+		foreach($private_forums as $forum => $role) {
+			if(!private_forums_check_user_access_to_forum($role))
+				$private_forums_for_user[$forum] = $role;
+		}
+		$private_forums_options['private_forums'] = $private_forums_for_user;
+	}
 	return $private_forums_options[$option];
 }
 
 function private_forums_upgrade() {
 	$private_forums_options = bb_get_option('private_forums_options');
-	if(!isset($private_forums_options['version']) || $private_forums_options['version'] < 40) 
+	if(!isset($private_forums_options['version']) || $private_forums_options['version'] < 40) {
 		private_forums_upgrade_4_0();		
+		$private_forums_options = bb_get_option('private_forums_options');
+	}
+	if($private_forums_options['version'] < 41) {
+		private_forums_upgrade_4_1();
+	}
 }
 
 function private_forums_upgrade_4_0() {
@@ -66,37 +82,60 @@ function private_forums_upgrade_4_0() {
 	bb_update_option('private_forums_options', $private_forums_options);
 }
 
-function private_forums_get_option($option) {
-	return (bb_get_option($option)) ? bb_get_option($option) : array() ;
+function private_forums_upgrade_4_1() {
+	$private_forums_options = bb_get_option('private_forums_options');
+	$private_forums = $private_forums_options['private_forums'];
+	$user_role = $private_forums_options['user_role'];
+	if('ADMINSTRATOR' == $user_role) $user_role = 'ADMINISTRATOR';
+	foreach($private_forums as $forums => $role) {
+		$private_forums[$forums] = $user_role;
+	}
+	$private_forums_options['private_forums'] = $private_forums;
+	$private_forums_options['version'] = 41;
+	unset($private_forums_options['user_role']);
+	bb_update_option('private_forums_options', $private_forums_options);
+}
+
+function private_forums_display_role_dropdown($name, $index, $role) {
+	?>
+	<p>
+		<select name="<?php echo $name . '[' . $index . ']'; ?>" id="<?php echo $name . '_' . $index ; ?>">
+			<option value="OPEN" <?php echo ($role == 'OPEN') ? 'selected' : '' ; ?>>Open to all</option>
+			<option value="MEMBER" <?php echo ($role == 'MEMBER') ? 'selected' : '' ; ?>>Registered Members</option>
+			<option value="MODERATOR" <?php echo ($role == 'MODERATOR') ? 'selected' : '' ; ?>>Moderators</option>
+			<option value="ADMINISTRATOR" <?php echo ($role == 'ADMINISTRATOR') ? 'selected' : '' ; ?>>Administrators</option>
+		</select>
+	</p>
+	<?php
 }
 
 function private_forums_admin_page() {
 	$forums = get_forums();
-	$private_forums = private_forums_custom_get_options('private_forums');
+	$private_forums_options = bb_get_option('private_forums_options');
+	$private_forums = $private_forums_options['private_forums'];
 	?>
 		<h2>Private Forums</h2>
 		<form method="post" name="private_forum_form" id="private_forum_form">
-			<p>
-				<label for="user_role">Forums Restricted to Role</label>
-				<select name="user_role" id="user_role">
-					<option value="MEMBER" <?php echo (private_forums_custom_get_options('user_role') == 'MEMBER') ? 'selected' :'' ;?>>Registered Members</option>
-					<option value="MODERATOR" <?php echo (private_forums_custom_get_options('user_role') == 'MODERATOR') ? 'selected' :'' ;?>>Moderators</option>
-					<option value="ADMINSTRATOR" <?php echo (private_forums_custom_get_options('user_role') == 'ADMINSTRATOR') ? 'selected' :'' ;?>>Adminstrators</option>
-				</select>
-			</p>
-			<?php
-			foreach($forums as $forum) {
-				?>
-					<p>
-						<input type="checkbox" id="private_forums_<?php echo $forum->forum_id; ?>" 
-							name = "private_forums[<?php echo $forum->forum_id; ?>]" 
-							value = "Y"
-							<?php echo (array_key_exists($forum->forum_id,$private_forums) ? ' checked ' : '') ; ?> > 
-						<label for="private_forums_<?php echo $forum->forum_id; ?>"><?php echo $forum->forum_name; ?></label>
-					</p>
-				<?php
-			}
-			?>
+			<table class="widefat">
+				<thead>
+					<tr>
+						<th>Forum</th>
+						<th>Restrict to Role</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+					foreach($forums as $forum) {
+						?>
+						<tr>
+							<td><label for="private_forums_<?php echo $forum->forum_id; ?>"><?php echo $forum->forum_name; ?></label></td>
+							<td><?php private_forums_display_role_dropdown('private_forums', $forum->forum_id, $private_forums[$forum->forum_id]); ?></td>
+						</tr>
+						<?php
+					}
+					?>
+				</tbody>
+			</table>
 			<p class="submit"><input type="submit" name="submit" value="Submit"></p>
 		<h2>Privacy Options</h2>
 		<?php
@@ -144,7 +183,6 @@ function private_forums_admin_page() {
 
 function private_forums_process_post() {
 	if(isset($_POST['submit'])) {
-		global $private_forums_options;
 		$private_forums_options = bb_get_option('private_forums_options');
 		$private_forums_options['private_forums'] = (isset($_POST['private_forums'])) ? $_POST['private_forums'] : array();
 		$private_forums_options['failure_msg'] = $_POST['failure_msg'];
@@ -152,8 +190,9 @@ function private_forums_process_post() {
 		if ('SHOW_PRIVATE'== $private_forums_options['hide_show_flag']) {
 			$private_forums_options['private_text'] = empty($_POST['private_text']) ? 'private' : $_POST['private_text'];
 		}
-		$private_forums_options['user_role'] = $_POST['user_role'];
+		
 		bb_update_option('private_forums_options',$private_forums_options);
+		unset($GLOBALS['private_forums_options']);
 	}
 }
 
@@ -165,16 +204,18 @@ function private_forums_initialize_filters() {
 
 	if ($_SERVER['PHP_SELF'] != $login_page) {
 		$private_forums = private_forums_custom_get_options('private_forums');
-		if ( !private_forums_check_user_access() && !empty($private_forums)) {
+		if ( !empty($private_forums)) {
 			add_action( 'bb_forum.php_pre_db', 'private_forums_check_private_forum' );
 			add_action( 'bb_topic.php_pre_db', 'private_forums_check_private_topic' );
 			add_action( 'bb_tag-single.php', 'private_forums_check_private_tag' );
+			add_action( 'bb_rss.php', 'private_forums_filter_stuff_in_rss' );
 
 			if (private_forums_custom_get_options('hide_show_flag') == 'SHOW_PRIVATE') {
 				add_filter( 'get_forum_name', 'private_forums_add_private_name_to_forums', 10,2);
 				add_filter( 'get_topic_title', 'private_forums_add_private_name_to_topics', 10,2);
 			} else {
 				add_action( 'bb_head', 'private_forums_filter_topics_in_head' );
+				add_action( 'do_search', 'private_forums_filter_stuff_in_search_results' );
 				add_filter( 'get_forums','private_forums_filter_forums');
 			}
 
@@ -203,6 +244,22 @@ function private_forums_filter_topics_in_head() {
 	$super_stickies = private_forums_filter_topics($super_stickies);
 }
 
+function private_forums_filter_stuff_in_search_results() {
+	global $titles, $recent, $relevant;
+	$titles = private_forums_filter_topics($titles);
+	$recent = private_forums_filter_posts($recent);
+	$relevant = private_forums_filter_posts($relevant);
+}
+
+function private_forums_filter_stuff_in_rss() {
+	global $posts, $forum_id, $topic;
+	$posts = private_forums_filter_posts($posts);
+	$private_forums = private_forums_custom_get_options('private_forums');
+	if(array_key_exists($forum_id,$private_forums) || array_key_exists($topic->forum_id,$private_forums)) {
+		exit();
+	}
+}
+
 function private_forums_check_private_forum($forum_id) {
 
 	$private_forums = private_forums_custom_get_options('private_forums');
@@ -224,9 +281,7 @@ function private_forums_check_private_tag($tag_id) {
 	global $topics;
 
 	$topics = private_forums_filter_topics($topics);
-	if (empty($topics)) {
-		bb_die(__(sprintf(private_forums_format_error(private_forums_custom_get_options('failure_msg')), 'tag')));
-	}
+
 }
 
 function private_forums_filter_forums($forums) {
@@ -237,8 +292,6 @@ function private_forums_filter_forums($forums) {
 		foreach($forums as $forum) {
 			if(!array_key_exists($forum->forum_id,$private_forums)) {
 				$new_forums[] = $forum;
-			} else {
-				//$new_forums[] = $forum;
 			}
 		}
 		return $new_forums ;
@@ -264,6 +317,20 @@ function private_forums_filter_topics($topics) {
 	return $topics;
 }
 
+function private_forums_filter_posts($posts) {
+	$new_posts = array();
+	if ($posts) {
+		$private_forums = private_forums_custom_get_options('private_forums');
+		foreach($posts as $post) {
+			if(!array_key_exists($post->forum_id,$private_forums)) {
+				$new_posts[] = $post;
+			}
+		}
+		return $new_posts ;
+	}
+	return $posts;
+}
+
 function private_forums_add_private_name_to_forums($text, $id) {
 	$private_forums = private_forums_custom_get_options('private_forums');
 	if(array_key_exists($id,$private_forums)) {
@@ -284,21 +351,22 @@ function private_forums_add_private_name_to_topics($text, $id) {
 	}
 }
 
-function private_forums_check_user_access() {
-	if(bb_current_user()) {
-		switch(private_forums_custom_get_options('user_role')) {
-			case 'MODERATOR':
-				return bb_current_user_can('moderate');
-				break;
-			case 'ADMINSTRATOR':
-				return bb_current_user_can('administrate');
-				break;
-			default:
-				return bb_current_user_can('participate');
-				break;
-		}
-	} else {
-		return false;
+function private_forums_check_user_access_to_forum($access) {
+	switch($access) {
+		case 'MODERATOR':
+			return bb_current_user_can('moderate');
+			break;
+		case 'ADMINISTRATOR':
+			return bb_current_user_can('administrate');
+			break;
+		case 'MEMBER':
+			return bb_current_user_can('participate');
+			break;
+		case 'OPEN':
+			return true;
+			break;
+		default:
+			return true;
 	}
 }
 

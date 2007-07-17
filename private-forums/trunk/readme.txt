@@ -4,14 +4,18 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=so1oonne
 Tags: private, forums, hide
 Requires at least: 0.74
 Tested up to: 0.74
-Stable tag: 4.0
+Stable tag: 5.0
 
 Regulate Access to forums in bbPress
 
 == Description ==
 
 This plugin filters private forums from view when the user does not have appropriate 
-role. The roles can currently be set to Member, Moderator or Administrator.
+role. The Access level can individually for each of the forums be set to following:
+* Open to all 
+* Registered Users
+* Moderator 
+* Administrator .
 
 The plugin enables the administrator to set forum or forums as private from the 
 administration menu. The Administrator can set the role to which the selected forums are
@@ -35,14 +39,16 @@ The admin menu can accessed by Administrators from
 
 == Screenshots ==
 
-1. There are several options provided by the Plugin. The main options is the one 
-to choose the forums which you want to make private. The privacy Options lets 
-the administrator control the behavior of the forum to private forums.
+1. The main options is the one to choose the access levels to retrict to forums.
 
 2. The error message shown when the user tries to access private resource is also 
 customizable using the Error Options.
 
 3. The admin menu is accessed through the Site Management tab
+
+4. The privacy Options lets the administrator control the behavior of the forum 
+to private forums.
+
 == Version History ==
 
 * 1.0 : 
@@ -67,6 +73,10 @@ customizable using the Error Options.
   * Changed where the options are stored.
   * Added Upgrade Function
   * Options can now be set by role administrator
+* 5.0 :	
+  * Access Roles can be set for each forums now
+  * Fixed the results of search
+  * Fixed RSS 
 
 == Frequently Asked Questions == 
 

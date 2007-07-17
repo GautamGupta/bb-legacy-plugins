@@ -4,7 +4,7 @@ Plugin Name: Private Forums
 Plugin URI: http://www.adityanaik.com/projects/plugins/bb-private-forums/
 Description: Regulate Access to forums in bbPress
 Author: Aditya Naik
-Version: 5.0
+Version: 5.1
 Author URI: http://www.adityanaik.com/
 
 Version History:
@@ -26,6 +26,7 @@ Version History:
 5.0		: Access Roles can be set for each forums now
 			: Fixed the results of search
 			: Fixed RSS 
+5.1		: Filtered queries rather that results
 */
 
 private_forums_upgrade();
@@ -214,13 +215,33 @@ function private_forums_initialize_filters() {
 				add_filter( 'get_forum_name', 'private_forums_add_private_name_to_forums', 10,2);
 				add_filter( 'get_topic_title', 'private_forums_add_private_name_to_topics', 10,2);
 			} else {
-				add_action( 'bb_head', 'private_forums_filter_topics_in_head' );
-				add_action( 'do_search', 'private_forums_filter_stuff_in_search_results' );
-				add_filter( 'get_forums','private_forums_filter_forums');
+				add_filter( 'get_forums_where','private_forums_filter_query_with_where');
+				add_filter( 'get_forum_where','private_forums_filter_query_with_and');
+				add_filter( 'get_topic_where','private_forums_filter_query_with_and');
+				add_filter( 'get_latest_topics_where','private_forums_filter_query_with_and');
+				add_filter( 'get_thread_where','private_forums_filter_query_with_and');
+				add_filter( 'get_recent_user_replies_where','private_forums_filter_query_with_and');
+				add_filter( 'get_sticky_topics_where','private_forums_filter_query_with_and');
+				add_filter( 'get_recent_user_threads_where','private_forums_filter_query_with_and');
+				add_filter( 'get_latest_posts_where','private_forums_filter_query_with_and');
+				add_filter( 'get_latest_forum_posts_where','private_forums_filter_query_with_and');
 			}
 
 		}
 	}
+}
+
+function private_forums_get_restricted_forums_list() {
+	$private_forums = implode(",", array_keys(private_forums_custom_get_options('private_forums')));
+	return 'forum_id NOT IN (' . $private_forums . ') ';
+}
+
+function private_forums_filter_query_with_where($where) {
+	return 'WHERE ' . private_forums_get_restricted_forums_list()	;
+}
+
+function private_forums_filter_query_with_and($where) {
+	return $where . ' AND ' . private_forums_get_restricted_forums_list()	;
 }
 
 function private_forums_format_error($err_msg){
@@ -237,27 +258,13 @@ function private_forums_format_error($err_msg){
 }
 
 
-function private_forums_filter_topics_in_head() {
-	global $forums, $topics, $super_stickies, $stickies, $topic, $topic_id;
-	$topics = private_forums_filter_topics($topics);
-	$stickies = private_forums_filter_topics($stickies);
-	$super_stickies = private_forums_filter_topics($super_stickies);
-}
-
-function private_forums_filter_stuff_in_search_results() {
-	global $titles, $recent, $relevant;
-	$titles = private_forums_filter_topics($titles);
-	$recent = private_forums_filter_posts($recent);
-	$relevant = private_forums_filter_posts($relevant);
-}
-
 function private_forums_filter_stuff_in_rss() {
 	global $posts, $forum_id, $topic;
-	$posts = private_forums_filter_posts($posts);
 	$private_forums = private_forums_custom_get_options('private_forums');
 	if(array_key_exists($forum_id,$private_forums) || array_key_exists($topic->forum_id,$private_forums)) {
 		exit();
 	}
+	$posts = private_forums_filter_posts($posts);
 }
 
 function private_forums_check_private_forum($forum_id) {
@@ -281,24 +288,6 @@ function private_forums_check_private_tag($tag_id) {
 	global $topics;
 
 	$topics = private_forums_filter_topics($topics);
-
-}
-
-function private_forums_filter_forums($forums) {
-
-	$new_forums = array();
-	if ($forums) {
-		$private_forums = private_forums_custom_get_options('private_forums');
-		foreach($forums as $forum) {
-			if(!array_key_exists($forum->forum_id,$private_forums)) {
-				$new_forums[] = $forum;
-			}
-		}
-		return $new_forums ;
-	}
-
-	return $forums;
-
 }
 
 function private_forums_filter_topics($topics) {
@@ -313,7 +302,6 @@ function private_forums_filter_topics($topics) {
 		}
 		return $new_topics ;
 	}
-
 	return $topics;
 }
 

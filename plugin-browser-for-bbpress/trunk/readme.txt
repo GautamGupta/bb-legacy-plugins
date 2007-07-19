@@ -36,7 +36,7 @@ directories within the plugins directory that are prefixed with 'pb--'.
 
 For the browser to work correctly these folder must not be renamed. The main
 plugin file within the folder also must not be renamed. The special file
-'pb-revision.php' within each folder must also be left untouched.
+'pb--revision.php' within each folder must also be left untouched.
 
 Plugins still need to be activated using the standard plugin page after
 installation.

@@ -1,7 +1,7 @@
 <?php
 ##  This file is included in bb-avatar-upload.php and is not a standalone plugin ##
-# Plugin Name: Identicon (ver 0.2)
-# URI: http://scott.sherrillmix.com/blog/blogger/wp_identicon/
+# Identicon (ver 0.2)
+# http://scott.sherrillmix.com/blog/blogger/wp_identicon/
 # Generates persistent specific geometric icons for each user based on the ideas of Don Park. 
 # http://www.docuverse.com/blog/donpark/2007/01/18/visual-security-9-block-ip-identification
 # Contains Identicon class only now - fel.

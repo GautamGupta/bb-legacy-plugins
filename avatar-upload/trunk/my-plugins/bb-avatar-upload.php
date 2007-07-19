@@ -2,7 +2,7 @@
 /*
 Plugin Name: Avatar Upload
 Plugin URI: http://bbpress.org/plugins/topic/46
-Version: 0.6.1
+Version: 0.6.2
 Description: Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress.
 Author: Louise Dade
 Author URI: http://www.classical-webdesigns.co.uk/
@@ -45,9 +45,9 @@ class avatarupload_config
 }
 
 // Display the avatar image
-function avatarupload_display($id)
+function avatarupload_display($id, $force_db=0)
 {
-	if ($a = avatarupload_get_avatar($id))
+	if ($a = avatarupload_get_avatar($id,1,$force_db))
 	{
 		echo '<img src="'.$a[0].'" width="'.$a[1].'" height="'.$a[2].'" alt="'.$a[4].'" />';
 	} else {
@@ -65,7 +65,7 @@ function avatarupload_display($id)
 			felapplyidenticon($id); // create identicon
 
 			// now fetch it from the database
-			if ($a = avatarupload_get_avatar($id))
+			if ($a = avatarupload_get_avatar($id,1,$force_db))
 			{
 				echo '<img src="'.$a[0].'" width="'.$a[1].'" height="'.$a[2].'" alt="'.$a[4].'" />';
 			}

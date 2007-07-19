@@ -3,7 +3,7 @@ Tags: avatars, avatar, uploads, profile
 Contributors: LouiseDade
 Requires at least: 0.8.2
 Tested up to: 0.8.2.1
-Stable Tag: 0.6.1
+Stable Tag: 0.6.2
 
 Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress. Admins can configure maximum allowed file size and image dimensions. Includes fel64's code enabling 'Identicons' - default avatars made of abstract patterns unique to each user.
 
@@ -106,6 +106,8 @@ However, one can never 100% sure and there is always some security risks when al
 You need to set the file permissions (chmod) of the `avatars` folder to `666` to allow the plugin to write to the folder.  You can do this using SHH or alternatively (and more easily) many FTP applications allow permissions setting.  Please refer to your web host for their advice if you do not know how to do this.
 
 == Change Log ==
+
+2007-07-19 Ver. 0.6.2 Bug-fix. 'Upload Avatar' page wasn't displaying new avatar after upload.
 
 2007-07-17 Ver. 0.6.1 Bug-fix. Reset generic avatar as default option and stopped identicon.php
                       from being loaded with plugin *every* time.

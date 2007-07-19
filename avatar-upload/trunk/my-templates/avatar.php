@@ -5,8 +5,8 @@
 <?php if (bb_current_user_can('edit_user', $user->ID)) { ?>
 
 <?php
-	echo (!empty($error_message)) ? '<div class="infobox"><strong>'.__("OOPS! ".$error_message).'</strong></div>' : "";
-	echo (!empty($success_message)) ? '<div class="notice">'.__($success_message).'</div>' : "";
+	echo (!empty($error_message)) ? '<div class="infobox"><strong>'.__($error_message).'</strong></div>' : '';
+	echo (!empty($success_message)) ? '<div class="notice">'.__($success_message).'</div>' : '';
 ?>
 
 <h2 id="userlogin">Avatar for <?php echo get_user_name( $user->ID ); ?></h2>
@@ -27,7 +27,8 @@
 </form>
 
 <h3><?php _e('Current Avatar'); ?></h3>
-<p><?php echo avatarupload_display($user->ID); ?></p>
+
+<p><?php echo avatarupload_display($user->ID, $force_db); ?></p>
 
 <?php if (!usingidenticon($user->ID)) { ?>
 <form method="POST" action="<?php profile_tab_link($user->ID, 'avatar'); ?>">

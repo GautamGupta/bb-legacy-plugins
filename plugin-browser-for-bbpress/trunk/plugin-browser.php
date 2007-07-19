@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Plugin browser for bbPress
-Plugin URI: http://bbpress.org/plugins/topic/56
+Plugin URI: http://bbpress.org/plugins/topic/57
 Description: Adds one-click installation and upgrade of plugins from the bbPress plugin repository.
 Author: Sam Bauers
 Author URI: 

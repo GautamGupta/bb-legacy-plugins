@@ -1,11 +1,6 @@
 <?php
 /*
-Plugin Name: Avatar Upload
-Plugin URI: http://bbpress.org/plugins/topic/46
-Version: 0.6.2
-Description: Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress.
-Author: Louise Dade
-Author URI: http://www.classical-webdesigns.co.uk/
+This file is part of the Avatar Upload plugin
 */
 
 require_once('./bb-load.php'); // load bbPress config 
@@ -144,7 +139,7 @@ if (!empty($_FILES['p_browse']))
 				$error_message = __("Failed to write file to disk - the server settings may not be correct.");
 				break;
 			case 8: // UPLOAD_ERR_EXTENSION (since PHP 5.2.0)
-				$error_message = __("The file is not a valid GIF, JPG/JPEG or PNG image-type.");
+				$error_message = __("You are not allowed to upload images of the type: ".strtoupper($img_ext));
 				break;
 			case 9: // custom error code
 				$error_message = __("Filenames may not include the following: # ? &amp; % \" | ' * `");
@@ -153,7 +148,7 @@ if (!empty($_FILES['p_browse']))
 				$error_message = __("The image could not be resized, please contact your forum admin.");
 				break;
 			case 11: // custom error code
-				$error_message = __("The file could not be saved to the 'avatars' folder.");
+				$error_message = __("The file could not be saved to the {$config->avatar_dir} folder.");
 				break;
 			default: // unknown error (this probably won't ever happen)
 				$error_message = __("An unknown error has occurred.");
@@ -208,6 +203,9 @@ function avatar_resize($img_temp, $img_w, $img_h, $img_type)
 		return array($img_w, $img_h);
 	}
 
+	// Can we use a truecolor image?
+	$truecolor = function_exists('imagecreatetruecolor');
+
 	// Resize the image preserving image type
 
 	switch ($img_type)
@@ -223,16 +221,18 @@ function avatar_resize($img_temp, $img_w, $img_h, $img_type)
 		case 2:
 			// JPEG
 			$im1 = @imagecreatefromjpeg($img_temp);
-			$im2 = @imagecreatetruecolor($new_width, $new_height) or $error = 1;
+			$im2 = ($truecolor) ? @imagecreatetruecolor($new_width, $new_height) : @imagecreate($new_width, $new_height);
 			@imagecopyresampled ($im2, $im1, 0, 0, 0, 0, $new_width, $new_height, $img_w, $img_h);
+			$im2 = ($truecolor) ? do_unsharp_mask($im2, $config->use_unsharpmask) : $im2;
 			@imagejpeg($im2, $img_temp, 100); // quality integer might become config variable
 			break;
 
 		case 3:
 			// PNG
 			$im1 = @imagecreatefrompng($img_temp);
-			$im2 = @imagecreatetruecolor($new_width, $new_height) or $error = 1;
+			$im2 = ($truecolor) ? @imagecreatetruecolor($new_width, $new_height) : @imagecreate($new_width, $new_height);
 			@imagecopyresampled ($im2, $im1, 0, 0, 0, 0, $new_width, $new_height, $img_w, $img_h);
+			$im2 = ($truecolor) ? do_unsharp_mask($im2, $config->use_unsharpmask) : $im2;
 			@imagepng($im2, $img_temp);
 			break;
 

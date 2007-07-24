@@ -3,7 +3,7 @@ Tags: avatars, avatar, uploads, profile
 Contributors: LouiseDade
 Requires at least: 0.8.2
 Tested up to: 0.8.2.1
-Stable Tag: 0.6.2
+Stable Tag: 0.7
 
 Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress. Admins can configure maximum allowed file size and image dimensions. Includes fel64's code enabling 'Identicons' - default avatars made of abstract patterns unique to each user.
 
@@ -19,17 +19,15 @@ Author URI: http://www.classical-webdesigns.co.uk/
 
 * Bozos can not upload avatars.
 
-* Admins can configure maximum allowed file size (bytes) and dimensions (pixels) of images.
+* Admins can configure maximum allowed file size (bytes) and dimensions (pixels) of images from within the admin page (credit: Sam Bauers).
 
-  - Currently done from within the script (no Admin page interface at this time).
-
-  - Images that exceed maximum dimensions are automatically resized.
+  - Images that exceed maximum dimensions are automatically resized (and sharpened if truecolor images).
 
 * Anybody with the 'moderate' capability can upload another user's avatar
 
   - this to ensures that inappropriate images can be removed.
 
-  - there is no "delete avatar" function at this time, but an inappropriate image can be removed by uploading a 'safe' image (e.g. a blank 1x1 pixel image) to replace it (you could them manually set that user as a bozo to stop them re-uploading inappropriate images).
+  - there is no "delete avatar" function at this time, but an inappropriate image can be removed by uploading a 'safe' image (e.g. a blank 1x1 pixel image) to replace it (you could them manually set that user as a bozo to stop them re-uploading inappropriate images). Alternatively, you could set their avatar to an identicon (see below).
 
 * Option to display a default avatar for users who do not upload their own.
 
@@ -39,13 +37,9 @@ Credit to fel64 for providing the bbPress interface for Identicons and Scott She
 
 == Installation ==
 
-UPGRADING?  If you are using an older version of this plugin, you need to follow these installation instructions because the template functions are incompatible with older versions.
+UPGRADING?  If you are using a version older than 0.3 of this plugin you NEED to follow these instructions fully because the template functions are incompatible with older versions.  If you are upgrading from version 0.3 or later then of this plugin you can ignore the template instructions (steps 2 to 4), but do check the rest.
 
-1. Open up the `my-plugins/bb-avatar-upload.php` file and configure the "Configuration Settings". At least make sure the `$avatar_dir` variable is correct.
-
-    IMPORTANT: to use Identicons, you must set the 'use_default' (avatar) option to '0' so that
-    the user's automatically created identicon is displayed and not the generic default image. 
-    Obviously, to go back to using a generic default set the option to '1' again.
+1. After activating the plugin go to the "Avatar upload" admin page and configure the options displayed there. At least make sure you have set the avatar upload directory to the location of your choice.
 
 2. The avatar upload page should appear as a tab ("Avatar") on the user's Profile menu.  If you'd prefer the link to be elsewhere, insert the following "Upload Avatar" link wherever you wish:
 
@@ -75,23 +69,45 @@ UPGRADING?  If you are using an older version of this plugin, you need to follow
 
 4. OPTIONAL: open up `my-templates/avatar.php` and edit the template if you wish, but be sure not to mess with the upload form.
 
-5. Upload the plugin files to the following locations.
+5. Upload the files in the "additional-files" directory to the following locations.
 
-   `avatars/default.png`             - both `avatars/` dir and image into the bbPress root dir.
+   `avatars/`                    - directory to the location specified on the admin page, rename if neccesary
 
-   `avatar-upload.php`               - bbPress root dir.
+   `avatars/default.png`         - default avatar image into the directory created above.
 
-   `my-templates/avatar.php`         - your `my-templates/my-template-name/` (or kakumei) dir.
+   `avatar-upload.php`           - bbPress root directory.
 
-   `my-plugins/bb-avatar-upload.php` - your `my-plugins/` dir (and activated).
+   `my-templates/avatar.php`     - your `my-templates/my-template-name/` (or bb-templates/kakumei/) directory.
 
-   `my-plugins/identicon.php`        - your `my-plugins/` dir (it is automatically activated).
+6. Upload the plugin files.
+
+   `bb-avatar-upload.php`        - your `my-plugins/` directory (and activate it).
+
+   `identicon.php`               - your `my-plugins/` directory (it is automatically included).
+
+   `unsharpmask.php`             - your `my-plugins/` directory (it is automatically included).
 
 That's it, the 'Avatar Upload' plugin should now be working.
 
 == Configuration ==
 
-Some variables can be configured.  See 'Installation' instructions.
+The following options are configured on the 'Avatar Upload Settings' admin page.
+
+* Avatar upload directory
+
+* Max. allowed width
+
+* Max. allowed height
+
+* Max. allowed filesize
+
+* Allow upload of GIFs, JPGs and/or PNGs
+
+* Use default avatar or auto generated identicon
+
+* Height/width of identicons (if used)
+
+See 'Installation' instructions and admin page for more details.
 
 == Frequently Asked Questions ==
 
@@ -105,7 +121,20 @@ However, one can never 100% sure and there is always some security risks when al
 
 You need to set the file permissions (chmod) of the `avatars` folder to `666` to allow the plugin to write to the folder.  You can do this using SHH or alternatively (and more easily) many FTP applications allow permissions setting.  Please refer to your web host for their advice if you do not know how to do this.
 
+= When I upload some JPEGs they either look rubbish or are blocks of plain colour =
+
+[N.b. this can also apply to some PNG images, but I'm only going to talk about JPEGS.]
+
+This is most likely a result of your web host providing a version of PHP that can not create 'truecolor' images. JPEGS are usually photographic images and therefore contain millions of colours, hence the need for truecolor. The plugin detects if truecolor is not an option and instead uses the same function as GIF (palette based) images, which can make some JPEGS look awful.
+
+To get the best out of a JPEG image you really need <strong>PHP version >= 4.0.6 or PHP 5 and GD library GD 2.0.1 or later</strong>.
+
+Alternatively, because this only happens when an image needs to be resized, you could inform your uses that they <strong>must</strong> make sure they avatar conforms to the maximum allowed dimensions <em>before</em> they upload it.
+
 == Change Log ==
+
+2007-07-23 Ver. 0.7   Added admin page for configuration, added an unsharp mask function, changed 
+                      additional file layout to be more friendly to the Plugin Browser plugin.
 
 2007-07-19 Ver. 0.6.2 Bug-fix. 'Upload Avatar' page wasn't displaying new avatar after upload.
 

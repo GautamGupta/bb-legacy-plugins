@@ -12,7 +12,7 @@ Adds a Sphere search link to topics
 Sphere related content for bbPress version 0.2
 Copyright (C) 2007 Sam Bauers (sam@viveka.net.au)
 
-Post count titles for bbPress comes with ABSOLUTELY NO WARRANTY
+Sphere related content for bbPress comes with ABSOLUTELY NO WARRANTY
 This is free software, and you are welcome to redistribute
 it under certain conditions.
 

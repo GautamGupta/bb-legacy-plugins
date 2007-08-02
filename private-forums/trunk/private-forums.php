@@ -4,7 +4,7 @@ Plugin Name: Private Forums
 Plugin URI: http://www.adityanaik.com/projects/plugins/bb-private-forums/
 Description: Regulate Access to forums in bbPress
 Author: Aditya Naik
-Version: 5.1
+Version: 5.2
 Author URI: http://www.adityanaik.com/
 
 Version History:
@@ -27,6 +27,7 @@ Version History:
 			: Fixed the results of search
 			: Fixed RSS 
 5.1		: Filtered queries rather that results
+5.2		: Filters Favorites 
 */
 
 private_forums_upgrade();
@@ -225,10 +226,22 @@ function private_forums_initialize_filters() {
 				add_filter( 'get_recent_user_threads_where','private_forums_filter_query_with_and');
 				add_filter( 'get_latest_posts_where','private_forums_filter_query_with_and');
 				add_filter( 'get_latest_forum_posts_where','private_forums_filter_query_with_and');
+				add_filter( 'bb_template','private_forums_filter_favorites', 10, 2);
 			}
 
 		}
 	}
+}
+
+function private_forums_filter_favorites($template, $file) {
+	
+	if ($file == 'favorites.php') {
+		global $topics, $favorites_total;
+		$topics = private_forums_filter_topics($topics);
+		$favorites_total = count($topics);
+	}
+	
+	return $template;
 }
 
 function private_forums_get_restricted_forums_list() {

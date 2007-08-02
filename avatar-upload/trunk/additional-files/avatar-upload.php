@@ -214,6 +214,8 @@ function avatar_resize($img_temp, $img_w, $img_h, $img_type)
 			// GIF
 			$im1 = @imagecreatefromgif($img_temp);
 			$im2 = @imagecreate($new_width, $new_height) or $error = 1;
+			$bg = @imagecolorallocate($im2, 192, 192, 192); // default background color
+			@imagecolortransparent($im2, $bg); // make it transparent
 			@imagecopyresampled ($im2, $im1, 0, 0, 0, 0, $new_width, $new_height, $img_w, $img_h);
 			@imagegif($im2, $img_temp);
 			break;
@@ -231,6 +233,10 @@ function avatar_resize($img_temp, $img_w, $img_h, $img_type)
 			// PNG
 			$im1 = @imagecreatefrompng($img_temp);
 			$im2 = ($truecolor) ? @imagecreatetruecolor($new_width, $new_height) : @imagecreate($new_width, $new_height);
+			$bg = @imagecolorallocate($im2, 192, 192, 192); // default background colour
+			@imagecolortransparent($im2, $bg); // make it transparent
+			@imagealphablending($im2, false); // stop alpha blending
+			@imagesavealpha($im2, true); // save original image alpha channel
 			@imagecopyresampled ($im2, $im1, 0, 0, 0, 0, $new_width, $new_height, $img_w, $img_h);
 			$im2 = ($truecolor) ? do_unsharp_mask($im2, $config->use_unsharpmask) : $im2;
 			@imagepng($im2, $img_temp);

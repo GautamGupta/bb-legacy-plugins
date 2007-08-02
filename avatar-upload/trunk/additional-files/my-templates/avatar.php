@@ -32,7 +32,7 @@
 
 <?php if (!usingidenticon($user->ID)) { ?>
 <form method="POST" action="<?php profile_tab_link($user->ID, 'avatar'); ?>">
-<p><label for"useidenticon"><input type="checkbox" name="identicon" value="1" id="useidenticon" /> <?php _e('Use your Identicon instead?'); ?></label></p>
+<p><label for="useidenticon"><input type="checkbox" name="identicon" value="1" id="useidenticon" /> <?php _e('Use your Identicon instead?'); ?></label></p>
 <p><input type="submit" name="submit" id="submit" value="Use Identicon" /></p>
 </form>
 <?php

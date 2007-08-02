@@ -2,7 +2,7 @@
 /*
 Plugin Name: Avatar Upload
 Plugin URI: http://bbpress.org/plugins/topic/46
-Version: 0.8
+Version: 0.8.1
 Description: Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress.
 Author: Louise Dade
 Author URI: http://www.classical-webdesigns.co.uk/
@@ -107,12 +107,20 @@ function avatarupload_get_avatar($id, $fulluri=1, $force_db=0)
 {
 	global $bbdb, $user;
 
-	if ($id == $user->ID && $force_db == 0)
+	$cached = bb_get_user($id);
+
+	if ($force_db == 0 && (!empty($user) || !empty($cached)) )
 	{
 		if (!empty($user->avatar_file)) {
 			$a = explode("|", $user->avatar_file);
+			$a[] = $user->user_login; // for 'alt' attribute
 		} else {
-			return false;
+			if (!empty($cached)) {
+				$a = explode("|", $cached->avatar_file);
+				$a[] = $cached->user_login; // for 'alt' attribute
+			} else {
+				return false;
+			}
 		}
 	}
 	else
@@ -121,6 +129,7 @@ function avatarupload_get_avatar($id, $fulluri=1, $force_db=0)
 
 		if ( $avatar = $bbdb->get_results($bb_query) ) {
 			$a = explode("|", $avatar[0]->meta_value);
+			$a[] = substr($a[0], 0, strrpos($a[0], ".")); // for 'alt' attribute (extract from filename)
 		} else {
 			return false;
 		}
@@ -132,9 +141,6 @@ function avatarupload_get_avatar($id, $fulluri=1, $force_db=0)
 		$config = new avatarupload_config();
 		$a[0] = bb_get_option('uri') . $config->avatar_dir . $a[0];
 	}
-
-	// Add the username for use in 'alt' attribute to end of array
-	$a[] = $user->user_login;
 
 	return $a;
 }

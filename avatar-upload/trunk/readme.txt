@@ -3,7 +3,7 @@ Tags: avatars, avatar, uploads, profile
 Contributors: LouiseDade
 Requires at least: 0.8.2
 Tested up to: 0.8.2.1
-Stable Tag: 0.7
+Stable Tag: 0.8
 
 Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress. Admins can configure maximum allowed file size and image dimensions. Includes fel64's code enabling 'Identicons' - default avatars made of abstract patterns unique to each user.
 
@@ -132,6 +132,7 @@ To get the best out of a JPEG image you really need <strong>PHP version >= 4.0.6
 Alternatively, because this only happens when an image needs to be resized, you could inform your uses that they <strong>must</strong> make sure they avatar conforms to the maximum allowed dimensions <em>before</em> they upload it.
 
 == Change Log ==
+2007-08-02 Ver. 0.8   Added support for transparent GIFs and PNGs in resize routine.
 
 2007-07-23 Ver. 0.7   Added admin page for configuration, added an unsharp mask function, changed 
                       additional file layout to be more friendly to the Plugin Browser plugin.

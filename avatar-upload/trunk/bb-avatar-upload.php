@@ -2,7 +2,7 @@
 /*
 Plugin Name: Avatar Upload
 Plugin URI: http://bbpress.org/plugins/topic/46
-Version: 0.8.1
+Version: 0.8.2
 Description: Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress.
 Author: Louise Dade
 Author URI: http://www.classical-webdesigns.co.uk/
@@ -73,11 +73,11 @@ class avatarupload_config
 }
 
 // Display the avatar image
-function avatarupload_display($id, $force_db=0)
+function avatarupload_display($id, $force_db=0, $class='avatar')
 {
 	if ($a = avatarupload_get_avatar($id,1,$force_db))
 	{
-		echo '<img src="'.$a[0].'" width="'.$a[1].'" height="'.$a[2].'" alt="'.$a[4].'" />';
+		echo '<img src="'.$a[0].'" width="'.$a[1].'" height="'.$a[2].'" alt="'.$a[4].'" class="'.$class.'" />';
 	} else {
 		$config = new avatarupload_config();
 
@@ -85,7 +85,7 @@ function avatarupload_display($id, $force_db=0)
 		{
 			// Use a "genric" default avatar
 			echo '<img src="'.$config->default_avatar['uri'].'" width="'.$config->default_avatar['width']
-			.'" height="'.$config->default_avatar['height'].'" alt="'.$config->default_avatar['alt'].'" />';
+			.'" height="'.$config->default_avatar['height'].'" alt="'.$config->default_avatar['alt'].'" class="'.$class.'" />';
 		} else {
 			// Or use Identicons instead.  New users will have an identicon automatically
 			// created when they join, but this is for existing users with no avatar.
@@ -95,7 +95,7 @@ function avatarupload_display($id, $force_db=0)
 			// now fetch it from the database
 			if ($a = avatarupload_get_avatar($id,1,$force_db))
 			{
-				echo '<img src="'.$a[0].'" width="'.$a[1].'" height="'.$a[2].'" alt="'.$a[4].'" />';
+				echo '<img src="'.$a[0].'" width="'.$a[1].'" height="'.$a[2].'" alt="'.$a[4].'" class="'.$class.'" />';
 			}
 		}
 	}
@@ -109,21 +109,9 @@ function avatarupload_get_avatar($id, $fulluri=1, $force_db=0)
 
 	$cached = bb_get_user($id);
 
-	if ($force_db == 0 && (!empty($user) || !empty($cached)) )
-	{
-		if (!empty($user->avatar_file)) {
-			$a = explode("|", $user->avatar_file);
-			$a[] = $user->user_login; // for 'alt' attribute
-		} else {
-			if (!empty($cached)) {
-				$a = explode("|", $cached->avatar_file);
-				$a[] = $cached->user_login; // for 'alt' attribute
-			} else {
-				return false;
-			}
-		}
-	}
-	else
+	// if $user-avatar-file and $cached->avatar_file are both empty,
+	// or we want to force the db query.
+	if ((empty($user->avatar_file) && empty($cached->avatar_file)) || $force_db == 1)
 	{
 		$bb_query = "SELECT meta_value FROM $bbdb->usermeta WHERE meta_key='avatar_file' AND user_id='$id' LIMIT 1";
 
@@ -133,8 +121,18 @@ function avatarupload_get_avatar($id, $fulluri=1, $force_db=0)
 		} else {
 			return false;
 		}
+	} else {
+		if (!empty($user->avatar_file)) {
+			$a = explode("|", $user->avatar_file);
+			$a[] = $user->user_login; // for 'alt' attribute
+		} elseif (!empty($cached->avatar_file)) {
+			$a = explode("|", $cached->avatar_file);
+			$a[] = $cached->user_login; // for 'alt' attribute
+		} else {
+			return false;
+		}
 	}
-	
+
 	// do we want the full uri?
 	if ($fulluri == 1)
 	{
@@ -155,7 +153,6 @@ function add_avatar_tab()
 	}
 }
 add_action( 'bb_profile_menu', 'add_avatar_tab' );
-
 
 //  bbPress Identicon function by Fel64
 function felapplyidenticon( $felID )

@@ -3,7 +3,7 @@ Tags: avatars, avatar, uploads, profile
 Contributors: LouiseDade
 Requires at least: 0.8.2
 Tested up to: 0.8.2.1
-Stable Tag: 0.8.1
+Stable Tag: 0.8.2
 
 Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress. Admins can configure maximum allowed file size and image dimensions. Includes fel64's code enabling 'Identicons' - default avatars made of abstract patterns unique to each user.
 
@@ -37,6 +37,14 @@ Credit to fel64 for providing the bbPress interface for Identicons and Scott She
 
 == Installation ==
 
+IMPORTANT: If the `avatars/` and `my-templates/` folders (in `additional-files/`) are empty in the ZIP archive, please download the files directly from the SVN trunk:
+
+* http://plugins-dev.bbpress.org/browser/avatar-upload/trunk/additional-files/avatars/default.png
+
+* http://plugins-dev.bbpress.org/browser/avatar-upload/trunk/additional-files/my-templates/avatar.php
+
+For each file above, scroll to the bottom of the page, where it says "Download in other formats" and click on the "Original format" link.
+
 UPGRADING?  If you are using a version older than 0.3 of this plugin you NEED to follow these instructions fully because the template functions are incompatible with older versions.  If you are upgrading from version 0.3 or later then of this plugin you can ignore the template instructions (steps 2 to 4), but do check the rest.
 
 1. After activating the plugin go to the "Avatar upload" admin page and configure the options displayed there. At least make sure you have set the avatar upload directory to the location of your choice.
@@ -66,6 +74,8 @@ UPGRADING?  If you are using a version older than 0.3 of this plugin you NEED to
      `<?php avatarupload_get_avatar(ID); ?>`
 
      Where ID is a user ID. Returns false if no avatar exists for that user.
+
+  d) The `<IMG>` tag that displays the avatar uses the class name 'avatar' to use in your CSS file.
 
 4. OPTIONAL: open up `my-templates/avatar.php` and edit the template if you wish, but be sure not to mess with the upload form.
 
@@ -132,6 +142,8 @@ To get the best out of a JPEG image you really need <strong>PHP version >= 4.0.6
 Alternatively, because this only happens when an image needs to be resized, you could inform your uses that they <strong>must</strong> make sure they avatar conforms to the maximum allowed dimensions <em>before</em> they upload it.
 
 == Change Log ==
+2007-08-07 Ver. 0.8.2 Bug-fix (default avatars not displaying). Added a classname ('avatar') to img tag.
+
 2007-08-02 Ver. 0.8.1 Bug-fix, plus improved cache support that should have been in previous update.
 
 2007-08-02 Ver. 0.8   Added support for transparent GIFs and PNGs in resize routine.

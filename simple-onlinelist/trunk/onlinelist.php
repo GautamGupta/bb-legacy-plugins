@@ -1,18 +1,11 @@
 <?php
 /**
- * Plugin Name: Online List
- * Plugin Description: Displays a simple List of current Online users.
+ * Plugin Name: Simple Onlinelist
+ * Plugin Description: Displays a simple list of current online users.
  * Author: Thomas Klaiber
- * Author URI: http://www.la-school.com
- * Plugin URI: http://www.la-school.com/2006/bbpress-onlinelist/
- * Version: 1.4
- */
-
-/**
- * To Do
- *
- * - Implement ghost function.
- * - Maybe add hooks for other plugins?
+ * Author URI: http://thomasklaiber.com
+ * Plugin URI: http://thomasklaiber.com/bbpress/
+ * Version: 1.5
  */
  
 /**
@@ -28,6 +21,9 @@ $mysql41 = true;
 function online_update() {	
 	global $bbdb, $bb_current_user, $bb_table_prefix;
 	
+	// So noone talks about that bad install-error
+	$bbdb->hide_errors();
+	
 	if ( bb_is_user_logged_in() ) : // logged in?
 		$now = bb_current_time('mysql');
 		if ( mysql_version() >= "4.1" ) :
@@ -41,6 +37,8 @@ function online_update() {
 			endif;	
 		endif;				
 	endif;	
+	
+	$bbdb->show_errors();
 }
 add_action('bb_init', 'online_update');
 
@@ -114,7 +112,7 @@ function show_online_users() {
 			endif;
 			
 			$user = bb_get_user($on->user_id);
-			echo "<a href=\"".get_user_profile_link($on->user_id)."\" title=\"\">".$user->user_login."</a>$komma";
+			echo "<a href=\"".get_user_profile_link($on->user_id)."\" title=\"\">".(empty($user->display_name) ? $user->user_login : $user->display_name)."</a>$komma";
 		endforeach;
 	else :
 		echo __('No Members around.');

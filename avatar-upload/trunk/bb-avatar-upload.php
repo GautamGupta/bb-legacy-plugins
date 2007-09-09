@@ -2,7 +2,7 @@
 /*
 Plugin Name: Avatar Upload
 Plugin URI: http://bbpress.org/plugins/topic/46
-Version: 0.8.2
+Version: 0.8.3
 Description: Allows users to upload an avatar (gif, jpeg/jpg or png) image to bbPress.
 Author: Louise Dade
 Author URI: http://www.classical-webdesigns.co.uk/
@@ -50,6 +50,11 @@ class avatarupload_config
 		// Use Unsharp Mask on resized truecolor images 1=yes (hidden option for now)
 		$this->use_unsharpmask = 1;
 		
+		// Use a thumbnail image (hidden feature for now). 1 = yes / 0 = no (default)
+		$this->use_thumbnail = 0;
+		$this->thumb_width = 25;
+		$this->thumb_height = 25;
+
 		// Default avatar - set 'use_default' to '0' to display Identicon instead of default
 		// The default URI is in the '$this->avatar_dir' folder.
 		$this->default_avatar = array( 	
@@ -101,9 +106,20 @@ function avatarupload_display($id, $force_db=0, $class='avatar')
 	}
 }
 
+// Display the avatar image
+function avatarupload_displaythumb($id, $force_db=0, $class='avatar_thumb')
+{
+	$config = new avatarupload_config();
+
+	if ($a = avatarupload_get_avatar($id,1,$force_db, 1))
+	{
+		echo '<img src="'.$a[0].'" width="'.$config->thumb_width.'" height="'.$config->thumb_height.'" alt="'.$a[4].'" class="'.$class.'" />';
+	}
+}
+
 // Get the avatar URI ($id = user->ID, $fulluri = full url to image,
 // $force_db = get avatar from database where 'usermeta' not already available)
-function avatarupload_get_avatar($id, $fulluri=1, $force_db=0)
+function avatarupload_get_avatar($id, $fulluri=1, $force_db=0, $is_thumb=0)
 {
 	global $bbdb, $user;
 
@@ -131,6 +147,11 @@ function avatarupload_get_avatar($id, $fulluri=1, $force_db=0)
 		} else {
 			return false;
 		}
+	}
+
+	if ($is_thumb == 1)
+	{
+		$a[0] = "thumb.".$a[0];
 	}
 
 	// do we want the full uri?

@@ -28,7 +28,13 @@
 
 <h3><?php _e('Current Avatar'); ?></h3>
 
-<p><?php echo avatarupload_display($user->ID, $force_db); ?></p>
+<p><?php
+	echo avatarupload_display($user->ID, $force_db);
+
+	if ($config->use_thumbnail == 1) {
+		echo " &nbsp; " . avatarupload_displaythumb($user->ID, $force_db) . "</p>";
+	}
+?></p>
 
 <?php if (!usingidenticon($user->ID)) { ?>
 <form method="POST" action="<?php profile_tab_link($user->ID, 'avatar'); ?>">

@@ -33,7 +33,8 @@ $config = new avatarupload_config();
 
 if (!empty($_FILES['p_browse']))
 {
-	$current_avatar = avatarupload_get_avatar($user_id, 0, 1); // for comparison later
+	$arr_current_avatar = avatarupload_get_avatar($user_id, 0, 1);
+	$current_avatar = ereg_replace("\?[0-9]+$", "", $arr_current_avatar[0]); // for comparison later
 
 	// Grab the uploaded image
 	$img = $_FILES['p_browse'];
@@ -81,6 +82,19 @@ if (!empty($_FILES['p_browse']))
 		} else {
 			$img_size = @filesize($img_temp);
 			list($img_w, $img_h) = $resized; // overwrite image width / height
+
+
+			// Do we want a thumbnail and was it successful?
+			if  ($config->use_thumbnail == 1)
+			{
+				$thumb_file = BBPATH . $config->avatar_dir . "thumb." . $user_filename;
+
+				if ( !$thumbresized = avatar_thumbnail($img_temp, $img_w, $img_h, $img_type, $thumb_file) )
+				{
+					$img_errs = 12;
+				}
+			}
+
 		}
 	}
 
@@ -100,11 +114,12 @@ if (!empty($_FILES['p_browse']))
 	if ($img_errs == 0)
 	{
 		// Compare 'new' and 'current' avatar filenames
-		if (!empty($current_avatar[0]) && $user_filename != $current_avatar[0])
+		if (!empty($current_avatar) && $user_filename != $current_avatar)
 		{
 			// If different, delete 'current' - this will only occur when
 			// the new and current avatars have different file extensions.
-			@unlink(BBPATH . $config->avatar_dir . $current_avatar[0]);
+			@unlink(BBPATH . $config->avatar_dir . $current_avatar);
+			@unlink(BBPATH . $config->avatar_dir . "thumb." . $current_avatar);
 		}
 
 		// Add avatar to database as usermeta data (append unix time to help browser caching probs).
@@ -149,6 +164,9 @@ if (!empty($_FILES['p_browse']))
 				break;
 			case 11: // custom error code
 				$error_message = __("The file could not be saved to the {$config->avatar_dir} folder.");
+				break;
+			case 12: // custom error code
+				$error_message = __("The thumbnail file could not be saved to the {$config->avatar_dir} folder.");
 				break;
 			default: // unknown error (this probably won't ever happen)
 				$error_message = __("An unknown error has occurred.");
@@ -240,6 +258,105 @@ function avatar_resize($img_temp, $img_w, $img_h, $img_type)
 			@imagecopyresampled ($im2, $im1, 0, 0, 0, 0, $new_width, $new_height, $img_w, $img_h);
 			$im2 = ($truecolor) ? do_unsharp_mask($im2, $config->use_unsharpmask) : $im2;
 			@imagepng($im2, $img_temp);
+			break;
+
+		default:
+			$error = 1;
+			break;
+	}
+
+	@imagedestroy($im2);
+	@imagedestroy($im1);
+
+	if ($error > 0)
+	{
+		// Something went wrong.
+		return false;
+	} else {
+		// return the new sizes
+		return array($new_width, $new_height);
+	}
+}
+
+
+/* Image thumbnail */
+function avatar_thumbnail($img_temp, $img_w, $img_h, $img_type, $img_thumb_name)
+{
+	global $config;
+
+	// if either the image width or height is greater than the maximums allowed
+	if ($img_w > $config->thumb_width || $img_h > $config->thumb_height)
+	{
+		// To maintain aspect ratio we need to resize proportionally
+
+		if ($img_w > $img_h)
+		{
+			// width is greater - make width 'max_width' and proportion height
+			$new_width = $config->thumb_width;
+			$new_height = round($img_h * ($config->thumb_width/$img_w));
+		}
+		else if ($img_w < $img_h)
+		{
+			// height is greater - make height 'max_height' and proportion width
+			$new_width = round($img_w * ($config->thumb_height/$img_h));
+			$new_height = $config->thumb_height;
+		}
+		else
+		{
+			// equal (square) - make both 'max' values
+			$new_width = $config->thumb_width;
+			$new_height = $config->thumb_height;
+		}
+	}
+	else
+	{
+		// image already within maximum limits - do not resize
+		$new_width = $img_w;
+		$new_height = $img_h;
+	}
+
+	// Thumbnail coordinates if width/height smaller than max thumb size
+	// because we want a square thumb image.
+	$x_start = ($config->thumb_width - $new_width > 0) ? round(($config->thumb_width - $new_width)/2) : 0;
+	$y_start = ($config->thumb_height - $new_height > 0) ? round(($config->thumb_height - $new_height)/2) : 0;
+
+	// Can we use a truecolor image?
+	$truecolor = function_exists('imagecreatetruecolor');
+
+	// Resize the image, preserving image type
+
+	switch ($img_type)
+	{
+		case 1:
+			// GIF
+			$im1 = @imagecreatefromgif($img_temp);
+			$im2 = @imagecreate($config->thumb_width, $config->thumb_height) or $error = 1;
+			$bg = @imagecolorallocate($im2, 192, 192, 192); // default background color
+			@imagecolortransparent($im2, $bg); // make it transparent
+			@imagecopyresampled ($im2, $im1, $x_start, $y_start, 0, 0, $new_width, $new_height, $img_w, $img_h);
+			@imagegif($im2, $img_thumb_name);
+			break;
+
+		case 2:
+			// JPEG
+			$im1 = @imagecreatefromjpeg($img_temp);
+			$im2 = ($truecolor) ? @imagecreatetruecolor($config->thumb_width, $config->thumb_height) : @imagecreate($config->thumb_width, $config->thumb_height);
+			@imagecopyresampled ($im2, $im1, $x_start, $y_start, 0, 0, $new_width, $new_height, $img_w, $img_h);
+			$im2 = ($truecolor) ? do_unsharp_mask($im2, $config->use_unsharpmask) : $im2;
+			@imagejpeg($im2, $img_thumb_name, 100); // quality integer might become config variable
+			break;
+
+		case 3:
+			// PNG
+			$im1 = @imagecreatefrompng($img_temp);
+			$im2 = ($truecolor) ? @imagecreatetruecolor($config->thumb_width, $config->thumb_height) : @imagecreate($config->thumb_width, $config->thumb_height);
+			$bg = @imagecolorallocate($im2, 192, 192, 192); // default background colour
+			@imagecolortransparent($im2, $bg); // make it transparent
+			@imagealphablending($im2, false); // stop alpha blending
+			@imagesavealpha($im2, true); // save original image alpha channel
+			@imagecopyresampled ($im2, $im1, $x_start, $y_start, 0, 0, $new_width, $new_height, $img_w, $img_h);
+			$im2 = ($truecolor) ? do_unsharp_mask($im2, $config->use_unsharpmask) : $im2;
+			@imagepng($im2, $img_thumb_name);
 			break;
 
 		default:

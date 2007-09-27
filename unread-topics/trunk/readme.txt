@@ -3,7 +3,7 @@ Contributors: henrybb
 Tags: topics, unread
 Requires at least: 0.8.2
 Tested up to: 0.8.2.1
-Stable: 0.4
+Stable tag: 0.4
 
 This plugin indicates new and unread posts.
 

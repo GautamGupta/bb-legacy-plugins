@@ -7,6 +7,10 @@ Version: 1.0.0
 Author: Leo Plaw
 Author URI: http://guildmedia.net
 BBPress Version: 0.8.3
+
+This plugin was ported from Andy Staines' WordPress Admin Drop Menus:
+http://www.stuff.yellowswordfish.com/admin-drop-down-menus/
+
 */
 
 /*  Copyright 2007 Leo Plaw

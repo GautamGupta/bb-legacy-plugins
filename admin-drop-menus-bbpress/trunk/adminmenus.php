@@ -3,7 +3,7 @@
 Plugin Name: Admin Drop Menus
 Plugin URI: http://guildmedia.net/programming_en/php/admin-drop-menus-for-bbpress/
 Description: Create Drop Down Menus for BBPress Admin Panels
-Version: 2.0.6
+Version: 1.0.0
 Author: Leo Plaw
 Author URI: http://guildmedia.net
 BBPress Version: 0.8.3

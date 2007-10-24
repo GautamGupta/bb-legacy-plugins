@@ -1,0 +1,128 @@
+/* ==  Admin Drop Menus 2.0 (WP Native) CSS (All Browsers) - Andy Staines == */
+
+/* START ADMIN MENU STUFF =========================================== */
+
+li {
+	margin-bottom: 1px;
+	}
+	
+#bb-admin-menu {
+	height: 29px;
+	background: #0D4F32;
+	border-top: 3px solid #0D4F32;
+	font-family: "Helvetica", Arial, "Microsoft Sans Serif", "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", "MS UI Gothic", Hei, SimHei, "Malgun Gothic", Gulim, 굴림, sans-serif;
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	vertical-align: middle;
+	white-space: normal;
+	z-index: 100;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	}
+
+#bb-admin-menu img {
+	padding: 3px 0 0 0;
+	margin: 0;
+	}
+	
+#bb-admin-menu table {
+	width: auto;
+	height: 0;
+	margin:0px;
+	border-collapse:collapse;
+	border: 0;
+	}	
+
+#bb-admin-menu a {
+	border-bottom: 0px;
+	text-decoration: none;
+	}
+	
+#bb-admin-menu table td {
+	border: 0 !important;
+	}
+
+#bb-admin-menu li {
+	float:left;
+	position:relative;
+	text-align: left;
+	padding: 0px 2px;
+	}
+	
+#bb-admin-menu li a {
+	display:block;
+	text-decoration:none;
+	font-size: 15px;
+	padding: 1px 10px;
+	color: #eee;
+	font-weight: normal;
+	border-right: 0px solid transparent;
+	border-left: 0px solid transparent;
+	z-index: 1;
+	}
+
+#bb-admin-menu li ul {
+	display: none;
+	list-style-type: none;
+	z-index: 2;
+	}
+	
+#bb-admin-menu li:hover a, #bb-admin-menu .current {
+	color:#000;
+	background: #DDF4EA;
+	}
+
+#bb-admin-menu li:hover ul {
+	display:block;
+	position:absolute;
+	left: -35px;
+	}
+
+#bb-admin-menu li:hover ul li a {
+	background: url(images/fade-drop.png) repeat-x;
+	color:#2c2c2c; 
+	height:auto; 
+	font-family: "Helvetica", Arial, "Microsoft Sans Serif", "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", "MS UI Gothic", Hei, SimHei, "Malgun Gothic", Gulim, 굴림, sans-serif;
+	font-weight: normal;
+	font-size: 14px;
+	line-height: 110%;
+	padding: 3px 10px 6px 30px;
+	width:130px;
+	border-top: 1px solid #103653;
+	border-bottom: 1px solid transparent;
+	margin-top: -1px;
+	margin-bottom: -4px;
+	text-indent: -20px;
+	}
+
+#bb-admin-menu li:hover ul li a:hover {
+	background: url(images/fade-drop-hover.png) repeat-x;
+	border-bottom: 1px solid #CFCFCF;
+	}
+
+.current {
+	font-weight: bold !important;
+	}
+	
+#bb-admin-submenu {
+	display: none;
+}
+
+#bb-admin-submenu .current {
+	display: none;
+}
+
+#bb-admin-submenu a {
+	display: none;
+}
+
+#bb-admin-submenu a:hover {
+	display: none;
+}
+
+#bb-admin-submenu li {
+	display: none;
+}
+
+/* END ADMIN MENU STUFF =========================================== */

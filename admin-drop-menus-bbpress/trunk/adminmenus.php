@@ -6,7 +6,7 @@ Description: Create Drop Down Menus for WordPress Admin Panels
 Version: 2.0.5
 Author: Andy Staines
 Author URI: http://www.yellowswordfish.com
-WordPress Version: 2.0
+BBPress Version: 2.0
 */
 
 /*  Copyright 2005/2006 Andy Staines
@@ -35,13 +35,13 @@ function aws_header()
 	global $plugin_uri;
 
 	$dir = basename(dirname(__FILE__));
-	$plugin_uri= trailingslashit(get_settings('siteurl')) . 'wp-content/plugins/' . $dir;
+	$plugin_uri= bb_get_option('uri') . 'my-plugins/' . $dir;
 	
-	echo '<link rel="stylesheet" type="text/css" href="' . $plugin_uri . '/wp-admin.css?version=2.0.2" />' . "\n";
+	echo '<link rel="stylesheet" type="text/css" href="' . $plugin_uri . '/bb-admin.css?version=2.0.2" />' . "\n";
 	
 	if ($is_winIE)
 	{
-		echo '<link rel="stylesheet" type="text/css" href="' . $plugin_uri . '/wp-admin-ie6.css?version=2.0.2" />';
+		echo '<link rel="stylesheet" type="text/css" href="' . $plugin_uri . '/bb-admin-ie6.css?version=2.0.2" />';
 	}
 }
 
@@ -54,7 +54,7 @@ function aws_adminmenu()
 	global $plugin_uri;
 	global $ipath;
 
-	$ipath = trailingslashit($plugin_uri . '/images');
+	$ipath = $plugin_uri . '/images';
 
 	$menu = aws_adminmenu_build();
 	$menu = aws_check_orphans($menu);
@@ -106,7 +106,7 @@ function aws_adminmenu()
 		
 		$adaut_menu .="</td></tr></table></li> ";			
 	}
-	$adaut_menu .= '<li><a href=\'' . get_settings('siteurl') . '\'>Site</a></li>';
+	$adaut_menu .= '<li><a href=\'' . bb_get_option('uri') . '\'>Site</a></li>';
 	
 	aws_adminmenu_printjs($adaut_menu, $printsub);
 }
@@ -114,28 +114,32 @@ function aws_adminmenu()
 /* Core stuff : builds an array populated with all the infos needed for menu and submenu */
 function aws_adminmenu_build () 
 {
-	global $menu, $submenu, $plugin_page, $pagenow;
+	global $bb_menu, $bb_submenu, $bb_current_menu, $bb_current_submenu;
+	$menu = $bb_menu;
+	$submenu = $bb_submenu;
+	
+	global $plugin_page, $pagenow;
 	global $ipath;
 
-	$self = preg_replace('|^.*/wp-admin/|i', '', $_SERVER['PHP_SELF']);
-	$self = preg_replace('|^.*/plugins/|i', '', $self);
+	$self = preg_replace('|^.*/bb-admin/|i', '', $_SERVER['PHP_SELF']);
+	$self = preg_replace('|^.*/my-plugins/|i', '', $self);
 
-	get_admin_page_parent();
+//	get_admin_page_parent();
 	$altmenu = array();
 
 	/* Step 1 : populate first level menu as per user rights */
 	foreach ($menu as $item) 
  	{
 		// 0 = name, 1 = capability, 2 = file
-		if ( current_user_can($item[1]) ) 
+		if ( bb_current_user_can($item[1]) ) 
 		{
 			$sys_menu_file = $item[2];
 
-			if ( file_exists(ABSPATH . "wp-content/plugins/{$item[2]}") )
+			if ( file_exists(ABSPATH . "my-plugins/{$item[2]}") )
 			{
-				$altmenu[$sys_menu_file]['url'] = get_settings('siteurl') . "/wp-admin/admin.php?page={$item[2]}";
+				$altmenu[$sys_menu_file]['url'] = bb_get_option('uri') . "bb-admin/admin-base.php?plugin={$item[2]}";
 			} else {
-				$altmenu[$sys_menu_file]['url'] = get_settings('siteurl') . "/wp-admin/{$item[2]}";
+				$altmenu[$sys_menu_file]['url'] = bb_get_option('uri') . "bb-admin/{$item[2]}";
 			}
 			if (( strcmp($self, $item[2]) == 0 && empty($parent_file)) || ($parent_file && ($item[2] == $parent_file)))
 			$altmenu[$sys_menu_file]['class'] = " class='current'";
@@ -149,24 +153,16 @@ function aws_adminmenu_build ()
 	{
 		foreach ($v as $item) 
 		{
-			if (array_key_exists($k,$altmenu) and current_user_can($item[1])) 
+			if (array_key_exists($k,$altmenu) and bb_current_user_can($item[1])) 
 			{
 				// What's the link ?
-				$menu_hook = get_plugin_page_hook($item[2], $k);
-				if (file_exists(ABSPATH . "wp-content/plugins/{$item[2]}") || ! empty($menu_hook)) 
-				{
-					$mtype = "<img src='" . $ipath . "plugin.png' height='16' width='16' alt=''/>&nbsp;";
-					if(! aws_top_menu_plugin( $altmenu[$k]['name'] ))
-					{
-						$link = get_settings('siteurl') . "/wp-admin/admin.php?page={$item[2]}";
-					} else {
-						$link = get_settings('siteurl') . "/wp-admin/{$k}?page={$item[2]}";
-					}
-				} else {
-					$icon = aws_add_icons($item[0]);
-					$mtype = "<img src='" . $ipath . $icon . "' height='16' width='16' alt=''/>&nbsp;"; 
-					$link = get_settings('siteurl') . "/wp-admin/{$item[2]}";
-				}
+
+				$menu_hook = bb_get_admin_tab_link($item);
+				$icon = aws_add_icons($item[0]);
+
+					$mtype = "<img src='$ipath/$icon' height='16' width='16' alt=''/>&nbsp;"; 
+					$link = bb_get_option('uri') . "bb-admin/$menu_hook";
+
 				$altmenu[$k]['sub'][$item[2]]['url'] = $link;
 				
 				// Is it current page ?
@@ -192,8 +188,8 @@ function aws_adminmenu_build ()
 function aws_adminmenu_printjs ($admin = '', $sub = 1) 
 {
 	print "<script>
-	document.getElementById('adminmenu').innerHTML=\"$admin\";";
-	if ($sub) print "document.getElementById('submenu').innerHTML=\"<li>&nbsp;</li>\"";
+	document.getElementById('bb-admin-menu').innerHTML=\"$admin\";";
+	if ($sub) print "document.getElementById('bb-admin-submenu').innerHTML=\"<li>&nbsp;</li>\"";
 	print "</script>";
 }
 
@@ -218,7 +214,7 @@ function aws_check_orphans($menu)
 			$menu[$k]['sub'][$k]['url'] = $v['url'];
 			$menu[$k]['sub'][$k]['name'] = $v['name'];
 			$icon = aws_add_icons($v['name']);
-			$menu[$k]['sub'][$k]['icon'] = "<img src='" . $ipath . $icon . "' height='16' width='16' alt=''/>&nbsp;";
+			$menu[$k]['sub'][$k]['icon'] = "<img src='$ipath/$icon' height='16' width='16' alt=''/>&nbsp;";
 		}
 	}
 	return $menu;
@@ -232,6 +228,36 @@ function aws_add_icons($menuitem)
 		case __('Dashboard'):
 			$i = "information.png";
 			break;
+		case __('Find'):
+			$i = "zoom.png";
+			break;
+		case __('Moderators'):
+			$i = "user.png";
+			break;			
+		case __('Blocked'):
+			$i = "plugin.png";
+			break;
+		case __('Topics'):
+			$i = "folder_page.png";
+			break;			
+		case __('Posts'):
+			$i = "comments.png";
+			break;
+		case __('Forums'):
+			$i = "basket_edit.png";
+			break;
+			break;
+		case __('Themes'):
+			$i = "layout.png";
+			break;
+		case __('Plugins'):
+			$i = "plugin.png";
+			break;
+		case __('Recount'):
+			$i = "plugin.png";
+			break;
+
+/*
 		case __('Write Post'):
 			$i = "email_edit.png";
 			break;
@@ -307,8 +333,10 @@ function aws_add_icons($menuitem)
 		case __('Import'):
 			$i = "report_add.png";
 			break;
-		default:
-			$i = "blank.png";
+*/
+			default: 
+			$i = "plugin.png";
+			break;
 	}
 	if (substr($menuitem,0,7) == substr(__('Authors &amp; Users'),0,7))
 	{
@@ -320,7 +348,14 @@ function aws_add_icons($menuitem)
 // wp action hooks
 // ====================================
 
+
+/*
 add_action('admin_head', 'aws_header');
 add_action('admin_footer', 'aws_adminmenu');
+*/
+
+add_action('bb_admin_head', 'aws_header');
+add_action('bb_admin_footer', 'aws_adminmenu');
+
 
 ?>

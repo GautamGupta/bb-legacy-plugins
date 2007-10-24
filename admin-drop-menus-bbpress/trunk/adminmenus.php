@@ -1,15 +1,15 @@
 <?php
 /*
 Plugin Name: Admin Drop Menus
-Plugin URI: http://www.yellowswordfish.com/index.php?pagename=admin-drop-menus-wordpress-plugin
-Description: Create Drop Down Menus for WordPress Admin Panels
-Version: 2.0.5
-Author: Andy Staines
-Author URI: http://www.yellowswordfish.com
-BBPress Version: 2.0
+Plugin URI: http://guildmedia.net/programming_en/php/admin-drop-menus-for-bbpress/
+Description: Create Drop Down Menus for BBPress Admin Panels
+Version: 1.0.0
+Author: Leo Plaw
+Author URI: http://guildmedia.net
+BBPress Version: 0.8.3
 */
 
-/*  Copyright 2005/2006 Andy Staines
+/*  Copyright 2007 Leo Plaw
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

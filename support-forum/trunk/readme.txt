@@ -2,8 +2,8 @@
 Contributors: so1o, mdawaffe, SamBauers
 Tags: support, forums
 Requires at least: 0.80 build 701
-Tested up to: 1.0 alpha build 949
-Stable tag: 2.3.2
+Tested up to: 1.0 alpha build 968
+Stable tag: 2.3.3
 
 Adds the ability to set a support status on topics in selected forums.
 
@@ -19,13 +19,14 @@ statuses have special views.
 You can select if the original poster has the ability to set the status on
 topic creation and whether they can change the status later.
 
-Two additional options add a visual marker to each topic to indicate it's
-support/locked status.
+Three additional options add a visual marker to each topic to indicate it's
+support, locked or sticky status.
 
 * Not a support question = empty slot
 * Unresolved = red ball (alternative orange ball also provided)
 * Resolved = green ball
 * Locked = padlock
+* Sticky = star
 
 Please Note: this plugin contains functionality that was standard before
 bbPress 0.75, for details please look at http://trac.bbpress.org/ticket/496
@@ -49,7 +50,7 @@ will need to be logged in as a keymaster.
 
 == License ==
 
-Support forum version 2.3.2
+Support forum version 2.3.3
 Copyright (C) 2007 Aditya Naik (so1oonnet@gmail.com)
 Copyright (C) 2007 Sam Bauers (sam@viveka.net.au)
 
@@ -113,3 +114,6 @@ See accompanying license.txt file for details.
 * 2.3.2 :
   <br/>Pass $support_forum object by reference for latest WP add_filter() and
        add_action() methods
+* 2.3.3 :
+  <br/>Make compatible with new bb_topic_labels filter introduced in build 968
+  <br/>Add option to label sticky topics with an icon

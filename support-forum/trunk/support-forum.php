@@ -37,11 +37,13 @@ Version History:
 		  Slightly better formatting of the admin page (Sam Bauers)
 2.3.1	: Fixed a problem where a warning was produced if there were no settings in the database (Sam Bauers)
 2.3.2	: Pass $support_forum object by reference for latest WP add_filter() and add_action() methods (Michael D. Adams)
+2.3.3	: Make compatible with new bb_topic_labels filter introduced in build 968 (Sam Bauers)
+		  Add option to label sticky topics with an icon (Sam Bauers)
 */
 
 
 /**
- * Support forum for bbPress version 2.3.2
+ * Support forum for bbPress version 2.3.3
  * 
  * ----------------------------------------------------------------------------------
  * 
@@ -77,7 +79,7 @@ Version History:
  * @copyright 2007 Aditya Naik
  * @copyright 2007 Sam Bauers
  * @license   http://www.gnu.org/licenses/gpl.txt GNU General Public License v2
- * @version   2.3.2
+ * @version   2.3.3
  **/
 
 
@@ -85,7 +87,7 @@ Version History:
  * Wrapper class for the Support forum plugin
  *
  * @author  Sam Bauers
- * @version 2.3.2
+ * @version 2.3.3
  **/
 class Support_Forum
 {
@@ -278,7 +280,8 @@ class Support_Forum
 	{
 		$this->icons = array(
 			'status' => bb_get_option('support_forum_icons_status'),
-			'closed' => bb_get_option('support_forum_icons_closed')
+			'closed' => bb_get_option('support_forum_icons_closed'),
+			'sticky' => bb_get_option('support_forum_icons_sticky')
 		);
 	}
 	
@@ -517,16 +520,22 @@ class Support_Forum
 	{
 		global $topic;
 		
-		if (in_array($topic->forum_id, $this->enabled)) {
-			echo '<li id="resolution-flipper">' . __('This topic is') . ' ';
-			$this->getStatusDisplay();
-			echo '</li>' . "\n";
+		if ($this->icons['sticky']) {
+			if ($topic->topic_sticky > 0) {
+				echo '<li>' . __('This topic is') . ' <img src="' . bb_get_option('uri') . $this->iconPath . 'support-forum-sticky.png" alt="" style="vertical-align:top; width:14px; height:14px; border-width:0;" /> ' . __('sticky') . '</li>' . "\n";
+			}
 		}
 		
 		if ($this->icons['closed']) {
 			if ('0' === $topic->topic_open) {
 				echo '<li>' . __('This topic is') . ' <img src="' . bb_get_option('uri') . $this->iconPath . 'support-forum-closed.png" alt="" style="vertical-align:top; width:14px; height:14px; border-width:0;" /> ' . __('closed') . '</li>' . "\n";
 			}
+		}
+		
+		if (in_array($topic->forum_id, $this->enabled)) {
+			echo '<li id="resolution-flipper">' . __('This topic is') . ' ';
+			$this->getStatusDisplay();
+			echo '</li>' . "\n";
 		}
 	}
 	
@@ -677,7 +686,7 @@ class Support_Forum
 	 * @return string
 	 * @author Sam Bauers
 	 **/
-	function modifyTopicTitleStatus($title)
+	function modifyTopicLabelStatus($label)
 	{
 		if (is_forum() || is_front() || is_view()) {
 			$topicStatus = $this->getTopicStatus();
@@ -688,11 +697,11 @@ class Support_Forum
 				} elseif ($topicStatus != 'mu') {
 					$status_image = '[' . $this->resolutions[$topicStatus] . '] ';
 				}
-				$title = $status_image . $title;
+				$label = $status_image . $label;
 			}
 		}
 		
-		return $title;
+		return $label;
 	}
 	
 	
@@ -702,16 +711,35 @@ class Support_Forum
 	 * @return string
 	 * @author Sam Bauers
 	 **/
-	function modifyTopicTitleClosed($title)
+	function modifyTopicLabelClosed($label)
 	{
 		if (is_forum() || is_front() || is_view()) {
 			global $topic;
 			if ('0' === $topic->topic_open) {
-				return sprintf(__('<img src="' . bb_get_option('uri') . $this->iconPath . 'support-forum-closed.png" alt="[' . __('closed') . ']" style="vertical-align:top; margin-right:0.3em; width:14px; height:14px; border-width:0;" />%s'), $title);
+				return sprintf(__('<img src="' . bb_get_option('uri') . $this->iconPath . 'support-forum-closed.png" alt="[' . __('closed') . ']" style="vertical-align:top; margin-right:0.3em; width:14px; height:14px; border-width:0;" />%s'), $label);
 			}
 		}
 		
-		return $title;
+		return $label;
+	}
+	
+	
+	/**
+	 * Appends data to the topic title that indicates the topic sticky status
+	 *
+	 * @return string
+	 * @author Sam Bauers
+	 **/
+	function modifyTopicLabelSticky($label)
+	{
+		if (is_forum() || is_front() || is_view()) {
+			global $topic;
+			if ($topic->topic_sticky > 0) {
+				return sprintf(__('<img src="' . bb_get_option('uri') . $this->iconPath . 'support-forum-sticky.png" alt="[' . __('sticky') . ']" style="vertical-align:top; margin-right:0.3em; width:14px; height:14px; border-width:0;" />%s'), $label);
+			}
+		}
+		
+		return $label;
 	}
 	
 	
@@ -808,16 +836,33 @@ if ($support_forum->isActive()) {
 	add_action('bb_head', array(&$support_forum, 'AJAX_setTopicStatus'));
 	add_action('bb_ajax_update-resolution', array(&$support_forum, 'AJAX_setTopicStatusProcess'));
 	add_filter('topic_class', array(&$support_forum, 'addTopicClass'));
-	add_filter('topic_title', array(&$support_forum, 'modifyTopicTitleStatus'), 40);
-	
 	add_action('bb_head', array(&$support_forum, 'addStatusSelectModifier'));
 	add_action('post_form_pre_post', array(&$support_forum, 'addStatusSelectToPostForm'));
 	add_action('bb_new_topic', array(&$support_forum, 'setTopicStatusOnCreation'));
 	
+	
 	if ($support_forum->icons['closed']) {
-		remove_filter('topic_title', 'closed_title', 30); // Build 371-791
-		remove_filter('topic_title', 'bb_closed_title', 30); // Build 792+
-		add_filter('topic_title', array(&$support_forum, 'modifyTopicTitleClosed'), 30);
+		if (function_exists('bb_topic_labels')) {
+			remove_filter('bb_topic_labels', 'bb_closed_label', 10); // Build 968+
+			add_filter('bb_topic_labels', array(&$support_forum, 'modifyTopicLabelClosed'), 20);
+		} else {
+			remove_filter('topic_title', 'closed_title', 30); // Build 371-791
+			remove_filter('topic_title', 'bb_closed_title', 30); // Build 792+
+			add_filter('topic_title', array(&$support_forum, 'modifyTopicLabelClosed'), 30);
+		}
+	}
+	
+	if ($support_forum->icons['sticky']) {
+		if (function_exists('bb_topic_labels')) {
+			remove_filter('bb_topic_labels', 'bb_sticky_label', 20); // Build 968+
+			add_filter('bb_topic_labels', array(&$support_forum, 'modifyTopicLabelSticky'), 30);
+		}
+	}
+	
+	if (function_exists('bb_topic_labels')) {
+		add_filter('bb_topic_labels', array(&$support_forum, 'modifyTopicLabelStatus'), 10);
+	} else {
+		add_filter('topic_title', array(&$support_forum, 'modifyTopicLabelStatus'), 40);
 	}
 }
 
@@ -943,6 +988,7 @@ function support_forum_admin_page() {
 	$support_forum->getIconStatus();
 	$support_forum_icons_status_checked = ($support_forum->icons['status']) ? "checked=\"checked\" " : "";
 	$support_forum_icons_closed_checked = ($support_forum->icons['closed']) ? "checked=\"checked\" " : "";
+	$support_forum_icons_sticky_checked = ($support_forum->icons['sticky']) ? "checked=\"checked\" " : "";
 	?>
 	<h2><?php _e('Support forum'); ?></h2>
 	<form method="post">
@@ -1031,6 +1077,13 @@ function support_forum_admin_page() {
 				- <?php _e('closed'); ?>
 			</span>
 		</p>
+		<p>
+			<input type="checkbox" name="support_forum_icons_sticky" value="1" <?php echo $support_forum_icons_sticky_checked;?>/> <?php _e('Use sticky icon on sticky topics (applies to all forums)'); ?>
+			<span style="display:block; line-height:18px; margin:6px 40px 13px 40px;">
+				<img src="<?php bb_option('uri'); ?><?php echo($support_forum->iconPath); ?>support-forum-sticky.png" alt="" style="vertical-align:top; width:14px; height:14px; border-width:0; padding-top:2px;" />
+				- <?php _e('sticky'); ?>
+			</span>
+		</p>
 		<input name="action" type="hidden" value="support_forum_post"/>
 		<p class="submit"><input type="submit" name="submit" value="Save support forum settings" /></p>
 	</form>
@@ -1095,6 +1148,12 @@ function support_forum_admin_page_process()
 				bb_update_option('support_forum_icons_closed', 1);
 			} else {
 				bb_delete_option('support_forum_icons_closed');
+			}
+			
+			if ($_POST['support_forum_icons_sticky']) {
+				bb_update_option('support_forum_icons_sticky', 1);
+			} else {
+				bb_delete_option('support_forum_icons_sticky');
 			}
 			
 			bb_admin_notice(__('Settings saved'));

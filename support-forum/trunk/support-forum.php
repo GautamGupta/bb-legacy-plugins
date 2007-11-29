@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/16
 Description: Changes the forum to a support forum and adds functionality to mark topics resolved, not resolved or not a support question
 Author: Aditya Naik, Sam Bauers
 Author URI: http://www.adityanaik.com/
-Version: 2.3.2
+Version: 2.3.3
 
 Version History:
 1.0		: Initial Release (Aditya Naik)

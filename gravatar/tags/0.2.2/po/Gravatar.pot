@@ -1,0 +1,182 @@
+# Message Catalog for Gravatar.
+# Copyright (C) 2007 Yu Jie Lin
+# This file is distributed under the same license as the Gravatar package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Gravatar 0.2.1\n"
+"Report-Msgid-Bugs-To: lb07@livibetter.com\n"
+"POT-Creation-Date: 2007-11-06 05:11+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: Gravatar.php:166 Gravatar.php:171
+msgid "Gravatar Email"
+msgstr ""
+
+#: Gravatar.php:167
+msgid "Gravatar Verification Code"
+msgstr ""
+
+#: Gravatar.php:179
+#, php-format
+msgid ""
+"New Gravatar Email is %1$s.\n"
+"New Verification Code is %2$s\n"
+"\n"
+"It is an 8-letter string. Note that before you successfully verify your new "
+"Gravatar Email, your Gravatar will not work.\n"
+"\n"
+"%3$s\n"
+"%4$s"
+msgstr ""
+
+#: Gravatar.php:182
+msgid "Your Gravatar usage verification code"
+msgstr ""
+
+#: Gravatar.php:312
+msgid "Gravatar"
+msgstr ""
+
+#: OptionsPage.php:30 OptionsPage.php:101
+msgid "Reset All Options"
+msgstr ""
+
+#: OptionsPage.php:33
+msgid "All options are reseted!"
+msgstr ""
+
+#: OptionsPage.php:35 OptionsPage.php:105
+msgid "Deactivate Plugin"
+msgstr ""
+
+#: OptionsPage.php:43 OptionsPage.php:61 OptionsPage.php:145
+#: OptionsPage.php:199
+msgid "Save"
+msgstr ""
+
+#: OptionsPage.php:50
+msgid "General options saved!"
+msgstr ""
+
+#: OptionsPage.php:52 OptionsPage.php:77 OptionsPage.php:146
+#: OptionsPage.php:200
+msgid "Reset"
+msgstr ""
+
+#: OptionsPage.php:55
+msgid "General options reseted!"
+msgstr ""
+
+#: OptionsPage.php:75
+msgid "Image options saved!"
+msgstr ""
+
+#: OptionsPage.php:81
+msgid "Image options reseted!"
+msgstr ""
+
+#: OptionsPage.php:87
+msgid "Gravatar Options"
+msgstr ""
+
+#: OptionsPage.php:88
+msgid "About this plugin"
+msgstr ""
+
+#: OptionsPage.php:91
+msgid "Plugin's Website"
+msgstr ""
+
+#: OptionsPage.php:91
+msgid "Documentations"
+msgstr ""
+
+#: OptionsPage.php:92
+msgid "Get Support"
+msgstr ""
+
+#: OptionsPage.php:92
+msgid "Ask question, submit feedbacks"
+msgstr ""
+
+#: OptionsPage.php:93
+msgid "Author's Website"
+msgstr ""
+
+#: OptionsPage.php:97
+msgid "Management"
+msgstr ""
+
+#: OptionsPage.php:102
+msgid "Reverts all options to defaults."
+msgstr ""
+
+#: OptionsPage.php:106
+msgid ""
+"Be careful! This will remove all your settings for this plugin! If you don't "
+"want to lose settings, please use Plugins page to deactivate this plugin."
+msgstr ""
+
+#: OptionsPage.php:111
+msgid "General Options"
+msgstr ""
+
+#: OptionsPage.php:116
+msgid "Use Registered Email?"
+msgstr ""
+
+#: OptionsPage.php:119
+msgid "No"
+msgstr ""
+
+#: OptionsPage.php:120
+msgid "Yes"
+msgstr ""
+
+#: OptionsPage.php:125
+msgid "Rating:"
+msgstr ""
+
+#: OptionsPage.php:137
+msgid "Avatar Size:"
+msgstr ""
+
+#: OptionsPage.php:140
+msgid "1 to 80 (pixels)."
+msgstr ""
+
+#: OptionsPage.php:151
+msgid "Default Image URIs"
+msgstr ""
+
+#: OptionsPage.php:156
+msgid "Avatar"
+msgstr ""
+
+#: OptionsPage.php:157
+msgid "Role Name / Default Image URI"
+msgstr ""
+
+#: OptionsPage.php:164
+msgid "Default Image"
+msgstr ""
+
+#: OptionsPage.php:168
+msgid ""
+"Default Image - This will apply to all no avatars users with no default "
+"avatar role."
+msgstr ""
+
+#: OptionsPage.php:173
+msgid ""
+"The following role default avatars override the Default Image above. Applies "
+"only when users don't have an avatar."
+msgstr ""

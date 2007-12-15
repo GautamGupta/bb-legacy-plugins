@@ -1,0 +1,205 @@
+# Traditional Chinese Message Catalog for Gravatar.
+# Copyright (C) 2007 Yu Jie Lin
+# This file is distributed under the same license as the Gravatar package.
+# Yu-Jie Lin <lb07@livibetter.com>, 2007.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Gravatar 0.2.1\n"
+"Report-Msgid-Bugs-To: lb07@livibetter.com\n"
+"POT-Creation-Date: 2007-11-06 05:11+0800\n"
+"PO-Revision-Date: 2007-11-06 05:11+0800\n"
+"Last-Translator: Yu-Jie Lin <lb07@livibetter.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: Gravatar.php:166 Gravatar.php:171
+msgid "Gravatar Email"
+msgstr "Gravatar 註冊信箱"
+
+#: Gravatar.php:167
+msgid "Gravatar Verification Code"
+msgstr "Gravatar 使用驗證碼"
+
+#: Gravatar.php:179
+#, php-format
+msgid ""
+"New Gravatar Email is %1$s.\n"
+"New Verification Code is %2$s\n"
+"\n"
+"It is an 8-letter string. Note that before you successfully verify your new "
+"Gravatar Email, your Gravatar will not work.\n"
+"\n"
+"%3$s\n"
+"%4$s"
+msgstr ""
+"新的 Gravatar 註冊信箱為 %1$s.\n"
+"新的使用驗證碼為 %2$s\n"
+"\n"
+"此驗證碼由 8 個英數字組成。注意：您完成驗證前，您的 Gravatar 圖像不會被顯"
+"示。\n"
+"\n"
+"%3$s\n"
+"%4$s"
+
+#: Gravatar.php:182
+msgid "Your Gravatar usage verification code"
+msgstr "您的 Gravatar 圖像使用驗證碼"
+
+#: Gravatar.php:312
+msgid "Gravatar"
+msgstr "Gravatar"
+
+#: OptionsPage.php:30 OptionsPage.php:101
+msgid "Reset All Options"
+msgstr "重置所有選項"
+
+#: OptionsPage.php:33
+msgid "All options are reseted!"
+msgstr "所有選項已恢復成預設值！"
+
+#: OptionsPage.php:35 OptionsPage.php:105
+msgid "Deactivate Plugin"
+msgstr "停用外掛"
+
+#: OptionsPage.php:43 OptionsPage.php:61 OptionsPage.php:145
+#: OptionsPage.php:199
+msgid "Save"
+msgstr "儲存"
+
+#: OptionsPage.php:50
+msgid "General options saved!"
+msgstr "一般選項已儲存！"
+
+#: OptionsPage.php:52 OptionsPage.php:77 OptionsPage.php:146
+#: OptionsPage.php:200
+msgid "Reset"
+msgstr "重置"
+
+#: OptionsPage.php:55
+msgid "General options reseted!"
+msgstr "一般選項已恢復成預設值！"
+
+#: OptionsPage.php:75
+msgid "Image options saved!"
+msgstr "圖像選項已儲存！"
+
+#: OptionsPage.php:81
+msgid "Image options reseted!"
+msgstr "圖像選項已恢復成預設值！"
+
+#: OptionsPage.php:87
+msgid "Gravatar Options"
+msgstr "Gravatar 選項"
+
+#: OptionsPage.php:88
+msgid "About this plugin"
+msgstr "關於本外掛"
+
+#: OptionsPage.php:91
+msgid "Plugin's Website"
+msgstr "外掛網站"
+
+#: OptionsPage.php:91
+msgid "Documentations"
+msgstr "說明文件"
+
+#: OptionsPage.php:92
+msgid "Get Support"
+msgstr "尋求協助"
+
+#: OptionsPage.php:92
+msgid "Ask question, submit feedbacks"
+msgstr "詢問問題、提供意見"
+
+#: OptionsPage.php:93
+msgid "Author's Website"
+msgstr "作者網站"
+
+#: OptionsPage.php:97
+msgid "Management"
+msgstr "管理"
+
+#: OptionsPage.php:102
+msgid "Reverts all options to defaults."
+msgstr "所有選項設定回復至預設值。"
+
+#: OptionsPage.php:106
+msgid ""
+"Be careful! This will remove all your settings for this plugin! If you don't "
+"want to lose settings, please use Plugins page to deactivate this plugin."
+msgstr ""
+"請注意！這會移除這個外掛所使用的所有設定！如果你想要保留這些設定，請使用外掛"
+"頁面來停用外掛。"
+
+#: OptionsPage.php:111
+msgid "General Options"
+msgstr "一般選項"
+
+#: OptionsPage.php:116
+msgid "Use Registered Email?"
+msgstr "使用註冊信箱？"
+
+#: OptionsPage.php:119
+msgid "No"
+msgstr "否"
+
+#: OptionsPage.php:120
+msgid "Yes"
+msgstr "是"
+
+#: OptionsPage.php:125
+msgid "Rating:"
+msgstr "圖像分級"
+
+#: OptionsPage.php:137
+msgid "Avatar Size:"
+msgstr "圖像大小："
+
+#: OptionsPage.php:140
+msgid "1 to 80 (pixels)."
+msgstr "1 至 80 （像素）。"
+
+#: OptionsPage.php:151
+msgid "Default Image URIs"
+msgstr "預設圖像網址"
+
+#: OptionsPage.php:156
+msgid "Avatar"
+msgstr "圖像"
+
+#: OptionsPage.php:157
+msgid "Role Name / Default Image URI"
+msgstr "會員身份 / 預設圖像網址"
+
+#: OptionsPage.php:164
+msgid "Default Image"
+msgstr "預設圖像"
+
+#: OptionsPage.php:168
+msgid ""
+"Default Image - This will apply to all no avatars users with no default "
+"avatar role."
+msgstr "預設圖像 — 這將會應用至沒有圖像且其會員身份也無預設圖像的使用者。"
+
+#: OptionsPage.php:173
+msgid ""
+"The following role default avatars override the Default Image above. Applies "
+"only when users don't have an avatar."
+msgstr ""
+"以下的會員身份預設圖像會取代上方預設圖像的設定，應用在未設定圖像的使用者。"
+
+#~ msgid "Newer code should be in you mail box."
+#~ msgstr "新的驗證碼應該已寄達您的信箱。"
+
+#~ msgid "Code has been sent again."
+#~ msgstr "驗證碼已再次寄出。"
+
+#~ msgid "Not a Valid Email!"
+#~ msgstr "非正確信箱格式！"
+
+#~ msgid "Check Your Mailbox."
+#~ msgstr "請檢查您的信箱。"

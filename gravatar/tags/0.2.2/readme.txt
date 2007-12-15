@@ -2,6 +2,7 @@
 Contributors: livibetter
 Donate link: http://www.livibetter.com/blog/donate/
 Tags: Gravatar,avatar
+Requires at least: 0.8.3
 Tested up to: 0.8.3
 Stable tag: 0.2.2
 

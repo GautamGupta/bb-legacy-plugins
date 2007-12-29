@@ -9,11 +9,13 @@ Author URI: http://www.loinhead.net/
 */
 
 add_action('publish_post', 'felsyncpost', 999 );
+
 add_action('comment_post', 'felsynccomment', 999, 2 );
+add_action('wp_set_comment_status', 'felsynccomment', 999, 2);
+add_action('wp_set_comment_status', 'felsynccomment', 999, 2)
 
 add_action('admin_menu', 'bbsyncaddsubmenu');
 add_action('edit_form_advanced', 'bbsyncpostoptions');
-
 
 	remove_action('publish_post', 'bbpress_setpost');
 	remove_filter('the_content', 'bbpress_add_forumlink');
@@ -122,14 +124,13 @@ function felgetbbreplies() {
 }
 
 /* COMMENTS -> REPLIES */
-function felsynccomment( $comment_id, $ham ) {
+function felsynccomment( $comment_id ) {
 	global $wpdb;
 	$opshuns = get_option('bbsync');
 	load_bb();
 	$comment = get_comment( $comment_id );
 	$topic_id = felwptobb( $comment->comment_post_ID );
-	$ham = $comment->comment_approved;
-	if( ( $topic_id ) && ( $ham == 1 ) && ( $comment->user_id ) && bb_set_current_user( $comment->user_id ) ) {
+	if( ( $topic_id ) && ( $comment->comment_approved == 1 ) && ( $comment->user_id ) && bb_set_current_user( $comment->user_id ) ) {
 		//topic linked, genuine comment, actual user, bb likes user
 		bb_new_post( $topic_id, $comment->comment_content );
 		return true;
@@ -343,7 +344,7 @@ function felbbsyncinterface() {
 			<li>It creates a new topic when you post in your blog, and links them behind the scenes.</li>
 			<li>Replies in the thread can be shown where the comments are (quite automagically). Use <code>&lt;?php bbrepliestext(); ?&gt;</code> to just link to the thread; it accepts the link text as an argument and <code>%no%</code> and <code>%replies%</code> will be replaced with the numebr of posts and the right pluralicised form of the word reply.</li>
 			<li>Comments made by the normal wp post form to integrated posts will be picked up and sent into the forum - so people can reply as they did before!</li>
-			<li>Deactivates the bbPress Post plugin. If you don't like that, take out lines 18 and 19 (<code>remove_action(...</code> and <code>remove_filter(...</code>) of bbsync.php. </li>
+			<li>Deactivates the bbPress Post plugin. If you don't like that, take out lines 20 and 21 (<code>remove_action(...</code> and <code>remove_filter(...</code>) of bbsync.php. </li>
 			<li>Can migrate data from the bbPress Post plugin and then delete it. bbPress Post must not be active after migration!</li>
 		</ul>
 	</div>

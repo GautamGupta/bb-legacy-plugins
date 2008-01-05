@@ -221,9 +221,13 @@ function felbbsyncinterface() {
 	if (function_exists("add_submenu_page")) {
 		$opshuns = get_option('bbsync');
 		
+		$olddir = getcwd();
+		chdir('..');
+		$wpdir = getcwd();
+		chdir( $olddir );
 		$bbsyncurl = get_bloginfo('wpurl') . '/wp-admin/options-general.php?page=bbsync.php';
 		$felerrors = array(
-			'nobbpath' => 'I don\'t have a working path to your bb-load.php file for bbPress, and I need it to make this work!',
+			'nobbpath' => 'I don\'t have a working path to your bb-load.php file for bbPress, and I need it to make this work!<br /> The directory of WordPress is '. $wpdir .', if it helps.',
 			'nobbPost' => 'I couldn\'t find the bbPress Post table, so I couldn\'t migrate it either. Sorry!',
 		);
 		$felmessages = array(

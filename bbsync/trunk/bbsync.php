@@ -28,9 +28,12 @@ function load_bb() {
 	global $bb_roles, $bb_table_prefix, $bb_locale, $bb_timestart, $timeend;  // INCOMPLETE
 	global $opshuns;
 	$opshuns = get_option('bbsync');
+	if( is_readable( $opshuns['bbpath'] ) ) {
 /**/	remove_action('bb_user_has_no_caps', 'bb_give_user_default_role');  // MAINTAIN
 	require_once( $opshuns['bbpath'] ); //bb-load
 /**/	add_action('bb_user_has_no_caps', 'bb_give_user_default_role');  // MAINTAIN
+	return true;
+	} else return false;
 }
 
 function felsyncpost( $post_id ) {
@@ -41,7 +44,8 @@ function felsyncpost( $post_id ) {
 	if( !empty( $post->post_password ) )
 		return;
 		
-	load_bb();
+	if( !load_bb() )
+		return false;
 	
 	if( !$current_user )
 		return;
@@ -221,13 +225,9 @@ function felbbsyncinterface() {
 	if (function_exists("add_submenu_page")) {
 		$opshuns = get_option('bbsync');
 		
-		$olddir = getcwd();
-		chdir('..');
-		$wpdir = getcwd();
-		chdir( $olddir );
 		$bbsyncurl = get_bloginfo('wpurl') . '/wp-admin/options-general.php?page=bbsync.php';
 		$felerrors = array(
-			'nobbpath' => 'I don\'t have a working path to your bb-load.php file for bbPress, and I need it to make this work!<br /> The directory of WordPress is '. $wpdir .', if it helps.',
+			'nobbpath' => 'I don\'t have a working path to your bb-load.php file for bbPress, and I need it to make this work!<br /> The directory of WordPress is '. dirname( getcwd() ) .', if it helps.',
 			'nobbPost' => 'I couldn\'t find the bbPress Post table, so I couldn\'t migrate it either. Sorry!',
 		);
 		$felmessages = array(
@@ -372,7 +372,8 @@ function bbsyncpostoptions() {
 }
 
 function felinterpretforum( $forumidname ) {
-	load_bb();
+	if( !load_bb() )
+		return false;
 	global $bbdb;
 	$opshuns = get_option('bbsync');
 	$forum = $bbdb->get_row("

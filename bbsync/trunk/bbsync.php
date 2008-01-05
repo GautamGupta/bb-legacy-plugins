@@ -12,7 +12,7 @@ add_action('publish_post', 'felsyncpost', 999 );
 
 add_action('comment_post', 'felsynccomment', 999, 2 );
 add_action('wp_set_comment_status', 'felsynccomment', 999, 2);
-add_action('wp_set_comment_status', 'felsynccomment', 999, 2)
+add_action('wp_set_comment_status', 'felsynccomment', 999, 2);
 
 add_action('admin_menu', 'bbsyncaddsubmenu');
 add_action('edit_form_advanced', 'bbsyncpostoptions');

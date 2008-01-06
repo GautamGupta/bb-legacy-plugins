@@ -69,7 +69,7 @@ function felsyncpost( $post_id ) {
 
 function felnewtopic( $post_id, $post_title, $post_text ) {
 	$opshuns = get_option('bbSync');
-	if( !( isset( $_GET['forum'] ) && $forum_id = felinterpretforum( $_GET['forum'] ) ) )
+	if( !( isset( $_POST['forum'] ) && $forum_id = felinterpretforum( $_POST['forum'] ) ) )
 		$forum_id = $opshuns['forum'];
 	
 	$topic_id = bb_new_topic( $post_title, $forum_id, $tags );

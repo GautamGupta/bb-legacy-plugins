@@ -16,7 +16,7 @@ These days forum spam is a big problem and also bad messages could drive away yo
 
 == Installation ==
 
-Download the plugin here.
+Download the plugin.
 
 Upload the file moderator_notification.php into /my-plugins/ directory 
 If you don't have a /my-plugins/ directory in your bbpress installation, just create one in your bbpress root directory.

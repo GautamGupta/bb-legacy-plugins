@@ -71,7 +71,7 @@ function mod_notification_new_post() {
 	$subject = 'There is a new post on: '.$topic->topic_title;
 	if (!is_moderator($bb_current_user->ID)) {
 		foreach ($all_moderators as $userdata) {
-			if (notification_is_activated($userdata->ID)) {
+			if (mod_notification_is_activated($userdata->ID)) {
 				$msg = "Hello,\n\n".get_user_name($bb_current_user->ID)." has posted here:\n".get_topic_link($topic_id);
 				mail($userdata->user_email, $subject, $msg, $header);
 				

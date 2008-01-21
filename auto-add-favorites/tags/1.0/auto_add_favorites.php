@@ -4,7 +4,7 @@
  * Plugin Description: Subscribe to thread whenever you have posted a comment
  * Author: Olaf Lederer
  * Author URI: http://www.finalwebsites.com/portal
- * Plugin URI: http://www.finalwebsites.com/auto-add-member-favorites.php
+ * Plugin URI: http://www.finalwebsites.com/bbpress/auto-add-member-favorites.php
  * Version: 1.0
  */
  

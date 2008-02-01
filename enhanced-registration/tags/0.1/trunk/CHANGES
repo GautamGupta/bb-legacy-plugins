@@ -1,0 +1,18 @@
+Enhanced Registration CHANGES
+=============================
+
+ER 0.1 (2008-02-02T04:09:03+0800)
+---------------------------------
+* Change method for deletion, no binding of pluggable function
+- Remove manual deletion
++ Add Complete deactivation
+
+ER 0.0.0.2 (2007-11-27T21:25:09+0800)
+-------------------------------------
+Fix: #7 - Empty input to foreach.
+Add: #8 - Auto-deletion unactivated users.
+Add: Mail reports.
+
+ER 0.0.0.1 (2007-11-26T14:18:59+0800)
+-------------------------------------
+First release.

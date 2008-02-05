@@ -16,6 +16,6 @@ function ajaxRate( e ) {
 	rateAjax.options.parameters += '&action=rate-topic&id=' + id + '&rate=' + rate;
 	rateAjax.request(rateAjax.url);
 	$$( '.star-rating.select' ).each( function(i) {
-		i.style.width = 85 * rate / 5 + 'px';
+		i.style.width = 100 * rate / 5 + 'px';
 	} );
 }

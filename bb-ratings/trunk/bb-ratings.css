@@ -1,8 +1,8 @@
 div.star-holder {
 	position: relative;
-	height: 16px;
-	width: 85px;
-	font-size: 16px;
+	height: 19px;
+	width: 100px;
+	font-size: 19px;
 }
 
 div.star {
@@ -38,9 +38,34 @@ div.star.select:hover { background-color: #d00; }
 }
 
 div.star img {
-	width: 16px;
-	height: 16px;
+	width: 19px;
+	height: 19px;
 	border-left: 1px solid #fff;
 	border-right: 1px solid #fff;
 }
 
+
+.rating-holder {
+	width: 100px;
+	position: relative;
+}
+
+td .rating-holder {
+	margin: 0 auto;
+	padding-right: 3ex;
+}
+
+span.count {
+	position: absolute;
+	left: 100px;
+	top: 0;
+}
+
+#bb-rating {
+	float: right;
+	padding-right: 1ex;
+}
+
+#bb-rating h4 {
+	margin-bottom: 0;
+}

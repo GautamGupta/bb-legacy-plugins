@@ -1,9 +1,9 @@
 === bbRatings ===
 Tags: rating, rate, vote
 Contributors: mdawaffe
-Requires at least: 0.8
-Tested up to: 0.8
-Stable Tag: 0.8
+Requires at least: 0.8.3
+Tested up to: 0.8.3.1
+Stable Tag: 0.8.3
 
 Allows users to rate topics on a simple 1-5 star scale.
 

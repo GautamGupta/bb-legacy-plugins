@@ -4,7 +4,7 @@ Plugin Name: My Views module - Installed/Available Themes
 Description: This plugin is part of the My Views plugin. It adds Installed/Available Themes to the list of views.		
 Plugin URI:  http://bbpress.org/plugins/topic/67
 Author: _ck_
-Author URI: http://CKon.wordpress.com
+Author URI: http://bbShowcase.org
 Version: 0.09
 */ 
 

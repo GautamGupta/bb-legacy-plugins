@@ -5,7 +5,7 @@ Description: This plugin is part of the My Views plugin. It adds Installed/Avail
 		Note that "Available Plugins" view requires the "Plugin Browser" plugin by Sam Bauers.		
 Plugin URI:  http://bbpress.org/plugins/topic/67
 Author: _ck_
-Author URI: http://CKon.wordpress.com
+Author URI: http://bbShowcase.org
 Version: 0.09
 */ 
 

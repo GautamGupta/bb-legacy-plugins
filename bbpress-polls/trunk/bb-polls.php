@@ -4,10 +4,9 @@ Plugin Name: bbPress Polls
 Description:  allows users to add polls to topics, with optional ajax-ish update action
 Plugin URI:  http://bbpress.org/plugins/topic/62
 Author: _ck_
-Author URI: http://CKon.wordpress.com
+Author URI: http://bbShowcase.org
 Version: 0.31
-*/
-/*
+
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
 Instructions:   install, activate, tinker with settings located several lines below
@@ -43,6 +42,8 @@ To Do:
 	: display a poll anywhere within bbpress templates
 	: display all polls on a single page
 */
+//	edit these lines below (until an Admin menu is made)
+
 	$bb_polls['minimum_view_level']="read";   // who can view polls = read / participate / moderate / administrate  (watchout for typos)
 	$bb_polls['minimum_vote_level']="participate";   // who can vote on polls = participate / moderate / administrate  (watchout for typos)
 	$bb_polls['minimum_add_level']="participate";   // who can add polls = participate / moderate / administrate  (watchout for typos)

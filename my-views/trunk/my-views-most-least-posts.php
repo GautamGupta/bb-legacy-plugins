@@ -4,7 +4,7 @@ Plugin Name: My Posts module - Most/Least Posts
 Description: This plugin is part of the My Posts plugin. It adds Most/Least Posts to the list of views.		
 Plugin URI:  http://bbpress.org/plugins/topic/67
 Author: _ck_
-Author URI: http://CKon.wordpress.com
+Author URI: http://bbShowcase.org
 Version: 0.09
 */ 
 

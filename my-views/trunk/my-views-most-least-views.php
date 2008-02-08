@@ -5,7 +5,7 @@ Description: This plugin is part of the My Views plugin. It adds Most/Least View
 		To make the forum view count available, you must edit your front-page.php and forum.php templates.
 Plugin URI:  http://bbpress.org/plugins/topic/67
 Author: _ck_
-Author URI: http://CKon.wordpress.com
+Author URI: http://bbShowcase.org
 Version: 0.09
 */ 
 

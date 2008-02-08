@@ -1,6 +1,6 @@
 === BBPress:Syntax Hiliter ===
 Tags: syntax, highlighter,hilite, code, geshi
-Donate link: http://klr20mg.com/bbpress_syntax_highlighter/
+Donate link: http://klr20mg.com/
 Contributors: Tmeister
 Requires at least: 0.8.3.1
 Tested up to: 0.8.3.1
@@ -26,6 +26,3 @@ The test was made with:
 ActionScript, ASP, C, CPP, CSS ,Delphi, HTML, Java, Javascript, Mysql, Perl, PHP, Python, Ruby, SQL, VB, XML
 
 
-== Screenshots ==
-
-http://klr20mg.com/bbpress_syntax_highlighter/

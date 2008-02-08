@@ -6,8 +6,7 @@ Plugin URI:  http://bbpress.org/plugins/topic/67
 Author: _ck_
 Author URI: http://bbShowcase.org
 Version: 0.091
-*/ 
-/*
+
 History
 0.03	: first public release, for 0.8.2.x only
 0.04	: now trunk compatibility

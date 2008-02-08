@@ -1,6 +1,6 @@
 === Plugin Name ===
-Contributors: Eric Barnes, Tom Werner
-Donate link: http://www.68kb.com/
+Contributors: Eric Barnes
+Donate link: http://68kb.com/
 Tags: gravatar, avatar
 Requires at least: 0.8.3
 Tested up to: 0.8.3

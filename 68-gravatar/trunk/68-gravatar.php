@@ -1,10 +1,10 @@
 <?php
 /*
 Plugin Name: 68 Gravatar
-Plugin URI: http://www.68kb.com
+Plugin URI: http://68kb.com
 Description: This plugin allows you to generate a gravatar URL complete with rating, size, default, and border options. See the <a href="http://www.68kb.com/2007/10/28/bbpress-plugin-68-gravatars/">documentation</a> for syntax and usage.
-Author: Eric Barnes and Tom Werner
-Author URI: http://www.mojombo.com/
+Author: Eric Barnes
+Author URI: http://68kb.com
 Version: 1.0
 */
 

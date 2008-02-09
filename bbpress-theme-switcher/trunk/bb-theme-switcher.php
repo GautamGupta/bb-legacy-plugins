@@ -42,13 +42,13 @@ global $bb_ts_add_dropdown, $bb_ts_optional_text;
 if ($file=='' || ($file=="footer.php" && !$bb_ts_add_dropdown)){
 $bb_ts_add_dropdown=true;
 echo '<form style="float:right;position:relative;clear:both;padding:5px;white-space:nowrap;text-align:right;">'
-.$bb_ts_optional_text.__('Theme Switcher').': ';bb_theme_switcher('dropdown'); echo '</form>;
+.$bb_ts_optional_text.__('Theme Switcher').': ';bb_theme_switcher('dropdown'); echo '</form>';
 }
 return $template;	
 } 
 
 function bb_ts_set_theme_cookie($timeout=180) { global $bbhash;
-	$expire = time() + $timeout;  	
+	$expire = time() + intval($timeout);  	
 	if (!empty($_GET["bbtheme"])) {		
 		if ( bb_get_option( 'cookiedomain' ) ) {
 		setcookie( "bb_theme_".$bbhash, stripslashes($_GET["bbtheme"]), $expire, bb_get_option( 'cookiepath' ), bb_get_option( 'cookiedomain' ) );}

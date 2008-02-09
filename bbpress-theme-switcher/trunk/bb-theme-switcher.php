@@ -1,16 +1,16 @@
 <?php
-
 /*
 Plugin Name: bbPress Theme Switcher
-Plugin URI: http://bbpress.org/
-Description: Allows your users and guests to switch themes.
-Version: 1.09
+Plugin URI: http://bbpress.org/plugins/topic/70
+Description: Allows your members and guests to switch between themes. Optional timer to return to default theme.
+Version: 1.10
 Author: _ck_
 Author URI:  http://bbshowcase.org
+Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
 
-Adapted from Ryan Boren WordPress theme switcher which was adapted from Alex King's WordPress style switcher http://www.alexking.org/software/wordpress/
+Inspired by Ryan Boren's WordPress theme switcher which was adapted from Alex King's WordPress style switcher http://www.alexking.org/software/wordpress/
 
-To use, add the following to your sidebar menu:
+To use, add the following to your footer:
 
   <li>Themes:
 	<?php bb_theme_switcher(); ?>
@@ -26,30 +26,35 @@ If you would like a dropdown box rather than a list, add this:
 
 */ 
 
+$bbhash=$bb->wp_siteurl ? md5($bb->wp_siteurl) : md5($bb_table_prefix);   // $bbhash is not available before plugins load in 0.8.2.x :-(
+bb_ts_set_theme_cookie(180);	//  60 seconds * 3 = 180. Set for 3 minute demo timeout - increase if you want a longer timeout 
+
+if (!(strpos("bbshowcase.org",$GLOBALS["HTTP_SERVER_VARS"]["SERVER_NAME"])===false)) {
+$bb_ts_optional_text = '<b><font color=red style="size:24px">keep _ck_ coding</font> >> <a style="color:blue;text-decoration:underline;" target=_blank href="http://amazon.com/paypage/P2FBORKDEFQIVM">donate $1</a> << </b> &nbsp;&nbsp;&nbsp;&nbsp;';
+}
+
 add_filter('bb_template','bb_ts_add_dropdown',100,2);    //  disable this line if you don't want the switcher inserted automatically
 add_filter('bb_get_active_theme_folder','bb_ts_get_template');
 add_filter('bb_get_active_theme_uri', 'bb_ts_get_active_theme_uri');
 
-$bbhash=$bb->wp_siteurl ? md5($bb->wp_siteurl) : md5($bb_table_prefix);   // $bbhash is not available before plugins load in 0.8.2.x :-(
-bb_ts_set_theme_cookie();
-
 function bb_ts_add_dropdown($template='',$file='') {
-global $bb_ts_add_dropdown; 
+global $bb_ts_add_dropdown, $bb_ts_optional_text; 
 if ($file=='' || ($file=="footer.php" && !$bb_ts_add_dropdown)){
 $bb_ts_add_dropdown=true;
-echo '<div style="position:relative;clear:right;padding-right:1em;white-space:nowrap;text-align:right;">'.__('Theme Switcher').': ';bb_theme_switcher('dropdown'); echo '</div>';
+echo '<form style="float:right;position:relative;clear:both;padding:5px;white-space:nowrap;text-align:right;">'
+.$bb_ts_optional_text.__('Theme Switcher').': ';bb_theme_switcher('dropdown'); echo '</form>;
 }
 return $template;	
 } 
 
-function bb_ts_set_theme_cookie() { global $bbhash;
-	$expire = time() + 180;  				// 180 set for 3 minute demo timeout - increase  want a longer timeout 
+function bb_ts_set_theme_cookie($timeout=180) { global $bbhash;
+	$expire = time() + $timeout;  	
 	if (!empty($_GET["bbtheme"])) {		
 		if ( bb_get_option( 'cookiedomain' ) ) {
 		setcookie( "bb_theme_".$bbhash, stripslashes($_GET["bbtheme"]), $expire, bb_get_option( 'cookiepath' ), bb_get_option( 'cookiedomain' ) );}
 		else {setcookie( "bb_theme_".$bbhash, stripslashes($_GET["bbtheme"]), $expire, bb_get_option( 'cookiepath' ) );}
 				
-		$redirect = bb_get_option( 'uri' );
+		$redirect = remove_query_arg('bbtheme');
 		if (function_exists('bb_redirect'))
 			bb_redirect($redirect);
 		else
@@ -128,7 +133,7 @@ function bb_theme_switcher($style = "text") { global $bbhash;
 			$ts = '<span id="themeswitcher">'."\n";		
 
 			$ts .=  // '<li>'."\n"
-				 '	<select style="width:150px;" name="themeswitcher" onchange="location.href=\''.bb_get_option( 'uri' ).'?bbtheme=\' + this.options[this.selectedIndex].value;">'."\n"	;
+				 '	<select style="width:150px;" name="themeswitcher" onchange="location.href=\''.add_query_arg('bbtheme','',remove_query_arg('bbtheme')).'=\' + this.options[this.selectedIndex].value;">'."\n"	;
 
 			foreach ($theme_names as $theme_name) {
 				// Skip unpublished themes.
@@ -141,8 +146,9 @@ function bb_theme_switcher($style = "text") { global $bbhash;
 				
 				$display = explode("/",trim($theme_name," /")); $display = end($display); 	// lazy fix for build >1000 with full path names								
 				$display = str_replace(array("Bb ","Bbpress"," For "),array("bb ","bbPress"," for "),htmlspecialchars(ucwords(str_replace("-"," ",$display))));
-												
-				$ts .= '<option style="text-indent: 1em;padding:2px" value="'.$theme_name.'"'.$selected.'>'. $display.'</option>'."\n";
+				if ($display=="Futurekind") {$bk="background:#CBD7E2;font-weight:bold;";} else {$bk="";}
+				
+				$ts .= '<option style="padding:2px;'.$bk.'" value="'.$theme_name.'"'.$selected.'>&nbsp;'.$display.'</option>'."\n";
 								
 			}
 			$ts .= '	</select></span>'."\n";

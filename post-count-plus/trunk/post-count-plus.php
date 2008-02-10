@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name:  Post Count Plus - Dynamic.Titles & More!
-Plugin URI:  http://bbpress.org/plugins/topic/
+Plugin URI:  http://bbpress.org/plugins/topic/83
 Description: An enhanced "user post count" with "custom titles" for topics and profiles, based on posts and membership, with cached results for faster pages. No template edits required. A demonstration can be found at http://bbshowcase.org/forums/topic/new-bbpress-theme-futurekind		
 Author: _ck_
 Author URI: http://bbShowcase.org
@@ -129,7 +129,7 @@ if (bb_get_location()=="topic-page") {
 	if ($post_count_plus['user_color']) {		
 		$found=post_count_plus_find_title($user_id);		
 		$color=$post_count_plus['custom_titles'][$found+4];
-		if ($color) {$user_name='<font color="'.$color.'">'.$user_name.'</font>';}
+		if ($color) {$user_name='<span class="post_count_plus"><font color="'.$color.'">'.$user_name.'</font></span>';}
 	}
 }
 return $user_name;
@@ -172,7 +172,7 @@ function post_count_plus_initialize() {
 		$post_count_plus['user_link']="Profile";
 		$post_count_plus['title_link']="Profile";
 		$post_count_plus['join_date_format']="M 'y";	
-		$post_count_plus['style']=".post_count_plus {color:SlateGray; text-align:center;}\n.post_count_plus a {color:DarkCyan;}";		
+		$post_count_plus['style']=".post_count_plus {color:SlateGray;}\n.post_count_plus a {color:DarkCyan;}";		
 		$post_count_plus['custom_titles']=array(
 		"New Title",	"Minimum Posts", "Minimum Days", "Minimum Role", "Color",
 		"new member",	"0",		"0",			"",	"SlateBlue",

@@ -2,9 +2,7 @@
 /*
 Plugin Name:  Post Count Plus - Dynamic.Titles & More!
 Plugin URI:  http://bbpress.org/plugins/topic/
-Description: An enhanced "user post count" with "custom titles" for topics and profiles, 
-based on posts and membership, with cached results for faster pages. No template edits required.
-A demonstration can be found at http://bbshowcase.org/forums/topic/new-bbpress-theme-futurekind		
+Description: An enhanced "user post count" with "custom titles" for topics and profiles, based on posts and membership, with cached results for faster pages. No template edits required. A demonstration can be found at http://bbshowcase.org/forums/topic/new-bbpress-theme-futurekind		
 Author: _ck_
 Author URI: http://bbShowcase.org
 Version: 1.0

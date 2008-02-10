@@ -12,12 +12,14 @@ Not just yet-another plugin to display the total post count for each user next t
 but has many customization options for colors and format. Also caches all counts in meta 
 for the  fastest performance possible with the fewest database queries.
 
-No template edits required of any kind.
+== Frequently Asked Questions ==
 
-Optionally  shows join date (member since)  next to posts, as well as 
+* No template edits required of any kind.
+
+* Optionally  shows join date (member since)  next to posts, as well as 
 custom titles based on either post count or membership length & role.
 
-A demo can be seen at any topic on http://bbShowcase.org/forums/
+* A demo can be seen at any topic on http://bbShowcase.org/forums/
 good example: http://bbshowcase.org/forums/topic/new-bbpress-theme-futurekind
 
 == Installation ==

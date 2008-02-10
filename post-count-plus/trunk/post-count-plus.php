@@ -5,7 +5,7 @@ Plugin URI:  http://bbpress.org/plugins/topic/83
 Description: An enhanced "user post count" with "custom titles" for topics and profiles, based on posts and membership, with cached results for faster pages. No template edits required. A demonstration can be found at http://bbshowcase.org/forums/topic/new-bbpress-theme-futurekind		
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 1.0
+Version: 1.01
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -94,7 +94,7 @@ global $post_count_plus,$post_count_plus_cache;
 if ($user_id) {
 	if (isset($post_count_plus[$user_id])) {return $post_count_plus[$user_id];}
 	if (!$posts) {$posts=get_user_post_count($user_id); $user = bb_get_user( $user_id );}
-	if (!$days) {$days=intval(((bb_current_time('timestamp') - date('Z')) - mysql2date('U', bb_gmtstrtotime( $user->user_registered )))/86400);}
+	if (!$days) {$days=intval((bb_current_time('timestamp') - bb_gmtstrtotime( $user->user_registered ))/86400);}	
 	if (!$role) {$role=array_pop(array_keys($user->bb_capabilities,array('blocked','inactive','member','moderator','administrator','keymaster')));}
 }
 $found=0; $width=5; $rows=floor(count($post_count_plus['custom_titles'])/$width);
@@ -172,7 +172,7 @@ function post_count_plus_initialize() {
 		$post_count_plus['user_link']="Profile";
 		$post_count_plus['title_link']="Profile";
 		$post_count_plus['join_date_format']="M 'y";	
-		$post_count_plus['style']=".post_count_plus {color:SlateGray;}\n.post_count_plus a {color:DarkCyan;}";		
+		$post_count_plus['style']=".post_count_plus {color:SlateGray; line-height:150%; white-space:nowrap;}\n.post_count_plus a {color:DarkCyan;}";		
 		$post_count_plus['custom_titles']=array(
 		"New Title",	"Minimum Posts", "Minimum Days", "Minimum Role", "Color",
 		"new member",	"0",		"0",			"",	"SlateBlue",

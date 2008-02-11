@@ -4,18 +4,19 @@ Plugin Name: bb-benchmark
 Plugin URI: http://bbpress.org/plugins/topic/65
 Description: Prints simple benchmarks and mysql diagnostics, hidden in page footers for administrators. Based on Jerome Lavigne's Query Diagnostics for WordPress.
 Author: _ck_
-Author URI: http://CKon.WordPress.com
-Version: 0.17
-*/
-/* 
-INSTRUCTIONS:
+Author URI: http://bbShowcase.org
+Version: 0.18
 
+License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
+
+Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
+
+Instructions: 
 1. put  define('SAVEQUERIES', true);   into your config.php
 2. install & activate plugin   (editing config.php no longer required)
 3. do a "view source" on any bbpress page to see hidden results at bottom (visible to administrators only)
 
 History:
-
 0.10	: first public release
 0.11	: improved load detection for php in safe mode or without shell access if using PHP5
 0.12	: visual output cleanup & reminder to add "define('SAVEQUERIES', true);" 
@@ -24,6 +25,7 @@ History:
 0.15	: switched to auto-load plugin (leading underscore) to better time main plugins loading
 0.16	: better unnamed hook tracking so benchmark timer can be inserted almost anywhere
 0.17	: double dashes break html comments and make them visible -- replaced as - -
+0.18	: add hook to admin panel for plugin admin testing
 */
 
 function bb_benchmark_output() {
@@ -85,6 +87,7 @@ function bb_benchmark_output() {
 // endif;	
 }
 add_action('bb_foot', 'bb_benchmark_output');
+add_action('bb_admin_footer', 'bb_benchmark_output');
 
 // global $bb_current_user;  if ($bb_current_user->data->bb_capabilities['keymaster']) :
 

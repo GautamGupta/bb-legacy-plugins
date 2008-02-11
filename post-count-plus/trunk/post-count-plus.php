@@ -2,10 +2,10 @@
 /*
 Plugin Name:  Post Count Plus - Dynamic.Titles & More!
 Plugin URI:  http://bbpress.org/plugins/topic/83
-Description: An enhanced "user post count" with "custom titles" for topics and profiles, based on posts and membership, with cached results for faster pages. No template edits required. A demonstration can be found at http://bbshowcase.org/forums/topic/new-bbpress-theme-futurekind		
+Description: An enhanced "user post count" with "custom titles" for topics and profiles, based on posts and membership, with cached results for faster pages. No template edits required.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 1.01
+Version: 1.02
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -18,7 +18,7 @@ global $post_count_plus;
 
 function post_count_plus($user_id=0, $posts_only=0, $titlelink='') {
 global $post_count_plus;
-if ($posts_only || (bb_get_location()=="profile-page" && $posts_only==0)) {echo __("Posts: ").bb_number_format_i18n(get_user_post_count($user_id));}
+if ($posts_only || (bb_get_location()=="profile-page" && $posts_only==0)) {echo __("Posts: ").bb_number_format_i18n(post_count_plus_get_count($user_id));}
 else {
 	// if (!$titlelink || $post_count_plus['custom_title']) { // calculate custom titles here
 	if (!$user_id) {
@@ -45,12 +45,12 @@ else {
 echo "<p class='post_count_plus'>";
 	echo "<b>$titlelink</b><br /><small>";	
 	if ($post_count_plus['join_date']) {post_count_plus_join_date($user_id);  echo "<br />";}
-	if ($post_count_plus['post_count']) {echo __("Posts: ").bb_number_format_i18n(get_user_post_count($user_id));}
+	if ($post_count_plus['post_count']) {echo __("Posts: ").bb_number_format_i18n(post_count_plus_get_count($user_id));}
 echo "</small></p>";
 }
 }
 
-function get_user_post_count($user_id=0) {
+function post_count_plus_get_count($user_id=0) {
 if (!$user_id) {
 	$location=bb_get_location(); 
 	if ($location=="topic-page") {$user_id=get_post_author_id();} 
@@ -61,8 +61,7 @@ if ($user_id) {
 	if (!$posts) {
 		global $bbdb; $posts=$bbdb->get_var("SELECT count(*) FROM $bbdb->posts WHERE poster_id = $user_id AND post_status = 0");
 		// bb_update_usermeta( $user_id, 'post_count', $posts);  // uses too many queries, we'll do it directly
-		$bbdb->query("INSERT INTO $bbdb->usermeta  (user_id, meta_key, meta_value)  VALUES ('".$user_id."', 'post_count', '".$posts."') ");
-		
+		$bbdb->query("INSERT INTO $bbdb->usermeta  (user_id, meta_key, meta_value)  VALUES ('".$user_id."', 'post_count', '".$posts."') ");		
 	}
 }	
 if ($posts) {return  $posts;} else {return 0;}
@@ -91,11 +90,14 @@ if (!$date_format) {$date_format=$post_count_plus['join_date_format'];}
 
 function post_count_plus_find_title($user_id=0,$posts=0,$days=0,$role='') {	
 global $post_count_plus,$post_count_plus_cache;
-if ($user_id) {
-	if (isset($post_count_plus[$user_id])) {return $post_count_plus[$user_id];}
-	if (!$posts) {$posts=get_user_post_count($user_id); $user = bb_get_user( $user_id );}
+if ($user_id) {	
+	if (isset($post_count_plus_cache[$user_id])) {return $post_count_plus_cache[$user_id];}		
+	$user = bb_get_user( $user_id );
+	if (!$posts) {$posts=post_count_plus_get_count($user_id);}
 	if (!$days) {$days=intval((bb_current_time('timestamp') - bb_gmtstrtotime( $user->user_registered ))/86400);}	
-	if (!$role) {$role=array_pop(array_keys($user->bb_capabilities,array('blocked','inactive','member','moderator','administrator','keymaster')));}
+	if (!$role && is_array($user->bb_capabilities)) {
+		$role=array_pop(array_keys($user->bb_capabilities,array('blocked','inactive','member','moderator','administrator','keymaster')));
+	}
 }
 $found=0; $width=5; $rows=floor(count($post_count_plus['custom_titles'])/$width);
 for ($i=1; $i<$rows; $i++) {

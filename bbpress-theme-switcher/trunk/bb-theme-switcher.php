@@ -41,7 +41,7 @@ function bb_ts_add_dropdown($template='',$file='') {
 global $bb_ts_add_dropdown, $bb_ts_optional_text; 
 if ($file=='' || ($file=="footer.php" && !$bb_ts_add_dropdown)){
 $bb_ts_add_dropdown=true;
-echo '<form style="float:right;position:relative;clear:both;padding:5px;white-space:nowrap;text-align:right;">'
+echo '<form style="display:block;float:right;clear:both;padding:5px;white-space:nowrap;text-align:right;">'
 .$bb_ts_optional_text.__('Theme Switcher').': ';bb_theme_switcher('dropdown'); echo '</form>';
 }
 return $template;	

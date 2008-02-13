@@ -1,5 +1,5 @@
 === bbPress Theme Switcher  ===
-Tags: theme, templates, change, switch
+Tags: theme, templates, change, switch, _ck_
 Contributors: _ck_
 Requires at least: 0.8
 Tested up to: trunk

@@ -1,0 +1,40 @@
+@charset "utf-8";
+/* CSS Document for live comment preview plugin*/
+
+/* *
+* small header that show the preview title
+* */
+
+#live_preview_header 
+{
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 12px;
+	background-color: #CAEAFF;
+	text-align: center;
+}
+/* *
+* Div where the submit button are
+* */
+#live_comment_preview_button_div
+{
+	float:right;
+}
+
+/* *
+* Submit button class
+* */
+#live_comment_preview_submit
+{
+}
+/* *
+* Div where the preload image are
+* */
+#live_comment_preview_loading
+{
+}
+/* *
+* Div where the preview text show
+* */
+#live_comment_preview_main_content
+{
+}

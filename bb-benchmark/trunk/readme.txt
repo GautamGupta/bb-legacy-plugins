@@ -1,5 +1,5 @@
 === bbPress Benchmark ===
-Tags: performance, speed, benchmark, mysql, queries, cache, caching, fast, faster, _ck_
+Tags: _ck_, performance, speed, benchmark, mysql, queries, cache, caching, faster
 Contributors: _ck_
 Requires at least: 0.8
 Tested up to: trunk alpha 1075
@@ -61,4 +61,4 @@ Output includes current server load, page render vs mysql query time, slowest qu
 * 0.16	: better unnamed hook tracking so benchmark timer can be inserted almost anywhere
 * 0.17	: double dashes break html comments and make them visible -- replaced as - -
 * 0.18	: added hook to admin panel for plugin admin testing
-
+* 0.19	: important bug fix to hide output again in certain situations

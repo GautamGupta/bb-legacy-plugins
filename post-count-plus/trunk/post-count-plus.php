@@ -5,7 +5,7 @@ Plugin URI:  http://bbpress.org/plugins/topic/83
 Description: An enhanced "user post count" with "custom titles" for topics and profiles, based on posts and membership, with cached results for faster pages. No template edits required.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 1.02
+Version: 1.03
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -94,9 +94,11 @@ if ($user_id) {
 	if (isset($post_count_plus_cache[$user_id])) {return $post_count_plus_cache[$user_id];}		
 	$user = bb_get_user( $user_id );
 	if (!$posts) {$posts=post_count_plus_get_count($user_id);}
-	if (!$days) {$days=intval((bb_current_time('timestamp') - bb_gmtstrtotime( $user->user_registered ))/86400);}	
-	if (!$role && is_array($user->bb_capabilities)) {
-		$role=array_pop(array_keys($user->bb_capabilities,array('blocked','inactive','member','moderator','administrator','keymaster')));
+	if (!$days) {$days=intval((bb_current_time('timestamp') - bb_gmtstrtotime( $user->user_registered ))/86400);}		
+	// echo " <!-- "; var_dump($user->capabilities); echo " --> ";	// diagnostic		
+	$capabilities=(isset($user->bb_capabilities)) ? $user->bb_capabilities : $user->capabilities;  // makes compatibile for 0.8.x + trunk
+	if (!$role && is_array($capabilities)) {		
+		$role=array_pop(array_keys($capabilities,array_keys($GLOBALS['bb_roles']->role_names)));	// grabs all the roles, nice!
 	}
 }
 $found=0; $width=5; $rows=floor(count($post_count_plus['custom_titles'])/$width);
@@ -109,7 +111,9 @@ if ($post_count_plus['custom_titles'][$i*$width]) {
 }	
 } // we don't break out of the loop because we need to see if there is a higher value more appropriate - array needs to be in sorted order though
 
-$post_count_plus_cache[$user_id]=$found;	// cache for same page queries
+// echo " <!-- f:$found p0:$posts0 p:$posts d0:$days0 d:$days r0:$role0 r:$role \n\n --> "; // diagnostic
+
+if ($user_id)  {$post_count_plus_cache[$user_id]=$found;}	// cache for same page queries
 return $found;
 }
 

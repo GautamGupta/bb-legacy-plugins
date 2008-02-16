@@ -2,7 +2,7 @@
 Tags: posts, count, post count, titles, custom titles, _ck_
 Contributors: _ck_
 Requires at least: 0.8.2
-Tested up to: trunk
+Tested up to: trunk alpha 1075
 Stable tag: trunk
 Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
 
@@ -46,7 +46,11 @@ any template by using direct calls, ie. `<?php post_count_plus($user->ID); ?>`
 = Version 1.00 (2008-02-10) =
 
 * first public release
-	
+
+= Version 1.03 (2008-02-16) =
+
+* bug fix to deal with user->bb_capabilities vs user->capabilities in trunk vs 0.8.x
+
 == To Do ==
 
 * Better instructions for all the options

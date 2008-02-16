@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/65
 Description: Prints simple benchmarks and mysql diagnostics, hidden in page footers for administrators. Based on Jerome Lavigne's Query Diagnostics for WordPress.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.18
+Version: 0.19
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -26,14 +26,15 @@ History:
 0.16	: better unnamed hook tracking so benchmark timer can be inserted almost anywhere
 0.17	: double dashes break html comments and make them visible -- replaced as - -
 0.18	: add hook to admin panel for plugin admin testing
+0.19	: bug fix to hide output in some different situations
 */
 
 function bb_benchmark_output() {
-// if (bb_current_user_can( 'administrate' ) )  : 
+if (bb_current_user_can( 'administrate' ) )  : 
 		$timer_stop=bb_timer_stop(0);	
 		global $bbdb;	        	
         	
-    	echo "<!-- \n === benchmark & query results === \n\n"; 
+    	echo " <!-- \n === benchmark & query results === \n\n"; 
 	    	    	  		   	    	       	
         	if (function_exists("shell_exec")  && $test=@shell_exec("uptime")) {echo $test."\n\n";}
 	elseif (function_exists("sys_getloadavg")) {
@@ -49,7 +50,7 @@ function bb_benchmark_output() {
 	if (!SAVEQUERIES) :
 	
 	echo "total query count: ".$bbdb->num_queries." \n\n";        		
-	echo "To see full bb-benchmark results here put the following line into your config.php\ndefine('SAVEQUERIES', true);\n\n -->";
+	echo "To see full bb-benchmark results here put the following line into your config.php\ndefine('SAVEQUERIES', true);\n\n --> ";
 
 	else :
 	
@@ -80,11 +81,11 @@ function bb_benchmark_output() {
     	echo "$filename : ".round($size/1024,2). " Kb\n";
 	} echo "\n".count($included_files)." files, ".round($totalsize/1024,2)." Kb\n";
 
-	echo "-->";
+	echo " --> ";
 		
 	endif;
 
-// endif;	
+endif;	
 }
 add_action('bb_foot', 'bb_benchmark_output');
 add_action('bb_admin_footer', 'bb_benchmark_output');

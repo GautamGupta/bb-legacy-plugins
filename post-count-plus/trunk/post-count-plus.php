@@ -5,7 +5,7 @@ Plugin URI:  http://bbpress.org/plugins/topic/83
 Description: An enhanced "user post count" with "custom titles" for topics and profiles, based on posts and membership, with cached results for faster pages. No template edits required.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 1.03
+Version: 1.05
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -94,11 +94,12 @@ if ($user_id) {
 	if (isset($post_count_plus_cache[$user_id])) {return $post_count_plus_cache[$user_id];}		
 	$user = bb_get_user( $user_id );
 	if (!$posts) {$posts=post_count_plus_get_count($user_id);}
-	if (!$days) {$days=intval((bb_current_time('timestamp') - bb_gmtstrtotime( $user->user_registered ))/86400);}		
-	// echo " <!-- "; var_dump($user->capabilities); echo " --> ";	// diagnostic		
+	if (!$days) {$days=intval((bb_current_time('timestamp') - bb_gmtstrtotime( $user->user_registered ))/86400);}					
 	$capabilities=(isset($user->bb_capabilities)) ? $user->bb_capabilities : $user->capabilities;  // makes compatibile for 0.8.x + trunk
+	// echo " <!-- "; var_dump($user->bb_capabilities); var_dump($user->capabilities); echo " --> ";	// diagnostic
 	if (!$role && is_array($capabilities)) {		
-		$role=array_pop(array_keys($capabilities,array_keys($GLOBALS['bb_roles']->role_names)));	// grabs all the roles, nice!
+		$role=array_pop(array_intersect(array_keys($capabilities),array_keys($GLOBALS['bb_roles']->role_names)));	// grabs all the roles, nice!
+	// echo " <!-- "; echo $role; var_dump($GLOBALS['bb_roles']->role_names); echo " --> ";	// diagnostic		
 	}
 }
 $found=0; $width=5; $rows=floor(count($post_count_plus['custom_titles'])/$width);
@@ -187,7 +188,8 @@ function post_count_plus_initialize() {
 		"senior member","50","180","","#0000FF",
 		"preferred member","100","365","","SkyBlue",
 		"mod","0","0","moderator","Red",
-		"admin","0","0","keymaster","DarkRed");
+		"admin","0","0","administrator","DarkRed",
+		"senior admin","0","0","keymaster","DarkRed");
 		}		
 		$post_count_plus_label['activate']=__("Use features without template editing ?");
 		$post_count_plus_label['post_count']=__("Show post counts for users in topic pages ?");

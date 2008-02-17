@@ -6,9 +6,11 @@ Tested up to: trunk alpha 1075
 Stable tag: trunk
 Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
 
+Force login cookies to last a year instead of the default two days (or two weeks). Works with both the old 0.8.x password method and the new method in the trunk.
+
 == Description ==
 
-* Force login cookies to a year instead of the default two days (or two weeks). Works with both the old 0.8.x password method and the new method in the trunk.
+* Forces login cookies to last a year instead of the default two days (or two weeks). 
 
 == Installation ==
 

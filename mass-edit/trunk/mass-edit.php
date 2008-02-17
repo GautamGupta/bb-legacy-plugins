@@ -204,7 +204,7 @@ if ($bb_posts) {
     <td><a href="<?php post_link(); ?>"><?php _e('View'); ?></a>
     	<?php if ( bb_current_user_can('edit_post', $bb_post->post_id) ) {post_edit_link();} ?></td>
     <td><?php if ( bb_current_user_can('edit_post', $bb_post->post_id) ) {post_delete_link();} ?></td>
-    <td><?php echo '<a class=metext href="'.get_post_link().'">'.mass_edit_scrub_text($bb_post->post_text,$post_text,50,$exact_match).'</a>'; ?></td>
+    <td><?php echo "<a class=metext href='".get_post_link()."'>[<strong>".get_topic_title($bb_post->topic_id) ."</strong>] ".mass_edit_scrub_text($bb_post->post_text,$post_text,50,$exact_match).'</a>'; ?></td>
   </tr>
 		<?php 
 		} // end foreach

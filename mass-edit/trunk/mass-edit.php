@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/89
 Description:  Adds a "mass edit" feature to bbPress admin panel, similar to WordPress, for easily moderating posts in bulk.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 1.02
+Version: 1.10
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -16,19 +16,57 @@ Instructions:   install, activate, look under Content in admin menu for Mass Edi
 
 function mass_edit() {
 	if ( !bb_current_user_can('browse_deleted') ) {die(__("Now how'd you get here?  And what did you think you'd be doing?"));}
-	
-	echo "<h2>".__('Mass Edit')."</h2>";
-		
-	global $bbdb, $bb_post_cache, $bb_user_cache, $bb_posts, $bb_post, $page;
 	add_action( 'bb_get_option_page_topics', 'mass_edit_topic_limit',250);
+	global $bbdb, $bb_post_cache, $bb_user_cache, $bb_posts, $bb_post, $page, $mass_edit_options;
+	
+	if (isset($_GET['mass_edit_reset'])) {
+		bb_delete_option('mass_edit_options');			
+		wp_redirect(remove_query_arg(array('mass_edit_options','mass_edit_reset')));
+	}
+	if ( !empty( $_POST['mass_edit_save_options'] ) ) {				
+		$mass_edit_options['mass_edit_columns']=implode(",",array_unique(array_map('trim',explode(",",strtolower(stripslashes($_POST['mass_edit_columns'].", checkbox , excerpt , name , meta , actions" ))))));
+		$mass_edit_options['mass_edit_css']=stripslashes($_POST['mass_edit_css']);
+		bb_update_option('mass_edit_options',$mass_edit_options);
+		wp_redirect(remove_query_arg(array('mass_edit_options','mass_edit_reset')));	// may not work since headers are already sent
+	}
+	
+	echo '<div style="text-align:right;margin-bottom:-1.5em;">';
+	if (isset($_GET['mass_edit_options'])) { 	
+	echo '[ <a href="'.bb_get_admin_tab_link("mass_edit").'&mass_edit_reset=1">Reset To Defaults</a> ]';
+	} else { echo '[ <a href="'.bb_get_admin_tab_link("mass_edit").'&mass_edit_options=1">Settings</a> ]';}
+	echo '</div>';
+	
+	echo "<h2><a style='color:black;border:0;text-decoration:none;' href='".bb_get_admin_tab_link("mass_edit")."'>".__('Mass Edit')."</a></h2>";
+		
+	if(!isset($mass_edit_options)) {$mass_edit_options = bb_get_option('mass_edit_options');	}
+	if (!isset($mass_edit_options['mass_edit_columns']) || is_array($mass_edit_options['mass_edit_columns'])) {
+		$mass_edit_options['mass_edit_columns']="checkbox , excerpt , name , meta , actions";
+		bb_update_option('mass_edit_options',$mass_edit_options);
+	}
 
-/*
-	add_filter( 'get_topic_where', 'no_where' );
-	add_filter( 'get_topic_link', 'bb_make_link_view_all' );
-	// post_text=test&forum_id=0&tag=&post_author=&post_status=0
+	$mass_edit_columns=explode(",",strtolower($mass_edit_options['mass_edit_columns']));
+	array_walk($mass_edit_columns ,create_function('&$arr','$arr=trim($arr);')); 	
+
+	if (isset($_GET['mass_edit_options'])) { ?>
+	<form action="<?php echo bb_get_admin_tab_link("mass_edit"); ?>" method="post" id="mass-edit-options">
+	
+	<fieldset><legend><strong>Mass Edit Column Order</strong> - default: checkbox , excerpt , name , meta , actions</legend>
+	<input name="mass_edit_columns" id="mass_edit_columns" type="text" size="50" value="<?php echo $mass_edit_options['mass_edit_columns']; ?>">
+	<span style="padding-left:2em;" class=submit><input class=submit type="submit" name="mass_edit_save_options" value="<?php _e('Save Options') ?> &raquo;"  /></span>
+	</fieldset>
+		
+	<fieldset><legend><b>Mass Edit CSS</b></legend>
+	<textarea name="mass_edit_css" id="mass_edit_css" cols="100" rows="10"><?php echo $mass_edit_options['mass_edit_css']; ?></textarea>
+	</fieldset>
+	</form>
+	<br clear=both />
+	<hr />
+	<?php 	}
+
+/*	
+	add_filter( 'get_topic_where', 'no_where' ); add_filter( 'get_topic_link', 'bb_make_link_view_all' );	
 	$bb_post_query = new BB_Query_Form( 'post',array( 'post_status' => 0, 'count' => true ));
-	$bb_posts =& $bb_post_query->results;
-	$total = $bb_post_query->found_rows;
+	$bb_posts =& $bb_post_query->results; 	$total = $bb_post_query->found_rows;
 */	
 
 if ( !empty( $_POST['mass_edit_delete_posts'] ) ) :
@@ -104,7 +142,7 @@ if ($total) {$bb_posts = $bbdb->get_results("SELECT * ".$query.$restrict);} else
 
 ?>
 
-<form action="<?php echo bb_get_admin_tab_link(""); ?>" method="get" id="post-search-form" class="search-form">
+<form action="<?php echo bb_get_admin_tab_link("mass_edit"); ?>" method="get" id="post-search-form" class="search-form">
 	<fieldset><legend><?php _e('Show Posts or IPs That Contain &hellip;') ?></legend> 
 	<input name="post_text" id="post-text" class="text-input" type="text" value="<?php echo wp_specialchars($post_text); ?>" size="30" /> 	
 	</fieldset>
@@ -172,18 +210,32 @@ $topics=$bbdb->get_results("SELECT topic_id,topic_title,topic_slug FROM $bbdb->t
 $topics = bb_append_meta( $topics, 'topic' );
 unset($topics);
 
-		echo '<form name="deleteposts" id="deleteposts" action="" method="post"> ';
-		bb_nonce_field('mass-edit-bulk-posts');
-		echo '<table class="widefat">
+echo '<form name="deleteposts" id="deleteposts" action="" method="post"> ';
+bb_nonce_field('mass-edit-bulk-posts');
+
+echo '<table class="widefat">
 <thead>
-  <tr>
-    <th scope="col"><input type="checkbox" onclick="checkAll(this,document.getElementById(\'deleteposts\'));" /></th>
-    <th scope="col" width="999">' . __('Post Excerpt') . '</th>    
-    <th scope="col">' .  __('Name') . '</th>    
-    <th scope="col">' . __('Meta') . '</th>
-    <th scope="col" colspan="2">' .  __('Actions') . '</th>    
-  </tr>
-</thead>';
+<tr>';
+foreach ($mass_edit_columns as $position) :	
+switch ($position) :
+case "checkbox" :
+    echo '<th scope="col"><input type="checkbox" onclick="checkAll(this,document.getElementById(\'deleteposts\'));" /></th>';
+break;
+case "excerpt" :   
+    echo '<th scope="col" width="999">' . __('Post Excerpt') . '</th>';
+break;   
+case "name" :   
+   echo '<th scope="col">' .  __('Name') . '</th>';
+break;
+case "meta" :
+   echo '<th scope="col">' . __('Meta') . '</th>';
+break;
+case 'actions' :   
+    echo '<th scope="col" colspan="2">' .  __('Actions') . '</th>';
+break;
+endswitch;
+endforeach;
+echo '</tr></thead>';
 
 	foreach ($bb_posts as $bb_post) {
 	
@@ -197,18 +249,32 @@ unset($topics);
 	endswitch;
 ?>
   <tr id="post-<?php echo $bb_post->post_id; ?>" <?php alt_class('post', $del_class); ?>'>   
+<?php  
+foreach ($mass_edit_columns as $position) :	
+switch ($position) :
+  case "checkbox" : ?>
     <td><?php if ( bb_current_user_can('edit_post', $bb_post->post_id) ) { ?><input type="checkbox" name="mass_edit_delete_posts[]" value="<?php echo $bb_post->post_id; ?>" /><?php } ?></td>
+  <?php break;    
+  case "excerpt" : ?>
     <td><?php echo "<a class=metext href='".get_post_link()."'>[<strong>".get_topic_title($bb_post->topic_id) ."</strong>] ".mass_edit_scrub_text($bb_post->post_text,$post_text,45,$exact_match).'</a>'; ?></td>
+<?php break;    
+  case "name" : ?>
     <td><a href="<?php echo get_user_profile_link( $bb_post->poster_id); ?>"><?php echo get_user_name( $bb_post->poster_id ); ?></a></td>    
+<?php break;    
+  case "meta" : ?>
     <td><span class=timetitle title="<? echo date("r",strtotime(bb_get_post_time())); ?>"><?php printf( __('%s ago'), bb_get_post_time() ); ?></span> 
     	<?php post_ip_link(); ?></td>    
+<?php break;    
+  case "actions" : ?>	
     <td><a href="<?php post_link(); ?>"><?php _e('View'); ?></a>
     	<?php if ( bb_current_user_can('edit_post', $bb_post->post_id) ) {post_edit_link();} ?></td>
     <td><?php if ( bb_current_user_can('edit_post', $bb_post->post_id) ) {post_delete_link();} ?></td>    
-  </tr>
-		<?php 
-		} // end foreach
-		unset($bb_posts);
+<?php  
+  endswitch;
+  endforeach;
+  echo '</tr>';	
+	} // end foreach
+	unset($bb_posts);
 	?></table>
 
 <?php if ($total) {echo $pagelinks;} ?>
@@ -306,21 +372,26 @@ add_action( 'bb_admin_menu_generator', 'mass_edit_admin_menu',200);	// try to be
 
 function mass_edit_add_css() { 
 if (!(isset($_GET['plugin']) && $_GET['plugin']=="mass_edit")) {return;}
-echo '<style type="text/css">
-fieldset {display:inline;}
-.submit input {cursor:pointer;cursor:hand;} 
-table td a {line-height:160%;border:0;text-decoration:none;}
-table.widefat tbody tr:hover { background: #ccddcc; }
-.timetitle {border-bottom: 1px dashed #aaa; cursor: help;}
-.metext,.metext:hover,.metext:visited {line-height:120%;text-decoration:none;border:0;color:black;overflow:hidden;display:block;}
-.bozo { background: #eeee88; }
-.alt.bozo { background: #ffff99; }
-.deleted,INPUT.deleted { background: #ee8888; }
-.alt.deleted { background: #ff9999; }
-.spam,INPUT.spam {background:#FFF380;}
-.alt.spam {background:#FAF8CC;}
-.normal,INPUT.normal {background:#D4E8D4;}
-</style>';
+
+$mass_edit_options = bb_get_option('mass_edit_options');	
+if (!isset($mass_edit_options['mass_edit_css'])) {
+	$mass_edit_options['mass_edit_css']= 'fieldset {display:inline;}
+	.submit input {cursor:pointer;cursor:hand;} 
+	table td a {line-height:160%;border:0;text-decoration:none;}
+	table.widefat tbody tr:hover { background: #ccddcc; }
+	.timetitle {border-bottom: 1px dashed #aaa; cursor: help;}
+	.metext,.metext:hover,.metext:visited {line-height:120%;text-decoration:none;border:0;color:black;overflow:hidden;display:block;}
+	.bozo { background: #eeee88; }
+	.alt.bozo { background: #ffff99; }
+	.deleted,INPUT.deleted { background: #ee8888; }
+	.alt.deleted { background: #ff9999; }
+	.spam,INPUT.spam {background:#FFF380;}
+	.alt.spam {background:#FAF8CC;}
+	.normal,INPUT.normal {background:#D4E8D4;}';	
+bb_update_option('mass_edit_options',$mass_edit_options);
+}
+echo '<style type="text/css">'.$mass_edit_options['mass_edit_css'].'</style>';
+
 ?><script type="text/javascript">
 <!--
 function checkAll(source,form)

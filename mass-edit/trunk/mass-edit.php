@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/89
 Description:  Adds a "mass edit" feature to bbPress admin panel, similar to WordPress, for easily moderating posts in bulk.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 1.01
+Version: 1.02
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -109,29 +109,17 @@ if ($total) {$bb_posts = $bbdb->get_results("SELECT * ".$query.$restrict);} else
 	<input name="post_text" id="post-text" class="text-input" type="text" value="<?php echo wp_specialchars($post_text); ?>" size="30" /> 	
 	</fieldset>
 
-<?php /*  
+<?php /*  selection by forum and tag not included in initial versions
 <fieldset><legend>Forum &hellip;</legend>
-
 <select name="forum_id" id="forum-id" tabindex="5">
-
 <option value="0">Any</option>
-
 <option value="1"> bbPress chat</option>
-
-<option value="2"> Plugins by _ck_</option>
-
-<option value="3"> Plugins by others</option>
-
-<option value="5"> bbPress Themes</option>
-
-<option value="4"> WordPress integration</option>
 </select>
 </fieldset>
-
 <fieldset><legend>Tag&hellip;</legend>
 <input name="tag" id="topic-tag" class="text-input" value="" type="text">	</fieldset>
-*/
-?>
+*/ ?>
+
 	<fieldset><legend>Post Author&hellip;</legend>
 	<input name="post_author" id="post-author" class="text-input" type="text" value="<?php if (isset($_GET['post_author'])) echo wp_specialchars($_GET['post_author'], 1); ?>" />	
 	</fieldset>
@@ -174,16 +162,15 @@ if ($total) {echo $pagelinks="<p style='clear:left'>[ ".(($total>$per_page) ? "s
 
 if ($bb_posts) {
 
-// lazy cache loading
-foreach ($bb_posts as $bb_post) {$users[$bb_post->poster_id]= $bb_post->poster_id; $topics[$bb_post->topic_id]= $bb_post->topic_id;}  
+// lazy cache loading to radically reduce query count
+foreach ($bb_posts as $bb_post) {$users[$bb_post->poster_id]=$bb_post->poster_id; $topics[$bb_post->topic_id]=$bb_post->topic_id;}  
 $users=join(',', $users); $topics=join(',', $topics);
-$users=$bbdb->get_results("SELECT * FROM $bbdb->users WHERE ID IN ($users)");
+$users=$bbdb->get_results("SELECT ID,user_login,user_registered FROM $bbdb->users WHERE ID IN ($users)");
 $users = bb_append_meta( $users, 'user' );
 unset($users); 
-$topics=$bbdb->get_results("SELECT * FROM $bbdb->topics WHERE topic_id IN ($topics)");
+$topics=$bbdb->get_results("SELECT topic_id,topic_title,topic_slug FROM $bbdb->topics WHERE topic_id IN ($topics)");
 $topics = bb_append_meta( $topics, 'topic' );
 unset($topics);
-
 
 		echo '<form name="deleteposts" id="deleteposts" action="" method="post"> ';
 		bb_nonce_field('mass-edit-bulk-posts');
@@ -191,10 +178,10 @@ unset($topics);
 <thead>
   <tr>
     <th scope="col"><input type="checkbox" onclick="checkAll(this,document.getElementById(\'deleteposts\'));" /></th>
+    <th scope="col" width="999">' . __('Post Excerpt') . '</th>    
     <th scope="col">' .  __('Name') . '</th>    
     <th scope="col">' . __('Meta') . '</th>
-    <th scope="col" colspan="2">' .  __('Actions') . '</th>
-    <th scope="col" width="999">' . __('Post Excerpt') . '</th>    
+    <th scope="col" colspan="2">' .  __('Actions') . '</th>    
   </tr>
 </thead>';
 
@@ -209,18 +196,19 @@ unset($topics);
 	default: $del_class=apply_filters( 'post_del_class', $bb_post->post_status, $bb_post->post_id );
 	endswitch;
 ?>
-  <tr id="post-<?php echo $bb_post->post_id; ?>" <?php alt_class('post', $del_class); ?>'>
+  <tr id="post-<?php echo $bb_post->post_id; ?>" <?php alt_class('post', $del_class); ?>'>   
     <td><?php if ( bb_current_user_can('edit_post', $bb_post->post_id) ) { ?><input type="checkbox" name="mass_edit_delete_posts[]" value="<?php echo $bb_post->post_id; ?>" /><?php } ?></td>
+    <td><?php echo "<a class=metext href='".get_post_link()."'>[<strong>".get_topic_title($bb_post->topic_id) ."</strong>] ".mass_edit_scrub_text($bb_post->post_text,$post_text,45,$exact_match).'</a>'; ?></td>
     <td><a href="<?php echo get_user_profile_link( $bb_post->poster_id); ?>"><?php echo get_user_name( $bb_post->poster_id ); ?></a></td>    
     <td><span class=timetitle title="<? echo date("r",strtotime(bb_get_post_time())); ?>"><?php printf( __('%s ago'), bb_get_post_time() ); ?></span> 
     	<?php post_ip_link(); ?></td>    
     <td><a href="<?php post_link(); ?>"><?php _e('View'); ?></a>
     	<?php if ( bb_current_user_can('edit_post', $bb_post->post_id) ) {post_edit_link();} ?></td>
-    <td><?php if ( bb_current_user_can('edit_post', $bb_post->post_id) ) {post_delete_link();} ?></td>
-    <td><?php echo "<a class=metext href='".get_post_link()."'>[<strong>".get_topic_title($bb_post->topic_id) ."</strong>] ".mass_edit_scrub_text($bb_post->post_text,$post_text,50,$exact_match).'</a>'; ?></td>
+    <td><?php if ( bb_current_user_can('edit_post', $bb_post->post_id) ) {post_delete_link();} ?></td>    
   </tr>
 		<?php 
 		} // end foreach
+		unset($bb_posts);
 	?></table>
 
 <?php if ($total) {echo $pagelinks;} ?>

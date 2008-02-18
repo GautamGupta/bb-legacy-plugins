@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/89
 Description:  Adds a "mass edit" feature to bbPress admin panel, similar to WordPress, for easily moderating posts in bulk.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 1.00
+Version: 1.01
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -19,12 +19,13 @@ function mass_edit() {
 	
 	echo "<h2>".__('Mass Edit')."</h2>";
 		
-	global $bbdb, $bb_post_cache, $bb_posts, $bb_post, $page;
+	global $bbdb, $bb_post_cache, $bb_user_cache, $bb_posts, $bb_post, $page;
 	add_action( 'bb_get_option_page_topics', 'mass_edit_topic_limit',250);
+
+/*
 	add_filter( 'get_topic_where', 'no_where' );
 	add_filter( 'get_topic_link', 'bb_make_link_view_all' );
-
-/*	// post_text=test&forum_id=0&tag=&post_author=&post_status=0
+	// post_text=test&forum_id=0&tag=&post_author=&post_status=0
 	$bb_post_query = new BB_Query_Form( 'post',array( 'post_status' => 0, 'count' => true ));
 	$bb_posts =& $bb_post_query->results;
 	$total = $bb_post_query->found_rows;
@@ -161,7 +162,7 @@ if ($total) {$bb_posts = $bbdb->get_results("SELECT * ".$query.$restrict);} else
 
 	<fieldset><legend>Exact Match</legend>
 	<input type="hidden" name="plugin" value="mass_edit"  />
-	<span style="padding-left:1em;"<input style="height:1.4em;width:1.4em;" name="exact_match" id="exact-match" class="checkbox" type="checkbox" value="1" <?php echo ($exact_match) ? 'checked="checked"' : ''; ?> /></span>
+	<span style="padding-left:1em;"><input style="height:1.4em;width:1.4em;" name="exact_match" id="exact-match" class="checkbox" type="checkbox" value="1" <?php echo ($exact_match) ? 'checked="checked"' : ''; ?> /></span>
     	<span style="padding-left:1em;" class=submit><input class=submit type="submit" name="submit" value="<?php _e('Search') ?> &raquo;"  /></span>
     	</fieldset>
     
@@ -172,6 +173,18 @@ if ($total) {$bb_posts = $bbdb->get_results("SELECT * ".$query.$restrict);} else
 if ($total) {echo $pagelinks="<p style='clear:left'>[ ".(($total>$per_page) ? "showing ".(($page-1)*$per_page+1)." - ".(($total<$page*$per_page) ? $total : $page*$per_page)." of " : "")."$total posts found ] ".'<span style="padding-left:1em">'.get_page_number_links( $page, $total )."</span></p>";}
 
 if ($bb_posts) {
+
+// lazy cache loading
+foreach ($bb_posts as $bb_post) {$users[$bb_post->poster_id]= $bb_post->poster_id; $topics[$bb_post->topic_id]= $bb_post->topic_id;}  
+$users=join(',', $users); $topics=join(',', $topics);
+$users=$bbdb->get_results("SELECT * FROM $bbdb->users WHERE ID IN ($users)");
+$users = bb_append_meta( $users, 'user' );
+unset($users); 
+$topics=$bbdb->get_results("SELECT * FROM $bbdb->topics WHERE topic_id IN ($topics)");
+$topics = bb_append_meta( $topics, 'topic' );
+unset($topics);
+
+
 		echo '<form name="deleteposts" id="deleteposts" action="" method="post"> ';
 		bb_nonce_field('mass-edit-bulk-posts');
 		echo '<table class="widefat">

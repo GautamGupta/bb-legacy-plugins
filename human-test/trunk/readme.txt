@@ -1,5 +1,5 @@
 === Human Test for bbPress  ===
-Tags: bots, captcha, register, registration
+Tags: bots, captcha, register, registration, _ck_
 Contributors: _ck_
 Requires at least: 0.8
 Tested up to: trunk
@@ -10,19 +10,19 @@ Uses various methods to exclude bots from registering (and eventually posting) o
 
 == Description ==
 
-Bot registration is becoming a problem on bbPress. 
-This will slow them down if not stop them entirely.
+Automated bot registration is becoming a problem on bbPress. 
+This is an easy way to stop virtually all of them.
 
-Simply adds a new field at the bottom of your registration page with two random numbers to add together. 
+This plugin adds a new field at the bottom of your registration page with two random numbers to add together. 
 Uses a few tricks like javascript and entity encoding to slow down the smarter bots.
 
-(no core modifications required, 100% plugin based)
+No template edits or core modifications required, 100% plugin based,
 
-Optional image based (captcha style) writing coming soon as well as "negative fields".
+Eventually will add image based (captcha style) writing as well as "negative fields".
 
 == Installation ==
 
-* Install, activate, and test your registration page. 
+* Install, activate, and test your registration page.  No edits required.
 
 == License ==
 

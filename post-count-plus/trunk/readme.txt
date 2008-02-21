@@ -51,6 +51,10 @@ any template by using direct calls, ie. `<?php post_count_plus($user->ID); ?>`
 
 * bug fix to deal with user->bb_capabilities vs user->capabilities in trunk vs 0.8.x
 
+= Version 1.06 (2008-02-20) =
+
+* workaround for 0.8.2 backwards compatibility
+
 == To Do ==
 
-* Better instructions for all the options
+* Better instructions for all the options, code cleanup

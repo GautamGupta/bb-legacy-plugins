@@ -5,7 +5,7 @@ Plugin URI:  http://bbpress.org/plugins/topic/83
 Description: An enhanced "user post count" with "custom titles" for topics and profiles, based on posts and membership, with cached results for faster pages. No template edits required.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 1.05
+Version: 1.06
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -57,19 +57,24 @@ if (!$user_id) {
 	elseif ($location=="profile-page") {global $user; $user_id=$user->ID;}
 }
 if ($user_id) {
-	$posts=bb_get_usermeta( $user_id, 'post_count');	// even this should be bypassed at some point with a simple cache check & mysql query - sometimes causes 2 queries
+	$user=bb_get_user($user_id); 
+	// echo " <!-- "; print_r($user); echo " --> ";
+	$posts=$user->post_count;  // bb_get_usermeta( $user_id, 'post_count');	// even this should be bypassed at some point with a simple cache check & mysql query - sometimes causes 2 queries
 	if (!$posts) {
 		global $bbdb; $posts=$bbdb->get_var("SELECT count(*) FROM $bbdb->posts WHERE poster_id = $user_id AND post_status = 0");
 		// bb_update_usermeta( $user_id, 'post_count', $posts);  // uses too many queries, we'll do it directly
-		$bbdb->query("INSERT INTO $bbdb->usermeta  (user_id, meta_key, meta_value)  VALUES ('".$user_id."', 'post_count', '".$posts."') ");		
+		// $bbdb->query("INSERT INTO $bbdb->usermeta  (user_id, meta_key, meta_value)  VALUES ('".$user_id."', 'post_count', '".$posts."') ");		
+		bb_update_meta( $user_id, "post_count", $posts, 'user' );
 	}
 }	
 if ($posts) {return  $posts;} else {return 0;}
 }
 
 function post_count_plus_update() {
-$user_id = bb_get_current_user_info( 'id' );  $posts=intval(bb_get_usermeta( $user_id, 'post_count'));
-if ($user_id && $posts) {global $bbdb; $bbdb->query("UPDATE $bbdb->usermeta SET meta_value = '".($posts+1)."' WHERE user_id = '".$user_id."' AND meta_key = 'post_count' LIMIT 1");}
+// $user_id = bb_get_current_user_info( 'id' );  $posts=intval(bb_get_usermeta( $user_id, 'post_count'));
+// if ($user_id && $posts) {global $bbdb; $bbdb->query("UPDATE $bbdb->usermeta SET meta_value = '".($posts+1)."' WHERE user_id = '".$user_id."' AND meta_key = 'post_count' LIMIT 1");}
+global $bb_current_user; $user_id=$bb_current_user->ID;    
+if ($user_id) {$user=bb_get_user($user_id); bb_update_meta( $user_id, "post_count", (intval($user->post_count)+1), 'user' );}
 } 
 add_action('bb_new_post', 'post_count_plus_update',200);
 

@@ -5,7 +5,7 @@ Plugin URI:  http://bbpress.org/plugins/topic/83
 Description: An enhanced "user post count" with "custom titles" for topics and profiles, based on posts and membership, with cached results for faster pages. No template edits required.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 1.06
+Version: 1.07
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -57,8 +57,7 @@ if (!$user_id) {
 	elseif ($location=="profile-page") {global $user; $user_id=$user->ID;}
 }
 if ($user_id) {
-	$user=bb_get_user($user_id); 
-	// echo " <!-- "; print_r($user); echo " --> ";
+	$user=bb_get_user($user_id); 	
 	$posts=$user->post_count;  // bb_get_usermeta( $user_id, 'post_count');	// even this should be bypassed at some point with a simple cache check & mysql query - sometimes causes 2 queries
 	if (!$posts) {
 		global $bbdb; $posts=$bbdb->get_var("SELECT count(*) FROM $bbdb->posts WHERE poster_id = $user_id AND post_status = 0");
@@ -101,10 +100,10 @@ if ($user_id) {
 	if (!$posts) {$posts=post_count_plus_get_count($user_id);}
 	if (!$days) {$days=intval((bb_current_time('timestamp') - bb_gmtstrtotime( $user->user_registered ))/86400);}					
 	$capabilities=(isset($user->bb_capabilities)) ? $user->bb_capabilities : $user->capabilities;  // makes compatibile for 0.8.x + trunk
-	// echo " <!-- "; var_dump($user->bb_capabilities); var_dump($user->capabilities); echo " --> ";	// diagnostic
+//	echo " <!-- "; var_dump($user->bb_capabilities); var_dump($user->capabilities); echo " --> ";	// diagnostic
 	if (!$role && is_array($capabilities)) {		
 		$role=array_pop(array_intersect(array_keys($capabilities),array_keys($GLOBALS['bb_roles']->role_names)));	// grabs all the roles, nice!
-	// echo " <!-- "; echo $role; var_dump($GLOBALS['bb_roles']->role_names); echo " --> ";	// diagnostic		
+//	echo " <!-- "; echo $role; var_dump($GLOBALS['bb_roles']->role_names); echo " --> ";	// diagnostic		
 	}
 }
 $found=0; $width=5; $rows=floor(count($post_count_plus['custom_titles'])/$width);
@@ -173,7 +172,7 @@ function post_count_plus_filter($titlelink) {post_count_plus(0,0,$titlelink); re
 
 function post_count_plus_initialize() {
 	global $bb, $bb_current_user, $post_count_plus, $post_count_plus_type, $post_count_plus_label;
-	if(!isset($post_count_plus)) {$post_count_plus = bb_get_option('post_count_plus');
+	if (!isset($post_count_plus)) {$post_count_plus = bb_get_option('post_count_plus');
 		if (!$post_count_plus) {
 		$post_count_plus['activate']=true;
 		$post_count_plus['post_count']=true;
@@ -195,7 +194,14 @@ function post_count_plus_initialize() {
 		"mod","0","0","moderator","Red",
 		"admin","0","0","administrator","DarkRed",
 		"senior admin","0","0","keymaster","DarkRed");
-		}		
+		}}						
+	if (BB_IS_ADMIN) {		
+		$post_count_plus['custom_titles'][0]=__("New Title");	 
+		$post_count_plus['custom_titles'][1]=__("Minimum Posts");
+		$post_count_plus['custom_titles'][2]=__("Minimum Days");
+		$post_count_plus['custom_titles'][3]=__("Minimum Role");
+		$post_count_plus['custom_titles'][4]=__("Color");					
+		
 		$post_count_plus_label['activate']=__("Use features without template editing ?");
 		$post_count_plus_label['post_count']=__("Show post counts for users in topic pages ?");
 		$post_count_plus_label['join_date']=__("Show joined date for users in topic pages ?");
@@ -218,16 +224,16 @@ function post_count_plus_initialize() {
 		$post_count_plus_type['title_link']="Profile,Author URL,Nothing";
 		$post_count_plus_type['join_date_format']="input";
 		$post_count_plus_type['style']="textarea";
-		$post_count_plus_type['custom_titles']="array,5,10";
+		$post_count_plus_type['custom_titles']="array,5,10";		
 	}
-if ($post_count_plus['profile_insert']) {add_filter( 'get_profile_info_keys','post_count_plus_profile_key',200);}
-if ($post_count_plus['activate']) {add_filter( 'post_author_title', 'post_count_plus_filter');}
-if ($post_count_plus['style']) {add_action('bb_head', 'post_count_plus_add_css');}
-add_filter( 'get_user_link','post_count_plus_user_link',200,2);
-if ($post_count_plus['user_color']) {add_filter( 'get_post_author','post_count_plus_user_color',200,2);}
+	if ($post_count_plus['profile_insert']) {add_filter( 'get_profile_info_keys','post_count_plus_profile_key',200);}
+	if ($post_count_plus['activate']) {add_filter( 'post_author_title', 'post_count_plus_filter');}
+	if ($post_count_plus['style']) {add_action('bb_head', 'post_count_plus_add_css');}	
+	if ($post_count_plus['user_color']) {add_filter( 'get_post_author','post_count_plus_user_color',200,2);}
+	add_filter( 'get_user_link','post_count_plus_user_link',200,2);
 }	
 add_action( 'bb_init', 'post_count_plus_initialize');
-add_action( 'init', 'post_count_plus_initialize');
+// add_action( 'init', 'post_count_plus_initialize');
 
 function post_count_plus_add_admin_page() {bb_admin_add_submenu(__('Post Count Plus'), 'administrate', 'post_count_plus_admin_page');}
 add_action( 'bb_admin_menu_generator', 'post_count_plus_add_admin_page' );
@@ -251,6 +257,13 @@ function post_count_plus_admin_page() {
 				</thead>
 				<tbody>
 					<?php
+					
+					$post_count_plus['custom_titles'][0]=__("New Title");	 
+					$post_count_plus['custom_titles'][1]=__("Minimum Posts");
+					$post_count_plus['custom_titles'][2]=__("Minimum Days");
+					$post_count_plus['custom_titles'][3]=__("Minimum Role");
+					$post_count_plus['custom_titles'][4]=__("Color");
+					
 					foreach(array_keys( $post_count_plus_type) as $key) {
 					$post_count_plus[$key]=stripslashes_deep($post_count_plus[$key]);					
 					$colspan= (substr($post_count_plus_type[$key],0,strpos($post_count_plus_type[$key].",",","))=="array") ? "2" : "1";
@@ -319,16 +332,22 @@ global $post_count_plus;
 			bb_delete_option('post_count_plus');
 			post_count_plus_initialize();			
 			bb_update_option('post_count_plus',$post_count_plus);
-			bb_admin_notice('<b>Post Count Plus: '.__('All Settings Reset To Defaults.')); 	// , 'error' 			
+			bb_admin_notice('<b>Post Count Plus: '.__('All Settings Reset To Defaults.').'</b>'); 	// , 'error' 			
 			wp_redirect(remove_query_arg(array('post_count_plus_reset','post_count_plus_recount')));	// bug workaround, page doesn't show reset settings
 		}
 		elseif (isset($_REQUEST['post_count_plus_recount'])) {post_count_plus_recount();}
 		elseif (isset($_POST['submit']) && isset($_POST['post_count_plus'])) {
+							
 			foreach(array_keys( $post_count_plus) as $key) {
 				if (isset($_POST[$key])) {$post_count_plus[$key]=$_POST[$key];}
 			}
+			$found=0; $width=5; $rows=floor(count($post_count_plus['custom_titles'])/$width);
+			for ($i=1; $i<$rows; $i++) {	// filter typed in settings here for correctness	
+			if ($post_count_plus['custom_titles'][$i*$width+3]) { // strip down roles to lowercase no spaces - could actually try to match real role names?
+				$post_count_plus['custom_titles'][$i*$width+3]=str_replace(" ","",strtolower($post_count_plus['custom_titles'][$i*$width+3]));
+			}} 
 			bb_update_option('post_count_plus',$post_count_plus);
-			bb_admin_notice('<b>Post Count Plus: '.__('All Settings Saved.'));
+			bb_admin_notice('<b>Post Count Plus: '.__('All Settings Saved.').'</b>');
 			// unset($GLOBALS['post_count_plus']); $post_count_plus = bb_get_option('post_count_plus');
 		}
 	}

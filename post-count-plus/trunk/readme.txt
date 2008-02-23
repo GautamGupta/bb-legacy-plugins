@@ -55,6 +55,11 @@ any template by using direct calls, ie. `<?php post_count_plus($user->ID); ?>`
 
 * workaround for 0.8.2 backwards compatibility
 
+= Version 1.07 (2008-02-23) =
+
+* a few tweaks, minor bug fixes to admin side
+* tries to enforce proper role name entry (no spaces & lowercase) - todo: selection box instead
+
 == To Do ==
 
 * Better instructions for all the options, code cleanup

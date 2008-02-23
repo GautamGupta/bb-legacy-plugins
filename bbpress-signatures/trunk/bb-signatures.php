@@ -1,14 +1,15 @@
 <?php
 /*
 Plugin Name: bbPress signatures
-Description:  allows users to add signatures to their forum posts, including an optional per-post toggle
 Plugin URI:  http://bbpress.org/plugins/topic/63
+Description:  allows users to add signatures to their forum posts, including an optional per-post toggle
+Version: 0.16
 Author: _ck_
-Author URI: http://CKon.wordpress.com
-Version: 0.15
-*/
-/*
+Author URI: http://bbshowcase.org
+
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
+
+Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
 
 Instructions:   install, activate, tinker with settings in admin menu
 
@@ -28,40 +29,44 @@ Version History:
 0.13	: warnings cleanup for better code
 0.14	: signatures removed from rss feeds
 0.15	: bug fix to maintain setting when posts are saved after edit 
-
+0.16	: minor bug fixes
 */
 
 function bb_signatures_initialize() {
-	global $bb,$bb_current_user,$bb_signatures,$bb_signatures_type;
+	global $bb,$bb_current_user,$bb_signatures,$bb_signatures_type, $bb_signatures_extra;
 	if(!isset($bb_signatures)) {$bb_signatures = bb_get_option('bb_signatures');
 		if (!$bb_signatures) {
 		$bb_signatures['max_length']=100;     // sanity 
 		$bb_signatures['max_lines']=3;     // sanity 
 		$bb_signatures['minimum_user_level']="participate";   // participate, moderate, administrate  (watchout for typos)
+		$bb_signatures['one_per_user_per_page']=true;    // only one signature shown for a user even if they have 2+ posts on a page
+		$bb_signatures['allow_per_post_signature_toggle']=true;    // allows user decide which posts should have signatures
 		$bb_signatures['allow_html']=true ;  // not implimented yet, obeys post text rules
 		$bb_signatures['allow_smilies']=true ;  // not implimented yet, obeys post text rules
 		$bb_signatures['allow_images']=true ;  // not implimented yet, obeys post text rules
-		$bb_signatures['one_per_user_per_page']=true;    // only one signature shown for a user even if they have 2+ posts on a page
-		$bb_signatures['allow_per_post_signature_toggle']=true;    // allows user decide which posts should have signatures
 		$bb_signatures['signature_question']="Show your signature on this post?";
 		$bb_signatures['signature_instructions']="You may enter a short signature which will be shown below your posts.";
 		$bb_signatures['style']=".signature {clear:both;border-top:1px solid #222; font-size:85%; color:#777;padding:1em;}";			
-		}
+		}}
+	// if (BB_IS_ADMIN) {		// doesn't exist until 1040 :-(
 		$bb_signatures_type['max_length']="numeric";     // sanity 
 		$bb_signatures_type['max_lines']="numeric";     // sanity 
 		$bb_signatures_type['minimum_user_level']="participate,moderate,administrate";   // participate, moderate, administrate  (watchout for typos)
+		$bb_signatures_type['one_per_user_per_page']="binary";    // only one signature shown for a user even if they have 2+ posts on a page
+		$bb_signatures_type['allow_per_post_signature_toggle']="binary";    // let's user decide which posts should have signatures
 		$bb_signatures_type['allow_html']="binary";  // not implimented yet, obeys post text rules
 		$bb_signatures_type['allow_smilies']="binary";  // not implimented yet, obeys post text rules
 		$bb_signatures_type['allow_images']="binary";  // not implimented yet, obeys post text rules
-		$bb_signatures_type['one_per_user_per_page']="binary";    // only one signature shown for a user even if they have 2+ posts on a page
-		$bb_signatures_type['allow_per_post_signature_toggle']="binary";    // let's user decide which posts should have signatures
 		$bb_signatures_type['signature_question']="input";
 		$bb_signatures_type['signature_instructions']="input";		
 		$bb_signatures_type['style']="textarea";
-	}
+		
+		$bb_signatures_extra['allow_html']="disabled";  // not implimented yet, obeys post text rules
+		$bb_signatures_extra['allow_smilies']="disabled" ;  // not implimented yet, obeys post text rules
+		$bb_signatures_extra['allow_images']="disabled" ;  // not implimented yet, obeys post text rules
+	// }
 }	
 add_action( 'bb_init', 'bb_signatures_initialize');
-add_action( 'init', 'bb_signatures_initialize');
 	
 function bb_signatures_add_css() { global $bb_signatures;  echo '<style type="text/css">'.$bb_signatures['style'].'</style>'; 
 } add_action('bb_head', 'bb_signatures_add_css');
@@ -185,7 +190,7 @@ function bb_signatures_display_role_dropdown($name, $index, $role) {
 }
 
 function bb_signatures_admin_page() {
-	global $bb_signatures,$bb_signatures_type;		
+	global $bb_signatures,$bb_signatures_type,$bb_signatures_extra;		
 	?>
 		<h2>bbPress Signatures</h2>
 		<form method="post" name="bb_signatures_form" id="bb_signatures_form">
@@ -204,8 +209,8 @@ function bb_signatures_admin_page() {
 							<?php
 							switch ( $bb_signatures_type[$key]) :
 							case 'binary' :
-								?><input type=radio name="<?php echo $key;  ?>" value="1" <?php echo ($bb_signatures[$key]==true ? 'checked="checked"' : '');?> >YES
-								     <input type=radio name="<?php echo $key;  ?>" value="0" <?php echo ($bb_signatures[$key]==false ? 'checked="checked"' : '');?> >NO <?php
+								?><input <?php echo ($test=$bb_signatures_extra[$key]) ? $test : ""; ?> type=radio name="<?php echo $key;  ?>" value="1" <?php echo ($bb_signatures[$key]==true ? 'checked="checked"' : '');?> >YES &nbsp; &nbsp;
+								     <input <?php echo ($test=$bb_signatures_extra[$key]) ? $test : ""; ?> type=radio name="<?php echo $key;  ?>" value="0" <?php echo ($bb_signatures[$key]==false ? 'checked="checked"' : '');?> >NO <?php
 							break;
 							case 'numeric' :
 								?><input type=text maxlength=3 name="<?php echo $key;  ?>" value="<?php echo $bb_signatures[$key]; ?>"> <?php 
@@ -231,7 +236,7 @@ function bb_signatures_admin_page() {
 					?>
 				</tbody>
 			</table>
-			<p class="submit"><input type="submit" name="submit" value="Submit"></p>
+			<p class="submit"><input type="submit" name="submit" value="Save bbPress Signatures Settings"></p>
 		
 		</form>
 		<?php

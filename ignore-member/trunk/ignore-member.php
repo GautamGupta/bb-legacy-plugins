@@ -2,14 +2,17 @@
 /*
 Plugin Name: Ignore Member
 Description:  Allows members to not see posts by other members that they don't get along with. They cannot block moderators or administrators.
-Plugin URI:  http://CKon.wordpress.com
+Plugin URI:  http://bbpress.org/plugins/topic/68
 Author: _ck_
-Author URI: http://CKon.wordpress.com
+Author URI: http://bbShowcase.org
 Version: 0.06
-*/ 
-/* 
-instructions:  install, activate 
-put  <? ignore_member_link(); ?> in your post.php template where you want the "Ignore" link to be seen
+
+License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
+
+Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
+
+Instructions:  install, activate 
+put  <?php ignore_member_link(); ?> in your post.php template where you want the "Ignore" link to be seen
 optionally put in your theme stylesheet:    a.ignore_member {color:blue;}  
 add any mods you wish to make unignorable to the array below, ie. 	array("1","27","55");
 
@@ -25,7 +28,6 @@ history:
 2007-08-12	0.01	Ignore Member plugin is born
 2007-08-13	0.05	first public beta release
 2007-08-20	0.06	admin can now see users blocked in other member's profile, and remove block if desired
-
 */
 
 $ignore_member['unignorable']=array("1");     // eventually automatic in admin panel:  get_ids_by_role( array('keymaster',administrator','moderator'));

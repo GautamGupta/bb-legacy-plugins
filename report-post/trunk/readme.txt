@@ -1,9 +1,10 @@
 === Report Post ===
-Tags: alert moderator, moderation, alert, report, report post
+Tags: alert moderator, moderation, alert, report, report post, _ck_
 Contributors: _ck_
 Requires at least: 0.8.2
 Tested up to: trunk
 Stable tag: trunk
+Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
 
 Allows members to easily report a post that needs to be reviewed by a moderator.
 
@@ -16,9 +17,17 @@ Email is currently used to notify the administrator but more options will come e
 == Installation ==
 
 1. install, activate 
-2. put  <? report_post_link(); ?> in your post.php template where you want the link to be seen - recommended next to <?php post_edit_link(); ?> 
-3. optionally edit your style.css stylesheet to make it stand out, add:  a.report_post {color:red;}  
+2. put  `<? report_post_link(); ?>` in your post.php template where you want the link to be seen - recommended next to `<?php post_edit_link(); ?>` 
+3. optionally edit your style.css stylesheet to make it stand out, add: `a.report_post {color:red;}`  
 4. note that you will NOT see a report link on YOUR OWN posts - to test, make a post as another member.
+
+== Frequently Asked Questions ==
+
+= I'm not getting the emails!? =
+
+* check if your server has proper reverse dns (rDNS) and a SPF record 
+* aol and hotmail accounts block the most servers and are troublesome
+* gmail (google) email accounts tend to accept almost any (bad) configuration - recommended!
 
 == To Do ==
 
@@ -30,8 +39,16 @@ Email is currently used to notify the administrator but more options will come e
 6. don't allow reports on moderators
 7. don't allow reports from members less than x days old
 
-== Version History ==
+== License ==
 
-Version 0.10 (2007-07-31)
+* CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
+
+== Donate ==
+
+* http://amazon.com/paypage/P2FBORKDEFQIVM
+
+== History ==
+
+= Version 0.10 (2007-07-31) =
 
 * first public release

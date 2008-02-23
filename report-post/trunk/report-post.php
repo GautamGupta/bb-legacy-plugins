@@ -4,13 +4,12 @@ Plugin Name: Report Post
 Description:  allows members to report a post to admin/moderators 
 Plugin URI:  http://bbpress.org/plugins/topic/64
 Author: _ck_
-Author URI: http://CKon.wordpress.com
-Version: 0.11
-*/ 
+Author URI: http://bbShowcase.org
+Version: 0.12
 
-/* 
-instructions:  install, activate and put  <? report_post_link(); ?> in your post.php template where you want the link to be seen
-optional in stylesheet:  a.report_post {color:red;}  
+instructions:  
+install, activate and put  <? report_post_link(); ?> in your post.php template where you want the link to be seen
+optionally in stylesheet:  a.report_post {color:red;}  
 
 todo: 
 1. don't let them report more than once on a post - or more than too many times per minute/hour
@@ -27,12 +26,15 @@ security: check if user is in the right topic for the post being reported
 history:
 0.10	: first public beta release
 0.11	: translation hooks added
+0.12	: fix to not allow report on primary administrator (keymaster) todo: all admin/moderators
 */
 
 function report_post_link($post_id=0) { 
 if (bb_current_user_can('participate') ) :
 	$post_id= get_post_id( $post_id ); 
-	if (get_post_author_id($post_id) != bb_get_current_user_info( 'id' )) {
+	$post_id= get_post_id( $post_id );
+	$post_author_id=get_post_author_id($post_id);  // to do, exclude all admin/moderators
+	if ($post_author_id != bb_get_current_user_info( 'id' ) && $post_author_id!="1") {	
 		$title=__("report post to moderator");
 		echo '<a class=report_post title="'.$title.'" href="#post-'.$post_id.'" onClick="report_post('.$post_id.');return false;">'.__("Report").'</a>';
 	}
@@ -56,7 +58,7 @@ if (isset($_POST['report_post_id']) && isset($_POST['report_post_reason'])) {
 	$message.="post by: ". get_post_author($post_id)."\r\n";     // add "member since", total posts, blah blah		
 	$message.="\r\n\r\nReport Trace:\r\n";
 	$message.="IP:    ".$_SERVER['REMOTE_ADDR']."\r\n";
-	$message.="Host:  ".gethostbyaddr($_SERVER['REMOTE_ADDR'])."\r\n";   // useful but can add a few seconds
+	$message.="Host:  ".gethostbyaddr($_SERVER['REMOTE_ADDR'])."\r\n";   // useful but can add a few seconds or fail
  	$message.="Agent: ".$_SERVER['HTTP_USER_AGENT']."\r\n";
  	$message.="Refer: ". $_REQUEST['refer']."\r\n";
  	$message.="URL:   http://".$_SERVER['HTTP_HOST'].$GLOBALS["HTTP_SERVER_VARS"]["REQUEST_URI"]."\r\n";  			

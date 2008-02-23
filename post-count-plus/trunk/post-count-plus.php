@@ -195,7 +195,7 @@ function post_count_plus_initialize() {
 		"admin","0","0","administrator","DarkRed",
 		"senior admin","0","0","keymaster","DarkRed");
 		}}						
-	if (BB_IS_ADMIN) {		
+	// if (BB_IS_ADMIN) {		// doesn't exist until 1040 :-(
 		$post_count_plus['custom_titles'][0]=__("New Title");	 
 		$post_count_plus['custom_titles'][1]=__("Minimum Posts");
 		$post_count_plus['custom_titles'][2]=__("Minimum Days");
@@ -225,7 +225,7 @@ function post_count_plus_initialize() {
 		$post_count_plus_type['join_date_format']="input";
 		$post_count_plus_type['style']="textarea";
 		$post_count_plus_type['custom_titles']="array,5,10";		
-	}
+	// }
 	if ($post_count_plus['profile_insert']) {add_filter( 'get_profile_info_keys','post_count_plus_profile_key',200);}
 	if ($post_count_plus['activate']) {add_filter( 'post_author_title', 'post_count_plus_filter');}
 	if ($post_count_plus['style']) {add_action('bb_head', 'post_count_plus_add_css');}	

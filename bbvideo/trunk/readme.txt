@@ -13,7 +13,7 @@ This plugin converts all links to knowen videos portals to the matching embedded
 
 == Installation ==
 
-Add `/bbvideo/` to your `/my-plugins/` directory.
+Add `/bbvideo/` to your `/my-plugins/` directory!
 
 == Configuration ==
 

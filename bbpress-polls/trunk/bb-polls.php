@@ -5,7 +5,7 @@ Description:  allows users to add polls to topics, with optional ajax-ish update
 Plugin URI:  http://bbpress.org/plugins/topic/62
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.31
+Version: 0.33
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -35,12 +35,12 @@ Version History:
 0.29	: enhancement so admin can always delete any poll
 0.30	: enhancement so admin can edit any poll (don't change the order of questions, it's a simple edit for now). Vote count edits, etc. coming later.
 0.31	: bug fix to also track/re-save change of poll type (multiple/single) on edit
+0.33	: bug fix on null topic_id saving poll setup
 	
 To Do: 
-	: admin menu (coming soon - edit plugin directly for now, many options)
-	: administrative editing/deleting of existing polls.	
+	: admin menu (coming soon - edit plugin directly for now, many options)	
 	: display a poll anywhere within bbpress templates
-	: display all polls on a single page
+	: list all polls on a single page
 */
 //	edit these lines below (until an Admin menu is made)
 
@@ -76,7 +76,7 @@ To Do:
 	$bb_polls['label_save_text']=__("Save");  // default "SAVE" = text to show for SAVE button
 	$bb_polls['label_cancel_text']=__("Cancel");  // default "CANCEL" = text to show for CANCEL button
 	$bb_polls['label_edit_text']=__("Edit");  // default "EDIT" = text to show for Edit button
-	$bb_polls['label_delete_text']=__("Delete");  // default "DELETE" = text to show for Edit button
+	$bb_polls['label_delete_text']=__("Delete");  // default "DELETE" = text to show for Delete button
 	$bb_polls['label_option_text']=__("option");  // default "option" = text to show for options
 	$bb_polls['label_question_text']=__("poll question");
 	$bb_polls['label_results_text']=__("show poll results");
@@ -84,7 +84,7 @@ To Do:
 	$bb_polls['label_nocheck_text']=__("You haven't selected anything!");	
 	$bb_polls['label_warning_text']=__("This cannot be undone. Are you sure to delete?");
 		
-	$bb_polls['style']="#bb_polls {list-style: none; width:350px; margin-left:-10px; line-height:120%; padding:5px; border:1px solid #ADADAD;  font-size:85%; color:#000; background:#eee; }
+	$bb_polls['style']="#bb_polls {list-style: none; width:350px; line-height:120%; margin:5px 0; padding:5px; border:1px solid #ADADAD;  font-size:85%; color:#000; background:#eee; }
 			#bb_polls .submit {cursor: pointer; cursor: hand; text-align:center; padding:2px 5px;}
 			#bb_polls .nowrap {white-space:nowrap;}
 			#bb_polls p {margin:15px 0;padding:0;}
@@ -282,7 +282,7 @@ if ($administrator) {
 }
 }
 
-function bb_polls_save_poll_setup($topic_id) {
+function bb_polls_save_poll_setup($topic_id=0) {
 global $bb_polls,$topic,$poll_options;
 if (bb_current_user_can('administrate') || bb_current_user_can($bb_polls['minimum_add_level'])) {
 $topic_id=bb_polls_check_cache($topic_id);
@@ -335,7 +335,7 @@ function bb_polls_title( $title ) {
 
 function bb_polls_add_header() { 
 	if (isset($_POST['poll_question'])) {	// save new poll setup from _post data 
-		bb_polls_save_poll_setup();				
+		bb_polls_save_poll_setup(0);				
 		// header("HTTP/1.1 307 Temporary redirect");
 		wp_redirect($GLOBALS["HTTP_SERVER_VARS"]["REQUEST_URI"]);	// I *really* don't like this technique but it's the only way to clear post data?
 		// exit();  // not sure why but this makes it fail?

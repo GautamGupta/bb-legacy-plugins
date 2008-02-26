@@ -12,7 +12,7 @@ License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
 */
 
-add_filter('post_text', 'bbcode_lite',7);	//  to store bbcode as html permanently,  change 'post_text' to 'pre_text' which is faster but harder for users to edit
+add_filter('post_text', 'bbcode_lite',7);	//  to store bbcode as html permanently,  change 'post_text' to 'pre_post' which is faster but harder for users to edit
 add_filter( 'bb_allowed_tags', 'bbcode_lite_extra_tags' );	 // unfortunately to make bbcode fast we need to allow some extra tags like "font"
 
 function bbcode_lite ($text) {

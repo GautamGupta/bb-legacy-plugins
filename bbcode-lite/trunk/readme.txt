@@ -25,7 +25,7 @@ http://bbshowcase.org/forums/topic/new-bbpress-plugin-bbcode-lite
 
 == Installation ==
 
-* Add the `bbcode-light.php` file to bbPress' `my-plugins/` directory and activate.
+* Add the `bbcode-lite.php` file to bbPress' `my-plugins/` directory and activate.
 
 == Frequently Asked Questions ==
 
@@ -47,12 +47,20 @@ http://bbshowcase.org/forums/topic/new-bbpress-plugin-bbcode-lite
 * [code] [/code]
 * there may be others, periodically updated based upon request
 
-= now ignores BBcode inbetween backticks or `<code>`  =
+= What if I want to show BBcode examples and not have them evaluated? =
 
-= There are still some weird special circumstances where the BBcode may not work properly,
-be sure to let me know if you find some and I will address them as time permits.  =
+* BBcode inbetween backticks or `code`  is ignored and will not be processed
 
-=  If you have an extremely active forum or overloaded server you can change `pre_text` to `post_text` within the plugin to permanently save changes =
+= some BBcode is not working? =
+
+* There are still some weird special circumstances where the BBcode may not work properly,
+be sure to let me know if you find some and I will address them as time permits. 
+
+= It's fast but my forum is huge and it's still too slow? =
+
+* If you have an extremely active forum or overloaded server you can change 
+`post_text` to `pre_post` within the plugin filter to permanently save bbcode as html.
+(however this makes it a bit harder for users to re-edit a post as the bbcode will then appear as html)
 
 == License ==
 

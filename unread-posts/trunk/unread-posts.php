@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: Unread Posts
-Description:  Indicates previously read topics with new unread posts. Features "mark all topics read". Builds on concepts by fel64 and henrybb with feature and performance improvements. No additional plugins or tables required.
-Plugin URI:  http://bbpress.org/plugins/
+Description:  Indicates previously read topics with new unread posts. Features "mark all topics read". Builds on concepts by fel64 and henrybb with feature and performance improvements. No additional plugins or database tables required.
+Plugin URI:  http://bbpress.org/plugins/topic/78
 Author: _ck_
 Author URI: http://bbshowcase.org
 Version: 0.80

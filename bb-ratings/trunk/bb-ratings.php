@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/#
 Description: Allows users to rate topics on a 1-5 star scale.
 Author: Michael D Adams
 Author URI: http://blogwaffe.com/
-Version: 0.8.3
+Version: 0.8.4
 */
 
 /* Template Functions */
@@ -91,9 +91,10 @@ function bb_get_user_rating( $user_id = 0 ) {
 /* Backend Functions */
 
 function bb_rating_init() {
-	bb_register_view( 'top-rated', __('Highest Rated', 'bb-rating'),
-		array( 'meta_key' => 'avg_rating', 'order_by' => '0 + tm.meta_value' )
-	);
+	$query_args = array( 'meta_key' => 'avg_rating', 'order_by' => '0 + tm.meta_value' );
+	if ( version_compare( bb_get_option( 'version' ), '0.8.4-z', '<' ) )
+		$query_args['meta_value'] = '>0';
+	bb_register_view( 'top-rated', __('Highest Rated', 'bb-rating'), $query_args );
 }
 
 function bb_do_rating() {

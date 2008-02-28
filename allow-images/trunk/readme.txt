@@ -1,8 +1,8 @@
 === Allow Images ===
 Tags: images, html
 Contributors: mdawaffe
-Requires at least: 0.73
-Tested up to: 0.73
+Requires at least: 0.8.4
+Tested up to: 0.8.4
 Stable Tag: 0.7.1
 
 Allow users to include &lt;img /&gt; tags in their posts.

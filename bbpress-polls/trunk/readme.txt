@@ -17,10 +17,7 @@ For now you must edit the bb-polls.php directly to change default options.
 == Installation ==
 
 Add the "bb-polls.php" file to bbPress "my-plugins/" directory and activate. 
-
-For now you must edit the bb-polls.php directly to change default options.
-Options can be found near the top of the file as `$bb_polls['option']` etc.
-This is a beta release without an admin menu (coming soon).
+Check under the admin menu for "bbPress Polls" options.
 
 == License ==
 
@@ -54,12 +51,15 @@ This is a beta release without an admin menu (coming soon).
 * 0.28	enhancement so admin are always offered to start a poll on any topic regardless
 * 0.29	enhancement so admin can always delete any poll
 * 0.30	enhancement so admin can edit any poll (don't try to change the order of questions, it's a simple edit for now)
+* 0.50	2008-March-1 basic admin menu  added
 	
 == To Do ==
 
-admin menu (coming soon - edit plugin directly for now, many options)
-display a poll anywhere within bbpress templates
-display all polls on a single page
-better editing / vote count editing 
-see who voted
-better colors / graphics
+* polls should be able to close with topic
+* allow results to display by number of votes
+* display a poll anywhere within bbpress templates
+* display all polls on a single page
+* better editing / vote count editing 
+* see who voted
+* better poll styles (colors / graphics)
+

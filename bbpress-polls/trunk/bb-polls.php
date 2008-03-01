@@ -1,48 +1,38 @@
 <?php
 /*
 Plugin Name: bbPress Polls
-Description:  allows users to add polls to topics, with optional ajax-ish update action
+Description:  allows users to add polls to topics, with optional ajax-like actions
 Plugin URI:  http://bbpress.org/plugins/topic/62
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.33
+Version: 0.50
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
-Instructions:   install, activate, tinker with settings located several lines below
+Instructions:   install, activate, check admin menu for options.
 
-Version History:
-0.01	: bb-polls is born - no voting yet, just create a poll for testing
-0.10	: first public beta
-0.11	: bug fix for polls on page 1 setting
-0.12	: poll can now be on first/last/both/all pages & add text to topic titles like [poll]
-0.13	: more control over who can add/vote/view/edit polls 
-0.14	: colour fixes for default theme
-0.15  	: cache performance fixes, extra custom label ability, more css classes, colour tweaks
-0.16	: added __() for automatic translations when possible, all text is now in array near top
-0.17	: trick bbpress to keep data unserialized until needed for performance (backward compatible)
-0.18	: post data fix for refreshed pages (via redirect, nasty but no other way?)
-0.19	: first ajax-ish behaviours added for view current voting results and then back to the form - pre-caching forms, but no submit saving ajax yet 
-0.20	: more text found & moved to array for translations, float removed from default css for Right-to-Left setups, graph bars limited to min & max
-0.21	: many little fixes for IE to work properly, css changes to make IE vs Firefox almost identical 
-0.22	: voting is now ajax-ish - only non-ajax-ish form is the one to create a poll, might be awhile - cancel button also added to create poll form
-0.23	: javascript fix for internet explorer (has to delay append action a few milliseconds or update won't appear to happen)
-0.24	: bug fix for opera trying to cache javascript requests - added alert if they try to vote without selection (todo: need to alert on non-ajax) 
-0.25	: experimental double-execute fix for Null
-0.26	: warnings cleanup for better code
-0.27	: bugfix: poll not showing for non-logged in guest and view setting set to "read"
-0.28	: enhancement so admin are always offered to start a poll on any topic regardless
-0.29	: enhancement so admin can always delete any poll
-0.30	: enhancement so admin can edit any poll (don't change the order of questions, it's a simple edit for now). Vote count edits, etc. coming later.
-0.31	: bug fix to also track/re-save change of poll type (multiple/single) on edit
-0.33	: bug fix on null topic_id saving poll setup
-	
 To Do: 
-	: admin menu (coming soon - edit plugin directly for now, many options)	
-	: display a poll anywhere within bbpress templates
-	: list all polls on a single page
+	* polls should be able to close with topic
+	* allow results to display by number of votes
+	* display a poll anywhere within bbpress templates
+	* display all polls on a single page
+	* better editing / vote count editing 
+	* see who voted
+	* better poll styles (colors / graphics)
 */
-//	edit these lines below (until an Admin menu is made)
+
+global $bb_polls;
+
+add_action( 'bb_send_headers', 'bb_polls_initialize');	// bb_init
+add_action( 'bb_admin-header.php','bb_polls_process_post');
+add_action( 'bb_admin_menu_generator', 'bb_polls_add_admin_page' );
+
+function bb_polls_add_admin_page() {bb_admin_add_submenu(__('bbPress Polls'), 'administrate', 'bb_polls_admin_page');}
+
+function bb_polls_initialize() {
+	global $bb_polls, $bb_polls_type, $bb_polls_label;
+	if (!isset($bb_polls)) {$bb_polls = bb_get_option('bb_polls');
+		if (!$bb_polls) {
 
 	$bb_polls['minimum_view_level']="read";   // who can view polls = read / participate / moderate / administrate  (watchout for typos)
 	$bb_polls['minimum_vote_level']="participate";   // who can vote on polls = participate / moderate / administrate  (watchout for typos)
@@ -65,7 +55,26 @@ To Do:
 	
 	$bb_polls['use_ajax']=true;		// true = enables ajax-ish behaviours, still works without javascript  / false = typical page refreshes
 	$bb_polls['test_mode']=false;	// if set to "true" allows multiple votes per person for testing purposes only
-				
+
+	$bb_polls['style']=
+	"#bb_polls {list-style: none; width:350px; line-height:120%; margin:5px 0; padding:5px; border:1px solid #ADADAD;  font-size:85%; color:#000; background:#eee; }
+	#bb_polls .submit {cursor: pointer; cursor: hand; text-align:center; padding:2px 5px;}
+	#bb_polls .nowrap {white-space:nowrap;}
+	#bb_polls p {margin:15px 0;padding:0;}
+	#bb_polls .poll_question, #bb_polls .poll_footer {font-weight:bold; text-align:center; color:#2E6E15;}
+	#bb_polls .poll_label {font-weight:bold;}								
+	#bb_polls .poll_option {margin:-12px 0 -5px 0; text-align:center;font-weight:bold; font-size:9px; line-height:5px; padding:2px 1px;  border:1px solid #303030; color:#fff; }
+	#bb_polls .poll_option1 {background:red;}
+	#bb_polls .poll_option2 {background:green;}
+	#bb_polls .poll_option3 {background:blue;}
+	#bb_polls .poll_option4 {background:orange;}
+	#bb_polls .poll_option5 {background:purple;}
+	#bb_polls .poll_option6 {background:pink;}
+	#bb_polls .poll_option7 {background:yellow;}
+	#bb_polls .poll_option8 {background:navy;}
+	#bb_polls .poll_option9 {background:grey;}
+	";			
+					
 	$bb_polls['poll_question']=__("Would you like to add a poll to this topic for members to vote on?");
 	$bb_polls['poll_instructions']=__("You may submit a poll question with several options for other members to vote from.");
 	$bb_polls['label_single']=__("you can vote on <u>ONE</u> choice");
@@ -83,26 +92,104 @@ To Do:
 	$bb_polls['label_now_text']=__("vote now");	
 	$bb_polls['label_nocheck_text']=__("You haven't selected anything!");	
 	$bb_polls['label_warning_text']=__("This cannot be undone. Are you sure to delete?");
-		
-	$bb_polls['style']="#bb_polls {list-style: none; width:350px; line-height:120%; margin:5px 0; padding:5px; border:1px solid #ADADAD;  font-size:85%; color:#000; background:#eee; }
-			#bb_polls .submit {cursor: pointer; cursor: hand; text-align:center; padding:2px 5px;}
-			#bb_polls .nowrap {white-space:nowrap;}
-			#bb_polls p {margin:15px 0;padding:0;}
-			#bb_polls .poll_question, #bb_polls .poll_footer {font-weight:bold; text-align:center; color:#2E6E15;}
-			#bb_polls .poll_label {font-weight:bold;}								
-			#bb_polls .poll_option {margin:-12px 0 -5px 0; text-align:center;font-weight:bold; font-size:9px; line-height:5px; padding:2px 1px;  border:1px solid #303030; color:#fff; }
-			#bb_polls .poll_option1 {background:red;}
-			#bb_polls .poll_option2 {background:green;}
-			#bb_polls .poll_option3 {background:blue;}
-			#bb_polls .poll_option4 {background:orange;}
-			#bb_polls .poll_option5 {background:purple;}
-			#bb_polls .poll_option6 {background:pink;}
-			#bb_polls .poll_option7 {background:yellow;}
-			#bb_polls .poll_option8 {background:navy;}
-			#bb_polls .poll_option9 {background:grey;}
-		          ";			
 
-//	- stop editing here -
+		}}						
+	// if (BB_IS_ADMIN) {		// doesn't exist until 1040 :-(
+	
+	$bb_polls_type['minimum_view_level']="read,participate,moderate,administrate"; 
+	$bb_polls_type['minimum_vote_level']="participate,moderate,administrate";
+	$bb_polls_type['minimum_add_level']="participate,moderate,administrate";  
+	$bb_polls_type['minimum_edit_level']="participate,moderate,administrate";
+	$bb_polls_type['minimum_delete_level']="participate,moderate,administrate";
+	
+	$bb_polls_type['only_topic_author_can_add']="binary";
+	$bb_polls_type['show_poll_on_which_pages']="first,last,both,all";	
+		
+	$bb_polls_type['add_within_hours']="1,2,6,12,24,48,72,999999";
+	$bb_polls_type['edit_within_hours']="1,2,6,12,24,48,72,999999";
+
+	$bb_polls_type['close_with_topic']="binary";
+	$bb_polls_type['close_after_days']="1,2,7,30,365";
+
+	$bb_polls_type['max_options']="3,5,9,15,20";
+	$bb_polls_type['max_length']="50,100,200";
+	$bb_polls_type['options_sort']="binary";
+	
+	$bb_polls_type['use_ajax']="binary";
+	$bb_polls_type['test_mode']="binary";
+
+	$bb_polls_type['style']="textarea";
+/*						
+	$bb_polls_type['poll_question']="text";
+	$bb_polls_type['poll_instructions']="text";
+	$bb_polls_type['label_single']="text";
+	$bb_polls_type['label_multiple']="text";
+	$bb_polls_type['label_poll_text']="text";
+	$bb_polls_type['label_votes_text']="text";
+	$bb_polls_type['label_vote_text']="text";
+	$bb_polls_type['label_save_text']="text";
+	$bb_polls_type['label_cancel_text']="text";
+	$bb_polls_type['label_edit_text']="text";
+	$bb_polls_type['label_delete_text']="text";
+	$bb_polls_type['label_option_text']="text";
+	$bb_polls_type['label_question_text']="text";
+	$bb_polls_type['label_results_text']="text";
+	$bb_polls_type['label_now_text']="text";
+	$bb_polls_type['label_nocheck_text']="text";
+	$bb_polls_type['label_warning_text']="text";
+*/	
+	
+	$bb_polls_label['minimum_view_level']=__("At what level can users SEE polls?");
+	$bb_polls_label['minimum_vote_level']=__("At what level can users VOTE on polls?");
+	$bb_polls_label['minimum_add_level']=__("At what level can users ADD a poll?");
+	$bb_polls_label['minimum_edit_level']=__("At what level can users EDIT a poll?");
+	$bb_polls_label['minimum_delete_level']=__("At what level can users DELETE a poll?");
+
+	$bb_polls_label['only_topic_author_can_add']=__("Only the topic starter can add a poll?");
+	$bb_polls_label['show_poll_on_which_pages']=__("Show poll only on which topic pages?");
+		
+	$bb_polls_label['add_within_hours']=__("How many hours later can a poll be ADDED?");
+	$bb_polls_label['edit_within_hours']=__("How many hours later can a poll be EDITED?");
+
+	$bb_polls_label['close_with_topic']=__("Should polls close when a topic is closed?");
+	$bb_polls_label['close_after_days']=__("If not closed with topic, after how many days?");
+
+	$bb_polls_label['max_options']=__("How many poll question slots should be offered?");
+	$bb_polls_label['max_length']=__("How many characters can the poll questions be?");
+	$bb_polls_label['options_sort']=__("Sort results by number of votes?");
+	
+	$bb_polls_label['use_ajax']=__("Use AJAX-like actions if javascript enabled?");
+	$bb_polls_label['test_mode']=__("Enable TEST MODE (multiple votes per person)?");
+
+	$bb_polls_label['style']=__("Custom CSS style for polls:");
+
+/*				
+	$bb_polls_label['poll_question']=__("Question to ask to start poll:");
+	$bb_polls_label['poll_instructions']=__("Instructions to add poll:");
+	$bb_polls_label['label_single']=__("Label for single vote selections:");
+	$bb_polls_label['label_multiple']=__("Label for multiple vote selections:");
+	$bb_polls_label['label_poll_text']=__("Text to show if a topic title has a poll:");
+	$bb_polls_label['label_votes_text']=__("Text to show for votes:");
+	$bb_polls_label['label_vote_text']=__("Text to show for VOTE button:");
+	$bb_polls_label['label_save_text']=__("Text to show for SAVE button:");
+	$bb_polls_label['label_cancel_text']=__("Text to show for CANCEL button:");
+	$bb_polls_label['label_edit_text']=__("Text to show for EDIT button:");
+	$bb_polls_label['label_delete_text']=__("Text to show for DELETE button:");
+	$bb_polls_label['label_option_text']=__("Text to show for each option:");
+	$bb_polls_label['label_question_text']=__("Text to show for question label:");
+	$bb_polls_label['label_results_text']=__("Text to show for results label:");
+	$bb_polls_label['label_now_text']=__("Text to show for VOTE NOW label:");
+	$bb_polls_label['label_nocheck_text']=__("No selection warning:");
+	$bb_polls_label['label_warning_text']=__("Delete warning:");
+*/		
+
+	// }	
+
+	bb_polls_add_header(); 	// add_action('bb_send_headers', 'bb_polls_add_header');
+	add_action('bb_head', 'bb_polls_add_css');
+	add_filter('topic_title', 'bb_polls_title');
+	add_action('topicmeta','bb_polls_pre_poll',200);
+}
 
 function bb_polls_pre_poll($topic_id,$edit_poll=0) { 
 global $bb_polls,$topic,$poll_options,$page;
@@ -157,7 +244,7 @@ if ($edit_poll || ! isset($topic->poll_options)) {	// no saved poll question wit
 }
 endif;	
 remove_action('topicmeta','bb_polls_pre_poll',200);  // NullFix ?
-} add_action('topicmeta','bb_polls_pre_poll',200);
+} 
 
 function bb_polls_check_cache($topic_id) {
 global $bb_polls,$topic,$poll_options;  
@@ -331,7 +418,7 @@ function bb_polls_title( $title ) {
 	global $bb_polls, $topic;
 	if ($bb_polls['label_poll_text'] && isset($topic->poll_options) && !is_topic())  {return '['.$bb_polls['label_poll_text'].'] '.$title;}		
 	return $title;
-} add_filter('topic_title', 'bb_polls_title');
+} 
 
 function bb_polls_add_header() { 
 	if (isset($_POST['poll_question'])) {	// save new poll setup from _post data 
@@ -369,7 +456,7 @@ function bb_polls_add_header() {
 		echo 'bb_polls_insert_ajax("'.mysql_escape_string(bb_polls_show_poll_results($topic_id,0)).'")';
 		exit();
 	}			
-} add_action('bb_send_headers', 'bb_polls_add_header');
+} 
 
 function bb_polls_add_javascript($topic_id) {
 global $bb_polls;
@@ -438,5 +525,98 @@ endif;
 function bb_polls_add_css() { 
 global $bb_polls;
 if (is_topic()) {echo '<style type="text/css">'.$bb_polls['style'].'</style>'; }
-} add_action('bb_head', 'bb_polls_add_css');
+} 
+
+function bb_polls_admin_page() {
+	global $bb_polls, $bb_polls_type, $bb_polls_label;			
+	?>
+		<div style="text-align:right;margin-bottom:-1.5em;">			
+			[ <a href="<?php echo add_query_arg('bb_polls_reset','1',remove_query_arg('bb_polls_recount')); ?>">Reset All Settings To Defaults</a> ] 			
+		</div>
+		
+		<h2>bbPress Polls</h2>
+		
+		<form method="post" name="bb_polls_form" id="bb_polls_form" action="<?php echo remove_query_arg(array('bb_polls_reset','bb_polls_recount')); ?>">
+		<input type=hidden name="bb_polls" value="1">
+			<table class="widefat">
+				<thead>
+					<tr> <th width="33%">Option</th>	<th>Setting</th> </tr>
+				</thead>
+				<tbody>
+					<?php
+					
+					foreach(array_keys( $bb_polls_type) as $key) {
+					
+					// if ($key=="style") {echo "<div id='bb_polls_rollup' style='display:none;'>";}
+					
+					$bb_polls[$key]=stripslashes_deep($bb_polls[$key]);					
+					$colspan= (substr($bb_polls_type[$key],0,strpos($bb_polls_type[$key].",",","))=="array") ? "2" : "1";
+						?>
+						<tr <?php alt_class('recount'); ?>
+							<td nowrap colspan=<?php echo $colspan; ?>>
+							<label for="bb_polls_<?php echo $key; ?>">
+							<b><?php  if ($bb_polls_label[$key])  {echo $bb_polls_label[$key];} else {echo ucwords(str_replace("_"," ",$key));} ?></b>
+							</label>
+							<?php
+							if ($colspan<2) {echo "</td><td>";} else {echo "<br />";}
+							switch (substr($bb_polls_type[$key],0,strpos($bb_polls_type[$key].",",","))) :
+							case 'binary' :
+								?><input type=radio name="<?php echo $key;  ?>" value="1" <?php echo ($bb_polls[$key]==true ? 'checked="checked"' : ''); ?> >Yes 									&nbsp; 
+								     <input type=radio name="<?php echo $key;  ?>" value="0" <?php echo ($bb_polls[$key]==false ? 'checked="checked"' : ''); ?> >No <?php
+							break;
+							case 'numeric' :
+								?><input type=text maxlength=3 name="<?php echo $key;  ?>" value="<?php echo $bb_polls[$key]; ?>"> <?php 
+							break;
+							case 'textarea' :								
+								?><textarea rows="9" style="width:98%" name="<?php echo $key;  ?>"><?php echo $bb_polls[$key]; ?></textarea><?php 							
+							break;
+							default :  // type "input" and everything else we forgot
+								$values=explode(",",$bb_polls_type[$key]);
+								if (count($values)>2) {
+								echo '<select name="'.$key.'">';
+								foreach ($values as $value) {echo '<option '; echo ($bb_polls[$key]== $value ? 'selected' : ''); echo '>'.$value.'</option>'; }
+								echo '</select>';
+								} else {														
+								?><input type=text style="width:98%" name="<?php echo $key;  ?>" value="<?php echo $bb_polls[$key]; ?>"> <?php 
+								}
+							endswitch;							
+							?>
+							</td>
+						</tr>
+						<?php
+					} 
+					// echo "</div>";
+					?>
+				</tbody>
+			</table>
+			<p class="submit"><input type="submit" name="submit" value="Save bbPress Polls Settings"></p>
+		
+		</form>
+		<?php
+}
+
+function bb_polls_process_post() {
+global $bb_polls;
+	if (bb_current_user_can('administrate')) {
+		if (isset($_REQUEST['bb_polls_reset'])) {
+			unset($bb_polls); 		
+			bb_delete_option('bb_polls');
+			bb_polls_initialize();			
+			bb_update_option('bb_polls',$bb_polls);
+			bb_admin_notice('<b>bbPress Polls: '.__('All Settings Reset To Defaults.').'</b>'); 	// , 'error' 			
+			wp_redirect(remove_query_arg(array('bb_polls_reset')));	// bug workaround, page doesn't show reset settings
+		}		
+		elseif (isset($_POST['submit']) && isset($_POST['bb_polls'])) {
+							
+			foreach(array_keys( $bb_polls) as $key) {
+				if (isset($_POST[$key])) {$bb_polls[$key]=$_POST[$key];}
+			}
+		
+			bb_update_option('bb_polls',$bb_polls);
+			bb_admin_notice('<b>bbPress Polls: '.__('All Settings Saved.').'</b>');
+			// unset($GLOBALS['bb_polls']); $bb_polls = bb_get_option('bb_polls');
+		}
+	}
+}
+
 ?>

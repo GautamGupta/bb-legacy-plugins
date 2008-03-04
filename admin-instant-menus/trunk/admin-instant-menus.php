@@ -3,7 +3,7 @@
 Plugin Name: Admin Instant Menus
 Plugin URI: http://bbpress.org/plugins/topic/95
 Description: Makes the third row of options in the admin menu instantly available without extra clicks. Conversion with code and CSS tweaks from WordPress based on <a href="http://planetozh.com/blog/my-projects/wordpress-admin-menu-drop-down-css/">Ozh</a>'s original. 
-Version: 1.0
+Version: 1.01
 Author: _ck_
 Author http://bbShowcase.org
 
@@ -139,7 +139,7 @@ function admin_instant_menus_old_printjs ($admin = '') {
 	print "<script type=\"text/javascript\">";		
 	print "document.getElementById('bb-admin-menu').innerHTML=\"$admin\";";
 	print "if (!document.getElementById('bb-admin-submenu')) {newUL = document.createElement(\"UL\"); newUL.setAttribute(\"id\", \"bb-admin-submenu\"); document.getElementById('bb-admin-menu').parentNode.insertBefore(newUL, document.getElementById('bb-admin-menu').nextSibling);	document.getElementById('bb-admin-submenu').innerHTML=\"<li class='altmenu_empty' title='This menu has no sub menu'><small>&#8230;</small></li><li style='padding:0 300px'>&nbsp;</li>\"; }";
-	
+	// print "else {document.getElementById('bb-admin-submenu').innerHTML=\"<li>&nbsp;</li><li>&nbsp;</li><li>&nbsp;</li><li>&nbsp;</li><li>&nbsp;</li><li>&nbsp;</li>\";}";
 	print "</script>";
 }
 
@@ -206,30 +206,28 @@ function admin_instant_menus_css() {
 		color: #fff;
 		font-weight:bold;	
 	}
-	
-	/* Stuff for MSIE */
-	* html $id li .ulcurrent {
+CSS;
+if (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') ) { // && strpos($_SERVER['HTTP_USER_AGENT'], 'Win') 
+print <<<CSS
+	$id li .ulcurrent {
 		width:200%; 	
 	}
-	* html $id li a {
+	$id li a {
 		margin-right:0.3em;
-	}
-	
-	* html $id li.msieFix ul, {
+	}	
+	$id li.msieFix ul, {
 		margin:2em 0;
 		width:300%;
 		left:0;
 	}
-	* html $id li ul {
+	$id li ul {
 		margin:2em 0;
 		padding-left: 3em;
-	}
-	
-	
-	/**/
-	</style>
-
+	}	
 CSS;
+}
+print "	</style>";
+
 }
 
 ?>

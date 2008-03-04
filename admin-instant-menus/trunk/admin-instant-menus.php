@@ -3,7 +3,7 @@
 Plugin Name: Admin Instant Menus
 Plugin URI: http://bbpress.org/plugins/topic/95
 Description: Makes the third row of options in the admin menu instantly available without extra clicks. Conversion with code and CSS tweaks from WordPress based on <a href="http://planetozh.com/blog/my-projects/wordpress-admin-menu-drop-down-css/">Ozh</a>'s original. 
-Version: 1.01
+Version: 1.02
 Author: _ck_
 Author http://bbShowcase.org
 
@@ -150,7 +150,7 @@ function admin_instant_menus_css() {
 	print <<<CSS
 	<style>	
 	$id {
-		height: 1.8em;		
+		height: 2em;		
 	}
 	$id .current {
 		background: #ddf4ea;
@@ -158,8 +158,7 @@ function admin_instant_menus_css() {
 		font-weight: bold;
 	}			
 	#bb-admin-submenu {
-		height: 1.8em;
-		line-height:170%;		
+		height: 2em;	
 	}		
 	$id li ul li {
 		float: left;
@@ -182,6 +181,7 @@ function admin_instant_menus_css() {
 		left: -3000px;
 		background: #0D4F32;				
 		margin:0;
+		padding-top: 0.2em;
 	}
 	$id li:hover ul,$id li.msieFix ul {
 		left:0px;
@@ -216,13 +216,12 @@ print <<<CSS
 		margin-right:0.3em;
 	}	
 	$id li.msieFix ul, {
-		margin:2em 0;
 		width:300%;
 		left:0;
 	}
 	$id li ul {
-		margin:2em 0;
-		padding-left: 3em;
+		padding-left: 3em;		
+		margin-top:1.9em;		
 	}	
 CSS;
 }

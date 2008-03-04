@@ -1,5 +1,5 @@
 === Admin Instant Menus  ===
-Tags: admin, administrate, drop-down, menus, slider, _ck_
+Tags: admin, administrate, drop-down, menu, menus, _ck_
 Contributors: _ck_
 Requires at least: 0.8.2
 Tested up to: 0.8 branch

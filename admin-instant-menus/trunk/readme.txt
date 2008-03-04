@@ -10,9 +10,11 @@ Makes the third row of options in the admin menu instantly available without ext
 
 == Description ==
 
-* Conversion with many additional code and CSS tweaks from WordPress based on <a href="http://planetozh.com/blog/my-projects/wordpress-admin-menu-drop-down-css/">Ozh</a>'s original. 
+* Makes the third row of options in the admin menu instantly available without extra clicks. 
 
-* <a href="http://planetozh.com/download/plugins/wordpress-admin-dropdown-menu-demo.html">Demo of the WordPress version to get an idea...</a> 
+* Conversion (with many additional code and CSS tweaks) from WordPress based on <a href="http://planetozh.com/blog/my-projects/wordpress-admin-menu-drop-down-css/">Ozh</a>'s original. 
+
+* <a href="http://planetozh.com/download/plugins/wordpress-admin-dropdown-menu-demo.html">demo of WordPress version to get an idea</a>
 
 * This was a bit harder than just a simple port like I had hoped!  Hope it's helpful to others.
 

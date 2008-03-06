@@ -62,3 +62,6 @@ This will create a list of themes for your readers to select.
 
 * enhanced to return to original location after theme switch instead of front page, also small bug fixes/tweaks
 
+= Version 1.14 (2008-3-06) =
+
+* update to match theme method in 0.8.4 while remaining backward compatible with 0.8.3

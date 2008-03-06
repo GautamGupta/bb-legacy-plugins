@@ -3,7 +3,7 @@
 Plugin Name: bbPress Theme Switcher
 Plugin URI: http://bbpress.org/plugins/topic/70
 Description: Allows your members and guests to switch between themes. Optional timer to return to default theme.
-Version: 1.10
+Version: 1.14
 Author: _ck_
 Author URI:  http://bbshowcase.org
 Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
@@ -75,12 +75,18 @@ function bb_ts_get_theme() { global $bbhash;
 function bb_ts_get_active_theme_uri($uri) {
 	$theme = bb_ts_get_theme(); 
 	if (empty($theme)) {return $uri;}
-	$active_uri=bb_get_theme_uri(bb_get_one_theme($theme));	
+	$theme=bb_get_one_theme($theme);	
+	$active_uri="";
+	if ( 0 === strpos($theme, BBTHEMEDIR) )
+		$active_uri = BBTHEMEURL . substr($theme, strlen(BBTHEMEDIR));
+	elseif ( 0 === strpos($theme, BBPATH) )
+		$active_uri = bb_get_option( 'uri' ) . substr($theme, strlen(BBPATH));
 	if ($active_uri) {return $active_uri;} else {return $uri;}
 }
 
 function bb_get_one_theme($theme) {
-	$themes = bb_get_all_themes();
+	$themes = bb_get_all_themes();	
+ 	// print " <!-- "; print bb_get_option( 'uri' ).'/'.str_replace(BBPATH,'',$themes[$theme]); print BBPATH.' - '.$themes[$theme]; print " --> ";	// diagnostic
 	if (array_key_exists($theme, $themes)) {return $themes[$theme];}	
 	return NULL;
 }
@@ -120,11 +126,13 @@ function bb_ts_get_template($template) {
 }
 
 
-function bb_theme_switcher($style = "text") { global $bbhash;
+function bb_theme_switcher($style = "text") { 
+	global $bbhash;
 	$themes = bb_get_all_themes();
-
-	$default_theme = array_search(bb_get_option('bb_active_theme'),$themes);  //  get_current_theme();
-
+	
+	$default_theme=str_replace(array('core#', 'user#'),'', bb_get_option('bb_active_theme'));
+	if (!array_key_exists($default_theme, $themes)) {$default_theme =array_search($default_theme,$themes);}
+		
 	if (count($themes) > 1) {
 		$theme_names = array_keys($themes);
 		natcasesort($theme_names);

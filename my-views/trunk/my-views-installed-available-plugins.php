@@ -74,8 +74,9 @@ $current = (array) bb_get_option( 'active_plugins' );
 		<th>Status</th>
 	</tr>
 
-<?php foreach (array($plugins,$_plugins) as $loop) {
-if ($loop) {
+<?php $count=0;
+foreach (array($plugins,$_plugins) as $loop) {
+if ($loop) { 
 foreach ( $loop as $p => $plugin ) : $class = in_array($p, $current) ? 'active' : ''; ?>
 	<tr<?php alt_class( 'plugin', $class ); ?>>
 		<td><?php echo $plugin['plugin_link']; ?></td>
@@ -85,12 +86,12 @@ foreach ( $loop as $p => $plugin ) : $class = in_array($p, $current) ? 'active' 
 		<td class="action" align=center nowrap>
 	<?php if ( $class ) { echo "active"; } else { if ($loop==$_plugins) {echo "autoload";} else {echo "inactive"; }} ?>	
 	</td></tr>
-<?php endforeach; 
+<?php ++$count; endforeach;  
 }
 }
 endif; ?>
 
-<tr class=sortbottom><th nowrap>Total Plugins: <?php echo count($plugins); ?></th><th nowrap>Authors: <?php echo count(array_unique($authors)); ?></th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th></tr>
+<tr class=sortbottom><th nowrap>Total Plugins: <?php echo $count; ?></th><th nowrap>Authors: <?php echo count(array_unique($authors)); ?></th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th></tr>
 </table>
 
 <?php
@@ -168,13 +169,14 @@ if (!class_exists("Plugin_Browser")) {return;}
 			</tr>		
 		
 <?php
-	$plugins = $plugin_browser->getLocalRepositoryList();
+	$plugins = $plugin_browser->getLocalRepositoryList(); $count=0;
 	
 	// $bb_plugins = bb_get_plugins();
 	// $bb_plugins_keys = array_map(create_function('$input', 'return preg_replace("|pb\-\-([^/]+)/.*|", "$1", $input);'), array_keys($bb_plugins));
 	
 	foreach ($plugins as $plugin) {
 		if ($plugin['version']) {
+			++$count;
 			$upgradeText = null;
 			$action = 'install';
 			$actionText = __('Install');
@@ -192,10 +194,11 @@ if (!class_exists("Plugin_Browser")) {return;}
 <?php
 		}
 	}
+
 ?>
 		
 		
-		<tr class=sortbottom><th nowrap>Total Plugins: <?php echo count($plugins); ?></th><th nowrap>Authors: <?php echo count(array_unique($authors)); ?></th><th>&nbsp;</th><th>&nbsp;</th></tr>
+		<tr class=sortbottom><th nowrap>Total Plugins: <?php echo $count; ?></th><th nowrap>Authors: <?php echo count(array_unique($authors)); ?></th><th>&nbsp;</th><th>&nbsp;</th></tr>
 
 	</table>
 	

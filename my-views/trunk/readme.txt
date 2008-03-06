@@ -1,9 +1,11 @@
 === My Views  ===
 Tags: view, views, most viewed, least viewed, my topics, _ck_
 Contributors: _ck_
-Requires at least: 0.8
-Tested up to:  1.0 alpha build 1075
+Requires at least: 0.8.2
+Tested up to:  trunk alpha 1075
 Stable tag: trunk
+Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+
 
 My Views is a powerful addition to the default "views" in bbPress. It will let you customize output and adds several new views.
 

@@ -5,7 +5,7 @@ Description: This plugin is part of the My Views plugin. It adds Installed/Avail
 Plugin URI:  http://bbpress.org/plugins/topic/67
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.09
+Version: 0.091
 */ 
 
 if (is_callable('bb_register_view')) {	// Build 876+   alpha trunk
@@ -58,17 +58,30 @@ function my_views_available_themes() {
 			</tr>		
 		
 <?php 
-$themes = bb_get_themes();
-$activetheme = bb_get_option('bb_active_theme');
 
-// bb_admin_theme_row( $themes[basename($activetheme)] ); unset($themes[basename($activetheme)] ); 
+$themes = array();	// $themes = bb_get_themes();
+$theme_roots = array(BBPATH . 'bb-templates/', BBTHEMEDIR );
+foreach ( $theme_roots as $theme_root )
+	if ( $themes_dir = @dir($theme_root) )
+		while( ( $theme_dir = $themes_dir->read() ) !== false )
+			if ( is_dir($theme_root . $theme_dir) && is_readable($theme_root . $theme_dir) && '.' != $theme_dir{0} )
+				$themes[$theme_dir] = $theme_root . $theme_dir . '/';
+
+ksort($themes);
+
+// $activetheme = bb_get_option('bb_active_theme'); bb_admin_theme_row( $themes[basename($activetheme)] ); unset($themes[basename($activetheme)] ); 
+$count=0;
 foreach ( $themes as $theme ) {
 
 	$theme_data = file_exists( $theme . 'style.css' ) ? my_views_get_theme_data( $theme . 'style.css' ) : false;
-	$screen_shot = file_exists( $theme . 'screenshot.png' ) ? clean_url( bb_get_theme_uri( $theme . 'screenshot.png' ) ) : false;
+	if (file_exists( $theme . 'screenshot.png' )) {
+		if ( 0 === strpos($theme, BBTHEMEDIR) ) {$screen_shot = BBTHEMEURL . substr($theme, strlen(BBTHEMEDIR))."screenshot.png";}
+		elseif ( 0 === strpos($theme, BBPATH) ) {$screen_shot = bb_get_option( 'uri' ) . substr($theme, strlen(BBPATH))."screenshot.png";}
+	} else {$screen_shot=false;}
 	if (function_exists('bb_ts_set_theme_cookie')) {$activation_url = '?bbtheme='.urlencode(basename($theme));}
 	else {$activation_url="#";} // clean_url( bb_nonce_url( add_query_arg( 'theme', urlencode($theme), bb_get_option( 'uri' ) . 'bb-admin/themes.php' ), 'switch-theme' ) );
 	$authors[]=trim(strip_tags( $theme_data['Author']));
+	++$count;
 ?>
 	<tr<?php alt_class( 'theme', $class ); ?>>		
 		
@@ -86,7 +99,7 @@ foreach ( $themes as $theme ) {
 	
 <?php } ?>	
 		
-	<tr class=sortbottom><th nowrap>Total Themes: <?php echo count($themes)+1; ?></th><th nowrap>Authors: <?php echo count(array_unique($authors))+1; ?></th><th>&nbsp;</th></tr>
+	<tr class=sortbottom><th nowrap>Total Themes: <?php echo $count; ?></th><th nowrap>Authors: <?php echo count(array_unique($authors)); ?></th><th>&nbsp;</th></tr>
 
 	</table>
 	

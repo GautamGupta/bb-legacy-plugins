@@ -61,7 +61,7 @@ if ($view=='latest-discussions' || ($user_id && ($view=='my-topics' || $view=='m
 	$query = " FROM $bbdb->topics WHERE topic_status=0  $where ";
 	$restrict = " ORDER BY cast(topic_last_post_id as UNSIGNED) $sort LIMIT $limit OFFSET $offset";	// topic_last_post_id is lazy/faster way to sort by newest
 
-	$view_count  = $bbdb->get_var("SELECT count(*) ".$query);	 //  bb_count_last_query();  // count($topics);		
+	$view_count  = $bbdb->get_var("SELECT count(*) ".$query);	 //  bb_count_last_query();  // count($topics);			
 	$topics = $bbdb->get_results("SELECT * ".$query.$restrict);
 	$topics = bb_append_meta( $topics, 'topic' );	
 }

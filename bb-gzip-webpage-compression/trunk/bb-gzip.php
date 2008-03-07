@@ -1,27 +1,16 @@
 <?php
 /*
-Plugin Name: bbPress Web Compress (bb-gzip)
+Plugin Name: bbPress Web Compression (bb-gzip)
 Description:  compresses bbpress pages on the fly
 Plugin URI:  http://bbpress.org/plugins/topic/66
 Author: _ck_
-Author URI: http://CKon.wordpress.com
+Author URI: http://bbShowcase.org
 Version: 0.02
-*/
-/*
+
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
-Makes bbPress pages smaller and faster for all modern web browsers that support it and leaves others alone. This plugin is only for those that do not have compression available on their host.
-
-== Description ==
-
-This plugin is only for bbPress users on servers which have no other compression methods installed (mod_gzip, mod_deflate, etc.)
-Please check to make sure your pages are NOT already compressed, ie. via http://www.pipeboost.com/report.asp or http://whatsmyip.org/mod_gzip_test/
-
-bbPress Web Compress gzips output to all modern web browsers that support it and leaves others alone.
-A 30k page can be reduced to as little as 5k which can be appreciated even on broadband and reduce your hosting bill if you are near your limit.
-Your static files, css, javascript & images will not be compressed.
-
-(some coders think this is as easy as setting ob_start("ob_gzhandler") but there are often missed checks and performance options)
+Makes bbPress pages smaller and faster for all modern web browsers that support it and leaves others alone. 
+This plugin is only for those that do not have compression available on their host.
 
 == Instructions ==
 

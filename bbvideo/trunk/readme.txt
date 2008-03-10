@@ -1,11 +1,11 @@
 === bbVideo ===
 Tags: video, embed, embedding, embedded, multimedia, film, media, videos, youtube, flashvideo, flashvideos
-Contributors: naden
+Contributors: Naden Badalgogtapeh
 Requires at least: 0.8.3
 Tested up to: 0.8.3.1
 Stable Tag: 0.8.3
 
-Converts links pointing to videos to embedded players.
+Converts links pointing to videos to embeded players.
 
 == Description ==
 
@@ -13,7 +13,7 @@ This plugin converts all links to knowen videos portals to the matching embedded
 
 == Installation ==
 
-Add `/bbvideo/` to your `/my-plugins/` directory!
+Add `/bbvideo/` to your `/my-plugins/` directory.
 
 == Configuration ==
 

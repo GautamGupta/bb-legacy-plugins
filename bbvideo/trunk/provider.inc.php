@@ -28,6 +28,7 @@ $this->provider = array(
 #		'pattern' => 'youtube\.(.*)/v(=|\/)([a-zA-Z0-9_-]*)',
 		'pattern' => 'youtube\.(.*)/watch\?v=([a-zA-Z0-9_-]*)',
 		'index' => 2,
+#    'code' => "<object width='[WIDTH]' height='[HEIGHT]'><param name='movie' value='http://www.youtube.com/v/[ID]&rel=1'></param><param name='wmode' value='transparent'></param><embed src='http://www.youtube.com/v/[ID]&rel=1' type='application/x-shockwave-flash' wmode='transparent' width='[WIDTH]' height='[HEIGHT]'></embed></object>",
 		'code' => '<object width="[WIDTH]" height="[HEIGHT]"><param name="movie" value="http://www.youtube.com/v/[ID]&rel=1"></param><param name="wmode" value="transparent"></param><embed src="http://www.youtube.com/v/[ID]&rel=1" type="application/x-shockwave-flash" wmode="transparent" width="[WIDTH]" height="[HEIGHT]"></embed></object>',
 		'page_url' => 'http://www.youtube.com'
 	),
@@ -98,7 +99,8 @@ $this->provider = array(
 	'googlevideo' => array(
 		'width' => '425',
 		'height' => '350',
-		'pattern' => 'docid=([a-zA-Z0-9_-]*)',
+#    'pattern' => 'video\.google\.(.*)/([url|videoplay].?)\?docid=([a-zA-Z0-9_-]*)',
+    'pattern' => 'video\.google\.(.*)/(videoplay)?(url)?\?docid=([a-zA-Z0-9_-]*)',
 		'index' => 1,
 		'code' => '<embed style="width:[WIDTH]px; height:[HEIGHT]px;" id="VideoPlayback" type="application/x-shockwave-flash" src="http://video.google.com/googleplayer.swf?docId=[ID]&hl=de" flashvars=""></embed>',
 		'page_url' => 'http://video.google.com'
@@ -116,13 +118,13 @@ $this->provider = array(
 		'height' => '350',
 		'pattern' => 'metacafe\.com/watch/([0-9].*?)/',
 		'index' => 1,
-		'code' => '<embed flashVars="altServerURL=http://www.metacafe.com&playerVars=showStats=yes|autoPlay=no|blogName=Grobekelle|blogURL=http://www.grobekelle.de" src="http://www.metacafe.com/fplayer/[ID]/what_if.swf" width="[WIDTH]" height="[HEIGHT]" wmode="transparent"></embed>',
+		'code' => '<embed flashVars="altServerURL=http://www.metacafe.com&playerVars=showStats=yes|autoPlay=no|blogName=naden.de|blogURL=http://www.naden.de" src="http://www.metacafe.com/fplayer/[ID]/what_if.swf" width="[WIDTH]" height="[HEIGHT]" wmode="transparent"></embed>',
 		'page_url' => 'http://www.metacafe.com'
 	),
 	'clipfish' => array(
 		'width' => '425',
 		'height' => '350',
-		'pattern' => 'videoid=([a-zA-z0-9]*)',
+		'pattern' => 'clipfish\.de/player\.php\?videoid=([a-zA-z0-9]*)',
 		'index' => 1,
 		'code' => '<embed src="http://www.clipfish.de/videoplayer.swf?as=0&videoid=[ID]&r=1" quality="high" bgcolor="#cacaca" width="[WIDTH]" height="[HEIGHT]" name="player" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash"></embed>',
 		'page_url' => 'http://www.clipfish.de'

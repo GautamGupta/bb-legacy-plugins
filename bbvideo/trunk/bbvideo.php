@@ -5,7 +5,7 @@ Plugin URI: http://www.naden.de/blog/bbvideo-bbpress-video-plugin
 Description: <strong>English:</strong> Converts Video-Links in your forum posts to embedded Video-Players.<br /><strong>Deutsch:</strong> Wandelt Video-Links in den Forenbeitr&auml;gen in Video-Player um.<br /><em>Supports: Youtube, Dailymotion, MyVideo Google Video and many <a href="http://www.naden.de/blog/bbvideo-bbpress-video-plugin#video-provider" target="_blank">more ...</a></em>
 Author: Naden Badalgogtapeh
 Author URI: http://www.naden.de/blog
-Version: 0.1
+Version: 0.2
 */
 
 /**
@@ -24,25 +24,61 @@ class BBPressPluginBBVideo
   var $version;
   
   /**
+   * plugin options
+   */
+  var $options;
+  
+  var $wp_filter_id;
+  
+  /**
    * public constructor
    */
   function BBPressPluginBBVideo()
   {
-    $this->version = '0.1';
+    $this->version = '0.2';
+    
+    $this->wp_filter_id = 'bbvideo';
 
-    // include list of video providers
-    @include_once( dirname( __FILE__ ) . '/provider.inc.php' );
+    $this->options = bb_get_option( 'bbvideo_options' );
 
-    // content filter only on topics
-    if( is_topic() )
+    if( is_null( $this->options ) )
     {
-      // add content filter
-      add_filter( 'post_text', array( &$this, 'ContentFilter' ), 9 );
+      $this->SaveOptions( array( 'embed' => 1 ), false );
     }
-    else
+    
+    $this->provider = array();
+    
+    // include list of video providers
+    if( @include_once( dirname( __FILE__ ) . '/provider.inc.php' ) )
     {
-      /// add admin panel
-      add_action( 'bb_admin_menu_generator', array( &$this, 'AddAdminPage' ) );
+      // content filter only on topics
+      if( is_topic() )
+      {
+        // header stuff
+        add_action( 'bb_head', array( &$this, 'AddHeader' ) );
+        // add content filter
+        add_filter( 'post_text', array( &$this, 'ContentFilter' ), 9 );
+      }
+      else
+      {
+        /// add admin panel
+        add_action( 'bb_admin_menu_generator', array( &$this, 'AddAdminPage' ) );
+      }
+    }
+  }
+  
+  function SaveOptions( $options, $verbose = true )
+  {
+    foreach( $options as $key => $value )
+    {
+      $this->options[ $key ] = $value;
+    }
+
+    bb_update_option( 'bbvideo_options', $this->options );
+    
+    if( $verbose )
+    {
+      print( __( '<div class="updated">Settings Saved</div>' ) );
     }
   }
 
@@ -51,6 +87,37 @@ class BBPressPluginBBVideo
 	  global $bbdb, $bb, $bb_table_prefix;
 
     @include_once( dirname( __FILE__ ) . '/admin.php' );
+  }
+  
+  function AddHeader()
+  {
+    if( $this->options[ 'embed' ] == 1 )
+    {
+      $code = <<<DATA
+      <!-- bbVideo Plugin v{$this->version} - http://www.naden.de/blog/bbvideo-bbpress-video-plugin -->
+      <script type="text/javascript">
+      function bbvideo_embed( sender ) {
+        var area = document.getElementById( sender.id + 'embed' );
+        if( area ) {
+          if( area.style.display == 'normal' || area.style.display == 'block' ) {
+            sender.innerHTML = sender.innerHTML.replace( /-/, '+' );
+            area.style.display = 'none';
+          }
+          else {
+            sender.innerHTML = sender.innerHTML.replace( /\+/, '-' );
+            area.style.display = 'block';
+          }
+        }
+        return( false );
+      }
+      </script>
+      <!-- // bbVideo Plugin -->
+DATA;
+    
+      print( $code );
+    
+      unset( $code );
+    }
   }
 
   function AddAdminPage()
@@ -63,6 +130,20 @@ class BBPressPluginBBVideo
   function DisplayProvider( $mask = '<small><a href="http://www.naden.de/blog/bbvideo-bbpress-video-plugin#video-provider">%s</a></small>', $pre = '<p>', $post = '</p>' )
   {
     printf( $pre . $mask . $post, implode( ', ', array_keys( $this->provider ) ) );
+  }
+ 
+  function GetTitle( $s )
+  {
+    $magic = 0;
+    
+    for( $k=0; $k<strlen( $s ); $k++ )
+    {
+      $magic += ord( $s[ $k ] );
+    }
+
+    $titles = array( 'video plugin', 'video plugins', 'video widget', 'video player', 'flash video', 'flash videos' );
+
+    return( @ucwords( $titles[ $magic % count( $titles ) ] ) );
   }
 
   function ContentFilter( $buffer )
@@ -88,12 +169,34 @@ class BBPressPluginBBVideo
             $provider[ 'code' ]
           );
           
-          $url = '<a href="http://www.naden.de/blog/bbvideo-bbpress-video-plugin" style="color:#aaa;text-decoration:underline;">Video Plugin</a>';
-          
-          if( $index == 0 )
+          $url = sprintf( '<a href="http://www.naden.de/blog/bbvideo-bbpress-video-plugin" style="color:#aaa;text-decoration:underline;">%s</a>', $this->GetTitle( get_topic_title() ) );
+
+          if( $this->options[ 'embed' ] == 1 )
+          {
+            $post_title = get_topic_title();
+            $post_link  = get_topic_link();
+            
+            $code = <<<DATA
+            <!-- bbVideo Plugin v{$this->version} - http://www.naden.de/blog/bbvideo-bbpress-video-plugin -->
+            <div style="width:{$provider[ 'width' ]}px;">{$code}<div>
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr><td><a href="" id="bbvideo{$index}" onclick="javascript:return(bbvideo_embed(this));" style="color: #000;">[+] Embed the video</a></td><td align="right" style="color:#aaa;font-size:80%;">Get the {$url}</td></tr></table>
+  
+            <div id="bbvideo{$index}embed" style="display:none;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr><td width="80">Text-Link:</td><td><input type="text" value="{$post_link}" onclick="javascript:this.focus();this.select();" style="width:100%;" /></td></tr>
+            <tr><td width="80">HTML-Link:</td><td><input type="text" value='<a href="{$post_link}">{$post_title}</a>' onclick="javascript:this.focus();this.select();" style="width:100%;" /></td></tr>
+            <tr><td width="80">BB-Code:</td><td><input type="text" value="[url={$post_link}]{$post_title}[/url]" onclick="javascript:this.focus();this.select();" style="width:100%;" /></td></tr>
+            <tr><td width="80">Embed:</td><td><input type="text" value='<div style="width:{$provider[ 'width' ]}px;">{$code}<div align="right" style="color:#aaa;font-size:80%;">Get the {$url}</div></div>' onclick="javascript:this.focus();this.select();" style="width:100%;" /></td></tr>
+            </table>
+            </div></div></div>
+            <!-- // bbVideo Plugin -->
+DATA;
+          }
+          else
           {          
             $code = "<div style=\"width:{$provider[ 'width' ]}px;\">{$code}<div align=\"right\" style=\"color:#aaa;font-size:80%;\">Get the {$url}</div></div>";
-          }
+          } 
 
           /// replace link w/ embed-code
           $buffer = str_replace( 
@@ -104,10 +207,9 @@ class BBPressPluginBBVideo
           
           unset( $code );
           
-          $index ++;
-          
           break;
         }
+        $index ++;
       }
       reset( $this->provider );
     }

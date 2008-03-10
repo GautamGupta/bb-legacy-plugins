@@ -5,7 +5,7 @@ Plugin URI: http://www.naden.de/blog/bbvideo-bbpress-video-plugin
 Description: <strong>English:</strong> Converts Video-Links in your forum posts to embedded Video-Players.<br /><strong>Deutsch:</strong> Wandelt Video-Links in den Forenbeitr&auml;gen in Video-Player um.<br /><em>Supports: Youtube, Dailymotion, MyVideo Google Video and many <a href="http://www.naden.de/blog/bbvideo-bbpress-video-plugin#video-provider" target="_blank">more ...</a></em>
 Author: Naden Badalgogtapeh
 Author URI: http://www.naden.de/blog
-Version: 0.2
+Version: 0.21
 */
 
 /**
@@ -27,17 +27,27 @@ class BBPressPluginBBVideo
    * plugin options
    */
   var $options;
-  
+
+  /**
+   * plugin id for filter hooks
+   */
   var $wp_filter_id;
+
+  /**
+  * global index for embedding
+  */
+  var $index;
   
   /**
    * public constructor
    */
   function BBPressPluginBBVideo()
   {
-    $this->version = '0.2';
+    $this->version = '0.21';
     
     $this->wp_filter_id = 'bbvideo';
+
+	$this->index = 0;
 
     $this->options = bb_get_option( 'bbvideo_options' );
 
@@ -152,7 +162,6 @@ DATA;
     @preg_match_all( '|http([s]?)\://(.*)|i', $buffer, $links, PREG_PATTERN_ORDER );
     
     $count = count( $links[ 0 ] );
-    $index = 0;
     
     foreach( $links[ 0 ] as $link )
     {
@@ -180,9 +189,9 @@ DATA;
             <!-- bbVideo Plugin v{$this->version} - http://www.naden.de/blog/bbvideo-bbpress-video-plugin -->
             <div style="width:{$provider[ 'width' ]}px;">{$code}<div>
             <table width="100%" cellpadding="0" cellspacing="0" border="0">
-            <tr><td><a href="" id="bbvideo{$index}" onclick="javascript:return(bbvideo_embed(this));" style="color: #000;">[+] Embed the video</a></td><td align="right" style="color:#aaa;font-size:80%;">Get the {$url}</td></tr></table>
+            <tr><td><a href="" id="bbvideo{$this->index}" onclick="javascript:return(bbvideo_embed(this));" style="color: #000;">[+] Embed the video</a></td><td align="right" style="color:#aaa;font-size:80%;">Get the {$url}</td></tr></table>
   
-            <div id="bbvideo{$index}embed" style="display:none;">
+            <div id="bbvideo{$this->index}embed" style="display:none;">
             <table width="100%" cellpadding="0" cellspacing="0" border="0">
             <tr><td width="80">Text-Link:</td><td><input type="text" value="{$post_link}" onclick="javascript:this.focus();this.select();" style="width:100%;" /></td></tr>
             <tr><td width="80">HTML-Link:</td><td><input type="text" value='<a href="{$post_link}">{$post_title}</a>' onclick="javascript:this.focus();this.select();" style="width:100%;" /></td></tr>
@@ -209,8 +218,11 @@ DATA;
           
           break;
         }
-        $index ++;
+        
       }
+	  
+	  $this->index ++;
+
       reset( $this->provider );
     }
     

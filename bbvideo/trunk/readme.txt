@@ -9,7 +9,7 @@ Converts links pointing to videos to embeded players.
 
 == Description ==
 
-This plugin converts all links to knowen videos portals to the matching embedded players.
+This plugin converts all links to knowen videos portals to the matching embedded players and supports the reader with easy sharing options.
 
 == Installation ==
 

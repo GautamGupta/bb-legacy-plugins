@@ -5,7 +5,7 @@ Description:  allows users to add polls to topics, with optional ajax-like actio
 Plugin URI:  http://bbpress.org/plugins/topic/62
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.50
+Version: 0.51
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -119,7 +119,7 @@ function bb_polls_initialize() {
 	$bb_polls_type['test_mode']="binary";
 
 	$bb_polls_type['style']="textarea";
-/*						
+						
 	$bb_polls_type['poll_question']="text";
 	$bb_polls_type['poll_instructions']="text";
 	$bb_polls_type['label_single']="text";
@@ -137,7 +137,7 @@ function bb_polls_initialize() {
 	$bb_polls_type['label_now_text']="text";
 	$bb_polls_type['label_nocheck_text']="text";
 	$bb_polls_type['label_warning_text']="text";
-*/	
+	
 	
 	$bb_polls_label['minimum_view_level']=__("At what level can users SEE polls?");
 	$bb_polls_label['minimum_vote_level']=__("At what level can users VOTE on polls?");
@@ -163,7 +163,6 @@ function bb_polls_initialize() {
 
 	$bb_polls_label['style']=__("Custom CSS style for polls:");
 
-/*				
 	$bb_polls_label['poll_question']=__("Question to ask to start poll:");
 	$bb_polls_label['poll_instructions']=__("Instructions to add poll:");
 	$bb_polls_label['label_single']=__("Label for single vote selections:");
@@ -181,7 +180,6 @@ function bb_polls_initialize() {
 	$bb_polls_label['label_now_text']=__("Text to show for VOTE NOW label:");
 	$bb_polls_label['label_nocheck_text']=__("No selection warning:");
 	$bb_polls_label['label_warning_text']=__("Delete warning:");
-*/		
 
 	// }	
 
@@ -552,7 +550,7 @@ function bb_polls_admin_page() {
 					$bb_polls[$key]=stripslashes_deep($bb_polls[$key]);					
 					$colspan= (substr($bb_polls_type[$key],0,strpos($bb_polls_type[$key].",",","))=="array") ? "2" : "1";
 						?>
-						<tr <?php alt_class('recount'); ?>
+						<tr <?php alt_class('recount'); ?>>
 							<td nowrap colspan=<?php echo $colspan; ?>>
 							<label for="bb_polls_<?php echo $key; ?>">
 							<b><?php  if ($bb_polls_label[$key])  {echo $bb_polls_label[$key];} else {echo ucwords(str_replace("_"," ",$key));} ?></b>

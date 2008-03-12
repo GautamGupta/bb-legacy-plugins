@@ -1,25 +1,27 @@
 <?php
-/*
-Plugin Name: Sphere Related Content for bbPress
-Plugin URI: http://bbpress.org/plugins/topic/58
-Description: Automatically show related blog posts and news articles from Sphere.
-Author: Sam Bauers
-Author URI: 
-Version: 0.2
-
-Version History:
-0.1		: Ported from original WordPress Plugin by Watershed Studio, LLC
-0.2		: When the scope is set to first, only show the Sphere link on the first page
-*/
-
-
 /**
- * Sphere Related Content for bbPress version 0.2
+ * Sphere Related Content for bbPress version 0.2.1
+ * 
+ * Plugin Name: Sphere Related Content for bbPress
+ * Plugin URI: http://bbpress.org/plugins/topic/58
+ * Description: Automatically show related blog posts and news articles from Sphere.
+ * Author: Sam Bauers
+ * Author URI: http://unlettered.org/
+ * Version: 0.2.1
+ * 
+ * ----------------------------------------------------------------------------------
+ * 
+ * Version History:
+ * 0.1		: Ported from original WordPress Plugin by Watershed Studio, LLC
+ * 0.2		: When the scope is set to first, only show the Sphere link on the first page
+ * 0.2.1	: Tested up to bbPress version 0.9
+ * 			: Stop registering of admin interface where possible
+ * 			: Re-arrange header block, edit contact details
  * 
  * ----------------------------------------------------------------------------------
  * 
  * Copyright (C) 2007 Sphere (plugins@sphere.com)
- * Copyright (C) 2007 Sam Bauers (sam@viveka.net.au)
+ * Copyright (C) 2007 Sam Bauers (sam@automattic.com)
  * 
  * ----------------------------------------------------------------------------------
  * 
@@ -45,11 +47,11 @@ Version History:
  * 
  * ----------------------------------------------------------------------------------
  * 
- * @author    Sam Bauers <sam@viveka.net.au>
+ * @author    Sam Bauers <sam@automattic.com>
  * @copyright 2007 Sphere
  * @copyright 2007 Sam Bauers
  * @license   http://www.gnu.org/licenses/gpl.txt GNU General Public License v2
- * @version   0.2
+ * @version   0.2.1
  **/
 
 
@@ -171,6 +173,12 @@ add_action('post_text','bb_sphere_post');
  * The admin pages below are handled outside of the class due to constraints
  * in the architecture of the admin menu generation routine in bbPress
  */
+
+
+// Don't bother with registering admin interface if not in admin (bbPress 0.9+ only)
+if (defined('BB_IS_ADMIN') && !BB_IS_ADMIN) {
+	return;
+}
 
 
 // Add filters for the admin area

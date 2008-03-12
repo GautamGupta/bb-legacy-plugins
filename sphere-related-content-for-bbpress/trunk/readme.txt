@@ -1,16 +1,16 @@
 === Sphere related content for bbPress ===
-Contributors: SamBauers
+Contributors: sambauers
 Tags: sphere
 Requires at least: 0.8.2.1
-Tested up to: 1.0 alpha build 911
-Stable tag: NA
+Tested up to: 0.9
+Stable tag: 0.2.1
 
 Adds a Sphere search link to topics
 
 == License ==
 
 Sphere related content for bbPress version 0.2.1
-Copyright (C) 2007 Sam Bauers (sam@viveka.net.au)
+Copyright (C) 2007 Sam Bauers (sam@automattic.com)
 
 Sphere related content for bbPress comes with ABSOLUTELY NO WARRANTY
 This is free software, and you are welcome to redistribute
@@ -42,7 +42,7 @@ After activating the plugin you can go to it's admin page to select what
 type of Sphere content plugin you wish to use in your forum.
 
 You can also choose to have Sphere retrieve content related to just the first
-post, instead of all posts (which is the default behaviour).
+post, instead of all posts ("all posts" is the default behaviour).
 
 == Version History ==
 
@@ -50,3 +50,7 @@ post, instead of all posts (which is the default behaviour).
   <br />Ported from original WordPress Plugin by Watershed Studio, LLC
 * 0.2 :
   <br />When the scope is set to first, only show the Sphere link on the first page
+* 0.2.1	:
+  <br />Tested up to bbPress version 0.9
+  <br />Stop registering of admin interface where possible
+  <br />Re-arrange header block, edit contact details

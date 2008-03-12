@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/16
 Description: Changes the forum to a support forum and adds functionality to mark topics resolved, not resolved or not a support question
 Author: Aditya Naik, Sam Bauers
 Author URI: http://www.adityanaik.com/
-Version: 2.3.5
+Version: 3.0
 
 Version History:
 1.0		: Initial Release (Aditya Naik)
@@ -44,11 +44,14 @@ Version History:
 		  Add option to hard code the icon URI in a constant (Sam Bauers)
 		  Squash JavaScript bug on front page (Sam Bauers)
 		  Add title attribute to icons (Sam Bauers)
+3.0		: Make compatible with bbPress 0.9 (Sam Bauers)
+		  Remove backwards compatibility with bbPress pre-0.9 (Sam Bauers)
+		  Limit admin function registration to admin area (Sam Bauers)
 */
 
 
 /**
- * Support forum for bbPress version 2.3.5
+ * Support forum for bbPress version 3.0
  * 
  * ----------------------------------------------------------------------------------
  * 
@@ -84,7 +87,7 @@ Version History:
  * @copyright 2007 Aditya Naik
  * @copyright 2007 Sam Bauers
  * @license   http://www.gnu.org/licenses/gpl.txt GNU General Public License v2
- * @version   2.3.5
+ * @version   3.0
  **/
 
 
@@ -92,7 +95,7 @@ Version History:
  * Wrapper class for the Support forum plugin
  *
  * @author  Sam Bauers
- * @version 2.3.4
+ * @version 3.0
  **/
 class Support_Forum
 {
@@ -145,11 +148,11 @@ class Support_Forum
 	
 	
 	/**
-	 * The path past the base url where the icons reside
+	 * The basename of the plugin
 	 *
 	 * @var string
 	 **/
-	var $iconPath;
+	var $basename;
 	
 	
 	/**
@@ -184,6 +187,12 @@ class Support_Forum
 	 **/
 	function Support_Forum()
 	{
+		if (version_compare(bb_get_option('version'), '0.9-z', '<')) {
+			error_log(__('This version of the "Support forum" plugin requires bbPress version 0.9'));
+			exit();
+			return;
+		}
+		
 		$this->enabled = bb_get_option('support_forum_enabled');
 		
 		$this->correctEnabled();
@@ -200,12 +209,12 @@ class Support_Forum
 		
 		$this->getIconStatus();
 		
-		$this->iconPath = str_replace(rtrim(BBPLUGINDIR, '/'), '', dirname(__FILE__)) . '/';
+		$this->basename = bb_plugin_basename(__FILE__);
 		
 		if (defined('SUPPORT_FORUM_ICON_URI')) {
 			$this->iconURI = SUPPORT_FORUM_ICON_URI;
 		} else {
-			$this->iconURI = bb_get_option('uri') . $this->iconPath;
+			$this->iconURI = bb_get_plugin_uri($this->iconPath);
 		}
 		
 		$this->posterSetable = bb_get_option('support_forum_poster_setable');
@@ -343,84 +352,6 @@ class Support_Forum
 	
 	
 	/**
-	 * Adds a view to bbPress
-	 *
-	 * @return array
-	 * @author Sam Bauers
-	 **/
-	function addViews($views)
-	{
-		foreach ($this->views as $status => $enabled) {
-			if ($enabled) {
-				$views['support-forum-' . $status] = sprintf(__('Support topics that are %s'), $this->resolutions[$status]);
-			}
-		}
-		return $views;
-	}
-	
-	
-	/**
-	 * Adds a filter to show the unresolved topics view
-	 *
-	 * @return void
-	 * @author Sam Bauers
-	 **/
-	function processViews($view, $page)
-	{
-		global $topics;
-		global $view_count;
-		global $bbdb;
-		
-		foreach ($this->views as $status => $enabled) {
-			if ($enabled) {
-				if ($view == 'support-forum-' . $status)  {
-					$this->statusForGetView = $status;
-					add_filter('get_latest_topics_where', array(&$this, 'getView'));
-					
-					$topics = get_latest_topics(0, $page);
-					$view_count = bb_count_last_query();
-				}
-			}
-		}
-	}
-	
-	
-	/**
-	 * Returns the "where" part of the SQL query for the unresolved topics view
-	 *
-	 * @return string
-	 * @author Sam Bauers
-	 **/
-	function getView($where)
-	{
-		global $bbdb;
-		
-		$query = 'SELECT ' . $bbdb->topics . '.topic_id';
-		$query .= ' FROM ' . $bbdb->topics;
-		$query .= ' LEFT JOIN ' . $bbdb->topicmeta;
-		$query .= ' ON ' . $bbdb->topics . '.topic_id = ' . $bbdb->topicmeta . '.topic_id';
-		$query .= " AND meta_key = 'topic_resolved'";
-		if ($this->getStatus() == $this->statusForGetView) {
-			$query .= " WHERE (meta_value = '" . $this->statusForGetView . "'";
-			$query .= ' OR meta_value IS NULL)';
-		} else {
-			$query .= " WHERE meta_value = '" . $this->statusForGetView . "'";
-		}
-		$query .= ' AND ' . $bbdb->topics . '.forum_id IN (' . join(',', $this->enabled) . ')';
-		
-		$topic_ids = $bbdb->get_col($query);
-		if ($topic_ids) {
-			$topics_in = join(',', $topic_ids);
-			$where = 'WHERE topic_status = 0 AND topic_open = 1 AND topic_id IN (' . $topics_in . ')';
-		} else {
-			$where = 'WHERE 0';
-		}
-		
-		return $where;
-	}
-	
-	
-	/**
 	 * Registers a view to bbPress
 	 *
 	 * @return void
@@ -428,31 +359,33 @@ class Support_Forum
 	 **/
 	function registerViews()
 	{
-		if (is_callable('bb_register_view')) { // Build 876+
-			foreach ($this->views as $status => $enabled) {
-				if ($enabled) {
-					if ($this->getStatus() == $status) {
-						$query = array(
-							'sticky' => 'all',
-							'meta_key' => 'topic_resolved',
-							'meta_value'=> $status . ',NULL',
-							'forum_id' => join(',', $this->enabled)
-						);
-					} else {
-						$query = array(
-							'sticky' => 'all',
-							'meta_key' => 'topic_resolved',
-							'meta_value'=> $status,
-							'forum_id' => join(',', $this->enabled)
-						);
-					}
-					
-					bb_register_view('support-forum-' . $status, sprintf(__('Support topics that are %s'), $this->resolutions[$status]), $query);
+		foreach ($this->views as $status => $enabled) {
+			if ($enabled) {
+				if ($this->getStatus() == $status) {
+					$query = array(
+						'sticky' => 'all',
+						'meta_key' => 'topic_resolved',
+						'meta_value'=> $status . ',NULL',
+						'forum_id' => join(',', $this->enabled)
+					);
+				} else {
+					$query = array(
+						'sticky' => 'all',
+						'meta_key' => 'topic_resolved',
+						'meta_value'=> $status,
+						'forum_id' => join(',', $this->enabled)
+					);
 				}
+				
+				$title = __('Support topics that are %s');
+				
+				if ($status === 'no') {
+					$query['started'] = '<' . gmdate( 'YmdH', time() - 7200 );
+					$title = __('Support topics that are %s and are more than 2 hours old');
+				}
+				
+				bb_register_view('support-forum-' . $status, sprintf($title, $this->resolutions[$status]), $query);
 			}
-		} else { // Build 214-875
-			add_filter('bb_views', array(&$this, 'addViews'));
-			add_action('bb_custom_view', array(&$this, 'processViews'),10,2);
 		}
 	}
 	
@@ -770,7 +703,7 @@ class Support_Forum
 	 **/
 	function addStatusSelectModifier()
 	{
-		if ($this->posterSetable && ((is_front() && $_GET['new']) || is_tag())) {
+		if ($this->posterSetable && ((is_front() && $_GET['new']) || is_bb_tag())) {
 			$j = '<script type="text/javascript">' . "\n";
 			$j .= '	window.onload = function()' . "\n";
 			$j .= '	{' . "\n";
@@ -861,28 +794,16 @@ if ($support_forum->isActive()) {
 	
 	
 	if ($support_forum->icons['closed']) {
-		if (function_exists('bb_topic_labels')) {
-			remove_filter('bb_topic_labels', 'bb_closed_label', 10); // Build 968+
-			add_filter('bb_topic_labels', array(&$support_forum, 'modifyTopicLabelClosed'), 20);
-		} else {
-			remove_filter('topic_title', 'closed_title', 30); // Build 371-791
-			remove_filter('topic_title', 'bb_closed_title', 30); // Build 792+
-			add_filter('topic_title', array(&$support_forum, 'modifyTopicLabelClosed'), 30);
-		}
+		remove_filter('bb_topic_labels', 'bb_closed_label', 10);
+		add_filter('bb_topic_labels', array(&$support_forum, 'modifyTopicLabelClosed'), 20);
 	}
 	
 	if ($support_forum->icons['sticky']) {
-		if (function_exists('bb_topic_labels')) {
-			remove_filter('bb_topic_labels', 'bb_sticky_label', 20); // Build 968+
-			add_filter('bb_topic_labels', array(&$support_forum, 'modifyTopicLabelSticky'), 30);
-		}
+		remove_filter('bb_topic_labels', 'bb_sticky_label', 20);
+		add_filter('bb_topic_labels', array(&$support_forum, 'modifyTopicLabelSticky'), 30);
 	}
 	
-	if (function_exists('bb_topic_labels')) {
-		add_filter('bb_topic_labels', array(&$support_forum, 'modifyTopicLabelStatus'), 10);
-	} else {
-		add_filter('topic_title', array(&$support_forum, 'modifyTopicLabelStatus'), 40);
-	}
+	add_filter('bb_topic_labels', array(&$support_forum, 'modifyTopicLabelStatus'), 10);
 }
 
 
@@ -891,6 +812,11 @@ if ($support_forum->isActive()) {
  * in the architecture of the admin menu generation routine in bbPress
  */
 
+
+// Don't bother with admin interface unless we are loading an admin page
+if (!BB_IS_ADMIN) {
+	return;
+}
 
 // Add filters for the admin area
 add_action('bb_admin_menu_generator', 'support_forum_admin_page_add');
@@ -905,17 +831,7 @@ add_action('bb_admin-header.php', 'support_forum_admin_page_process');
  * @author Sam Bauers
  **/
 function support_forum_admin_page_add() {
-	if (function_exists('bb_admin_add_submenu')) { // Build 794+
-		bb_admin_add_submenu(__('Support forum'), 'use_keys', 'support_forum_admin_page');
-	} else {
-		global $bb_submenu;
-		$submenu = array(__('Support forum'), 'use_keys', 'support_forum_admin_page');
-		if (isset($bb_submenu['plugins.php'])) { // Build 740-793
-			$bb_submenu['plugins.php'][] = $submenu;
-		} else { // Build 277-739
-			$bb_submenu['site.php'][] = $submenu;
-		}
-	}
+	bb_admin_add_submenu(__('Support forum'), 'use_keys', 'support_forum_admin_page');
 }
 
 

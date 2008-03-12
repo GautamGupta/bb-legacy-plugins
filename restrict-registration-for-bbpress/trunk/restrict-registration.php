@@ -1,29 +1,30 @@
 <?php
-/*
-Plugin Name: Restrict registration
-Plugin URI: http://bbpress.org/plugins/topic/44
-Description: Limits registration to email addresses from specific domains
-Author: Sam Bauers
-Version: 2.0.2
-Author URI: 
-
-Version History:
-1.0		: Initial Release
-2.0		: Complete re-write
-		  Added blacklist functionality and admin page
-		  Domains can now optionally be specified with wildcards
-2.0.1	: Some comments cleanup
-		  Added support for bb_admin_add_submenu()
-2.0.2	: Made PHP4 compatible
-*/
-
-
 /**
- * Restrict registration for bbPress version 2.0.2
+ * Restrict registration for bbPress version 2.0.3
+ * 
+ * Plugin Name: Restrict registration
+ * Plugin URI: http://bbpress.org/plugins/topic/44
+ * Description: Limits registration to email addresses from specific domains
+ * Author: Sam Bauers
+ * Version: 2.0.3
+ * Author URI: http://unlettered.org/
  * 
  * ----------------------------------------------------------------------------------
  * 
- * Copyright (C) 2007 Sam Bauers (sam@viveka.net.au)
+ * Version History:
+ * 1.0		: Initial Release
+ * 2.0		: Complete re-write
+ * 			  Added blacklist functionality and admin page
+ * 			  Domains can now optionally be specified with wildcards
+ * 2.0.1	: Some comments cleanup
+ * 			  Added support for bb_admin_add_submenu()
+ * 2.0.2	: Made PHP4 compatible
+ * 2.0.3	: Tested up to bbPress version 0.9
+ * 			  Updated header and contact details
+ * 
+ * ----------------------------------------------------------------------------------
+ * 
+ * Copyright (C) 2007 Sam Bauers (sam@automattic.com)
  * 
  * ----------------------------------------------------------------------------------
  * 
@@ -52,7 +53,7 @@ Version History:
  * @author    Sam Bauers <sam@viveka.net.au>
  * @copyright 2007 Sam Bauers
  * @license   http://www.gnu.org/licenses/gpl.txt GNU General Public License v2
- * @version   2.0.2
+ * @version   2.0.3
  **/
 
 

@@ -1,9 +1,9 @@
 === Support Forum ===
 Contributors: so1o, mdawaffe, SamBauers
 Tags: support, forums
-Requires at least: 0.80 build 701
-Tested up to: 1.0 alpha build 1060
-Stable tag: 2.3.5
+Requires at least: 0.9
+Tested up to: 0.9
+Stable tag: 3.0
 
 Adds the ability to set a support status on topics in selected forums.
 
@@ -28,8 +28,12 @@ support, locked or sticky status.
 * Locked = padlock
 * Sticky = star
 
-Please Note: this plugin contains functionality that was standard before
-bbPress 0.75, for details please look at http://trac.bbpress.org/ticket/496
+Version 3.0 of this plugin removes support for bbPress versions prior to
+bbPress 0.9. A maintenance branch of the 2.3 version of this plugin is
+available which will remain updated with security fixes, but no new
+functionality will be added. The 2.3 branch is available here:
+
+http://plugins-dev.bbpress.org/browser/support-forum/branches/2.3
 
 == Installation ==
 
@@ -50,7 +54,7 @@ will need to be logged in as a keymaster.
 
 == License ==
 
-Support forum version 2.3.5
+Support forum version 3.0
 Copyright (C) 2007 Aditya Naik (so1oonnet@gmail.com)
 Copyright (C) 2007 Sam Bauers (sam@viveka.net.au)
 
@@ -125,3 +129,7 @@ See accompanying license.txt file for details.
   <br/>Add option to hard code the icon URI in a constant
   <br/>Squash JavaScript bug on front page
   <br/>Add title attribute to icons
+* 3.0 :
+  <br/>Make compatible with bbPress 0.9
+  <br/>Remove backwards compatibility with bbPress pre-0.9
+  <br/>Limit admin function registration to admin area

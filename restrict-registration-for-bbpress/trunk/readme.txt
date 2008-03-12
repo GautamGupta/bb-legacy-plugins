@@ -1,9 +1,9 @@
 === Restrict registration for bbPress ===
-Contributors: SamBauers
+Contributors: sambauers
 Tags: registration user users whitelist blacklist
-Requires at least: 0.80
-Tested up to: 1.0 alpha build 805
-Stable tag: 2.0.2
+Requires at least: 0.8
+Tested up to: 0.9
+Stable tag: 2.0.3
 
 Limits registration to email addresses from specific domains
 
@@ -105,8 +105,8 @@ appears to be more 'correct'.
 
 == License ==
 
-Restrict registration for bbPress version 2.0.2
-Copyright (C) 2007 Sam Bauers (sam@viveka.net.au)
+Restrict registration for bbPress version 2.0.3
+Copyright (C) 2007 Sam Bauers (sam@automattic.com)
 
 Restrict registration for bbPress comes with ABSOLUTELY NO WARRANTY
 This is free software, and you are welcome to redistribute
@@ -126,3 +126,6 @@ See accompanying license.txt file for details.
   <br/>Added support for bb_admin_add_submenu()
 * 2.0.2 :
   <br/>Made PHP4 compatible
+* 2.0.3 :
+  <br/>Tested up to bbPress version 0.9
+  <br/>Updated header and contact details

@@ -5,7 +5,7 @@ Description:  allows users to add polls to topics, with optional ajax-like actio
 Plugin URI:  http://bbpress.org/plugins/topic/62
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.51
+Version: 0.5.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -189,13 +189,14 @@ function bb_polls_initialize() {
 	add_action('topicmeta','bb_polls_pre_poll',200);
 }
 
-function bb_polls_pre_poll($topic_id,$edit_poll=0) { 
+function bb_polls_pre_poll($topic_id, $edit_poll=0) { 
 global $bb_polls,$topic,$poll_options,$page;
 if ($bb_polls['minimum_view_level']=="read" || bb_current_user_can($bb_polls['minimum_view_level']) ) :   
 $topic_id=bb_polls_check_cache($topic_id);
 $user_id=bb_get_current_user_info( 'id' );
 $administrator=bb_current_user_can('administrate');
 bb_polls_add_javascript($topic_id);	// ajax-ish
+if (!$edit_poll && isset($_GET['edit_poll'])) {$edit_poll= intval($_GET['edit_poll']);}
 if ($edit_poll || ! isset($topic->poll_options)) {	// no saved poll question with options
 
 	if ($administrator || (bb_current_user_can($bb_polls['minimum_add_level'])  &&  ! ( $bb_polls['only_topic_author_can_add'] && $topic->topic_poster!=$user_id))) {	// 1
@@ -213,7 +214,7 @@ if ($edit_poll || ! isset($topic->poll_options)) {	// no saved poll question wit
  				bb_polls_show_poll_setup_form($topic_id,1,1);  				
  		} else {	
 			// ask if they want to start a new poll
-				echo '<li id="bb_polls"><a class=nowrap onClick="if (window.bb_polls_insert_ajax) {bb_polls_start_new_poll_ajax();return false;}" href="'.add_query_arg( 'start_new_poll', '1').'">'.$bb_polls['poll_question'].'</a></li>'; 
+				echo '<li id="bb_polls"><a class="nowrap" onClick="if (window.bb_polls_insert_ajax) {bb_polls_start_new_poll_ajax();return false;}" href="'.add_query_arg( 'start_new_poll', '1').'">'.$bb_polls['poll_question'].'</a></li>'; 
 		
 		} } }	// end new poll question + end show start_new_poll form 
 
@@ -295,28 +296,28 @@ global $bb_polls,$topic,$poll_options;
 $administrator=bb_current_user_can('administrate');
 if ($bb_polls['minimum_view_level']=="read" || bb_current_user_can($bb_polls['minimum_view_level']) ) {
 $topic_id=bb_polls_check_cache($topic_id);
-$output='<p class=poll_question>'.$bb_polls['label_poll_text'].': '.$poll_options['poll_question'].'</p>';
+$output='<p class="poll_question">'.$bb_polls['label_poll_text'].': '.$poll_options['poll_question'].'</p>';
 
 if (!$poll_options['poll_multiple_choice'] && isset($poll_options['poll_count_0'])) {$real_vote_count=intval($poll_options['poll_count_0']);}
 else {$real_vote_count=0; if ($poll_options['poll_multiple_choice']) {for ($i=1; $i<=$bb_polls['max_options']; $i++) {if (isset($poll_options['poll_count_'.$i])) {$real_vote_count+=intval($poll_options['poll_count_'.$i]);}}}}
 
 for ($i=1; $i<=$bb_polls['max_options']; $i++) {
 	if (isset($poll_options[$i])) { 		
-		$output.= '<p class=poll_label>'.$poll_options[$i].' : ';	
+		$output.= '<p class="poll_label">'.$poll_options[$i].' : ';	
 		$test=(isset($poll_options['poll_count_'.$i]) ? intval($poll_options['poll_count_'.$i]) : 0);
 		$output.= ' ('.$test.' '.$bb_polls['label_votes_text'].')';
 		if ($test) {
 			$vote_percent=(round($test/$real_vote_count,2)*100);
 			$vote_width=$vote_percent; if ($vote_width < 5) {$vote_width=5;} else {if ($vote_width >98 ) {$vote_width=98;}}
-			$output.= ' <div style="width:'.$vote_width.'%"class="poll_option poll_option'.$i.'"> '.$vote_percent.' % </div> ';
+			$output.= ' <div style="width:'.$vote_width.'%" class="poll_option poll_option'.$i.'"> '.$vote_percent.' % </div> ';
 		}
 		$output.= ' </p>';
 	}
 }
 $test=(isset($poll_options['poll_count_0']) ? intval($poll_options['poll_count_0']) : 0);
-$output.= '<p class=poll_footer>'.intval($test).' '.$bb_polls['label_votes_text'].'</p>';
+$output.= '<p class="poll_footer">'.intval($test).' '.$bb_polls['label_votes_text'].'</p>';
 if (isset($_GET['show_poll_results']) || (bb_get_current_user_info( 'id' ) && !bb_polls_has_voted(bb_get_current_user_info( 'id' ),$topic_id) )) {
-$output.= '<p class=poll_footer>( <a onClick="if (window.bb_polls_insert_ajax) {bb_polls_show_poll_vote_form_ajax();return false;}" href="'.remove_query_arg( 'show_poll_results').'">'.$bb_polls['label_now_text'].'</a> )</p>';
+$output.= '<p class="poll_footer">( <a onClick="if (window.bb_polls_insert_ajax) {bb_polls_show_poll_vote_form_ajax();return false;}" href="'.remove_query_arg( 'show_poll_results').'">'.$bb_polls['label_now_text'].'</a> )</p>';
 }
 $output.=bb_polls_edit_link();
 $output=stripslashes($output);
@@ -330,15 +331,15 @@ if (bb_current_user_can($bb_polls['minimum_vote_level'])) {
 $topic_id=bb_polls_check_cache($topic_id);
 if ($poll_options['poll_multiple_choice']==1) {$poll_type="checkbox";} else {$poll_type="radio";}
 $output='<form action="'.remove_query_arg( 'show_poll_results').'" method="post" name="bb_polls" onSubmit="if (window.bb_polls_insert_ajax) {bb_polls_add_vote_ajax();return false;}">
-	 <p class=poll_question>'.$bb_polls['label_poll_text'].': '.$poll_options['poll_question'].'</p>';
+	 <p class="poll_question">'.$bb_polls['label_poll_text'].': '.$poll_options['poll_question'].'</p>';
 for ($i=1; $i<=$bb_polls['max_options']; $i++) {
 	if (isset($poll_options[$i])) {
 		if ($poll_options['poll_multiple_choice']==1) {$poll_name="poll_vote_".$i;} else {$poll_name="poll_vote_0";}
-		$output.= '<p><input type="'.$poll_type.'" name="'.$poll_name.'" value="'.$i.'"> '.$poll_options[$i].' </p>';
+		$output.= '<p><input type="'.$poll_type.'" name="'.$poll_name.'" value="'.$i.'" /> '.$poll_options[$i].' </p>';
 	}
 }
-$output.= '<p class=poll_footer><input class=submit type=submit  name="poll_vote" value="'.$bb_polls['label_vote_text'].'"></p>
-	<p class=poll_footer>( <a onClick="if (window.bb_polls_insert_ajax) {bb_polls_show_poll_results_ajax();return false;}"  href="'.add_query_arg( 'show_poll_results', '1').'">'.$bb_polls['label_results_text'].'</a> )</p></form>';
+$output.= '<p class="poll_footer"><input class="submit" type="submit"  name="poll_vote" value="'.$bb_polls['label_vote_text'].'" /></p>
+	<p class="poll_footer">( <a onClick="if (window.bb_polls_insert_ajax) {bb_polls_show_poll_results_ajax();return false;}"  href="'.add_query_arg( 'show_poll_results', '1').'">'.$bb_polls['label_results_text'].'</a> )</p></form>';
 $output.=bb_polls_edit_link();
 $output=stripslashes($output);
 if ($display) {echo '<li id="bb_polls">'.$output.'</li>';} else {return $output;}
@@ -389,25 +390,25 @@ $topic_id=bb_polls_check_cache($topic_id);
 
 $output='<form action="'.remove_query_arg(array('start_new_poll','edit_poll')).'" method="post"><p>'.$bb_polls['poll_instructions'].'</p>';
 			
-$output.='<p class=poll_label>'.$bb_polls['label_question_text'].' : <input name="poll_question" type=text style="width:98%" maxlength="'.$bb_polls['max_length'].'" value="'.$poll_options['poll_question'].'"></p>';
+$output.='<p class="poll_label">'.$bb_polls['label_question_text'].' : <input name="poll_question" type="text" style="width:98%" maxlength="'.$bb_polls['max_length'].'" value="'.$poll_options['poll_question'].'" /></p>';
 			
-$output.='<p class=poll_label><span class=nowrap><input name="poll_multiple_choice" type="radio" value="0" ';
+$output.='<p class="poll_label"><span class="nowrap"><input name="poll_multiple_choice" type="radio" value="0" ';
 $output.=($poll_options['poll_multiple_choice']) ? ' ' : ' checked="checked" ';
-$output.='>'.$bb_polls['label_single'].'</span> <span class=nowrap><input name="poll_multiple_choice" type="radio" value="1" ';
+$output.=' />'.$bb_polls['label_single'].'</span> <span class="nowrap"><input name="poll_multiple_choice" type="radio" value="1" ';
 $output.=($poll_options['poll_multiple_choice']) ? ' checked="checked" ' : ' ';
-$output.='> '.$bb_polls['label_multiple'].'</span></p>';
+$output.=' /> '.$bb_polls['label_multiple'].'</span></p>';
 			
 for ($i=1; $i<=$bb_polls['max_options']; $i++) {			
 	if ($i==5 && $bb_polls['max_options']>4 && !$poll_options[5]) {	// more options input fields hidden until asked for
 		$output.='<a href="javascript:void(0)" onClick="this.style.display='."'none'".'; document.getElementById('."'poll_more_options'".').style.display='."'block'".'">[+] '.$bb_polls['label_option_text'].'</a><div id="poll_more_options" style="display:none;">';
 	}
-	$output.='<p class=poll_label>'.$bb_polls['label_option_text'].' #'.$i.' : <input name="poll_option_'.$i.'" type=text style="width:98%" maxlength="'.$bb_polls['max_length'].'" value="'.$poll_options[$i].'"></p>';
+	$output.='<p class="poll_label">'.$bb_polls['label_option_text'].' #'.$i.' : <input name="poll_option_'.$i.'" type="text" style="width:98%" maxlength="'.$bb_polls['max_length'].'" value="'.$poll_options[$i].'" /></p>';
 } // loop 
 if ($bb_polls['max_options']>4 && !$poll_options[5]) {$output.='</div>';}
 		
-$output.='<p class=poll_footer>
-<input class=submit type=button  value="'.$bb_polls['label_cancel_text'].'" onClick="document.location='."'".remove_query_arg( 'start_new_poll')."'".'"> 
-<input class=submit type=submit  value="'.$bb_polls['label_save_text'].'"></p></form>';
+$output.='<p class="poll_footer">
+<input class="submit" type="button"  value="'.$bb_polls['label_cancel_text'].'" onClick="document.location='."'".remove_query_arg( 'start_new_poll')."'".'" /> 
+<input class="submit" type="submit"  value="'.$bb_polls['label_save_text'].'" /></p></form>';
 $output=stripslashes($output);if ($display) {echo '<li id="bb_polls" class="extra-caps-row">'.$output.'</li>';} else {return $output;}
 }
 }
@@ -459,7 +460,8 @@ function bb_polls_add_header() {
 function bb_polls_add_javascript($topic_id) {
 global $bb_polls;
 if ($bb_polls['use_ajax']) :
-echo '<scr'.'ipt type="text/javascript" DEFER>
+echo '<scr'.'ipt type="text/javascript" defer="defer">
+<!--
 var dhead = document.getElementsByTagName("head")[0];
 var bb_polls_script = null;
 var bb_polls_htmldata = null;
@@ -516,6 +518,7 @@ for (i=1; i<='.$bb_polls['max_options'].'; i++) {
 if (vote.length) {append_dhead("'.add_query_arg( 'add_vote_ajax', get_topic_id( $topic_id )).'"+vote);}
 else {alert("'.$bb_polls['label_nocheck_text'].'"); return false;}
 }
+//-->
 </scr'.'ipt>';
 endif;
 }
@@ -535,7 +538,7 @@ function bb_polls_admin_page() {
 		<h2>bbPress Polls</h2>
 		
 		<form method="post" name="bb_polls_form" id="bb_polls_form" action="<?php echo remove_query_arg(array('bb_polls_reset','bb_polls_recount')); ?>">
-		<input type=hidden name="bb_polls" value="1">
+		<input type="hidden" name="bb_polls" value="1" />
 			<table class="widefat">
 				<thead>
 					<tr> <th width="33%">Option</th>	<th>Setting</th> </tr>
@@ -559,11 +562,11 @@ function bb_polls_admin_page() {
 							if ($colspan<2) {echo "</td><td>";} else {echo "<br />";}
 							switch (substr($bb_polls_type[$key],0,strpos($bb_polls_type[$key].",",","))) :
 							case 'binary' :
-								?><input type=radio name="<?php echo $key;  ?>" value="1" <?php echo ($bb_polls[$key]==true ? 'checked="checked"' : ''); ?> >Yes 									&nbsp; 
-								     <input type=radio name="<?php echo $key;  ?>" value="0" <?php echo ($bb_polls[$key]==false ? 'checked="checked"' : ''); ?> >No <?php
+								?><input type="radio" name="<?php echo $key;  ?>" value="1" <?php echo ($bb_polls[$key]==true ? 'checked="checked"' : ''); ?> />Yes 									&nbsp; 
+								     <input type="radio" name="<?php echo $key;  ?>" value="0" <?php echo ($bb_polls[$key]==false ? 'checked="checked"' : ''); ?> />No <?php
 							break;
 							case 'numeric' :
-								?><input type=text maxlength=3 name="<?php echo $key;  ?>" value="<?php echo $bb_polls[$key]; ?>"> <?php 
+								?><input type="text" maxlength=3 name="<?php echo $key;  ?>" value="<?php echo $bb_polls[$key]; ?>" /> <?php 
 							break;
 							case 'textarea' :								
 								?><textarea rows="9" style="width:98%" name="<?php echo $key;  ?>"><?php echo $bb_polls[$key]; ?></textarea><?php 							
@@ -575,7 +578,7 @@ function bb_polls_admin_page() {
 								foreach ($values as $value) {echo '<option '; echo ($bb_polls[$key]== $value ? 'selected' : ''); echo '>'.$value.'</option>'; }
 								echo '</select>';
 								} else {														
-								?><input type=text style="width:98%" name="<?php echo $key;  ?>" value="<?php echo $bb_polls[$key]; ?>"> <?php 
+								?><input type="text" style="width:98%" name="<?php echo $key;  ?>" value="<?php echo $bb_polls[$key]; ?>" /> <?php 
 								}
 							endswitch;							
 							?>
@@ -587,7 +590,7 @@ function bb_polls_admin_page() {
 					?>
 				</tbody>
 			</table>
-			<p class="submit"><input type="submit" name="submit" value="Save bbPress Polls Settings"></p>
+			<p class="submit"><input type="submit" name="submit" value="Save bbPress Polls Settings" /></p>
 		
 		</form>
 		<?php

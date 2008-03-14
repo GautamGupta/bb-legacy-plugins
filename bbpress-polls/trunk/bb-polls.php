@@ -183,11 +183,14 @@ function bb_polls_initialize() {
 
 	// }	
 
-	bb_polls_add_header(); 	// add_action('bb_send_headers', 'bb_polls_add_header');
-	add_action('bb_head', 'bb_polls_add_css');
-	add_action('bb_head','bb_polls_add_javascript');
-	add_filter('topic_title', 'bb_polls_title');
-	add_action('topicmeta','bb_polls_pre_poll',200);
+	bb_polls_add_header(); 	// add_action('bb_send_headers', 'bb_polls_add_header');	
+	if (is_topic()) {		// this eventually may have to be added on an admin page
+		add_action('bb_head', 'bb_polls_add_css');
+		add_action('bb_head','bb_polls_add_javascript');
+		add_action('topicmeta','bb_polls_pre_poll',200);
+	} else {
+		add_filter('topic_title', 'bb_polls_title');
+	}	
 }
 
 function bb_polls_pre_poll($topic_id, $edit_poll=0) { 

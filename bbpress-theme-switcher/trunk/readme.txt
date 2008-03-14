@@ -65,3 +65,7 @@ This will create a list of themes for your readers to select.
 = Version 1.14 (2008-3-06) =
 
 * update to match theme method in 0.8.4 while remaining backward compatible with 0.8.3
+
+= Version 1.1.5 (2008-3-14) =
+
+* update to deal with 0.9 function name change from bb_get_active_theme_folder() to bb_get_active_theme_directory()

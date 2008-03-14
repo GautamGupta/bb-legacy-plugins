@@ -395,9 +395,9 @@ $output='<form action="'.remove_query_arg(array('start_new_poll','edit_poll','de
 			
 $output.='<div class="poll_label">'.$bb_polls['label_question_text'].' : <br /><input name="poll_question" type="text" style="width:98%" maxlength="'.$bb_polls['max_length'].'" value="'.$poll_options['poll_question'].'" /></div>';
 			
-$output.='<div class="poll_label"><span class="nowrap"><input name="poll_multiple_choice" type="radio" value="0" ';
+$output.='<div class="poll_label"><span class="nowrap"><input name="poll_multiple_choice" style="vertical-align:middle;height:1.3em;width:1.3em;" type="radio" value="0" ';
 $output.=($poll_options['poll_multiple_choice']) ? ' ' : ' checked="checked" ';
-$output.=' />'.$bb_polls['label_single'].'</span> <span class="nowrap"><input name="poll_multiple_choice" type="radio" value="1" ';
+$output.=' /> '.$bb_polls['label_single'].'</span> <span class="nowrap"><input name="poll_multiple_choice" style="vertical-align:middle;height:1.3em;width:1.3em;" type="radio" value="1" ';
 $output.=($poll_options['poll_multiple_choice']) ? ' checked="checked" ' : ' ';
 $output.=' /> '.$bb_polls['label_multiple'].'</span></div>';
 			

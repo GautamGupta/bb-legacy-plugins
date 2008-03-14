@@ -185,6 +185,7 @@ function bb_polls_initialize() {
 
 	bb_polls_add_header(); 	// add_action('bb_send_headers', 'bb_polls_add_header');
 	add_action('bb_head', 'bb_polls_add_css');
+	add_action('bb_head','bb_polls_add_javascript');
 	add_filter('topic_title', 'bb_polls_title');
 	add_action('topicmeta','bb_polls_pre_poll',200);
 }
@@ -195,7 +196,6 @@ if ($bb_polls['minimum_view_level']=="read" || bb_current_user_can($bb_polls['mi
 $topic_id=bb_polls_check_cache($topic_id);
 $user_id=bb_get_current_user_info( 'id' );
 $administrator=bb_current_user_can('administrate');
-bb_polls_add_javascript($topic_id);	// ajax-ish
 if (!$edit_poll && isset($_GET['edit_poll'])) {$edit_poll= intval($_GET['edit_poll']);}
 if ($edit_poll || ! isset($topic->poll_options)) {	// no saved poll question with options
 
@@ -457,7 +457,7 @@ function bb_polls_add_header() {
 	}			
 } 
 
-function bb_polls_add_javascript($topic_id) {
+function bb_polls_add_javascript($topic_id=0) {
 global $bb_polls;
 if ($bb_polls['use_ajax']) :
 echo '<scr'.'ipt type="text/javascript" defer="defer">

@@ -52,3 +52,6 @@ Eventually will add image based (captcha style) writing as well as "negative fie
 * bug fix for some session issues
 * bug fix for dealing with bad registration info
 
+= Version 0.7.1 (2008-03-14) =
+
+* more attempts to fix session support on different server configs

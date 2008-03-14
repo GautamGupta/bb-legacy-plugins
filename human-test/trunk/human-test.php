@@ -3,7 +3,7 @@
 Plugin Name: Human Test for bbPress
 Plugin URI:  http://bbpress.org/plugins/topic/77
 Description:  uses various methods to exclude bots from registering (and eventually posting) on bbPress
-Version: 0.07
+Version: 0.7.1
 Author: _ck_
 Author URI: http://bbshowcase.org
 
@@ -58,6 +58,9 @@ function human_test_check() {
 if (human_register_page()) :  //  only display on register.php and hide on profile page
 	// one way or another we're gonna need sessions for now
 	// @session_cache_limiter('nocache');	// "nocache" destroys form data with back button - "public" preserves form values when hitting back
+	
+	@ini_set('session.use_trans_sid', false);
+	@ini_set("url_rewriter.tags","");
 	@session_start();	// sent with headers - errors masked with @ if sessions started previously - which it actually has to be for the following to 
 
 	if ($_POST || isset($_POST['human_test'])) {

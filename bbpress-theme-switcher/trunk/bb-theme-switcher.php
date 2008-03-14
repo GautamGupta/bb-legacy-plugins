@@ -3,7 +3,7 @@
 Plugin Name: bbPress Theme Switcher
 Plugin URI: http://bbpress.org/plugins/topic/70
 Description: Allows your members and guests to switch between themes. Optional timer to return to default theme.
-Version: 1.14
+Version: 1.1.5
 Author: _ck_
 Author URI:  http://bbshowcase.org
 Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
@@ -35,6 +35,7 @@ $bb_ts_optional_text = '<b><font color=red style="size:24px">keep _ck_ coding</f
 
 add_filter('bb_template','bb_ts_add_dropdown',100,2);    //  disable this line if you don't want the switcher inserted automatically
 add_filter('bb_get_active_theme_folder','bb_ts_get_template');
+add_filter('bb_get_active_theme_directory','bb_ts_get_template');
 add_filter('bb_get_active_theme_uri', 'bb_ts_get_active_theme_uri');
 
 function bb_ts_add_dropdown($template='',$file='') {

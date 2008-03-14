@@ -53,6 +53,8 @@ Check under the admin menu for "bbPress Polls" options.
 * 0.30	enhancement so admin can edit any poll (don't try to change the order of questions, it's a simple edit for now)
 * 0.50	2008-March-1 basic admin menu  added
 * 0.5.2	2008-March-14 xhtml and non-ajax-edit bug fixes, props zmaroti
+* 0.5.3	2008-March-14 javascript payload is now kept as small as possible 
+* 0.5.4	2008-March-14 new poll form (and edit form) remotely loaded when in "ajax" mode
 	
 == To Do ==
 

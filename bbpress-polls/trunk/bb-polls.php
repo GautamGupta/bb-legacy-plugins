@@ -5,7 +5,7 @@ Description:  allows users to add polls to topics, with optional ajax-like actio
 Plugin URI:  http://bbpress.org/plugins/topic/62
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.5.2
+Version: 0.5.4
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -57,13 +57,13 @@ function bb_polls_initialize() {
 	$bb_polls['test_mode']=false;	// if set to "true" allows multiple votes per person for testing purposes only
 
 	$bb_polls['style']=
-	"#bb_polls {list-style: none; width:350px; line-height:120%; margin:5px 0; padding:5px; border:1px solid #ADADAD;  font-size:85%; color:#000; background:#eee; }
+	"#bb_polls {list-style: none; width:400px; line-height:120%; margin:5px 0; padding:5px; border:1px solid #ADADAD;  font-size:90%; color:#000; background:#eee; }
 	#bb_polls .submit {cursor: pointer; cursor: hand; text-align:center; padding:2px 5px;}
 	#bb_polls .nowrap {white-space:nowrap;}
 	#bb_polls p {margin:15px 0;padding:0;}
 	#bb_polls .poll_question, #bb_polls .poll_footer {font-weight:bold; text-align:center; color:#2E6E15;}
-	#bb_polls .poll_label {font-weight:bold;}								
-	#bb_polls .poll_option {margin:-12px 0 -5px 0; text-align:center;font-weight:bold; font-size:9px; line-height:5px; padding:2px 1px;  border:1px solid #303030; color:#fff; }
+	#bb_polls .poll_label {font-weight:bold; margin:1em 0 1em 1em;}								
+	#bb_polls .poll_option {margin:2px 0 -2px 0; text-align:center;font-weight:bold; font-size:9px; line-height:5px; padding:2px 1px;  border:1px solid #303030; color:#fff; }
 	#bb_polls .poll_option1 {background:red;}
 	#bb_polls .poll_option2 {background:green;}
 	#bb_polls .poll_option3 {background:blue;}
@@ -76,7 +76,7 @@ function bb_polls_initialize() {
 	";			
 					
 	$bb_polls['poll_question']=__("Would you like to add a poll to this topic for members to vote on?");
-	$bb_polls['poll_instructions']=__("You may submit a poll question with several options for other members to vote from.");
+	$bb_polls['poll_instructions']=__("You may add a poll question with options for members to vote from.");
 	$bb_polls['label_single']=__("you can vote on <u>ONE</u> choice");
 	$bb_polls['label_multiple']=__("you can vote on <u>MULTIPLE</u> choices");
 	$bb_polls['label_poll_text']=__("poll");    // default "poll" = text to show if on topic title if it has a poll (delete text to disable) // you can even use HTML/CSS
@@ -296,28 +296,28 @@ global $bb_polls,$topic,$poll_options;
 $administrator=bb_current_user_can('administrate');
 if ($bb_polls['minimum_view_level']=="read" || bb_current_user_can($bb_polls['minimum_view_level']) ) {
 $topic_id=bb_polls_check_cache($topic_id);
-$output='<p class="poll_question">'.$bb_polls['label_poll_text'].': '.$poll_options['poll_question'].'</p>';
+$output='<div class="poll_question">'.$bb_polls['label_poll_text'].': '.$poll_options['poll_question'].'</div>';
 
 if (!$poll_options['poll_multiple_choice'] && isset($poll_options['poll_count_0'])) {$real_vote_count=intval($poll_options['poll_count_0']);}
 else {$real_vote_count=0; if ($poll_options['poll_multiple_choice']) {for ($i=1; $i<=$bb_polls['max_options']; $i++) {if (isset($poll_options['poll_count_'.$i])) {$real_vote_count+=intval($poll_options['poll_count_'.$i]);}}}}
 
 for ($i=1; $i<=$bb_polls['max_options']; $i++) {
 	if (isset($poll_options[$i])) { 		
-		$output.= '<p class="poll_label">'.$poll_options[$i].' : ';	
+		$output.= '<div class="poll_label">'.$poll_options[$i].' : ';	
 		$test=(isset($poll_options['poll_count_'.$i]) ? intval($poll_options['poll_count_'.$i]) : 0);
-		$output.= ' ('.$test.' '.$bb_polls['label_votes_text'].')';
+		$output.= ' ('.$test.' '.$bb_polls['label_votes_text'].') <br />';
 		if ($test) {
 			$vote_percent=(round($test/$real_vote_count,2)*100);
 			$vote_width=$vote_percent; if ($vote_width < 5) {$vote_width=5;} else {if ($vote_width >98 ) {$vote_width=98;}}
 			$output.= ' <div style="width:'.$vote_width.'%" class="poll_option poll_option'.$i.'"> '.$vote_percent.' % </div> ';
 		}
-		$output.= ' </p>';
+		$output.= ' </div>';
 	}
 }
 $test=(isset($poll_options['poll_count_0']) ? intval($poll_options['poll_count_0']) : 0);
 $output.= '<p class="poll_footer">'.intval($test).' '.$bb_polls['label_votes_text'].'</p>';
 if (isset($_GET['show_poll_results']) || (bb_get_current_user_info( 'id' ) && !bb_polls_has_voted(bb_get_current_user_info( 'id' ),$topic_id) )) {
-$output.= '<p class="poll_footer">( <a onClick="if (window.bb_polls_insert_ajax) {bb_polls_show_poll_vote_form_ajax();return false;}" href="'.remove_query_arg( 'show_poll_results').'">'.$bb_polls['label_now_text'].'</a> )</p>';
+$output.= '<p class="poll_footer">( <a onClick="if (window.bb_polls_insert_ajax) {bb_polls_show_poll_vote_form_ajax();return false;}" href="'.remove_query_arg(array('start_new_poll','edit_poll','delete_poll','show_poll_vote_form_ajax','show_poll_setup_form_ajax','bb_polls_cache')).'">'.$bb_polls['label_now_text'].'</a> )</p>';
 }
 $output.=bb_polls_edit_link();
 $output=stripslashes($output);
@@ -330,8 +330,8 @@ global $bb_polls,$topic,$poll_options;
 if (bb_current_user_can($bb_polls['minimum_vote_level'])) {
 $topic_id=bb_polls_check_cache($topic_id);
 if ($poll_options['poll_multiple_choice']==1) {$poll_type="checkbox";} else {$poll_type="radio";}
-$output='<form action="'.remove_query_arg( 'show_poll_results').'" method="post" name="bb_polls" onSubmit="if (window.bb_polls_insert_ajax) {bb_polls_add_vote_ajax();return false;}">
-	 <p class="poll_question">'.$bb_polls['label_poll_text'].': '.$poll_options['poll_question'].'</p>';
+$output='<form action="'.remove_query_arg(array('start_new_poll','edit_poll','delete_poll','show_poll_vote_form_ajax','show_poll_setup_form_ajax','bb_polls_cache')).'" method="post" name="bb_polls" onSubmit="if (window.bb_polls_insert_ajax) {bb_polls_add_vote_ajax();return false;}">
+	 <div class="poll_question">'.$bb_polls['label_poll_text'].': '.$poll_options['poll_question'].'</div>';
 for ($i=1; $i<=$bb_polls['max_options']; $i++) {
 	if (isset($poll_options[$i])) {
 		if ($poll_options['poll_multiple_choice']==1) {$poll_name="poll_vote_".$i;} else {$poll_name="poll_vote_0";}
@@ -388,26 +388,26 @@ global $bb_polls,$topic,$poll_options;
 if (($edit_poll==0 && bb_current_user_can($bb_polls['minimum_add_level'])) || bb_current_user_can('administrate')) {
 $topic_id=bb_polls_check_cache($topic_id);
 
-$output='<form action="'.remove_query_arg(array('start_new_poll','edit_poll')).'" method="post"><p>'.$bb_polls['poll_instructions'].'</p>';
+$output='<form action="'.remove_query_arg(array('start_new_poll','edit_poll','delete_poll','show_poll_vote_form_ajax','show_poll_setup_form_ajax','bb_polls_cache')).'" method="post"><p>'.$bb_polls['poll_instructions'].'</p>';
 			
-$output.='<p class="poll_label">'.$bb_polls['label_question_text'].' : <input name="poll_question" type="text" style="width:98%" maxlength="'.$bb_polls['max_length'].'" value="'.$poll_options['poll_question'].'" /></p>';
+$output.='<div class="poll_label">'.$bb_polls['label_question_text'].' : <br /><input name="poll_question" type="text" style="width:98%" maxlength="'.$bb_polls['max_length'].'" value="'.$poll_options['poll_question'].'" /></div>';
 			
-$output.='<p class="poll_label"><span class="nowrap"><input name="poll_multiple_choice" type="radio" value="0" ';
+$output.='<div class="poll_label"><span class="nowrap"><input name="poll_multiple_choice" type="radio" value="0" ';
 $output.=($poll_options['poll_multiple_choice']) ? ' ' : ' checked="checked" ';
 $output.=' />'.$bb_polls['label_single'].'</span> <span class="nowrap"><input name="poll_multiple_choice" type="radio" value="1" ';
 $output.=($poll_options['poll_multiple_choice']) ? ' checked="checked" ' : ' ';
-$output.=' /> '.$bb_polls['label_multiple'].'</span></p>';
+$output.=' /> '.$bb_polls['label_multiple'].'</span></div>';
 			
 for ($i=1; $i<=$bb_polls['max_options']; $i++) {			
 	if ($i==5 && $bb_polls['max_options']>4 && !$poll_options[5]) {	// more options input fields hidden until asked for
 		$output.='<a href="javascript:void(0)" onClick="this.style.display='."'none'".'; document.getElementById('."'poll_more_options'".').style.display='."'block'".'">[+] '.$bb_polls['label_option_text'].'</a><div id="poll_more_options" style="display:none;">';
 	}
-	$output.='<p class="poll_label">'.$bb_polls['label_option_text'].' #'.$i.' : <input name="poll_option_'.$i.'" type="text" style="width:98%" maxlength="'.$bb_polls['max_length'].'" value="'.$poll_options[$i].'" /></p>';
+	$output.='<div class="poll_label">'.$bb_polls['label_option_text'].' #'.$i.' : <br /><input name="poll_option_'.$i.'" type="text" style="width:98%" maxlength="'.$bb_polls['max_length'].'" value="'.$poll_options[$i].'" /></div>';
 } // loop 
 if ($bb_polls['max_options']>4 && !$poll_options[5]) {$output.='</div>';}
 		
 $output.='<p class="poll_footer">
-<input class="submit" type="button"  value="'.$bb_polls['label_cancel_text'].'" onClick="document.location='."'".remove_query_arg( 'start_new_poll')."'".'" /> 
+<input class="submit" type="button"  value="'.$bb_polls['label_cancel_text'].'" onClick="document.location='."'".remove_query_arg(array('start_new_poll','edit_poll','delete_poll','show_poll_vote_form_ajax','show_poll_setup_form_ajax','bb_polls_cache'))."'".'" /> 
 <input class="submit" type="submit"  value="'.$bb_polls['label_save_text'].'" /></p></form>';
 $output=stripslashes($output);if ($display) {echo '<li id="bb_polls" class="extra-caps-row">'.$output.'</li>';} else {return $output;}
 }
@@ -434,7 +434,7 @@ function bb_polls_add_header() {
 	}
 	if (isset($_GET['delete_poll']) && intval($_GET['delete_poll'])) { 	
 		bb_polls_delete_poll();
-		wp_redirect(remove_query_arg(array('start_new_poll','delete_poll')));	// I *really* don't like this technique but it's the only way to clear post data?
+		wp_redirect(remove_query_arg(array('start_new_poll','edit_poll','delete_poll','show_poll_vote_form_ajax','show_poll_setup_form_ajax','bb_polls_cache')));	// I *really* don't like this technique but it's the only way to clear post data?
 	}				
 	if (isset($_GET['show_poll_results_ajax'])) {
 		$topic_id=intval($_GET['show_poll_results_ajax']);
@@ -447,6 +447,12 @@ function bb_polls_add_header() {
 		header("Content-Type: application/x-javascript");
 		echo 'bb_polls_insert_ajax("'.mysql_escape_string(bb_polls_show_poll_vote_form($topic_id,0)).'")';
 		exit();
+	}	
+	if (isset($_GET['show_poll_setup_form_ajax'])) {
+		$topic_id=intval($_GET['show_poll_setup_form_ajax']);
+		header("Content-Type: application/x-javascript");
+		echo 'bb_polls_insert_ajax("'.mysql_escape_string(bb_polls_show_poll_setup_form($topic_id,0,1)).'")';
+		exit();
 	}
 	if (isset($_GET['add_vote_ajax'])) {
 		$topic_id=intval($_GET['add_vote_ajax']);
@@ -458,8 +464,9 @@ function bb_polls_add_header() {
 } 
 
 function bb_polls_add_javascript($topic_id=0) {
-global $bb_polls;
-if ($bb_polls['use_ajax']) :
+global $bb_polls, $topic;
+if ($bb_polls['use_ajax'] && bb_current_user_can($bb_polls['minimum_vote_level']) ) :
+$topic_id=bb_polls_check_cache($topic_id);
 echo '<scr'.'ipt type="text/javascript" defer="defer">
 <!--
 var dhead = document.getElementsByTagName("head")[0];
@@ -468,7 +475,7 @@ var bb_polls_htmldata = null;
 
 function append_dhead(bb_polls_src) {
 if (bb_polls_script) {dhead.removeChild(bb_polls_script);}
-d = new Date();  bb_polls_src=bb_polls_src+"&"+d.getTime();
+d = new Date();  bb_polls_src=bb_polls_src+"&bb_polls_cache="+d.getTime();
 bb_polls_script = document.createElement("script");
 bb_polls_script.src = bb_polls_src;
 bb_polls_script.type = "text/javascript";
@@ -482,29 +489,33 @@ bb_polls_htmldata = unescape(htmldata);
 setTimeout("bb_polls_insert_ajax_delayed()",20);
 }
 function bb_polls_insert_ajax_delayed() {document.getElementById("bb_polls").innerHTML=bb_polls_htmldata;}
+';
 
-function bb_polls_show_poll_results_ajax() {
-append_dhead("'.add_query_arg( 'show_poll_results_ajax', get_topic_id( $topic_id )).'");
-}
-
-function bb_polls_show_poll_vote_form_ajax() {
-var bb_polls_poll_vote_form = "'.mysql_escape_string(bb_polls_show_poll_vote_form(get_topic_id( $topic_id ),0)).'";
-if (bb_polls_poll_vote_form) {bb_polls_insert_ajax(bb_polls_poll_vote_form);}
-else {
-append_dhead("'.add_query_arg( 'show_poll_vote_form_ajax', get_topic_id( $topic_id )).'");
-}
-}
-
+// only add new poll support if they can add and there's no poll already 
+if (bb_current_user_can($bb_polls['minimum_add_level']) && !isset($topic->poll_options)) {	
+echo '
 function bb_polls_start_new_poll_ajax() {
-var bb_polls_poll_setup_form = "'.mysql_escape_string(bb_polls_show_poll_setup_form(get_topic_id( $topic_id ),0,1)).'";
-if (bb_polls_poll_setup_form) {bb_polls_insert_ajax(bb_polls_poll_setup_form);}
+append_dhead("'.add_query_arg( 'show_poll_setup_form_ajax', $topic_id).'");
 }
+';}
 
+// only add edit support if they can edit and saved poll question with options	 
+if (bb_current_user_can($bb_polls['minimum_edit_level']) && isset($topic->poll_options)) {	
+echo '
 function bb_polls_edit_poll_ajax() {
-var bb_polls_poll_setup_form = "'.mysql_escape_string(bb_polls_show_poll_setup_form(get_topic_id( $topic_id ),0,1)).'";
-if (bb_polls_poll_setup_form) {bb_polls_insert_ajax(bb_polls_poll_setup_form);}
+append_dhead("'.add_query_arg( 'show_poll_setup_form_ajax', $topic_id).'");
 }
+';}
 
+// only add vote and view toggle support javascript if they have not yet voted
+if (!bb_polls_has_voted(bb_get_current_user_info( 'id' ),$topic_id) ) {	
+echo '
+function bb_polls_show_poll_results_ajax() {
+append_dhead("'.add_query_arg( 'show_poll_results_ajax', $topic_id).'");
+}
+function bb_polls_show_poll_vote_form_ajax() {
+append_dhead("'.add_query_arg( 'show_poll_vote_form_ajax', $topic_id).'");
+}
 function bb_polls_add_vote_ajax() {
 vote="";
 if (document.bb_polls.poll_vote_0) {
@@ -515,9 +526,12 @@ for (i=1; i<='.$bb_polls['max_options'].'; i++) {
 	test=eval("document.bb_polls.poll_vote_"+i);
 	if (test && test.checked) {vote=vote+"&poll_vote_"+i+"="+i;}
 }
-if (vote.length) {append_dhead("'.add_query_arg( 'add_vote_ajax', get_topic_id( $topic_id )).'"+vote);}
+if (vote.length) {append_dhead("'.add_query_arg( 'add_vote_ajax', $topic_id).'"+vote);}
 else {alert("'.$bb_polls['label_nocheck_text'].'"); return false;}
 }
+';}
+
+echo '
 //-->
 </scr'.'ipt>';
 endif;

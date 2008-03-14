@@ -52,6 +52,7 @@ Check under the admin menu for "bbPress Polls" options.
 * 0.29	enhancement so admin can always delete any poll
 * 0.30	enhancement so admin can edit any poll (don't try to change the order of questions, it's a simple edit for now)
 * 0.50	2008-March-1 basic admin menu  added
+* 0.5.2	2008-March-14 xhtml and non-ajax-edit bug fixes, props zmaroti
 	
 == To Do ==
 

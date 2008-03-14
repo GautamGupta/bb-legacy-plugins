@@ -48,6 +48,7 @@ if (human_register_page()) :  //  only display on register.php and hide on profi
 	echo '<script language="JavaScript" type="text/javascript">document.write("'.$question.'");</script>';	// write question with javascript
 	echo '<noscript><i>'.__("registration requires JavaScript").'</i></noscript>';	// warn no-script users 
 	echo '</th><td width="72%"><input name="human_test" type="text" id="human_test" size="30" maxlength="140" value="" />';	// answer field
+	echo '<input type="hidden" name = "'.session_name().'" value = "'.session_id().'">';	// improved session support without cookies or urls
 	echo '</td></tr></table></fieldset>';
 
 endif;

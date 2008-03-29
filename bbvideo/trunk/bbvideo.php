@@ -5,7 +5,7 @@ Plugin URI: http://www.naden.de/blog/bbvideo-bbpress-video-plugin
 Description: <strong>English:</strong> Converts Video-Links in your forum posts to embedded Video-Players.<br /><strong>Deutsch:</strong> Wandelt Video-Links in den Forenbeitr&auml;gen in Video-Player um.<br /><em>Supports: Youtube, Dailymotion, MyVideo Google Video and many <a href="http://www.naden.de/blog/bbvideo-bbpress-video-plugin#video-provider" target="_blank">more ...</a></em>
 Author: Naden Badalgogtapeh
 Author URI: http://www.naden.de/blog
-Version: 0.21
+Version: 0.22
 */
 
 /**
@@ -43,7 +43,7 @@ class BBPressPluginBBVideo
    */
   function BBPressPluginBBVideo()
   {
-    $this->version = '0.21';
+    $this->version = '0.22';
     
     $this->wp_filter_id = 'bbvideo';
 
@@ -182,7 +182,7 @@ DATA;
 
           if( $this->options[ 'embed' ] == 1 )
           {
-            $post_title = get_topic_title();
+            $post_title = str_replace( "'", '', get_topic_title() );
             $post_link  = get_topic_link();
             
             $code = <<<DATA

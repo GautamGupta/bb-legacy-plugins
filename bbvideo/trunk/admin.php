@@ -1,6 +1,6 @@
 <?php
 /*
-BBVideo Plugin v0.1 admin template
+BBVideo Plugin v0.22 admin template
 http://www.naden.de/blog/bbvideo-bbpress-video-plugin
 */
 

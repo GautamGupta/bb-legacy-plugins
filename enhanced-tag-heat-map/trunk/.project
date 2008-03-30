@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>enhanced-tag-heat-map</name>
+	<comment></comment>
+	<projects>
+		<project>plugin7-bbpress</project>
+		<project>site7-bbpress</project>
+		<project>site7-wordpress</project>
+	</projects>
+	<buildSpec>
+	</buildSpec>
+	<natures>
+	</natures>
+</projectDescription>

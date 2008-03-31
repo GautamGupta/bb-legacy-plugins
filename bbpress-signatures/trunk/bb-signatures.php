@@ -3,7 +3,7 @@
 Plugin Name: bbPress signatures
 Plugin URI:  http://bbpress.org/plugins/topic/63
 Description:  allows users to add signatures to their forum posts, including an optional per-post toggle
-Version: 0.16
+Version: 0.1.7
 Author: _ck_
 Author URI: http://bbshowcase.org
 
@@ -158,11 +158,11 @@ return  in_array($post_id,$bb_signatures_exclude_posts);
 
 function bb_signatures_checkbox() {
 //  this function call must unfortunately be manually placed into edit-form.php and post-form.php templates
-global $bb_post,$bb_signatures,$bb_signatures_on_page;
+global $bb_signatures,$bb_signatures_on_page,$posts,$bb_post;
 if ($bb_signatures['allow_per_post_signature_toggle']) :
 if (bb_current_user_can($bb_signatures['minimum_user_level']) ) :
-if (is_topic() || !$user_id=$bb_post->poster_id) {$user_id=bb_get_current_user_info( 'id' );}
-if (is_topic() || !$post_id=$bb_post->post_id) {$post_id=0;}
+if (isset($posts) || !isset($bb_post->poster_id)) {$user_id=bb_get_current_user_info( 'id' );} else {$user_id=$bb_post->poster_id;}	// || is_topic()
+if (isset($posts) || !isset($bb_post->post_id)) {$post_id=0;} else {$post_id=$bb_post->post_id;}		// || is_topic()
 // if (fetch_user_signature($user_id)) {$checked="checked";}
 if ($post_id && bb_signatures_exclude_posts_check($post_id)) {$checked=""; $disabled="1";} else {$checked="checked"; $disabled="0";}
 echo $bb_signatures['signature_question'].'	

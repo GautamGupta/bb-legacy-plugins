@@ -40,3 +40,7 @@ you must edit  the  edit-form.php  & post-form.php   templates and place at or n
 
 *	signatures removed from rss feeds
 *	bug fix to maintain setting when posts are saved after edit 
+
+= Version 0.1.7 (2008-03-31) =
+
+*	bug workaround for is_topic() failure to maintain signature toggle during edits

@@ -36,3 +36,9 @@ To see a demonstration, create an account at http://bbShowcase.org read some pos
 = Version 0.80 (2008-01-31) =
 
 *   first public release of Unread Posts
+
+= Version 0.8.5 (2008-04-02) =
+
+*   now makes title link jump to last unread post - props kaviaar
+
+

@@ -5,7 +5,7 @@ Description:  Indicates previously read topics with new unread posts. Features "
 Plugin URI:  http://bbpress.org/plugins/topic/78
 Author: _ck_
 Author URI: http://bbshowcase.org
-Version: 0.80
+Version: 0.8.5
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 Instructions:   install, activate, edit unread style and number of topics tracked per user
@@ -29,17 +29,25 @@ if ($bb_current_user->ID) {		// only bother with the overhead if a user is logge
 		$up_read_topics=explode(",",$user->up_read_topics);  settype($up_read_topics,"array"); // unpack once, use many times
 		$up_last_posts=explode(",",$user->up_last_posts); settype($up_last_posts,"array");	 // unpack once, use many times			
 		add_filter('topic_title', 'up_mark_title_unread');
+		add_filter('topic_link', 'up_mark_link_unread');	// props kaviaar
 		if ($unread_posts_style) {add_action('bb_head', 'up_add_css');}
 	}	
 }
 } add_action('bb_init','unread_posts_init',200);
+
+function up_mark_link_unread($link)  {			// props kaviaar - makes title links jump to last unread post
+global $topic, $up_read_topics, $up_last_posts;	
+	$up_key=array_search($topic->topic_id ,$up_read_topics);	
+	if ($up_key!=false &&  $up_last_posts[$up_key]!=$topic->topic_last_post_id) {$link = get_post_link($up_last_posts[$up_key]);}
+ return $link;
+}
 
 function up_add_css() {global $unread_posts_style; echo '<style type="text/css">'.$unread_posts_style.'</style>'; } 
 
 function up_mark_title_unread($title)  {
 global $topic, $up_read_topics, $up_last_posts;	
 	$up_key=array_search($topic->topic_id ,$up_read_topics);	
-	if ($up_key!=false &&  $up_last_posts[$up_key]!=$topic->topic_last_post_id) {$title = '<span class=unread_posts>' . $title . '</span>';}
+	if ($up_key!=false &&  $up_last_posts[$up_key]!=$topic->topic_last_post_id) {$title = '<span class="unread_posts">' . $title . '</span>';}
 return $title;
 }
 

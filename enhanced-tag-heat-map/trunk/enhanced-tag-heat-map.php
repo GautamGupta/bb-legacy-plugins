@@ -4,12 +4,13 @@ Plugin Name: Enhanced Tag Heat Map
 Plugin URI: http://www.adityanaik.com/projects/plugins/enhanced-tag-heat-map/
 Description: Enhanced Tag Heat Map replaces the tag heat map to highlight related tags for each of the tag on mouse over.
 Author: Aditya Naik
-Version: 1.0.1
+Version: 1.0.2
 Author URI: http://www.adityanaik.com/
 
 Version History
 1.0	: Initial Release
 1.0.1 : remove calls to firebug console
+1.0.2 : removed hooks to wordpress
 */
 
 /**
@@ -452,9 +453,6 @@ add_filter('tag_heat_map','show_enhanced_tag_heat_map');
 // Add script to the head if user is loading it in bbpress
 bb_enqueue_script('prototype');
 add_action('bb_head','enhanced_tag_heat_map_script');
-// Add script to the head if user is loading it in wordpress
-wp_enqueue_script('prototype');
-add_action('wp_head','enhanced_tag_heat_map_script');
 
 /**
  * Print script and style for the enhanced heat map

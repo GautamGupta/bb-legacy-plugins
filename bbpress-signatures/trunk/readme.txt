@@ -44,3 +44,7 @@ you must edit  the  edit-form.php  & post-form.php   templates and place at or n
 = Version 0.1.7 (2008-03-31) =
 
 *	bug workaround for is_topic() failure to maintain signature toggle during edits
+
+= Version 0.1.8 (2008-04-06) =
+
+* boost plugin priority to 5 so signatures are inserted before bbcode-lite runs (allowing bbcode in signatures)

@@ -3,7 +3,7 @@
 Plugin Name: bbPress signatures
 Plugin URI:  http://bbpress.org/plugins/topic/63
 Description:  allows users to add signatures to their forum posts, including an optional per-post toggle
-Version: 0.1.7
+Version: 0.1.8
 Author: _ck_
 Author URI: http://bbshowcase.org
 
@@ -85,7 +85,7 @@ global $bb_post,$bb_signatures,$bb_signatures_on_page;
 }
 return $text;
 }
-add_filter('post_text','add_signature_to_post',9);
+add_filter('post_text','add_signature_to_post',5);
 
 function add_signature_to_profile_edit() {
 global $user_id, $bb_current_user, $bb_signatures;		

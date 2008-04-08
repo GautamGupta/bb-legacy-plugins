@@ -5,7 +5,7 @@ Description:  Indicates previously read topics with new unread posts. Features "
 Plugin URI:  http://bbpress.org/plugins/topic/78
 Author: _ck_
 Author URI: http://bbshowcase.org
-Version: 0.8.5
+Version: 0.8.6
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 Instructions:   install, activate, edit unread style and number of topics tracked per user
@@ -19,7 +19,9 @@ $unread_posts_topics_per_user=100;			// how many topics to watch for each user -
 function unread_posts_init() {
 global $bb_current_user;
 if ($bb_current_user->ID) {		// only bother with the overhead if a user is logged in        - prep page, arrays, etc.
-	if (isset($_GET['mark_all_topics_read'])) {add_action('bb_send_headers', 'up_mark_all_read');}	//  can't hook to automatically place links for this???
+	if (isset($_GET['mark_all_topics_read']) || $_GET['clear_all_topics_read']) {add_action('bb_send_headers', 'up_mark_all_read');}	//  can't hook to automatically place links for this???
+	
+	elseif (isset($_GET['update_all_topics_read']) || $_GET['catch_all_topics_read']) {add_action('bb_send_headers', 'up_update_all_read');}	//  this too
 	
 	elseif (is_topic()) {add_action('topicmeta','up_update_topics_read',200);}	// topic pages is where all the heavy lifting is done
 
@@ -55,7 +57,19 @@ function up_mark_all_read() {	// actually, just delete all it's meta and start f
 global $bb_current_user;	
 	bb_delete_usermeta($bb_current_user->ID, "up_read_topics");
 	bb_delete_usermeta($bb_current_user->ID, "up_last_posts");
-	wp_redirect(str_replace("mark_all_topics_read","",$GLOBALS["HTTP_SERVER_VARS"]["REQUEST_URI"]));			
+	wp_redirect(str_replace(array("mark_all_topics_read","clear_all_topics_read"),"",$GLOBALS["HTTP_SERVER_VARS"]["REQUEST_URI"]));			
+} 
+
+function up_update_all_read() {	// catches up all topics tracked instead of purging list - props kaviaar
+global $bbdb,$bb_current_user;
+	$user = bb_get_user($bb_current_user->ID);	
+	$up_read_topics=trim($user->up_read_topics," ,");
+	if ($up_read_topics) {
+		$up_last_posts=$bbdb->get_col("SELECT topic_last_post_id FROM $bbdb->topics WHERE topic_id IN ($up_read_topics) ORDER BY field(topic_id,$up_read_topics)");		
+		bb_update_usermeta($bb_current_user->ID, "up_read_topics",$up_read_topics);  // needs to resave because of trim
+		bb_update_usermeta($bb_current_user->ID, "up_last_posts",implode(",",$up_last_posts));
+	}
+	wp_redirect(str_replace(array("update_all_topics_read","catch_all_topics_read"),"",$GLOBALS["HTTP_SERVER_VARS"]["REQUEST_URI"]));	
 } 
 
 function up_update_topics_read() {

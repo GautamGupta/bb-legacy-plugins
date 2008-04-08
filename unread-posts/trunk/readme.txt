@@ -22,6 +22,8 @@ To see a demonstration, create an account at http://bbShowcase.org read some pos
 * Install, activate, optionally edit the unread css style and number of topics tracked per user within unread-posts.php
 * If you'd like to give users the ability to "mark all topics read", simply place the following html in your template:
 `<a href="?mark_all_topics_read">Mark all topics as read</a>`
+* If you'd rather the "all read" function catches up tracked topics instead of stop tracking them entirely, instead place the following html in your template:
+`<a href="?update_all_topics_read">Update all topics read</a>`
 
 == License ==
 
@@ -40,5 +42,10 @@ To see a demonstration, create an account at http://bbShowcase.org read some pos
 = Version 0.8.5 (2008-04-02) =
 
 *   now makes title link jump to last unread post - props kaviaar
+
+= Version 0.8.6 (2008-04-08) =
+
+* now allows optional link to catch-up all topics read instead of deleting the list to clear them all - props kaviaar
+
 
 

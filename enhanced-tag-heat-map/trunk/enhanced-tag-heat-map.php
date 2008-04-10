@@ -4,7 +4,7 @@ Plugin Name: Enhanced Tag Heat Map
 Plugin URI: http://www.adityanaik.com/projects/plugins/enhanced-tag-heat-map/
 Description: Enhanced Tag Heat Map replaces the tag heat map to highlight related tags for each of the tag on mouse over.
 Author: Aditya Naik
-Version: 1.1.0
+Version: 1.1.1
 Author URI: http://www.adityanaik.com/
 
 Version History
@@ -12,6 +12,7 @@ Version History
 1.0.1 : remove calls to firebug console
 1.0.2 : removed hooks to wordpress
 1.1.0 : update the getTagHeatMapRelatedTagsScript function make only one call to database
+1.1.1 : removed highlights of self on tag mouse over
 */
 
 /**
@@ -409,7 +410,7 @@ class enhancedTagHeatMap {
 	 * Creates javascript for the related tags for each of the tag in the tag heat map
 	 * 
 	 * @author	Aditya Naik
-	 * @version	1.1
+	 * @version	1.2
 	 * @return 	void
 	 */
 	function getTagHeatMapRelatedTagsScript() {
@@ -432,7 +433,8 @@ class enhancedTagHeatMap {
 		tag_relation[<?=$tag->tag_id; ?>] = new Array(<?php
 				$a_r_tags = array();
 				if (count($related_tags[$tag->tag_id]) > 0): foreach($related_tags[$tag->tag_id] as $r_tag) {
-					$a_r_tags[] = "'tag_" . $r_tag . "'";
+					if ($tag->tag_id != $r_tag)
+						$a_r_tags[] = "'tag_" . $r_tag . "'";
 				}
 				echo "" . join ($a_r_tags, ",");
 				$a_r_tags = null;

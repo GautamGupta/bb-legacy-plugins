@@ -1,15 +1,18 @@
 <?php
 /**
  * Plugin Name: Admin add user
- * Plugin Description: Allows Keymasters to add user through the administration panel.
+ * Plugin Description: Allows keymasters to add user through the administration panel.
  * Author: Thomas Klaiber
  * Author URI: http://thomasklaiber.com/
  * Plugin URI: http://thomasklaiber.com/bbpress/admin-add-user/
- * Version: 1.2
+ * Version: 1.3
  */
  
 function admin_add_user_adminpage() {
-	global $bbdb, $bb, $bb_table_prefix;
+	global $bbdb, $bb;
+	
+	// get the default registration functions
+	require_once( BB_PATH . BB_INC . 'registration-functions.php');
 ?>
 <h2><?php _e('Add New User') ?></h2>
 
@@ -19,7 +22,7 @@ function admin_add_user_adminpage() {
 
 	if (empty($_POST['user_login'])) :
 		$admin_add_user_error['user_login'] = "<li><strong>ERROR</strong>: Please enter a username.</li>";
-	elseif (bb_user_exists(user_sanitize($_POST['user_login'], true))) :
+	elseif (bb_user_exists(sanitize_user($_POST['user_login'], true))) :
 		$admin_add_user_error['user_login'] = "<li><strong>ERROR</strong>: This username is already taken.</li>";	
 	endif;
 	
@@ -35,35 +38,33 @@ function admin_add_user_adminpage() {
 	
 	if (!$admin_add_user_error) :
 	
-		$now = bb_current_time('mysql');
-		$user_login = user_sanitize( $_POST['user_login'], true );
+		$user_login =  $_POST['user_login'];
 		$user_email = $_POST['user_email'];
 		$user_url   = bb_fix_link( $_POST['user_url'] );
 		$password   = $_POST['pass1'];
-		$passcrypt  = md5( $password );
 		
-		$bbdb->query("INSERT INTO $bbdb->users
-		(user_login,     user_pass,    user_email,    user_url, user_registered)
-		VALUES
-		('$user_login', '$passcrypt', '$user_email', '$user_url',   '$now')");
-	
-		$user_id = $bbdb->insert_id;
-		bb_update_usermeta( $user_id, $bb_table_prefix . 'capabilities', array('member' => true) );
-		
-		if ($_POST['user_send_email']) :
-			// why doesn't this work?
-			// bb_send_pass( $user_id, $password );
+		if ( $user_id = bb_new_user( $user_login, $user_email, $user_url ) ) {
+			bb_update_user_password( $user_id, $password );
 			
-			$message = __("Your username is: %1\$s \nYour password is: %2\$s \nYou can now log in: %3\$s \n\nEnjoy!");
+			bb_update_usermeta( $user_id, $bbdb->prefix . 'capabilities', array('member' => true) );
+			
+			if ($_POST['user_send_email']) :
+				/**
+				 * Sending a mail again is bad, but if we don't do this,
+				 * the user gets a wrong password sent.
+				 * The bb_new_user() function can't be prevented from sending the first mail.
+				 */
+				$message = __("PLEASE IGNORE THE FIRST MAIL!\n\nYour username is: %1\$s \nYour new password is: %2\$s \nYou can now log in: %3\$s \n\nEnjoy!");
 
-			bb_mail(
-				bb_get_user_email( $user_id ),
-				bb_get_option('name') . ': ' . __('Password'),
-				sprintf( $message, "$user_login", "$password", bb_get_option('uri') )
-			);
-		endif;
+				bb_mail(
+					$user_email,
+					bb_get_option('name') . ': ' . __('Password'),
+					sprintf( $message, $user_login, $password, bb_get_option('uri') )
+				);
+			endif;		
 	
-		do_action('bb_admin_new_user', $user_id, $password);
+			do_action('bb_admin_new_user', $user_id, $password);
+		}
 	
 		$admin_add_user_success['user_login'] = "<li>User <strong>".$user_login."</strong> has been added. <a href=\"".get_profile_tab_link($user_id, 'edit')."\">Edit user's profile &raquo;</a></li>";
 		
@@ -140,7 +141,7 @@ function admin_add_user_adminpage() {
 
 function admin_add_user_adminnav() {
 	global $bb_submenu;
-	$bb_submenu['users.php'][] = array(__('Add User'), 'use_keys', 'admin_add_user_adminpage');
+	$bb_submenu['users.php'][] = array(__('Add User'), 'administrate', 'admin_add_user_adminpage');
 }
 add_action( 'bb_admin_menu_generator', 'admin_add_user_adminnav' );
 

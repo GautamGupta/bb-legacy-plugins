@@ -4,6 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=so1oonne
 Tags: tag, tags, related, heat map
 Requires at least: 0.9
 Tested up to: 0.9.0.1
+Stable tag: 1.0.2
 
 Enhances the tag heat map to highlight the related tags on mouse over
 

@@ -35,7 +35,16 @@ this name would be configurable.
 
 == Version History ==
 
-* 1.0 : 
+Version History
+* 1.0
   * Initial Release
+* 1.0.1
+  * remove calls to firebug console
+* 1.0.2
+  * removed hooks to wordpress
+* 1.1.0
+  * update the getTagHeatMapRelatedTagsScript function make only one call to database
+* 1.1.1
+  * removed highlights of self on tag mouse over
 
 

@@ -4,13 +4,14 @@ Plugin Name: Enhanced Tag Heat Map
 Plugin URI: http://www.adityanaik.com/projects/plugins/enhanced-tag-heat-map/
 Description: Enhanced Tag Heat Map replaces the tag heat map to highlight related tags for each of the tag on mouse over.
 Author: Aditya Naik
-Version: 1.0.2
+Version: 1.1.0
 Author URI: http://www.adityanaik.com/
 
 Version History
 1.0	: Initial Release
 1.0.1 : remove calls to firebug console
 1.0.2 : removed hooks to wordpress
+1.1.0 : update the getTagHeatMapRelatedTagsScript function make only one call to database
 */
 
 /**
@@ -408,18 +409,30 @@ class enhancedTagHeatMap {
 	 * Creates javascript for the related tags for each of the tag in the tag heat map
 	 * 
 	 * @author	Aditya Naik
-	 * @version	1.0
+	 * @version	1.1
 	 * @return 	void
 	 */
 	function getTagHeatMapRelatedTagsScript() {
+		global $bbdb;
 		$tags = $this->tags;
+		
+		$related_tags_result = $bbdb->get_results( "SELECT t.tag_id as t, tt.tag_id as rt FROM $bbdb->tagged t JOIN $bbdb->tagged AS tt  ON (t.topic_id = tt.topic_id)"  );
+		$related_tags = array();
+		if ($related_tags_result)
+		foreach($related_tags_result as $r ) {
+			if (isset($related_tags[$r->t])) {
+				$related_tags[$r->t] = array_merge($related_tags[$r->t], array($r->rt));
+			} else {
+				$related_tags[$r->t] = array($r->rt);
+			}
+		}
+		
 		foreach($tags as $tag) {
-			$r_tags = bb_related_tags( $tag);
 			?>	
 		tag_relation[<?=$tag->tag_id; ?>] = new Array(<?php
 				$a_r_tags = array();
-				if (count($r_tags) > 0): foreach($r_tags as $r_tag) {
-					$a_r_tags[] = "'tag_" . $r_tag->tag_id . "'";
+				if (count($related_tags[$tag->tag_id]) > 0): foreach($related_tags[$tag->tag_id] as $r_tag) {
+					$a_r_tags[] = "'tag_" . $r_tag . "'";
 				}
 				echo "" . join ($a_r_tags, ",");
 				$a_r_tags = null;

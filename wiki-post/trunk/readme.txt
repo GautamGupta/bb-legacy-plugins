@@ -8,21 +8,25 @@ Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
 
 == Description ==
 
-Allows any user to edit a Wiki-like post in any topic for a collaborative entry or FAQ.
+Allows any member to edit a Wiki-like post in any topic for a collaborative entry or FAQ. 
 
-This is a beta release without an admin menu (coming soon).
+This is a beta release without an admin menu (coming soon). 
 For now you must edit the wiki-post.php directly to change default options.
 
 == Installation ==
 
-* Edit `wiki-post.php` and change any default settings as desired near the top (until admin menu is made).
+* Edit `wiki-post.php` and change any default settings as desired near the top (until admin menu is available).
 * Add the "wiki-post.php" file to bbPress "my-plugins/" directory and activate. 
-* Optionally edit the "Wiki Post" user that has been created for you, ie. add avatar icon or change email for gravatar use
+* Optionally edit the new "Wiki Post" member that has been created for you, ie. add avatar icon or change email for gravatar use
 * If you edit `wiki-post.php` after install, you must reset the plugin via `your-forum.com?reset_wiki_post` (until there is an admin menu)
 
 == Frequently Asked Questions ==
 
+* demo: http://bbshowcase.org/forums/topic/new-bbpress-plugin-wiki-post
+
 * If you edit `wiki-post.php` after install, you must reset the plugin via `your-forum.com?reset_wiki_post` (until there is an admin menu)
+
+* There is a separate level control to create the Wiki and then another be able to edit it - so if you want, you can allow only mods+admin to create the Wiki and then any member to edit it.
 
 == License ==
 
@@ -36,6 +40,7 @@ For now you must edit the wiki-post.php directly to change default options.
 
 * 0.0.1 	wiki-post is born 
 * 0.1.0	first public beta release
+* 0.1.1 a few minor tweaks
 	
 == To Do ==
 

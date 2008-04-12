@@ -26,7 +26,7 @@ function wiki_post_initialize() {
 	$wiki_post['post_position']="2";		// you can make the wiki post the 1st or 2nd post (2 is recommended)
 	$wiki_post['automatic_insert']=false;	// not implimented yet - automatic wiki creation for every topic
 	$wiki_post['name']="Wiki Post";		// formal wiki name
-	$wiki_post['title']="<span style='font: bold 1.3em san-serif;color:navy;'>W</span> ";	// text, html or image to show on topic titles if Wiki is present	
+	$wiki_post['title']="<span style='font:bold 1.4em serif;color:navy;'>W</span> "; // text, html or image to show on topic titles if Wiki is present	
 	
 	// stop editing
 	

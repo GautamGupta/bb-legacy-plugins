@@ -232,7 +232,7 @@ function post_count_plus_initialize() {
 	if ($post_count_plus['style']) {add_action('bb_head', 'post_count_plus_add_css');}	
 	if ($post_count_plus['user_color']) {
 		add_filter( 'get_post_author','post_count_plus_user_color',200,2);
-		add_filter( 'get_user_name','post_count_plus_user_color', 200,2);
+	            	// add_filter( 'get_user_name','post_count_plus_user_color', 200,2);
 		add_filter( 'get_topic_last_poster', 'post_count_plus_user_color',200,2 ); 
 		add_filter( 'get_topic_author', 'post_count_plus_user_color',200,2 ); 
 		add_action('bb_head', 'post_count_plus_user_cache');

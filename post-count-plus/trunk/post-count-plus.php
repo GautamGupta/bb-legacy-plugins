@@ -5,7 +5,7 @@ Plugin URI:  http://bbpress.org/plugins/topic/83
 Description: An enhanced "user post count" with "custom titles" for topics and profiles, based on posts and membership, with cached results for faster pages. No template edits required.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 1.07
+Version: 1.1.1
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -93,9 +93,9 @@ if (!$date_format) {$date_format=$post_count_plus['join_date_format'];}
 }
 
 function post_count_plus_find_title($user_id=0,$posts=0,$days=0,$role='') {	
-global $post_count_plus,$post_count_plus_cache;
+global $post_count_plus, $post_count_plus_title_cache;
 if ($user_id) {	
-	if (isset($post_count_plus_cache[$user_id])) {return $post_count_plus_cache[$user_id];}		
+	if (isset($post_count_plus_title_cache[$user_id])) {return $post_count_plus_title_cache[$user_id];}		
 	$user = bb_get_user( $user_id );
 	if (!$posts) {$posts=post_count_plus_get_count($user_id);}
 	if (!$days) {$days=intval((bb_current_time('timestamp') - bb_gmtstrtotime( $user->user_registered ))/86400);}					
@@ -118,7 +118,7 @@ if ($post_count_plus['custom_titles'][$i*$width]) {
 
 // echo " <!-- f:$found p0:$posts0 p:$posts d0:$days0 d:$days r0:$role0 r:$role \n\n --> "; // diagnostic
 
-if ($user_id)  {$post_count_plus_cache[$user_id]=$found;}	// cache for same page queries
+if ($user_id)  {$post_count_plus_title_cache[$user_id]=$found;}	// cache for same page queries
 return $found;
 }
 
@@ -136,13 +136,13 @@ return $title;
 
 function post_count_plus_user_color($user_name, $user_id) {
 global $post_count_plus;
-if (bb_get_location()=="topic-page") {
+// if (bb_get_location()=="topic-page") {
 	if ($post_count_plus['user_color']) {		
 		$found=post_count_plus_find_title($user_id);		
 		$color=$post_count_plus['custom_titles'][$found+4];
 		if ($color) {$user_name='<span class="post_count_plus"><font color="'.$color.'">'.$user_name.'</font></span>';}
 	}
-}
+// }
 return $user_name;
 }
 
@@ -170,6 +170,7 @@ function post_count_plus_add_css() { global $post_count_plus;  echo '<style type
 
 function post_count_plus_filter($titlelink) {post_count_plus(0,0,$titlelink); return '';}	// only if automatic inserts are selected
 
+add_action( 'bb_init', 'post_count_plus_initialize');
 function post_count_plus_initialize() {
 	global $bb, $bb_current_user, $post_count_plus, $post_count_plus_type, $post_count_plus_label;
 	if (!isset($post_count_plus)) {$post_count_plus = bb_get_option('post_count_plus');
@@ -229,11 +230,24 @@ function post_count_plus_initialize() {
 	if ($post_count_plus['profile_insert']) {add_filter( 'get_profile_info_keys','post_count_plus_profile_key',200);}
 	if ($post_count_plus['activate']) {add_filter( 'post_author_title', 'post_count_plus_filter');}
 	if ($post_count_plus['style']) {add_action('bb_head', 'post_count_plus_add_css');}	
-	if ($post_count_plus['user_color']) {add_filter( 'get_post_author','post_count_plus_user_color',200,2);}
+	if ($post_count_plus['user_color']) {
+		add_filter( 'get_post_author','post_count_plus_user_color',200,2);
+		add_filter( 'get_user_name','post_count_plus_user_color', 200,2);
+		add_filter( 'get_topic_last_poster', 'post_count_plus_user_color',200,2 ); 
+		add_filter( 'get_topic_author', 'post_count_plus_user_color',200,2 ); 
+		add_action('bb_head', 'post_count_plus_user_cache');
+	}
 	add_filter( 'get_user_link','post_count_plus_user_link',200,2);
 }	
-add_action( 'bb_init', 'post_count_plus_initialize');
-// add_action( 'init', 'post_count_plus_initialize');
+
+function post_count_plus_user_cache() {
+	global $post_count_plus, $topics, $stickies;
+	if (in_array(bb_get_location(),array('front-page','forum-page', 'tag-page','search-page','favorites-page','profile-page','view-page'))) {
+		if ( $stickies ) {foreach ( $stickies as $topic ) { $ids[$topic->topic_last_poster]=$topic->topic_last_poster; }}
+		if ( $topics ) {foreach ( $topics as $topic ) { $ids[$topic->topic_last_poster]=$topic->topic_last_poster; }} 
+		if (isset($ids)) {bb_cache_users($ids);}
+	}
+}
 
 function post_count_plus_add_admin_page() {bb_admin_add_submenu(__('Post Count Plus'), 'administrate', 'post_count_plus_admin_page');}
 add_action( 'bb_admin_menu_generator', 'post_count_plus_add_admin_page' );

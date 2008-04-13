@@ -5,7 +5,7 @@ Description:  Allows any member to edit a Wiki-like post in any topic for a coll
 Plugin URI:  http://bbpress.org/plugins/topic/101
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.1
+Version: 0.1.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -46,13 +46,14 @@ function wiki_post_initialize() {
 					
 	if (is_topic()) {					
 		add_action('topicmeta','wiki_post_create_link',200);
-		add_filter('post_text','wiki_post_instructions',5);
+		add_filter('post_text','wiki_post_footer',5);
 	} else {
 		add_filter('topic_title', 'wiki_post_title',200);
 	}	
-	add_filter('bb_current_user_can', 'wiki_post_allow_edit',200,3);	
+	add_filter('bb_current_user_can', 'wiki_post_allow_edit',200,3);		
 } 
 add_action('bb_init','wiki_post_initialize');
+add_action( 'bb_update_post', 'wiki_post_update_post');
 
 function wiki_post_allow_edit($retvalue, $capability, $args) {
 	global $wiki_post, $bb_post;		 			
@@ -107,9 +108,32 @@ function wiki_post_create_post($topic_id=0) {
 		if ($post_id && $topic_id) {$topic->wiki_post['post_id']=$post_id; bb_update_topicmeta( $topic_id, 'wiki_post', $topic->wiki_post);}
 		
 	wiki_post_fix_last_poster($topic_id);
+	wiki_post_add_edit_history($topic_id);
 	return $post_id;
 	}
 return 0;	
+}
+
+function wiki_post_update_post($post_id) {
+	global $wiki_post, $bb_post;		
+	if ($post_id && $post_id==$bb_post->post_id && $wiki_post['user']==$bb_post->poster_id) {wiki_post_add_edit_history($bb_post->topic_id);}	
+}
+
+function wiki_post_fix_last_poster($topic_id) {
+	global $wiki_post, $bbdb;	
+	// bbpress wants to make wiki_post the last poster, so undo that		
+	$old_post = $bbdb->get_row( "SELECT post_id, poster_id, post_time FROM $bbdb->posts WHERE poster_id!= ".$wiki_post['user']." AND topic_id = $topic_id AND post_status = 0 ORDER BY post_time DESC LIMIT 1");
+	$old_name = $bbdb->get_var("SELECT user_login FROM $bbdb->users WHERE ID = $old_post->poster_id");
+	$bbdb->update( $bbdb->topics, array( 'topic_time' => $old_post->post_time, 'topic_last_poster' => $old_post->poster_id, 'topic_last_poster_name' => $old_name, 'topic_last_post_id' => $old_post->post_id ), compact( 'topic_id' ) );
+}
+
+function wiki_post_add_edit_history($topic_id=0) {
+	global $wiki_post;		
+	$topic_id=get_topic_id($topic_id); $topic = get_topic($topic_id);  
+	$user_id=bb_get_current_user_info( 'id' );  $time=time();	
+	if ($topic->wiki_post['user_id']) {$topic->wiki_post['user_id'].=",$user_id";} else {$topic->wiki_post['user_id']=$user_id;}
+	if ($topic->wiki_post['time']) {$topic->wiki_post['time'].=",$time";} else {$topic->wiki_post['time']=$time;}	
+	bb_update_topicmeta( $topic_id, 'wiki_post', $topic->wiki_post); 
 }
 
 function wiki_post_title( $title ) {
@@ -118,20 +142,21 @@ function wiki_post_title( $title ) {
 	return $title;
 } 
 
-function wiki_post_fix_last_poster($topic_id) {
-	global $wiki_post, $bbdb;
-	
-	// bbpress wants to make wiki_post the last poster, so undo that		
-	$old_post = $bbdb->get_row( "SELECT post_id, poster_id, post_time FROM $bbdb->posts WHERE poster_id!= ".$wiki_post['user']." AND topic_id = $topic_id AND post_status = 0 ORDER BY post_time DESC LIMIT 1");
-	$old_name = $bbdb->get_var("SELECT user_login FROM $bbdb->users WHERE ID = $old_post->poster_id");
-	$bbdb->update( $bbdb->topics, array( 'topic_time' => $old_post->post_time, 'topic_last_poster' => $old_post->poster_id, 'topic_last_poster_name' => $old_name, 'topic_last_post_id' => $old_post->post_id ), compact( 'topic_id' ) );
-}
-
-function wiki_post_instructions($text) {
+function wiki_post_footer($text) {
 	if (!is_bb_feed()) {
-		global $wiki_post, $bb_post;
-		if ($wiki_post['user']==$bb_post->poster_id) {$text.="<div class='wiki_post'>".$wiki_post['post_instructions']."</div>";}
+		global $wiki_post, $bb_post, $topic;		
+		if ($wiki_post['user']==$bb_post->poster_id) {
+			$edited=1+intval(substr_count($topic->wiki_post['user_id'],",")); 
+			if ($edited>1) {$edited="Edited $edited times."; 			
+			$last="Last edit by ".get_full_user_link(intval(substr($topic->wiki_post['user_id'],strrpos($topic->wiki_post['user_id'],",")+1)))." ";
+			$last.=bb_since(1+intval(substr($topic->wiki_post['time'],strrpos($topic->wiki_post['time'],",")+1)))." ago.";
+			} else {$last=""; $edited=""; $ago="";}			
+			$started="Started by ".get_full_user_link(intval($topic->wiki_post['user_id'])).".";
+			$text.="<div class='wiki_post'>".$wiki_post['post_instructions']."<br />($started $edited $last)</div>";
+		}
 	}
 return $text;
 }
+
+
 ?>

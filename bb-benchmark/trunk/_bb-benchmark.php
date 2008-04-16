@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/65
 Description: Prints simple benchmarks and mysql diagnostics, hidden in page footers for administrators. Based on Jerome Lavigne's Query Diagnostics for WordPress.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.19
+Version: 0.2.0
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -27,12 +27,15 @@ History:
 0.17	: double dashes break html comments and make them visible -- replaced as - -
 0.18	: add hook to admin panel for plugin admin testing
 0.19	: bug fix to hide output in some different situations
+0.2.0	: bug fix when checking BB_IS_ADMIN
 */
 
 function bb_benchmark_output() {
 if (bb_current_user_can( 'administrate' ) )  : 
 		$timer_stop=bb_timer_stop(0);	
 		global $bbdb;	        	
+		
+	if (defined('BB_IS_ADMIN')) {echo '<div style="margin-top:-0.9em;text-align:center;">'.$bbdb->num_queries." queries </div>";}
         	
     	echo " <!-- \n === benchmark & query results === \n\n"; 
 	    	    	  		   	    	       	

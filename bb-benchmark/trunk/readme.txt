@@ -62,3 +62,7 @@ Output includes current server load, page render vs mysql query time, slowest qu
 * 0.17	: double dashes break html comments and make them visible -- replaced as - -
 * 0.18	: added hook to admin panel for plugin admin testing
 * 0.19	: important bug fix to hide output again in certain situations
+
+= Version 0.2.0 (2008-04-16) =
+
+* 0.2.0	: bug fix when checking BB_IS_ADMIN

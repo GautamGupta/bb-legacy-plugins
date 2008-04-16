@@ -39,6 +39,14 @@ Activate and check under "content" admin submenu for "Mass Edit".
 
 * first public release
 
+= Version 1.10 (2008-02-18) =
+
+* user adjustable options including column order and CSS editing
+
+= Version 1.1.1 (2008-04-16) =
+
+* only load mass-edit core if in admin menu and on mass-edit (saves 20k per instance)
+
 == To Do ==
 
 * more language translation hooks

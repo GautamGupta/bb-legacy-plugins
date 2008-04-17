@@ -6,7 +6,7 @@ Tested up to: trunk
 Stable tag: trunk
 Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
 
-Prevent all or certain members from starting topics or just replying in certain forums while allowing posting in others. Moderators and administrators can always post. Note that this does NOT hide forums, just prevents posting.
+Prevent all or certain members from starting topics or just replying in certain forums while allowing posting in others. Moderators and administrators can always post. Note that this does not hide forums, just prevents posting.
 
 == Description ==
 
@@ -20,7 +20,7 @@ Prevent all or certain members from starting topics or just replying in certain 
 
 == Frequently Asked Questions ==
 
-= how do I know the forum / user number ? =
+= how do I know the forum number / user number ? =
 
 * administrators can do  forum.com/forums/?forumlist to get a list of forums by number (when the plugin is installed)
 
@@ -29,7 +29,7 @@ Prevent all or certain members from starting topics or just replying in certain 
 = examples =
 
 * stop ALL members from starting topics in ALL forums 
-`$read_only_forums['deny_all_start_topic']=true; `
+`$read_only_forums['deny_all_start_topic']=true;`
 
 * stop ALL members from replying to topics in ALL forums
 `$read_only_forums['deny_all_reply']=false;`
@@ -41,16 +41,16 @@ Prevent all or certain members from starting topics or just replying in certain 
 `$read_only_forums['deny_forums_reply']=array(9,15,22);`
 
 * allow start topic override for this member=>forums
-`$read_only_forums['allow_members_start_topic']= array(1=>array(1,2,3,4,5,6,7), 2=>array(9,10,11));`  
+`$read_only_forums['allow_members_start_topic']=array(1=>array(1,2,3,4,5,6,7), 2=>array(9,10,11));`  
 
 * allow reply override for this member=>forums
-`$read_only_forums['allow_members_reply']=	array(1=>array(1,2,3,4,5,6,7), 2=>array(9,10,11));` 	
+`$read_only_forums['allow_members_reply']=array(1=>array(1,2,3,4,5,6,7), 2=>array(9,10,11));` 	
 
 * deny start topic for this specific member=>forums
-`$read_only_forums['deny_members_start_topic']= array(54321=>array(1,2,3,4,5,6,7), 34567=>array(1,2,3));`
+`$read_only_forums['deny_members_start_topic']=array(54321=>array(1,2,3,4,5,6,7), 34567=>array(1,2,3));`
 
 * deny reply for this specific member=>forums
-`$read_only_forums['deny_members_reply'] =array(54321=>array(1,2,3,4,5,6,7), 34567=>array(1,2,3));`
+`$read_only_forums['deny_members_reply']=array(54321=>array(1,2,3,4,5,6,7), 34567=>array(1,2,3));`
 
 * these types of users can always start/reply
 `$read_only_forums['allow_roles_always']=array('moderator','administrator','keymaster');`

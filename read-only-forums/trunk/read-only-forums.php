@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Read-Only Forums
-Description: Prevent all or certain members from starting topics or just replying in certain forums while allowing posting in others. Moderators and administrators can always post. Note that this does NOT hide forums, just prevents posting.
+Description: Prevent all or certain members from starting topics or just replying in certain forums while allowing posting in others. Moderators and administrators can always post. Note that this does not hide forums, just prevents posting.
 Plugin URI:  http://bbpress.org/plugins/topic/103
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.1
+Version: 0.0.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -19,8 +19,8 @@ global $read_only_forums,$bb_current_user, $bb_roles;
 $read_only_forums['deny_all_start_topic']=false;  // true = stop ALL members from starting topics in ALL forums 
 $read_only_forums['deny_all_reply']=false;	  // true = stop ALL members from replying to topics in ALL forums
 
-$read_only_forums['deny_forums_start_topic']=array(9,15,22);  // which forums should ALL members not be able to start topics
-$read_only_forums['deny_forums_reply']=array(9,15,22);  	  // which forums should ALL members not be able to reply to posts
+$read_only_forums['deny_forums_start_topic']=array(9,15,22);  // which forums should ALL members NOT be able to start topics
+$read_only_forums['deny_forums_reply']=array(9,15,22);  	  // which forums should ALL members NOT be able to reply to posts
 
 $read_only_forums['allow_members_start_topic']= array(1=>array(1,2,3,4,5,6,7), 2=>array(9,10,11));  // allow override for this member=>forums
 $read_only_forums['allow_members_reply']=	array(1=>array(1,2,3,4,5,6,7), 2=>array(9,10,11)); 	// allow override for this member=>forums
@@ -44,10 +44,11 @@ if (!$bb_current_user->ID) {return $retvalue;}	// not logged in
 if (in_array(reset($bb_current_user->roles),$read_only_forums['allow_roles_always'])) {return true;}	// role in override list
 
 if ($capability=='write_topic') {	// $args = forum_id	
-	$forum=intval($args[1]);
+	$forum=intval($args[1]);	
 	if (read_only_forums_dig($bb_current_user->ID,$forum,$read_only_forums['allow_members_start_topic'])) {echo "a:true"; return true;}
 	if (read_only_forums_dig($bb_current_user->ID,$forum,$read_only_forums['deny_members_start_topic']))  {echo "a:false"; return false;}
 
+	if (in_array($forum,$read_only_forums['deny_forums_start_topic'])) {return false;} // check specific forum blocks
 	if ($read_only_forums['deny_all_start_topic']) {return false;}	// stop all members from starting topics
 }
 
@@ -56,6 +57,7 @@ if ($capability=='write_post') {	// $args = topic_id
 	if (read_only_forums_dig($bb_current_user->ID,$forum,$read_only_forums['allow_members_reply'])) {return true;}
 	if (read_only_forums_dig($bb_current_user->ID,$forum,$read_only_forums['deny_members_reply']))  {return false;}
 	
+	if (in_array($forum,$read_only_forums['deny_forums_reply'])) {return false;} // check specific forum blocks
 	if ($read_only_forums['deny_all_reply']) {return false;} // stop all members from replying to topics	
 }
 

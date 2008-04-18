@@ -5,7 +5,7 @@ Description: Prevent all or certain members from starting topics or just replyin
 Plugin URI:  http://bbpress.org/plugins/topic/103
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.2
+Version: 0.0.5
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -30,14 +30,16 @@ $read_only_forums['deny_members_reply'] =      array(54321=>array(1,2,3,4,5,6,7)
 
 $read_only_forums['allow_roles_always']=array('moderator','administrator','keymaster'); // these types of users can always start/reply
 
-// stop editing here
+$read_only_forums['message_deny_start_topic']=__("Posting in this forum has been restricted.");
+$read_only_forums['message_deny_reply'] = __("Posting in this topic has been restricted.");
 
+// stop editing here
 
 function read_only_forums($retvalue, $capability, $args) {
 
 if ($capability!="write_post" && $capability!="write_topic") {return $retvalue;} // not our problem
 
-global $read_only_forums,$bb_roles,$bb_current_user;
+global $read_only_forums,$bb_current_user;
 
 if (!$bb_current_user->ID) {return $retvalue;}	// not logged in
 
@@ -45,8 +47,8 @@ if (in_array(reset($bb_current_user->roles),$read_only_forums['allow_roles_alway
 
 if ($capability=='write_topic') {	// $args = forum_id	
 	$forum=intval($args[1]);	
-	if (read_only_forums_dig($bb_current_user->ID,$forum,$read_only_forums['allow_members_start_topic'])) {echo "a:true"; return true;}
-	if (read_only_forums_dig($bb_current_user->ID,$forum,$read_only_forums['deny_members_start_topic']))  {echo "a:false"; return false;}
+	if (read_only_forums_dig($bb_current_user->ID,$forum,$read_only_forums['allow_members_start_topic'])) { return true;}
+	if (read_only_forums_dig($bb_current_user->ID,$forum,$read_only_forums['deny_members_start_topic']))  { return false;}
 
 	if (in_array($forum,$read_only_forums['deny_forums_start_topic'])) {return false;} // check specific forum blocks
 	if ($read_only_forums['deny_all_start_topic']) {return false;}	// stop all members from starting topics
@@ -74,11 +76,24 @@ return false;
 
 add_filter('bb_current_user_can','read_only_forums',10,3);
 
-function read_only_forums_list_forums() {
-if (isset($_GET['listforums']) && bb_current_user_can('administrate')) {
-foreach (get_forums() as $forum) {echo "$forum->forum_id -> $forum->forum_name <br><br>";} exit();
+function read_only_post_form($h2='') {	
+	if (!bb_is_user_logged_in()) {post_form($h2);} 
+	else {	
+		global $read_only_forums,$page, $topic, $forum;	
+		if (is_topic()) {$args[1]=$topic->topic_id; if (read_only_forums(true, 'write_post', $args)) {post_form($h2);} 
+			else {echo $read_only_forums['message_deny_reply'] . "\n";}
+		} else { 
+		if (is_forum()) {$args[1]=$forum->forum_id; if (read_only_forums(true, 'write_topic', $args)) {post_form($h2);} 
+			else {echo $read_only_forums['message_deny_start_topic'] . "\n";}	
+		}}
+	}
 }
-} if (isset($_GET['listforums'])) {add_action('bb_init','read_only_forums_list_forums');}
+
+function read_only_forums_list_forums() {
+if (bb_current_user_can('administrate')) {
+echo "<h2>Forum List</h2>"; foreach (get_forums() as $forum) {echo "$forum->forum_id -> $forum->forum_name <br><br>";} exit();
+}
+} if (isset($_GET['listforums']) || isset($_GET['forumlist'])) {add_action('bb_init','read_only_forums_list_forums');}
 
 /*	not going to use this for now because it prevents overrides
 if ($read_only_forums['deny_all_start_topic']) {$bb_roles->remove_cap('member','write_topics');}

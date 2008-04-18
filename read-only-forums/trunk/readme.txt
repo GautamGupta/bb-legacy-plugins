@@ -10,7 +10,7 @@ Prevent all or certain members from starting topics or just replying in certain 
 
 == Description ==
 
-Prevent all or certain members from starting topics or just replying in certain forums while allowing posting in others. Moderators and administrators can always post. Note that this does NOT hide forums, just prevents posting.
+Prevent all or certain members from starting topics or just replying in certain forums while allowing posting in others. Moderators and administrators can always post. Note that this does not hide forums, just prevents posting.
 
 == Installation ==
 
@@ -20,13 +20,21 @@ Prevent all or certain members from starting topics or just replying in certain 
 
 == Frequently Asked Questions ==
 
-= how do I know the forum number / user number ? =
+= How do I know the forum number / user number ? =
 
 * administrators can do  forum.com/forums/?forumlist to get a list of forums by number (when the plugin is installed)
 
 * user numbers can be found under forum.com/forums/bb-admin/users.php
 
-= examples =
+= How can I remove the "Add a reply" message when members can't post? =
+
+* in `topic.php` template replace the `<?php post_form(); ?>`  with `<?php if (function_exists('read_only_post_form')) {read_only_post_form();}  else {post_form();} ?>`
+
+* in `forum.php` template replace the `<?php post_form(); ?>`  with `<?php if (function_exists('read_only_post_form')) {read_only_post_form();}  else {post_form();} ?>`
+
+* if ALL your forums are going to be Read-Only, replace in `topic.php` `forum.php` `front-page.php`  `tag-single.php` `<?php post_form(); ?>` with `<?php if (function_exists('read_only_post_form')) {if (bb_current_user_can('moderate')) {read_only_post_form();}}  else {post_form();} ?>`
+
+= Configuration Examples =
 
 * stop ALL members from starting topics in ALL forums 
 `$read_only_forums['deny_all_start_topic']=true;`

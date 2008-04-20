@@ -6,11 +6,11 @@ Tested up to: 0.8 branch
 Stable tag: trunk
 Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
 
-Notifies the admin by email that a new user has registered.
+Notifies the keymaster by email that a new user has registered.
 
 == Description ==
 
-Notifies the admin by email that a new user has registered.
+Notifies the keymaster by email that a new user has registered.
 
 == Installation ==
 
@@ -20,7 +20,7 @@ Notifies the admin by email that a new user has registered.
 
 = I'm not receiving the emails? =
 
-* If you use Hotmail or AOL, your server must have rDNS and SPF setup. Otherwise try gmail instead.
+* If you use Hotmail or AOL, your server must have rDNS and SPF setup. Otherwise try gmail instead which is more tolerant.
 
 == License ==
 
@@ -36,3 +36,6 @@ Notifies the admin by email that a new user has registered.
 
 * first public release
 
+= Version 0.0.2 (2008-04-20) =
+
+* deals with bbPress change from admin_email to from_email

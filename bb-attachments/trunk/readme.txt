@@ -1,14 +1,19 @@
 === bbPress Attachments ===
-Tags:  attachments,attachment,attach,uploads,upload, _ck_
+Tags:  attachments, attachment, attach, uploads, upload, files, _ck_
 Contributors: _ck_
 Requires at least: 0.9
 Tested up to: trunk
 Stable tag: trunk
 Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
 
+Gives members the ability to upload attachments on their posts. This is an early beta release for review. Feedback, bug reports, feature ideas, improvements are encouraged. Please note there are important security considerations when allowing uploads of any kind to your server.
+
 == Description ==
 
-Gives members the ability to upload attachments on their posts. This is an early beta release for review. Bug reports, feature ideas, improvements encouraged. Please note there are important security considerations when allowing uploads of any kind to your server.
+Gives members the ability to upload attachments on their posts. 
+This is an early beta release for review. 
+Feedback, bug reports, feature ideas, improvements are encouraged. 
+Please note there are important security considerations when allowing uploads of any kind to your server.
 
 == Installation ==
 

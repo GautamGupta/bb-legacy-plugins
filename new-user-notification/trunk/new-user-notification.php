@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name:  New User Notification Email
-Plugin URI: http://bbpress.org/plugins/
+Plugin URI: http://bbpress.org/plugins/topic/94
 Description: Notifies the admin by email that a new user has registered.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.01
+Version: 0.0.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -30,7 +30,8 @@ function new_user_notification($user_id=0) {
 	
 	$message .= sprintf(__('Profile: %s'), get_user_profile_link($user_id)) . "\r\n\r\n";
 		
-@bb_mail(bb_get_option('admin_email') , sprintf(__('[%s] New User Registration'), bb_get_option('name')), $message, '' );
+$to=bb_get_option('admin_email'); if (!$to) {$to=bb_get_option('from_email');}
+@bb_mail($to , sprintf(__('[%s] New User Registration'), bb_get_option('name')), $message, '' );
 }
 
 ?>

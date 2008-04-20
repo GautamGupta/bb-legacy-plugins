@@ -5,7 +5,11 @@ Description:  allows members to report a post to admin/moderators
 Plugin URI:  http://bbpress.org/plugins/topic/64
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.12
+Version: 0.1.3
+
+license: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
+
+donate: http://amazon.com/paypage/P2FBORKDEFQIVM
 
 instructions:  
 install, activate and put  <? report_post_link(); ?> in your post.php template where you want the link to be seen
@@ -49,8 +53,8 @@ if (isset($_POST['report_post_id']) && isset($_POST['report_post_reason'])) {
 	echo '<scr'.'ipt type="text/javascript">alert("'.$message.'");</scr'.'ipt>';
 	$post_id=intval($_POST['report_post_id']);
 	// todo: custom response if invalid id, problem sending email - maybe flush output buffer so member gets alert faster
-	$to = bb_get_option('admin_email');
-	$from = $to;
+	$to=bb_get_option('admin_email'); if (!$to) {$to=bb_get_option('from_email');}
+	$from =  $to;
 	$subject = __("post reported by member for moderation");
 	$headers ="From: ".$from;
 	$message ="report by:  ".bb_get_current_user_info( 'name' )." (".bb_get_current_user_info( 'id' ).")  email: ".bb_get_current_user_info( 'email' )."\r\n\r\n";  

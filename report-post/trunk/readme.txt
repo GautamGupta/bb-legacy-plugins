@@ -52,3 +52,7 @@ Email is currently used to notify the administrator but more options will come e
 = Version 0.10 (2007-07-31) =
 
 * first public release
+
+= Version 0.1.3 (2008-04-20) =
+
+* fix for bbPress change from admin_email to from_email

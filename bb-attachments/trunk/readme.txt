@@ -33,6 +33,7 @@ Please note there are important security considerations when allowing uploads of
 * needs PHP >= 4.3
 * mime_content_type function or shell access must exist to verify mime types 
 * filesize max might be 2mb because of passthrough/readfile limit (supposedly fixed in newer PHP)
+* administrators can debug settings (ie. PHP upload limit) by adding to url `?bb_attachments_diagnostic`
 
 == License ==
 
@@ -45,6 +46,7 @@ Please note there are important security considerations when allowing uploads of
 == History ==
 
 * 0.0.5	first public beta release for review
+* 0.0.6	advanced restrictions by file type & user role, upload form displays allowed file types
 	
 == To Do ==
 

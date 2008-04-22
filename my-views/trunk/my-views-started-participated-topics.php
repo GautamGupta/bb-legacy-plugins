@@ -5,14 +5,14 @@ Description: This plugin is part of the My Views plugin. It adds Started/Partici
 Plugin URI:  http://bbpress.org/plugins/topic/67
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.091
+Version: 0.1.1
 */ 
 
 if (is_callable('bb_register_view')) {	// Build 876+   alpha trunk
 
-function my_views_add_started_participated_topics() {
-	$query = '';
-	bb_register_view("latest-discussions","Latest Discussions",$query);
+function my_views_add_started_participated_topics() {	
+	$query = array('append_meta'=>false,'sticky'=>false);	// attempt to short-circuit bb_query
+	bb_register_view("latest-discussions","Latest Discussions", $query);
 	if (bb_is_user_logged_in()) {
     		bb_register_view("my-topics","Topics I've Started",$query);
     		bb_register_view("my-posts","Topics I've Participated In",$query);
@@ -43,7 +43,7 @@ if ($view=='latest-discussions' || ($user_id && ($view=='my-topics' || $view=='m
 	$limit = bb_get_option('page_topics');
 	$offset = ($page-1)*$limit;
 	$sort=" DESC ";
-	$where = apply_filters('get_latest_topics_where','');
+	$where = apply_filters('get_latest_topics_where',"WHERE topic_status=0 ");
 	if ($user_id) {
 		if ($view=='my-topics') {
 		$where = $where." AND topic_poster=$user_id ";		
@@ -58,7 +58,7 @@ if ($view=='latest-discussions' || ($user_id && ($view=='my-topics' || $view=='m
 		$where = $where." AND topic_id IN ($ids) ";			
 		}
 	}
-	$query = " FROM $bbdb->topics WHERE topic_status=0  $where ";
+	$query = " FROM $bbdb->topics $where ";
 	$restrict = " ORDER BY cast(topic_last_post_id as UNSIGNED) $sort LIMIT $limit OFFSET $offset";	// topic_last_post_id is lazy/faster way to sort by newest
 
 	$view_count  = $bbdb->get_var("SELECT count(*) ".$query);	 //  bb_count_last_query();  // count($topics);			

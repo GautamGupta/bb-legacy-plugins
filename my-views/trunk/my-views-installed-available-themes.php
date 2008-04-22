@@ -5,11 +5,11 @@ Description: This plugin is part of the My Views plugin. It adds Installed/Avail
 Plugin URI:  http://bbpress.org/plugins/topic/67
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.091
+Version: 0.1.0
 */ 
 
 if (is_callable('bb_register_view')) {	// Build 876+   alpha trunk
-    $query = ''; 
+    $query = array('append_meta'=>false,'sticky'=>false);	// attempt to short-circuit bb_query 
 //  bb_register_view("installed-themes","Installed bbPress Themes",$query);
     bb_register_view("available-themes","Available bbPress Themes",$query);
 

@@ -1,18 +1,17 @@
 <?php
 /*
 Plugin Name: My Views module - Most/Least Views
-Description: This plugin is part of the My Views plugin. It adds Most/Least Views to the list of views and forum view counts to the list of forums.
-		To make the forum view count available, you must edit your front-page.php and forum.php templates.
+Description: This plugin is part of the My Views plugin. It adds Most/Least Views to the list of views and forum view counts to the list of forums. To make the forum view count available, you must edit your front-page.php and forum.php templates. REQUIRES bb-Topic-Views plugin.
 Plugin URI:  http://bbpress.org/plugins/topic/67
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.09
+Version: 0.1.1
 */ 
 
-//  if (function_exists('get_view_count')) :       // requires  bb-topic-views plugin   // this needs to check the db meta directly as the other plugin may not have loaded
+// NOTICE: requires  bb-topic-views plugin  
 
 if (is_callable('bb_register_view')) {	// Build 876+   alpha trunk
-	$query = ''; 
+	$query = array('append_meta'=>false,'sticky'=>false);	// attempt to short-circuit bb_query 
     	bb_register_view("most-views","Topics with the most views",$query);
     	bb_register_view("least-views","Topics with the least views",$query);
 
@@ -33,15 +32,15 @@ if ($view=='most-views')  {$sort="DESC";}
 if ($view=='least-views')  {$sort="ASC";}
 if ($view=='least-views' || $view=='most-views')  {
 	$limit = bb_get_option('page_topics');
-	$offset = ($page-1)*$limit;
-	$where = apply_filters('get_latest_topics_where','');
+	$offset = ($page-1)*$limit;	
 	// limit *9 is a lazy work around to avoid a join, as topic_static=0 in next query filters out deleted
 	$most_views = $bbdb->get_results("SELECT topic_id FROM $bbdb->topicmeta WHERE meta_key='views' ORDER BY cast(meta_value as UNSIGNED) $sort LIMIT ".$limit*9);
 	foreach (array_keys($most_views) as $i) {$trans[$most_views[$i]->topic_id] =& $most_views[$i];} 
 	unset($most_views); 	 // huge query, release memory
 	$ids = join(',', array_keys($trans));			// this eventually needs to be enhanced to filter/split the array for pagination - could get HUGE
 	
-	$query ="FROM $bbdb->topics WHERE topic_status=0 AND topic_id IN ($ids) $where ";
+	$where = apply_filters('get_latest_topics_where',"WHERE topic_status=0 AND topic_id IN ($ids) ");
+	$query ="FROM $bbdb->topics $where ";
 	$restrict="ORDER BY FIELD(topic_id, $ids) LIMIT $limit OFFSET $offset";
 	
 	$view_count  = $bbdb->get_var("SELECT count(*) ".$query);	 //  bb_count_last_query();  // count($topics);		
@@ -56,7 +55,7 @@ function forums_views_append($forums) {
 if (is_front() || is_forum()) {
 global $bbdb, $forums_views; $sum_meta_value="SUM(meta_value)";
 if (!isset($forums_views)) {
-$forums_views = $bbdb->get_results(" SELECT $sum_meta_value,forum_id FROM $bbdb->topicmeta LEFT JOIN $bbdb->topics ON $bbdb->topicmeta.topic_id = $bbdb->topics.topic_id  WHERE $bbdb->topics.topic_status=0 AND $bbdb->topicmeta.meta_key='views'  GROUP BY $bbdb->topics.forum_id");
+$forums_views = $bbdb->get_results("SELECT $sum_meta_value,forum_id FROM $bbdb->topicmeta LEFT JOIN $bbdb->topics ON $bbdb->topicmeta.topic_id = $bbdb->topics.topic_id  WHERE $bbdb->topics.topic_status=0 AND $bbdb->topicmeta.meta_key='views'  GROUP BY $bbdb->topics.forum_id");
 } foreach ($forums_views as $forum_views) {
 // echo " <!-- ".$forum_views->forum_id." - ".$sum_meta_value." -->";  
 if ($forum_views->forum_id) {$forums[$forum_views->forum_id]->views=$forum_views->$sum_meta_value;} 
@@ -66,5 +65,5 @@ return $forums;
 }
 add_filter('get_forums','forums_views_append');
 
-// endif;
+//  if (function_exists('get_view_count')) :
 ?>

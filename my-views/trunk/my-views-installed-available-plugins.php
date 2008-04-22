@@ -6,11 +6,11 @@ Description: This plugin is part of the My Views plugin. It adds Installed/Avail
 Plugin URI:  http://bbpress.org/plugins/topic/67
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.09
+Version: 0.1.0
 */ 
 
 if (is_callable('bb_register_view')) {	// Build 876+   alpha trunk
-    $query = ''; 
+    $query = array('append_meta'=>false,'sticky'=>false);	// attempt to short-circuit bb_query 
     bb_register_view("installed-plugins","Installed bbPress Plugins",$query);
     bb_register_view("available-plugins","Available bbPress Plugins",$query);
 
@@ -60,7 +60,7 @@ if ( is_callable( 'glob' ) ) {
 	foreach ( glob(BBPLUGINDIR . '_*.php') as $_plugin ) {$_data = my_views_get_installed_plugin_details( $_plugin );	$_plugins[$_plugin] = $_data ? $_data : true;}
 }
 
-$current = (array) bb_get_option( 'active_plugins' );
+$current = (array) str_replace("user#","",bb_get_option( 'active_plugins' ));
 ?>
 
 <?php if( $plugins ) : ?> 

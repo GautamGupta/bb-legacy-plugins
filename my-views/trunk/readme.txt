@@ -98,4 +98,8 @@ Version 0.091 (2008-02-03)
 
 * 	quick fix for removing duplicated/misplaced stickies & incorrect sorting orders
 
+Version 0.1.1 (2008-04-21)
+
+*	fix for improper WHERE filter use to peacefully co-exist with Hidden Forums plugin
+
 

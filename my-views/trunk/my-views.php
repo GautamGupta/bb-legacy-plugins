@@ -5,7 +5,7 @@ Description:  My Views is a powerful addition to the default "views" in bbPress.
 Plugin URI:  http://bbpress.org/plugins/topic/67
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.091
+Version: 0.1.1
 
 History
 0.03	: first public release, for 0.8.2.x only

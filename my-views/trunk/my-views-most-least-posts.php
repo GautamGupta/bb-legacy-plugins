@@ -5,11 +5,11 @@ Description: This plugin is part of the My Posts plugin. It adds Most/Least Post
 Plugin URI:  http://bbpress.org/plugins/topic/67
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.09
+Version: 0.1.1
 */ 
 
 if (is_callable('bb_register_view')) {	// Build 876+   alpha trunk
-	$query = ''; 
+	$query = array('append_meta'=>false,'sticky'=>false);	// attempt to short-circuit bb_query 
     	bb_register_view("most-posts","Topics with the most posts",$query);
     	bb_register_view("least-posts","Topics with the least posts",$query);
 
@@ -31,8 +31,8 @@ if ($view=='least-posts')  {$sort="ASC";}
 if ($view=='least-posts' || $view=='most-posts')  {
 	$limit = bb_get_option('page_topics');
 	$offset = ($page-1)*$limit;
-	$where = apply_filters('get_latest_topics_where','');
-	$query = " FROM $bbdb->topics WHERE topic_status=0  $where ";
+	$where = apply_filters('get_latest_topics_where',"WHERE topic_status=0 ");
+	$query = " FROM $bbdb->topics $where ";
 	$restrict = " ORDER BY cast(topic_posts as UNSIGNED) $sort LIMIT $limit OFFSET $offset";
 
 	$view_count  = $bbdb->get_var("SELECT count(*) ".$query);	 //  bb_count_last_query();  // count($topics);		

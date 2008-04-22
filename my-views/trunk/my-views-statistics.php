@@ -5,13 +5,13 @@ Description: This plugin is part of the My Views plugin. It adds forum statistic
 Plugin URI:  http://bbpress.org/plugins/topic/67
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.09
+Version: 0.1.1
 */ 
 
 //  if (function_exists('get_view_count')) :       // requires  bb-topic-views plugin   // this needs to check the db meta directly as the other plugin may not have loaded
 
 if (is_callable('bb_register_view')) {	// Build 876+   alpha trunk
-	$query = '';     	
+	$query = array('append_meta'=>false,'sticky'=>false);	// attempt to short-circuit bb_query     	
     	bb_register_view("statistics","Forum Statistics",$query);
 
 } else {		// Build 214-875	(0.8.2.1)
@@ -39,6 +39,9 @@ add_action( 'bb_custom_view', 'my_views_statistics_view' );
 function my_views_statistics() {
 global $bbdb;
 
+$topiclimit=15;  // top topics 10,15,20 etc.
+$userlimit=10;  // top users 10,15,20 etc.
+
 $my_views_statistics["total_members"]=$bbdb->get_var("SELECT COUNT(*) FROM $bbdb->users");
 $my_views_statistics["total_posts"]=$bbdb->get_var("SELECT SUM(posts) FROM $bbdb->forums");
 $my_views_statistics["total_topics"]=$bbdb->get_var("SELECT SUM(topics) FROM $bbdb->forums");
@@ -47,22 +50,26 @@ $my_views_statistics["total_tags"]=$bbdb->get_var("SELECT COUNT(*) FROM $bbdb->t
 $my_views_statistics["total_forums"]=$bbdb->get_var("SELECT COUNT(*) FROM $bbdb->forums");
 $my_views_statistics["total_days_old"]=round((time()-strtotime($bbdb->get_var("SELECT topic_start_time FROM $bbdb->topics ORDER BY topic_start_time LIMIT 1"))) / (3600 * 24),2);
 
-$my_views_statistics["average_registrations"]=bb_number_format_i18n($my_views_statistics["total_members"]/$my_views_statistics["total_days_old"],2);
-$my_views_statistics["average_posts"]=bb_number_format_i18n($my_views_statistics["total_posts"]/$my_views_statistics["total_days_old"],2);
-$my_views_statistics["average_topics"]=bb_number_format_i18n($my_views_statistics["total_topics"]/$my_views_statistics["total_days_old"],2);
-$my_views_statistics["average_topic_views"]=bb_number_format_i18n($my_views_statistics["total_topic_views"]/$my_views_statistics["total_days_old"],2);
+$my_views_statistics["average_registrations"]=$my_views_statistics["total_members"]/$my_views_statistics["total_days_old"];
+$my_views_statistics["average_posts"]=$my_views_statistics["total_posts"]/$my_views_statistics["total_days_old"];
+$my_views_statistics["average_topics"]=$my_views_statistics["total_topics"]/$my_views_statistics["total_days_old"];
+$my_views_statistics["average_topic_views"]=$my_views_statistics["total_topic_views"]/$my_views_statistics["total_days_old"];
 
-$my_views_statistics["total_days_old"]=bb_number_format_i18n($my_views_statistics["total_days_old"],2);
+$my_views_statistics["total_days_old"]=$my_views_statistics["total_days_old"];
 
-$my_views_statistics["top_posters"] = $bbdb->get_results("SELECT poster_id, COUNT(poster_id) AS post_count FROM $bbdb->posts WHERE post_status != 1 GROUP BY poster_id ORDER BY post_count DESC LIMIT 10");
-$my_views_statistics["top_topic_starters"]=$bbdb->get_results("SELECT topic_poster_name,  COUNT(topic_id) AS post_count FROM $bbdb->topics WHERE topic_status=0 GROUP BY topic_poster_name ORDER BY post_count DESC LIMIT 10");
+$my_views_statistics["oldest_members"] = $bbdb->get_results("SELECT ID,user_registered FROM $bbdb->users ORDER BY user_registered ASC LIMIT $userlimit");
+$my_views_statistics["newest_members"] = $bbdb->get_results("SELECT ID,user_registered FROM $bbdb->users ORDER BY user_registered DESC LIMIT $userlimit");
 
-$my_views_statistics["top_topics_by_posts"] = $bbdb->get_results("SELECT topic_title,topic_posts FROM $bbdb->topics WHERE topic_status=0 ORDER BY topic_posts DESC LIMIT 10");
+$my_views_statistics["top_posters"] = $bbdb->get_results("SELECT poster_id, COUNT(poster_id) AS post_count FROM $bbdb->posts WHERE post_status != 1 GROUP BY poster_id ORDER BY post_count DESC LIMIT $userlimit");
+$my_views_statistics["top_topic_starters"]=$bbdb->get_results("SELECT topic_poster, topic_poster_name, COUNT(topic_id) AS post_count FROM $bbdb->topics WHERE topic_status=0 GROUP BY topic_poster_name ORDER BY post_count DESC LIMIT $userlimit");
 
-	$where = apply_filters('get_latest_topics_where','');
-	$most_views = $bbdb->get_results("SELECT topic_id FROM $bbdb->topicmeta WHERE meta_key='views' ORDER BY cast(meta_value as UNSIGNED) DESC LIMIT 10");
+$topics=$bbdb->get_results("SELECT * FROM $bbdb->topics WHERE topic_status=0 ORDER BY topic_posts DESC LIMIT $topiclimit"); 	// topic_id,topic_title,topic_posts
+$my_views_statistics["top_topics_by_posts"] = bb_append_meta( $topics, 'topic' );
+	
+	$most_views = $bbdb->get_results("SELECT topic_id FROM $bbdb->topicmeta WHERE meta_key='views' ORDER BY cast(meta_value as UNSIGNED) DESC LIMIT $topiclimit");
 	foreach (array_keys($most_views) as $i) {$trans[$most_views[$i]->topic_id] =& $most_views[$i];} $ids = join(',', array_keys($trans));
-	$topics ="SELECT topic_id,topic_title FROM $bbdb->topics WHERE topic_status=0 AND topic_id IN ($ids) $where ORDER BY FIELD(topic_id, $ids)";
+	$where = apply_filters('get_latest_topics_where',"WHERE topic_status=0 AND topic_id IN ($ids) ");
+	$topics ="SELECT * FROM $bbdb->topics $where ORDER BY FIELD(topic_id, $ids)"; // topic_id,topic_title
 	$topics = $bbdb->get_results($topics);
 $my_views_statistics["top_topics_by_views"] = bb_append_meta( $topics, 'topic' );
 
@@ -76,7 +83,9 @@ $my_views_statistics["top_topics_by_views"] = bb_append_meta( $topics, 'topic' )
 <tbody>
 <?php $totals=array("members","posts","topics","topic views","tags","forums","days old");
 foreach ($totals as $total) {
-echo "<tr".get_alt_class('plugin', $class)."><td>Total ".ucwords($total).":</td><td class=num>".$my_views_statistics["total_".str_replace(" ","_",$total)]."</td></tr>";
+$item=$my_views_statistics["total_".str_replace(" ","_",$total)];
+echo  "<tr".get_alt_class('plugin', $class)."><td> Total ".ucwords($total).":</td>
+	<td class=num>".bb_number_format_i18n($item,((int) $item.""==$item."" ? 0 : 2))."</td></tr>";
 } ?>
 </tbody>
 </table>
@@ -88,7 +97,9 @@ echo "<tr".get_alt_class('plugin', $class)."><td>Total ".ucwords($total).":</td>
 <tbody>
 <?php $averages=array("registrations","posts","topics","topic views");
 foreach ($averages as $average) {
-echo "<tr".get_alt_class('plugin', $class)."><td>Average ".ucwords($average)." per day:</td><td class=num>".$my_views_statistics["average_".str_replace(" ","_",$average)]."</td></tr>";
+$item=$my_views_statistics["average_".str_replace(" ","_",$average)];
+echo  "<tr".get_alt_class('plugin', $class)."><td> Average ".ucwords($average)." per day:</td>
+	<td class=num>".bb_number_format_i18n($item,((int) $item.""==$item."" ? 0 : 2))."</td></tr>";
 } ?>
 <!-- 
 <tr><td>Latest Member:</td><td> </td></tr>
@@ -103,38 +114,13 @@ echo "<tr".get_alt_class('plugin', $class)."><td>Average ".ucwords($average)." p
 
 <table style="width:49%;margin:0 0 1em 0;clear:none;float:left;" id="latest">
 <thead>
-<tr><th>Top Posters</th><th>#</th></tr>
-</thead>
-<tbody>
-<?php 
-foreach ($my_views_statistics["top_posters"] as $top_poster) {
-echo "<tr".get_alt_class('plugin', $class)."><td>".get_user_name($top_poster->poster_id)."</td><td class=num>".$top_poster->post_count."</td></tr>";
-} ?>
-</tbody>
-</table>
-
-<table style="width:49%;margin:0 0 1em 0;clear:none;float:right;" id="latest">
-<thead>
-<tr><th>Top Topic Starters</th><th>#</th></tr>
-</thead>
-<tbody>
-<?php 
-foreach ($my_views_statistics["top_topic_starters"] as $top_poster) {
-echo "<tr".get_alt_class('plugin', $class)."><td>".$top_poster->topic_poster_name."</td><td class=num>".$top_poster->post_count."</td></tr>";
-} ?>
-</tbody>
-</table>
-
-<br clear=both />
-
-<table style="width:49%;margin:0 0 1em 0;clear:none;float:left;" id="latest">
-<thead>
 <tr><th>Top Topics (by posts)</th><th>#</th></tr>
 </thead>
 <tbody>
 <?php
 foreach ($my_views_statistics["top_topics_by_posts"] as $top_topic) {
-echo "<tr".get_alt_class('plugin', $class)."><td>".$top_topic->topic_title."</td><td class=num>".$top_topic->topic_posts."</td></tr>";
+echo  "<tr".get_alt_class('plugin', $class)."><td> <a href='".get_topic_link($top_topic->topic_id)."'>".$top_topic->topic_title."</a></td>
+	<td class=num>".bb_number_format_i18n($top_topic->topic_posts)."</td></tr>";
 } ?>
 </tbody>
 </table>
@@ -146,13 +132,83 @@ echo "<tr".get_alt_class('plugin', $class)."><td>".$top_topic->topic_title."</td
 <tbody>
 <?php
 foreach ($my_views_statistics["top_topics_by_views"] as $top_topic) {
-echo "<tr".get_alt_class('plugin', $class)."><td>".$top_topic->topic_title."</td><td class=num>".$top_topic->views."</td></tr>";
+echo  "<tr".get_alt_class('plugin', $class)."><td> <a href='".get_topic_link($top_topic->topic_id)."'>".$top_topic->topic_title."</a></td>
+	<td class=num>".bb_number_format_i18n($top_topic->views)."</td></tr>";
 } ?>
 </tbody>
 </table>
 
 <br clear=both />
 
+<table style="width:49%;margin:0 0 1em 0;clear:none;float:left;" id="latest">
+<thead>
+<tr><th>Oldest Members</th><th>#</th></tr>
+</thead>
+<tbody>
+<?php 
+unset($ids); foreach ($my_views_statistics["oldest_members"] as $member) {
+		$ids[$member->ID]=$member->ID;} 
+bb_cache_users($ids); 
+foreach ($my_views_statistics["oldest_members"] as $member) {
+echo  "<tr".get_alt_class('plugin', $class)."><td> <a href='" . attribute_escape( get_user_profile_link( $member->ID ) ) . "'>" .get_user_name($member->ID)."</a></td>
+	<td class='num'><span class='timetitle' title='". bb_datetime_format_i18n(bb_gmtstrtotime( $member->user_registered ), 'date')."'>".sprintf(__('%s'),bb_since(bb_gmtstrtotime( $member->user_registered )))."</span></td></tr>";
+} ?>
+</tbody>
+</table>
+
+<table style="width:49%;margin:0 0 1em 0;clear:none;float:right;" id="latest">
+<thead>
+<tr><th>Newest  Members</th><th>#</th></tr>
+</thead>
+<tbody>
+<?php 
+unset($ids); foreach ($my_views_statistics["newest_members"] as $member) {
+		$ids[$member->ID]=$member->ID;} 
+bb_cache_users($ids); 
+foreach ($my_views_statistics["newest_members"] as $member) {
+echo  "<tr".get_alt_class('plugin', $class)."><td> <a href='" . attribute_escape( get_user_profile_link( $member->ID ) ) . "'>" .get_user_name($member->ID)."</a></td>
+	<td class='num'><span class='timetitle' title='". bb_datetime_format_i18n(bb_gmtstrtotime( $member->user_registered ), 'date')."'>".sprintf(__('%s'),bb_since(bb_gmtstrtotime( $member->user_registered )))."</span></td></tr>";
+} ?>
+</tbody>
+</table>
+
+<br clear=both />
+
+<table style="width:49%;margin:0 0 1em 0;clear:none;float:left;" id="latest">
+<thead>
+<tr><th>Top Posters</th><th>#</th></tr>
+</thead>
+<tbody>
+<?php 
+unset($ids); foreach ($my_views_statistics["top_posters"] as $top_poster) {
+		$ids[$top_poster->poster_id]=$top_poster->poster_id;} 
+bb_cache_users($ids); 
+foreach ($my_views_statistics["top_posters"] as $top_poster) {
+echo  "<tr".get_alt_class('plugin', $class)."><td> <a href='" . attribute_escape( get_user_profile_link( $top_poster->poster_id ) ) . "'>" .get_user_name($top_poster->poster_id)."</a></td>
+	<td class=num>".bb_number_format_i18n($top_poster->post_count)."</td></tr>";
+} ?>
+</tbody>
+</table>
+
+<table style="width:49%;margin:0 0 1em 0;clear:none;float:right;" id="latest">
+<thead>
+<tr><th>Top Topic Starters</th><th>#</th></tr>
+</thead>
+<tbody>
+<?php 
+unset($ids); foreach ($my_views_statistics["top_topic_starters"] as $top_topic_starter) {
+		$ids[$top_topic_starter->topic_poster]=$top_topic_starter->topic_poster;} 
+bb_cache_users($ids); 
+foreach ($my_views_statistics["top_topic_starters"] as $top_topic_starter) {
+echo  "<tr".get_alt_class('plugin', $class)."><td>  <a href='" . attribute_escape( get_user_profile_link( $top_topic_starter->topic_poster ) ) . "'>" .$top_topic_starter->topic_poster_name."</a></td>
+	<td class=num>".bb_number_format_i18n($top_topic_starter->post_count)."</td></tr>";
+} ?>
+</tbody>
+</table>
+
+<br clear=both />
+
+ <!--
 <table style="width:49%;margin:0 0 1em 0;clear:none;float:left;" id="latest">
 <thead>
 <tr><th>Top Forums</th><th>#</th></tr>
@@ -170,6 +226,7 @@ echo "<tr".get_alt_class('plugin', $class)."><td>".$top_topic->topic_title."</td
 </table>
 
 <br clear=both />
+ -->
 
 <?php
 }
@@ -180,10 +237,10 @@ if ($view=='most-views')  {$sort="DESC";}
 if ($view=='least-views')  {$sort="ASC";}
 if ($view=='least-views' || $view=='most-views')  {
 $limit = bb_get_option('page_topics');
-$where = apply_filters('get_latest_topics_where','');
 $most_views = $bbdb->get_results("SELECT topic_id FROM $bbdb->topicmeta WHERE meta_key='views' ORDER BY cast(meta_value as UNSIGNED) $sort LIMIT $limit");
 foreach (array_keys($most_views) as $i) {$trans[$most_views[$i]->topic_id] =& $most_views[$i];} $ids = join(',', array_keys($trans));
-$topics ="SELECT * FROM $bbdb->topics WHERE topic_status=0 AND topic_id IN ($ids) $where ORDER BY FIELD(topic_id, $ids)";
+$where = apply_filters('get_latest_topics_where',"WHERE topic_status=0 AND topic_id IN ($ids) ");
+$topics ="SELECT * FROM $bbdb->topics $where ORDER BY FIELD(topic_id, $ids)";
 $topics = $bbdb->get_results($topics);
 $view_count  = count($topics);
 $topics = bb_append_meta( $topics, 'topic' );	

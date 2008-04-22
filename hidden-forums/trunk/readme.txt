@@ -1,4 +1,4 @@
-=== Read-Only Forums ===
+=== Hidden Forums ===
 Tags: hidden, hide, private, restrict, secret, forum,forums _ck_
 Contributors: _ck_
 Requires at least: 0.9

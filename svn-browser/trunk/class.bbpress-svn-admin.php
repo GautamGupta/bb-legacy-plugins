@@ -380,6 +380,8 @@ class bbPress_SVN_Admin extends Automattic_SVN_Admin {
 			$post = bb_get_first_post( $topic->topic_id );
 			bb_insert_post( array( 'post_id' => $post->post_id, 'poster_id' => $author->ID ) );
 
+			$this->tracker->pull_triggers( array( $topic->topic_slug  ), array( 'roots' => true, 'paths_in_roots' => true ) );
+
 			$query_args['message'] = 'primary-author';
 			break;
 		case 'update' :

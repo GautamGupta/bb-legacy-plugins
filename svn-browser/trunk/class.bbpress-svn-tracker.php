@@ -89,7 +89,7 @@ class bbPress_SVN_Tracker extends Automattic_SVN_Tracker {
 			$types = array( 'paths' => true, 'roots' => true );
 
 		if ( $this->admin && !$old_id = bb_get_current_user_info( 'id' ) ) {
-			$user = bb_get_user( BBPRESS_SVN_ADMIN__SVN_USER );
+			$user = bb_get_user( AUTOMATTIC_SVN_TRACKER__SVN_USER );
 			bb_set_current_user( $user->ID );
 		}
 

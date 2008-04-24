@@ -25,7 +25,7 @@ In the default example below:
 (to get a list of forums by number, use forumname.com?forumlist when this plugin is active)
 */
 
-$hidden_forums['hidden_forums']=array(7,500,501,502);	// hide these forums, list by comma seperated number
+$hidden_forums['hidden_forums']=array(500,501,502);	// hide these forums, list by comma seperated number
 
 $hidden_forums['allow_roles']['all_forums']=array('keymaster');		// these roles can always see ALL forums regardless
 $hidden_forums['allow_roles'][500]=array('administrator','moderator');	// exact formal role name, *not* ability

@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/16
 Description: Changes the forum to a support forum and adds functionality to mark topics resolved, not resolved or not a support question
 Author: Aditya Naik, Sam Bauers
 Author URI: http://www.adityanaik.com/
-Version: 3.0
+Version: 3.0.2
 
 Version History:
 1.0		: Initial Release (Aditya Naik)
@@ -49,11 +49,12 @@ Version History:
 		  Limit admin function registration to admin area (Sam Bauers)
 3.0.1	: Remove conditional triggering of label modifiers (Sam Bauers)
 		  Use trigger_error() to warn of incompatible bbPress version (Sam Bauers)
+3.0.2	: Change AJAX status changing to regular POST action (Sam Bauers)
 */
 
 
 /**
- * Support forum for bbPress version 3.0.1
+ * Support forum for bbPress version 3.0.2
  * 
  * ----------------------------------------------------------------------------------
  * 
@@ -89,7 +90,7 @@ Version History:
  * @copyright 2007 Aditya Naik
  * @copyright 2007 Sam Bauers
  * @license   http://www.gnu.org/licenses/gpl.txt GNU General Public License v2
- * @version   3.0.1
+ * @version   3.0.2
  **/
 
 
@@ -97,7 +98,7 @@ Version History:
  * Wrapper class for the Support forum plugin
  *
  * @author  Sam Bauers
- * @version 3.0.1
+ * @version 3.0.2
  **/
 class Support_Forum
 {
@@ -410,6 +411,30 @@ class Support_Forum
 	
 	
 	/**
+	 * Gets the URI of the current page
+	 *
+	 * @return string
+	 * @author Sam Bauers
+	 **/
+	function getCurrentURI()
+	{
+		$schema = 'http://';
+		if (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') {
+			$schema = 'https://';
+		}
+		if ($querystring = $_SERVER['QUERYSTRING']) {
+			$querystring = ltrim($querystring, '?&');
+			$querystring = rtrim($querystring, '&');
+			if ($querystring) {
+				$querystring = '?' . $querystring;
+			}
+		}
+		$uri = $schema . $_SERVER['HTTP_HOST'] . rtrim($_SERVER['REQUEST_URI'], '?&') . $querystring;
+		return $uri;
+	}
+	
+	
+	/**
 	 * Prints a string of HTML which is a topic status chooser
 	 *
 	 * @return string
@@ -425,7 +450,7 @@ class Support_Forum
 			echo ' <img src="' . $this->iconURI . 'support-forum-' . $topicStatus . '.png" alt="" style="vertical-align:middle; width:14px; height:14px; border-width:0;" /> ';
 		}
 		
-		$r  = '<form id="resolved" method="post" style="display:inline;"><div style="display:inline;">' . "\n";
+		$r  = '<form action="' . $this->getCurrentURI() . '" id="resolved" method="post" style="display:inline;"><div style="display:inline;">' . "\n";
 		$r .= '<input type="hidden" name="action" value="support_forum_post_process" />' . "\n";
 		$r .= '<input type="hidden" name="id" value="' . $topic->topic_id . '" />' . "\n";
 		$r .= '<select name="resolved" id="resolvedformsel" tabindex="2">' . "\n";
@@ -544,74 +569,24 @@ class Support_Forum
 	
 	
 	/**
-	 * Prints a string that is a javascript call to allow for AJAX editing of the topic support status
-	 *
-	 * @return string
-	 * @author Sam Bauers
-	 **/
-	function AJAX_setTopicStatus()
-	{
-		if (is_topic()) {
-			$r = '<script type="text/javascript">' . "\n";
-			$r .= '	addLoadEvent(' . "\n";
-			$r .= '		function() {' . "\n";
-			$r .= '			var resolvedSub = $("resolvedformsub");' . "\n";
-			$r .= '			if (!resolvedSub) { return; }' . "\n";
-			$r .= '			resFunc = function(e) {' . "\n";
-			$r .= '				return theTopicMeta.ajaxUpdater("resolution", "resolved");' . "\n";
-			$r .= '			}' . "\n";
-			$r .= '			resolvedSub.onclick = resFunc;' . "\n";
-			$r .= '			theTopicMeta.addComplete = function(what, where, update) {' . "\n";
-			$r .= '				if (update && "resolved" == where) {' . "\n";
-			$r .= '					$("resolvedformsub").onclick = resFunc;' . "\n";
-			$r .= '				}' . "\n";
-			$r .= '			}' . "\n";
-			$r .= '		}' . "\n";
-			$r .= '	);' . "\n";
-			$r .= '</script>' . "\n";
-			
-			echo $r;
-		}
-	}
-	
-	
-	/**
-	 * undocumented function
+	 * Processes non-AJAX posts from the status changing form
 	 *
 	 * @return void
 	 * @author Sam Bauers
 	 **/
-	function AJAX_setTopicStatusProcess()
-	{
-		global $topic;
-		$topic_id = (integer) @$_POST['topic_id'];
-		$resolved = @$_POST['resolved'];
-		
-		if ($this->getChangeableStatus($topic_id)) {
-			die('-1');
-		}
-		
-		$topic = get_topic($topic_id);
-		if (!$topic) {
-			die('0');
-		}
-		
-		if ($this->setTopicStatus($topic_id, $resolved)) {
-			$topic->topic_resolved = $resolved;
-			ob_start();
-			echo '<li id="resolution-flipper">' . __('This topic is') . ' ';
-			$this->statusChooser();
-			echo '</li>';
-			$data = ob_get_contents();
-			ob_end_clean();
-			$x = new WP_Ajax_Response(
-				array(
-					'what' => 'resolution',
-					'id' => 'flipper',
-					'data' => $data
-				)
-			);
-			$x->send();
+	function setTopicStatusProcess() {
+		if (is_topic() && isset($_POST['action']) && $_POST['action'] == 'support_forum_post_process') { 
+			global $topic;
+			$topic_id = (integer) @$_POST['id'];
+			$resolved = @$_POST['resolved'];
+			
+			if ($this->getChangeableStatus($topic_id)) {
+				$topic = get_topic($topic_id);
+				if ($topic) {
+					$this->setTopicStatus($topic_id, $resolved);
+				}
+			}
+			wp_redirect($this->getCurrentURI());
 		}
 	}
 	
@@ -781,25 +756,25 @@ if ($support_forum->isActive()) {
 	$support_forum->registerViews();
 	
 	add_action('topicmeta', array(&$support_forum, 'topicMeta'));
-	add_action('bb_head', array(&$support_forum, 'AJAX_setTopicStatus'));
-	add_action('bb_ajax_update-resolution', array(&$support_forum, 'AJAX_setTopicStatusProcess'));
+	add_action('bb_init', array(&$support_forum, 'setTopicStatusProcess'));
 	add_filter('topic_class', array(&$support_forum, 'addTopicClass'));
 	add_action('bb_head', array(&$support_forum, 'addStatusSelectModifier'));
 	add_action('post_form_pre_post', array(&$support_forum, 'addStatusSelectToPostForm'));
 	add_action('bb_new_topic', array(&$support_forum, 'setTopicStatusOnCreation'));
 	
-	
-	if ($support_forum->icons['closed']) {
-		remove_filter('bb_topic_labels', 'bb_closed_label', 10);
-		add_filter('bb_topic_labels', array(&$support_forum, 'modifyTopicLabelClosed'), 20);
+	if (is_forum() || is_front() || is_view()) {
+		if ($support_forum->icons['closed']) {
+			remove_filter('bb_topic_labels', 'bb_closed_label', 10);
+			add_filter('bb_topic_labels', array(&$support_forum, 'modifyTopicLabelClosed'), 20);
+		}
+		
+		if ($support_forum->icons['sticky']) {
+			remove_filter('bb_topic_labels', 'bb_sticky_label', 20);
+			add_filter('bb_topic_labels', array(&$support_forum, 'modifyTopicLabelSticky'), 30);
+		}
+		
+		add_filter('bb_topic_labels', array(&$support_forum, 'modifyTopicLabelStatus'), 10);
 	}
-	
-	if ($support_forum->icons['sticky']) {
-		remove_filter('bb_topic_labels', 'bb_sticky_label', 20);
-		add_filter('bb_topic_labels', array(&$support_forum, 'modifyTopicLabelSticky'), 30);
-	}
-	
-	add_filter('bb_topic_labels', array(&$support_forum, 'modifyTopicLabelStatus'), 10);
 }
 
 

@@ -3,7 +3,7 @@ Contributors: so1o, mdawaffe, SamBauers
 Tags: support, forums
 Requires at least: 0.9
 Tested up to: 0.9
-Stable tag: 3.0.1
+Stable tag: 3.0.2
 
 Adds the ability to set a support status on topics in selected forums.
 
@@ -54,7 +54,7 @@ will need to be logged in as a keymaster.
 
 == License ==
 
-Support forum version 3.0.1
+Support forum version 3.0.2
 Copyright (C) 2007 Aditya Naik (so1oonnet@gmail.com)
 Copyright (C) 2007 Sam Bauers (sam@viveka.net.au)
 
@@ -137,3 +137,5 @@ See accompanying license.txt file for details.
 * 3.0.1 :
   <br />Remove conditional triggering of label modifiers
   <br />Use trigger_error() to warn of incompatible bbPress version
+* 3.0.2 :
+  <br />Change AJAX status changing to regular POST action

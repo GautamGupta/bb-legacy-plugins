@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/89
 Description:  Adds a "mass edit" feature to bbPress admin panel, similar to WordPress, for easily moderating posts in bulk.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 1.1.1
+Version: 1.1.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 

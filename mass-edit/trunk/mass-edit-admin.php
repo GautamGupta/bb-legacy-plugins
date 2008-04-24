@@ -4,7 +4,7 @@ Mass Edit - Moderate Posts
 http://bbpress.org/plugins/topic/89
 Adds a "mass edit" feature to bbPress admin panel, similar to WordPress, for easily moderating posts in bulk.
 http://bbShowcase.org
-1.1.1
+1.1.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -50,7 +50,7 @@ function mass_edit() {
 	<form action="<?php echo bb_get_admin_tab_link("mass_edit"); ?>" method="post" id="mass-edit-options">
 	
 	<fieldset><legend><strong>Mass Edit Column Order</strong> - default: checkbox , excerpt , name , meta , actions</legend>
-	<input name="mass_edit_columns" id="mass_edit_columns" type="text" size="50" value="<?php echo $mass_edit_options['mass_edit_columns']; ?>">
+	<input name="mass_edit_columns" id="mass_edit_columns" type="text" size="50" value="<?php echo $mass_edit_options['mass_edit_columns']; ?>" />
 	<span style="padding-left:2em;" class=submit><input class=submit type="submit" name="mass_edit_save_options" value="<?php _e('Save Options') ?> &raquo;"  /></span>
 	</fieldset>
 		
@@ -154,7 +154,7 @@ if ($total) {$bb_posts = $bbdb->get_results("SELECT * ".$query.$restrict);} else
 </select>
 </fieldset>
 <fieldset><legend>Tag&hellip;</legend>
-<input name="tag" id="topic-tag" class="text-input" value="" type="text">	</fieldset>
+<input name="tag" id="topic-tag" class="text-input" value="" type="text" />	</fieldset>
 */ ?>
 
 	<fieldset><legend>Post Author&hellip;</legend>
@@ -247,7 +247,7 @@ echo '</tr></thead>';
 	default: $del_class=apply_filters( 'post_del_class', $bb_post->post_status, $bb_post->post_id );
 	endswitch;
 ?>
-  <tr id="post-<?php echo $bb_post->post_id; ?>" <?php alt_class('post', $del_class); ?>'>   
+  <tr id="post-<?php echo $bb_post->post_id; ?>" <?php alt_class('post', $del_class); ?>>   
 <?php  
 foreach ($mass_edit_columns as $position) :	
 switch ($position) :

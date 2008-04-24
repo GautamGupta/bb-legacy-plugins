@@ -47,11 +47,13 @@ Version History:
 3.0		: Make compatible with bbPress 0.9 (Sam Bauers)
 		  Remove backwards compatibility with bbPress pre-0.9 (Sam Bauers)
 		  Limit admin function registration to admin area (Sam Bauers)
+3.0.1	: Remove conditional triggering of label modifiers (Sam Bauers)
+		  Use trigger_error() to warn of incompatible bbPress version (Sam Bauers)
 */
 
 
 /**
- * Support forum for bbPress version 3.0
+ * Support forum for bbPress version 3.0.1
  * 
  * ----------------------------------------------------------------------------------
  * 
@@ -87,7 +89,7 @@ Version History:
  * @copyright 2007 Aditya Naik
  * @copyright 2007 Sam Bauers
  * @license   http://www.gnu.org/licenses/gpl.txt GNU General Public License v2
- * @version   3.0
+ * @version   3.0.1
  **/
 
 
@@ -95,7 +97,7 @@ Version History:
  * Wrapper class for the Support forum plugin
  *
  * @author  Sam Bauers
- * @version 3.0
+ * @version 3.0.1
  **/
 class Support_Forum
 {
@@ -188,7 +190,7 @@ class Support_Forum
 	function Support_Forum()
 	{
 		if (version_compare(bb_get_option('version'), '0.9-z', '<')) {
-			error_log(__('This version of the "Support forum" plugin requires bbPress version 0.9'));
+			trigger_error(__('This version of the "Support forum" plugin requires bbPress version 0.9'), E_USER_WARNING);
 			exit();
 			return;
 		}
@@ -640,17 +642,15 @@ class Support_Forum
 	 **/
 	function modifyTopicLabelStatus($label)
 	{
-		if (is_forum() || is_front() || is_view()) {
-			$topicStatus = $this->getTopicStatus();
-			
-			if ($topicStatus) {
-				if ($this->icons['status']) {
-					$status_image = '<img src="' . $this->iconURI . 'support-forum-' . $topicStatus . '.png" alt="[' . $this->resolutions[$topicStatus] . ']" title="[' . $this->resolutions[$topicStatus] . ']" style="vertical-align:top; margin-right:0.3em; width:14px; height:14px; border-width:0;" />';
-				} elseif ($topicStatus != 'mu') {
-					$status_image = '[' . $this->resolutions[$topicStatus] . '] ';
-				}
-				$label = $status_image . $label;
+		$topicStatus = $this->getTopicStatus();
+		
+		if ($topicStatus) {
+			if ($this->icons['status']) {
+				$status_image = '<img src="' . $this->iconURI . 'support-forum-' . $topicStatus . '.png" alt="[' . $this->resolutions[$topicStatus] . ']" title="[' . $this->resolutions[$topicStatus] . ']" style="vertical-align:top; margin-right:0.3em; width:14px; height:14px; border-width:0;" />';
+			} elseif ($topicStatus != 'mu') {
+				$status_image = '[' . $this->resolutions[$topicStatus] . '] ';
 			}
+			$label = $status_image . $label;
 		}
 		
 		return $label;
@@ -665,11 +665,9 @@ class Support_Forum
 	 **/
 	function modifyTopicLabelClosed($label)
 	{
-		if (is_forum() || is_front() || is_view()) {
-			global $topic;
-			if ('0' === $topic->topic_open) {
-				return sprintf(__('<img src="' . $this->iconURI . 'support-forum-closed.png" alt="[' . __('closed') . ']" title="[' . __('closed') . ']" style="vertical-align:top; margin-right:0.3em; width:14px; height:14px; border-width:0;" />%s'), $label);
-			}
+		global $topic;
+		if ('0' === $topic->topic_open) {
+			return sprintf(__('<img src="' . $this->iconURI . 'support-forum-closed.png" alt="[' . __('closed') . ']" title="[' . __('closed') . ']" style="vertical-align:top; margin-right:0.3em; width:14px; height:14px; border-width:0;" />%s'), $label);
 		}
 		
 		return $label;
@@ -684,11 +682,9 @@ class Support_Forum
 	 **/
 	function modifyTopicLabelSticky($label)
 	{
-		if (is_forum() || is_front() || is_view()) {
-			global $topic;
-			if ($topic->topic_sticky > 0) {
-				return sprintf(__('<img src="' . $this->iconURI . 'support-forum-sticky.png" alt="[' . __('sticky') . ']" title="[' . __('sticky') . ']" style="vertical-align:top; margin-right:0.3em; width:14px; height:14px; border-width:0;" />%s'), $label);
-			}
+		global $topic;
+		if ($topic->topic_sticky > 0) {
+			return sprintf(__('<img src="' . $this->iconURI . 'support-forum-sticky.png" alt="[' . __('sticky') . ']" title="[' . __('sticky') . ']" style="vertical-align:top; margin-right:0.3em; width:14px; height:14px; border-width:0;" />%s'), $label);
 		}
 		
 		return $label;

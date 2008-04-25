@@ -5,7 +5,7 @@ Description:  Allows any member to edit a Wiki-like post in any topic for a coll
 Plugin URI:  http://bbpress.org/plugins/topic/101
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.2
+Version: 0.1.4
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -26,7 +26,7 @@ function wiki_post_initialize() {
 	$wiki_post['post_position']="2";		// you can make the wiki post the 1st or 2nd post (2 is recommended)
 	$wiki_post['automatic_insert']=false;	// not implimented yet - automatic wiki creation for every topic
 	$wiki_post['name']="Wiki Post";		// formal wiki name
-	$wiki_post['title']="<span style='font:bold 1.4em serif;color:navy;'>W</span> "; // text, html or image to show on topic titles if Wiki is present	
+	$wiki_post['title']="<span style='font:bold 1.2em serif;color:navy;'>W</span>"; // text, html or image to show on topic titles if Wiki is present	
 	
 	// stop editing
 	
@@ -75,7 +75,8 @@ function wiki_post_create_user() {
 	$user_id=$bbdb->get_var("SELECT ID FROM $bbdb->users WHERE user_login = '".$wiki_post['name']."' LIMIT 1");
 	if (!$user_id) {
 		require_once( BB_PATH . BB_INC . 'registration-functions.php');
-		if ( $user_id = bb_new_user( $wiki_post['name'], bb_get_option('admin_email'), "" ) ) {
+		$email=bb_get_option('from_email'); if (!$email) {$email=bb_get_option('admin_email');}
+		if ( $user_id = bb_new_user( $wiki_post['name'], $email, "" ) ) {
 			bb_update_usermeta( $user_id, $bbdb->prefix . 'capabilities', array('throttle'=>true, 'member' => true) );
 			bb_update_usermeta( $user_id, $bbdb->prefix . 'title', $wiki_post['name']);
 		}	
@@ -138,7 +139,7 @@ function wiki_post_add_edit_history($topic_id=0) {
 
 function wiki_post_title( $title ) {
 	global $wiki_post, $topic;
-	if ($wiki_post['title'] && isset($topic->wiki_post) && !is_topic())  {return $wiki_post['title'].' '.$title;}		
+	if ($wiki_post['title'] && isset($topic->wiki_post) && !is_topic())  {return $wiki_post['title']." ".$title;}		
 	return $title;
 } 
 

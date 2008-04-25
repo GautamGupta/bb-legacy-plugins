@@ -5,8 +5,139 @@ Plugin URI: http://www.adityanaik.com
 Description: Hold posts and topics for moderation
 Author: Aditya Naik
 Author URI: http://www.adityanaik.com/
-Version: 0.3
+Version: 0.4
 */
+/**
+ * Filter topics held for moderation
+ *
+ * @author  Aditya Naik <aditya@adityanaik.com>
+ * @version v 0.02 Sun Apr 08 2007 01:31:51 GMT-0400 (Eastern Daylight Time)
+ */
+function bb_moderation_hold_where_moderated_topics($where){
+  return str_replace("topic_status = '0'", "topic_status = '-1'", $where);
+}
+
+/**
+ * Filter posts held for moderation
+ *
+ * @author  Aditya Naik <aditya@adityanaik.com>
+ * @version v 0.02 Sun Apr 08 2007 01:32:35 GMT-0400 (Eastern Daylight Time)
+ */
+function bb_moderation_hold_where_moderated_posts($where){
+  return str_replace("post_status = '0'", "post_status = '-1'", $where);
+}
+
+/**
+ * Holds stuff for moderation
+ *
+ * Hold topics and posts for moderation depending on the options.
+ * Also send mail options are set
+ *
+ * @author  Aditya Naik <aditya@adityanaik.com>
+ * @version v 0.01 Tue Apr 10 2007 23:29:07 GMT-0400 (Eastern Daylight Time)
+ */
+function bb_moderation_hold_after_posting_do_the_magic($post_id){
+  global $bbdb, $topic_id, $post_id;
+  $options = bb_anonymous_default_options(bb_get_option('bb_moderation_hold'));
+
+  $hold_topics = bb_moderation_check_options('hold_topics', $options);
+  $hold_posts = bb_moderation_check_options('hold_posts', $options);
+  
+  if ( $hold_topics && isset($_POST['topic']) && $forum = (int) $_POST['forum_id'] ) {
+    $bbdb->query("UPDATE $bbdb->topics SET topic_status = '-1' WHERE topic_id = '$topic_id'");
+    if ('Y' == $options['hold_topics_send_email']) bb_moderation_hold_mail_moderation();
+    $post_id = false;
+  } elseif($hold_posts) {
+    $post_id = false;
+    if ('Y' == $options['hold_posts_send_email']) bb_moderation_hold_mail_moderation('P');
+  }
+  
+}
+
+/**
+ * Send Moderation Notification
+ *
+ * @author  Aditya Naik <aditya@adityanaik.com>
+ * @version v 0.01 Sun Apr 08 2007 01:37:30 GMT-0400 (Eastern Daylight Time)
+ */
+function bb_moderation_hold_mail_moderation($obj = 'T') {
+
+  if ('T' == $obj) {
+    $email = $options['hold_topics_email_address'];
+    $obj = 'topic';
+  } elseif ('P' == $obj) {
+    $email = $options['hold_posts_email_address'];
+    $obj = 'post';
+  } else
+    return;
+
+  $message = __("You have a new $s in the moderation queue.");
+
+  mail( $email, bb_get_option('name') . ': ' . __('Moderation Alert'),
+    sprintf( $message, "$obj"),
+    'From: ' . bb_get_option('admin_email')
+  );
+}
+
+/**
+ * Change the status before post is created
+ * 
+ * @author  Aditya Naik <aditya@adityanaik.com>
+ * @version v 0.02 Tue Apr 10 2007 23:29:38 GMT-0400 (Eastern Daylight Time)
+ */
+function bb_moderation_fix_status_before_post($old_status, $post_id, $topic_id) {
+    $options = bb_anonymous_default_options(bb_get_option('bb_moderation_hold'));
+
+	$hold_posts = bb_moderation_check_options('hold_posts', $options);
+    if (!$post_id && $hold_posts) {
+		$old_status = -1;    
+    }
+    return $old_status;
+}
+
+/**
+ * Check Moderation options
+ * 
+ * @author  Aditya Naik <aditya@adityanaik.com>
+ * @version v 0.01 Tue Apr 10 2007 23:30:05 GMT-0400 (Eastern Daylight Time)
+ */
+function bb_moderation_check_options($check = 'hold_topics', $options = false) {
+
+    if (!$options)
+        $options = bb_anonymous_default_options(bb_get_option('bb_moderation_hold'));
+
+    switch($options[$check]) {
+        case 2:
+          if (!$user = bb_current_user()) $ret = true;
+          break;
+        case 3:
+          if (!bb_current_user_can('moderate')) $ret = true;
+          break;
+        default:
+            $ret = false;
+    }
+
+    return $ret;
+}
+add_action('bb_post.php','bb_moderation_hold_after_posting_do_the_magic');
+add_filter('pre_post_status','bb_moderation_fix_status_before_post',10,3);
+add_filter('post_delete_link','bb_moderation_fix_delete_link',10,3);
+
+/**
+ * Add a delete/moderate link to posts
+ * 
+ * @author  Aditya Naik <aditya@adityanaik.com>
+ * @version v 0.01 Tue Apr 10 2007 23:30:05 GMT-0400 (Eastern Daylight Time)
+ */
+function bb_moderation_fix_delete_link($r, $post_status, $post_id){
+    if (-1 == $post_status)
+        $r = "<a href='" . bb_get_option('uri') . 'bb-admin/admin-base.php?plugin=bb_moderation_hold_post_admin_page' . "' >". __('Moderate') ."</a>";
+    return $r;
+}
+
+if (!BB_IS_ADMIN) {
+	return;
+}
 
 /**
  * Add Admin Page
@@ -268,25 +399,6 @@ function bb_moderation_hold_process_post() {
     $theme_notice = bb_admin_notice("Options Updated");
 }
 
-/**
- * Filter topics held for moderation
- *
- * @author  Aditya Naik <aditya@adityanaik.com>
- * @version v 0.01 Sun Apr 08 2007 01:31:51 GMT-0400 (Eastern Daylight Time)
- */
-function bb_moderation_hold_where_moderated_topics($where){
-  return str_replace('topic_status = 0', 'topic_status = -1', $where);
-}
-
-/**
- * Filter posts held for moderation
- *
- * @author  Aditya Naik <aditya@adityanaik.com>
- * @version v 0.01 Sun Apr 08 2007 01:32:35 GMT-0400 (Eastern Daylight Time)
- */
-function bb_moderation_hold_where_moderated_posts($where){
-  return str_replace('post_status = 0', 'post_status = -1', $where);
-}
 
 /**
  * Approve Topics
@@ -345,109 +457,5 @@ function bb_moderation_hold_approve_posts($postids){
   endforeach; endif;
 }
 
-/**
- * Holds stuff for moderation
- *
- * Hold topics and posts for moderation depending on the options.
- * Also send mail options are set
- *
- * @author  Aditya Naik <aditya@adityanaik.com>
- * @version v 0.01 Tue Apr 10 2007 23:29:07 GMT-0400 (Eastern Daylight Time)
- */
-function bb_moderation_hold_after_posting_do_the_magic($post_id){
-  global $bbdb, $topic_id, $post_id;
-  $options = bb_anonymous_default_options(bb_get_option('bb_moderation_hold'));
-
-  $hold_topics = bb_moderation_check_options('hold_topics', $options);
-  $hold_posts = bb_moderation_check_options('hold_posts', $options);
-  
-  if ( $hold_topics && isset($_POST['topic']) && $forum = (int) $_POST['forum_id'] ) {
-    $bbdb->query("UPDATE $bbdb->topics SET topic_status = '-1' WHERE topic_id = '$topic_id'");
-    if ('Y' == $options['hold_topics_send_email']) bb_moderation_hold_mail_moderation();
-    $post_id = false;
-  } elseif($hold_posts) {
-    $post_id = false;
-    if ('Y' == $options['hold_posts_send_email']) bb_moderation_hold_mail_moderation('P');
-  }
-  
-}
-
-/**
- * Send Moderation Notification
- *
- * @author  Aditya Naik <aditya@adityanaik.com>
- * @version v 0.01 Sun Apr 08 2007 01:37:30 GMT-0400 (Eastern Daylight Time)
- */
-function bb_moderation_hold_mail_moderation($obj = 'T') {
-
-  if ('T' == $obj) {
-    $email = $options['hold_topics_email_address'];
-    $obj = 'topic';
-  } elseif ('P' == $obj) {
-    $email = $options['hold_posts_email_address'];
-    $obj = 'post';
-  } else
-    return;
-
-  $message = __("You have a new $s in the moderation queue.");
-
-  mail( $email, bb_get_option('name') . ': ' . __('Moderation Alert'),
-    sprintf( $message, "$obj"),
-    'From: ' . bb_get_option('admin_email')
-  );
-}
-
-/**
- * Change the status before post is created
- * 
- * @author  Aditya Naik <aditya@adityanaik.com>
- * @version v 0.01 Tue Apr 10 2007 23:29:38 GMT-0400 (Eastern Daylight Time)
- */
-function bb_moderation_fix_status_before_post($old_status, $post_id, $topic_id) {
-    if (!$post_id) {
-        $old_status = -1;    
-    }
-    return $old_status;
-}
-
-/**
- * Check Moderation options
- * 
- * @author  Aditya Naik <aditya@adityanaik.com>
- * @version v 0.01 Tue Apr 10 2007 23:30:05 GMT-0400 (Eastern Daylight Time)
- */
-function bb_moderation_check_options($check = 'hold_topics', $options = false) {
-
-    if (!$options)
-        $options = bb_anonymous_default_options(bb_get_option('bb_moderation_hold'));
-
-    switch($options[$check]) {
-        case 2:
-          if (!$user = bb_current_user()) $ret = true;
-          break;
-        case 3:
-          if (!bb_current_user_can('moderate')) $ret = true;
-          break;
-        default:
-            $ret = false;
-    }
-
-    return $ret;
-}
-add_action('bb_post.php','bb_moderation_hold_after_posting_do_the_magic');
-add_filter('pre_post_status','bb_moderation_fix_status_before_post',10,3);
-add_filter('post_delete_link','bb_moderation_fix_delete_link',10,3);
-
-/**
- * Add a delete/moderate link to posts
- * 
- * @author  Aditya Naik <aditya@adityanaik.com>
- * @version v 0.01 Tue Apr 10 2007 23:30:05 GMT-0400 (Eastern Daylight Time)
- */
-function bb_moderation_fix_delete_link($r, $post_status, $post_id){
-    if (-1 == $post_status)
-        $r = "<a href='" . bb_get_option('uri') . 'bb-admin/admin-base.php?plugin=bb_moderation_hold_post_admin_page' . "' >". __('Moderate') ."</a>";
-    return $r;
-}
 
 ?>

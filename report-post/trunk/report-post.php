@@ -5,7 +5,7 @@ Description:  allows members to report a post to admin/moderators
 Plugin URI:  http://bbpress.org/plugins/topic/64
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.3
+Version: 0.1.4
 
 license: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -31,6 +31,7 @@ history:
 0.10	: first public beta release
 0.11	: translation hooks added
 0.12	: fix to not allow report on primary administrator (keymaster) todo: all admin/moderators
+0.1.4	: fix for bbPress 0.9 change to from_email (instead of admin_email)
 */
 
 function report_post_link($post_id=0) { 
@@ -53,7 +54,7 @@ if (isset($_POST['report_post_id']) && isset($_POST['report_post_reason'])) {
 	echo '<scr'.'ipt type="text/javascript">alert("'.$message.'");</scr'.'ipt>';
 	$post_id=intval($_POST['report_post_id']);
 	// todo: custom response if invalid id, problem sending email - maybe flush output buffer so member gets alert faster
-	$to=bb_get_option('admin_email'); if (!$to) {$to=bb_get_option('from_email');}
+	$to=bb_get_option('from_email'); if (!$to) {$to=bb_get_option('admin_email');}
 	$from =  $to;
 	$subject = __("post reported by member for moderation");
 	$headers ="From: ".$from;

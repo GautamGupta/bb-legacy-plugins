@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.6
+Version: 0.0.7
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -240,12 +240,14 @@ while(list($key,$value) = each($_FILES['bb_attachments']['name'])) {
 					} 
 					
 					$file=$dir."/".$id.".".$filename;					
+					
+					// file is commited here
 								
-					if (!$failed && $id>0 && @copy($_FILES['bb_attachments']['tmp_name'][$key], $file)) {    	// file is commited here
+					if (!$failed && $id>0 && @is_uploaded_file($_FILES['bb_attachments']['tmp_name'][$key]) && @move_uploaded_file($_FILES['bb_attachments']['tmp_name'][$key], $file)) {    
 						chmod("$file",0777);                           			
 						$count++; $offset++;		// count how many successfully uploaded this time							
 					} else {			
-						$status=2;	// failed - not necessarily user's fault						
+						$status=2;	// failed - not necessarily user's fault, could be filesystem	
 					}
 					
 					if (isset($org_uid) && $org_uid>0 && function_exists('posix_setuid')) {posix_setuid($org_uid);}
@@ -408,8 +410,16 @@ switch(strtoupper($l)){   case 'P':   $ret *= 1024;  case 'T':  $ret *= 1024;  c
 return $ret;
 }
 
-if ( ! function_exists ( 'mime_content_type' ) ) {	// most newer PHP doesn't have this, so try shell  ?
-   	function mime_content_type ( $f )  {return trim (@exec ('file -bi ' . escapeshellarg ( $f ) ) ) ;}
+if ( ! function_exists ( 'mime_content_type' ) ) {	// most newer PHP doesn't have this
+
+if (function_exists('finfo_open') && function_exists('finfo_file')) {	// try finfo
+
+	function mime_content_type( $f )  {$finfo=finfo_open(FILEINFO_MIME); return trim(finfo_file($finfo, $f));}
+
+} else {		//  so try shell  ?  - will fail on windows 100% of the time
+
+   	function mime_content_type( $f )  {return trim (@exec ('file -bi ' . escapeshellarg ( $f ) ) ) ;}
+}   	
 }
 
 function bb_attachments_install() {

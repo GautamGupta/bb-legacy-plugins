@@ -47,6 +47,7 @@ Please note there are important security considerations when allowing uploads of
 
 * 0.0.5	first public beta release for review
 * 0.0.6	advanced restrictions by file type & user role, upload form displays allowed file types
+* 0.0.7	one more mime option for windows/no-shell-access users
 	
 == To Do ==
 

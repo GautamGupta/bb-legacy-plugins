@@ -170,7 +170,8 @@ function post_count_plus_add_css() { global $post_count_plus;  echo '<style type
 
 function post_count_plus_filter($titlelink) {post_count_plus(0,0,$titlelink); return '';}	// only if automatic inserts are selected
 
-add_action( 'bb_init', 'post_count_plus_initialize');
+if (!is_bb_feed()) {add_action( 'bb_init', 'post_count_plus_initialize');}
+
 function post_count_plus_initialize() {
 	global $bb, $bb_current_user, $post_count_plus, $post_count_plus_type, $post_count_plus_label;
 	if (!isset($post_count_plus)) {$post_count_plus = bb_get_option('post_count_plus');
@@ -228,7 +229,7 @@ function post_count_plus_initialize() {
 		$post_count_plus_type['custom_titles']="array,5,10";		
 	// }
 	if ($post_count_plus['profile_insert']) {add_filter( 'get_profile_info_keys','post_count_plus_profile_key',200);}
-	if ($post_count_plus['activate'] && !is_bb_feed()) {add_filter( 'post_author_title', 'post_count_plus_filter');}
+	if ($post_count_plus['activate']) {add_filter( 'post_author_title', 'post_count_plus_filter');}
 	if ($post_count_plus['style']) {add_action('bb_head', 'post_count_plus_add_css');}	
 	if ($post_count_plus['user_color']) {
 		add_filter( 'get_post_author','post_count_plus_user_color',200,2);

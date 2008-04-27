@@ -60,6 +60,10 @@ any template by using direct calls, ie. `<?php post_count_plus($user->ID); ?>`
 * a few tweaks, minor bug fixes to admin side
 * tries to enforce proper role name entry (no spaces & lowercase) - todo: selection box instead
 
+= Version 1.1.2 (2008-04-27) =
+
+* don't activate if inside a feed 
+
 == To Do ==
 
 * Better instructions for all the options, code cleanup

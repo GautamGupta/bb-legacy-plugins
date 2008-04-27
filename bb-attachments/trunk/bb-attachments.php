@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.7
+Version: 0.0.8
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -201,7 +201,7 @@ while(list($key,$value) = each($_FILES['bb_attachments']['name'])) {
 						
 			$tmp=$_FILES['bb_attachments']['tmp_name'][$key];
 			$size=filesize($tmp);	
-			$mime=mime_content_type($tmp); $mime=substr($mime,0,strpos($mime.";",";"));					
+			$mime=bb_attachments_mime_type($tmp); 				
    			$status=0; $id=0;
    			
    			if ($status==0 && !in_array($ext,bb_attachments_lookup($bb_attachments['allowed']['extensions']))) {$status=3;}	// disallowed extension
@@ -410,16 +410,23 @@ switch(strtoupper($l)){   case 'P':   $ret *= 1024;  case 'T':  $ret *= 1024;  c
 return $ret;
 }
 
-if ( ! function_exists ( 'mime_content_type' ) ) {	// most newer PHP doesn't have this
+function bb_attachments_mime_type($f) {
+$disabled=strtolower(ini_get('disable_functions')); $mime="";
 
-if (function_exists('finfo_open') && function_exists('finfo_file')) {	// try finfo
-
-	function mime_content_type( $f )  {$finfo=finfo_open(FILEINFO_MIME); return trim(finfo_file($finfo, $f));}
-
-} else {		//  so try shell  ?  - will fail on windows 100% of the time
-
-   	function mime_content_type( $f )  {return trim (@exec ('file -bi ' . escapeshellarg ( $f ) ) ) ;}
-}   	
+if (function_exists('mime_content_type') && strpos($disabled,'mime_content_type')===false) {	// many newer PHP doesn't have this
+	$mime=mime_content_type($f);
+}
+elseif (function_exists('finfo_open') && function_exists('finfo_file') && strpos($disabled,'finfo_open')===false) {	// try finfo
+	$finfo=finfo_open(FILEINFO_MIME);  $mime=trim(finfo_file($finfo, $f));
+} 
+elseif (function_exists('exec') && strpos($disabled,'exec')===false) {	//  so try shell  ?  - will fail on windows 100% of the time?
+	$mime=trim(@exec('file -bi '.escapeshellarg($f)));
+}
+if ((!$mime || strpos($mime,'file -bi')!==false) && function_exists('getimagesize') && function_exists('image_type_to_mime_type')  && strpos($disabled,'getimagesize')===false) { 
+	// use image function in worst case senario - won't do text types - must fix !
+   	$mime=""; $imgt =@getimagesize($f);  if ($imgt) {$mime=image_type_to_mime_type($imgt[2]);}	// 0=width  1=height
+}
+return substr($mime,0,strpos($mime.";",";"));	
 }
 
 function bb_attachments_install() {

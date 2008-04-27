@@ -5,7 +5,7 @@ Description:  Indicates previously read topics with new unread posts. Features "
 Plugin URI:  http://bbpress.org/plugins/topic/78
 Author: _ck_
 Author URI: http://bbshowcase.org
-Version: 0.8.7
+Version: 0.8.8
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 Instructions:   install, activate, edit unread style and number of topics tracked per user
@@ -46,11 +46,11 @@ function up_mark_forum_unread($title,$id) {
 global $bbdb,$bb_current_user,$unread_posts,$up_forums;
 if (!isset($up_forums)) {			// unfortunately requires an extra query, data impossible to store
 	$user = bb_get_user($bb_current_user->ID);  
-	$up_forums=$bbdb->get_col("SELECT forum_id FROM $bbdb->topics WHERE topic_id IN (".trim($user->up_read_topics,", ").") AND topic_last_post_id  NOT IN (".trim($user->up_last_posts,", ").") GROUP BY forum_id");
-	$up_forums=array_flip($up_forums);		
+	$up_forums=@$bbdb->get_col("SELECT forum_id FROM $bbdb->topics WHERE topic_id IN (".trim($user->up_read_topics,", ").") AND topic_last_post_id  NOT IN (".trim($user->up_last_posts,", ").") GROUP BY forum_id");
+	if (is_array($up_forums)) {$up_forums=array_flip($up_forums);} else 	{$up_forums=array();}	
 }	
-	if (array_key_exists($id,$up_forums)) {$title = '<span class="unread_posts">' . $title . '</span>';}
-return $title;;
+	if (isset($up_forums[$id])) {$title = '<span class="unread_posts">' . $title . '</span>';}
+return $title;
 }
 
 function up_mark_link_unread($link)  {			// props kaviaar - makes title links jump to last unread post

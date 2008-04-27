@@ -5,7 +5,7 @@ Description:  Indicates previously read topics with new unread posts. Features "
 Plugin URI:  http://bbpress.org/plugins/topic/78
 Author: _ck_
 Author URI: http://bbshowcase.org
-Version: 0.8.6
+Version: 0.8.7
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 Instructions:   install, activate, edit unread style and number of topics tracked per user
@@ -13,12 +13,13 @@ Instructions:   install, activate, edit unread style and number of topics tracke
 todo: mark topics read for specific forums instead of just all, maybe change title link to jump to last read post
 */
 
-$unread_posts_style=".unread_posts {color:blue;}";	// optional style - or put it into your css file and disable this line
-$unread_posts_topics_per_user=100;			// how many topics to watch for each user - on a fast, small forum you could probably do 1000 
+$unread_posts['style']=".unread_posts {color:blue;}";	// optional style - or put it into your css file and disable this line
+$unread_posts['topics_per_user']=100;			// how many topics to watch for each user - on a fast, small forum you could probably do 1000 
+$unread_posts['indicate_forums']=false;			// should forums also be highlighted if there are new posts (note: causes extra query)
 
 function unread_posts_init() {
 global $bb_current_user;
-if ($bb_current_user->ID) {		// only bother with the overhead if a user is logged in        - prep page, arrays, etc.
+if ($bb_current_user->ID  && !is_bb_feed()) {	// only bother with the overhead if a user is logged in        - prep page, arrays, etc.
 	if (isset($_GET['mark_all_topics_read']) || $_GET['clear_all_topics_read']) {add_action('bb_send_headers', 'up_mark_all_read');}	//  can't hook to automatically place links for this???
 	
 	elseif (isset($_GET['update_all_topics_read']) || $_GET['catch_all_topics_read']) {add_action('bb_send_headers', 'up_update_all_read');}	//  this too
@@ -26,16 +27,31 @@ if ($bb_current_user->ID) {		// only bother with the overhead if a user is logge
 	elseif (is_topic()) {add_action('topicmeta','up_update_topics_read',200);}	// topic pages is where all the heavy lifting is done
 
 	elseif (in_array(bb_get_location(),array('front-page','forum-page', 'tag-page','search-page','favorites-page','profile-page','view-page'))) {	// where should we affect titles
-		global $up_read_topics, $up_last_posts, $unread_posts_style;
+		global $up_read_topics, $up_last_posts, $unread_posts;
 		$user = bb_get_user($bb_current_user->ID);  
-		$up_read_topics=explode(",",$user->up_read_topics);  settype($up_read_topics,"array"); // unpack once, use many times
-		$up_last_posts=explode(",",$user->up_last_posts); settype($up_last_posts,"array");	 // unpack once, use many times			
-		add_filter('topic_title', 'up_mark_title_unread');
-		add_filter('topic_link', 'up_mark_link_unread');	// props kaviaar
-		if ($unread_posts_style) {add_action('bb_head', 'up_add_css');}
-	}	
+		if (trim($user->up_read_topics,", ")) {
+			$up_read_topics=explode(",",$user->up_read_topics);  settype($up_read_topics,"array"); // unpack once, use many times
+			$up_last_posts=explode(",",$user->up_last_posts); settype($up_last_posts,"array");	 // unpack once, use many times			
+			add_filter('topic_title', 'up_mark_title_unread');
+			add_filter('topic_link', 'up_mark_link_unread');	// props kaviaar
+			if ($unread_posts['style']) {add_action('bb_head', 'up_add_css');}		
+			if ($unread_posts['indicate_forums'] && in_array(bb_get_location(),array('front-page','forum-page'))) {add_filter( 'get_forum_name', 'up_mark_forum_unread' ,10,2);}
+		}
+	}
+	
 }
 } add_action('bb_init','unread_posts_init',200);
+
+function up_mark_forum_unread($title,$id) {
+global $bbdb,$bb_current_user,$unread_posts,$up_forums;
+if (!isset($up_forums)) {			// unfortunately requires an extra query, data impossible to store
+	$user = bb_get_user($bb_current_user->ID);  
+	$up_forums=$bbdb->get_col("SELECT forum_id FROM $bbdb->topics WHERE topic_id IN (".trim($user->up_read_topics,", ").") AND topic_last_post_id  NOT IN (".trim($user->up_last_posts,", ").") GROUP BY forum_id");
+	$up_forums=array_flip($up_forums);		
+}	
+	if (array_key_exists($id,$up_forums)) {$title = '<span class="unread_posts">' . $title . '</span>';}
+return $title;;
+}
 
 function up_mark_link_unread($link)  {			// props kaviaar - makes title links jump to last unread post
 global $topic, $up_read_topics, $up_last_posts;	
@@ -44,7 +60,7 @@ global $topic, $up_read_topics, $up_last_posts;
  return $link;
 }
 
-function up_add_css() {global $unread_posts_style; echo '<style type="text/css">'.$unread_posts_style.'</style>'; } 
+function up_add_css() {global $unread_posts; echo '<style type="text/css">'.$unread_posts['style'].'</style>'; } 
 
 function up_mark_title_unread($title)  {
 global $topic, $up_read_topics, $up_last_posts;	
@@ -73,7 +89,7 @@ global $bbdb,$bb_current_user;
 } 
 
 function up_update_topics_read() {
-global  $bbdb, $bb_current_user, $topic, $unread_posts_topics_per_user;
+global  $bbdb, $bb_current_user, $topic, $unread_posts;
 	$user = bb_get_user($bb_current_user->ID);  
 		
 	$up_read_topics=explode(",",$user->up_read_topics);  settype($up_read_topics,"array"); 
@@ -89,9 +105,9 @@ global  $bbdb, $bb_current_user, $topic, $unread_posts_topics_per_user;
 		$up_last_posts[$up_key]=$topic->topic_last_post_id;		
 		$up_key=-1;							// flag to save just last post update
 	}
-	if ($up_key==-2 && count($up_read_topics)>$unread_posts_topics_per_user) {		// trim arrays since we are going to do a full save anyway
-		$up_read_topics=array_slice($up_read_topics,25-$unread_posts_topics_per_user);	// offset by 25 so we aren't constantly trimming
-		$up_last_posts=array_slice($up_last_posts,25-$unread_posts_topics_per_user);
+	if ($up_key==-2 && count($up_read_topics)>$unread_posts['topics_per_user']) {		// trim arrays since we are going to do a full save anyway
+		$up_read_topics=array_slice($up_read_topics,25-$unread_posts['topics_per_user']);	// offset by 25 so we aren't constantly trimming
+		$up_last_posts=array_slice($up_last_posts,25-$unread_posts['topics_per_user']);
 	}			
 
 /* how we would simply do it if bbpress wasn't abusing mysql calls

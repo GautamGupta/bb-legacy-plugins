@@ -424,7 +424,7 @@ elseif (function_exists('exec') && strpos($disabled,'exec')===false) {	//  so tr
 }
 if ((!$mime || strpos($mime,'file -bi')!==false) && function_exists('getimagesize') && function_exists('image_type_to_mime_type')  && strpos($disabled,'getimagesize')===false) { 
 	// use image function in worst case senario - won't do text types - must fix !
-   	$mime=""; $imgt =@getimagesize($f);  if ($imgt) {$mime=image_type_to_mime_type($imgt[2]);}	// 0=width  1=height
+   	$mime=""; $imgt =@getimagesize($f);  $mime=image_type_to_mime_type($imgt[2]); 	// 0=width  1=height  if ($imgt) {} 
 }
 return substr($mime,0,strpos($mime.";",";"));	
 }

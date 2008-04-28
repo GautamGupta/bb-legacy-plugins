@@ -5,7 +5,7 @@ Description:  Make selected forums completely hidden except to certain members o
 Plugin URI:  http://bbpress.org/plugins/topic/105
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.1
+Version: 0.0.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -35,7 +35,7 @@ $hidden_forums['allow_users']['all_forums']=array(1);		// these users can always
 $hidden_forums['allow_users'][500]=array(5432,7654);	// list of users by number
 $hidden_forums['allow_users'][501]=array(5432,7654);	// list of users by number
 
-$hidden_forums['label']="[H] ";	// text, html or image to indicate hidden forums
+$hidden_forums['label']="[H] ";	// text, html, css or image to indicate hidden forums/topics, make it =""; if you don't want any label at all
 
 /*    stop  editing  here    */
 
@@ -47,7 +47,7 @@ global $hidden_forums, $hidden_forums_list, $hidden_forums_array, $bb_views, $bb
 $id=(isset($bb_current_user)) ? $bb_current_user->ID : 0;
 $hidden_forums_list=array_flip($hidden_forums['hidden_forums']);
 
-if ($id>0) {	// if id=0, don't bother searching allows
+if ($id>0) {	// if id=0, don't bother searching allowed exceptions
 
 if ((isset($_GET['listforums']) || isset($_GET['forumlist'])) && 'keymaster'==@reset($bb_current_user->roles)) {echo "<h2>Forum List</h2>"; foreach (get_forums() as $forum) {echo "$forum->forum_id -> $forum->forum_name <br><br>";} exit();}
 
@@ -80,6 +80,7 @@ if (!empty($hidden_forums_list)) {
 if (!empty($hidden_forums['label']) && $hidden_forums_list!=array_flip($hidden_forums['hidden_forums'])) {
 	add_filter( 'get_forum_name', 'hidden_forums_label', 10,2);
 	add_filter( 'get_topic_title', 'hidden_forums_label_topic', 10,2);
+	add_action('pre_edit_form', 'hidden_forums_label_topic_stop');
 }
 }
 
@@ -100,4 +101,5 @@ function hidden_forums_label_topic($title,$id) {
 	return ((in_array($forum_id,$hidden_forums['hidden_forums'])) ? $hidden_forums['label'] : "").$title;		
 }	
 
+function hidden_forums_label_topic_stop() {remove_filter( 'get_topic_title', 'hidden_forums_label_topic', 10);}
 ?>

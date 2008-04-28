@@ -50,7 +50,10 @@ Make selected forums completely hidden except to certain members or roles. Uses 
 
 * first public release for beta test
 
+= Version 0.0.2 (2008-04-28) =
+
+* bug fix for duplicate label when editing hidden topics
+
 == To Do ==
 
 * admin menu
-

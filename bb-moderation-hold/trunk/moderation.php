@@ -5,7 +5,7 @@ Plugin URI: http://www.adityanaik.com
 Description: Hold posts and topics for moderation
 Author: Aditya Naik
 Author URI: http://www.adityanaik.com/
-Version: 0.4
+Version: 0.4.1
 */
 /**
  * Filter topics held for moderation
@@ -58,7 +58,7 @@ function bb_moderation_hold_after_posting_do_the_magic($post_id){
  * Send Moderation Notification
  *
  * @author  Aditya Naik <aditya@adityanaik.com>
- * @version v 0.01 Sun Apr 08 2007 01:37:30 GMT-0400 (Eastern Daylight Time)
+ * @version v 0.02 Sun Apr 08 2007 01:37:30 GMT-0400 (Eastern Daylight Time)
  */
 function bb_moderation_hold_mail_moderation($obj = 'T') {
 
@@ -72,11 +72,7 @@ function bb_moderation_hold_mail_moderation($obj = 'T') {
     return;
 
   $message = __("You have a new $s in the moderation queue.");
-
-  mail( $email, bb_get_option('name') . ': ' . __('Moderation Alert'),
-    sprintf( $message, "$obj"),
-    'From: ' . bb_get_option('admin_email')
-  );
+  bb_mail( $email, __('Moderation Alert'), sprintf( $message, "$obj"));
 }
 
 /**

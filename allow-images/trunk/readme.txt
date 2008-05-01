@@ -23,3 +23,4 @@ This plugin only allows certain types of files to be linked to as an image, so
 the security risk is minimal.  Be that as it may, there is always the
 possibility of a security risk when allowing people to post content on your site
 that is stored elsewhere.  Use this plugin at your own risk.
+

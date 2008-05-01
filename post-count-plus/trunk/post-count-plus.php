@@ -185,7 +185,7 @@ function post_count_plus_initialize() {
 		$post_count_plus['user_link']="Profile";
 		$post_count_plus['title_link']="Profile";
 		$post_count_plus['join_date_format']="M 'y";	
-		$post_count_plus['style']=".post_count_plus {color:SlateGray; line-height:150%; white-space:nowrap;}\n.post_count_plus a {color:DarkCyan;}";		
+		$post_count_plus['style']=".post_count_plus {color:SlateGray; line-height:150%; white-space:nowrap;}\n.post_count_plus a {color:DarkCyan;}\n#thread .post li {clear:none;}";
 		$post_count_plus['custom_titles']=array(
 		"New Title",	"Minimum Posts", "Minimum Days", "Minimum Role", "Color",
 		"new member",	"0",		"0",			"",	"SlateBlue",

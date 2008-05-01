@@ -61,7 +61,7 @@ bb_register_activation_hook( __FILE__,  'bb_attachments_install');
 function bb_attachments_init() {
 global $bbdb, $bb_attachments;
 
-if (isset($_GET['bb_attachments_diagnostic']) && bb_current_user_can('administrate')) {echo "<pre>"; print_r($bb_attachments); echo "</pre>"; exit();}
+if (isset($_GET['bb_attachments_diagnostic']) || isset($_GET['bb_attachments_debug'])) {include('debug.php');}
 
 if (isset($_GET['bbat_delete'])) {bb_attachments_delete();}
 

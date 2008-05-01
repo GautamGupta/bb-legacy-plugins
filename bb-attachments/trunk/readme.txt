@@ -26,14 +26,14 @@ Please note there are important security considerations when allowing uploads of
 
 == Frequently Asked Questions ==
 
-* demo: http://bbshowcase.org/forums/topic/put-your-test-posts-here
+* demo: http://bbshowcase.org/forums/topic/new-bbpress-plugin-bbpress-attachments
 * members's ability to upload attachments is tied to their ability to edit post - ie. if edit ends in 1 hour, so does adding attachments
 * the plugin will try to create the base upload directory itself, but in most cases will fail so you need to follow the first installation step
 * if available, posix is used to write files with owner's id so you can delete/move files manually via FTP
 * needs PHP >= 4.3
-* mime_content_type function or shell access must exist to verify mime types 
 * filesize max might be 2mb because of passthrough/readfile limit (supposedly fixed in newer PHP)
 * administrators can debug settings (ie. PHP upload limit) by adding to url `?bb_attachments_diagnostic`
+* if you get `error: denied mime`  on every upload, mime_content_type function or shell access must exist to verify mime types - otherwise you can force all types to be allowed by editing `bb-attachments.php` and adding `'application/octet-stream'` to each of the `$bb_attachments['allowed']['mime_types']` 
 
 == License ==
 
@@ -48,7 +48,7 @@ Please note there are important security considerations when allowing uploads of
 * 0.0.5	first public beta release for review
 * 0.0.6	advanced restrictions by file type & user role, upload form displays allowed file types
 * 0.0.7	one more mime option for windows/no-shell-access users
-* 0.0.9	no longer necessary to edit `edit-post.php` template if using 0.9.0.2 or newer
+* 0.0.9	no longer necessary to edit `edit-post.php` template if using bbPress 0.9.0.2 or newer
 	
 == To Do ==
 

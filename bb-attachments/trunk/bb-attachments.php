@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.9
+Version: 0.1.0
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -14,7 +14,7 @@ Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
 
 $bb_attachments['role']['see']="read"; 		 // minimum role to see list of attachments = read/participate/moderate/administrate
 $bb_attachments['role']['download']="participate";  // minimum role to download = read/participate/moderate/administrate
-$bb_attachments['role']['upload']="moderate";  // minimum role to upload = participate/moderate/administrate (times out with post edit time)
+$bb_attachments['role']['upload']="participate";  // minimum role to upload = participate/moderate/administrate (times out with post edit time)
 $bb_attachments['role']['delete']="moderate";  // minimum role to delete = read/participate/moderate/administrate
 
 $bb_attachments['allowed']['extensions']['default']=array('gif','jpeg','jpg','pdf','png','txt');	// anyone who can upload can submit these
@@ -55,10 +55,11 @@ $bb_attachments['status']=array("ok","deleted","failed","denied extension","deni
 // really stop editing!
 
 add_action( 'bb_init', 'bb_attachments_init');
+add_action( 'bb_post.php', 'bb_attachments_process_post');
 bb_register_activation_hook( __FILE__,  'bb_attachments_install');
 
 function bb_attachments_init() {
-global $bbdb, $post_id, $bb_post, $topic, $bb_attachments;
+global $bbdb, $bb_attachments;
 
 if (isset($_GET['bb_attachments_diagnostic']) && bb_current_user_can('administrate')) {echo "<pre>"; print_r($bb_attachments); echo "</pre>"; exit();}
 
@@ -67,11 +68,11 @@ if (isset($_GET['bbat_delete'])) {bb_attachments_delete();}
 if (isset($_GET['bb_attachments'])) {
 	if (isset($_GET['bbat'])) {
 		bb_attachments_download();
-	} else {
+	} else { 
 		if (bb_attachments_location()!='edit.php') {
-			bb_repermalink();		
-			bb_get_header();
-			bb_attachments();
+			bb_repermalink();					
+			bb_get_header();		
+			bb_attachments($post_id);
 			bb_get_footer();
 			exit(); 
 		}
@@ -86,14 +87,21 @@ if (is_topic()) {
 	if ($bb_attachments['title']) {add_filter('topic_title', 'bb_attachments_title',200);}
 }
 add_action('post_edit_form','bb_attachments');	// auto-insert on post edit form
-
+add_action('post_form','bb_attachments_upload_form'); // auto-insert on new post form 
+add_action('pre_post_form','bb_attachments_enctype'); // multipart workaround on new post form
 }
+
+// insane bbPress workaround - adds multipart enctype to the new post form via uri patch
+function bb_attachments_enctype() {add_filter( 'bb_get_option_uri','bb_attachments_uri',999);}
+function bb_attachments_uri($uri) {remove_filter( 'bb_get_option_uri','bb_attachments_uri',999); 
+					return $uri. 'bb-post.php"  enctype="multipart/form-data" hack="';} 
 
 function bb_attachments($post_id=0) {
 global $bb_attachments_on_page;
 if (isset($bb_attachments_on_page)) {return;} else {$bb_attachments_on_page=true;}	// only insert once per page -> pre 0.9.0.2
 
 if ($post_id==0) {if (isset($_GET['bb_attachments'])) {$post_id=intval($_GET['bb_attachments']);} else {global $bb_post; $post_id=$bb_post->post_id;}}
+
 if ($post_id) {
 	$bb_post=bb_get_post($post_id);
 	if (bb_attachments_location()!='edit.php') {
@@ -101,7 +109,7 @@ if ($post_id) {
 	}
 	echo "<div class='indent'>";
 	if (isset($_FILES['bb_attachments'])) {
-	bb_attachments_process_post(intval($_GET['bb_attachments'])); 
+	bb_attachments_process_post(intval($_GET['bb_attachments']),1); 
 	echo "<br />";
 	}	
 	echo bb_attachments_post_attachments($post_id);
@@ -113,30 +121,32 @@ if ($post_id) {
 }
 
 function bb_attachments_post_attachments($post_id=0) {
-global $bbdb, $bb_attachments, $bb_attachments_cache; 
+global $bbdb, $bb_attachments, $bb_attachments_cache, $bb_current_user; 
 
 $output="";	
 if ($post_id && ($bb_attachments['role']['see']=="read" || bb_current_user_can($bb_attachments['role']['see']))) {
 	
-	$can_delete=false; $admin=false; $filter=" AND status = 0 "; 	// speedup checks with flag	
+	$time=time()-60; $can_delete=false; $self=false; $admin=false; $filter=true;   // " AND status = 0 "; 	// speedup checks with flag	
+	if ($bb_current_user->ID==get_post_author_id( $post_id )) {$self=true;}
 	if ((!is_topic() || isset($_GET['bb_attachments'])) && bb_current_user_can('moderate')) {$filter=""; $admin=bb_current_user_can('administrate');} 	 
 	if (bb_current_user_can($bb_attachments['role']['delete'])) {$can_delete=true;}
 		
 	if (!isset($bb_attachments_cache[$post_id])) {
-		$bb_attachments_cache[$post_id]=$bbdb->get_results("SELECT * FROM bb_attachments WHERE post_id = $post_id $filter ORDER BY time DESC LIMIT 999");
+		$bb_attachments_cache[$post_id]=$bbdb->get_results("SELECT * FROM bb_attachments WHERE post_id = $post_id ORDER BY time DESC LIMIT 999");
 	}		
 
 
 	if (count($bb_attachments_cache[$post_id])) {
 		foreach ($bb_attachments_cache[$post_id] as $attachment) { 
-			if ($attachment->status==0 || empty($filter)) {
+			$showerror=($self && $attachment->time>$time) ? true : false;
+			if ($attachment->status==0 || empty($filter) || $showerror) {
 				$attachment->filename=stripslashes($attachment->filename);
 				$output.="<li>"; 
 				$output.="<span".(($attachment->status>0) ? " class='deleted' ": "")."> "; 
 				if (isset($bb_attachments['icons'][$attachment->ext])) {$icon=$bb_attachments['icons'][$attachment->ext];} else {$icon=$bb_attachments['icons']['default'];}
 				$output.=" <img align='absmiddle' title='".$attachment->ext."' src='".$bb_attachments['icons']['url'].$icon."' /> ";
 				
-				if ($attachment->status>0 && empty($filter)) {					
+				if ($attachment->status>0 && (empty($filter) || $showerror)) {					
 					$output.=" [".__($bb_attachments['status'][$attachment->status])."] $attachment->filename ";
 				}
 						
@@ -149,11 +159,11 @@ if ($post_id && ($bb_attachments['role']['see']=="read" || bb_current_user_can($
 						."'>".$attachment->filename."</a> "." ";				
 				}						
 				
-				$output.=" <span class='num'>(".round($attachment->size/1024,1)." KB, ";				
-				$output.=bb_number_format_i18n($attachment->downloads)." ".__('downloads').")</span> ";
+				$output.=" <span class='num'>(".round($attachment->size/1024,1)." KB";				
+				if ($attachment->status<2) {$output.=", ".bb_number_format_i18n($attachment->downloads)." ".__('downloads');}
+				$output.=")</span> ";
 				
-				$bb_since=bb_since($attachment->time);
-				if (intval($bb_since)>0) {$output.=" <small>".$bb_since." ".__('old')."</small> ";}
+				if ($attachment->time<$time) {$output.=" <small>".bb_since($attachment->time)." ".__('old')."</small> ";}
 								
 				if ($admin) {				
 					$output.=' [<a href="'.attribute_escape(bb_get_option('uri').'bb-admin/view-ip.php?ip='.long2ip($attachment->user_ip)) . '">'.long2ip($attachment->user_ip).'</a>] ';
@@ -172,10 +182,10 @@ if ($output) {$output="<h3>".__("Attachments")."</h3><ol>".$output."</ol>";}
 return $output;
 }
 
-function bb_attachments_process_post() {
+function bb_attachments_process_post($post_id=0,$display=0) {
 global $bbdb, $bb_attachments;
 
-$post_id=intval($_GET['bb_attachments']);  	// only can upload if user is allowed to edit post
+if (!$post_id) {$post_id=intval($_GET['bb_attachments']);}	// only can upload if user is allowed to edit post
 $user_id=bb_get_current_user_info( 'id' );
 if (!$user_id || !$post_id || !bb_current_user_can('edit_post',$post_id) || !bb_current_user_can($bb_attachments['role']['upload'])) {return;}	
 
@@ -189,7 +199,7 @@ $offset=0;	// counter for this pass
 $strip = array(' ','`','"','\'','\\','/','..','__');  // filter for filenames
 $maxlength=bb_attachments_lookup($bb_attachments['max']['filename']);
 
-echo "<h3>".__("Uploads")."</h3><ol>";	// start output
+$output="<h3>".__("Uploads")."</h3><ol>";	// start output
 while(list($key,$value) = each($_FILES['bb_attachments']['name'])) {
 	if(!empty($value)){ 	
 		
@@ -221,8 +231,6 @@ while(list($key,$value) = each($_FILES['bb_attachments']['name'])) {
 				");
 				
 				if ($status==0 && !$failed) {$id=intval($bbdb->get_var("SELECT LAST_INSERT_ID()"));}	// fetch the assigned unique id #
-				
-				// echo "status: $status - ".$_FILES['bb_attachments']['tmp_name'][$key]." - ".$file;
 				
 				if ($failed) {$status=2;}		// db failure ?
 										
@@ -264,11 +272,12 @@ while(list($key,$value) = each($_FILES['bb_attachments']['name'])) {
 		else {$status=2;}
 		if ($status>0) {
 			if ($id>0) {$bbdb->query("UPDATE  bb_attachments SET `status` = $status WHERE `id` = $id");}
-			echo "<li><span style='color:red'><strong>$filename "." <span class='num'>(".round($size/1024,1)." KB)</span> ".__('error:')." ".$bb_attachments['status'][$status]."</strong></span></li>";
-		} else {echo "<li><span style='color:green'><strong>$filename "." <span class='num'>(".round($size/1024,1)." KB)</span> ".__('successful')."</strong></span></li>";}
+			$output.="<li><span style='color:red'><strong>$filename "." <span class='num'>(".round($size/1024,1)." KB)</span> ".__('error:')." ".$bb_attachments['status'][$status]."</strong></span></li>";
+		} else {$output.="<li><span style='color:green'><strong>$filename "." <span class='num'>(".round($size/1024,1)." KB)</span> ".__('successful')."</strong></span></li>";}
 	} // end !$empty
 } // end while
-echo "</ol>";
+$output.="</ol>";
+if ($display) {echo $output;}
 bb_update_topicmeta( $topic_id, 'bb_attachments', $topic_attachments+$offset);
 }
 
@@ -277,7 +286,7 @@ global $bb_attachments;
 
 if (!$post_id) {$post_id=intval($_GET['bb_attachments']);} 	// only can upload if user is allowed to edit post
 $user_id=bb_get_current_user_info( 'id' );
-if (!$user_id || !$post_id || !bb_current_user_can('edit_post',$post_id) || !bb_current_user_can($bb_attachments['role']['upload'])) {return;}	
+if (!$user_id || ($post_id && !bb_current_user_can('edit_post',$post_id)) || !bb_current_user_can($bb_attachments['role']['upload'])) {return;}	
 
 $count=0; $allowed=__('allowed uploads:')." "; $exts=bb_attachments_lookup($bb_attachments['allowed']['extensions']);
 $tcount=count($exts); foreach ($exts as $ext) {
@@ -286,9 +295,10 @@ $count++; if ($count==5 && $tcount>7) {$allowed.="<br />";}
 }
 $allowed=rtrim($allowed," ,");
 
-echo '<form class="bb_attachments_upload_form" enctype="multipart/form-data" method="post" action="'.attribute_escape(add_query_arg('bb_attachments',$post_id,remove_query_arg(array('bb_attachments','bbat','bbat_delete')))).'">	
-	<h3>'.__("Upload Files from your Computer").'</h3>		
-	<input  type="hidden" name="MAX_FILE_SIZE" value="'.$bb_attachments['max']['php_upload_limit'].'" />	
+if ($post_id) {echo '<form class="bb_attachments_upload_form" enctype="multipart/form-data" method="post" action="'.attribute_escape(add_query_arg('bb_attachments',$post_id,remove_query_arg(array('bb_attachments','bbat','bbat_delete')))).'">';}
+else {echo '<input  type="hidden" name="bb_attachments" value="0" />';}
+echo	'<h3>'.__("Upload Files from your Computer").'</h3>		
+	<input  type="hidden" name="MAX_FILE_SIZE" value="'.$bb_attachments['max']['php_upload_limit'].'" />			
 	<span id="bb_attachments_file_sample">
 	<input type="file" name="bb_attachments[]" size="50" /><br />
 	<input type="file" name="bb_attachments[]" size="50" /><br />
@@ -303,12 +313,13 @@ echo '<form class="bb_attachments_upload_form" enctype="multipart/form-data" met
 	}
 	</script>
 	'.$allowed.'<br />
-	<div style="margin:1em 0 0 0;">	
-	 <a style="margin-right:12em;" href="'. get_post_link( $post_id ).'">'.__("&laquo; return to post").'</a>
-	<a href="javascript:void(0)" onClick="bb_attachment_inputs();">[+] '.__('more').'</a> &nbsp; 
+	<div style="margin:1em 0 0 0;">';		 
+if ($post_id) {echo '<a style="margin-right:12em;" href="'. get_post_link( $post_id ).'">'.__("&laquo; return to post").'</a>';}
+else {echo '<span style="margin-right:20em;">&nbsp;</span>';}
+echo	'<a href="javascript:void(0)" onClick="bb_attachment_inputs();">[+] '.__('more').'</a> &nbsp; 
 	<input style="font-weight:bold;" type="submit" class="submit" name="upload" value="'.__('Upload').'" />
-	</div>
-	</form>';
+	</div>';
+if ($post_id) {echo '</form>';}
 }
 
 function bb_attachments_download($filenum=0) {
@@ -379,7 +390,7 @@ return $text;
 function bb_attachments_link($link) { 
 global $bb_attachments, $bb_attachments_cache, $bb_post, $bb_current_user;
 $post_id=$bb_post->post_id;
-	if (($bb_current_user->ID ==$bb_post->poster_id || $bb_attachments_cache[$post_id]) && bb_current_user_can($bb_attachments['role']['upload']) ) { 
+	if (($bb_current_user->ID ==$bb_post->poster_id && $bb_attachments_cache[$post_id]) && bb_current_user_can($bb_attachments['role']['upload']) ) { 
 		echo " <a href='" . attribute_escape(add_query_arg('bb_attachments',$post_id,remove_query_arg(array('bb_attachments','bbat','bbat_delete')))) . "' >" . __('Attachments') ."</a> ";
 	}
 	return $link;

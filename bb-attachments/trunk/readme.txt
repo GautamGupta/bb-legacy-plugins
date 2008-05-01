@@ -22,7 +22,6 @@ Please note there are important security considerations when allowing uploads of
 * (skip this step if your bbPress is 0.9.0.2 or newer) edit `edit-post.php` and below `<?php edit_form(); ?>` put `<?php if (function_exists('bb_attachments')) {bb_attachments();} ?>`
 * install plugin in it's own bb-attachments directory in `my-plugins` then activate plugin 
 * there are some optional settings you can adjust in `bb-attachments.php`
-* default upload role setting is set to `moderate` in beta for security reasons, you can reduce to `participate` to allow members to test
 
 == Frequently Asked Questions ==
 
@@ -49,6 +48,7 @@ Please note there are important security considerations when allowing uploads of
 * 0.0.6	advanced restrictions by file type & user role, upload form displays allowed file types
 * 0.0.7	one more mime option for windows/no-shell-access users
 * 0.0.9	no longer necessary to edit `edit-post.php` template if using bbPress 0.9.0.2 or newer
+* 0.1.0	uploading now possible directly on new posts (instead of only attaching afterwards)
 	
 == To Do ==
 
@@ -57,5 +57,4 @@ Please note there are important security considerations when allowing uploads of
 * thumbnails for image attachments
 * serving images inline rather than just downloading
 * pre-validate upload filenames via javascript to spare user upload time with rejection
-* deal with attachments on new, unsaved posts - tricky but possible - will take time
 * admin menu

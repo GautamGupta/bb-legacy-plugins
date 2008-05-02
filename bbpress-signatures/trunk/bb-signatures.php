@@ -3,7 +3,7 @@
 Plugin Name: bbPress signatures
 Plugin URI:  http://bbpress.org/plugins/topic/63
 Description:  allows users to add signatures to their forum posts, including an optional per-post toggle
-Version: 0.1.8
+Version: 0.1.9
 Author: _ck_
 Author URI: http://bbshowcase.org
 
@@ -94,9 +94,9 @@ if (bb_current_user_can($bb_signatures['minimum_user_level'])  &&  bb_is_user_lo
 echo '<fieldset>
 <legend>'. __('Signature') .'</legend>
 <p>' .$bb_signatures['signature_instructions'].'</p>
-<table border=0>
+<table border=0 cellpadding=0 cellspacing=0 width="95%">
 <tr class="extra-caps-row">
-<td><textarea style="width:90%;" name="signature" id="signature" type="text"  rows="2" cols="80" wrap="off"
+<td><textarea style="overflow:auto;height:5em;width:98%;" name="signature" id="signature" type="text"  rows="2" wrap="off"
  onkeyup="if (this.value.length>'.$bb_signatures['max_length'].') {this.value=this.value.substring(0,'.$bb_signatures['max_length'].')}">
 '.$signature.'</textarea></td>
 </tr>

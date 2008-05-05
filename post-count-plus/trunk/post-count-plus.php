@@ -146,6 +146,13 @@ global $post_count_plus;
 return $user_name;
 }
 
+function post_count_plus_delete_link_cleanup($r,$post_status,$post_id) {	// nasty fix for nasty mess that ajaxPostDelete creates
+if (strpos($r,'ajaxPostDelete')!==false && strpos($r,'post_count_plus')!==false) {
+$r=preg_replace("/(.*?)<span class\='post\_count\_plus'><font color\='.*?'>(.*?)<\/font><\/span>(.*?)/i","\${1}\${2}\${3}",$r);
+}
+return $r;
+}
+
 function post_count_plus_user_link( $url, $user_id) {	// forces links to profile instead of author's url on topic pages
 global $post_count_plus;
 if (bb_get_location()=="topic-page") {
@@ -233,9 +240,10 @@ function post_count_plus_initialize() {
 	if ($post_count_plus['style']) {add_action('bb_head', 'post_count_plus_add_css');}	
 	if ($post_count_plus['user_color']) {
 		add_filter( 'get_post_author','post_count_plus_user_color',200,2);
-	            	// add_filter( 'get_user_name','post_count_plus_user_color', 200,2);
+	            	// add_filter( 'get_user_name','post_count_plus_user_color', 200,2);	            	
 		add_filter( 'get_topic_last_poster', 'post_count_plus_user_color',200,2 ); 
 		add_filter( 'get_topic_author', 'post_count_plus_user_color',200,2 ); 
+		add_filter( 'post_delete_link', 'post_count_plus_delete_link_cleanup',10,3);
 		add_action('bb_head', 'post_count_plus_user_cache');
 	}
 	add_filter( 'get_user_link','post_count_plus_user_link',200,2);

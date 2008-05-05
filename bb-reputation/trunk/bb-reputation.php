@@ -2,7 +2,7 @@
 /*
 Plugin Name: Reputation (Karma) for bbPress 
 Description:  Allows the forum and members to award Reputation or "Karma" points to other members for their posts. Can optionally be used as a pseudo currency (ie. "forum dollars").
-Plugin URI:  http://bbpress.org/plugins/topic/64
+Plugin URI:  http://bbpress.org/plugins/topic/97
 Author: _ck_
 Author URI: http://bbShowcase.org
 Version: 0.0.1

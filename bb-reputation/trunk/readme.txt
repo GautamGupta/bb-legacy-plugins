@@ -1,4 +1,4 @@
-=== bb Reputation ===
+=== Reputation (Karma) for bbPress ===
 Tags: reputation, karma, points, cash, currency, bank, _ck_
 Contributors: _ck_
 Requires at least: 0.8.3
@@ -22,7 +22,7 @@ This is a very early release for the adventurous. Allows members to award Reputa
 
 == Frequently Asked Questions ==
 
-* template editing not required - if you want manual placement in posts change `$bb_reputation['automatic']` to `false`
+* template editing not required - if for some reason you want manual placement in posts change `$bb_reputation['automatic']` to `false` and put `<?php bb_reputation(); ?>` somewhere in your `post.php` template
 
 * please note that you cannot add reputation to yourself, you'll have to test with another member
 
@@ -35,6 +35,10 @@ This is a very early release for the adventurous. Allows members to award Reputa
 * admin review of all transactions 
 
 * admin menu
+
+* ajax-ish behaviours
+
+* dhtml prompts instead of javascript popups
 
 == License ==
 

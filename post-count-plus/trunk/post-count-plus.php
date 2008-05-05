@@ -5,7 +5,7 @@ Plugin URI:  http://bbpress.org/plugins/topic/83
 Description: An enhanced "user post count" with "custom titles" for topics and profiles, based on posts and membership, with cached results for faster pages. No template edits required.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 1.1.2
+Version: 1.1.3
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -129,7 +129,7 @@ $found=post_count_plus_find_title($user_id,$posts,$days,$role);
 if ($found) { 
 	$title=$post_count_plus['custom_titles'][$found];
 	$color=$post_count_plus['custom_titles'][$found+4];
-	if ($color) {$title='<font color="'.$color.'">'.$title.'</font>';}
+	if ($color) {$title="<font color='$color'>$title</font>";}
 }
 return $title;
 }
@@ -140,7 +140,7 @@ global $post_count_plus;
 	if ($post_count_plus['user_color']) {		
 		$found=post_count_plus_find_title($user_id);		
 		$color=$post_count_plus['custom_titles'][$found+4];
-		if ($color) {$user_name='<span class="post_count_plus"><font color="'.$color.'">'.$user_name.'</font></span>';}
+		if ($color) {$user_name="<span class='post_count_plus'><font color='$color'>$user_name</font></span>";}
 	}
 // }
 return $user_name;

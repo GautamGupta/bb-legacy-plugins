@@ -30,7 +30,7 @@ This is a very early release for the adventurous. Allows members to award Reputa
 
 == To Do ==
 
-* convert transaction history to real db table and not use user_meta will will overload on active forums
+* convert transaction history to real db table and not use user_meta which will overload on active forums
 
 * admin review of all transactions 
 

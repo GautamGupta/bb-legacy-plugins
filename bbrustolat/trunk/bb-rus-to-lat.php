@@ -3,10 +3,10 @@
 Plugin Name: bbRusToLat
 Plugin URI: http://bbpress.ru/downloads/plugins/#bb-rus-to-lat
 Description: This plugin convert cyrillic characters in tag to latin characters. Very usefull for russian-speaking users of bbPress. This plugin is based on plugin rus-to-lat for WordPress' post title.
-Author: Alex
-Contributor: Alex
+Author: A1ex
+Contributor: A1ex
 Author URI: http://bbpress.ru/
-Version: 0.31
+Version: 0.32
 */ 
 
 $original = array(

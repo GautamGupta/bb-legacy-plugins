@@ -1,11 +1,10 @@
 <?php
 /*
 Plugin Name: Support forum
-Plugin URI: http://bbpress.org/plugins/topic/16
+Plugin URI: http://bbpress.org/plugins/topic/support-forum/
 Description: Changes the forum to a support forum and adds functionality to mark topics resolved, not resolved or not a support question
-Author: Aditya Naik, Sam Bauers
-Author URI: http://www.adityanaik.com/
-Version: 3.0.2
+Author: <a href="http://www.adityanaik.com/">Aditya Naik</a>, <a href="http://unlettered.org/">Sam Bauers</a>
+Version: 3.0.3
 
 Version History:
 1.0		: Initial Release (Aditya Naik)
@@ -50,11 +49,12 @@ Version History:
 3.0.1	: Remove conditional triggering of label modifiers (Sam Bauers)
 		  Use trigger_error() to warn of incompatible bbPress version (Sam Bauers)
 3.0.2	: Change AJAX status changing to regular POST action (Sam Bauers)
+3.0.3	: Add textdomain to gettext functions (Sam Bauers)
 */
 
 
 /**
- * Support forum for bbPress version 3.0.2
+ * Support forum for bbPress version 3.0.3
  * 
  * ----------------------------------------------------------------------------------
  * 
@@ -90,7 +90,7 @@ Version History:
  * @copyright 2007 Aditya Naik
  * @copyright 2007 Sam Bauers
  * @license   http://www.gnu.org/licenses/gpl.txt GNU General Public License v2
- * @version   3.0.2
+ * @version   3.0.3
  **/
 
 
@@ -98,7 +98,7 @@ Version History:
  * Wrapper class for the Support forum plugin
  *
  * @author  Sam Bauers
- * @version 3.0.2
+ * @version 3.0.3
  **/
 class Support_Forum
 {
@@ -191,7 +191,7 @@ class Support_Forum
 	function Support_Forum()
 	{
 		if (version_compare(bb_get_option('version'), '0.9-z', '<')) {
-			trigger_error(__('This version of the "Support forum" plugin requires bbPress version 0.9'), E_USER_WARNING);
+			trigger_error(__('This version of the "Support forum" plugin requires bbPress version 0.9', 'support-forum'), E_USER_WARNING);
 			exit();
 			return;
 		}
@@ -203,9 +203,9 @@ class Support_Forum
 		$this->status = bb_get_option('support_forum_default_status');
 		
 		$this->resolutions = array(
-			'yes' => __('resolved'),
-			'no'  => __('not resolved'),
-			'mu'  => __('not a support question')
+			'yes' => __('resolved', 'support-forum'),
+			'no'  => __('not resolved', 'support-forum'),
+			'mu'  => __('not a support question', 'support-forum')
 		);
 		
 		$this->getViewStatus();
@@ -380,11 +380,11 @@ class Support_Forum
 					);
 				}
 				
-				$title = __('Support topics that are %s');
+				$title = __('Support topics that are %s', 'support-forum');
 				
 				if ($status === 'no') {
 					$query['started'] = '<' . gmdate( 'YmdH', time() - 7200 );
-					$title = __('Support topics that are %s and are more than 2 hours old');
+					$title = __('Support topics that are %s and are more than 2 hours old', 'support-forum');
 				}
 				
 				bb_register_view('support-forum-' . $status, sprintf($title, $this->resolutions[$status]), $query);
@@ -463,7 +463,7 @@ class Support_Forum
 		}
 		
 		$r .= '</select>' . "\n";
-		$r .= '<input type="submit" name="submit" id="resolvedformsub" value="' . __('Change') . '" />' . "\n";
+		$r .= '<input type="submit" name="submit" id="resolvedformsub" value="' . __('Change', 'support-forum') . '" />' . "\n";
 		$r .= '</div>' . "\n";
 		echo $r;
 		bb_nonce_field('support-forum-resolve-topic_' . $topic->topic_id);
@@ -501,18 +501,18 @@ class Support_Forum
 		
 		if ($this->icons['sticky']) {
 			if ($topic->topic_sticky > 0) {
-				echo '<li>' . __('This topic is') . ' <img src="' . $this->iconURI . 'support-forum-sticky.png" alt="" style="vertical-align:top; width:14px; height:14px; border-width:0;" /> ' . __('sticky') . '</li>' . "\n";
+				echo '<li>' . __('This topic is', 'support-forum') . ' <img src="' . $this->iconURI . 'support-forum-sticky.png" alt="" style="vertical-align:top; width:14px; height:14px; border-width:0;" /> ' . __('sticky', 'support-forum') . '</li>' . "\n";
 			}
 		}
 		
 		if ($this->icons['closed']) {
 			if ('0' === $topic->topic_open) {
-				echo '<li>' . __('This topic is') . ' <img src="' . $this->iconURI . 'support-forum-closed.png" alt="" style="vertical-align:top; width:14px; height:14px; border-width:0;" /> ' . __('closed') . '</li>' . "\n";
+				echo '<li>' . __('This topic is', 'support-forum') . ' <img src="' . $this->iconURI . 'support-forum-closed.png" alt="" style="vertical-align:top; width:14px; height:14px; border-width:0;" /> ' . __('closed', 'support-forum') . '</li>' . "\n";
 			}
 		}
 		
 		if (in_array($topic->forum_id, $this->enabled)) {
-			echo '<li id="resolution-flipper">' . __('This topic is') . ' ';
+			echo '<li id="resolution-flipper">' . __('This topic is', 'support-forum') . ' ';
 			$this->getStatusDisplay();
 			echo '</li>' . "\n";
 		}
@@ -642,7 +642,13 @@ class Support_Forum
 	{
 		global $topic;
 		if ('0' === $topic->topic_open) {
-			return sprintf(__('<img src="' . $this->iconURI . 'support-forum-closed.png" alt="[' . __('closed') . ']" title="[' . __('closed') . ']" style="vertical-align:top; margin-right:0.3em; width:14px; height:14px; border-width:0;" />%s'), $label);
+			return sprintf(
+				'<img src="$1%ssupport-forum-$2%s.png" alt="[$3%s]" title="[$3%s]" style="vertical-align:top; margin-right:0.3em; width:14px; height:14px; border-width:0;" />$4%s',
+				$this->iconURI,
+				'closed',
+				__('closed', 'support-forum'),
+				$label
+			);
 		}
 		
 		return $label;
@@ -659,7 +665,13 @@ class Support_Forum
 	{
 		global $topic;
 		if ($topic->topic_sticky > 0) {
-			return sprintf(__('<img src="' . $this->iconURI . 'support-forum-sticky.png" alt="[' . __('sticky') . ']" title="[' . __('sticky') . ']" style="vertical-align:top; margin-right:0.3em; width:14px; height:14px; border-width:0;" />%s'), $label);
+			return sprintf(
+				'<img src="$1%ssupport-forum-$2%s.png" alt="[$3%s]" title="[$3%s]" style="vertical-align:top; margin-right:0.3em; width:14px; height:14px; border-width:0;" />$4%s',
+				$this->iconURI,
+				'sticky',
+				__('sticky', 'support-forum'),
+				$label
+			);
 		}
 		
 		return $label;
@@ -715,7 +727,7 @@ class Support_Forum
 			if (!$forum || in_array($forum->forum_id, $this->enabled)) {
 				$r = '<p>' . "\n";
 				$r .= '<label for="topic-support-status">' . "\n";
-				$r .= __('This topic is') . ':' . "\n";
+				$r .= __('This topic is', 'support-forum') . ':' . "\n";
 				$r .= '<select name="topic_support_status" id="topic-support-status">' . "\n";
 			
 				foreach ($this->resolutions as $resolution => $display) {
@@ -746,6 +758,10 @@ class Support_Forum
 		}
 	}
 } // END class Support_Forum
+
+
+// Load the gettext textdomain
+load_plugin_textdomain('support-forum', dirname(__FILE__) . '/languages');
 
 
 // Initialise the class
@@ -802,7 +818,7 @@ add_action('bb_admin-header.php', 'support_forum_admin_page_process');
  * @author Sam Bauers
  **/
 function support_forum_admin_page_add() {
-	bb_admin_add_submenu(__('Support forum'), 'use_keys', 'support_forum_admin_page');
+	bb_admin_add_submenu(__('Support forum', 'support-forum'), 'use_keys', 'support_forum_admin_page');
 }
 
 
@@ -851,9 +867,9 @@ function support_forum_upgrade_1_1() {
 			bb_update_topicmeta($row->topic_id, 'topic_resolved', $row->meta_value);
 			bb_delete_topicmeta($row->topic_id, 'support_forum_resolved');
 		endforeach;
-		bb_admin_notice(__('Update performed'));
+		bb_admin_notice(__('Update performed', 'support-forum'));
 	} else {
-		bb_admin_notice(__('No update required'));
+		bb_admin_notice(__('No update required', 'support-forum'));
 	}
 }
 
@@ -899,13 +915,13 @@ function support_forum_admin_page() {
 	$support_forum_icons_closed_checked = ($support_forum->icons['closed']) ? "checked=\"checked\" " : "";
 	$support_forum_icons_sticky_checked = ($support_forum->icons['sticky']) ? "checked=\"checked\" " : "";
 	?>
-	<h2><?php _e('Support forum'); ?></h2>
+	<h2><?php _e('Support forum', 'support-forum'); ?></h2>
 	<form method="post">
 <?php
 	if (bb_forums('type=list&walker=BB_Walker_ForumAdminlistitems')) {
 ?>
 		<ul id="the-list" class="list-block holder" style="margin-bottom:40px;">
-			<li class="thead list-block"><div class="list-block"><?php _e('Name'); ?> &#8212; <?php _e('Description'); ?></div></li>
+			<li class="thead list-block"><div class="list-block"><?php _e('Name', 'support-forum'); ?> &#8212; <?php _e('Description', 'support-forum'); ?></div></li>
 <?php
 		while (bb_forum()) {
 			$forum = $GLOBALS['forum'];
@@ -920,7 +936,7 @@ function support_forum_admin_page() {
 ?>
 				<div class="list-block posrel">
 					<div class="alignright">
-						<?php _e('Enable support forum'); ?>
+						<?php _e('Enable support forum', 'support-forum'); ?>
 						<input type="checkbox" name="support_forum_enabled[]" value="<?php echo($forum->forum_id); ?>" <?php echo($support_forum_enabled_checked[$forum->forum_id]); ?>/>
 					</div>
 					<?php forum_name(); forum_description(array('before' => ' &#8212; ')); ?>
@@ -939,35 +955,35 @@ function support_forum_admin_page() {
 ?>
 		<hr />
 		<p>
-			<?php _e('Set the default status for topics:'); ?>
+			<?php _e('Set the default status for topics:', 'support-forum'); ?>
 			<select name="support_forum_default_status" >
-				<option value="yes"<?php echo($support_forum_default_status['yes']); ?>><?php _e('resolved'); ?></option>
-				<option value="no"<?php echo($support_forum_default_status['no']); ?>><?php _e('not resolved'); ?></option>
-				<option value="mu"<?php echo($support_forum_default_status['mu']); ?>><?php _e('not a support question'); ?></option>
+				<option value="yes"<?php echo($support_forum_default_status['yes']); ?>><?php _e('resolved', 'support-forum'); ?></option>
+				<option value="no"<?php echo($support_forum_default_status['no']); ?>><?php _e('not resolved', 'support-forum'); ?></option>
+				<option value="mu"<?php echo($support_forum_default_status['mu']); ?>><?php _e('not a support question', 'support-forum'); ?></option>
 			</select>
 		</p>
 		<hr />
 		<p>
-			<input type="checkbox" name="support_forum_poster_setable" id="support-forum-poster-setable" value="1" <?php echo $support_forum_poster_setable_checked;?>/> <?php _e('Allow the poster of the topic to set the status on topic creation'); ?>
+			<input type="checkbox" name="support_forum_poster_setable" id="support-forum-poster-setable" value="1" <?php echo $support_forum_poster_setable_checked;?>/> <?php _e('Allow the poster of the topic to set the status on topic creation', 'support-forum'); ?>
 			<span style="display:block; line-height:18px; margin:6px 40px 13px 40px;">
-				<input type="checkbox" name="support_forum_poster_changeable" id="support-forum-poster-changeable" value="1" <?php echo $support_forum_poster_changeable_checked;?><?php echo $support_forum_poster_changeable_disabled;?>/> <?php _e('Allow the poster of the topic to set the status at any time'); ?>
+				<input type="checkbox" name="support_forum_poster_changeable" id="support-forum-poster-changeable" value="1" <?php echo $support_forum_poster_changeable_checked;?><?php echo $support_forum_poster_changeable_disabled;?>/> <?php _e('Allow the poster of the topic to set the status at any time', 'support-forum'); ?>
 			</span>
 		</p>
 		<hr />
 		<p>
-			<?php _e('Choose which statuses will have a view:'); ?>
+			<?php _e('Choose which statuses will have a view:', 'support-forum'); ?>
 			<span style="display:block; line-height:18px; margin:6px 40px 13px 40px;">
 				<input type="checkbox" name="support_forum_views[yes]" value="1"<?php echo($support_forum_views_checked['yes']); ?>>
-				<?php _e('resolved'); ?><br />
+				<?php _e('resolved', 'support-forum'); ?><br />
 				<input type="checkbox" name="support_forum_views[no]" value="1"<?php echo($support_forum_views_checked['no']); ?>>
-				<?php _e('not resolved'); ?><br />
+				<?php _e('not resolved', 'support-forum'); ?><br />
 				<input type="checkbox" name="support_forum_views[mu]" value="1"<?php echo($support_forum_views_checked['mu']); ?>>
-				<?php _e('not a support question'); ?>
+				<?php _e('not a support question', 'support-forum'); ?>
 			</span>
 		</p>
 		<hr />
 		<p>
-			<input type="checkbox" name="support_forum_icons_status" value="1" <?php echo $support_forum_icons_status_checked;?>/> <?php _e('Use resolution status icons on topics'); ?>
+			<input type="checkbox" name="support_forum_icons_status" value="1" <?php echo $support_forum_icons_status_checked;?>/> <?php _e('Use resolution status icons on topics', 'support-forum'); ?>
 			<span style="display:block; line-height:18px; margin:6px 40px 13px 40px;">
 <?php
 	foreach ($support_forum->resolutions as $resolution => $display) {
@@ -980,17 +996,17 @@ function support_forum_admin_page() {
 			</span>
 		</p>
 		<p>
-			<input type="checkbox" name="support_forum_icons_closed" value="1" <?php echo $support_forum_icons_closed_checked;?>/> <?php _e('Use lock icon on closed topics (applies to all forums)'); ?>
+			<input type="checkbox" name="support_forum_icons_closed" value="1" <?php echo $support_forum_icons_closed_checked;?>/> <?php _e('Use lock icon on closed topics (applies to all forums)', 'support-forum'); ?>
 			<span style="display:block; line-height:18px; margin:6px 40px 13px 40px;">
 				<img src="<?php echo($support_forum->iconURI); ?>support-forum-closed.png" alt="" style="vertical-align:top; width:14px; height:14px; border-width:0; padding-top:2px;" />
-				- <?php _e('closed'); ?>
+				- <?php _e('closed', 'support-forum'); ?>
 			</span>
 		</p>
 		<p>
-			<input type="checkbox" name="support_forum_icons_sticky" value="1" <?php echo $support_forum_icons_sticky_checked;?>/> <?php _e('Use sticky icon on sticky topics (applies to all forums)'); ?>
+			<input type="checkbox" name="support_forum_icons_sticky" value="1" <?php echo $support_forum_icons_sticky_checked;?>/> <?php _e('Use sticky icon on sticky topics (applies to all forums)', 'support-forum'); ?>
 			<span style="display:block; line-height:18px; margin:6px 40px 13px 40px;">
 				<img src="<?php echo($support_forum->iconURI); ?>support-forum-sticky.png" alt="" style="vertical-align:top; width:14px; height:14px; border-width:0; padding-top:2px;" />
-				- <?php _e('sticky'); ?>
+				- <?php _e('sticky', 'support-forum'); ?>
 			</span>
 		</p>
 		<input name="action" type="hidden" value="support_forum_post"/>
@@ -1002,10 +1018,10 @@ function support_forum_admin_page() {
 			<?php echo($upgrade_alert); ?>
 		</p>
 		<p>
-			<?php _e('If you used support forum plugin version 1.0, you will need to update existing topics to work with version 2.x'); ?>
+			<?php _e('If you used support forum plugin version 1.0, you will need to update existing topics to work with version 2.x', 'support-forum'); ?>
 		</p>
 		<input name="action" type="hidden" value="support_forum_post_upgrade"/>
-		<p class="submit"><input type="submit" name="submit_upgrade" value="<?php _e('Update topics to version 2.x'); ?>" /></p>
+		<p class="submit"><input type="submit" name="submit_upgrade" value="<?php _e('Update topics to version 2.x', 'support-forum'); ?>" /></p>
 	</form>
 <?php
 }
@@ -1065,7 +1081,7 @@ function support_forum_admin_page_process()
 				bb_delete_option('support_forum_icons_sticky');
 			}
 			
-			bb_admin_notice(__('Settings saved'));
+			bb_admin_notice(__('Settings saved', 'support-forum'));
 		}
 	} elseif (isset($_POST['submit_upgrade'])) {
 		if ($_POST['action'] == 'support_forum_post_upgrade') {

@@ -141,3 +141,4 @@ See accompanying license.txt file for details.
   <br />Change AJAX status changing to regular POST action
 * 3.0.3 :
   <br />Add textdomain to gettext functions
+  <br />Add en_US pot file to languages directory

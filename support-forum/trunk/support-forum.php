@@ -50,6 +50,7 @@ Version History:
 		  Use trigger_error() to warn of incompatible bbPress version (Sam Bauers)
 3.0.2	: Change AJAX status changing to regular POST action (Sam Bauers)
 3.0.3	: Add textdomain to gettext functions (Sam Bauers)
+		  Add en_US pot file to languages directory (Sam Bauers)
 */
 
 

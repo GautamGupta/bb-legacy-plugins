@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: User Languages
-Description: Allow users to set their own language. This plugin is based on "User Timezones" plugin.
+Description: Allow users to set their own language. This plugin is based on the "User Timezones" plugin.
 Plugin URI: http://bbpress.ru/downloads/plugins#user-languages
 Version: 0.1
 Author: A1ex

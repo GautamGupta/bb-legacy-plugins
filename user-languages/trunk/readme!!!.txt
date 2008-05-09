@@ -1,5 +1,5 @@
 
-This plugin requires small modification the bb-settings.php file.
+This plugin requires a litle modification of the bb-settings.php file.
 
 Code
 

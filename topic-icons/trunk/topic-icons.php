@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Topic Icons
-Plugin URI: http://bbpress.org/plugins/topic/
+Plugin URI: http://bbpress.org/plugins/topic/110
 Description: Adds icons next to your topic (and forum) titles automatically based on keywords or special topic status such as sticky, support question, has poll, etc.
 Author: _ck_
 Author URI: http://bbShowcase.org

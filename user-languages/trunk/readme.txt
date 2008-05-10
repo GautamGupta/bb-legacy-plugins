@@ -26,6 +26,7 @@ $bb_locale = new BB_Locale();
 $bb_roles  = new BB_Roles();
 do_action('bb_got_roles', '');
 `
+
 should be replaced with
 `
 $bb_roles  = new BB_Roles();

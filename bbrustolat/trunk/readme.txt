@@ -4,11 +4,11 @@ Contributors: A1ex
 Tested up to: trunk
 Stable tag: trunk
 
-This plugin convert cyrillic characters in tag to latin characters. Very usefull for russian-speaking users of bbPress. This plugin is based on plugin 'rus-to-lat' for WordPress' post title.
+This plugin convert cyrillic characters in tag to latin characters. Very usefull for russian-speaking users of bbPress. This plugin is based on the 'rus-to-lat' plugin for WordPress' slugs.
 
 == Description ==
 
-This plugin convert cyrillic characters in tag to latin characters. Very usefull for russian-speaking users of bbPress. This plugin is based on plugin 'rus-to-lat' for WordPress' post title.
+This plugin convert cyrillic characters in tag to latin characters. Very usefull for russian-speaking users of bbPress. This plugin is based on the 'rus-to-lat' plugin for WordPress' slugs.
 
 == Installation ==
 

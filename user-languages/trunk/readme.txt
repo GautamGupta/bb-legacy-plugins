@@ -1,5 +1,5 @@
 === User Languages ===
-Tags: languages, A1ex
+Tags: user, languages, A1ex
 Contributors: A1ex
 Tested up to: trunk
 Stable tag: trunk

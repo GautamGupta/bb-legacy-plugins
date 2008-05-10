@@ -37,7 +37,7 @@ $topic_icons['graphics']=array(
 "unresolved" => "flag_red"
 );
 
-$topic_icons['style']=".topic_icons {width:16px; height:16px; text-decoration:none; border: 0; padding: 1px; vertical-align: text-bottom;}";
+$topic_icons['style']=".topic_icons {width:16px; height:16px; text-decoration:none; border: 0; padding: 1px; vertical-align: text-top;}";
 
 /*	stop editing here	*/
 

@@ -40,5 +40,8 @@ require_once(BB_PATH . BB_INC . 'locale.php');
 $bb_locale = new BB_Locale();
 `
 
+* Edit settings near the top of `user-languages.php` as desired (until admin menu is created)
+
 * Add the `user-languages.php` file to bbPress' `my-plugins/` directory and activate.
+
 

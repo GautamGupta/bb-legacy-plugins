@@ -53,3 +53,9 @@ This is a very early release for the adventurous. Allows members to award Reputa
 = Version 0.0.1 (2008-05-05) =
 
 * first public release for alpha testing - warning: history transactions will not be converted to next version, only total points per member
+
+= Version 0.0.2 (2008-05-10) =
+
+* admin (or you can also allow mods) can apply negative points for deductions
+
+*  bug fix for incorrect name displayed in reputation history

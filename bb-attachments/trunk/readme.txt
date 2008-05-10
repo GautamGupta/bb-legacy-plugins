@@ -49,6 +49,7 @@ Please note there are important security considerations when allowing uploads of
 * 0.0.7	one more mime option for windows/no-shell-access users
 * 0.0.9	no longer necessary to edit `edit-post.php` template if using bbPress 0.9.0.2 or newer
 * 0.1.0	uploading now possible directly on new posts (instead of only attaching afterwards)
+* 0.1.1	role check before hooks, ability to disable upload on new posts if compatibility issues
 	
 == To Do ==
 

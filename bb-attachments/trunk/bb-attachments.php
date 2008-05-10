@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.0
+Version: 0.1.1
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -44,6 +44,8 @@ $bb_attachments['style']="#thread .post li {clear:none;}";
 // stop editing here (advanced user settings below)
 
 $bb_attachments['path']=dirname($_SERVER['DOCUMENT_ROOT'])."/bb-attachments/";  //  make *NOT* WEB ACCESSABLE for security
+
+$bb_attachments['upload_on_new']=true;	// allow uploads directly on new posts (set FALSE if incompatible for some reason)
 
 $bb_attachments['icons']=array('default'=>'default.gif','bmp'=>'img.gif','doc'=>'doc.gif','gif'=>'img.gif','gz'=>'zip.gif','jpeg'=>'img.gif','jpg'=>'img.gif','pdf'=>'pdf.gif','png'=>'img.gif','txt'=>'txt.gif','xls'=>'xls.gif','zip'=>'zip.gif');
 $bb_attachments['icons']['url']=bb_get_option('uri').trim(str_replace(BBPATH,'',dirname(__FILE__)),' /\\').'/icons/'; 
@@ -88,16 +90,23 @@ if (is_topic()) {
 } else {
 	if ($bb_attachments['title']) {add_filter('topic_title', 'bb_attachments_title',200);}
 }
-add_action('post_edit_form','bb_attachments');	// auto-insert on post edit form
-add_action('post_form','bb_attachments_upload_form'); // auto-insert on new post form 
-add_action('pre_post_form','bb_attachments_enctype'); // multipart workaround on new post form
+
 if ($bb_attachments['style']) {add_action('bb_head', 'bb_attachments_add_css');}	// add css if present (including Kakumei  0.9.0.2 LI fix!)
-}
+
+if (bb_current_user_can($bb_attachments['role']['upload'])) {
+add_action('post_edit_form','bb_attachments');		// auto-insert on post edit form
+
+if ($bb_attachments['upload_on_new']) {
+add_action('post_form','bb_attachments_upload_form');	 // auto-insert on new post form 
+add_action('pre_post_form','bb_attachments_enctype');	 // multipart workaround on new post form
 
 // insane bbPress workaround - adds multipart enctype to the new post form via uri patch
 function bb_attachments_enctype() {add_filter( 'bb_get_option_uri','bb_attachments_uri',999);}
 function bb_attachments_uri($uri) {remove_filter( 'bb_get_option_uri','bb_attachments_uri',999); 
 					return $uri. 'bb-post.php"  enctype="multipart/form-data" hack="';} 
+}
+}					
+}
 
 function bb_attachments_add_css() { global $bb_attachments;  echo '<style type="text/css">'.$bb_attachments['style'].'</style>';} // inject css
 

@@ -45,6 +45,8 @@ $bb_reputation['member_award_role']='participate';	// members can award points a
 $bb_reputation['points_from_balance']=true;	// when awarding points, should they come from their own balance?
 $bb_reputation['variable_points']=true;		// can members chose how many points to award or use fixed numbers above
 
+$bb_reputation['deduct_role']='administrate';	// members can deduct points at what role level (participate/moderate/administrate)
+
 $bb_reputation['reason_length']=80;		// how long can their description for the award reason be?
 $bb_reputation['history']=100;			// track how many transactions per user - on large forums you might want to reduce this
 
@@ -120,7 +122,7 @@ if ($bb_reputation['points_from_balance'] && $points>0) {
 	if ($deduct<0) {return false;}	// can't deduct so don't give points
 	bb_update_meta( $from_id, "bb_reputation", $deduct, 'user' );
 }
-if ($points>0) {
+if ($points>0 || bb_current_user_can($bb_reputation['deduct_role'])) {
 	$add=intval($user->bb_reputation)+$points;		
 	bb_update_meta( $user_id, "bb_reputation", $add, 'user' );
 	$history=$user->bb_reputation_history.time()."|$from_id|$post_id|$points|$reason|";

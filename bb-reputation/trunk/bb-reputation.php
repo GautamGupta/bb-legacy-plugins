@@ -5,7 +5,7 @@ Description:  Allows the forum and members to award Reputation or "Karma" points
 Plugin URI:  http://bbpress.org/plugins/topic/97
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.1
+Version: 0.0.2
 
 license: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -247,7 +247,7 @@ for ($offset=$rows-1; $offset>=0; $offset--) { ?>
 	// time()."|$from_id|$post_id|$points|$reason
 	$y=$offset*5; 				// 5 items per row
 	printf(__('%s ago'),bb_since($matches[$y])); 
-	echo ', <a href="' . get_user_profile_link($matches[$y+1]) . '">' . get_post_author($matches[$y+1]) . '</a> ';
+	echo ', <a href="' . get_user_profile_link($matches[$y+1]) . '">' . get_user_name( $matches[$y+1] ) . '</a> ';
 	if (intval($matches[$y+2])>0) {
 	$bb_post = bb_get_post( $matches[$y+2] ); 
 	echo __('on').' <a href="' . get_post_link($matches[$y+2] ) . '">&ldquo;' . get_topic_title($bb_post->topic_id) . '&rdquo;</a> ';

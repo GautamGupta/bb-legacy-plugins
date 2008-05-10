@@ -1,5 +1,5 @@
 === bbRusToLat ===
-Tags: tags, A1ex, 
+Tags: tags, russian, cyrillic, A1ex
 Contributors: A1ex
 Tested up to: trunk
 Stable tag: trunk

@@ -8,15 +8,18 @@ Author URI: http://bbshowcase.org
 Version: 0.8.9
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
-Instructions:   install, activate, edit unread style and number of topics tracked per user
-
-todo: mark topics read for specific forums instead of just all, maybe change title link to jump to last read post
 */
 
 $unread_posts['style']=".unread_posts {color:#0000DD;}"	// optional style for topics read with new posts
 			    .".unread_login  {color:#000099;}";	// optional style for topics with new posts since last login
-$unread_posts['topics_per_user']=100;			// how many topics to watch for each user - on a fast, small forum you could probably do 1000 
-$unread_posts['indicate_forums']=false;			// should forums also be highlighted if there are new posts (note: causes extra query)
+
+$unread_posts['indicate_forums']=false;		// should forums also be highlighted if there are new posts (note: causes extra query)
+
+$unread_posts['indicate_last_login']=true;	// should topics be highlighted if new posts since last login (regardless if previously read)
+
+$unread_posts['topics_per_user']=100;		// how many topics to watch for each user - on a fast, small forum you could probably do 1000 
+
+/*	stop editing here	*/
 
 function unread_posts_init() {
 global $bb_current_user;
@@ -29,9 +32,9 @@ if ($bb_current_user->ID  && !is_bb_feed()) {	// only bother with the overhead i
 
 	elseif (in_array(bb_get_location(),array('front-page','forum-page', 'tag-page','search-page','favorites-page','profile-page','view-page'))) {	// where should we affect titles
 		global $up_read_topics, $up_last_posts, $unread_posts, $up_last_login;
-		$user = bb_get_user($bb_current_user->ID);  
-		$up_last_login=trim(end(explode("|","|".$user->up_last_login)));
-		if ($up_last_login) {$up_last_login=strtotime($up_last_login);} else {$up_last_login=time()-86400;}
+		$user = bb_get_user($bb_current_user->ID);  		
+		if ($unread_posts['indicate_last_login']) {$up_last_login=trim(end(explode("|","|".$user->up_last_login)));
+ 		if ($up_last_login) {$up_last_login=strtotime($up_last_login);} else {$up_last_login=time()-86400;}}
 		if (trim($user->up_read_topics,", ")) {
 			$up_read_topics=explode(",",$user->up_read_topics);  settype($up_read_topics,"array"); // unpack once, use many times
 			$up_last_posts=explode(",",$user->up_last_posts); settype($up_last_posts,"array");	 // unpack once, use many times			
@@ -73,7 +76,7 @@ function up_mark_title_unread($title)  {
 global $topic, $up_read_topics, $up_last_posts,$up_last_login;		
 	$up_key=array_search($topic->topic_id ,$up_read_topics);	
 	if ($up_key!=false &&  $up_last_posts[$up_key]!=$topic->topic_last_post_id) {$title = '<span class="unread_posts">' . $title . '</span>';}
-	elseif (strtotime($topic->topic_time)>=$up_last_login) {$title = '<span class="unread_login">' . $title . '</span>';}	
+	elseif ($unread_posts['indicate_last_login'] && strtotime($topic->topic_time)>=$up_last_login) {$title = '<span class="unread_login">' . $title . '</span>';}	
 return $title;
 }
 

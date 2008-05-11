@@ -5,7 +5,7 @@ Description:  Indicates previously read topics with new unread posts. Features "
 Plugin URI:  http://bbpress.org/plugins/topic/78
 Author: _ck_
 Author URI: http://bbshowcase.org
-Version: 0.8.8
+Version: 0.8.9
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 Instructions:   install, activate, edit unread style and number of topics tracked per user
@@ -13,7 +13,8 @@ Instructions:   install, activate, edit unread style and number of topics tracke
 todo: mark topics read for specific forums instead of just all, maybe change title link to jump to last read post
 */
 
-$unread_posts['style']=".unread_posts {color:blue;}";	// optional style - or put it into your css file and disable this line
+$unread_posts['style']=".unread_posts {color:#0000DD;}"	// optional style for topics read with new posts
+			    .".unread_login  {color:#000099;}";	// optional style for topics with new posts since last login
 $unread_posts['topics_per_user']=100;			// how many topics to watch for each user - on a fast, small forum you could probably do 1000 
 $unread_posts['indicate_forums']=false;			// should forums also be highlighted if there are new posts (note: causes extra query)
 
@@ -27,8 +28,10 @@ if ($bb_current_user->ID  && !is_bb_feed()) {	// only bother with the overhead i
 	elseif (is_topic()) {add_action('topicmeta','up_update_topics_read',200);}	// topic pages is where all the heavy lifting is done
 
 	elseif (in_array(bb_get_location(),array('front-page','forum-page', 'tag-page','search-page','favorites-page','profile-page','view-page'))) {	// where should we affect titles
-		global $up_read_topics, $up_last_posts, $unread_posts;
+		global $up_read_topics, $up_last_posts, $unread_posts, $up_last_login;
 		$user = bb_get_user($bb_current_user->ID);  
+		$up_last_login=trim(end(explode("|","|".$user->up_last_login)));
+		if ($up_last_login) {$up_last_login=strtotime($up_last_login);} else {$up_last_login=time()-86400;}
 		if (trim($user->up_read_topics,", ")) {
 			$up_read_topics=explode(",",$user->up_read_topics);  settype($up_read_topics,"array"); // unpack once, use many times
 			$up_last_posts=explode(",",$user->up_last_posts); settype($up_last_posts,"array");	 // unpack once, use many times			
@@ -40,7 +43,11 @@ if ($bb_current_user->ID  && !is_bb_feed()) {	// only bother with the overhead i
 	}
 	
 }
-} add_action('bb_init','unread_posts_init',200);
+} 
+add_action('bb_init','unread_posts_init',200);
+
+function up_last_login($user_id) {bb_update_usermeta($user_id, "up_last_login",bb_current_time('mysql')."|".substr(bb_get_usermeta($user_id, 'up_last_login'),0,19));}
+add_action('bb_user_login', 'up_last_login' );
 
 function up_mark_forum_unread($title,$id) {
 global $bbdb,$bb_current_user,$unread_posts,$up_forums;
@@ -63,9 +70,10 @@ global $topic, $up_read_topics, $up_last_posts;
 function up_add_css() {global $unread_posts; echo '<style type="text/css">'.$unread_posts['style'].'</style>'; } 
 
 function up_mark_title_unread($title)  {
-global $topic, $up_read_topics, $up_last_posts;	
+global $topic, $up_read_topics, $up_last_posts,$up_last_login;		
 	$up_key=array_search($topic->topic_id ,$up_read_topics);	
 	if ($up_key!=false &&  $up_last_posts[$up_key]!=$topic->topic_last_post_id) {$title = '<span class="unread_posts">' . $title . '</span>';}
+	elseif (strtotime($topic->topic_time)>=$up_last_login) {$title = '<span class="unread_login">' . $title . '</span>';}	
 return $title;
 }
 
@@ -73,12 +81,14 @@ function up_mark_all_read() {	// actually, just delete all it's meta and start f
 global $bb_current_user;	
 	bb_delete_usermeta($bb_current_user->ID, "up_read_topics");
 	bb_delete_usermeta($bb_current_user->ID, "up_last_posts");
+	up_last_login($bb_current_user->ID);	// trick last login to current time to force no-highlighting (ruins real last login though)	
 	wp_redirect(str_replace(array("mark_all_topics_read","clear_all_topics_read"),"",$GLOBALS["HTTP_SERVER_VARS"]["REQUEST_URI"]));			
 } 
 
 function up_update_all_read() {	// catches up all topics tracked instead of purging list - props kaviaar
 global $bbdb,$bb_current_user;
-	$user = bb_get_user($bb_current_user->ID);	
+	$user = bb_get_user($bb_current_user->ID);
+	up_last_login($bb_current_user->ID);	// trick last login to current time to force no-highlighting (ruins real last login though)	
 	$up_read_topics=trim($user->up_read_topics," ,");
 	if ($up_read_topics) {
 		$up_last_posts=$bbdb->get_col("SELECT topic_last_post_id FROM $bbdb->topics WHERE topic_id IN ($up_read_topics) ORDER BY field(topic_id,$up_read_topics)");		
@@ -131,5 +141,4 @@ if ($up_key<0)   {
 	}
 }
 } 
-
 ?>

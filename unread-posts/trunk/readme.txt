@@ -50,3 +50,7 @@ To see a demonstration, create an account at http://bbShowcase.org read some pos
 = Version 0.8.7 (2008-04-27) =
 
 * now can optionally indicate forums with unread posts if you change setting near top of file to `$unread_posts['indicate_forums']=true;` (this causes one extra query for the front page or forum page)
+
+= Version 0.8.9 (2008-05-11) =
+
+* now can also indicate topics with new posts since last login (in alternate color/style than previously read topics)

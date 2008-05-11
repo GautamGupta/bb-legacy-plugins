@@ -5,13 +5,13 @@ Description:  Indicates previously read topics with new unread posts. Features "
 Plugin URI:  http://bbpress.org/plugins/topic/78
 Author: _ck_
 Author URI: http://bbshowcase.org
-Version: 0.8.9
+Version: 0.9.0
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 */
 
-$unread_posts['style']=".unread_posts {color:#0000DD;}"	// optional style for topics read with new posts
-			    .".unread_login  {color:#0000AA;}";	// optional style for topics with new posts since last login
+$unread_posts['style']=".unread_posts {color:#0000AA;}"	// optional style for topics read with new posts
+			    .".unread_login  {color:#000080;}";	// optional style for topics with new posts since last login
 
 $unread_posts['indicate_forums']=false;		// should forums also be highlighted if there are new posts (note: causes extra query)
 
@@ -35,8 +35,8 @@ if ($bb_current_user->ID  && !is_bb_feed()) {	// only bother with the overhead i
 		$user = bb_get_user($bb_current_user->ID);  		
 		if ($unread_posts['indicate_last_login']) {$up_last_login=trim(end(explode("|","|".$user->up_last_login)));
  		if ($up_last_login) {$up_last_login=strtotime($up_last_login);} else {$up_last_login=time()-86400;}}
- 		else {$up_last_login=0;}
-		if (trim($user->up_read_topics,", ")) {
+ 		else {$up_last_login=0;} 		
+		if ($up_last_login || trim($user->up_read_topics,", ")) {
 			$up_read_topics=explode(",",$user->up_read_topics);  settype($up_read_topics,"array"); // unpack once, use many times
 			$up_last_posts=explode(",",$user->up_last_posts); settype($up_last_posts,"array");	 // unpack once, use many times			
 			add_filter('topic_title', 'up_mark_title_unread');
@@ -54,13 +54,19 @@ function up_last_login($user_id) {bb_update_usermeta($user_id, "up_last_login",b
 add_action('bb_user_login', 'up_last_login' );
 
 function up_mark_forum_unread($title,$id) {
-global $bbdb,$bb_current_user,$unread_posts,$up_forums;
+global $bbdb,$bb_current_user,$unread_posts,$up_last_login,$up_forums,$up_last_login_forums;
 if (!isset($up_forums)) {			// unfortunately requires an extra query, data impossible to store
 	$user = bb_get_user($bb_current_user->ID);  
-	$up_forums=@$bbdb->get_col("SELECT forum_id FROM $bbdb->topics WHERE topic_id IN (".trim($user->up_read_topics,", ").") AND topic_last_post_id  NOT IN (".trim($user->up_last_posts,", ").") GROUP BY forum_id");
+	if ($user->up_read_topics) {$up_forums=@$bbdb->get_col("SELECT DISTINCT forum_id FROM $bbdb->topics WHERE topic_id IN (".trim($user->up_read_topics,", ").") AND topic_last_post_id  NOT IN (".trim($user->up_last_posts,", ").") ");}
 	if (is_array($up_forums)) {$up_forums=array_flip($up_forums);} else 	{$up_forums=array();}	
-}	
-	if (isset($up_forums[$id])) {$title = '<span class="unread_posts">' . $title . '</span>';}
+if ($unread_posts['indicate_last_login'] && !isset($up_last_login_forums)) {		// unfortunately requires an extra query, data impossible to store		
+	$up_last_login_forums=@$bbdb->get_col("SELECT DISTINCT forum_id FROM $bbdb->topics WHERE  topic_time >= '".gmdate('Y-m-d H:i:s',$up_last_login)."' "
+					.(($user->up_read_topics) ? "AND  topic_id NOT IN (".trim($user->up_read_topics,", ").")" : "") );
+	if (is_array($up_last_login_forums)) {$up_last_login_forums=array_flip($up_last_login_forums);} else {$up_last_login_forums=array();}	
+}
+}
+if (isset($up_forums[$id])) {$title = '<span class="unread_posts">' . $title . '</span>';}
+elseif ($unread_posts['indicate_last_login'] && isset($up_last_login_forums[$id])) {$title = '<span class="unread_login">' . $title . '</span>';}
 return $title;
 }
 

@@ -35,6 +35,7 @@ if ($bb_current_user->ID  && !is_bb_feed()) {	// only bother with the overhead i
 		$user = bb_get_user($bb_current_user->ID);  		
 		if ($unread_posts['indicate_last_login']) {$up_last_login=trim(end(explode("|","|".$user->up_last_login)));
  		if ($up_last_login) {$up_last_login=strtotime($up_last_login);} else {$up_last_login=time()-86400;}}
+ 		else {$up_last_login=0;}
 		if (trim($user->up_read_topics,", ")) {
 			$up_read_topics=explode(",",$user->up_read_topics);  settype($up_read_topics,"array"); // unpack once, use many times
 			$up_last_posts=explode(",",$user->up_last_posts); settype($up_last_posts,"array");	 // unpack once, use many times			
@@ -76,7 +77,7 @@ function up_mark_title_unread($title)  {
 global $topic, $up_read_topics, $up_last_posts,$up_last_login;		
 	$up_key=array_search($topic->topic_id ,$up_read_topics);	
 	if ($up_key!=false &&  $up_last_posts[$up_key]!=$topic->topic_last_post_id) {$title = '<span class="unread_posts">' . $title . '</span>';}
-	elseif ($unread_posts['indicate_last_login'] && strtotime($topic->topic_time)>=$up_last_login) {$title = '<span class="unread_login">' . $title . '</span>';}	
+	elseif ($up_last_login && strtotime($topic->topic_time)>=$up_last_login) {$title = '<span class="unread_login">' . $title . '</span>';}	
 return $title;
 }
 

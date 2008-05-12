@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: bbPress Avatars
-Plugin URI:  http://gravatar.bloggs.be
+Plugin Name: bb-avatars
+Plugin URI:  http://bbpress.org/plugins/topic/bb-avatars
 Description:  Allows admin to choose default Gravatar image and set other options
-Version: 0.2
+Version: 0.1
 Author: RuneG
 Author URI: http://shuttlex.blogdns.net
 
@@ -16,7 +16,6 @@ Instructions:   install, activate, tinker with settings in admin menu
 
 Version History:
 0.1 	: First public release
-0.2		: Avatars did not show correct in profile page. Fixed.
 
 */
 
@@ -106,14 +105,8 @@ function bb_avatars_show() {
 	if ( ! bb_get_option('avatars_show') )
 		return false;
 	$avatars = bb_get_option('bb_avatars');
-	
 	$author_id = get_post_author_id( $post_id );
-	
 	$email = bb_get_user_email($author_id);
-	if ($email == '' || $email == ' '){
-		$author_id = bb_get_user_id( $post_id );
-		$email = bb_get_user_email($author_id);
-		}
 	if ($avatars['default'] == 'Your Own Gravatar'){
 		$default = $avatars['standard'];
 	} else {

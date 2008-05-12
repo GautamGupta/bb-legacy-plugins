@@ -3,7 +3,7 @@ Tags: Gravatars, wavatar, identicon, monsterid
 Contributors: RuneG
 Requires at least: 0.9.x
 Tested up to: 1.0-dev
-Stable Tag: 0.2
+Stable Tag: 0.1
 
 Shows Gravatar and identicons.
 

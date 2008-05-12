@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/110
 Description: Adds icons next to your topic (and forum) titles automatically based on keywords or special topic status such as sticky, support question, has poll, etc.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.1
+Version: 0.0.3
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -14,27 +14,35 @@ Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
 
 $topic_icons['automatic']=true;
 
-$topic_icons['rules']=array(						// triggers seperated by vertical pipe |, plurals ending in 's' are also matched
-	"alert" => "test|testing|attention|warning|alert|error",
-	"idea" => "idea|tip|trick",
+$topic_icons['rules']=array(			// triggers seperated by vertical pipe |, plurals ending in 's' are also matched	
+	"idea" => "idea|tip|trick",		// if you don't want this feature, just remove these entries or comment them out with /*    */
 	"theme" => "theme|template",
 	"plugin" => "plugin|extension",
+	"alert" => "test|testing|attention|warning|alert|error",
 	"wordpress" => "wordpress",
 	"bbpress" => "bbpress"
 );
 
-$topic_icons['graphics']=array(
-"alert" => "exclamation",
-"idea" => "lightbulb",
-"theme" => "layout_content",
-"plugin" => "plugin",
-"wordpress" => "wordpress",
-"bbpress" => "bbpress",
-"sticky" => "star",
-"closed" => "lock",
-"poll" => "chart_bar",
-"resolved" => "flag_green",
-"unresolved" => "flag_red"
+$topic_icons['forums']=array(	// keyword group to show based on forum number as fallback if none of the rules above are matched
+	"1" => "bbpress",		// to get a list of your forums by number when this plugin is active: add   ?forumlist to your url
+	"2" => "plugin",		// if you don't want this feature, just remove these entries or comment them out with /*    */
+	"3" => "plugin",	
+ 	"5" => "wordpress",
+ 	"4" => "theme"
+);					
+
+$topic_icons['graphics']=array(		// graphics to assign to keyword groups (now you must specify extension)
+	"alert" => "exclamation.png",
+	"idea" => "lightbulb.png",
+	"theme" => "layout_content.png",
+	"plugin" => "plugin.png",
+	"wordpress" => "wordpress.png",
+	"bbpress" => "bbpress.png",
+	"sticky" => "star.png",
+	"closed" => "lock.png",
+	"poll" => "chart_bar.png",
+	"resolved" => "flag_green.png",
+	"unresolved" => "flag_red.png"
 );
 
 $topic_icons['style']=".topic_icons {width:16px; height:16px; text-decoration:none; border: 0; padding: 1px; vertical-align: text-top;}";
@@ -43,21 +51,29 @@ $topic_icons['style']=".topic_icons {width:16px; height:16px; text-decoration:no
 
 $topic_icons['url']=bb_get_option('uri').trim(str_replace(BBPATH,'',dirname(__FILE__)),' /\\').'/icons/';   ;	// bb_get_active_theme_uri()."images/icons/";
 
+add_action('bb_init','topic_icons_init');
+
 if ($topic_icons['style']) {add_action('bb_head', 'topic_icons_add_css');}	
 
 if ($topic_icons['automatic']) { // in_array(bb_get_location(),array('front-page','forum-page', 'tag-page','search-page','favorites-page','profile-page','view-page'))) {
 	$bb_location=bb_get_location();
 	if ($bb_location!='feed-page') {
-	add_filter( 'forum_name', 'forum_icon_automatic',9);
-	if ($bb_location!='topic-page') {add_filter( 'topic_title', 'topic_icon_automatic',9);}
+	add_filter( 'forum_name', 'forum_icon_automatic',9,2);
+	if ($bb_location!='topic-page') {add_filter( 'topic_title', 'topic_icon_automatic',9,2);}
 	}
 }
 
-function forum_icon_automatic($name) {if (forum_icon(true)) {echo " ";} return $name;}
-function topic_icon_automatic($title) {if (topic_icon(true)) {echo " ";} return $title;}
+function topic_icons_init() { 
+global $bb_current_user;
+	if ((isset($_GET['listforums']) || isset($_GET['forumlist'])) && 'keymaster'==@reset($bb_current_user->roles)) {echo "<h2>Forum List</h2>"; foreach (get_forums() as $forum) {echo "$forum->forum_id -> $forum->forum_name <br><br>";} exit();}
+}
 
-function topic_icon($automatic=false) {
+function forum_icon_automatic($name,$id) {if (forum_icon(true,$id)) {echo " ";} return $name;}
+function topic_icon_automatic($title,$id) {if (topic_icon(true,$id)) {echo " ";} return $title;}
+
+function topic_icon($automatic=false,$id=0) {
 global $topic_icons,$topic;		// print " <!-- "; print_r($topic); print " --> ";	// diagnostic
+if ($id && (!isset($topic->topic_id) || $topic->topic_id!=$id) ) {$topic=get_topic($id);}	// handles searches albeit with too many queries - needs fix
 	if ($automatic==false && $topic_icons['automatic']) {
 		remove_filter( 'forum_name', 'forum_icon_automatic',9); 
 		remove_filter( 'topic_title', 'topic_icon_automatic',9);
@@ -70,32 +86,46 @@ global $topic_icons,$topic;		// print " <!-- "; print_r($topic); print " --> ";	
 		if ($topic->topic_resolved=="yes") {echo topic_icons_graphic("resolved");}
 		if ($topic->topic_resolved=="no") {echo topic_icons_graphic("unresolved");}
 	}
-	else {return false;}
+	else {	// no topic icon found, check for forum icon fallback
+		global $topic; if ($topic->ID==$id) {$forum_id=$topic->forum_id;} else {$temp=get_topic($id); $forum_id=$temp->forum_id;}
+		if ($temp=topic_icons_forum($forum_id))  {echo $temp;} 
+		else {return false;} // nope, nothing found
+	}
+				
 return true;	
 }
 
-function forum_icon($automatic=false) {
+function forum_icon($automatic=false,$id=0) {
 global $topic_icons,$forum;
 	if ($automatic==false && $topic_icons['automatic']) {
 		remove_filter( 'forum_name', 'forum_icon_automatic',9); 
 		remove_filter( 'topic_title', 'topic_icon_automatic',9);
 	}
-	if ($temp=topic_icons_keyword($forum->forum_name)) {echo $temp;}	
-	else {return false;}
+	if ($temp=topic_icons_keyword($forum->forum_name)) {echo $temp;}
+	elseif ($temp=topic_icons_forum($id))  {echo $temp;}
+	else {return false;}	// nope, nothing found
 return true;	
 }	
 
 function topic_icons_keyword($item) {
 global $topic_icons; $temp="";
-	foreach ($topic_icons['rules'] as $keyword=>$rule) {
-		if (eregi("(^|[^\w])(".$rule.")(s?)($|[^\w])",$item)) {$temp=topic_icons_graphic($keyword); break;}
+	if (isset($topic_icons['rules']) && is_array($topic_icons['rules'])) {
+		foreach ($topic_icons['rules'] as $keyword=>$rule) {
+			if (eregi("(^|[^\w])(".$rule.")(s?)($|[^\w])",$item)) {$temp=topic_icons_graphic($keyword); break;}
+		}
 	}
+return $temp;	
+}
+
+function topic_icons_forum($item) {
+global $topic_icons; $temp="";
+	if (isset($topic_icons['forums'][$item])) {$temp=topic_icons_graphic($topic_icons['forums'][$item]);}
 return $temp;	
 }
 
 function topic_icons_graphic($keyword) {
 global $topic_icons;
-return "<img class='topic_icons' title='$keyword' alt='$keyword' src='".$topic_icons['url'].$topic_icons['graphics'][$keyword].".png'>";
+return "<img class='topic_icons' title='$keyword' alt='$keyword' src='".$topic_icons['url'].$topic_icons['graphics'][$keyword]."'>";
 }
 
 function topic_icons_add_css() { global $topic_icons;  echo '<style type="text/css">'.$topic_icons['style'].'</style>';} // inject css

@@ -101,8 +101,8 @@ global $topic_icons,$forum;
 		remove_filter( 'forum_name', 'forum_icon_automatic',9); 
 		remove_filter( 'topic_title', 'topic_icon_automatic',9);
 	}
-	if ($temp=topic_icons_keyword($forum->forum_name)) {echo $temp;}
-	elseif ($temp=topic_icons_forum($id))  {echo $temp;}
+	if ($temp=topic_icons_forum($id))  {echo $temp;}
+	elseif ($temp=topic_icons_keyword($forum->forum_name)) {echo $temp;}	
 	else {return false;}	// nope, nothing found
 return true;	
 }	

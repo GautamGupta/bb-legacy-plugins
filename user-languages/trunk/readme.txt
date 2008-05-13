@@ -15,7 +15,8 @@ Allow users to set their own language. This plugin is based on the "User Timezon
 * This plugin requires a little modification of the bb-settings.php file.
 
 Code
-`
+
+{{{
 // Load the default text localization domain.
 load_default_textdomain();
 
@@ -25,10 +26,11 @@ $bb_locale = new BB_Locale();
 
 $bb_roles  = new BB_Roles();
 do_action('bb_got_roles', '');
-`
+}}}
 
 should be replaced with
-`
+
+{{{
 $bb_roles  = new BB_Roles();
 do_action('bb_got_roles', '');
 
@@ -38,7 +40,7 @@ load_default_textdomain();
 // Pull in locale data after loading text domain.
 require_once(BB_PATH . BB_INC . 'locale.php');
 $bb_locale = new BB_Locale();
-`
+}}}
 
 * Edit settings near the top of `user-languages.php` as desired (until admin menu is created)
 

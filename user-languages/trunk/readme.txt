@@ -12,7 +12,7 @@ Allow users to set their own language. This plugin is based on the "User Timezon
 
 == Installation ==
 
-* This plugin requires a litle modification of the bb-settings.php file.
+* This plugin requires a little modification of the bb-settings.php file.
 
 Code
 `

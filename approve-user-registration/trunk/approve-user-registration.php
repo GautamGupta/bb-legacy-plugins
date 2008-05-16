@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Approve User Registration
-Plugin URI: http://www.adityanaik.com
+Plugin URI: http://www.adityanaik.com/projects/plugins/approve-user-registration/
 Description: Holds user registration for approval from the administration
 Author: Aditya Naik
 Author URI: http://www.adityanaik.com/

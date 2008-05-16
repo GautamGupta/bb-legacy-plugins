@@ -1,5 +1,6 @@
 === Approve User Registration ===
 Contributors: so1o
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=so1oonnet%40gmail%2ecom&item_name=Aditya%20Naik%20for%20bbPress%20Plugin%20Development&no_shipping=0&no_note=1&tax=0&currency_code=USD&lc=US&bn=PP%2dDonationsBF&charset=UTF%2d8
 Tags: user, registration, hold, moderation
 Requires at least: 0.9.0.2
 Tested up to: 0.9.0.2

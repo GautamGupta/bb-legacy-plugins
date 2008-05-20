@@ -205,9 +205,9 @@ global $bbdb, $bb_attachments;
 
 if (!$post_id) {$post_id=intval($_GET['bb_attachments']);}	// only can upload if user is allowed to edit post
 $user_id=bb_get_current_user_info( 'id' );
-if (!$user_id || !$post_id || !bb_current_user_can('edit_post',$post_id) || !bb_current_user_can($bb_attachments['role']['upload'])) {return;}	
+if (!isset($_FILES) || !is_array($_FILES) || !$user_id || !$post_id || !bb_current_user_can('edit_post',$post_id) || !bb_current_user_can($bb_attachments['role']['upload'])) {return;}	
 
-$user_ip=$_SERVER["REMOTE_ADDR"];  // $GLOBALS["HTTP_SERVER_VARS"]["REMOTE_ADDR"];
+$user_ip=$_SERVER["REMOTE_ADDR"];  	// $GLOBALS["HTTP_SERVER_VARS"]["REMOTE_ADDR"];
 $time=time();						
 
 $bb_post=bb_get_post($post_id);  $topic_id=$bb_post->topic_id; 	// fetch related topic

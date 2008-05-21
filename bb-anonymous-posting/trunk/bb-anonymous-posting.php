@@ -4,7 +4,7 @@ Plugin Name: BB Anonymous Posting
 Plugin URI: http://www.adityanaik.com/projects/plugins/bb-anonymous-posting/
 Description: Allows anonymous users to add posts and topics
 Author: Aditya Naik
-Version: 2.1
+Version: 2.2
 Author URI: http://www.adityanaik.com/
 */
 
@@ -32,7 +32,6 @@ function bb_anon_init() {
 		'write_posts' => true,
 		'read' => true
 	);
-	
 	if (bb_get_option('bb_anon_write_topics') == 'Y')
 		$perm_array['write_topics'] = true;
 	
@@ -52,6 +51,10 @@ function bb_anon_spoof_user() {
 	global $bb_current_user;
 	if (!$bb_current_user) {
 		$anon_id = bb_get_option('bb_anon_user_id');
+		if (!$anon_id) {
+			bb_anon_activate_plugin();
+			$anon_id = bb_get_option('bb_anon_user_id');
+		}
 		$bb_current_user = new BB_User($anon_id);
 	}
 }
@@ -63,7 +66,7 @@ function bb_anon_unspoof_user() {
 		$bb_current_user = false;
 	}
 	
-	if (!bb_current_user_can('write_topics')) {
+	if (is_forum() && bb_get_option('bb_anon_write_topics') != "Y") {
 		echo '<p>';
 		printf(__('You must <a href="%s">log in</a> to post.'), attribute_escape( bb_get_option('uri') . 'bb-login.php' ));
 		echo '</p>';

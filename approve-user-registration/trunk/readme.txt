@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=so1oonne
 Tags: user, registration, hold, moderation
 Requires at least: 0.9.0.2
 Tested up to: 0.9.0.2
-Stable tag: trunk
+Stable tag: 0.3
 
 Holds user registration for approval from the administration
 

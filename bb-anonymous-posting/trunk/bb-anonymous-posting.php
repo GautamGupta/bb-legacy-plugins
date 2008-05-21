@@ -4,7 +4,7 @@ Plugin Name: BB Anonymous Posting
 Plugin URI: http://www.adityanaik.com/projects/plugins/bb-anonymous-posting/
 Description: Allows anonymous users to add posts and topics
 Author: Aditya Naik
-Version: 2.2
+Version: 2.3
 Author URI: http://www.adityanaik.com/
 */
 
@@ -129,13 +129,18 @@ function bb_anon_filter_poster_id($poster_id) {
 }
 
 // this fixes the display names for topic last poster or topic author
-add_filter('topic_last_poster','bb_anon_filter_poster',10,2);
-add_filter('get_topic_author','bb_anon_filter_poster',10,2);
-function bb_anon_filter_poster($last_poster, $poster_id) {
-	if ($poster_id == bb_get_option('bb_anon_user_id'))
-		return __('Anonymous');
+add_filter('topic_last_poster','bb_anon_filter_poster');
+add_filter('get_topic_author','bb_anon_filter_poster');
+add_filter('post_author', 'bb_anon_filter_poster');
+function bb_anon_filter_poster($last_poster) {
+	if ($last_poster == 'Anonymous' || $last_poster == 'anonymous')
+		return bb_anon_get_user_text();
 	else
 		return $last_poster;
+}
+
+function bb_anon_get_user_text() {
+	return ($user_text = bb_get_option('bb_anon_user_text')) ? $user_text : "Anonymous";
 }
 
 // admin functionality
@@ -163,6 +168,13 @@ function bb_anon_settings_page() {
 				No <input <?php if($write_topics != 'Y') echo ' checked="checked" ' ?> type="radio" name="bb_anon_write_topics" id="bb_anon_write_topics_n" value="N"/>
 				<p>By default if the plugin is enabled the users can create new posts. Selecting yes above will let users create new topics also.</p>
 			</div>
+	       	<label for="bb_anon_user_text">
+				Name for the 'Anonymous' users 
+			</label>
+			<div>
+				<input type="text" value="<? echo bb_anon_get_user_text(); ?>" name="bb_anon_user_text" id="bb_anon_user_text" />
+				<p>This will be the text show as the name of the poster or author</p>
+			</div>
 	       	<p class="submit">
 	          <input type="submit" name="bb_anon_submit_options" value="Update Options" />
 	        </p>
@@ -184,6 +196,8 @@ function bb_anon_settings_page_process() {
 			bb_update_option('bb_anon_write_topics',"N");
 			//$user->remove_cap('write_topics');
 		}
+
+		bb_update_option('bb_anon_user_text',$_POST['bb_anon_user_text']);
 
 		$goback = add_query_arg('bb-anon-options-updated', 'true', wp_get_referer());
 		bb_safe_redirect($goback);

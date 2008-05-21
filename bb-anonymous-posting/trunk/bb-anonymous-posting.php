@@ -4,9 +4,8 @@ Plugin Name: BB Anonymous Posting
 Plugin URI: http://www.adityanaik.com/projects/plugins/bb-anonymous-posting/
 Description: Allows anonymous users to add posts and topics
 Author: Aditya Naik
-Version: 2.0
+Version: 2.1
 Author URI: http://www.adityanaik.com/
-
 */
 
 // before a form is shown spoof the user

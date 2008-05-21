@@ -4,7 +4,7 @@ Plugin Name: BB Anonymous Posting
 Plugin URI: http://www.adityanaik.com/projects/plugins/bb-anonymous-posting/
 Description: Allows anonymous users to add posts and topics
 Author: Aditya Naik
-Version: 2.3
+Version: 2.3.1
 Author URI: http://www.adityanaik.com/
 */
 
@@ -129,7 +129,7 @@ function bb_anon_filter_poster_id($poster_id) {
 }
 
 // this fixes the display names for topic last poster or topic author
-add_filter('topic_last_poster','bb_anon_filter_poster');
+add_filter('get_topic_last_poster','bb_anon_filter_poster');
 add_filter('get_topic_author','bb_anon_filter_poster');
 add_filter('post_author', 'bb_anon_filter_poster');
 function bb_anon_filter_poster($last_poster) {

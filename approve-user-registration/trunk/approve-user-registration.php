@@ -5,7 +5,7 @@ Plugin URI: http://www.adityanaik.com/projects/plugins/approve-user-registration
 Description: Holds user registration for approval from the administration
 Author: Aditya Naik
 Author URI: http://www.adityanaik.com/
-Version: 0.2
+Version: 0.3
 */
 if (!function_exists('bb_new_user')) :
 function bb_new_user( $user_login, $user_email, $user_url ) {
@@ -119,7 +119,6 @@ function approve_user_registration_settings_page_process() {
 		$options = ($_POST['approve_user_registration']) ? $_POST['approve_user_registration'] : array() ;
 		bb_update_option('approve_user_registration_options',$options);
 	}
-	//print_r($options);
 }
 
 add_action('approve_user_registration_admin_page_pre_head','approve_user_registration_admin_page_process');
@@ -222,6 +221,7 @@ function approve_user_registration_admin_page_process() {
 			?>
 	       <p class="submit">
 	          <input type="submit" name="approve_user_registration_button_approve" value="Approve" />
+	          <input type="submit" name="approve_user_registration_button_reject" value="Reject" />
 	        </p>
 	        </form>
 			<?php
@@ -235,7 +235,14 @@ function approve_user_registration_admin_page_process() {
 		foreach($users as $user) {
 			approve_user_registration_approve_user($user);
 		}
+	} elseif (isset($_POST['approve_user_registration_button_reject'])) {
+		$users = $_POST['userids'];
+		if ($users)
+		foreach($users as $user) {
+			approve_user_registration_reject_user($user);
+		}
 	}
+	
 }
 
 function approve_user_registration_admin_page() {
@@ -272,15 +279,34 @@ function approve_user_registration_approve_user($user_id) {
 	);
 }
 
+function approve_user_registration_reject_user($user_id) {
+	global $bbdb; 
+	
+	$user = new BB_User($user_id);
+	$user->remove_cap('waitingapproval');
+	$user->remove_cap('member');
+	$user->add_cap('blocked');
+	
+	$user = bb_get_user($user_id);
+	
+	$message = __("Your user %1\$s has been rejected by the administrator.");
+
+	return bb_mail(
+		bb_get_user_email( $user->ID ),
+		bb_get_option('name') . ': ' . __('User Rejected'),
+		sprintf( $message, $user->user_login )
+	);
+}
+
 add_action('bb_admin-footer.php','approve_user_registration_dashboard'); 
 function approve_user_registration_dashboard() {
 	global $page,$bb_current_menu;
-	$waiting_user = $bb_waiting_users = new BB_Users_By_Role( 'waitingapproval', $_GET['userspage'] );
-	if($bb_current_menu[0] == 'Dashboard' && $waiting_user ) :
+	$waiting_user = new BB_Users_By_Role( 'waitingapproval' );
+	if($bb_current_menu[0] == 'Dashboard' && $waiting_user->total_users_for_query > 0 ) :
 		?>
 		<h3><?php _e('Users waiting for approval'); ?></h3>
 		<ul>
-		 <li><a href="<?php echo bb_get_option('path') . 'bb-admin/' . bb_get_admin_tab_link('approve_user_registration_admin_page') ; ?>"><?php echo count($waiting_user) . ((count($waiting_user) == 1) ? ' user' : ' users') . ' waiting for approval'; ?></a> </li>
+		 <li><a href="<?php echo bb_get_option('path') . 'bb-admin/' . bb_get_admin_tab_link('approve_user_registration_admin_page') ; ?>"><?php echo $waiting_user->total_users_for_query . (($waiting_user->total_users_for_query == 1) ? ' user' : ' users') . ' waiting for approval'; ?></a> </li>
 		</ul>
 		<?php
 	endif;

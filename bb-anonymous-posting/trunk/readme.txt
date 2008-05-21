@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=so1oonne
 Tags: user, anonymous, posting
 Requires at least: 0.9.0.2
 Tested up to: 0.9.0.2
-Stable tag: 2.1
+Stable tag: 2.2
 
 lets anonymous users post new topics and posts
 

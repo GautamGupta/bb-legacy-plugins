@@ -1,0 +1,125 @@
+# translation of support-forum-bg.po to Bulgarian
+# Copyright (C) 2008 <a href="http://www.adityanaik.com/">Aditya Naik</a>, <a href="http://unlettered.org/">Sam Bauers</a>
+#
+# Nikolay Bachiyski <nb@nikolay.bg>, 2008.
+msgid ""
+msgstr ""
+"Project-Id-Version: support-forum-bg\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/support-forum\n"
+"POT-Creation-Date: 2008-05-08 16:40+0300\n"
+"PO-Revision-Date: 2008-05-08 19:03+0300\n"
+"Last-Translator: Nikolay Bachiyski <nb@nikolay.bg>\n"
+"Language-Team: Bulgarian <dict@fsa-bg.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: support-forum.php:194
+msgid "This version of the \"Support forum\" plugin requires bbPress version 0.9"
+msgstr "Тази версия на разширението \"Support forum\" изисква bbPress 0.9"
+
+#: support-forum.php:206 support-forum.php:960 support-forum.php:977
+msgid "resolved"
+msgstr "решен"
+
+#: support-forum.php:207 support-forum.php:961 support-forum.php:979
+msgid "not resolved"
+msgstr "нерешен"
+
+#: support-forum.php:208 support-forum.php:962 support-forum.php:981
+msgid "not a support question"
+msgstr "не е тема с проблем"
+
+#: support-forum.php:383
+#, php-format
+msgid "Support topics that are %s"
+msgstr "Теми с проблеми, които са %s"
+
+#: support-forum.php:387
+#, php-format
+msgid "Support topics that are %s and are more than 2 hours old"
+msgstr "Теми с проблеми, които са %s и са от по-рано от 2 часа"
+
+#: support-forum.php:466
+msgid "Change"
+msgstr "Промяна"
+
+#: support-forum.php:504 support-forum.php:510 support-forum.php:515
+#: support-forum.php:730
+msgid "This topic is"
+msgstr "Темата е"
+
+#: support-forum.php:504 support-forum.php:672 support-forum.php:1009
+msgid "sticky"
+msgstr "лепкава"
+
+#: support-forum.php:510 support-forum.php:649 support-forum.php:1002
+msgid "closed"
+msgstr "затворена"
+
+#: support-forum.php:821 support-forum.php:918
+msgid "Support forum"
+msgstr "Форуми за поддръжка"
+
+#: support-forum.php:870
+msgid "Update performed"
+msgstr "Обновяването бе извършено успешно"
+
+#: support-forum.php:872
+msgid "No update required"
+msgstr "Нямаше нужда от обновяване"
+
+#: support-forum.php:924
+msgid "Name"
+msgstr "Име"
+
+#: support-forum.php:924
+msgid "Description"
+msgstr "Описание"
+
+#: support-forum.php:939
+msgid "Enable support forum"
+msgstr "Включване на форум за поддръжка"
+
+#: support-forum.php:958
+msgid "Set the default status for topics:"
+msgstr "Състоянието по подразбиране е:"
+
+#: support-forum.php:967
+msgid "Allow the poster of the topic to set the status on topic creation"
+msgstr "Позволяване на авторите да променят състоянието на темата при създването й"
+
+#: support-forum.php:969
+msgid "Allow the poster of the topic to set the status at any time"
+msgstr "Позволяване на авторите да променят състоянието на темата по всяко време"
+
+#: support-forum.php:974
+msgid "Choose which statuses will have a view:"
+msgstr "За кои състояния да има отделен изглед:"
+
+#: support-forum.php:986
+msgid "Use resolution status icons on topics"
+msgstr "Показване на икона за всяко състояние"
+
+#: support-forum.php:999
+msgid "Use lock icon on closed topics (applies to all forums)"
+msgstr "Показване на икона за затворените теми (важи за всички форуми)"
+
+#: support-forum.php:1006
+msgid "Use sticky icon on sticky topics (applies to all forums)"
+msgstr "Показване на икона за лепкавите теми (важи за всички форуми)"
+
+#: support-forum.php:1021
+msgid ""
+"If you used support forum plugin version 1.0, you will need to update "
+"existing topics to work with version 2.x"
+msgstr "Ако сте използвали версия 1.0 на това разширение ще трябва да обновите темите за да бъдат съвместими с версия 2.0"
+
+#: support-forum.php:1024
+msgid "Update topics to version 2.x"
+msgstr "Обновяване на темите до версия 2.0"
+
+#: support-forum.php:1084
+msgid "Settings saved"
+msgstr "Настройките бяха запазени"
+

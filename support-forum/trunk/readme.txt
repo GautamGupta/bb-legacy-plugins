@@ -3,7 +3,7 @@ Contributors: so1o, mdawaffe, SamBauers
 Tags: support, forums
 Requires at least: 0.9
 Tested up to: 0.9.0.2
-Stable tag: 3.0.3
+Stable tag: 3.0.4
 
 Adds the ability to set a support status on topics in selected forums.
 
@@ -54,9 +54,9 @@ will need to be logged in as a keymaster.
 
 == License ==
 
-Support forum version 3.0.3
-Copyright (C) 2007 Aditya Naik (so1oonnet@gmail.com)
-Copyright (C) 2007 Sam Bauers (sam@viveka.net.au)
+Support forum version 3.0.4<br />
+Copyright (C) 2007 Aditya Naik (http://www.adityanaik.com/)<br />
+Copyright (C) 2007 Sam Bauers (http://unlettered.org/)
 
 Support forum comes with ABSOLUTELY NO WARRANTY
 This is free software, and you are welcome to redistribute
@@ -142,3 +142,8 @@ See accompanying license.txt file for details.
 * 3.0.3 :
   <br />Add textdomain to gettext functions
   <br />Add en_US pot file to languages directory
+* 3.0.4 :
+  <br />Fix a bug where the icons weren't referenced when the plugin resides in a sub-directory
+  <br />Move en_US pot file to just support-forum.pot
+  <br />Add Bulgarian language files
+  <br />Add Japanese language files

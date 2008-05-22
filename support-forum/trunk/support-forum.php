@@ -3,8 +3,9 @@
 Plugin Name: Support forum
 Plugin URI: http://bbpress.org/plugins/topic/support-forum/
 Description: Changes the forum to a support forum and adds functionality to mark topics resolved, not resolved or not a support question
-Author: <a href="http://www.adityanaik.com/">Aditya Naik</a>, <a href="http://unlettered.org/">Sam Bauers</a>
-Version: 3.0.3
+Author: Aditya Naik, Sam Bauers
+Author URI: http://bbpress.org/plugins/topic/support-forum/other_notes/
+Version: 3.0.4
 
 Version History:
 1.0		: Initial Release (Aditya Naik)
@@ -51,11 +52,15 @@ Version History:
 3.0.2	: Change AJAX status changing to regular POST action (Sam Bauers)
 3.0.3	: Add textdomain to gettext functions (Sam Bauers)
 		  Add en_US pot file to languages directory (Sam Bauers)
+3.0.4	: Fix a bug where the icons weren't referenced when the plugin resides in a sub-directory (Sam Bauers)
+		  Move en_US pot file to just support-forum.pot (Nikolay Bachiyski)
+		  Add Bulgarian language files (Nikolay Bachiyski)
+		  Add Japanese language files (Nikolay Bachiyski)
 */
 
 
 /**
- * Support forum for bbPress version 3.0.3
+ * Support forum for bbPress version 3.0.4
  * 
  * ----------------------------------------------------------------------------------
  * 
@@ -91,7 +96,7 @@ Version History:
  * @copyright 2007 Aditya Naik
  * @copyright 2007 Sam Bauers
  * @license   http://www.gnu.org/licenses/gpl.txt GNU General Public License v2
- * @version   3.0.3
+ * @version   3.0.4
  **/
 
 
@@ -99,7 +104,7 @@ Version History:
  * Wrapper class for the Support forum plugin
  *
  * @author  Sam Bauers
- * @version 3.0.3
+ * @version 3.0.4
  **/
 class Support_Forum
 {
@@ -218,7 +223,7 @@ class Support_Forum
 		if (defined('SUPPORT_FORUM_ICON_URI')) {
 			$this->iconURI = SUPPORT_FORUM_ICON_URI;
 		} else {
-			$this->iconURI = bb_get_plugin_uri($this->iconPath);
+			$this->iconURI = bb_get_plugin_uri($this->basename);
 		}
 		
 		$this->posterSetable = bb_get_option('support_forum_poster_setable');

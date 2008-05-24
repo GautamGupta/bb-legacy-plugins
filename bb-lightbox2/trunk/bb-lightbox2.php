@@ -24,12 +24,13 @@ $tumb_height = 100;
 // STOP EDITING!!!
 
 function bb_preg_callback2($matches) {
+  print_r ($matches);
   return '<a href="'.$matches[2].'" rel="lightbox">'.'<img src="'.ImgTumb($matches).'" />'.'</a>';
 } 
 
 function bb_removeLinks($content) {
 
-  $content = preg_replace_callback('@(]|<img.*src="(([^>"]*/)(.*[^"]))"*[^<].>)[^(</a>)]@i', "bb_preg_callback2", $content);
+  $content = preg_replace_callback('@(]|<img.*src="(([^>"]*/)(.*[^"]))"*[^<].>).[^(</a>)]@i', "bb_preg_callback2", $content);
 
   return $content;
 } 

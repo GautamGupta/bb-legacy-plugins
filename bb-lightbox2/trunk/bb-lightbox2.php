@@ -29,7 +29,7 @@ function bb_preg_callback2($matches) {
 
 function bb_removeLinks($content) {
 
-  $content = preg_replace_callback('@(]|<img.*src="(([^>"]*/)(.*[^"]))"*[^<].>)[^(</a>)]@i', "bb_preg_callback2", $content);
+  $content = preg_replace_callback('@(]|<img.*src="(([^>"]*/)(.*[^"]))".[^<]*>)(?!<\/a>)@i', "bb_preg_callback2", $content);
 
   return $content;
 } 

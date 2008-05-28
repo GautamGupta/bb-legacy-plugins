@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.1
+Version: 0.1.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -85,9 +85,9 @@ if (isset($_GET['bb_attachments'])) {
 
 if ($bb_attachments['style']) {add_action('bb_head', 'bb_attachments_add_css');}	// add css if present (including Kakumei  0.9.0.2 LI fix!)
 
-if (!is_topic() && !isset($_GET["new"])) {
-	if ($bb_attachments['title']) {add_filter('topic_title', 'bb_attachments_title',200);}
-} else {
+if ($bb_attachments['title'] && !is_topic()) {add_filter('topic_title', 'bb_attachments_title',200);} 
+
+if (isset($_GET["new"]) || is_topic() || is_forum()) {
 	add_action( 'bb_topic.php', 'bb_attachments_cache' );
 	add_filter('post_text', 'bb_attachments_post_footer',4);
 	add_filter('post_edit_uri', 'bb_attachments_link');

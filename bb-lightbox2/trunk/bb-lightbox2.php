@@ -80,7 +80,7 @@ function GetImgType($image)
 
 function ImgTumb($matches)
 {
- global $tumb_width, $tumb_height, $tumbs_path;
+ global $tumb_width, $tumb_height, $tumbs_path, $tumbs_url;
 
  if(!$tumbs_path) {
    $tumbs_path = BBPATH.'tumbs/';

@@ -3,7 +3,7 @@
 Plugin Name: bb-Lightbox2
 Plugin URI: http://bbpress.ru/
 Description: Used to overlay images on the current page. Lightbox JS v2.2 by <a href="http://www.huddletogether.com/projects/lightbox2/" title="Lightbox JS v2.2 ">Lokesh Dhakar</a>. This plugin is based on "Lightbox 2" plugin for WordPress.
-Version: 0.11
+Version: 0.12
 Author: A1ex
 Author URI: http://bbpress.ru
 */
@@ -14,11 +14,12 @@ $lightbox_2_theme = "Black";
 //$lightbox_2_theme = "Grey";
 //$lightbox_2_theme = "White";
 
+$tumb_width  = 100;
+$tumb_height = 100;
+
 $tumbs_path = "";
 $tumbs_url = "";
 
-$tumb_width  = 100;
-$tumb_height = 100;
 
 
 // STOP EDITING!!!
@@ -86,7 +87,7 @@ function ImgTumb($matches)
    $tumbs_path = BBPATH.'tumbs/';
  }
   if(!$tumbs_url) {
-   $tumbs_url = $_GET[SERVER_URI].'tumbs/';
+   $tumbs_url = bb_get_option('uri').'tumbs/';
  }
  $tumb_name = 'tumb_'.md5($matches[2]).'_'.$matches[4];
  $tumb_path = $tumbs_path.$tumb_name;

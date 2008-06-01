@@ -2,7 +2,7 @@
 /*
 Plugin Name: bb-Lightbox2
 Plugin URI: http://bbpress.ru/
-Description: Used to overlay images on the current page. Lightbox JS v2.2 by <a href="http://www.huddletogether.com/projects/lightbox2/" title="Lightbox JS v2.2 ">Lokesh Dhakar</a>. This plugin is based on "Lightbox 2" plugin for WordPress.
+Description: Used to overlay images on the current page. Lightbox JS v2.2 by <a href="http://www.huddletogether.com/projects/lightbox2/" title="Lightbox JS v2.2 ">Lokesh Dhakar</a>. This plugin is based on "Lightbox 2" plugin for WordPress.\nExample: http://www.sablinov.ru/forums/topic/1
 Version: 0.2
 Author: A1ex
 Author URI: http://bbpress.ru

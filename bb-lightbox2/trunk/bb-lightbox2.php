@@ -3,7 +3,7 @@
 Plugin Name: bb-Lightbox2
 Plugin URI: http://bbpress.ru/
 Description: Used to overlay images on the current page. Lightbox JS v2.2 by <a href="http://www.huddletogether.com/projects/lightbox2/" title="Lightbox JS v2.2 ">Lokesh Dhakar</a>. This plugin is based on "Lightbox 2" plugin for WordPress.
-Version: 0.15
+Version: 0.2
 Author: A1ex
 Author URI: http://bbpress.ru
 */
@@ -25,13 +25,13 @@ $tumbs_url = "";
 // STOP EDITING!!!
 
 function bb_preg_callback2($matches) {
-  return '<a href="'.$matches[2].'" rel="lightbox">'.'<img src="'.ImgTumb($matches[2],$matches[4]).'" /></a>';
+  return '<a href="'.$matches[2].'" rel="lightbox'.get_post_id().'">'.'<img src="'.ImgTumb($matches[2],$matches[4]).'" /></a>';
 }
 
 function bb_removeLinks($content) {
 
-  $content = preg_replace_callback('@(<img.*src="(([^>"]*/)(.*[^"]))"[^<]*>)(?!<\/a>)@i', "bb_preg_callback2", $content);
-  $content = preg_replace_callback('@(<img.*src=\'(([^>\']*/)(.*[^\']))\'[^<]*>)(?!<\/a>)@i', "bb_preg_callback2", $content);
+  $content = preg_replace_callback('@(<img.*?src="(([^>"]*/)(.*?[^"]))"[^<]*?>)(?!<\/a>)@i', "bb_preg_callback2", $content);
+  $content = preg_replace_callback('@(<img.*?src=\'(([^>\']*/)(.*?[^\']))\'[^<]*?>)(?!<\/a>)@i', "bb_preg_callback2", $content);
 	
   return $content;
 } 

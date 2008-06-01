@@ -2,8 +2,8 @@
 /*
 Plugin Name: bb-Lightbox2
 Plugin URI: http://bbpress.ru/
-Description: Used to overlay images on the current page. Lightbox JS v2.2 by <a href="http://www.huddletogether.com/projects/lightbox2/" title="Lightbox JS v2.2 ">Lokesh Dhakar</a>. This plugin is based on "Lightbox 2" plugin for WordPress. Example: http://www.sablinov.ru/forums/topic/1
-Version: 0.14
+Description: Used to overlay images on the current page. Lightbox JS v2.2 by <a href="http://www.huddletogether.com/projects/lightbox2/" title="Lightbox JS v2.2 ">Lokesh Dhakar</a>. This plugin is based on "Lightbox 2" plugin for WordPress.
+Version: 0.15
 Author: A1ex
 Author URI: http://bbpress.ru
 */
@@ -28,15 +28,11 @@ function bb_preg_callback2($matches) {
   return '<a href="'.$matches[2].'" rel="lightbox">'.'<img src="'.ImgTumb($matches[2],$matches[4]).'" /></a>';
 }
 
-function bb_preg_callback3($matches) {
-  return '<a href="'.$matches[2].'" rel="lightbox">'.'[img]'.ImgTumb($matches[2],$matches[3]).'[/img]</a>';
-}
-
 function bb_removeLinks($content) {
 
-  $content = preg_replace_callback('@(<img.*src="(([^>"]*/)(.*[^"]))".[^<]*>)(?!<\/a>)@i', "bb_preg_callback2", $content);
-  $content = preg_replace_callback('@(\[img\](.*[^\[]*\/(.*))\[/img\])(?!<\/a>)@i', "bb_preg_callback3", $content);
-  
+  $content = preg_replace_callback('@(<img.*src="(([^>"]*/)(.*[^"]))"[^<]*>)(?!<\/a>)@i', "bb_preg_callback2", $content);
+  $content = preg_replace_callback('@(<img.*src=\'(([^>\']*/)(.*[^\']))\'[^<]*>)(?!<\/a>)@i', "bb_preg_callback2", $content);
+	
   return $content;
 } 
 
@@ -153,7 +149,7 @@ function ImgTumb($image_path, $image_file)
  return $tumb_url;
 }
 
-add_action('get_post_text', 'bb_removeLinks');
+add_action('post_text', 'bb_removeLinks');
 
 /* we want to add the above xhtml to the header of our pages: */
 add_action('bb_head', 'lightbox_styles');

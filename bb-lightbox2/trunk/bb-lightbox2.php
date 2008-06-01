@@ -2,8 +2,8 @@
 /*
 Plugin Name: bb-Lightbox2
 Plugin URI: http://bbpress.ru/
-Description: Used to overlay images on the current page. Lightbox JS v2.2 by <a href="http://www.huddletogether.com/projects/lightbox2/" title="Lightbox JS v2.2 ">Lokesh Dhakar</a>. This plugin is based on "Lightbox 2" plugin for WordPress.
-Version: 0.12
+Description: Used to overlay images on the current page. Lightbox JS v2.2 by <a href="http://www.huddletogether.com/projects/lightbox2/" title="Lightbox JS v2.2 ">Lokesh Dhakar</a>. This plugin is based on "Lightbox 2" plugin for WordPress. Example: http://www.sablinov.ru/forums/topic/1
+Version: 0.14
 Author: A1ex
 Author URI: http://bbpress.ru
 */
@@ -25,13 +25,18 @@ $tumbs_url = "";
 // STOP EDITING!!!
 
 function bb_preg_callback2($matches) {
-  return '<a href="'.$matches[2].'" rel="lightbox">'.'<img src="'.ImgTumb($matches).'" />'.'</a>';
-} 
+  return '<a href="'.$matches[2].'" rel="lightbox">'.'<img src="'.ImgTumb($matches[2],$matches[4]).'" /></a>';
+}
+
+function bb_preg_callback3($matches) {
+  return '<a href="'.$matches[2].'" rel="lightbox">'.'[img]'.ImgTumb($matches[2],$matches[3]).'[/img]</a>';
+}
 
 function bb_removeLinks($content) {
 
-  $content = preg_replace_callback('@(]|<img.*src="(([^>"]*/)(.*[^"]))".[^<]*>)(?!<\/a>)@i', "bb_preg_callback2", $content);
-
+  $content = preg_replace_callback('@(<img.*src="(([^>"]*/)(.*[^"]))".[^<]*>)(?!<\/a>)@i', "bb_preg_callback2", $content);
+  $content = preg_replace_callback('@(\[img\](.*[^\[]*\/(.*))\[/img\])(?!<\/a>)@i', "bb_preg_callback3", $content);
+  
   return $content;
 } 
 
@@ -79,7 +84,7 @@ function GetImgType($image)
  }
 }
 
-function ImgTumb($matches)
+function ImgTumb($image_path, $image_file)
 {
  global $tumb_width, $tumb_height, $tumbs_path, $tumbs_url;
 
@@ -89,13 +94,13 @@ function ImgTumb($matches)
   if(!$tumbs_url) {
    $tumbs_url = bb_get_option('uri').'tumbs/';
  }
- $tumb_name = 'tumb_'.md5($matches[2]).'_'.$matches[4];
+ $tumb_name = 'tumb_'.md5($image_path).'_'.$image_file;
  $tumb_path = $tumbs_path.$tumb_name;
  $tumb_url = $tumbs_url.$tumb_name;
  
  if(!is_file($tumb_path))
  {
-  $image = $matches[2];
+  $image = $image_path;
   $this_type = GetImgType($image);
   switch($this_type)
   {

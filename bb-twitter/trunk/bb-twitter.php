@@ -38,10 +38,10 @@ if (bb_current_user_can( 'edit_profile', $user->ID )  &&  bb_is_user_logged_in()
 <legend><?php  _e('Twitter')?></legend>
 <table border=0>
 <tr>
-<td>Twitter brukernavn : </td><td><input type="text" name="twitter" value="<?php echo $twitter;?> " size="25"/></td>
+<td>Twitter username : </td><td><input type="text" name="twitter" value="<?php echo $twitter;?> " size="25"/></td>
 </tr>
 <tr>
-<td>Vis din siste <em>tweet</em> i profilen?</td><td>
+<td>Show your latest <em>tweet</em> in your profile?</td><td>
 <?php
 if ($tweets_on == "yes"){
 ?>

@@ -11,9 +11,9 @@ buttonhtml+='onmouseover="edOver(this);" onmouseout="edOut(this);" onclick="edCl
 }
 
 var CSS='float:left; border: 1px outset; color: black; background: buttonface; padding: 0px 6px 1px 6px; margin: 1px 7px 2px 0;'
-	+'font: 1.2em times, serif; word-spacing: -1px; height: 16px; vertical-align:middle;'
+	+'font: 1.2em times, serif; word-spacing: -1px; height: 16px; vertical-align:middle; line-height:16px;'
 	+'text-align:center; position:relative; cursor: pointer; cursor: hand;';
-var stylesheet = document.styleSheets[0];
+var stylesheet = document.styleSheets[document.styleSheets.length-1];
 if (stylesheet.addRule) {stylesheet.addRule(".ed_button", CSS);} else {if (stylesheet.insertRule) {stylesheet.insertRule(".ed_button {"+CSS+"}",stylesheet);}}
 
 myField.setAttribute("style", "clear:both;"); 	// fix textarea to clear toolbar

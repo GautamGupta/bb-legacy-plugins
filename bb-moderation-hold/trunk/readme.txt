@@ -3,7 +3,7 @@ Contributors: so1o
 Tags: moderation, hold
 Requires at least: 1.0 alpha build 809
 Tested up to: 0.8.2.1
-Stable tag: 0.3
+Stable tag: 0.4.1
 
 Hold posts and topics for moderation
 

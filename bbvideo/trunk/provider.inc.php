@@ -1,6 +1,6 @@
 <?php
 /*
-BBVideo Plugin v0.1 definition file
+BBVideo Plugin v0.23 definition file
 http://www.naden.de/blog/bbvideo-bbpress-video-plugin
 */
 
@@ -19,16 +19,15 @@ Support for:
 + metacafe
 + clipfish
 + gametrailers
++ vimeo
 */
 
 $this->provider = array(
 	'youtube' => array(
 		'width' => '425',
 		'height' => '350',
-#		'pattern' => 'youtube\.(.*)/v(=|\/)([a-zA-Z0-9_-]*)',
 		'pattern' => 'youtube\.(.*)/watch\?v=([a-zA-Z0-9_-]*)',
 		'index' => 2,
-#    'code' => "<object width='[WIDTH]' height='[HEIGHT]'><param name='movie' value='http://www.youtube.com/v/[ID]&rel=1'></param><param name='wmode' value='transparent'></param><embed src='http://www.youtube.com/v/[ID]&rel=1' type='application/x-shockwave-flash' wmode='transparent' width='[WIDTH]' height='[HEIGHT]'></embed></object>",
 		'code' => '<object width="[WIDTH]" height="[HEIGHT]"><param name="movie" value="http://www.youtube.com/v/[ID]&rel=1"></param><param name="wmode" value="transparent"></param><embed src="http://www.youtube.com/v/[ID]&rel=1" type="application/x-shockwave-flash" wmode="transparent" width="[WIDTH]" height="[HEIGHT]"></embed></object>',
 		'page_url' => 'http://www.youtube.com'
 	),
@@ -99,7 +98,6 @@ $this->provider = array(
 	'googlevideo' => array(
 		'width' => '425',
 		'height' => '350',
-#    'pattern' => 'video\.google\.(.*)/([url|videoplay].?)\?docid=([a-zA-Z0-9_-]*)',
     'pattern' => 'video\.google\.(.*)/(videoplay)?(url)?\?docid=([a-zA-Z0-9_-]*)',
 		'index' => 1,
 		'code' => '<embed style="width:[WIDTH]px; height:[HEIGHT]px;" id="VideoPlayback" type="application/x-shockwave-flash" src="http://video.google.com/googleplayer.swf?docId=[ID]&hl=de" flashvars=""></embed>',
@@ -128,6 +126,14 @@ $this->provider = array(
 		'index' => 1,
 		'code' => '<embed src="http://www.clipfish.de/videoplayer.swf?as=0&videoid=[ID]&r=1" quality="high" bgcolor="#cacaca" width="[WIDTH]" height="[HEIGHT]" name="player" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash"></embed>',
 		'page_url' => 'http://www.clipfish.de'
+	),
+	'vimeo' => array(
+		'width' => '425',
+		'height' => '350',
+		'pattern' => 'vimeo\.com/([0-9]*)',
+		'index' => 1,
+		'code' => '<object width="[WIDTH]" height="[HEIGHT]"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://www.vimeo.com/moogaloop.swf?clip_id=[ID]&amp;server=www.vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" /><embed src="http://www.vimeo.com/moogaloop.swf?clip_id=[ID]&amp;server=www.vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="[WIDTH]" height="[HEIGHT]"></embed></object>',
+		'page_url' => 'http://www.vimeo.com'
 	)
 );
 

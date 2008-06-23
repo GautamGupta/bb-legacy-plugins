@@ -1,5 +1,5 @@
 === bbVideo ===
-Tags: video, embed, embedding, embedded, multimedia, film, media, videos, youtube, flashvideo, flashvideos
+Tags: video, embed, embedding, embedded, multimedia, film, media, videos, youtube, flashvideo, flashvideos, vimeo, myvideo, clipfish, video download
 Contributors: Naden Badalgogtapeh
 Requires at least: 0.8.3
 Tested up to: 0.8.3.1
@@ -9,7 +9,7 @@ Converts links pointing to videos to embeded players.
 
 == Description ==
 
-This plugin converts all links to knowen videos portals to the matching embedded players and supports the reader with easy sharing options.
+This plugin converts all links to knowen videos portals to the matching embedded players and supports the reader with easy sharing options and video downloading capabilities.
 
 == Installation ==
 
@@ -21,14 +21,14 @@ not needed.
 
 But! You can add the following snippet to 'topic.php' just below '<?php post_form(); ?>' to have a list of video providers displayed the poster can use.
 
-<?php
+<code>
 global $BBPressPluginBBVideo;
 if( isset( $BBPressPluginBBVideo ) && !is_null( $BBPressPluginBBVideo ) )
 {
 	print( _e( 'Supported video provider:' ) );
 	$BBPressPluginBBVideo->DisplayProvider();
 }
-?>
+</code>
 
 == Frequently Asked Questions ==
 

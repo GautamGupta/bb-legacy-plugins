@@ -1,6 +1,6 @@
 <?php
 /*
-BBVideo Plugin v0.22 admin template
+BBVideo Plugin v0.23 admin template
 http://www.naden.de/blog/bbvideo-bbpress-video-plugin
 */
 
@@ -8,7 +8,8 @@ if( isset( $_POST[ 'cmd' ] ) )
 {
   $this->SaveOptions(
     array(
-      'embed' => intval( $_POST[ 'embed' ] )
+      'embed' => intval( $_POST[ 'embed' ] ),
+      'download' => intval( $_POST[ 'download' ] )
     )
   );
 }
@@ -21,10 +22,18 @@ if( isset( $_POST[ 'cmd' ] ) )
 <form method="post" action="">
 <p>
 <h4>Embed:</h4>
-<label for"embed">Zeige Embed Optionen unter den Videos. / Show embed field below the videos.</label>
+<label for="embed">Zeige Embed Optionen unter den Videos. / Show embed field below the videos.</label>
 <p>
 <input type="radio" name="embed" value="1" <?php print( $this->options[ 'embed' ] == 1 ? ' checked="checked"' : '' ); ?>/> Ja
 <input type="radio" name="embed" value="0" <?php print( $this->options[ 'embed' ] == 0 ? ' checked="checked"' : '' ); ?>/> Nein
+</p>
+</p>
+<p>
+<h4>Download:</h4>
+<label for="download">Zeige Download-Link unter den Videos. / Show download link field below the videos.</label>
+<p>
+<input type="radio" name="download" value="1" <?php print( $this->options[ 'download' ] == 1 ? ' checked="checked"' : '' ); ?>/> Ja
+<input type="radio" name="download" value="0" <?php print( $this->options[ 'download' ] == 0 ? ' checked="checked"' : '' ); ?>/> Nein
 </p>
 </p>
 

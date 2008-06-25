@@ -169,7 +169,7 @@ function edInsertLink(i, defaultValue) {
 function edInsertImage() {
 	var myValue = prompt('Enter the URL of the image', 'http://');
 	if (myValue) {
-		myValue = '[img='+ myValue+']';
+		myValue = '[img]'+ myValue+'[/img]';
 		edInsertContent(myValue);
 	}
 }

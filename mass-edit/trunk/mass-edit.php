@@ -19,7 +19,7 @@ if (defined('BB_IS_ADMIN') || !(strpos($_SERVER['REQUEST_URI'],"/bb-admin/")===f
 function mass_edit_admin_menu() {
 	if (bb_current_user_can('browse_deleted')) {
 		global $bb_submenu;
-		$bb_submenu['content.php'][] = array(__('Mass Edit'), 'use_keys', 'mass_edit');
+		$bb_submenu['content.php'][] = array(__('Mass Edit'), 'administrate', 'mass_edit');
 	}
 }
 add_action( 'bb_admin_menu_generator', 'mass_edit_admin_menu',200);	// try to be last menu feature

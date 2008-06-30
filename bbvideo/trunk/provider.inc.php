@@ -1,6 +1,6 @@
 <?php
 /*
-BBVideo Plugin v0.23 definition file
+BBVideo Plugin v0.24 definition file
 http://www.naden.de/blog/bbvideo-bbpress-video-plugin
 */
 
@@ -10,6 +10,7 @@ Support for:
 + myvideo
 + funnyordie
 + collegehumor
++ redtube
 + dailymotion 
 + sevenload
 + glumbert

@@ -5,7 +5,7 @@ Plugin URI: http://www.adityanaik.com
 Description: Hold posts and topics for moderation
 Author: Aditya Naik
 Author URI: http://www.adityanaik.com/
-Version: 0.4.1
+Version: 0.4.2
 */
 /**
  * Filter topics held for moderation
@@ -58,9 +58,10 @@ function bb_moderation_hold_after_posting_do_the_magic($post_id){
  * Send Moderation Notification
  *
  * @author  Aditya Naik <aditya@adityanaik.com>
- * @version v 0.02 Sun Apr 08 2007 01:37:30 GMT-0400 (Eastern Daylight Time)
+ * @version v 0.03 Sun Apr 08 2007 01:37:30 GMT-0400 (Eastern Daylight Time)
  */
 function bb_moderation_hold_mail_moderation($obj = 'T') {
+$options = bb_anonymous_default_options(bb_get_option('bb_moderation_hold'));
 
   if ('T' == $obj) {
     $email = $options['hold_topics_email_address'];
@@ -202,11 +203,11 @@ function bb_moderation_hold_admin_page() {
  * Admin Page for Topic Moderation
  *
  * @author  Aditya Naik <aditya@adityanaik.com>
- * @version v 0.01 Sun Apr 08 2007 02:32:53 GMT-0400 (Eastern Daylight Time)
+ * @version v 0.02 Sun Apr 08 2007 02:32:53 GMT-0400 (Eastern Daylight Time)
  */
 function bb_moderation_hold_topic_admin_page() {
 
-  global $bbdb, $topic, $bb_post, $post_id, $topic_id;
+  global $bbdb, $topic, $bb_post, $post_id, $topic_id, $page;
   $options = bb_anonymous_default_options(bb_get_option('bb_moderation_hold'));
 
   if ($options['hold_topics']) :
@@ -416,7 +417,7 @@ function bb_moderation_hold_approve_topics($topicids){
  * Approve Posts
  *
  * @author  Aditya Naik <aditya@adityanaik.com>
- * @version v 0.01 Sun Apr 08 2007 01:34:06 GMT-0400 (Eastern Daylight Time)
+ * @version v 0.02 Sun Apr 08 2007 01:34:06 GMT-0400 (Eastern Daylight Time)
  */
 function bb_moderation_hold_approve_posts($postids){
   global $bbdb, $thread_ids_cache;
@@ -431,7 +432,8 @@ function bb_moderation_hold_approve_posts($postids){
       $uid = 0;
       $uname = $bb_post->poster_name;
     } else {
-      $uid = $bb_post->poster_id;
+      $uid = $user->ID;
+      $uname = $user->user_login;
     }
 
     $topic_posts = $topic->topic_posts + 1;
@@ -449,7 +451,7 @@ function bb_moderation_hold_approve_posts($postids){
     
     $post_ids = get_thread_post_ids( $topic_id );
     if ( $uid && !in_array($uid, array_slice($post_ids['poster'], 0, -1)) )
-      bb_update_usermeta( $uid, $bb_table_prefix . 'topics_replied', $bb_current_user->data->topics_replied + 1 );
+      bb_update_usermeta( $uid, $bbdb->prefix . 'topics_replied', $bb_current_user->data->topics_replied + 1 );
   endforeach; endif;
 }
 

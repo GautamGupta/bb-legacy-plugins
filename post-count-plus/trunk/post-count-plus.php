@@ -166,8 +166,8 @@ return $url;
 }
 
 function post_count_plus_profile_key($keys) {	// inserts post_count into profile without hacking
-global $post_count_plus; 
-if (!isset($_GET['tab']) && bb_get_location()=="profile-page") {
+global $post_count_plus, $self; 
+if (!$self && !isset($_GET['tab']) && bb_get_location()=="profile-page") {
 	$keys=array_merge(array_slice($keys, 0 , 1), array('post_count' => array(0, __('Posts'))), array_slice($keys,  1));
 }
 return $keys;

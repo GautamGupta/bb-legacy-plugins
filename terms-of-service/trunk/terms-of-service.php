@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Terms of Service
-Plugin URI:  http://bbpress.org/plugins/topic/115
+Plugin URI:  http://bbpress.org/plugins/topic/117
 Description:  Adds a "Terms of Service" (aka TOS) agreement to your registration page (and can optionally be linked to directly).
 Version: 0.0.1
 Author: _ck_

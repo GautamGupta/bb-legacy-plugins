@@ -1,4 +1,4 @@
-=== Terms of Service for bbPress  ===
+=== Terms of Service  ===
 Tags: register, registration, TOS, terms of service, disclaimer, age verification, privacy policy, _ck_
 Contributors: _ck_
 Requires at least: 0.8

@@ -1,0 +1,51 @@
+=== Terms of Service for bbPress  ===
+Tags: register, registration, TOS, terms of service, disclaimer, age verification, privacy policy, _ck_
+Contributors: _ck_
+Requires at least: 0.8
+Tested up to: trunk
+Stable tag: trunk
+Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+
+Adds a "Terms of Service" (aka TOS) agreement to your registration page (and can optionally be linked to directly).
+
+== Description ==
+
+Adds a "Terms of Service" (aka TOS) agreement to your registration page (and can optionally be linked to directly).
+
+== Installation ==
+
+* edit the `terms-of-service.html` file and insert the desired TOS (see FAQ for suggestions)
+* upload entire `/terms-of-service/` directory to `my-plugins/`
+* activate plugin and check registration page
+* optional create link `?terms-of-service=display` anywhere desired to show TOS 
+
+== Frequently Asked Questions ==
+
+= What do I put into the `terms-of-service.html` file? =
+
+* any text/HTML you'd like - for legal reasons I cannot tell you what to say - you're supposed to hire an attorney
+
+* hint: wordpress.com's TOS is creative-commons licensed so you can re-use it http://wordpress.com/tos/
+
+* check these URLs for suggestions:
+http://wordpress.com/tos/
+http://www.bennadel.com/coldfusion/privacy-policy-generator.htm
+http://www.houseoffusion.com/groups/cf-talk/message.cfm/messageid:273006
+http://www.ownterms.org/documents/terms-of-service/
+
+* let me know if you find other free (CC licensed) TOS - especially if they are reviewed by lawyers
+
+== License ==
+
+* CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
+
+== Donate ==
+
+* http://amazon.com/paypage/P2FBORKDEFQIVM
+
+== History ==
+
+= Version 0.01 (2008-07-15) =
+
+*   Terms-of-Service first public release
+

@@ -17,26 +17,25 @@ if (bb_get_location()=="register-page") {	// determines if we're actually on reg
 	add_action('bb_send_headers', 'terms_of_service_check');	// check before headers finish sending
 } 
 
-add_action( 'bb_init', 'terms_of_service_get');	
+add_action( 'bb_init', 'terms_of_service_get');	// check for direct link
 
 function terms_of_service_get() {
-	if (isset($_GET['terms_of_service'])) {
-		bb_get_header();  
-		?>
+	if (isset($_GET['terms_of_service']) || isset($_GET['terms-of-service'])) {	// check for direct link
+		bb_get_header();	?>
 		<h3 class="bbcrumb"><a href="<?php bb_option('uri'); ?>"><?php bb_option('name'); ?></a> &raquo; <?php _e('Terms of Service'); ?></h3>
 		<div class="indent">
 		<h2 id="register"><?php _e('Terms of Service'); ?></h2>		
-		<div style="padding:0.5em 1em 1em 1em; margin:0em 3em; background: #eee; color: #000;">	
-		<?php @readfile(dirname(__FILE__).'/terms-of-service.html');
+		<div id="terms_of_service" style="padding:0.5em 1em 1em 1em; margin:0em 3em; background: #eee; color: #000;">	
+		<?php 	@readfile(dirname(__FILE__).'/terms-of-service.html');
 		echo '</div></div>';
 		bb_get_footer(); 
-		exit();
+		exit();	
 	}
 }
 
 function terms_of_service() {	// show the form
 	echo '<fieldset><legend>'.__("Terms of Service").'</legend>'
-	.'<div style="padding:0.5em 1em 1em 1em; margin:0em 3em; background: #eee; color: #000; overflow:auto; height:7em;">';	
+	.'<div id="terms_of_service" style="padding:0.5em 1em 1em 1em; margin:0em 3em; background: #eee; color: #000; overflow:auto; height:7em;">';	
 	@readfile(dirname(__FILE__).'/terms-of-service.html');
 	echo '</div><table width="100%"><tr class="required"><th scope="row" nowrap><sup class="required">*</sup> '.__("I understand and agree:").'</th><td width="72%">'
 	.'<input name="terms_of_service" type="checkbox" id="terms_of_service" value="agree" style="vertical-align:middle;width:1.40em;height:1.40em; margin-top:4px;" />'

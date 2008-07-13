@@ -17,7 +17,7 @@ Adds a "Terms of Service" (aka TOS) agreement to your registration page (and can
 * edit the `terms-of-service.html` file and insert the desired TOS (see FAQ for suggestions)
 * upload entire `/terms-of-service/` directory to `my-plugins/`
 * activate plugin and check registration page
-* optional create link `?terms-of-service=display` anywhere desired to show TOS 
+* optionally create link `?terms-of-service=display` anywhere desired to show TOS (ie. within footer.php template)
 
 == Frequently Asked Questions ==
 
@@ -33,7 +33,7 @@ http://www.bennadel.com/coldfusion/privacy-policy-generator.htm
 http://www.houseoffusion.com/groups/cf-talk/message.cfm/messageid:273006
 http://www.ownterms.org/documents/terms-of-service/
 
-* let me know if you find other free (CC licensed) TOS - especially if they are reviewed by lawyers
+* let me know if you find other free (or CC licensed) TOS - especially if they are reviewed by lawyers
 
 == License ==
 
@@ -45,7 +45,7 @@ http://www.ownterms.org/documents/terms-of-service/
 
 == History ==
 
-= Version 0.01 (2008-07-15) =
+= Version 0.01 (2008-07-13) =
 
 *   Terms-of-Service first public release
 

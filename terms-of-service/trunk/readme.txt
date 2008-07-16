@@ -1,7 +1,7 @@
 === Terms of Service  ===
 Tags: register, registration, TOS, terms of service, disclaimer, age verification, privacy policy, _ck_
 Contributors: _ck_
-Requires at least: 0.8
+Requires at least: 0.9
 Tested up to: trunk
 Stable tag: trunk
 Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM

@@ -32,7 +32,7 @@ if (isset($tags['center'])) {echo "BBcodeButtons.push(new BBcodeButton('ed_cente
 echo  "BBcodeButtons.push(new BBcodeButton('ed_code','CODE','[code]','[/code]','p','line-height:160%;font-size:80%;letter-spacing:1px;font-family:anadale,serif;','unformatted / code'));
 	BBcodeButtons.push(new BBcodeButton('ed_close','close','','','c',' ','auto-close any tags you left open'));
 	}</scr"."ipt>
-	<scr"."ipt src='" .bb_get_option('uri').str_replace(array(BBPATH,".php","\\"),array("",".js","/"),dirname(__FILE__)."/".basename(__FILE__))."?0.0.4' type='text/javascript' defer='defer'></scr"."ipt>";
+	<scr"."ipt src='" .bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),".php","\\"),array("",".js","/"),__FILE__),"/\\")."?0.0.4' type='text/javascript' defer='defer'></scr"."ipt>";
 }	
 } add_action('bb_foot', 'bbcode_buttons');	
 

@@ -5,7 +5,7 @@ Description: Turn a forum into a "category" which cannot be posted to and does n
 Plugin URI: http://bbpress.org/plugins/topic/forum-is-category/
 Author: Nightgunner5
 Author URI: http://llamaslayers.net/daily-llama/
-Version: 1.0
+Version: 1.1
 */
 
 $forums_that_are_categories = bb_get_option("forum_is_category_forums");

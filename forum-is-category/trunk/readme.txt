@@ -3,7 +3,7 @@ Contributors: Nightgunner5
 Tags: forums, category, posting
 Requires at least: 0.7.2
 Tested up to: 0.9.0.2
-Stable tag: 1.0
+Stable tag: 1.1
 
 Turn a forum into a "category" which cannot be posted to and does not have post/topic counts.
 

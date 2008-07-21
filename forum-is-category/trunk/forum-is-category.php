@@ -2,7 +2,7 @@
 /*
 Plugin Name: Forum is category
 Description: Turn a forum into a "category" which cannot be posted to and does not have post/topic counts.
-Plugin URI: about:blank
+Plugin URI: http://bbpress.org/plugins/topic/forum-is-category/
 Author: Nightgunner5
 Author URI: http://llamaslayers.net/daily-llama/
 Version: 1.0

@@ -15,9 +15,9 @@ If a specified forum has a parent, the parent will also be turned into a no-post
 
 == Installation ==
 
-1. Change the `$forums_that_are_categories` variable.  Instructions are in the plugin file.
 1. Upload `forum-is-category.php` to the `/my-plugins/` directory.  If you do not already have one, make one.
 1. Activate the plugin through the 'Plugins' menu in bbPress admin.
+1. Change the settings on the menu that appears.
 
 == Frequently Asked Questions ==
 

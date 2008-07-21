@@ -79,6 +79,15 @@ function forum_is_category_admin_page() {
 <?php endwhile; ?>
 <?php endif; // bb_forums() ?>
 </ul>
+<script type="text/javascript">
+//<![CDATA[
+	var forum_is_category_checkboxes = document.getElementById('the-list').getElementsByTagName('input');
+	for (var i = 0; i < forum_is_category_checkboxes.length; i++) {
+		var the_checkbox = forum_is_category_checkboxes[i];
+		the_checkbox.onclick = function () { if (this.checked) { var checkbox_walker = this; while (1) { checkbox_walker = checkbox_walker.parentNode.parentNode.parentNode.parentNode; if (checkbox_walker.previousSibling) { checkbox_walker = checkbox_walker.previousSibling.firstChild.firstChild; } else { break; } checkbox_walker.checked = true; } } else { var checkbox_walker = this.parentNode.parentNode.nextSibling; if (checkbox_walker) { checkbox_walker = checkbox_walker.getElementsByTagName('input'); for (var i = 0; i < checkbox_walker.length; i++) { checkbox_walker[i].checked = false; } } } };
+	}
+//]]>
+</script>
 	<p class="submit alignleft">
 		<input name="submit" id="submit" type="submit" value="<?php _e('Update'); ?>" />
 		<input type="hidden" id="action" name="action" value="forum_is_category_update" />

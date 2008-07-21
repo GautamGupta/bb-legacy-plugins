@@ -40,7 +40,7 @@ add_filter('get_forum_topics', 'forum_is_category_restrict_posttopic_view', 10, 
 
 function forum_is_category_admin_page_add() {
 	if (function_exists('bb_admin_add_submenu')) { // Build 794+
-		bb_admin_add_submenu(__('Forum is category', 'forum-is-category'), 'use_keys', 'forum_is-category_admin_page');
+		bb_admin_add_submenu(__('Forum is category', 'forum-is-category'), 'use_keys', 'forum_is_category_admin_page');
 	} else {
 		global $bb_submenu;
 		$bb_submenu['content.php'][] = array(__('Forum is category', 'forum-is-category'), 'use_keys', 'forum_is_category_admin_page');;

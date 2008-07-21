@@ -56,7 +56,7 @@ function forum_is_category_row() {
 	$r  = '';
 	$r .= "\t\t<div class='list-block posrel'>\n";
 	$r .= "\t\t\t<div class='alignright'>\n";
-	$r .= "\t\t\t\t<input type='checkbox' name='forum-is-category[]' name='".$_forum->forum_id."' id='forum-is-category[]'".((in_array($_forum->forum_id, $forums_that_are_categories)) ? " checked='checked'" : "")." />";
+	$r .= "\t\t\t\t<input type='checkbox' name='forum-is-category[]' value='".$_forum->forum_id."' id='forum-is-category[]'".((in_array($_forum->forum_id, $forums_that_are_categories)) ? " checked='checked'" : "")." />";
 	$r .= "\t\t\t</div>\n";
 	$r .= "\t\t\t" . get_forum_name( $_forum->forum_id ) . ' &#8212; ' . get_forum_description( $_forum->forum_id ) . "\n\t\t</div>\n";
 

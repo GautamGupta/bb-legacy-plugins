@@ -20,6 +20,7 @@ while (list(, $forumcat) = each($forums_that_are_categories)) {
 }
 
 function forum_is_category_restrict_posting($retvalue, $capability, $args) {
+	global $forums_that_are_categories;
 	if ($capability == "write_topic" && in_array($args[1], $forums_that_are_categories)) {
 		return false;
 	} elseif ($capability == "move_topic" && in_array($args[2], $forums_that_are_categories)) {
@@ -30,6 +31,7 @@ function forum_is_category_restrict_posting($retvalue, $capability, $args) {
 add_filter('bb_current_user_can', 'forum_is_category_restrict_posting', 10, 3);
 
 function forum_is_category_restrict_posttopic_view($posts, $id) {
+	global $forums_that_are_categories;
 	if (in_array($id, $forums_that_are_categories)) {
 		return false;
 	}

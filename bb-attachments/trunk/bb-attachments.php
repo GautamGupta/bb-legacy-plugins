@@ -158,7 +158,7 @@ if ($post_id && ($bb_attachments['role']['see']=="read" || bb_current_user_can($
 	if ((!is_topic() || isset($_GET['bb_attachments'])) && bb_current_user_can('moderate')) {$filter=""; $admin=bb_current_user_can('administrate');} 	 
 	if (bb_current_user_can($bb_attachments['role']['delete'])) {$can_delete=true;}
 	
-	$file = bb_attachments_location();	 $can_inline=true;
+	$location = bb_attachments_location();	 $can_inline=true;
 	if (!($bb_attachments['role']['inline']=="read" || bb_current_user_can($bb_attachments['role']['inline']))) {$can_inline=false;}
 		
 	if (!isset($bb_attachments_cache[$post_id])) {
@@ -202,8 +202,11 @@ if ($post_id && ($bb_attachments['role']['see']=="read" || bb_current_user_can($
 						$output.=' [<a onClick="return confirm('."'".__('Delete')." $attachment->filename ?"."'".')" href="'.add_query_arg('bbat_delete',$attachment->id).'">x</a>] ';
 				}
 
-				if ($attachment->status==0 && $file=="edit.php" && $can_inline) {								
-					$output.=" [<a href='#' onclick='bbatt_inline_insert($attachment->post_id,$attachment->id); return false;'>".__("INSERT")."</a>] ";				
+				if ($attachment->status==0 && $location=="edit.php" && $can_inline) {				
+					$fullpath=$bb_attachments['path'].floor($file->id/1000)."/".$attachment->id.".".$attachment->filename;
+					if (list($width, $height, $type) = getimagesize($fullpath)) {								
+						$output.=" [<strong><a href='#' onclick='bbatt_inline_insert($attachment->post_id,$attachment->id); return false;'>".__("INSERT")."</a></strong>] ";	
+					}
 				}						
 	
 				$output.=" </span></li>";
@@ -211,7 +214,7 @@ if ($post_id && ($bb_attachments['role']['see']=="read" || bb_current_user_can($
 		}
 	}
 if ($output) {$output="<h3>".__("Attachments")."</h3><ol>".$output."</ol>";}
-if ($file="edit.php") {
+if ($location="edit.php") {
 $output.='<scr'.'ipt type="text/javascript" defer="defer">function bbatt_inline_insert(post_id,id) {
 	myField=document.getElementsByTagName("textarea")[0];  
 	tmp="?bb_attachments="+post_id+"&bbat="+id; q="'."'".'";

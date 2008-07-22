@@ -3,7 +3,7 @@ Contributors: Nightgunner5
 Tags: forums, category, posting
 Requires at least: 0.7.2
 Tested up to: 0.9.0.2
-Stable tag: 1.1
+Stable tag: 1.2
 
 Turn a forum into a "category" which cannot be posted to and does not have post/topic counts.
 
@@ -12,6 +12,8 @@ Turn a forum into a "category" which cannot be posted to and does not have post/
 The forums that you specify in the `forum-is-category.php` file are turned into no-posts-allowed categories.
 
 If a specified forum has a parent, the parent will also be turned into a no-posts-allowed category, whether specified or not.
+
+Do not use this with bbPress 1.0 or higher, categories are in the core on those versions.
 
 == Installation ==
 

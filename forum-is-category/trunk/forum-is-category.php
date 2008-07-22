@@ -5,19 +5,12 @@ Description: Turn a forum into a "category" which cannot be posted to and does n
 Plugin URI: http://bbpress.org/plugins/topic/forum-is-category/
 Author: Nightgunner5
 Author URI: http://llamaslayers.net/daily-llama/
-Version: 1.0
+Version: 1.2
 */
 
 $forums_that_are_categories = bb_get_option("forum_is_category_forums");
 if (!is_array($forums_that_are_categories))
 	$forums_that_are_categories = array();
-reset($forums_that_are_categories);
-while (list(, $forumcat) = each($forums_that_are_categories)) {
-	if (!in_array(get_forum_parent($forumcat), $forums_that_are_categories)) {
-		$forums_that_are_categories[] = get_forum_parent($forumcat);
-		reset($forums_that_are_categories);
-	}
-}
 
 function forum_is_category_restrict_posting($retvalue, $capability, $args) {
 	global $forums_that_are_categories;
@@ -79,15 +72,6 @@ function forum_is_category_admin_page() {
 <?php endwhile; ?>
 <?php endif; // bb_forums() ?>
 </ul>
-<script type="text/javascript">
-//<![CDATA[
-	var forum_is_category_checkboxes = document.getElementById('the-list').getElementsByTagName('input');
-	for (var i = 0; i < forum_is_category_checkboxes.length; i++) {
-		var the_checkbox = forum_is_category_checkboxes[i];
-		the_checkbox.onclick = function () { if (this.checked) { var checkbox_walker = this; while (1) { checkbox_walker = checkbox_walker.parentNode.parentNode.parentNode.parentNode; if (checkbox_walker.previousSibling) { checkbox_walker = checkbox_walker.previousSibling.firstChild.firstChild; } else { break; } checkbox_walker.checked = true; } } else { var checkbox_walker = this.parentNode.parentNode.nextSibling; if (checkbox_walker) { checkbox_walker = checkbox_walker.getElementsByTagName('input'); for (var i = 0; i < checkbox_walker.length; i++) { checkbox_walker[i].checked = false; } } } };
-	}
-//]]>
-</script>
 	<p class="submit alignleft">
 		<input name="submit" id="submit" type="submit" value="<?php _e('Update'); ?>" />
 		<input type="hidden" id="action" name="action" value="forum_is_category_update" />
@@ -101,6 +85,17 @@ function forum_is_category_admin_page_process() {
 		if ('forum_is_category_update' == $_POST['action']) {
 			global $forums_that_are_categories;
 			$forums_that_are_categories = array_map(intval, $_POST['forum-is-category']);
+
+			if (!is_array($forums_that_are_categories))
+				$forums_that_are_categories = array();
+
+			reset($forums_that_are_categories);
+			while (list(, $forumcat) = each($forums_that_are_categories)) {
+				if (!in_array(get_forum_parent($forumcat), $forums_that_are_categories)) {
+					$forums_that_are_categories[] = get_forum_parent($forumcat);
+					reset($forums_that_are_categories);
+				}
+			}
 
 			if (count($forums_that_are_categories)) {
 				bb_update_option('forum_is_category_forums', $forums_that_are_categories);

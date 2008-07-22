@@ -421,24 +421,33 @@ if ($filenum>0 && ($bb_attachments['role']['inline']=="read" || bb_current_user_
 				if (!$file->size) {exit();}
 			}
 			
+			$headers = apache_request_headers();
+			$filemtime=filemtime($fullpath);
+			$httpcode="200";
+			if (isset($headers['If-Modified-Since']) && (strtotime($headers['If-Modified-Since']) == $filemtime)) {$httpcode="304";}      				
 			if (ini_get('zlib.output_compression')) {ini_set('zlib.output_compression', 'Off');}	// fix for IE
-			// header ("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
-			// header("Pragma: hack");
+			header('Last-Modified: '.gmdate('D, d M Y H:i:s', $filemtime).' GMT', true, $httpcode);
+			header("Cache-Control: Public");
+			header("Pragma: Public");
+			header("Expires: " . gmdate("D, d M Y H:i:s", time() + (86400 * 30)) . " GMT");
 			header("Content-Type: ".$mime);
-			header("Content-Length: $file->size");
-			header('Content-Disposition: inline; filename="'.$file->filename.'"');
-			header("Content-Transfer-Encoding: binary");              
-			ob_clean();
-  			flush(); 
-  			$fp = @fopen($fullpath,"rb");
-            			set_time_limit(0); 
-			fpassthru($fp);	// avoids file touch bug with readfile
-			fclose($fp); 							           			
+			if ($httpcode=="200") {			
+				header("Content-Length: $file->size");
+				header('Content-Disposition: inline; filename="'.$file->filename.'"');
+				header("Content-Transfer-Encoding: binary");              
+				ob_clean();
+  				flush(); 
+  				$fp = @fopen($fullpath,"rb");
+            				set_time_limit(0); 
+				fpassthru($fp);	// avoids file touch bug with readfile
+				fclose($fp);			
+			} 							           			
             		}		
 		exit();		
 	}	
 } else {
 	$im=@imagecreatetruecolor(1,1);
+	header("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
 	header("Content-type: image/png");
 	header("Content-Length: ".strlen($im));
 	imagepng($im);

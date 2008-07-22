@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.2
+Version: 0.1.5
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -13,6 +13,7 @@ Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
 */
 
 $bb_attachments['role']['see']="read"; 		 // minimum role to see list of attachments = read/participate/moderate/administrate
+$bb_attachments['role']['inline']="read";    // minimum role to view inline images = read/participate/moderate/administrate
 $bb_attachments['role']['download']="participate";  // minimum role to download = read/participate/moderate/administrate
 $bb_attachments['role']['upload']="participate";  // minimum role to upload = participate/moderate/administrate (times out with post edit time)
 $bb_attachments['role']['delete']="moderate";  // minimum role to delete = read/participate/moderate/administrate
@@ -39,6 +40,10 @@ $bb_attachments['max']['uploads']['moderate']=10;	// and again, this is optional
 $bb_attachments['max']['filename']['default']=40;	// maximum length of filename before auto-trim
 $bb_attachments['max']['filename']['administrate']=80;	// override
 
+$bb_attachments['inline']['width']=590;		// max inline image width in pixels (for display, real width unlimited)
+$bb_attachments['inline']['height']=590;		// max inline image height in pixels (for display, real height unlimited)
+$bb_attachments['inline']['solution']="resize";	// resize|frame - images can be either resized or CSS framed to meet above requirement
+									// only resize is supported at this time
 $bb_attachments['style']="#thread .post li {clear:none;}";
 
 // stop editing here (advanced user settings below)
@@ -60,6 +65,7 @@ $bb_attachments['status']=array("ok","deleted","failed","denied extension","deni
 
 add_action( 'bb_init', 'bb_attachments_init');
 add_action( 'bb_post.php', 'bb_attachments_process_post');
+add_filter( 'bb_allowed_tags', 'bb_attachments_extra_tags' );
 bb_register_activation_hook( __FILE__,  'bb_attachments_install');
 
 function bb_attachments_init() {
@@ -71,7 +77,8 @@ if (isset($_GET['bbat_delete'])) {bb_attachments_delete();}
 
 if (isset($_GET['bb_attachments'])) {
 	if (isset($_GET['bbat'])) {
-		bb_attachments_download();
+		if (isset($_GET['inline'])) {bb_attachments_inline();}
+		else {bb_attachments_download();}
 	} else { 
 		if (bb_attachments_location()!='edit.php') {
 			bb_repermalink();					
@@ -114,6 +121,8 @@ if (isset($_GET["new"]) || is_topic() || is_forum()) {
 
 function bb_attachments_add_css() { global $bb_attachments;  echo '<style type="text/css">'.$bb_attachments['style'].'</style>';} // inject css
 
+function bb_attachments_extra_tags( $tags ) {if (!isset($tags['img'])) {$tags['img'] = array('src' => array(), 'title' => array(), 'alt' => array());} return $tags;}
+
 function bb_attachments($post_id=0) {
 global $bb_attachments_on_page;
 if (isset($bb_attachments_on_page)) {return;} else {$bb_attachments_on_page=true;}	// only insert once per page -> pre 0.9.0.2
@@ -148,11 +157,13 @@ if ($post_id && ($bb_attachments['role']['see']=="read" || bb_current_user_can($
 	if ($bb_current_user->ID==get_post_author_id( $post_id )) {$self=true;}
 	if ((!is_topic() || isset($_GET['bb_attachments'])) && bb_current_user_can('moderate')) {$filter=""; $admin=bb_current_user_can('administrate');} 	 
 	if (bb_current_user_can($bb_attachments['role']['delete'])) {$can_delete=true;}
+	
+	$file = bb_attachments_location();	 $can_inline=true;
+	if (!($bb_attachments['role']['inline']=="read" || bb_current_user_can($bb_attachments['role']['inline']))) {$can_inline=false;}
 		
 	if (!isset($bb_attachments_cache[$post_id])) {
 		$bb_attachments_cache[$post_id]=$bbdb->get_results("SELECT * FROM bb_attachments WHERE post_id = $post_id ORDER BY time DESC LIMIT 999");
-	}		
-
+	}			
 
 	if (count($bb_attachments_cache[$post_id])) {
 		foreach ($bb_attachments_cache[$post_id] as $attachment) { 
@@ -190,12 +201,27 @@ if ($post_id && ($bb_attachments['role']['see']=="read" || bb_current_user_can($
 				if ($attachment->status==0 && $can_delete) {
 						$output.=' [<a onClick="return confirm('."'".__('Delete')." $attachment->filename ?"."'".')" href="'.add_query_arg('bbat_delete',$attachment->id).'">x</a>] ';
 				}
+
+				if ($attachment->status==0 && $file=="edit.php" && $can_inline) {								
+					$output.=" [<a href='#' onclick='bbatt_inline_insert($attachment->post_id,$attachment->id); return false;'>".__("INSERT")."</a>] ";				
+				}						
 	
 				$output.=" </span></li>";
 			}
 		}
 	}
 if ($output) {$output="<h3>".__("Attachments")."</h3><ol>".$output."</ol>";}
+if ($file="edit.php") {
+$output.='<scr'.'ipt type="text/javascript" defer="defer">function bbatt_inline_insert(post_id,id) {
+	myField=document.getElementsByTagName("textarea")[0];  
+	tmp="?bb_attachments="+post_id+"&bbat="+id; q="'."'".'";
+	myValue="<a href="+q+tmp+q+"><img src="+q+tmp+"&inline"+q+"></a>";	
+	if (document.selection) {myField.focus();sel = document.selection.createRange();sel.text = myValue;}
+	else if (myField.selectionStart || myField.selectionStart == "0") {var startPos = myField.selectionStart; var endPos = myField.selectionEnd;
+		myField.value = myField.value.substring(0, startPos)+ myValue+ myField.value.substring(endPos, myField.value.length);
+	} else {myField.value += myValue;}
+return false;} </script>';
+}
 }
 return $output;
 }
@@ -367,7 +393,85 @@ if ($filenum>0 && ($bb_attachments['role']['download']=="read" || bb_current_use
             		}		
 		exit();		
 	}	
-} else {echo "<script type='text/javascript'>alert('".__('Sorry, download is restricted.')."');</script>";}
+} else {echo "<scr"."ipt type='text/javascript'>alert('".__('Sorry, download is restricted.')."');</script>";}
+}
+
+function bb_attachments_inline($filenum=0) {
+global $bbdb, $bb_attachments;
+$filenum=intval($filenum);
+if ($filenum==0 && isset($_GET['bbat'])) {$filenum=intval($_GET['bbat']);}
+if ($filenum>0 && ($bb_attachments['role']['inline']=="read" || bb_current_user_can($bb_attachments['role']['inline']))) {
+	$file=$bbdb->get_results("SELECT * FROM bb_attachments WHERE id = $filenum AND status = 0 LIMIT 1");		
+	if (isset($file[0]) && $file[0]->id) {
+		$file=$file[0]; $file->filename=stripslashes($file->filename);				
+		$fullpath=$bb_attachments['path'].floor($file->id/1000)."/".$file->id.".".$file->filename;
+		if (file_exists($fullpath)) {				
+			if (!list($width, $height, $type) = getimagesize($fullpath)) {exit();} // not an image?!
+			$mime=image_type_to_mime_type($type); 	// lookup number to full string
+			$mime=trim(substr($mime,0,strpos($mime.";",";")));	// trim full string if necessary					
+			
+			if ($height>$bb_attachments['inline']['height'] || $width>$bb_attachments['inline']['width']) {
+				if (!file_exists($fullpath.".resize") && !bb_attachments_resize($fullpath,$type,$width,$height)) {exit();}		
+				$fullpath.=".resize";
+				$file->filename.=".resize";			
+				$file->size=filesize($fullpath);
+				if (!$file->size) {exit();}
+			}
+			
+			if (ini_get('zlib.output_compression')) {ini_set('zlib.output_compression', 'Off');}	// fix for IE
+			// header ("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
+			// header("Pragma: hack");
+			header("Content-Type: ".$mime);
+			header("Content-Length: $file->size");
+			header('Content-Disposition: inline; filename="'.$file->filename.'"');
+			header("Content-Transfer-Encoding: binary");              
+			ob_clean();
+  			flush(); 
+  			$fp = @fopen($fullpath,"rb");
+            			set_time_limit(0); 
+			fpassthru($fp);	// avoids file touch bug with readfile
+			fclose($fp); 							           			
+            		}		
+		exit();		
+	}	
+} else {
+	$im=@imagecreatetruecolor(1,1);
+	header("Content-type: image/png");
+	header("Content-Length: ".strlen($im));
+	imagepng($im);
+	imagedestroy($im);
+	exit();
+}
+}
+
+function bb_attachments_resize($filename, $type, $width, $height) {		
+global $bb_attachments;
+	switch($type) {
+	case IMAGETYPE_JPEG:
+		$img = imagecreatefromjpeg($filename); 	$save= 'imagejpeg'; break;
+	case IMAGETYPE_GIF:
+		$img = imagecreatefromgif($filename); $save='imagegif';  break;
+	case IMAGETYPE_PNG:			
+		$img = imagecreatefrompng($filename); 	$save_img = 'imagepng';  break;
+	default:		
+		return false;
+	}	
+	$scale_x=1; if ($width>$bb_attachments['inline']['width']) {$scale_x = $width/$bb_attachments['inline']['width'];}
+	$scale_y=1; if ($height>$bb_attachments['inline']['height']) {$scale_y = $height/$bb_attachments['inline']['height'];}
+	$scale=$scale_x; if ($scale_y>$scale_x) {$scale=$scale_y;};
+	if ($scale<=1) {return false;}	
+	$new_width = round(1/$scale * $width);
+	$new_height = round(1/$scale * $height);
+		
+	$output=$filename.".resize";		
+	if (!file_exists($output)) {
+		$new= imagecreatetruecolor($new_width, $new_height);
+		imagecopyresampled($new, $img, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+		$save($new, $output);
+		imagedestroy($new);
+	}
+	imagedestroy($img);		
+return true;		
 }
 
 function bb_attachments_delete($filenum=0) {

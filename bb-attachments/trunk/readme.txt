@@ -50,12 +50,12 @@ Please note there are important security considerations when allowing uploads of
 * 0.0.9	no longer necessary to edit `edit-post.php` template if using bbPress 0.9.0.2 or newer
 * 0.1.0	uploading now possible directly on new posts (instead of only attaching afterwards)
 * 0.1.1	role check before hooks, ability to disable upload on new posts if compatibility issues
+* 0.1.5 first attempt at inline image display ability
 	
 == To Do ==
 
 * map mime types to match extensions?
 * check for file duplicates before saving
 * thumbnails for image attachments
-* serving images inline rather than just downloading
 * pre-validate upload filenames via javascript to spare user upload time with rejection
 * admin menu

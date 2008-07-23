@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: BBcode Lite
-Plugin URI: http://bbpress.org/plugins/
+Plugin URI: http://bbpress.org/plugins/topic/93
 Description: A lightweight alternative to allow BBcode on your forum.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 1.01
+Version: 1.0.1
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 

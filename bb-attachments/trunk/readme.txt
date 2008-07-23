@@ -51,6 +51,7 @@ Please note there are important security considerations when allowing uploads of
 * 0.1.0	uploading now possible directly on new posts (instead of only attaching afterwards)
 * 0.1.1	role check before hooks, ability to disable upload on new posts if compatibility issues
 * 0.1.5 first attempt at inline image display ability
+* 0.1.6 BBcode replacement for inserted inline attachment
 	
 == To Do ==
 

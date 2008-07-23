@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.5
+Version: 0.1.6
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -65,7 +65,7 @@ $bb_attachments['status']=array("ok","deleted","failed","denied extension","deni
 
 add_action( 'bb_init', 'bb_attachments_init');
 add_action( 'bb_post.php', 'bb_attachments_process_post');
-add_filter( 'bb_allowed_tags', 'bb_attachments_extra_tags' );
+add_filter('post_text', 'bb_attachments_bbcode',250);	
 bb_register_activation_hook( __FILE__,  'bb_attachments_install');
 
 function bb_attachments_init() {
@@ -120,8 +120,6 @@ if (isset($_GET["new"]) || is_topic() || is_forum()) {
 }
 
 function bb_attachments_add_css() { global $bb_attachments;  echo '<style type="text/css">'.$bb_attachments['style'].'</style>';} // inject css
-
-function bb_attachments_extra_tags( $tags ) {if (!isset($tags['img'])) {$tags['img'] = array('src' => array(), 'title' => array(), 'alt' => array());} return $tags;}
 
 function bb_attachments($post_id=0) {
 global $bb_attachments_on_page;
@@ -205,7 +203,7 @@ if ($post_id && ($bb_attachments['role']['see']=="read" || bb_current_user_can($
 				if ($attachment->status==0 && $location=="edit.php" && $can_inline) {				
 					$fullpath=$bb_attachments['path'].floor($file->id/1000)."/".$attachment->id.".".$attachment->filename;
 					if (list($width, $height, $type) = getimagesize($fullpath)) {								
-						$output.=" [<strong><a href='#' onclick='bbatt_inline_insert($attachment->post_id,$attachment->id); return false;'>".__("INSERT")."</a></strong>] ";	
+						$output.=" [<strong><a href='#' onclick='bbat_inline_insert($attachment->post_id,$attachment->id); return false;'>".__("INSERT")."</a></strong>] ";	
 					}
 				}						
 	
@@ -215,10 +213,8 @@ if ($post_id && ($bb_attachments['role']['see']=="read" || bb_current_user_can($
 	}
 if ($output) {$output="<h3>".__("Attachments")."</h3><ol>".$output."</ol>";}
 if ($location="edit.php") {
-$output.='<scr'.'ipt type="text/javascript" defer="defer">function bbatt_inline_insert(post_id,id) {
-	myField=document.getElementsByTagName("textarea")[0];  
-	tmp="?bb_attachments="+post_id+"&bbat="+id; q="'."'".'";
-	myValue="<a href="+q+tmp+q+"><img src="+q+tmp+"&inline"+q+"></a>";	
+$output.='<scr'.'ipt type="text/javascript" defer="defer">function bbat_inline_insert(post_id,id) {
+	myValue="[attachment="+post_id+","+id+"]";
 	if (document.selection) {myField.focus();sel = document.selection.createRange();sel.text = myValue;}
 	else if (myField.selectionStart || myField.selectionStart == "0") {var startPos = myField.selectionStart; var endPos = myField.selectionEnd;
 		myField.value = myField.value.substring(0, startPos)+ myValue+ myField.value.substring(endPos, myField.value.length);
@@ -227,6 +223,11 @@ return false;} </script>';
 }
 }
 return $output;
+}
+
+function bb_attachments_bbcode($text) {
+$text = preg_replace("/\[attachment=([0-9]+?)\,([0-9]+?)\]/sim","<a href='?bb_attachments=$1&bbat=$2'><img src='?bb_attachments=$1&bbat=$2&inline'></a>",$text);
+return $text;
 }
 
 function bb_attachments_process_post($post_id=0,$display=0) {

@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/110
 Description: Adds icons next to your topic (and forum) titles automatically based on keywords or special topic status such as sticky, support question, has poll, etc.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.3
+Version: 0.0.4
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -27,8 +27,8 @@ $topic_icons['forums']=array(	// keyword group to show based on forum number as 
 	"1" => "bbpress",		// to get a list of your forums by number when this plugin is active: add   ?forumlist to your url
 	"2" => "plugin",		// if you don't want this feature, just remove these entries or comment them out with /*    */
 	"3" => "plugin",	
- 	"5" => "wordpress",
- 	"4" => "theme"
+ 	"5" => "theme",
+ 	"4" => "wordpress"
 );					
 
 $topic_icons['graphics']=array(		// graphics to assign to keyword groups (now you must specify extension)
@@ -49,7 +49,7 @@ $topic_icons['style']=".topic_icons {width:16px; height:16px; text-decoration:no
 
 /*	stop editing here	*/
 
-$topic_icons['url']=bb_get_option('uri').trim(str_replace(BBPATH,'',dirname(__FILE__)),' /\\').'/icons/';   ;	// bb_get_active_theme_uri()."images/icons/";
+$topic_icons['url']=bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),"\\"),array("","/"),dirname(__FILE__)),' /\\').'/icons/'; 
 
 add_action('bb_init','topic_icons_init');
 
@@ -58,8 +58,8 @@ if ($topic_icons['style']) {add_action('bb_head', 'topic_icons_add_css');}
 if ($topic_icons['automatic']) { // in_array(bb_get_location(),array('front-page','forum-page', 'tag-page','search-page','favorites-page','profile-page','view-page'))) {
 	$bb_location=bb_get_location();
 	if ($bb_location!='feed-page') {
-	add_filter( 'forum_name', 'forum_icon_automatic',9,2);
-	if ($bb_location!='topic-page') {add_filter( 'topic_title', 'topic_icon_automatic',9,2);}
+		add_filter( 'forum_name', 'forum_icon_automatic',9,2);
+		if ($bb_location!='topic-page') {add_filter( 'topic_title', 'topic_icon_automatic',9,2);}
 	}
 }
 

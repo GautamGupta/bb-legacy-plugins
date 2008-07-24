@@ -38,6 +38,10 @@ Demo: http://bbshowcase.org/forums/
 
 * in the plugin change the top to `$topic_icons['automatic']=false;` (from true). Note that making your own column manually will turn off automatic insertion anyway.
 
+= How do I know what forum number to use for forum icons? =
+
+* put `?forumlist` at the end of your url (must be logged in as keymaster)
+
 == License ==
 
 * CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
@@ -51,6 +55,14 @@ Demo: http://bbshowcase.org/forums/
 = Version 0.0.1 (2008-05-09) =
 
 * first public release
+
+= Version 0.0.3 (2008-05-12) =
+
+* now can specify icons for forums as a fallback (or primary by removing other rules)
+
+= Version 0.0.4 (2008-07-24) =
+
+* IIS bug fix
 
 == To Do ==
 

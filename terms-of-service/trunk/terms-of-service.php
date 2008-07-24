@@ -3,7 +3,7 @@
 Plugin Name: Terms of Service
 Plugin URI:  http://bbpress.org/plugins/topic/117
 Description:  Adds a "Terms of Service" (aka TOS) agreement to your registration page (and can optionally be linked to directly).
-Version: 0.0.2
+Version: 0.0.3
 Author: _ck_
 Author URI: http://bbshowcase.org
 
@@ -24,7 +24,7 @@ if (isset($_GET['terms_of_service']) || isset($_GET['terms-of-service'])) {	// c
 function terms_of_service() {	// show the form
 	echo '<fieldset><legend>'.__("Terms of Service").'</legend>'
 	.'<div id="terms_of_service" style="padding:0.5em 1em 1em 1em; margin:0em 3em; background: #eee; color: #000; overflow:auto; height:7em;">';	
-	@readfile(dirname(__FILE__).'/terms-of-service.html');
+	@readfile(rtrim(dirname(__FILE__),' /\\').'/terms-of-service.html');	 
 	echo '</div><table width="100%"><tr class="required"><th scope="row" nowrap><sup class="required">*</sup> '.__("I understand and agree:").'</th><td width="72%">'
 	.'<input name="terms_of_service" type="checkbox" id="terms_of_service" value="agree" style="vertical-align:middle;width:1.40em;height:1.40em; margin-top:4px;" />'
 	.'</td></tr></table></fieldset>';	
@@ -42,7 +42,7 @@ function terms_of_service_get() {
 	<div class="indent">
 	<h2 id="register"><?php _e('Terms of Service'); ?></h2>		
 	<div id="terms_of_service" style="padding:0.5em 1em 1em 1em; margin:0em 3em; background: #eee; color: #000;">	
-	<?php 	@readfile(dirname(__FILE__).'/terms-of-service.html');
+	<?php @readfile(rtrim(dirname(__FILE__),' /\\').'/terms-of-service.html');
 	echo '</div></div>';
 	bb_get_footer(); 
 	exit();	

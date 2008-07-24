@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.6
+Version: 0.1.7
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -53,7 +53,8 @@ $bb_attachments['path']=dirname($_SERVER['DOCUMENT_ROOT'])."/bb-attachments/";  
 $bb_attachments['upload_on_new']=true;	// allow uploads directly on new posts (set FALSE if incompatible for some reason)
 
 $bb_attachments['icons']=array('default'=>'default.gif','bmp'=>'img.gif','doc'=>'doc.gif','gif'=>'img.gif','gz'=>'zip.gif','jpeg'=>'img.gif','jpg'=>'img.gif','pdf'=>'pdf.gif','png'=>'img.gif','txt'=>'txt.gif','xls'=>'xls.gif','zip'=>'zip.gif');
-$bb_attachments['icons']['url']=bb_get_option('uri').trim(str_replace(BBPATH,'',dirname(__FILE__)),' /\\').'/icons/'; 
+
+$bb_attachments['icons']['url']=bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),"\\"),array("","/"),dirname(__FILE__)),' /\\').'/icons/'; 
 
 $bb_attachments['title']=" <img title='attachments' border='0' align='absmiddle' src='".$bb_attachments['icons']['url'].$bb_attachments['icons']['default']."' />"; // text, html or image to show on topic titles if has attachments
 

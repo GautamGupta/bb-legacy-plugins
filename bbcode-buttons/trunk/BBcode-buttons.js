@@ -1,4 +1,6 @@
-window.attachEvent('onload', BBcodeButtonsToolbar());
+if (window.attachEvent) {window.attachEvent("onload", BBcodeButtonsToolbar);} 
+else if (window.addEventListener) {window.addEventListener("load", BBcodeButtonsToolbar, false);} 
+else {document.addEventListener("load", BBcodeButtonsToolbar, false);}
 
 function BBcodeButtonsToolbar() {
 myField = document.getElementsByTagName("textarea")[0];  

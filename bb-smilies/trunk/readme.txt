@@ -1,0 +1,48 @@
+=== bbPress Smilies  ===
+Tags: smilies, smileys, emoticons, _ck_
+Contributors: _ck_
+Requires at least: 0.8.2
+Tested up to: trunk
+Stable tag: trunk
+Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+
+Adds clickable smilies (emoticons) to bbPress.  No template edits required. Streamlined for low overhead. Uses swappable icon sets.
+
+== Description ==
+
+Adds clickable smilies (emoticons) to bbPress.  No template edits required. Streamlined for low overhead. Uses swappable icon sets.
+
+Builds on work by Alex King (WP Grins) and Matt Read (More Smilies).
+
+== Installation ==
+
+* Add entire folder `bb-smilies` to bbPress' `my-plugins/` directory and activate.
+
+== Frequently Asked Questions ==
+
+= Where can I get different smilies? =
+
+* BB-Smilies uses the smilies packages from "More Smilies" by Matt Read (and continued by Ricardo González)
+Extract the other sets from "Smilies Themer" http://downloads.wordpress.org/plugin/smilies-themer.zip
+or the older "More Smilies" http://downloads.wordpress.org/plugin/more-smilies.zip
+Or build your own. Just make sure you follow the style in `package-config.php`
+
+== License ==
+
+* CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
+
+== Donate ==
+
+* http://amazon.com/paypage/P2FBORKDEFQIVM
+
+== History ==
+
+= Version 0.0.1 (2008-07-24) =
+
+* first public alpha release
+
+== To Do ==
+
+* ajax-ish behaviors
+
+*  more smilies sets

@@ -66,15 +66,14 @@ echo "';
 } // bb_smilies_init
 
 function bb_smilies_panel() {
-	if (bb_smilies_clicker.style.visibility!='hidden') {bb_smilies_clicker.style.visibility='hidden';} 
-	else {	
+	if (bb_smilies_clicker.style.visibility!='visible') {	
 	// var obj = bb_smilies_textarea; var pos = {x: obj.offsetLeft||0, y: obj.offsetTop||0};	
 	// while(obj = obj.offsetParent) { pos.x += obj.offsetLeft||0; pos.y += obj.offsetTop||0; }		
 	// bb_smilies_clicker.style.left = pos.x + 'px';  
 	// bb_smilies_clicker.style.top = pos.y + 'px';	
 	bb_smilies_clicker.style.left =  (bb_smilies_textarea.offsetLeft + bb_smilies_textarea.offsetWidth) - (3 + bb_smilies_clicker.offsetWidth + bb_smilies_toggle.offsetWidth) + 'px'; 
 	bb_smilies_clicker.style.visibility='visible';		
-	}  
+	} else {bb_smilies_clicker.style.visibility='hidden';}  
 }
 
 if (window.attachEvent) {window.attachEvent('onload', bb_smilies_init);} 

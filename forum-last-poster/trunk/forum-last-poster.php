@@ -10,15 +10,15 @@ Version: 0.0.1
 
 function forum_last_poster($id=0) {topic_last_poster(forum_last_topic_id($id));}
 
-function get_forum_last_poster($id=0) {get_topic_last_poster(forum_last_topic_id($id));}
+function get_forum_last_poster($id=0) {return get_topic_last_poster(forum_last_topic_id($id));}
 
 function forum_time($id=0) {topic_time(forum_last_topic_id($id));}
 
-function get_forum_time($id=0) {get_topic_time(forum_last_topic_id($id));}
+function get_forum_time($id=0) {return get_topic_time(forum_last_topic_id($id));}
 
 function forum_last_post_link($id=0) {forum_last_post_link(forum_last_topic_id($id));}
 
-function get_forum_last_post_link($id=0) {get_forum_last_post_link(forum_last_topic_id($id));}
+function get_forum_last_post_link($id=0) {return get_forum_last_post_link(forum_last_topic_id($id));}
 
 function forum_last_topic_id($id = 0) {
 global $forums_last_topic_id, $forum, $bbdb; 

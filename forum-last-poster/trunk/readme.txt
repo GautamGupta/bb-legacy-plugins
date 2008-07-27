@@ -74,4 +74,4 @@ High performance: requires only a single extra query regardless of the number of
 
 == To Do ==
 
-* pretty much finished unless there are any requests / feedback
+* instead of "expensive" mysql lookup for every page load, data could be stored upon every new post or deletion - since bbPress 1.0 will have meta for forums (0.9 does not) I will look at this again later

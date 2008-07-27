@@ -6,13 +6,13 @@ Tested up to: trunk
 Stable tag: trunk
 Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
 
-Adds forum_last_poster, forum_time() and other functions to bbPress to mimic the topic tables' freshness columns. Requires simple template edits.
+Adds `forum_last_poster()` `forum_time()` and other functions to bbPress to mimic the topic tables' FRESHNESS column. Requires simple template edits.
 
 == Description ==
 
-Adds forum_last_poster, forum_time() and other functions to bbPress to mimic the topic tables' freshness columns. Requires simple template edits.
+Adds `forum_last_poster()` `forum_time()` and other functions to bbPress to mimic the topic tables' FRESHNESS column. Requires simple template edits.
 
-Requires only a single extra query regardless of the number of forums lists (when topics are on same page).
+High performance: requires only a single extra query regardless of the number of forums listed (when topics are on same page).
 
 == Installation ==
 

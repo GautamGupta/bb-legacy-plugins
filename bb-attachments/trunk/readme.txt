@@ -54,6 +54,7 @@ Please note there are important security considerations when allowing uploads of
 * 0.1.6 BBcode replacement for inserted inline attachment
 * 0.1.7 bug squashed for IIS ?
 * 0.1.8 workaround for lack of apache_request_headers, javascript insert bug
+* 0.1.9 handle missing inline images a bit better with "x" icon
 	
 == To Do ==
 

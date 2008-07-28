@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.8
+Version: 0.1.9
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -44,7 +44,7 @@ $bb_attachments['inline']['width']=590;		// max inline image width in pixels (fo
 $bb_attachments['inline']['height']=590;		// max inline image height in pixels (for display, real height unlimited)
 $bb_attachments['inline']['solution']="resize";	// resize|frame - images can be either resized or CSS framed to meet above requirement
 									// only resize is supported at this time
-$bb_attachments['style']="#thread .post li {clear:none;}";
+$bb_attachments['style']=".bb_attachments_link, .bb_attachments_link img {border:0; text-decoration:none;} #thread .post li {clear:none;}";
 
 // stop editing here (advanced user settings below)
 
@@ -55,6 +55,7 @@ $bb_attachments['upload_on_new']=true;	// allow uploads directly on new posts (s
 $bb_attachments['icons']=array('default'=>'default.gif','bmp'=>'img.gif','doc'=>'doc.gif','gif'=>'img.gif','gz'=>'zip.gif','jpeg'=>'img.gif','jpg'=>'img.gif','pdf'=>'pdf.gif','png'=>'img.gif','txt'=>'txt.gif','xls'=>'xls.gif','zip'=>'zip.gif');
 
 $bb_attachments['icons']['url']=bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),"\\"),array("","/"),dirname(__FILE__)),' /\\').'/icons/'; 
+$bb_attachments['icons']['path']=rtrim(dirname(__FILE__),' /\\').'/icons/'; 
 
 $bb_attachments['title']=" <img title='attachments' border='0' align='absmiddle' src='".$bb_attachments['icons']['url'].$bb_attachments['icons']['default']."' />"; // text, html or image to show on topic titles if has attachments
 
@@ -171,7 +172,8 @@ if ($post_id && ($bb_attachments['role']['see']=="read" || bb_current_user_can($
 				$attachment->filename=stripslashes($attachment->filename);
 				$output.="<li>"; 
 				$output.="<span".(($attachment->status>0) ? " class='deleted' ": "")."> "; 
-				if (isset($bb_attachments['icons'][$attachment->ext])) {$icon=$bb_attachments['icons'][$attachment->ext];} else {$icon=$bb_attachments['icons']['default'];}
+				if ($attachment->status>0) {$icon="missing.gif";}
+				else {if (isset($bb_attachments['icons'][$attachment->ext])) {$icon=$bb_attachments['icons'][$attachment->ext];} else {$icon=$bb_attachments['icons']['default'];}}
 				$output.=" <img align='absmiddle' title='".$attachment->ext."' src='".$bb_attachments['icons']['url'].$icon."' /> ";
 				
 				if ($attachment->status>0 && (empty($filter) || $showerror)) {					
@@ -229,7 +231,7 @@ return $output;
 }
 
 function bb_attachments_bbcode($text) {
-$text = preg_replace("/\[attachment=([0-9]+?)\,([0-9]+?)\]/sim","<a href='?bb_attachments=$1&bbat=$2'><img src='?bb_attachments=$1&bbat=$2&inline'></a>",$text);
+$text = preg_replace("/\[attachment=([0-9]+?)\,([0-9]+?)\]/sim","<a class='bb_attachments_link' href='?bb_attachments=$1&bbat=$2'><img  src='?bb_attachments=$1&bbat=$2&inline'></a>",$text);
 return $text;
 }
 
@@ -445,20 +447,29 @@ if ($filenum>0 && ($bb_attachments['role']['inline']=="read" || bb_current_user_
   				$fp = @fopen($fullpath,"rb");
             				set_time_limit(0); 
 				fpassthru($fp);	// avoids file touch bug with readfile
-				fclose($fp);			
+				fclose($fp);
+				exit();			
 			} 							           			
-            		}		
-		exit();		
-	}	
-} else {
-	$im=@imagecreatetruecolor(1,1);
-	header("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
-	header("Content-type: image/png");
-	header("Content-Length: ".strlen($im));
-	imagepng($im);
-	imagedestroy($im);
-	exit();
+            		} else {	bb_attachments_inline_missing();}						
+	} else {	bb_attachments_inline_missing();}	
+} else {	bb_attachments_inline_missing();}
 }
+
+function bb_attachments_inline_missing() {
+global $bb_attachments;
+	$missing=$bb_attachments['icons']['path']."missing.gif";
+	header("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
+	header("Content-Type: image/gif");
+	header("Content-Length: ".filesize($missing));
+	header('Content-Disposition: inline; filename="missing.gif"');
+	header("Content-Transfer-Encoding: binary");              
+	ob_clean();
+	flush(); 
+	$fp = @fopen($missing,"rb");
+	set_time_limit(0); 
+	fpassthru($fp);	// avoids file touch bug with readfile
+	fclose($fp);				
+	exit();
 }
 
 function bb_attachments_resize($filename, $type, $width, $height) {		

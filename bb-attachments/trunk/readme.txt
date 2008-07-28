@@ -52,6 +52,8 @@ Please note there are important security considerations when allowing uploads of
 * 0.1.1	role check before hooks, ability to disable upload on new posts if compatibility issues
 * 0.1.5 first attempt at inline image display ability
 * 0.1.6 BBcode replacement for inserted inline attachment
+* 0.1.7 bug squashed for IIS ?
+* 0.1.8 workaround for lack of apache_request_headers, javascript insert bug
 	
 == To Do ==
 

@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.7
+Version: 0.1.8
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -213,13 +213,15 @@ if ($post_id && ($bb_attachments['role']['see']=="read" || bb_current_user_can($
 		}
 	}
 if ($output) {$output="<h3>".__("Attachments")."</h3><ol>".$output."</ol>";}
-if ($location="edit.php") {
-$output.='<scr'.'ipt type="text/javascript" defer="defer">function bbat_inline_insert(post_id,id) {
-	myValue="[attachment="+post_id+","+id+"]";
-	if (document.selection) {myField.focus();sel = document.selection.createRange();sel.text = myValue;}
-	else if (myField.selectionStart || myField.selectionStart == "0") {var startPos = myField.selectionStart; var endPos = myField.selectionEnd;
-		myField.value = myField.value.substring(0, startPos)+ myValue+ myField.value.substring(endPos, myField.value.length);
-	} else {myField.value += myValue;}
+if ($location=="edit.php") {
+$output.='<scr'.'ipt type="text/javascript" defer="defer">
+	function bbat_inline_insert(post_id,id) {
+	bbat_field = document.getElementsByTagName("textarea")[0];
+	bbat_value="[attachment="+post_id+","+id+"]";
+	if (document.selection) {bbat_field.focus(); sel = document.selection.createRange();sel.text = bbat_value;}
+	else if (bbat_field.selectionStart || bbat_field.selectionStart == "0") {var startPos = bbat_field.selectionStart; var endPos = bbat_field.selectionEnd;
+		bbat_field.value = bbat_field.value.substring(0, startPos)+ bbat_value+ bbat_field.value.substring(endPos, bbat_field.value.length);
+	} else {bbat_field.value += bbat_value;}
 return false;} </script>';
 }
 }
@@ -423,10 +425,11 @@ if ($filenum>0 && ($bb_attachments['role']['inline']=="read" || bb_current_user_
 				if (!$file->size) {exit();}
 			}
 			
-			$headers = apache_request_headers();
+			// $headers = apache_request_headers();  $ifModifiedSince=$headers['If-Modified-Since'];
+			$ifModifiedSince = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? stripslashes($_SERVER['HTTP_IF_MODIFIED_SINCE']) : false;
 			$filemtime=filemtime($fullpath);
 			$httpcode="200";
-			if (isset($headers['If-Modified-Since']) && (strtotime($headers['If-Modified-Since']) == $filemtime)) {$httpcode="304";}      				
+			if ($ifModifiedSince && (strtotime($ifModifiedSince) >= $filemtime)) {$httpcode="304";}      				
 			if (ini_get('zlib.output_compression')) {ini_set('zlib.output_compression', 'Off');}	// fix for IE
 			header('Last-Modified: '.gmdate('D, d M Y H:i:s', $filemtime).' GMT', true, $httpcode);
 			header("Cache-Control: Public");

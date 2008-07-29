@@ -250,8 +250,9 @@ function post_count_plus_initialize() {
 }	
 
 function post_count_plus_user_cache() {
-	global $post_count_plus, $topics, $stickies;
-	if (in_array(bb_get_location(),array('front-page','forum-page', 'tag-page','search-page','favorites-page','profile-page','view-page'))) {
+	global $post_count_plus, $topics, $stickies, $super_stickies;
+	if (in_array(bb_get_location(),array('front-page','forum-page', 'tag-page','search-page','favorites-page','profile-page','view-page'))) {	
+		if ( $super_stickies ) {foreach ( $super_stickies as $topic ) { $ids[$topic->topic_last_poster]=$topic->topic_last_poster; }}
 		if ( $stickies ) {foreach ( $stickies as $topic ) { $ids[$topic->topic_last_poster]=$topic->topic_last_poster; }}
 		if ( $topics ) {foreach ( $topics as $topic ) { $ids[$topic->topic_last_poster]=$topic->topic_last_poster; }} 
 		if (isset($ids)) {bb_cache_users($ids);}

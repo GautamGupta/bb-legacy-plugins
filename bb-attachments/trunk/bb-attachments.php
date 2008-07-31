@@ -44,7 +44,7 @@ $bb_attachments['inline']['width']=590;		// max inline image width in pixels (fo
 $bb_attachments['inline']['height']=590;		// max inline image height in pixels (for display, real height unlimited)
 $bb_attachments['inline']['solution']="resize";	// resize|frame - images can be either resized or CSS framed to meet above requirement
 									// only resize is supported at this time
-$bb_attachments['style']=".bb_attachments_link, .bb_attachments_link img {border:0; text-decoration:none;} #thread .post li {clear:none;}";
+$bb_attachments['style']=".bb_attachments_link, .bb_attachments_link img {border:0; text-decoration:none; background:none;} #thread .post li {clear:none;}";
 
 // stop editing here (advanced user settings below)
 
@@ -57,7 +57,7 @@ $bb_attachments['icons']=array('default'=>'default.gif','bmp'=>'img.gif','doc'=>
 $bb_attachments['icons']['url']=bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),"\\"),array("","/"),dirname(__FILE__)),' /\\').'/icons/'; 
 $bb_attachments['icons']['path']=rtrim(dirname(__FILE__),' /\\').'/icons/'; 
 
-$bb_attachments['title']=" <img title='attachments' border='0' align='absmiddle' src='".$bb_attachments['icons']['url'].$bb_attachments['icons']['default']."' />"; // text, html or image to show on topic titles if has attachments
+$bb_attachments['title']=" <img class='bb_attachments_link' title='attachments' align='absmiddle' src='".$bb_attachments['icons']['url'].$bb_attachments['icons']['default']."' />"; // text, html or image to show on topic titles if has attachments
 
 $bb_attachments['max']['php_upload_limit']=min(bb_attachments_l2n(ini_get('post_max_size')), bb_attachments_l2n(ini_get('upload_max_filesize'))); // internal php upload limit - only edit if you know what you are doing
 

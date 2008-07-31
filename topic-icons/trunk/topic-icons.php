@@ -45,7 +45,7 @@ $topic_icons['graphics']=array(		// graphics to assign to keyword groups (now yo
 	"unresolved" => "flag_red.png"
 );
 
-$topic_icons['style']=".topic_icons {width:16px; height:16px; text-decoration:none; border: 0; padding: 1px; vertical-align: text-top;}";
+$topic_icons['style']=".topic_icons {width:16px; height:16px; text-decoration:none; border: 0; padding: 1px; vertical-align: text-top; background:none;}";
 
 /*	stop editing here	*/
 

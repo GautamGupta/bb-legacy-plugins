@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/110
 Description: Adds icons next to your topic (and forum) titles automatically based on keywords or special topic status such as sticky, support question, has poll, etc.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.4
+Version: 0.0.5
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -27,7 +27,7 @@ $topic_icons['forums']=array(	// keyword group to show based on forum number as 
 	"1" => "bbpress",		// to get a list of your forums by number when this plugin is active: add   ?forumlist to your url
 	"2" => "plugin",		// if you don't want this feature, just remove these entries or comment them out with /*    */
 	"3" => "plugin",	
- 	"5" => "theme",
+ 	"5" => "theme",		// example where order doesn't matter
  	"4" => "wordpress"
 );					
 
@@ -68,12 +68,13 @@ global $bb_current_user;
 	if ((isset($_GET['listforums']) || isset($_GET['forumlist'])) && 'keymaster'==@reset($bb_current_user->roles)) {echo "<h2>Forum List</h2>"; foreach (get_forums() as $forum) {echo "$forum->forum_id -> $forum->forum_name <br><br>";} exit();}
 }
 
-function forum_icon_automatic($name,$id) {if (forum_icon(true,$id)) {echo " ";} return $name;}
 function topic_icon_automatic($title,$id) {if (topic_icon(true,$id)) {echo " ";} return $title;}
+function forum_icon_automatic($name,$id) {if (forum_icon(true,$id)) {echo " ";} return $name;}
 
 function topic_icon($automatic=false,$id=0) {
 global $topic_icons,$topic;		// print " <!-- "; print_r($topic); print " --> ";	// diagnostic
-if ($id && (!isset($topic->topic_id) || $topic->topic_id!=$id) ) {$topic=get_topic($id);}	// handles searches albeit with too many queries - needs fix
+	if ($id && (!isset($topic->topic_id) || $topic->topic_id!=$id) ) {$topic=get_topic($id);}	// handles searches albeit with too many queries - needs fix
+	elseif (!$id && isset($topic->topic_id)) {$id=$topic->topic_id;}
 	if ($automatic==false && $topic_icons['automatic']) {
 		remove_filter( 'forum_name', 'forum_icon_automatic',9); 
 		remove_filter( 'topic_title', 'topic_icon_automatic',9);
@@ -87,7 +88,7 @@ if ($id && (!isset($topic->topic_id) || $topic->topic_id!=$id) ) {$topic=get_top
 		if ($topic->topic_resolved=="no") {echo topic_icons_graphic("unresolved");}
 	}
 	else {	// no topic icon found, check for forum icon fallback
-		global $topic; if ($topic->ID==$id) {$forum_id=$topic->forum_id;} else {$temp=get_topic($id); $forum_id=$temp->forum_id;}
+		if ($topic->topic_id==$id) {$forum_id=$topic->forum_id;} else {$temp=get_topic($id); $forum_id=$temp->forum_id;}
 		if ($temp=topic_icons_forum($forum_id))  {echo $temp;} 
 		else {return false;} // nope, nothing found
 	}
@@ -97,6 +98,7 @@ return true;
 
 function forum_icon($automatic=false,$id=0) {
 global $topic_icons,$forum;
+	if (!$id && isset($forum->forum_id)) {$id=$forum->forum_id;}
 	if ($automatic==false && $topic_icons['automatic']) {
 		remove_filter( 'forum_name', 'forum_icon_automatic',9); 
 		remove_filter( 'topic_title', 'topic_icon_automatic',9);

@@ -5,7 +5,7 @@ Description: Allows you to see a detailed history of exactly what has been chang
 Plugin URI: http://bbpress.org/plugins/topic/102
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.1
+Version: 0.0.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -49,8 +49,10 @@ foreach ($edit_history as $edit) {
 	</p>
 </div>		
 <div class="threadpost">
-	<div class="post"><?php  echo apply_filters( 'post_text', edit_history_visual($bb_post->post_text, $newer), $bb_post->post_id); ?></div>
-	<div class="poststuff"><?php printf( __('Edited %s ago'), bb_since($edit->time) ); ?></div>
+	<?php $link=get_user_name($edit->user_id); //  user_profile_link($id) ?>
+	<div><span style="background:#eeee00;">&nbsp;<?php printf( __('Edited %s ago by %s'), bb_since($edit->time), $link); ?>&nbsp;</span></div>
+	<div class="post"><?php  echo balanceTags(apply_filters( 'post_text', edit_history_visual($bb_post->post_text, $newer), $bb_post->post_id),true); ?></div>
+	<div class="poststuff"><?php printf( __('Edited %s ago by %s'), bb_since($edit->time), $link); ?></div>
 </div>
 </li>
 <?php
@@ -77,7 +79,7 @@ if ($post_id) {$new = $bbdb->get_var("SELECT post_text FROM $bbdb->posts WHERE p
 $old=$bb_post->post_text;
 if ($post_id && $post_id==$bb_post->post_id && $new && $old != $new) {
 $old=edit_history_split($old); $new=edit_history_split($new);
-$time=time(); $user_ip=$GLOBALS["HTTP_SERVER_VARS"]["REMOTE_ADDR"]; $user_id=bb_get_current_user_info( 'id' );
+$time=time(); $user_ip=$_SERVER["REMOTE_ADDR"]; $user_id=bb_get_current_user_info( 'id' );
 $diff=addslashes(serialize(edit_history_trim_diff(edit_history_diff($old,$new)))); // looks so simple eh? not!
 @$bbdb->query("INSERT INTO bb_edit_history ( `time`  , `post_id` , `user_id`, `user_ip`, `diff` ) VALUES ('$time', '$post_id' ,  '$user_id' , inet_aton('$user_ip') , '$diff')");
 }
@@ -128,13 +130,15 @@ function edit_history_diff($old, $new) {
 
 function edit_history_visual($old, $new) {
 	$diff = edit_history_diff(edit_history_split($old),edit_history_split($new));
+	// echo "<code>"; print_r($diff); echo "</code>";
 	foreach($diff as $k){
 		if (is_array($k)) {
 			$d=(!empty($k['d'])?implode(' ',$k['d']):'');
 			$i=(!empty($k['i'])?implode(' ',$k['i']):'');
-			if ($d && $i && substr($d,-6)=="<br />" && substr($i,-6)=="<br />") {$d=substr($d,0,-6);}
-			$ret .= (!empty($d)?"<del style='background:#ffdddd;'>$d</del> ":'').
-				(!empty($i)?"<ins style='background:#ddFFdd;'>$i</ins> ":'');
+			if ($d && $i && str_replace("</p>","",$d)==str_replace("</p>","",$k['i'][0])) {$ret.=$k['i'][0]; unset($d); unset($k['i'][0]); $i=implode(' ',$k['i']);}	
+			if ($d && $i && substr($d,-6)=="<br />" && substr($i,-6)=="<br />") {$d=substr($d,0,-6);}			
+			$ret .= (!empty($d)?"<del style='background:#ffdddd;'>".str_replace("<p>","</del><p><del style='background:#ffdddd;'>",$d)."</del> ":'').
+				(!empty($i)?"<ins style='text-decoration:none; background:#ddFFdd;'>".str_replace("<p>","</ins><p><ins style='text-decoration:none; background:#ddFFdd;'>",$i)."</ins> ":'');			
 		} else { $ret .= $k . ' ';}
 	}
 	return $ret;

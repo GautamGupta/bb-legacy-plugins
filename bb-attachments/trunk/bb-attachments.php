@@ -231,7 +231,7 @@ return $output;
 }
 
 function bb_attachments_bbcode($text) {
-$text = preg_replace("/\[attachment=([0-9]+?)\,([0-9]+?)\]/sim","<a class='bb_attachments_link' href='?bb_attachments=$1&bbat=$2'><img  src='?bb_attachments=$1&bbat=$2&inline'></a>",$text);
+$text = preg_replace("/\[attachment=([0-9]+?)\,([0-9]+?)\]/sim","<a class='bb_attachments_link' href='?bb_attachments=$1&bbat=$2'><img  src='?bb_attachments=$1&bbat=$2&inline' /></a>",$text);
 return $text;
 }
 

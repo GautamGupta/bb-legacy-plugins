@@ -129,7 +129,7 @@ $found=post_count_plus_find_title($user_id,$posts,$days,$role);
 if ($found) { 
 	$title=$post_count_plus['custom_titles'][$found];
 	$color=$post_count_plus['custom_titles'][$found+4];
-	if ($color) {$title="<font color='$color'>$title</font>";}
+	if ($color) {$title="<span style='color:$color;'>$title</span>";}
 }
 return $title;
 }
@@ -140,7 +140,7 @@ global $post_count_plus;
 	if ($post_count_plus['user_color']) {		
 		$found=post_count_plus_find_title($user_id);		
 		$color=$post_count_plus['custom_titles'][$found+4];
-		if ($color) {$user_name="<span class='post_count_plus'><font color='$color'>$user_name</font></span>";}
+		if ($color) {$user_name="<span class='post_count_plus' style='color:$color;'>$user_name</span>";}
 	}
 // }
 return $user_name;
@@ -148,7 +148,7 @@ return $user_name;
 
 function post_count_plus_delete_link_cleanup($r,$post_status,$post_id) {	// nasty fix for nasty mess that ajaxPostDelete creates
 if (strpos($r,'ajaxPostDelete')!==false && strpos($r,'post_count_plus')!==false) {
-$r=preg_replace("/(.*?)<span class\='post\_count\_plus'><font color\='.*?'>(.*?)<\/font><\/span>(.*?)/i","\${1}\${2}\${3}",$r);
+$r=preg_replace("/(.*?)<span class\='post\_count\_plus' style\='.*?'>(.*?)<\/span>(.*?)/i","\${1}\${2}\${3}",$r);
 }
 return $r;
 }

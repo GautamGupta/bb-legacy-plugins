@@ -127,7 +127,7 @@ return $temp;
 
 function topic_icons_graphic($keyword) {
 global $topic_icons;
-return "<img class='topic_icons' title='$keyword' alt='$keyword' src='".$topic_icons['url'].$topic_icons['graphics'][$keyword]."'>";
+return "<img class='topic_icons' title='$keyword' alt='$keyword' src='".$topic_icons['url'].$topic_icons['graphics'][$keyword]."' />";
 }
 
 function topic_icons_add_css() { global $topic_icons;  echo '<style type="text/css">'.$topic_icons['style'].'</style>';} // inject css

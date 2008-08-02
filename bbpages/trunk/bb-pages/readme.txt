@@ -20,14 +20,22 @@ This plugin allows you to create, edit and delete static pages within your bbPre
 
 == Frequently Asked Questions ==
 
--Question: Does the plugin support MultiViews and pretty permalinks?
+Question: Does the plugin support MultiViews and pretty permalinks?
 Answer: Nope, not yet, but I'm working on it. If you know how to make this "support" possible, please contact me :).
 
--Q: How do I create a link to my page?
+Q: How do I create a link to my page?
 A: Notice the ID number of your page, then use the following "syntax": `http://domain.com/page.php?page_id=X`, where 'X' is your page ID.
 
--Q: How do I change how my page looks like?
+Q: How do I change how my page looks like?
 A: Look for 'page.php' within your template folder. You can change the look there. Look below for plugin API.
+
+== Plugin API ==
+
+- < ?php isset_id(); ? > - returns true if $_GET['page_id'] equals 1 or more; return false if $_GET['page_id'] equals 0 or none;
+- < ?php page_exist(); ? > - returns true if page with $_GET['page_id'] exist in database;
+- < ?php get_page_title(); ? > - returns page_title from database, use 'echo' to display it;
+- < ?php get_page_content(); ? > - returns page_content from database, use 'echo' to display it;
+- < ?php get_page_slug(); ? > - returns page_slug from database, use 'echo' to display it;
 
 == TO DO ==
 

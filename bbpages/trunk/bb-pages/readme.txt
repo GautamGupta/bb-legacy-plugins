@@ -15,29 +15,19 @@ This plugin allows you to create, edit and delete static pages within your bbPre
 3. Move 'page.php' from `root` folder to your bbpress root directory (where your bb-config.php is located)
 4. Move 'page.php' from `template` folder to your template folder (e.g. 'kakumei')
 5. Go to your administration panel and activate plugin.
-6. Go to tab 'Manage Pages' and click 'Create new page' - fill it with date and save changes.
+6. Go to the 'Manage Pages' tab and click 'Create new page' - fill it with data and save changes.
 7. You're ready :).
 
 == Frequently Asked Questions ==
 
-Q: Does the plugin support MultiViews and pretty permalinks?
-A: Nope, not yet, but I'm working on it. If you know how to make this "support" possible, please contact me :).
+-Question: Does the plugin support MultiViews and pretty permalinks?
+Answer: Nope, not yet, but I'm working on it. If you know how to make this "support" possible, please contact me :).
 
-Q: How do I create a link to my page?
-A: Notice the ID number of your page, then use the following "syntax":
-	<a href="http://domain.com/page.php?page_id=X">PUT YOUR TITLE HERE</a>
-Where 'X' is your page ID.
+-Q: How do I create a link to my page?
+A: Notice the ID number of your page, then use the following "syntax": `http://domain.com/page.php?page_id=X`, where 'X' is your page ID.
 
-Q: How do I change how my page looks like?
+-Q: How do I change how my page looks like?
 A: Look for 'page.php' within your template folder. You can change the look there. Look below for plugin API.
-
-== Plugin API ==
-
-<?php isset_id(); ?> - returns true if $_GET['page_id'] equals 1 or more; return false if $_GET['page_id'] equals 0 or none;
-<?php page_exist(); ?> - returns true if page with $_GET['page_id'] exist in database;
-<?php get_page_title(); ?> - returns page_title from database, use 'echo' to display it;
-<?php get_page_content(); ?> - returns page_content from database, use 'echo' to display it;
-<?php get_page_slug(); ?> - returns page_slug from database, use 'echo' to display it;
 
 == TO DO ==
 

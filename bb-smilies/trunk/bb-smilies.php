@@ -5,7 +5,7 @@ Description:  Adds clickable smilies (emoticons) to bbPress.  No template edits 
 Plugin URI:  http://bbpress.org/plugins/topic/121
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.1
+Version: 0.0.2
 */
 
 $bb_smilies['icon_set']="default";  // change this to the exact directory name (case sensitive) if you want to switch icon package sets
@@ -89,10 +89,13 @@ function bb_smilies_convert($text) {
 global $bb_smilies;
 @include($bb_smilies['icon_path']."package-config.php");
 
+$counter=0;  // filter out all backtick code first
+if (preg_match_all("|\<code\>(.*?)\<\/code\>|sim", $text, $backticks)) {foreach ($backticks[0] as $backtick) {++$counter; $text=str_replace($backtick,"_bb_smilies_".$counter."_",$text);}}
+
+
 foreach($wp_smilies as $smiley => $img) { 
 	$bb_smilies_search[] = $smiley;
 	$bb_smilies_replace[] = ' <img src="'. $bb_smilies['icon_url'] . $img .'" title="'. htmlspecialchars(trim($smiley), ENT_QUOTES) .'" class="bb_smilies" /> ';
-
 }
 
 $prep_search = array_map('bb_smilies_prep', $bb_smilies_search);	
@@ -104,6 +107,9 @@ for ($i = 0; $i < $stop; $i++) {
 	if ((strlen($content) > 0) && ('<' != $content{0})) {$content = preg_replace($prep_search, $bb_smilies_replace, $content);}
 	$output .= $content;
 }
+
+// undo backticks
+if ($counter) {$counter=0; foreach ($backticks[0] as $backtick)  {++$counter; $output=str_replace("_bb_smilies_".$counter."_",$backtick,$output);}}	
 
 return $output;
 }

@@ -41,6 +41,10 @@ Or build your own. Just make sure you follow the style in `package-config.php`
 
 * first public alpha release
 
+= Version 0.0.2 (2008-08-03) =
+
+* ignores smilies inside `<code></code>` tags (backticks)
+
 == To Do ==
 
 * ajax-ish behaviors

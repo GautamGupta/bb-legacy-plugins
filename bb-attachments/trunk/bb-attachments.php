@@ -63,6 +63,9 @@ $bb_attachments['max']['php_upload_limit']=min(bb_attachments_l2n(ini_get('post_
 
 $bb_attachments['status']=array("ok","deleted","failed","denied extension","denied mime","denied size","denied count","denied duplicate","denied dimensions");
 
+$bb_attachments['errors']=array("ok","uploaded file exceeds UPLOAD_MAX_FILESIZE in php.ini","uploaded file exceeds MAX_FILE_SIZE in the HTML form",
+"uploaded file was only partially uploaded","no file was uploaded","temporary folder missing","failed to write file to disk","file upload stopped by PHP extension");
+
 // really stop editing!
 
 add_action( 'bb_init', 'bb_attachments_init');
@@ -258,10 +261,10 @@ while(list($key,$value) = each($_FILES['bb_attachments']['name'])) {
 		
 		// don't trust these, check after upload $_FILES['bb_attachments']['type']   $_FILES['bb_attachments']['size']			
 		
-		$filename=trim(str_replace($strip,'_',stripslashes($value)));	// sanitize filename further ???		
+		$filename=trim(str_replace($strip,'_',stripslashes($value)));	// sanitize filename further ???	
 			
-		if (intval($_FILES['bb_attachments']['error'][$key])==0) {
-			
+		if (intval($_FILES['bb_attachments']['error'][$key])==0 && $_FILES['bb_attachments']['size'][$key]>0) {		
+		
 			$ext = (strrpos($filename, '.')===false) ? "" : trim(strtolower(substr($filename, strrpos($filename, '.')+1)));
 						
 			if (strlen($filename)>$maxlength) {$filename=substr($filename,0,$maxlength-strlen($ext)+1).".".$ext;}	// fix filename length
@@ -325,7 +328,8 @@ while(list($key,$value) = each($_FILES['bb_attachments']['name'])) {
 		else {$status=2;}
 		if ($status>0) {
 			if ($id>0) {$bbdb->query("UPDATE  bb_attachments SET `status` = $status WHERE `id` = $id");}
-			$output.="<li><span style='color:red'><strong>$filename "." <span class='num'>(".round($size/1024,1)." KB)</span> ".__('error:')." ".$bb_attachments['status'][$status]."</strong></span></li>";
+			$error=""; if ($_FILES['bb_attachments']['error'][$key]>0) {$error=" (".$bb_attachments['errors'][$_FILES['bb_attachments']['error'][$key]].") ";}
+			$output.="<li><span style='color:red'><strong>$filename "." <span class='num'>(".round($size/1024,1)." KB)</span> ".__('error:')." ".$bb_attachments['status'][$status]."</strong>$error</span></li>";
 		} else {$output.="<li><span style='color:green'><strong>$filename "." <span class='num'>(".round($size/1024,1)." KB)</span> ".__('successful')."</strong></span></li>";}
 	} // end !$empty
 } // end while

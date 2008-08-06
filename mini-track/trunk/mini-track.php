@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/130
 Description: A simple way to count and track both members and non-members as they move around your forum.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.1
+Version: 0.0.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -23,14 +23,19 @@ function mini_track($display=0) {
 global $mini_track_done, $bb_current_user; 
 if (isset($mini_track_done)) {return;} $mini_track_done=true; // only run once if manually called
 $mini_track=bb_get_option('mini_track');
-$ip=ip2long($_SERVER["REMOTE_ADDR"]);	// this has some limitations and bugs but is a good enough shortcut for now
+$users=0; $members=0; $onpage=0; $names=""; $index="";
+$index=ip2long($_SERVER["REMOTE_ADDR"]);	// this has some limitations and bugs - disable if you use the next two lines 
+/*
+// more advanced indexing technique on the next two lines - disabled by default for speed
+$indexlist=array('REMOTE_ADDR','HTTP_USER_AGENT','HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_FORWARDED_FOR','HTTP_FORWARDED','HTTP_VIA', 'HTTP_X_COMING_FROM', 'HTTP_COMING_FROM'); 
+foreach ($indexlist as $check) {if (isset($_SERVER[$check])) {$index.=$_SERVER[$check];}} $index=md5($index);
+*/
 $url=addslashes(urlencode($_SERVER["REQUEST_URI"]));	// this also has some issues with dynamic url cruft but is acceptable
-$mini_track[$ip]->location=$url;
-$mini_track[$ip]->member=$bb_current_user->ID;
-$mini_track[$ip]->name=$bb_current_user->data->user_login;
-$mini_track[$ip]->time=time()-1217548800;	// the subtraction is to keep the number small since it's serialized and not stored integer
+$mini_track[$index]->location=$url;
+$mini_track[$index]->member=$bb_current_user->ID;
+$mini_track[$index]->name=$bb_current_user->data->user_login;
+$mini_track[$index]->time=time()-1217548800;	// the subtraction is to keep the number small since it's serialized and not stored integer
 $cutoff=(time()-1217548800)-30*60; 	// seconds to consider user "online" :: 30 minute default, reduce if desired
-$users=0; $members=0; $onpage=0; $names="";
 $bb_uri=bb_get_option('uri'); $profile=$bb_uri."profile.php?id=";
 foreach ($mini_track as $key=>$value) { if ($value->time<$cutoff) {unset($mini_track[$key]);}
 else {$users++; if ($value->member) {$members++; $names.="<a href='$profile$value->member'>$value->name</a>, ";} if ($value->location==$url) {$onpage++;}}}

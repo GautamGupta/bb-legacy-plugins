@@ -57,10 +57,11 @@ function mini_track($display=0) {
 global $mini_track_options, $mini_track_done, $bb_current_user; 
 
 if (isset($mini_track_done)) {return;} $mini_track_done=true; // only run once if manually called
-if ($mini_track_options['automatic_in_footer']) {$display=1;}
-if ($mini_track_options['show_names_in_footer']) {$display=2;}
-if ($display && $mini_track_options['show_only_on_front_page'] && !is_front()) {$display=0;}
-
+if (empty($display)) {
+	if ($mini_track_options['automatic_in_footer']) {$display=1;}
+	if ($mini_track_options['show_names_in_footer']) {$display=2;}
+	if ($display && $mini_track_options['show_only_on_front_page'] && !is_front()) {$display=0;}
+}
 $mini_track=bb_get_option('mini_track');
 $users=0; $members=0; $bots=0; $onpage=0; $names=""; $index="";
 
@@ -82,7 +83,7 @@ if ($bb_current_user->ID) {$mini_track[$index]->name=$bb_current_user->data->use
 elseif (eregi($mini_track_options['bots'],$_SERVER['HTTP_USER_AGENT'])) {$mini_track[$index]->bot=1;}	// detect/save bots
 
 $bb_uri=bb_get_option('uri'); $profile=$bb_uri."profile.php?id=";
-$cutoff=time()-$mini_track_options['track_time']*60; 	// seconds to consider user "online" :: 30 minute default, reduce if desired
+$cutoff=time()-$mini_track_options['track_time']*60; 	// seconds to consider user "online" 
 
 foreach ($mini_track as $key=>$value) { 
 if ($value->time<$cutoff) {

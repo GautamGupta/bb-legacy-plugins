@@ -65,6 +65,10 @@ That will make all options load at once when bbPress starts.
 
 * first public alpha release
 
+= Version 0.0.5 (2008-08-06) =
+
+* bunch of new features including online status in posts, last online time in profile, bot tracking
+
 == To Do ==
 
 * internationalization 

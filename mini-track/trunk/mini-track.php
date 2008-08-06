@@ -40,7 +40,7 @@ $mini_track[$index]->time=time();
 $mini_track[$index]->location=$url;
 $mini_track[$index]->member=$bb_current_user->ID;
 if ($bb_current_user->ID) {$mini_track[$index]->name=$bb_current_user->data->user_login;}
-elseif (eregi($user_track['bots'],$_SERVER['HTTP_USER_AGENT'])) {$mini_track[$index]->bot=1;}
+elseif (eregi($bots,$_SERVER['HTTP_USER_AGENT'])) {$mini_track[$index]->bot=1;}
 
 $cutoff=time()-30*60; // seconds to consider user "online" :: 30 minute default, reduce if desired
 $bb_uri=bb_get_option('uri'); $profile=$bb_uri."profile.php?id=";
@@ -73,6 +73,7 @@ echo "<div style='float:right;'>[<a href='$bb_url?mini_track_reset'><small>reset
 mini_track(1); 
 echo "<br clear=both>";
 $mini_track=bb_get_option('mini_track');
+$mini_track=array_reverse($mini_track,true);
 foreach ($mini_track as $key=>$value) {
 $url=urldecode($value->location);
 if ($value->member) echo "<a href='$profile$value->member'>$value->name</a>";

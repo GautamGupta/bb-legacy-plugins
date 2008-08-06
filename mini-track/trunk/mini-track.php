@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/130
 Description: A simple way to count and track both members and non-members as they move around your forum.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.4
+Version: 0.0.5
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -100,9 +100,12 @@ return $titlelink;
 }
 
 function mini_track_profile_key($keys) {	// inserts post_count into profile without hacking
-global $self; 
+global $self, $user, $bb_user_cache;  // nasty trick
 if (empty($self)==true && isset($_GET['tab'])==false && bb_get_location()=="profile-page") {
-	(array) $keys=array_merge(array_slice((array) $keys, 0 , 1), array('mini_track' => array(0, __('Last Online'))), array_slice((array) $keys,  1));    
+	$bb_user_cache[$user->ID]->last_online="<span title='".$bb_user_cache[$user->ID]->mini_track."'>".bb_since($bb_user_cache[$user->ID]->mini_track,1).__(' ago ')."</span>";
+	if (mini_track_online()) {$bb_user_cache[$user->ID]->last_online.=" (<span class='mini_track_online'>".__("online")."</span>)";} 
+	else {$bb_user_cache[$user->ID]->last_online.=" (<span class='mini_track_offline'>".__("offline")."</span>)";} 
+	(array) $keys=array_merge(array_slice((array) $keys, 0 , 1), array('last_online' => array(0, __('Last Online'))), array_slice((array) $keys,  1));    
 }
 return (array) $keys;
 }

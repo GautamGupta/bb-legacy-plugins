@@ -1,5 +1,5 @@
 === Mini Track  ===
-Tags: statistics, tracking, online,_ck_
+Tags: statistics, track, tracking, online, onlinelist, _ck_
 Contributors: _ck_
 Requires at least: 0.9
 Tested up to: trunk

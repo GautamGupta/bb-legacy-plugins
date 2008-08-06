@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/65
 Description: Prints simple benchmarks and mysql diagnostics, hidden in page footers for administrators. Based on Jerome Lavigne's Query Diagnostics for WordPress.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.2.0
+Version: 0.2.1
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -28,6 +28,7 @@ History:
 0.18	: add hook to admin panel for plugin admin testing
 0.19	: bug fix to hide output in some different situations
 0.2.0	: bug fix when checking BB_IS_ADMIN
+0.2.1	: set priority to dead last so ALL queries are tracked in bb_foot, another BB_IS_ADMIN bug
 */
 
 function bb_benchmark_output() {
@@ -35,7 +36,7 @@ if (bb_current_user_can( 'administrate' ) )  :
 		$timer_stop=bb_timer_stop(0);	
 		global $bbdb;	        	
 		
-	if (defined('BB_IS_ADMIN')) {echo '<div style="margin-top:-0.9em;text-align:center;">'.$bbdb->num_queries." queries </div>";}
+	if (defined('BB_IS_ADMIN') && BB_IS_ADMIN) {echo '<div style="margin-top:-0.9em;text-align:center;">'.$bbdb->num_queries." queries </div>";}
         	
     	echo " <!-- \n === benchmark & query results === \n\n"; 
 	    	    	  		   	    	       	
@@ -90,7 +91,7 @@ if (bb_current_user_can( 'administrate' ) )  :
 
 endif;	
 }
-add_action('bb_foot', 'bb_benchmark_output');
+add_action('bb_foot', 'bb_benchmark_output',999);
 add_action('bb_admin_footer', 'bb_benchmark_output');
 
 // global $bb_current_user;  if ($bb_current_user->data->bb_capabilities['keymaster']) :

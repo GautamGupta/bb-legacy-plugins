@@ -27,6 +27,7 @@ $mini_track_options['show_only_on_front_page'] = false;
 $mini_track_options['last_online_in_profile'] = true;
 $mini_track_options['online_status_in_post'] = true;
 $mini_track_options['fast_index'] = false;			// false tracks NAT/proxy users better, true = faster IP only
+$mini_track_options['track_time'] = 30; 	// minutes
 $mini_track_options['display_refresh_time'] = 30; 	// seconds
 
 $mini_track_options['style']="
@@ -81,7 +82,7 @@ $mini_track[$index]->member=$bb_current_user->ID;
 if ($bb_current_user->ID) {$mini_track[$index]->name=$bb_current_user->data->user_login;}
 elseif (eregi($mini_track_options['bots'],$_SERVER['HTTP_USER_AGENT'])) {$mini_track[$index]->bot=1;}	// detect/save bots
 
-$cutoff=time()-30*60; // seconds to consider user "online" :: 30 minute default, reduce if desired
+$cutoff=time()-$mini_track_options['track_time']*60; // seconds to consider user "online" :: 30 minute default, reduce if desired
 $bb_uri=bb_get_option('uri'); $profile=$bb_uri."profile.php?id=";
 foreach ($mini_track as $key=>$value) { 
 if ($value->time<$cutoff) {

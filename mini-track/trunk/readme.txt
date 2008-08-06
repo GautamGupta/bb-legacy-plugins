@@ -11,21 +11,18 @@ A simple way to count and track both members and non-members as they move around
 == Description ==
 
 A simple way to count and track both members and non-members as they move around your forum.
-Now shows online status in posts and last online time in profiles and can determine most bots.
+Now automatically shows online status in posts and last online time in profiles and can detect most bots.
 
 This plugin now inserts itself into the footer automatically, no template edits required unless you want custom placement.
-You can see a list of users and locations by going to  `your-forum-url.com/?mini_track_display`
+You can see the real-time tracking at  `your-forum-url.com/?mini_track_display`
 
-The core of this plugin was written in 15 minutes to demonstrate how easy it is to write plugins for bbPress.
-(It is meant as a temporary substitute until the full "User Track" plugin is released much later this year.)
-
-If you upgrade from an old version you need to use the RESET link in the mini-track display panel.
+If you upgrade from an old version you need to use the RESET link in the tracking display.
 
 == Installation ==
 
 * Install `mini-track.php` to  `my-plugins/` and activate
 
-* Edit options (true/false) at the top of the plugin until an admin menu is made
+* Edit options (true / false) at the top of the plugin until an admin menu is made
 
 *  This plugin now inserts itself into the footer automatically, no template edits required unless you want custom placement.
 If you want CUSTOM placement, edit your `footer.php` template (or other template) to add  the info like so:
@@ -62,6 +59,11 @@ That will make all options load at once when bbPress starts.
 If it's a problem for anyone, you could take the md5 of the IP plus the User Agent plus any proxy headers and use that as an index instead. I didn't do that by default because it would be considerably slower and doubles the size of the key (and serialized string).
 
 The md5 technique is now used by default. You can disable it if you want and use the old IP method at the expense of missing multiple NAT/proxy visitors.
+
+= It's missing this or that feature ... =
+
+* The core of this plugin was written in 15 minutes to demonstrate how easy it is to write plugins for bbPress.
+(It is meant as a temporary substitute until the full "User Track" plugin is released much later this year.)
 
 == License ==
 

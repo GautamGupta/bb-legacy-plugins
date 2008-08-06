@@ -66,3 +66,7 @@ Output includes current server load, page render vs mysql query time, slowest qu
 = Version 0.2.0 (2008-04-16) =
 
 * 0.2.0	: bug fix when checking BB_IS_ADMIN
+
+= Version 0.2.1 (2008-08-06) =
+
+* 0.2.1	: set priority to dead last so ALL queries are tracked in bb_foot, another BB_IS_ADMIN bug

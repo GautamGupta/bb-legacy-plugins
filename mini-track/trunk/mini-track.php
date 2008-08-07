@@ -165,5 +165,5 @@ return (array) $keys;
 
 function mini_track_style() {global $mini_track_options; echo "<style type='text/css'>".$mini_track_options['style']."</style>"; }
 
-function mini_track_activation() {bb_update_option('mini_track','');}
+function mini_track_activation() {bb_update_option('mini_track',array());}
 ?>

@@ -115,14 +115,15 @@ if (!bb_current_user_can('administrate')) {return;}
 global $mini_track_options;
 $bb_uri=bb_get_option('uri'); $profile=$bb_uri."profile.php?id=";
 if (isset($_GET['mini_track_reset'])) {@bb_update_option('mini_track','');}
-echo '<html><head><meta http-equiv="refresh" content="'.$mini_track_options['display_refresh_time'].';url='.$bb_uri.'?mini_track_display" />
+$mini_track=bb_get_option('mini_track');
+echo '<html><head><title>'.count($mini_track).' Users Online &laquo; '.bb_get_option('name').'</title>
+<meta http-equiv="refresh" content="'.$mini_track_options['display_refresh_time'].';url='.$bb_uri.'?mini_track_display" />
 <style>table {border:1px solid #111;} table td {text-align:center;} table .link {text-align:left;} table th.link {padding-left:5em;}
 table th {background: #aaa;} .alt {background: #eee;} .time {font-size:85%;} .bot {color:red;} .guest {color:green;} </style></head><body>';
 echo "<div style='float:right;'>[<a href='$bb_url?mini_track_reset'><small>reset</small></a>]</div>";
 mini_track(1); 
 echo "<br clear=both /><br /><table width='99%' cellpadding=1 cellspacing=1>
 <tr class=alt><th>#</th><th>user</th><th>pages</th><th>last activity</th><th class=link>last URL</th></tr>";
-$mini_track=bb_get_option('mini_track');
 $mini_track=array_reverse($mini_track,true);
 $counter=0;
 foreach ($mini_track as $key=>$value) {

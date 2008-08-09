@@ -42,6 +42,8 @@ or if you only want it on the front page you can do it like this: `<?php if (is_
 
 * If you upgrade from an old version you need to use the RESET link in the mini-track display panel.
 
+* If you see repeats of the same IP's in the real-time display, that means the user is going through a proxy. Some bots like yahoo's slurp will connect to your site many times in a row from the same external IP, but a different computer in their network: Mini-Track can detect and follow this.
+
 = Does this slow down my website? =
 
 * I highly recommend you put this line in your `bb-config.php`
@@ -83,6 +85,16 @@ The md5 technique is now used by default. You can disable it if you want and use
 
 * bunch of new features including online status in posts, last online time in profile, bot tracking
 
+= Version 0.0.9 (2008-08-09) =
+
+* bug fixes for last online, IP tracked/displayed + IP lookup, bots recorded/displayed by agent
+
 == To Do ==
 
+* store time online per member in profile ++(first seen - last seen)
+
 * internationalization 
+
+* geoip
+
+* convert to real db table instead of meta

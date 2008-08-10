@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/133
 Description:  Allows all settings, including hidden options to be edited in the admin control panel. Works exactly like the (little-known) WordPress feature. 
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.1
+Version: 0.0.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 

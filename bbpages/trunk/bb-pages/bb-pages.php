@@ -78,14 +78,19 @@ function list_pages() {
 	$table_name = $bbdb->prefix . "pages";
 		$query = $bbdb->get_results("SELECT * FROM $table_name ORDER BY page_order ASC");
 
+	$status = array(
+		0 => 'Draft',
+		1 => 'Published'
+	);
+
 	foreach ($query as $rk) {
 		echo '
 			<tr>
 				<td>'.$rk->page_id.'</td>
 				<td>'.$rk->page_title.'</td>
 				<td>'.$rk->page_date.'</td>
-				<td>'.$rk->page_status.'</td>
-				<td><a href="admin-base.php?plugin=pages_panel&act=edit&id='.$rk->page_id.'">Edit</a> | <a href="admin-base.php?plugin=pages_panel&act=delete&id='.$rk->page_id.'">Delete</a></td>
+				<td>'.$status[$rk->page_status].'</td>
+				<td><a href="admin-base.php?plugin=pages_panel&act=edit&id='.$rk->page_id.'">Edit</a> | <a href="admin-base.php?plugin=pages_panel&act=delete&id='.$rk->page_id.'">Delete</a> | <a href="'.bb_get_option('uri').'/page.php?page_id='.$rk->page_id.'">View</a></td>
 			</tr>
 		';
 	}
@@ -98,9 +103,7 @@ function pages_panel() {
 	{
 		default:
 			?>
-				<h2>Manage Static Pages</h2>
-
-				<a href="admin-base.php?plugin=pages_panel&act=add">Create new page</a>
+				<h2>Manage Static Pages <small>(<a class="submit" href="admin-base.php?plugin=pages_panel&act=add">Create new page</a>)</small></h2>
 
 				<table class="widefat">
 				<thead>
@@ -120,7 +123,9 @@ function pages_panel() {
 				
 	<h3>Please support the developer</h3>
 	
-	Do you like this plugin? Do you find it useful? Please donate few dollars so I could keep developing it further and further, and add a lot of great functions such as MultiViews support or WYSIWYG editor. Even the smallest help is greatly appreciated!
+	<img src="http://astateofmind.eu/uploads/donation.gif" style="margin-right:10px" border="0" align="left" />
+	
+	Do you like this plugin? Do you find it useful? If so, please donate few dollars so I could keep develop this plugin and others further and further. Even the smallest help is greatly appreciated for a student in Poland ;). <br /><br />
 	
 	<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 	
@@ -141,6 +146,8 @@ function pages_panel() {
 	<input type="submit" name="submit" value="Donate with PayPal!" alt="PayPal - The safer, easier way to pay online!">
 	<img alt="" border="0" src="https://www.paypal.com/pl_PL/i/scr/pixel.gif" width="1" height="1">
 	</form>
+	
+	<p>Want to know what I'm developing right now? <a href="http://twitter.com/t_thion/">Follow me on Twitter</a>, ignore 90% of stuff and learn a lot you will ;). And thank you for using my plugin!</p>
 	
 			<?php	
 		break;
@@ -168,23 +175,41 @@ function pages_panel() {
 			}
 			?>
 
-			<form method="post">
-				<fieldset><legend>Page title (slug will be created automatically)</legend>
-				<input name="page_title" id="page_title" type="text" class="text-input" value="" size="50" /></fieldset>
-
-				<fieldset><legend>Page content</legend>
-				<textarea name="page_content" id="page_content" rows="20" cols="80" ></textarea></fieldset>
+			<h2>Add new page</h2>
 			
-				<fieldset><legend>Page order (type numbers here)</legend>
-				<input name="page_order" id="page_order" type="text" class="text-input" value="" size="10" /></fieldset>
+			<form class="settings" method="post">
+			
+				<fieldset>
+					<div>
+						<label for="page_title">
+							Page title			</label>
+						<div>
+							<input name="page_title" id="page_title" type="text" class="text long" />
+							<p>Page slug will be created automatically (don't worry, it's not useful for anything yet).</p>
+						</div>
+					</div>
+					
+					<div>
+						<label for="page_order">
+							Page order			</label>
+						<div>
+							<input name="page_order" id="page_order" type="text" class="text long" />
+						</div>
+					</div>
+					
+					<div>
+						<label for="page_content">
+							Page content			</label>
+						<div>
+							<textarea name="page_content" id="page_content" rows="20" cols="80" ></textarea>
+						</div>
+					</div>
 
-				<fieldset><legend>Save page as:</legend>
-				<select name="page_status" id="page_status" onChange="this.options[this.selectedIndex].value">
-					<option value="0">Draft</option>
-					<option value="1">Published</option>
-				</select></fieldset>
+				<input type="hidden" name="page_status" value="1" />
+				<input type="hidden" name="page_id" value="<?php echo $_GET['id']; ?>" />
+				</fieldset>
 				
-				<input type="submit" name="add_page" value="<?php _e('Add page', 'add_page') ?>" />
+				<input type="submit" class="submit" name="add_page" value="<?php _e('Add page', 'add_page') ?>" />
 			</form>
 			
 			<?php
@@ -224,25 +249,39 @@ function pages_panel() {
 			?>
 			<h2>Edit page</h2>
 			
-			<form method="post">
-				<fieldset><legend>Page title (slug will be created automatically)</legend>
-				<input name="page_title" id="page_title" type="text" class="text-input" value="<?php echo "$title"; ?>" size="50" /></fieldset>
-
-				<fieldset><legend>Page content</legend>
-				<textarea name="page_content" id="page_content" rows="20" cols="80" ><?php echo "$content"; ?></textarea></fieldset>
+			<form class="settings" method="post">
 			
-				<fieldset><legend>Page order (type numbers here)</legend>
-				<input name="page_order" id="page_order" type="text" class="text-input" value="<?php echo "$order"; ?>" size="10" /></fieldset>
+				<fieldset>
+					<div>
+						<label for="page_title">
+							Page title			</label>
+						<div>
+							<input name="page_title" id="page_title" type="text" class="text long" value="<?php echo "$title"; ?>" />
+							<p>Page slug will be created automatically (don't worry, it's not useful for anything yet).</p>
+						</div>
+					</div>
+					
+					<div>
+						<label for="page_order">
+							Page order			</label>
+						<div>
+							<input name="page_order" id="page_order" type="text" class="text long" value="<?php echo "$order"; ?>" size="10" />
+						</div>
+					</div>
+					
+					<div>
+						<label for="page_content">
+							Page content			</label>
+						<div>
+							<textarea name="page_content" id="page_content" rows="20" cols="80" ><?php echo "$content"; ?></textarea>
+						</div>
+					</div>
 
-				<fieldset><legend>Save page as:</legend>
-				<select name="page_status" id="page_status" onChange="this.options[this.selectedIndex].value">
-					<option value="0">Draft</option>
-					<option value="1">Published</option>
-				</select></fieldset>
-				
+				<input type="hidden" name="page_status" value="1" />
 				<input type="hidden" name="page_id" value="<?php echo $_GET['id']; ?>" />
+				</fieldset>
 				
-				<input type="submit" name="save_page" value="<?php _e('Save page', 'save_page') ?>" />
+				<input type="submit" class="submit" name="save_page" value="<?php _e('Save page', 'save_page') ?>" />
 			</form>
 			
 			<?php

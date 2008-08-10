@@ -1,6 +1,8 @@
-=== bbPages 0.0.1 ===
-Tested up to: 0.9.2
-Licence: GPL
+=== bbPages ===
+Tags: static pages, pages, page
+Contributors: F.Thion
+Tested up to: 1.0-dev
+Donate link: http://astateofmind.eu/about/support/
 
 Allows you to create static pages within your bbPress forum.
 
@@ -51,4 +53,10 @@ Below you can see a list of things I'm going to do when people will enjoy this p
 
 == Plugin History ==
 
-0.0.1 - Initial release (August 2, 2008) - basic features: add, edit, delete and display pages.
+0.0.2 - (August 10th, 2008) - minor fixes to management interface:
+- Added "view" button to page actions;
+- Status selection menu deleted, plugin is not supporting drafts yet;
+- Changed page statuses from numbers (0, 1) to words (Draft, Published);
+- Few classes and divs added, to make sure it will look cool under bbPress 1.0;
+
+0.0.1 - Initial release (August 2nd, 2008) - basic features: add, edit, delete and display pages.

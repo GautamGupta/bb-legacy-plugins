@@ -58,6 +58,10 @@ Please be aware that misuse of this plugin can break your bbPress install entire
 
 * first public release
 
+= Version 0.0.2 (2008-08-10) =
+
+* array merge error fix, hardcoded bb_get_options displayed, 1.0 alpha compatibility fix for new bb_meta 
+
 == To Do ==
 
 * display CONSTANTS currently in use (may require PHP > 5.0 )

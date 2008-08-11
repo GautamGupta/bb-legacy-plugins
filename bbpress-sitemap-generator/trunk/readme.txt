@@ -4,11 +4,11 @@ Requires at least: 1.0
 Tested up to: trunk
 Stable tag: trunk
 
-A plugin that can Generate an XML SiteMap based on the topics, posts and tags present in a bbPress forum. All users are welcome to improve on it :p
+A plugin that can generate an XML SiteMap based on the topics, posts and tags present in a bbPress forum. All users are welcome to improve on it :p
 
 == Description ==
 
-A plugin that can Generate an XML SiteMap based on the topics, posts and tags present in a bbPress forum. All users are welcome to improve on it :p
+A plugin that can generate an XML SiteMap based on the topics, posts and tags present in a bbPress forum. All users are welcome to improve on it :p
 
 See the original thread: http://bbpress.org/forums/topic/sitemap-generator
 

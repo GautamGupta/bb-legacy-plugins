@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: BBpress Username Extended
+Plugin Name: bbPress Username Extended
 Plugin URI: http://www.howtogeek.com
-Description: Users can be use a username with other forbidden characters like "."  All users are welcome to improve on it :P
+Description: Users can be use a username with other forbidden characters like "."  All users are welcome to improve on it :p
 Author: The Geek & Frederic Petit
 Author URI: http://www.howtogeek.com/
 Version: 0.0.2

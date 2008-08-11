@@ -18,6 +18,8 @@ You can see the real-time tracking at  `your-forum-url.com/?mini_track_display`
 
 If you upgrade from an old version you need to use the RESET link in the tracking display.
 
+This plugin is now bbPress 1.0 compatible.
+
 == Installation ==
 
 * Install `mini-track.php` to  `my-plugins/` and activate
@@ -29,12 +31,20 @@ If you want CUSTOM placement, edit your `footer.php` template (or other template
 `
 	<div id="footer">
 		<?php mini_track(1); ?>
+		<?php mini_track_statistics(); ?>
 		<p><?php printf(__('%1$s is proudly powered by <a href="%2$s">bbPress</a>.'), bb_option('name'), "http://bbpress.org") ?></p>
 	</div>
 
 `
 * With non-automatic placement, if you also want a list of the member names, use `<?php mini_track(2); ?>`
 or if you only want it on the front page you can do it like this: `<?php if (is_front() ) {mini_track(1);} ?>` or you can put it anywhere in `front-page.php` that you'd like.
+
+* Mini-Track can now show some basic statistics in your footer, or with manual placement anywhere on the page via `<?php mini_track_statistics(); ?>`
+
+* it is highly recommend you put this line in your `bb-config.php`  which will help with database performance on active forums by loading all  bbPress options at once instead of piecemeal
+`
+$bb->load_options = true;
+`
 
 == Frequently Asked Questions ==
 
@@ -89,7 +99,21 @@ The md5 technique is now used by default. You can disable it if you want and use
 
 * bug fixes for last online, IP tracked/displayed + IP lookup, bots recorded/displayed by agent
 
+= Version 0.1.0 (2008-08-11) =
+
+* more bots detected, including spoofing/steath bots that use regular user agents
+
+* remote IP lookup at RIPE (click IP in tracking display)
+
+* referer from remote site tracked upon entry
+
+* statistics of topics/posts and members
+
 == To Do ==
+
+* total online today
+
+* online today by name
 
 * store time online per member in profile ++(first seen - last seen)
 

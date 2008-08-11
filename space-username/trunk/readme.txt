@@ -1,14 +1,14 @@
-=== BBpress Username Extended ===
+=== bbPress Username Extended ===
 Contributors: Frédéric Petit & The Geek
 Requires at least: 1.0
 Tested up to: trunk
 Stable tag: trunk
 
-Users can be use a username with other forbidden characters like "."  All users are welcome to improve on it :P
+Users can be use a username with other forbidden characters like "."  All users are welcome to improve on it :p
 
 == Description ==
 
-Users can be use a username with other forbidden characters like "."  All users are welcome to improve on it :P
+Users can be use a username with other forbidden characters like "."  All users are welcome to improve on it :p
 
 == Installation ==
 

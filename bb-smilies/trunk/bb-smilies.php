@@ -5,10 +5,11 @@ Description:  Adds clickable smilies (emoticons) to bbPress.  No template edits 
 Plugin URI:  http://bbpress.org/plugins/topic/121
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.2
+Version: 0.0.3
 */
 
 $bb_smilies['icon_set']="default";  // change this to the exact directory name (case sensitive) if you want to switch icon package sets
+$bb_smilies['popup'] = true;	  	// true = popup panel of smilies /  false = visible above text area always
 
 $bb_smilies['css'] = ".bb_smilies {border:0; vertical-align: top; padding-top:3px;}
 .bb_smilies {cursor: pointer; cursor: hand;}
@@ -33,7 +34,7 @@ if ($bb_current_user->ID && (isset($_GET['new']) || in_array(bb_get_location(),a
 echo  "<scr"."ipt type='text/javascript' defer='defer'>
 
 function bb_smilies(myValue) {
-	myValue=' '+myValue+' ';	
+	myValue=' '+myValue;	
 	if (document.selection) {bb_smilies_textarea.focus();sel = document.selection.createRange();sel.text = myValue;}
 	else if (bb_smilies_textarea.selectionStart || bb_smilies_textarea.selectionStart == '0') {var startPos = bb_smilies_textarea.selectionStart; var endPos = bb_smilies_textarea.selectionEnd;
 		bb_smilies_textarea.value = bb_smilies_textarea.value.substring(0, startPos)+ myValue+ bb_smilies_textarea.value.substring(endPos, bb_smilies_textarea.value.length);
@@ -52,16 +53,26 @@ echo "';
 	}
 echo "';
 	bb_smilies_textarea.setAttribute('style', 'clear:both;'); 	
-	bb_smilies_toggle= document.createElement('div');
+	bb_smilies_toggle= document.createElement('div');	
 	bb_smilies_toggle.setAttribute('id', 'bb_smilies_toggle'); 	
+
+"; 	if ($bb_smilies['popup']) { 
+echo "
 	bb_smilies_toggle.innerHTML=bb_smilies_html;
 	bb_smilies_textarea.parentNode.insertBefore(bb_smilies_toggle,bb_smilies_textarea);
 	
 	bb_smilies_clicker= document.createElement('div');
-	bb_smilies_clicker.setAttribute('id', 'bb_smilies_clicker'); 	
+	bb_smilies_clicker.setAttribute('id', 'bb_smilies_clicker'); 		
 	bb_smilies_clicker.innerHTML=bb_smilies_panel_html;
 	bb_smilies_textarea.parentNode.insertBefore(bb_smilies_clicker,bb_smilies_textarea);
-	
+";	
+	} else {
+echo "
+	bb_smilies_toggle.innerHTML=bb_smilies_panel_html;
+	bb_smilies_textarea.parentNode.insertBefore(bb_smilies_toggle,bb_smilies_textarea);
+";	
+	}
+echo "
 } // if bb_smilies_textarea
 } // bb_smilies_init
 
@@ -91,7 +102,6 @@ global $bb_smilies;
 
 $counter=0;  // filter out all backtick code first
 if (preg_match_all("|\<code\>(.*?)\<\/code\>|sim", $text, $backticks)) {foreach ($backticks[0] as $backtick) {++$counter; $text=str_replace($backtick,"_bb_smilies_".$counter."_",$text);}}
-
 
 foreach($wp_smilies as $smiley => $img) { 
 	$bb_smilies_search[] = $smiley;

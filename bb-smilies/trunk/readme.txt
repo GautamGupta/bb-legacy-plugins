@@ -45,6 +45,12 @@ Or build your own. Just make sure you follow the style in `package-config.php`
 
 * ignores smilies inside `<code></code>` tags (backticks)
 
+= Version 0.0.3 (2008-08-11) =
+
+* popup is now optional, edit top of plugin to disable and show row of smilies instead
+
+* trailing space on smilie insertion removed (leading space still required unless on start of new line)
+
 == To Do ==
 
 * ajax-ish behaviors

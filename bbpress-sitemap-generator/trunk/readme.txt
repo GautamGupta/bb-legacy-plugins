@@ -10,6 +10,8 @@ A plugin that can Generate an XML SiteMap based on the topics, posts and tags pr
 
 A plugin that can Generate an XML SiteMap based on the topics, posts and tags present in a bbPress forum. All users are welcome to improve on it :p
 
+See the original thread: http://bbpress.org/forums/topic/sitemap-generator
+
 == Installation ==
 
 * Add the `bbpress_sitemap.php` file to bbPress' `bb-plugins/` directory.

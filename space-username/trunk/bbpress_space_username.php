@@ -1,11 +1,11 @@
 <?php
 /*
-Plugin Name: BBpres Space Username
+Plugin Name: BBpress Space Username
 Plugin URI: http://www.howtogeek.com
-Description: Users can be use a username with space
+Description: Users can be use a username with a space
 Author: The Geek & Frederic Petit
 Author URI: http://www.howtogeek.com/
-Version: 0.0.1
+Version: 0.0.2
 */
 
 function htg_resanitize( $text, $raw ) {

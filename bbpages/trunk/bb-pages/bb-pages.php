@@ -5,7 +5,7 @@ Plugin URI: http://astateofmind.eu/freebies/bbpages/
 Description: Allows you to create static pages within your bbPress forum.
 Author: F.Thion
 Author URI: http://astateofmind.eu
-Version: 0.0.1
+Version: 0.0.2
 
 license: GPL 
 donate: http://astateofmind.eu/about/support/

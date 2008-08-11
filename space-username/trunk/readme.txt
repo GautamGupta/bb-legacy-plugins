@@ -12,7 +12,7 @@ Users can be use a username with other forbidden characters like "."  All users 
 
 == Installation ==
 
-* Add the `bbpress_username_extend.php` file to bbPress' `bb-plugins/` directory.
+* Add the `bbpress_username_extended.php` file to bbPress' `bb-plugins/` directory.
 
 * Activate it!
 

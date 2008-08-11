@@ -2,7 +2,7 @@
 /*
 Plugin Name: Simple Google Adsense
 Plugin URI: http://www.strapontins.org/people/rentendre/simple-google-adsense-bbpress/
-Description: Add Google Adsense code in your bbPress forum, in the footer :) ALL USERS CAN BE IMPROVED IT :P
+Description: Add Google Adsense code in your bbPress forum, in the footer :)  All users are welcome to improve on it :p
 Author: Frédéric Petit
 Author URI: http://www.strapontins.org/
 Version: 0.2

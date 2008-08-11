@@ -4,11 +4,11 @@ Requires at least: 1.0
 Tested up to: trunk
 Stable tag: trunk
 
-Add Google Adsense code in your bbPress forum, in the footer :) ALL USERS CAN BE IMPROVED IT :P
+Add Google Adsense code in your bbPress forum, in the footer :) All users are welcome to improve on it :p
 
 == Description ==
 
-Add Google Adsense code in your bbPress forum, in the footer :) ALL USERS CAN BE IMPROVED IT :P
+Add Google Adsense code in your bbPress forum, in the footer :) All users are welcome to improve on it :p
 
 == Installation ==
 

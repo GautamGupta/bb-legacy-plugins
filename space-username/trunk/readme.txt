@@ -1,5 +1,5 @@
 === BBpress Space Username ===
-Contributors: Frédéric Petit
+Contributors: Frédéric Petit & The Geek
 Requires at least: 1.0
 Tested up to: trunk
 Stable tag: trunk

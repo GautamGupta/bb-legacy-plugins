@@ -5,7 +5,7 @@ Description:  Allows the forum and members to award Reputation or "Karma" points
 Plugin URI:  http://bbpress.org/plugins/topic/97
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.2
+Version: 0.0.3
 
 license: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -16,7 +16,7 @@ to do:
 * dhtml prompts instead of javascript popups
 */
 
-if (strpos($self,"bb-reputation.php")===false) :
+if (strpos($self,"bb-reputation.php")===false) :	
 
 function bb_reputation_initialize() { global $bb_reputation;
 
@@ -57,7 +57,7 @@ $bb_reputation['history_public']=true;		// reputation history is viewable by all
 $bb_reputation['use_ajax']=false;			// not implimented yet
 
 $bb_reputation['style']="
-.bb_reputation {margin:5px 0; line-height:1.1em; font-size:90%;  white-space: nowrap; letter-spacing:-1px;} 
+.bb_reputation {margin:5px 0; line-height:1.1em; font-size:11px;  white-space: nowrap; letter-spacing:-1px;} 
 .bb_reputation a {color:green;}
 .bb_reputation .bb_number {color:black; padding:0 2px;} 
 .bb_reputation a.bb_reputation_link {font-size:150%; font-weight:bold; color:red;}
@@ -66,6 +66,9 @@ $bb_reputation['style']="
 ";
 
 /*	 stop editing here	*/
+
+$bb_reputation['points_per_post']=intval($bb_reputation['points_per_post']);	// correct config errors
+$bb_reputation['points_per_topic']=intval($bb_reputation['points_per_topic']);	// correct config errors
 
 bb_reputation_process_request();
 
@@ -86,12 +89,12 @@ $post_id= intval(get_post_id( $post_id ));
 if ($post_id) {$user_id=get_post_author_id($post_id);} else {global $user; $user_id=$user->ID;}
 $user = bb_get_user( $user_id ); 
 $reputation=intval($user->bb_reputation);		
-if (!isset($user->bb_reputation) && $user_id && ($bb_reputation['points_per_post'] || $bb_reputation['points_per_topic'])) {
+if ($user_id && !isset($user->bb_reputation) && ($bb_reputation['points_per_post'] || $bb_reputation['points_per_topic'])) {
 	global $bbdb; 
 	$topics = $bb_reputation['points_per_topic']*intval($bbdb->get_var("SELECT count(*) FROM $bbdb->topics WHERE topic_poster = $user_id  AND topic_status = 0"));
 	$posts = $bb_reputation['points_per_post']*intval($bbdb->get_var("SELECT count(*) FROM $bbdb->posts WHERE poster_id = $user_id AND post_position != 1 AND post_status = 0"));		
 	$reputation = $topics + $posts;
-	bb_update_meta( $user_id, "bb_reputation", $reputation, 'user' );
+	bb_update_meta( $user_id, 'bb_reputation', $reputation, 'user' );
 }
 $link=''; if ($bb_reputation['members_can_award'] && bb_current_user_can($bb_reputation['member_award_role']) && $user_id != bb_get_current_user_info( 'id' )) {$link='<a class="bb_reputation_link" title="'.$bb_reputation['action'].'" href="#post-'.$post_id.'" onClick="bb_reputation('.$post_id.');return false;">+</a>';}
 $output='<div class="bb_reputation"><a href="'.get_profile_tab_link( $user_id, $bb_reputation['label'] ).'">'.$bb_reputation['label'].':<span class="bb_number">'.bb_number_format_i18n($reputation).'</span></a>'.$link;		
@@ -120,13 +123,13 @@ if ($bb_reputation['points_from_balance'] && $points>0) {
 	$from = bb_get_user( $from_id ); 
 	$deduct=intval($from->bb_reputation)-$points;
 	if ($deduct<0) {return false;}	// can't deduct so don't give points
-	bb_update_meta( $from_id, "bb_reputation", $deduct, 'user' );
+	bb_update_meta( $from_id, 'bb_reputation', $deduct, 'user' );
 }
-if ($points>0 || bb_current_user_can($bb_reputation['deduct_role'])) {
-	$add=intval($user->bb_reputation)+$points;		
-	bb_update_meta( $user_id, "bb_reputation", $add, 'user' );
-	$history=$user->bb_reputation_history.time()."|$from_id|$post_id|$points|$reason|";
-	bb_update_meta( $user_id, "bb_reputation_history", $history, 'user' );
+if ($points>0 || ($points && bb_current_user_can($bb_reputation['deduct_role']))) {
+	$add=intval($user->bb_reputation)+$points;			
+	bb_update_meta( $user_id, 'bb_reputation', $add, 'user' );
+	$history=(string) $user->bb_reputation_history.(time()."|$from_id|$post_id|$points|$reason|");
+	bb_update_meta( $user_id, 'bb_reputation_history', $history, 'user' );
 }
 return $points;
 }
@@ -140,7 +143,7 @@ if ($post_id && $user_id) {
 	$post=bb_get_post($post_id);
 	if ($post->post_position==1) {$points=$bb_reputation['points_per_topic'];}
 	elseif ($post->post_position>1) {$points=$bb_reputation['points_per_post'];}	
-	bb_update_meta( $user_id, "bb_reputation", $reputation+$points, 'user' );
+	bb_update_meta( $user_id, 'bb_reputation', $reputation+$points, 'user' );
 } 
 }
 
@@ -173,39 +176,27 @@ endif;
 function bb_reputation_filter($titlelink) {echo $titlelink; bb_reputation(); return '';}	// only if automatic post inserts are selected
 
 function bb_reputation_process_request() { 
-	if (isset($_POST['bb_reputation_id']) && isset($_POST['bb_reputation_reason'])) { 
+	if (isset($_POST) && isset($_POST['bb_reputation_id']) && isset($_POST['bb_reputation_reason'])) { 
 		$points=(isset($_POST['bb_reputation_points'])) ? $_POST['bb_reputation_points'] : 0;
 		 bb_reputation_add_points($_POST['bb_reputation_id'],$points,$_POST['bb_reputation_reason']);				
 		// header("HTTP/1.1 307 Temporary redirect");
-		wp_redirect($GLOBALS["HTTP_SERVER_VARS"]["REQUEST_URI"]);	// I *really* don't like this technique but it's the only way to clear post data?
+		wp_redirect($_SERVER["REQUEST_URI"]);	// I *really* don't like this technique but it's the only way to clear post data?
 		// exit();  // not sure why but this makes it fail?
 	}	
-	/*
-	if (isset($_GET['delete_poll']) && intval($_GET['delete_poll'])) { 	
-		bb_polls_delete_poll();
-		wp_redirect(remove_query_arg(array('start_new_poll','delete_poll')));	// I *really* don't like this technique but it's the only way to clear post data?
-	}				
-	if (isset($_GET['show_poll_results_ajax'])) {
-		$topic_id=intval($_GET['show_poll_results_ajax']);
-		header("Content-Type: application/x-javascript");
-		echo 'bb_polls_insert_ajax("'.mysql_escape_string(bb_polls_show_poll_results($topic_id,0)).'")';
-		exit();
-	}
-	*/	
 } 
 
 function bb_reputation_add_css() { 	// inject css
 global $bb_reputation;  
 $fix=""; if ($bb_reputation['fix_kakumei']) {$fix=".threadauthor  {position:relative; float:left; margin:0 -110px 0 0; right:110px; } .poststuff {clear:both;}";}
-echo '<style type="text/css">'.$bb_reputation['style'].$fix.'</style>';
+if (!empty($bb_reputation['style']) || !empty($fix)) {echo '<style type="text/css">'.$bb_reputation['style'].$fix.'</style>';}
 } 
 
 function bb_reputation_profile_key($keys) {	// inserts reputation into profile without hacking
-global $bb_reputation; 
-if (!isset($_GET['tab']) && bb_get_location()=="profile-page") {
-	$keys=array_merge(array_slice($keys, 0 , 1), array('bb_reputation' => array(0, $bb_reputation['label'])), array_slice($keys,  1));
+global $bb_reputation, $self;
+if (empty($self)==true && isset($_GET['tab'])==false && bb_get_location()=="profile-page") {	
+	(array) $keys=array_merge(array_slice((array) $keys, 0 , 1), array('bb_reputation' => array(0, $bb_reputation['label'])), array_slice((array) $keys,  1));    
 }
-return $keys;
+return (array) $keys;
  }
 
 function bb_reputation_add_profile_tab() {
@@ -220,13 +211,13 @@ if (!$self) {	// I have no idea exactly why this is but apparently bb_profile_me
 }		
 }
 
-elseif ($bb_reputation['history_profile'])  :
+elseif ($bb_reputation['history_profile'])  :		// we're in the profile tab, is it enabled?
 
 bb_get_header();
 ?>
 <h3 class="bbcrumb"><a href="<?php bb_option('uri'); ?>"><?php bb_option('name'); ?></a> &raquo; <a href="<?php echo get_user_profile_link($user->ID ).'">'.__("Profile"); ?></a> &raquo; <?php echo $bb_reputation['label']; ?></h3>
 
-<?php if (($bb_reputation['history_public']) || bb_current_user_can('edit_user', $user->ID)) {	// security check ?>
+<?php if (($bb_reputation['history_public']) || bb_current_user_can('edit_user', $user->ID)) {   ?>
 <div class="indent">
 <?php
 	echo (!empty($error_message)) ? '<div class="infobox"><strong>'.__($error_message).'</strong></div>' : '';
@@ -238,7 +229,7 @@ bb_get_header();
 <div id="user-threads" class="user-recent">
 <h4><?php echo $bb_reputation['label_history']; ?> <small>(<?php printf(__('%s total ').$bb_reputation['unit'], bb_number_format_i18n($user->bb_reputation)); ?>)</small></h4>
 
-<?php $matches=explode("|",$user->bb_reputation_history); if ($matches && is_array($matches)) : ?>
+<?php $matches=explode("|",(string) $user->bb_reputation_history); if ($matches && is_array($matches)) : ?>
 <ol>
 <?php $rows=floor(count($matches)/5); 		// 5 items per row
 for ($offset=$rows-1; $offset>=0; $offset--) { ?>
@@ -269,5 +260,5 @@ for ($offset=$rows-1; $offset>=0; $offset--) { ?>
 <?php 
 } // security check
 bb_get_footer();
-endif;
+endif;	// profile tab check
 ?>

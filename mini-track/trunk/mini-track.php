@@ -47,15 +47,16 @@ $mini_track_options['style']="
 	.mini_track_title {border-bottom: 1px dashed #ccc; cursor: help;}
 ";
 
-$mini_track_options['bots']="Googlebot\-Image|Googlebot|mediapartners|MSNBOT|YahooSeeker|froogle|"
-."Yahoo\! Slurp|Slurp|YahooSeeker|Yahoo Test|Yahoo (stealth)|Ask Jeeves|AskJeeves|teoma_agent|Teoma|teomaagent|slurp\@inktomi|inktomi|"
+$mini_track_options['bots']="Googlebot\-Image|Googlebot|mediapartners|MSNBOT|MSN stealth|froogle|"
+."Yahoo\! Slurp|Slurp|YahooSeeker|Yahoo Test|Yahoo stealth|Ask Jeeves|AskJeeves|teoma_agent|Teoma|teomaagent|slurp\@inktomi|inktomi|"
 ."Gigabot|Netcraft|ia_archiver|lycos|fast\-webcrawler|turnitinbot|technorati|Findexa|NextLinks|findlinks|"
 ."ZyBorg|InfoSeek|looksmart|Scooter|MARTINI|SurveyBot|Overture|VerticalCrawler|FastSearch|modspider|"
 ."Gais|gaisbo|zyborg|surveybot|Bloglines|BlogSearch|blogpulse|thumbshots|Snapbot|"
 ."Feedfetcher|BlogSearch|PubSub|pubsub|Syndic8|userland|become\.com|Yeti|naver|Sogou|Netcache|Netapp|BlogTick|Baiduspider|"
+."Toluu|SimplePie|"
 ."Virtual Reach|Wordpress\/2\.|Yandex|linkcheck|idbot|id\-search|Nutch|larbin|heritrix|WebAlta|Indy Library|"	
-."Java\/|Wget\/|libcurl|libwww|lwp-trivial|urllib|GT::WWW|Snoopy|HTTP::Lite|PHPCrawl|URI::Fetch|Zend_Http_Client|http client|PECL::HTTP|"	// scrapers
-."crawler|indexer|archiver|worm|spider|bot";	// generic
+."Java\/|Wget\/|libcurl|libwww|Python-urllib|urllib|lwp-trivial|GT::WWW|Snoopy|HTTP::Lite|PHPCrawl|URI::Fetch|Zend_Http_Client|http client|PECL::HTTP|"	// scrapers
+."parser|crawler|indexer|archiver|worm|spider|bot";	// generic
 
 /* STOP EDITING HERE */
 
@@ -167,43 +168,6 @@ echo "</div>";
 }
 }
 
-function mini_track_display() {
-if (!bb_current_user_can('administrate')) {return;}
-global $mini_track, $mini_track_current, $mini_track_options;
-$bb_uri=bb_get_option('uri'); $profile=$bb_uri."profile.php?id=";
-if (isset($_GET['mini_track_reset'])) {mini_track_activation(); mini_track_init();}
-echo '<html><head><title>'.count($mini_track).' Users Online &laquo; '.bb_get_option('name').'</title>
-<meta http-equiv="refresh" content="'.$mini_track_options['display_refresh_time'].';url='.$bb_uri.'?mini_track_display" />
-<style>table {border:1px solid #111; font-size:14px; font-family: arial, san-serif; line-height:150%;} table td {text-align:center; white-space:nowrap;} table .link {text-align:left;} table th.link {padding-left:5em;}
-table th {background: #aaa;} .alt {background: #eee;} .tiny {font-size:12px;} .bot {color:red; font-size:90%;} .guest {color:green;} 
-.link div {padding-left: 5px; width:500px; white-space:nowrap; overflow; hidden;} </style>
-<script>window.onload=titlelink; function titlelink() {blank="_blank"; for (i=0;x=document.links[i];++i){x.target=blank; x.title=x.href;}};</script>
-</head><body>';
-echo "<div style='float:right;'>[<a href='$bb_url?mini_track_reset'><small>reset</small></a>]</div>";
-mini_track(2); 
-echo "<br clear=both /><table width='99%' cellpadding=1 cellspacing=1>
-<tr class=alt><th>#</th><th>user</th><th>ip</th><th>referer</th><th>pages</th><th>time online</th><th>last activity</th><th class=link>last URL</th></tr>";
-$mini_track=array_reverse($mini_track,true);
-$counter=0;
-foreach ($mini_track as $key=>$value) {
-$url=urldecode($value->url);
-echo "<tr".(($counter % 2) ? " class=alt" : "")."><td align=right class=tiny ".(($mini_track_options['debug']) ?" title='$value->debug' " : "")."> ".(++$counter)." </td><td>";	// line number
-if ($value->id) echo "<a  href='$profile$value->id'>$value->name</a>";			// member profile link
-elseif (isset($value->bot)) {echo "<span class=bot>".preg_replace("/[^A-Za-z_ ]+?/is","",$mini_track_options['bots'][$value->bot-1])."</span>";} else {echo "<span class=guest>guest</span>";}
-echo "</td><td class=tiny><a href='?mini_track_ip=$value->ip'>$value->ip</a></td>";
-if (isset($value->referer)) {$parse_url=parse_url($value->referer);	// referer
-		$host=substr(ereg_replace("^(www[0-9]?|search|talk|community|support|foro|mitmachen|board[s]?|forum[s]?)(\.?)","",$parse_url['host']),0,30); 
-		echo "<td><a href='$value->referer'>".$host."</a></td>";} else {echo "<td>&nbsp;</td>";
-} 
-echo "<td>".intval($value->pages)."</td>";						// page count
-echo "<td class=tiny>".ceil((($value->time)-$value->seen+1)/60)." minutes</td>";	// total activity time
-echo "<td class=tiny>".ceil(((time())-$value->time+1)/60)." minutes ago</td>";		// last activity time
-echo "<td class=link><div style='overflow:hidden;'><a href='$url'>$url</a></div></td></tr>"; // last url
-}
-echo "</table></body></html>";
-exit();
-}
-
 function mini_track_index($id=0) {
 global $mini_track_options;
 $id=intval($id);
@@ -230,7 +194,10 @@ function mini_track_bot_lookup() {
 global $mini_track_options; $bot=0;
 $agent=strtolower($_SERVER['HTTP_USER_AGENT']);
 foreach ($mini_track_options['bots'] as $key=>$name) {if (!(strpos($agent,$name)===false)) {$bot=$key+1; break;}}
-if ($bot==0)  {if (ereg("^(67\.195\.|74\.6\.)",$_SERVER['REMOTE_ADDR'])) {$bot=1+array_search("yahoo stealth",$mini_track_options['bots']);}} // yahoo fakes it
+if ($bot==0)  {
+if (ereg("^(67\.195\.|74\.6\.)",$_SERVER['REMOTE_ADDR'])) {$bot=1+array_search("yahoo stealth",$mini_track_options['bots']);} // yahoo fakes it
+elseif (ereg("^(65.5[2-5]\.)",$_SERVER['REMOTE_ADDR'])) {$bot=1+array_search("msn stealth",$mini_track_options['bots']);} // microsoft fakes it
+}
 return $bot;
 }
 
@@ -351,5 +318,42 @@ $results2=$bbdb->get_results($query);
 $results[0]->members=$results2[0]->members;
 bb_update_option('mini_track_statistics',$results[0]);
 return $results[0];
+}
+
+function mini_track_display() {
+if (!bb_current_user_can('administrate')) {return;}
+global $mini_track, $mini_track_current, $mini_track_options;
+$bb_uri=bb_get_option('uri'); $profile=$bb_uri."profile.php?id=";
+if (isset($_GET['mini_track_reset'])) {mini_track_activation(); mini_track_init();}
+echo '<html><head><title>'.count($mini_track).' Users Online &laquo; '.bb_get_option('name').'</title>
+<meta http-equiv="refresh" content="'.$mini_track_options['display_refresh_time'].';url='.$bb_uri.'?mini_track_display" />
+<style>table {border:1px solid #111; font-size:14px; font-family: arial, san-serif; line-height:150%;} table td {text-align:center; white-space:nowrap;} table .link {text-align:left;} table th.link {padding-left:5em;}
+table th {background: #aaa;} .alt {background: #eee;} .tiny {font-size:12px;} .bot {color:red; font-size:90%;} .guest {color:green;} 
+.link div {padding-left: 5px; width:500px; white-space:nowrap; overflow; hidden;} </style>
+<script>window.onload=titlelink; function titlelink() {blank="_blank"; for (i=0;x=document.links[i];++i){x.target=blank; if (!x.title.length) {x.title=x.href;}}};</script>
+</head><body>';
+echo "<div style='float:right;'>[<a href='$bb_url?mini_track_reset'><small>reset</small></a>]</div>";
+mini_track(2); 
+echo "<br clear=both /><table width='99%' cellpadding=1 cellspacing=1>
+<tr class=alt><th>#</th><th>user</th><th>ip</th><th>referer</th><th>pages</th><th>time online</th><th>last activity</th><th class=link>last URL</th></tr>";
+$mini_track=array_reverse($mini_track,true);
+$counter=0;
+foreach ($mini_track as $key=>$value) {
+$url=urldecode($value->url);
+echo "<tr".(($counter % 2) ? " class=alt" : "")."><td align=right class=tiny> ".(++$counter)." </td><td>";	// line number
+if ($value->id) echo "<a  href='$profile$value->id'>$value->name</a>";			// member profile link
+elseif (isset($value->bot)) {echo "<span class=bot>".preg_replace("/[^A-Za-z_ ]+?/is","",$mini_track_options['bots'][$value->bot-1])."</span>";} else {echo "<span class=guest>guest</span>";}
+echo "</td><td class=tiny><a ".(($mini_track_options['debug']) ?" title='$value->debug' " : "")." href='?mini_track_ip=$value->ip'>$value->ip</a></td>";
+if (isset($value->referer)) {$parse_url=parse_url($value->referer);	// referer
+		$host=substr(ereg_replace("^(www[0-9]?|search|talk|community|support|foro|mitmachen|board[s]?|forum[s]?)(\.?)","",$parse_url['host']),0,30); 
+		echo "<td><a href='$value->referer'>".$host."</a></td>";} else {echo "<td>&nbsp;</td>";
+} 
+echo "<td>".intval($value->pages)."</td>";						// page count
+echo "<td class=tiny>".ceil((($value->time)-$value->seen+1)/60)." minutes</td>";	// total activity time
+echo "<td class=tiny>".ceil(((time())-$value->time+1)/60)." minutes ago</td>";		// last activity time
+echo "<td class=link><div style='overflow:hidden;'><a href='$url'>$url</a></div></td></tr>"; // last url
+}
+echo "</table></body></html>";
+exit();
 }
 ?>

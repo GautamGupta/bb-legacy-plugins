@@ -18,8 +18,6 @@ You can see the real-time tracking at  `your-forum-url.com/?mini_track_display`
 
 If you upgrade from an old version you need to use the RESET link in the tracking display.
 
-This plugin is now bbPress 1.0 compatible.
-
 == Installation ==
 
 * Install `mini-track.php` to  `my-plugins/` and activate
@@ -47,6 +45,27 @@ $bb->load_options = true;
 `
 
 == Frequently Asked Questions ==
+
+= How do I enable GeoIP (country codes) and flags? =
+
+* While the mysql lookup for geoip is much faster, it is not available yet to the public, instead you can use the IP2C method which although slower, is much easier to install
+
+* create a new sub-directory in the same folder as mini-track.php called  "ip2c"  ie.  `/my-plugins/mini-track/ip2c/`
+
+* download these two files and put them in there 
+http://firestats.cc/browser/trunk/ip2c/ip-to-country.bin?format=raw
+http://firestats.cc/browser/trunk/ip2c/php/ip2c.php?format=raw
+
+* find the option  `$mini_track_options['geoip'] = ` near the top of `mini-track.php` and set it to "ip2c" ie.
+`$mini_track_options['geoip'] = "ip2c";`
+
+* if you also want country flags shown instead of country codes, you need to install the 80 or so country flags in png format
+one free source of the flags is the famfamfam site:
+http://www.famfamfam.com/lab/icons/flags/famfamfam_flag_icons.zip
+you need to extract the png folder in the zip to your own image sub-directory,  ie. `/images/flags/`
+
+* find the option  `$mini_track_options['flags'] = ` near the top of `mini-track.php` and set it to the path of your flags images ie.
+`$mini_track_options['flags'] = "/images/flags/";`
 
 = There are duplicates of users or dates are wrong ? =
 
@@ -109,6 +128,18 @@ The md5 technique is now used by default. You can disable it if you want and use
 
 * statistics of topics/posts and members
 
+= Version 0.1.5 (2008-08-15) =
+
+* major additions including geoip via ip2c (or mysql but dataset not available to public)
+
+* admin functions moved to external php for inclusion only by admin user
+
+* more bot tracking
+
+* tracking display can be sorted
+
+* temporary ban ability (with automatic/manual action)
+
 == To Do ==
 
 * total online today
@@ -118,7 +149,5 @@ The md5 technique is now used by default. You can disable it if you want and use
 * store time online per member in profile ++(first seen - last seen)
 
 * internationalization 
-
-* geoip
 
 * convert to real db table instead of meta

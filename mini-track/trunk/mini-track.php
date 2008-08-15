@@ -59,7 +59,7 @@ $mini_track_options['style']="
 
 /* STOP EDITING HERE */
 
-$mini_track_options['geoip'] = false;  	//  "ip2c";      	  	 // cc lookup ->  false | mysql | ip2c
+$mini_track_options['geoip'] =  false;   	 // "ip2c"; 		// cc lookup ->  false | mysql | ip2c
 $mini_track_options['flags'] = false; 	// "/images/flags/"; 	// images instead of cc - path to flags
 
 $mini_track_options['debug'] = false;       // true = shows more info when you hover over IP in display panel - makes saved data very large, don't use regularly

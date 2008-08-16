@@ -6,13 +6,13 @@ Tested up to: trunk
 Stable tag: trunk
 Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
 
-Adds `forum_last_poster()` `forum_time()` and other functions to bbPress to mimic the topic tables' FRESHNESS column. Requires simple template edits.
+Adds `forum_last_poster()`, `forum_time()`, `forum_last_post_link()` and other functions to bbPress to mimic the topic tables' FRESHNESS column. Requires simple template edits.
 
 == Description ==
 
-Adds `forum_last_poster()` `forum_time()` and other functions to bbPress to mimic the topic tables' FRESHNESS column. Requires simple template edits.
+Adds `forum_last_poster()`, `forum_time()`, `forum_last_post_link()` and other functions to bbPress to mimic the topic tables' FRESHNESS column. Requires simple template edits.
 
-High performance: requires only a single extra query regardless of the number of forums listed (when topics are on same page).
+High performance: uses only a single extra query regardless of the number of forums listed (when topics are on same page).
 
 == Installation ==
 
@@ -30,7 +30,7 @@ High performance: requires only a single extra query regardless of the number of
 
 <?php while ( bb_forum() ) : ?>
 <tr<?php bb_forum_class(); ?>>
-	<td><?php bb_forum_pad( '<div class="nest">' ); ?><a href="<?php forum_link(); ?>"><?php forum_name(); ?></a><small><?php forum_description(); ?></small><?php bb_forum_pad( '</div>' ); ?></td>
+	<td class="num"><?php bb_forum_pad( '<div class="nest">' ); ?><a href="<?php forum_link(); ?>"><?php forum_name(); ?></a><small><?php forum_description(); ?></small><?php bb_forum_pad( '</div>' ); ?></td>
 	<td class="num"><?php forum_time(); ?></td>
 	<td class="num"><?php forum_topics(); ?></td>
 	<td class="num"><?php forum_posts(); ?></td>
@@ -71,6 +71,10 @@ High performance: requires only a single extra query regardless of the number of
 = Version 0.0.1 (2008-07-24) =
 
 * first public alpha release
+
+= Version 0.0.3 (2008-08-16) =
+
+* unfortunately the join query does not handle deleted topics correctly and returns no results for that forum, so have to use subquery :-(
 
 == To Do ==
 

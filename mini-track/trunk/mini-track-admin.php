@@ -124,7 +124,7 @@ if ($fp = fsockopen ($host[$server], 80, &$errno, &$errstr, 10)) {
 	$request = "GET $path[$server]$ip HTTP/1.0\r\nHost: $host[$server]\r\nUser-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)\r\n\r\n"; 
 	$page=''; fputs ($fp, $request); while (!feof($fp)) {$page.=fgets ($fp,1024);} fclose ($fp); 	// echo $page;
 	preg_match("/\<pre\>(.*)\<\/pre\>/sim",$page,$temp); $lines=explode("\n",strip_tags($temp[0]));
-	foreach ($lines as $line) {$line=trim($line);if ((!ereg('^\#|\%.*$',$line)) && ($line>'')) {$temp=explode(":",$line,2); @$data[trim($temp[0])] = trim($temp[1]);}}
+	foreach ($lines as $line) {$line=trim($line);if ((!ereg('^\#|\%.*$',$line)) && ($line>'')) {$temp=explode(":",$line,2); $data[trim($temp[0])] = trim($temp[1]);}}
 } else {$data['error'] = "$errstr ($errno)\n";}         
 $server=0; for ($i = 1; $i <= count($host); $i++){if (isset($data['ReferralServer']) && strpos($data['ReferralServer'],$keyword[$i])){$server=$i;break;}}
 } while ($server>0);

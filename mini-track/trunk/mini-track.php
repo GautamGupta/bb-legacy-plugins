@@ -40,8 +40,8 @@ $mini_track_options['fast_index'] = false;				// false = accurately tracks NAT/p
 $mini_track_options['ban_speed'] = 50;				// temporarily ban any user for the track_time if they exceed this many pages per minute 
 									// (not recommended to set this lower than 50 ppm because some bots like google move that fast)
 									// set to 0 (zero) to disable.
-$mini_track_options['ban_pages'] = 95;				// temporarily ban any user for the track_time if they exceed this many pages in a single session
-									// (not recommended to set this lower than 100 because some bots like google take that many at once)
+$mini_track_options['ban_pages'] = 200;				// temporarily ban any user for the track_time if they exceed this many pages in a single session
+									// (not recommended to set this lower than 200 because some bots like google take that many at once)
 									// set to 0 (zero) to disable.
 									
 									// you will be able to also temporarily ban (or unban) via the realtime display panel
@@ -59,10 +59,10 @@ $mini_track_options['style']="
 
 /* STOP EDITING HERE */
 
-$mini_track_options['geoip'] =  false;   	 // "ip2c"; 		// cc lookup ->  false | mysql | ip2c
-$mini_track_options['flags'] = false; 	// "/images/flags/"; 	// images instead of cc - path to flags
+$mini_track_options['geoip'] =  "mysql";		// false;   	 // "ip2c"; 		// cc lookup ->  false | mysql | ip2c
+$mini_track_options['flags'] = "/images/flags/";	// false; 	// "/images/flags/"; 	// images instead of cc - path to flags
 
-$mini_track_options['debug'] = false;       // true = shows more info when you hover over IP in display panel - makes saved data very large, don't use regularly
+$mini_track_options['debug'] = true;       // true = shows more info when you hover over IP in display panel - makes saved data very large, don't use regularly
 
 $bb->load_options = true;	// better db performance, but probably won't work here, put it into your bb-config.php
 

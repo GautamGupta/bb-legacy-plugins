@@ -59,10 +59,10 @@ $mini_track_options['style']="
 
 /* STOP EDITING HERE */
 
-$mini_track_options['geoip'] =  "mysql";		// false;   	 // "ip2c"; 		// cc lookup ->  false | mysql | ip2c
-$mini_track_options['flags'] = "/images/flags/";	// false; 	// "/images/flags/"; 	// images instead of cc - path to flags
+$mini_track_options['geoip'] =  false;		// false;   	 // "ip2c"; 		// cc lookup ->  false | mysql | ip2c
+$mini_track_options['flags'] =  false;	// false; 	// "/images/flags/"; 	// images instead of cc - path to flags
 
-$mini_track_options['debug'] = true;       // true = shows more info when you hover over IP in display panel - makes saved data very large, don't use regularly
+$mini_track_options['debug'] = false;       // true = shows more info when you hover over IP in display panel - makes saved data very large, don't use regularly
 
 $bb->load_options = true;	// better db performance, but probably won't work here, put it into your bb-config.php
 

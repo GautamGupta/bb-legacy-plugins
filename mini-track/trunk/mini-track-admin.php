@@ -14,8 +14,8 @@ if (isset($_GET['sort'])) {$sort=intval($_GET['sort']);} elseif (isset($mini_tra
 $url=$uri=$bb_uri."?mini_track_display"; if ($sort!=0) {$uri.="&sort=".$sort;};
 
 if (isset($_GET['mini_track_reset'])) {mini_track_activation(); mini_track_init();}
-elseif (isset($_GET['mini_track_ban']) && isset($mini_track[$_GET['mini_track_ban']])) {$mini_track[$_GET['mini_track_ban']]->ban=1; mini_track_save();}
-elseif (isset($_GET['mini_track_unban']) && isset($mini_track[$_GET['mini_track_unban']])) {unset($mini_track[$_GET['mini_track_unban']]->ban); mini_track_save();}
+elseif (isset($_GET['mini_track_ban']) && isset($mini_track[$_GET['mini_track_ban']])) {$mini_track[$_GET['mini_track_ban']]->ban=1; $mini_track[$_GET['mini_track_ban']]->ok=0; mini_track_save();}
+elseif (isset($_GET['mini_track_unban']) && isset($mini_track[$_GET['mini_track_unban']])) {unset($mini_track[$_GET['mini_track_unban']]->ban); $mini_track[$_GET['mini_track_unban']]->ok=1; mini_track_save();}
 bb_send_headers();
 echo "<html><head><title>".count($mini_track)." Users Online &laquo; ".bb_get_option('name')."</title>
 <meta http-equiv='refresh' content='".$mini_track_options['display_refresh_time'].";url=".$uri."' />
@@ -62,7 +62,8 @@ $td[7][$counter]="<span class=num>".($last=ceil(($time-$value->time+1)/60))."</s
 $actual[6][$counter]=$value->time-$value->seen;
 $actual[7][$counter]=$time-$value->time;
 
-if (isset($value->ban)) {$td[8][$counter]="<span class=bot>banned</span>  [<a href='$uri"."&mini_track_unban=$key'>x</a>]";}
+if (isset($value->ok) && $value->ok && isset($value->bot)) {$td[8][$counter]="<span class=new>verified</span>";}
+elseif (isset($value->ban)) {$td[8][$counter]="<span class=bot>banned</span>  [<a href='$uri"."&mini_track_unban=$key'>x</a>]";}
 elseif ($value->pages>9 && $bb_current_user->ID!=$value->id) {$td[8][$counter]="<a href='$uri"."&mini_track_ban=$key'>ban?</a>";}
 elseif ($value->pages<3 && $total<2 && $last<2) {$td[8][$counter]="<span class=new>new</span>";}
 elseif ($last>15) {$td[8][$counter]="<span class=inactive>inactive</span>";}
@@ -106,25 +107,34 @@ return;
 function mini_track_ip() {
 if (!bb_current_user_can('administrate') || !$_GET['mini_track_ip']) {return;}
 $ip=$_GET['mini_track_ip']; $rdns=gethostbyaddr($ip); if ($rdns==$ip) {$rdns="(no rDNS)";}
+bb_send_headers();
 echo "<html><pre><h2>IP ".$ip."</h2><h3>".$rdns."</h3>"; 
-$data=mini_track_ip_lookup($ip); 
-foreach ($data as $key=>$value) {
-if (eregi("abuse|tech|nettype|comment|remark|ReferralServer|signature|auth|encryption",$key)===false) {echo "$key: $value <br />";}
-}
+$data=mini_track_ip_lookup($ip);
+if (!isset($data) || !is_array($data)) {echo "<small>reloading...</small><br />"; sleep(1); $data=mini_track_ip_lookup($ip);}  // try a 2nd time before giving up
+if (isset($data) && is_array($data)) { 
+	foreach ($data as $key=>$value) {
+		if (eregi("abuse|tech|nettype|comment|remark|ReferralServer|signature|auth|encryption",$key)===false) {
+			if (intval($key)===$key) {echo "$value <br />";} else {echo "$key: <b>$value</b><br />";}
+		}
+	}
+} else {echo "lookup error, <a href='?mini_track_ip=$ip'>try again?</a>";}
 exit();
 }
 
 function mini_track_ip_lookup($ip,$server=0) {
 if (!bb_current_user_can('administrate') || !$_GET['mini_track_ip']) {return;}
+// error_reporting(E_ALL);  ini_set("display_errors", 1);	// debug
 $host=array('ws.arin.net','wq.apnic.net','www.db.ripe.net','lacnic.net','www.afrinic.net');
 $keyword=array('arin.net','apnic.net','ripe.net','lacnic.net','afrinic.net');
 $path=array('/whois/?queryinput=','/apnic-bin/whois.pl?searchtext=','/whois/?form_type=simple&searchtext=','/cgi-bin/lacnic/whois?query=','/cgi-bin/whois?form_type=simple&searchtext=');
-do {unset($data); 
+do {unset($data); $data="";
 if ($fp = fsockopen ($host[$server], 80, &$errno, &$errstr, 10)) {
 	$request = "GET $path[$server]$ip HTTP/1.0\r\nHost: $host[$server]\r\nUser-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)\r\n\r\n"; 
-	$page=''; fputs ($fp, $request); while (!feof($fp)) {$page.=fgets ($fp,1024);} fclose ($fp); 	// echo $page;
-	preg_match("/\<pre\>(.*)\<\/pre\>/sim",$page,$temp); $lines=explode("\n",strip_tags($temp[0]));
-	foreach ($lines as $line) {$line=trim($line);if ((!ereg('^\#|\%.*$',$line)) && ($line>'')) {$temp=explode(":",$line,2); $data[trim($temp[0])] = trim($temp[1]);}}
+	$page=''; fputs ($fp, $request); while (!feof($fp)) {$page.=fgets ($fp,1024);} fclose ($fp); 	// echo $page; // debug
+	preg_match("/\<pre\>(.*)\<\/pre\>/sim",$page,$temp); $lines=explode("\n",strip_tags($temp[0]));	// print_r($temp); // debug
+	foreach ($lines as $line) {$line=trim($line); 
+		if (!empty($line) && !ereg("^(\#|\%)",$line)) {if (strpos($line,":")) {$temp=explode(":",$line,2); $data[trim($temp[0])] = trim($temp[1]);} else {$data[]=$line;}}
+	}
 } else {$data['error'] = "$errstr ($errno)\n";}         
 $server=0; for ($i = 1; $i <= count($host); $i++){if (isset($data['ReferralServer']) && strpos($data['ReferralServer'],$keyword[$i])){$server=$i;break;}}
 } while ($server>0);

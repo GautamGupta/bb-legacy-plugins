@@ -140,6 +140,12 @@ The md5 technique is now used by default. You can disable it if you want and use
 
 * temporary ban ability (with automatic/manual action)
 
+= Version 0.1.6 (2008-08-16) =
+
+* bot verification via rdns to allow excessive page counts
+
+* can replace the view count function of bb-topic-views without using sessions 
+
 == To Do ==
 
 * total online today

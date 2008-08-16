@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/130
 Description: A simple way to count and track both members and non-members as they move around your forum.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.5
+Version: 0.1.6
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -37,14 +37,13 @@ $mini_track_options['statistics_only_on_front_page'] = false;	// everywhere or j
 $mini_track_options['display_refresh_time'] = 30; 		// seconds for real-time display update
 $mini_track_options['fast_index'] = false;				// false = accurately tracks NAT/proxy/spoofing users  //  true = faster but by IP only
 
-$mini_track_options['ban_speed'] = 50;				// temporarily ban any user for the track_time if they exceed this many pages per minute 
-									// (not recommended to set this lower than 50 ppm because some bots like google move that fast)
+$mini_track_options['ban_speed'] = 50;				// temporarily ban any user for the track_time if they exceed this many pages per minute 									
 									// set to 0 (zero) to disable.
-$mini_track_options['ban_pages'] = 200;				// temporarily ban any user for the track_time if they exceed this many pages in a single session
-									// (not recommended to set this lower than 200 because some bots like google take that many at once)
+$mini_track_options['ban_pages'] = 100;				// temporarily ban any user for the track_time if they exceed this many pages in a single session									
 									// set to 0 (zero) to disable.
 									
-									// you will be able to also temporarily ban (or unban) via the realtime display panel
+									// good bots like google are now verified by rdns when they exceed bans and are whitelisted
+									// you can also temporarily ban (or unban) via the realtime display panel
 									// note about banning: it still loads the bbPress core, just doesn't serve any content
 $mini_track_options['style']="
 	.mini_track, .mini_track_statistics {font-size:1em; color:black; text-align:center;} 
@@ -59,8 +58,10 @@ $mini_track_options['style']="
 
 /* STOP EDITING HERE */
 
-$mini_track_options['geoip'] =  false;		// false;   	 // "ip2c"; 		// cc lookup ->  false | mysql | ip2c
-$mini_track_options['flags'] =  false;	// false; 	// "/images/flags/"; 	// images instead of cc - path to flags
+$mini_track_options['topic_views'] = false;			// true = replace bb-topic-views plugin, works better as no sessions needed
+
+$mini_track_options['geoip'] =  false;   	 // "ip2c"; 		// cc lookup ->  false | mysql | ip2c
+$mini_track_options['flags'] =   false; 	// "/images/flags/"; 	// images instead of cc - path to flags
 
 $mini_track_options['debug'] = false;       // true = shows more info when you hover over IP in display panel - makes saved data very large, don't use regularly
 
@@ -85,7 +86,7 @@ $mini_track_options['bots']="msnbot\-Products|msnbot\-media|MS Search|MSNBOT|MSN
 $mini_track_options['bots']=explode("|",str_replace("\\","", strtolower($mini_track_options['bots']) ));	// prep bot list
 
 // hooks and triggers
-add_action('bb_init','mini_track_init');
+add_action('bb_init','mini_track_init',9);	// 9 so it runs before most other plugins execute
 add_action('bb_foot','mini_track',99);
 add_action('bb_admin_footer', 'mini_track',99);
 add_action('bb_user_login', 'mini_track_login');
@@ -101,7 +102,6 @@ add_action( 'bb_delete_post','mini_track_statistics_update');
 add_action('register_user','mini_track_statistics_update');
 add_action('user_register','mini_track_statistics_update');
 
-
 // admin hooks
 if (defined('BB_IS_ADMIN') && BB_IS_ADMIN && isset($_GET['action']) && $_GET['action']=="activate" && $_GET['plugin'] && strpos($_GET['action'],basename(__FILE__)) ) {
 	bb_register_activation_hook( __FILE__,  'mini_track_activation');		
@@ -114,10 +114,15 @@ if (isset($_GET['mini_track_display']) || isset($_GET['mini_track_reset']) || is
 }
 
 function mini_track_init() {  
-global $mini_track, $mini_track_options,  $mini_track_current, $bb_current_user, $bbdb;
+global $mini_track, $mini_track_options, $mini_track_current, $bb_current_user, $bbdb, $topic_id;
 
-$mini_track=bb_get_option('mini_track');	// start with latest data from db
 $time=time(); 					// snapshot time for all calculations
+$mini_track=bb_get_option('mini_track');	// start with latest data from db
+
+if ($mini_track_options['topic_views']) {			// remove bb-topic-views hook as to not duplicate counts or start sessions
+	remove_filter('bb_head', 'update_view_count');
+	remove_action('bb_init', 'views_session_check');
+}
 
 if (!empty($mini_track)) {
 // clean up expired entries (especially if plugin has been inactive)
@@ -163,21 +168,34 @@ else {if ($bot=mini_track_bot_lookup()) {$mini_track[$index]->bot=$bot;}}	// det
 
 $mini_track[$index]->pages=1;
 } // end of first seen checks
-else {
+
+else {	// repeat user
+
 $mini_track[$index]->pages++;	// count how many pages they've viewed
 
 // check for ban-able activity
+if (!isset($mini_track[$index]->ban) && !(isset($mini_track[$index]->ok) && $mini_track[$index]->ok)) {
 $active=$time - $mini_track[$index]->seen;	// seconds active
-if ($mini_track[$index]->pages>30 && $active>30 && !($bb_current_user->ID && bb_current_user_can('administrate'))) {
-if ($mini_track_options['ban_speed'] && ($mini_track[$index]->pages/$active)>$mini_track_options['ban_speed']/60) {$mini_track[$index]->ban=1;}
-if ($mini_track_options['ban_pages'] && $mini_track[$index]->pages>$mini_track_options['ban_pages']) {$mini_track[$index]->ban=1;}
+if ( $mini_track[$index]->pages>30 && $active>30 && !($bb_current_user->ID && bb_current_user_can('administrate'))) {
+	if ($mini_track_options['ban_speed'] && ($mini_track[$index]->pages/$active)>$mini_track_options['ban_speed']/60) {$mini_track[$index]->ban=1;}
+	if ($mini_track_options['ban_pages'] && $mini_track[$index]->pages>$mini_track_options['ban_pages']) {$mini_track[$index]->ban=1;}
+	if ($mini_track[$index]->ban==1 && !isset($mini_track[$index]->ok)) {
+		$mini_track[$index]->ok=((mini_track_verify($mini_track[$index]->ip)) ? 1 : 0);		// check if it's a legit bot 
+		if ($mini_track[$index]->ok) {unset($mini_track[$index]->ban);}				// if so, let it through
+	}
 } 
+}
 
 } // end repeat user
 
 $mini_track[$index]->time=$time;	
-$mini_track[$index]->url=mini_track_safe_url($_SERVER['REQUEST_URI']); // current page
-if ($mini_track_options['debug']) {$mini_track[$index]->debug=$debug;}  // save debug info if in debug mode
+$mini_track[$index]->url=mini_track_safe_url($_SERVER['REQUEST_URI']); 				// current page
+if ($mini_track_options['debug']) {$mini_track[$index]->debug=$debug;} 			 	// save debug info if in debug mode
+
+if ($mini_track_options['topic_views'] && is_topic()) {			// for topic view counts, replacing bb-topic-views plugin
+bb_repermalink();  
+if (empty($mini_track[$index]->topic) || $topic_id!=$mini_track[$index]->topic) {mini_track_update_view_count(); $mini_track[$index]->topic=$topic_id;}
+}
 
 // tally new tracking data for all users
 $bb_uri=bb_get_option('uri'); $profile=$bb_uri."profile.php?id=";
@@ -253,6 +271,20 @@ $value=addslashes(bb_maybe_serialize($mini_track));    	// this serialized strin
 @$bbdb->query("UPDATE $table SET meta_value='$value' $where AND meta_key='mini_track'  LIMIT 1");	// save serialized results to db
 }
 
+function mini_track_update_view_count() {	// all this to prevent bbPress's read-before-write on meta data :-(
+global $topic, $bb_topic_cache, $bbdb;
+if (empty($topic) || empty($topic->topic_id)) {return;}	// should never happen but just in case to prevent corrupt data
+if (empty($topic->views)) {	// it's a new value to insert, never used before, use post count as initial view count
+if (bb_get_option('bb_db_version')>1600) {@$bbdb->query("INSERT INTO $bbdb->meta (object_id, object_type, meta_key, meta_value) VALUES ($topic->topic_id, 'bb_topic', 'views', $topic->topic_posts)");} 
+else {@$bbdb->query("INSERT INTO $bbdb->topicmeta (topic_id, meta_key, meta_value) VALUES ($topic->topic_id, 'views', $topic->topic_posts)");} 
+$topic->views=$topic->posts; $bb_topic_cache[$topic->topic_id]->views=$topic->posts;
+} else {	  // update existing value: we don't force a specific value just in case there's a collision with another user viewing the topic since it was loaded
+if (bb_get_option('bb_db_version')>1600) {@$bbdb->query("UPDATE $bbdb->meta SET meta_value=meta_value+1 WHERE object_type='bb_topic' AND object_id=$topic->topic_id AND meta_key='views' LIMIT 1");}
+else {@$bbdb->query("UPDATE $bbdb->topicmeta SET meta_value=meta_value+1 WHERE topic_id=$topic->topic_id AND meta_key='views' LIMIT 1");}
+$topic->views++; $bb_topic_cache[$topic->topic_id]->views++;
+}
+}
+
 function mini_track_index($id=0) {
 global $mini_track_options;
 $id=intval($id);
@@ -273,6 +305,13 @@ function mini_track_remote_addr() {	// detects true IP of known proxies and NATs
 if (ereg("^(67\.195\.|74\.6\.)",$_SERVER['REMOTE_ADDR']) && isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 return $_SERVER['HTTP_X_FORWARDED_FOR'];
 } else {return $_SERVER['REMOTE_ADDR'];} 
+}
+
+function mini_track_verify_addr($ip=0) {	
+if ($rdns=gethostbyaddr($ip) && $rdns!=$ip) {
+if (eregi("\.(msn\.com|alexa\.com|yahoo\.net|google\.com|googlebot\.com)$",$rdns)) {return true;}
+}
+return false;
 }
 
 function mini_track_bot_lookup() { 

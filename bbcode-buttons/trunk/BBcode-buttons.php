@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/114
 Description: Automatically adds an easy access button toolbar above the post textarea to allow quick tags in BBcode. This is an enhanced replacement for the Comment Quicktags plugin. No template editing required.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.4
+Version: 0.0.5
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -27,7 +27,7 @@ echo  "<scr"."ipt type='text/javascript' defer='defer'>
 if (isset($tags['img'])) {echo "BBcodeButtons.push(new BBcodeButton('ed_img','IMG','[img]','[/img]','m',-1)); // special case";}
 echo  "BBcodeButtons.push(new BBcodeButton('ed_ul','UL','[list]','[/list]','u','','unordered list'));
 	BBcodeButtons.push(new BBcodeButton('ed_ol','OL','[list=1]','[/list]','o','','ordered list'));
-	BBcodeButtons.push(new BBcodeButton('ed_li','LI','[li]','[/li]','l','','list item'));";	
+	BBcodeButtons.push(new BBcodeButton('ed_li','LI','[*]','[/*]','l','','list item'));";	
 if (isset($tags['center'])) {echo "BBcodeButtons.push(new BBcodeButton('ed_center','center','[center]','[/center]','c','','center'));";}	
 echo  "BBcodeButtons.push(new BBcodeButton('ed_code','CODE','[code]','[/code]','p','line-height:160%;font-size:80%;letter-spacing:1px;font-family:anadale,serif;','unformatted / code'));
 	BBcodeButtons.push(new BBcodeButton('ed_close','close','','','c',' ','auto-close any tags you left open'));

@@ -28,7 +28,7 @@ table tr.alt {background: #eee;} .tiny {font-size:12px;}
 .idle {color:#666;} .inactive {color:#999;} .rbot,.bot {color:red;} .new,.guest {color:green;} .member, .guest, .referer, td.pages {font-size:14px;}
 .num {font-family: monospaced; color:navy;} .lasturl div {padding-left: 5px; width:380px; white-space:nowrap; overflow; hidden;} </style> 
 <script>window.onload=titlelink; function titlelink() {blank='_blank'; for (i=0;x=document.links[i];++i){if (!x.target) {x.target=blank}; if (!x.title.length) {x.title=x.href;}}};</script>
-</head><body><div style='float:right;'>[<a href='$bb_uri?mini_track_reset'><small>reset</small></a>]</div>";
+</head><body><div style='float:right;'>[<a onclick='return confirm(".'"Erase current data?"'.");' href='$bb_uri?mini_track_reset'><small>reset</small></a>]</div>";
 
 mini_track(2);
 

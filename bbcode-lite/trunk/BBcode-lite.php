@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/93
 Description: A lightweight alternative to allow BBcode on your forum.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 1.0.1
+Version: 1.0.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -21,7 +21,7 @@ function bbcode_lite ($text) {
 $counter=0;  // filter out all backtick code first
 if (preg_match_all("|\<code\>(.*?)\<\/code\>|sim", $text, $backticks)) {foreach ($backticks[0] as $backtick) {++$counter; $text=str_replace($backtick,"_bbcode_lite_".$counter."_",$text);}}
 
-$text = preg_replace('/\[\*\](.+?)(\[\/\*\]|(?=(\[\*\]|\[\/list\])))/sim','<li>$1</li>',$text);	// * = li, a very special case since they may not be closed
+$text = preg_replace('/\[(\*|li)\](.+?)(\[\/(\*|li)\]|(?=(\[(\*|li)\]|\[\/list\])))/sim','<li>$2</li>',$text);	// * = li, a very special case since they may not be closed
 
 $wrap = array('color' => array('font','color'),'size' => array('font','size'),'url' => array('a','href'), 'list' => array('ol','type'));	
 foreach($wrap as $bbcode=>$html){$text = preg_replace('/\['.$bbcode.'=(.+?)\](.+?)\[\/'.$bbcode.'\]/is','<'.$html[0].' '.$html[1].'="$1">$2</'.$html[0].'>',$text);}

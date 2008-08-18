@@ -21,7 +21,7 @@ function bbcode_lite ($text) {
 $counter=0;  // filter out all backtick code first
 if (preg_match_all("|\<code\>(.*?)\<\/code\>|sim", $text, $backticks)) {foreach ($backticks[0] as $backtick) {++$counter; $text=str_replace($backtick,"_bbcode_lite_".$counter."_",$text);}}
 
-$text = preg_replace('/\[(\*|li)\](.+?)(\[\/(\*|li)\]|(?=(\[(\*|li)\]|\[\/list\])))/sim','<li>$2</li>',$text);	// * = li, a very special case since they may not be closed
+$text=preg_replace('/(\<br \/\>|[\s])*?\[(\*|li)\](.+?)(\<br \/\>|[\s])*?(\[\/(\*|li)\](\<br \/\>|[\s])*?|(?=(\[(\*|li)\](\<br \/\>|[\s])*?|\[\/list\])))/sim','<li>$3</li>',$text); // * = li, a very special case since they may not be closed
 
 $wrap = array('color' => array('font','color'),'size' => array('font','size'),'url' => array('a','href'), 'list' => array('ol','type'));	
 foreach($wrap as $bbcode=>$html){$text = preg_replace('/\['.$bbcode.'=(.+?)\](.+?)\[\/'.$bbcode.'\]/is','<'.$html[0].' '.$html[1].'="$1">$2</'.$html[0].'>',$text);}

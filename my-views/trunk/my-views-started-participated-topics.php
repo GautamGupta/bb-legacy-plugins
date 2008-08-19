@@ -5,17 +5,18 @@ Description: This plugin is part of the My Views plugin. It adds Started/Partici
 Plugin URI:  http://bbpress.org/plugins/topic/67
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.1
+Version: 0.1.2
 */ 
 
 if (is_callable('bb_register_view')) {	// Build 876+   alpha trunk
 
-function my_views_add_started_participated_topics() {	
+function my_views_add_started_participated_topics() {		
 	$query = array('append_meta'=>false,'sticky'=>false);	// attempt to short-circuit bb_query
 	bb_register_view("latest-discussions","Latest Discussions", $query);
 	if (bb_is_user_logged_in()) {
+		if (function_exists('unread_posts_init')  ) {bb_register_view("new-posts","Topics with new posts",$query);}
     		bb_register_view("my-topics","Topics I've Started",$query);
-    		bb_register_view("my-posts","Topics I've Participated In",$query);
+    		bb_register_view("my-posts","Topics I've Participated In",$query);    		
     	}
 }    	
 add_action('bb_init', 'my_views_add_started_participated_topics');
@@ -26,6 +27,7 @@ function my_views_filter( $passthrough ) {
 	global $views;
 	$views['latest-discussions'] = "Latest Discussions";
 	if (bb_is_user_logged_in()) {
+		if (function_exists('unread_posts_init') ) {$views['new-posts'] = "Topics with new posts";}
 		$views['my-topics'] = "Topics I've Started";
 		$views['my-posts'] = "Topics I've Participated In";		
 	}
@@ -38,7 +40,7 @@ function my_views_action( $view ) {
 global $bbdb, $topics, $view_count, $page; 
 $user_id=bb_get_current_user_info( 'id' );
 
-if ($view=='latest-discussions' || ($user_id && ($view=='my-topics' || $view=='my-posts')))  {
+if ($view=='latest-discussions' || ($user_id && ($view=='my-topics' || $view=='my-posts' || $view=='new-posts')))  {
 	// $topics=get_recent_user_threads($user_id);  $view_count  = count($topics);
 	$limit = bb_get_option('page_topics');
 	$offset = ($page-1)*$limit;
@@ -56,6 +58,14 @@ if ($view=='latest-discussions' || ($user_id && ($view=='my-topics' || $view=='m
 		unset($my_posts); 	 // huge query, release memory
 		$ids = join(',', array_keys($trans));			// this eventually needs to be enhanced to filter/split the array for pagination - could get HUGE
 		$where = $where." AND topic_id IN ($ids) ";			
+		}
+		
+		elseif ($view=='new-posts') {
+		global $up_last_login, $up_read_topics, $up_read_posts;
+		$where= $where." AND topic_time>'".gmdate("Y-m-d H:i:s",$up_last_login-86400*2)."' ";  // go back 48 hours just to give them something if empty
+		if (isset($up_read_posts) && is_array($up_read_posts)) {
+			$where.=" AND topic_id IN {".implode(',',$up_read_topics)."} AND topic_last_post_id NOT IN {".implode(',',$up_read_posts)."} ";
+		}
 		}
 	}
 	$query = " FROM $bbdb->topics $where ";

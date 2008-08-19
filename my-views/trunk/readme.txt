@@ -2,7 +2,7 @@
 Tags: view, views, most viewed, least viewed, my topics, _ck_
 Contributors: _ck_
 Requires at least: 0.8.2
-Tested up to:  trunk alpha 1075
+Tested up to:  0.9.0.2
 Stable tag: trunk
 Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
 
@@ -101,5 +101,21 @@ Version 0.091 (2008-02-03)
 Version 0.1.1 (2008-04-21)
 
 *	fix for improper WHERE filter use to peacefully co-exist with Hidden Forums plugin
+
+Version 0.1.2 (2008-08-19)
+
+* 	additional view: "Topics with new posts"  (requires Unread Posts plugin by _ck_ ) Part of "started-participated" view.
+
+== To Do ==
+
+* admin interface
+
+* deal with stickies confusing view results
+
+* rename views
+
+* make table sort optional
+
+* translation ability
 
 

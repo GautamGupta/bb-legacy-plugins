@@ -5,30 +5,11 @@ Description:  My Views is a powerful addition to the default "views" in bbPress.
 Plugin URI:  http://bbpress.org/plugins/topic/67
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.1
+Version: 0.1.2
 
-History
-0.03	: first public release, for 0.8.2.x only
-0.04	: now trunk compatibility
-0.05	: breakup of view modules into seperate, optional plugins
-0.06	: available/installed plugins improvements (totals, sorting)
-0.07	: additional modules (statistics, available themes)	  Statistics is not finished yet and Themes requires bbPress Theme Switcher
-0.08	: bug fix for passthrough adding views to 0.8.2.x , optional header & footer for internal views, optional .my_views_header class
-0.09	: pagination (multi-page) support added for versions >0.8.3 & add label "pages: " (or any text) to list of pages
-0.091	: quick fix for removing duplicated/misplaced stickies & incorrect sorting orders
+License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
-To Do:
-admin interface
-deal with stickies confusing view results
-rename views
-make table sort optional
-translation ability
-
-Features:
-ability to change view list order 
-remove any view
-label list of pages with "pages: " or any custom text
-
+Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
 */
 
 function my_views_init() {	//	to do: make much nicer with admin interface
@@ -37,7 +18,7 @@ global $my_views;
 $my_views['remove_views']=array("weird-view1","weird-view2");	// remove any views by slug name, built-in or from my-views, example: "untagged"
 
 $my_views['prefered_order']=array(	// force views to list in the order that you desire
-	"latest-discussions","no-replies","untagged","my-topics","my-posts","most-views","most-posts","least-views","least-posts","support-forum-no",
+	"latest-discussions","no-replies","untagged","my-topics","my-posts","new-posts","most-views","most-posts","least-views","least-posts","support-forum-no",
 	"installed-plugins","available-plugins","installed-themes","available-themes","statistics"
 	);
 
@@ -297,11 +278,13 @@ function ts_sort_currency(a,b) {
 }
 
 function ts_sort_recursive_comma(a,b) { 
+try {
     aa = parseInt(ts_getInnerText(a.cells[SORT_COLUMN_INDEX]).replace(/[^0-9]/g,''));
     if (isNaN(aa)) aa = 0;
     bb = parseInt(ts_getInnerText(b.cells[SORT_COLUMN_INDEX]).replace(/[^0-9]/g,''));
     if (isNaN(bb)) bb = 0;
     return aa - bb;
+} catch(dummy) {return 0;}    
 }
 
 function ts_sort_numeric(a,b) { 

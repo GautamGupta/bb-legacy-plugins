@@ -1,8 +1,8 @@
 === SMTP mailer for bbPress ===
 Contributors: sambauers
 Tags: mail, smtp
-Requires at least: 1.0-alpha
-Tested up to: 1.0-alpha
+Requires at least: 1.0-alpha-2
+Tested up to: 1.0-alpha-2
 Stable tag: 0.1
 
 Allows bbPress to send email through an SMTP server.
@@ -12,7 +12,7 @@ Allows bbPress to send email through an SMTP server.
 This plugin allows an administrator to direct emails sent by bbPress through
 an SMTP email server.
 
-This plugin only works with bbPress version 1.0-alpha or higher.
+This plugin only works with bbPress version 1.0-alpha-2 or higher.
 
 == Installation ==
 

@@ -5,7 +5,7 @@ Description: This plugin is part of the My Views plugin. It adds forum statistic
 Plugin URI:  http://bbpress.org/plugins/topic/67
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.1
+Version: 0.1.2
 */ 
 
 //  if (function_exists('get_view_count')) :       // requires  bb-topic-views plugin   // this needs to check the db meta directly as the other plugin may not have loaded
@@ -42,37 +42,51 @@ global $bbdb;
 $topiclimit=15;  // top topics 10,15,20 etc.
 $userlimit=10;  // top users 10,15,20 etc.
 
+// SELECT count(*) as posts, count(distinct topic_id) as topics, count(distinct poster_id) as members FROM `bb_posts` WHERE post_status=0
+// SELECT count(*) as posts, count(distinct t1.topic_id) as topics, count(distinct poster_id) as members FROM `bb_posts` as t1  LEFT JOIN `bb_topics` as t2 ON t1.topic_id=t2.topic_id WHERE post_status=0 AND topic_status=0
+
+$results=$bbdb->get_results("SELECT COUNT(*) as forums, SUM(posts)  as posts, SUM(topics) as topics FROM $bbdb->forums");
+$my_views_statistics["total_forums"]=$results[0]->forums;
+$my_views_statistics["total_posts"]=$results[0]->posts;
+$my_views_statistics["total_topics"]=$results[0]->topics;
+
 $my_views_statistics["total_members"]=$bbdb->get_var("SELECT COUNT(*) FROM $bbdb->users");
-$my_views_statistics["total_posts"]=$bbdb->get_var("SELECT SUM(posts) FROM $bbdb->forums");
-$my_views_statistics["total_topics"]=$bbdb->get_var("SELECT SUM(topics) FROM $bbdb->forums");
+$my_views_statistics["total_days_old"]=round((time()-strtotime($bbdb->get_var("SELECT topic_start_time FROM $bbdb->topics ORDER BY topic_start_time LIMIT 1"))) / (3600 * 24),2);
+
+if (bb_get_option('bb_db_version')>1600) { // bbPress 1.0 vs 0.9
+$my_views_statistics["total_topic_views"]= $bbdb->get_var("SELECT SUM(meta_value) FROM $bbdb->meta LEFT JOIN $bbdb->topics ON $bbdb->meta.object_id = $bbdb->topics.topic_id  WHERE $bbdb->topics.topic_status=0 AND $bbdb->meta.meta_key='views' AND $bbdb->meta.object_type='bb_topic' ");
+$my_views_statistics["total_tags"]=$bbdb->get_var("SELECT COUNT(*) FROM $bbdb->terms");
+} else {	 // 0.9
 $my_views_statistics["total_topic_views"]= $bbdb->get_var("SELECT SUM(meta_value) FROM $bbdb->topicmeta LEFT JOIN $bbdb->topics ON $bbdb->topicmeta.topic_id = $bbdb->topics.topic_id  WHERE $bbdb->topics.topic_status=0 AND $bbdb->topicmeta.meta_key='views' ");
 $my_views_statistics["total_tags"]=$bbdb->get_var("SELECT COUNT(*) FROM $bbdb->tags");
-$my_views_statistics["total_forums"]=$bbdb->get_var("SELECT COUNT(*) FROM $bbdb->forums");
-$my_views_statistics["total_days_old"]=round((time()-strtotime($bbdb->get_var("SELECT topic_start_time FROM $bbdb->topics ORDER BY topic_start_time LIMIT 1"))) / (3600 * 24),2);
+}
 
 $my_views_statistics["average_registrations"]=$my_views_statistics["total_members"]/$my_views_statistics["total_days_old"];
 $my_views_statistics["average_posts"]=$my_views_statistics["total_posts"]/$my_views_statistics["total_days_old"];
 $my_views_statistics["average_topics"]=$my_views_statistics["total_topics"]/$my_views_statistics["total_days_old"];
 $my_views_statistics["average_topic_views"]=$my_views_statistics["total_topic_views"]/$my_views_statistics["total_days_old"];
 
-$my_views_statistics["total_days_old"]=$my_views_statistics["total_days_old"];
-
 $my_views_statistics["oldest_members"] = $bbdb->get_results("SELECT ID,user_registered FROM $bbdb->users ORDER BY user_registered ASC LIMIT $userlimit");
 $my_views_statistics["newest_members"] = $bbdb->get_results("SELECT ID,user_registered FROM $bbdb->users ORDER BY user_registered DESC LIMIT $userlimit");
 
-$my_views_statistics["top_posters"] = $bbdb->get_results("SELECT poster_id, COUNT(poster_id) AS post_count FROM $bbdb->posts WHERE post_status != 1 GROUP BY poster_id ORDER BY post_count DESC LIMIT $userlimit");
-$my_views_statistics["top_topic_starters"]=$bbdb->get_results("SELECT topic_poster, topic_poster_name, COUNT(topic_id) AS post_count FROM $bbdb->topics WHERE topic_status=0 GROUP BY topic_poster_name ORDER BY post_count DESC LIMIT $userlimit");
+$my_views_statistics["top_posters"] = $bbdb->get_results("SELECT DISTINCT poster_id, COUNT(poster_id) AS post_count FROM $bbdb->posts WHERE post_status != 1 GROUP BY poster_id ORDER BY post_count DESC LIMIT $userlimit");
+$my_views_statistics["top_topic_starters"]=$bbdb->get_results("SELECT DISTINCT topic_poster, topic_poster_name, COUNT(topic_id) AS post_count FROM $bbdb->topics WHERE topic_status=0 GROUP BY topic_poster_name ORDER BY post_count DESC LIMIT $userlimit");
 
 $topics=$bbdb->get_results("SELECT * FROM $bbdb->topics WHERE topic_status=0 ORDER BY topic_posts DESC LIMIT $topiclimit"); 	// topic_id,topic_title,topic_posts
 $my_views_statistics["top_topics_by_posts"] = bb_append_meta( $topics, 'topic' );
 	
+if ($my_views_statistics["total_topic_views"]) {
+	if (bb_get_option('bb_db_version')>1600) { // bbPress 1.0 vs 0.9
+	$most_views = $bbdb->get_results("SELECT object_id as topic_id FROM $bbdb->meta WHERE meta_key='views' AND object_type='bb_topic' ORDER BY cast(meta_value as UNSIGNED) DESC LIMIT $topiclimit");
+	} else {
 	$most_views = $bbdb->get_results("SELECT topic_id FROM $bbdb->topicmeta WHERE meta_key='views' ORDER BY cast(meta_value as UNSIGNED) DESC LIMIT $topiclimit");
+	}
 	foreach (array_keys($most_views) as $i) {$trans[$most_views[$i]->topic_id] =& $most_views[$i];} $ids = join(',', array_keys($trans));
 	$where = apply_filters('get_latest_topics_where',"WHERE topic_status=0 AND topic_id IN ($ids) ");
 	$topics ="SELECT * FROM $bbdb->topics $where ORDER BY FIELD(topic_id, $ids)"; // topic_id,topic_title
 	$topics = $bbdb->get_results($topics);
 $my_views_statistics["top_topics_by_views"] = bb_append_meta( $topics, 'topic' );
-
+} else {$my_views_statistics["top_topics_by_views"] = array();}
 
 ?>
 
@@ -229,36 +243,6 @@ echo  "<tr".get_alt_class('plugin', $class)."><td>  <a href='" . attribute_escap
  -->
 
 <?php
-}
-
-function stats_most_views( $view ) {
-global $bbdb, $topics, $view_count;
-if ($view=='most-views')  {$sort="DESC";}
-if ($view=='least-views')  {$sort="ASC";}
-if ($view=='least-views' || $view=='most-views')  {
-$limit = bb_get_option('page_topics');
-$most_views = $bbdb->get_results("SELECT topic_id FROM $bbdb->topicmeta WHERE meta_key='views' ORDER BY cast(meta_value as UNSIGNED) $sort LIMIT $limit");
-foreach (array_keys($most_views) as $i) {$trans[$most_views[$i]->topic_id] =& $most_views[$i];} $ids = join(',', array_keys($trans));
-$where = apply_filters('get_latest_topics_where',"WHERE topic_status=0 AND topic_id IN ($ids) ");
-$topics ="SELECT * FROM $bbdb->topics $where ORDER BY FIELD(topic_id, $ids)";
-$topics = $bbdb->get_results($topics);
-$view_count  = count($topics);
-$topics = bb_append_meta( $topics, 'topic' );	
-}
-// else {do_action( 'bb_custom_view', $view );}
-}
-
-function stats_forums_views_append($forums) {
-if (is_front() || is_forum()) {
-global $bbdb, $forums_views; $sum_meta_value="SUM(meta_value)";
-if (!isset($forums_views)) {
-$forums_views = $bbdb->get_results(" SELECT $sum_meta_value,forum_id FROM $bbdb->topicmeta LEFT JOIN $bbdb->topics ON $bbdb->topicmeta.topic_id = $bbdb->topics.topic_id  WHERE $bbdb->topics.topic_status=0 AND $bbdb->topicmeta.meta_key='views'  GROUP BY $bbdb->topics.forum_id");
-} foreach ($forums_views as $forum_views) {
-// echo " <!-- ".$forum_views->forum_id." - ".$sum_meta_value." -->";  
-if ($forum_views->forum_id) {$forums[$forum_views->forum_id]->views=$forum_views->$sum_meta_value;} 
-}
-}
-return $forums;
 }
 
 // endif;

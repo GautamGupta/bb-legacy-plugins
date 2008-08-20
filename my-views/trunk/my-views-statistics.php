@@ -222,26 +222,6 @@ echo  "<tr".get_alt_class('plugin', $class)."><td>  <a href='" . attribute_escap
 
 <br clear=both />
 
- <!--
-<table style="width:49%;margin:0 0 1em 0;clear:none;float:left;" id="latest">
-<thead>
-<tr><th>Top Forums</th><th>#</th></tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
-<table style="width:49%;margin:0 0 1em 0;clear:none;float:right;" id="latest">
-<thead>
-<tr><th>Top Time Online</th><th>#</th></tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-
-<br clear=both />
- -->
-
 <?php
 }
 

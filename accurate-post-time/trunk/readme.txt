@@ -11,5 +11,9 @@ Outputs an accurate post time in, optionally, your choice of formatting. Use <?p
 == Installation ==
 
 * Add the `accurate-post-time` file to bbPress 'bb-plugins/' directory and activate.
-* For example, in front-page.php, change the "topic_time()" to "topic_time('l j M G:i')
+
+* For example, in front-page.php,
+change:  topic_time()
+to:      topic_time('l j M G:i')
+
 * Enjoy :)

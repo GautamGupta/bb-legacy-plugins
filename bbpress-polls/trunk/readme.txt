@@ -55,6 +55,7 @@ Check under the admin menu for "bbPress Polls" options.
 * 0.5.2	2008-March-14 xhtml and non-ajax-edit bug fixes, props zmaroti
 * 0.5.3	2008-March-14 javascript payload is now kept as small as possible 
 * 0.5.4	2008-March-14 new poll form (and edit form) remotely loaded when in "ajax" mode
+* 0.5.5	2008-August-27 serious ajax bug with data loss fixed, admin functions externalized
 	
 == To Do ==
 

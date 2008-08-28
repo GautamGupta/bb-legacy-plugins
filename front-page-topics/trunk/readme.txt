@@ -1,29 +1,47 @@
-=== Front Page Topics ===
-Tags: page_topics, pagination
-Contributors: mdawaffe
-Requires at least: 0.8
-Stable Tag: 0.8
+=== Topics Per Page  ===
+Tags: _ck_, topics, posts, custom, limit, front-page, discussions
+Contributors: _ck_, mdawaffe
+Requires at least: 0.9
+Tested up to: trunk
+Stable tag: trunk
+Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
 
-Front Page Topics allows you to change the number of topics or posts shown on 
-most of your bbPress pages.
+Set custom topic or post count limits for nearly every kind of bbPress page while still calculating direct post links correctly. (now 1.0 compatible)
+
+== Description ==
+
+Set custom topic or post count limits for nearly every kind of bbPress page while still calculating direct post links correctly. (now 1.0 compatible)
 
 == Installation ==
 
-Add the front-page-topics.php file to bbPress' my-plugins/ directory.
+* Edit the top of the `topics-per-page.php` file to change the number of topics or posts you want on each kind of page
 
-== Configuration ==
+* Add the `topics-per-page.php` file to bbPress' `my-plugins/` directory
 
-1. Log in as the key master.
-2. In your admin panels, go to Site Management -> Front Page Topics
-3. Enter the number of topics (or posts) you want displayed on each page.
-   If you enter a `0` for any item, the default number (as defined by
-   `$bb->page_topics` in your `config.php` file) will be used.
-
+* Activate plugin
 
 == Frequently Asked Questions ==
 
-= It says I can adjust the number of items in my feeds, but I can't.  Is it lying? =
+= Where's the admin menu? =
 
-A little bit, yes.  You can adjust the number of topics or posts in your all of your
-feeds except the main feed.  That feed shows the 35 most recent topics from any forum
-and cannot be customized with this plugin.
+* Since the settings in this plugin will likely be edited only once and then left forever, an admin menu would only slow bbPress down
+
+* mdawaffe has instructed me to completely replace front-page-topics with this plugin
+
+== License ==
+
+* CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
+
+== Donate ==
+
+* http://amazon.com/paypage/P2FBORKDEFQIVM
+
+== History ==
+
+= Version 0.0.1 (2008-08-26) =
+
+* first public release after several informal versions posted around the bbPress.org forums
+
+== To Do ==
+
+* optionally calculate number of stickies on a page and enforce topic count limit including stickies (overriding bbPress's default behaviour)

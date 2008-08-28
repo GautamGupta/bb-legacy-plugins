@@ -3,26 +3,13 @@
 Plugin Name: Human Test for bbPress
 Plugin URI:  http://bbpress.org/plugins/topic/77
 Description:  uses various methods to exclude bots from registering (and eventually posting) on bbPress
-Version: 0.7.1
+Version: 0.7.2
 Author: _ck_
 Author URI: http://bbshowcase.org
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
 Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
-
-Instructions:   install, activate, check registration page for new field and test a new registration.
-
-todo:
-"negative fields" that are hidden and supposed to remain blank but spam bots try to fill, therefore fail
-optionally write questions in captcha-like graphics (tricks spammers to enter graphic as code instead of answer)
-optionally notify admin of failed registration
-
-history:
-0.01	first public release - hard-coded and only can test for 2+2=4 (obviously improvements coming soon)
-0.05	now generates random numbers for addition between 3 and 10 (and uses sessions on registration page only)
-0.06	minor logic bug fix to prevent multiple attempts against same answer, additional text localization
-0.07	SESSION support improvement, fine-tuning to question placement
 */ 
 
 function human_register_page() {	// determines if we're actually on register.php and returns true/false
@@ -48,7 +35,7 @@ if (human_register_page()) :  //  only display on register.php and hide on profi
 	echo '<script language="JavaScript" type="text/javascript">document.write("'.$question.'");</script>';	// write question with javascript
 	echo '<noscript><i>'.__("registration requires JavaScript").'</i></noscript>';	// warn no-script users 
 	echo '</th><td width="72%"><input name="human_test" type="text" id="human_test" size="30" maxlength="140" value="" />';	// answer field
-	echo '<input type="hidden" name = "'.session_name().'" value = "'.session_id().'">';	// improved session support without cookies or urls
+	echo '<input type="hidden" name = "'.session_name().'" value = "'.session_id().'" />';	// improved session support without cookies or urls
 	echo '</td></tr></table></fieldset>';
 
 endif;
@@ -58,12 +45,12 @@ add_action( 'extra_profile_info', 'human_registration_test');	// attach to regis
 function human_test_check() {
 if (human_register_page()) :  //  only display on register.php and hide on profile page
 	// one way or another we're gonna need sessions for now
-	// @session_cache_limiter('nocache');	// "nocache" destroys form data with back button - "public" preserves form values when hitting back
-	
+	if (!isset($_SESSION)) {
+	// @session_cache_limiter('nocache');	// "nocache" destroys form data with back button - "public" preserves form values when hitting back	
 	@ini_set('session.use_trans_sid', false);
 	@ini_set("url_rewriter.tags","");
 	@session_start();	// sent with headers - errors masked with @ if sessions started previously - which it actually has to be for the following to 
-
+	}
 	if ($_POST || isset($_POST['human_test'])) {
 		$human_test =  stripslashes_deep($_POST['human_test']);		
 		$compare = $_SESSION['HUMAN_TEST'];

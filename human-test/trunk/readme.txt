@@ -55,3 +55,16 @@ Eventually will add image based (captcha style) writing as well as "negative fie
 = Version 0.7.1 (2008-03-14) =
 
 * more attempts to fix session support on different server configs
+
+= Version 0.7.2 (2008-08-28) =
+
+* don't start session if already started to behave with other plugins that use sessions
+
+== To Do ==
+
+* "negative fields" that are hidden and supposed to remain blank but spam bots try to fill, therefore fail
+
+* optionally write questions in captcha-like graphics (tricks spammers to enter graphic as code instead of answer)
+
+* optionally notify admin of failed registration
+

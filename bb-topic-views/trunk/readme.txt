@@ -1,10 +1,13 @@
 === bb-Topic-Views ===
 Plugin Name: bb-Topic-Views
-Plugin URI: http://blog.wittmania.com/bb-topic-views
-Tags: views, count, topic views
+Plugin URI: http://bbpress.org/plugins/topic/bb-topic-views/
+Tags: views, count, topic views, _ck_
 Author: wittmania
 Author URI: http://blog.wittmania.com
-Stable Tag: 1.5
+Contributors:  _ck_
+Stable Tag: 1.6
+Requires at least: 0.8
+Tested up to: 1.0
 
 bb-Topic-Views counts and displays the number of times each topic has been viewed.
 
@@ -118,4 +121,4 @@ each section.
 	
 == Example ==
 
-You can see this plugin in action at http://blog.wittmania.com/bbpress
+You can see this plugin in action at http://blog.wittmania.com/bbpress or http://bbshowcase.org/forums/

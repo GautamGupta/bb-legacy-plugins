@@ -1,11 +1,11 @@
 <?php
 /*
-Plugin Name: bb-Topic-Views
+Plugin Name: bb Topic Views
 Plugin URI: http://bbpress.org/plugins/topic/bb-topic-views/
 Description: Counts the number of times a topic has been viewed, and allows the administrator to display the count in various places.
 Author: Mike Wittmann, _ck_
 Author URI: http://blog.wittmania.com/
-Version: 1.6.0
+Version: 1.6.1
 */
 
 // Set this to zero if you DON'T want the view count automatically appended to the topic title.  Default is 1.
@@ -106,9 +106,11 @@ function initialize_view_count( $topic_id ) {	//If the view count for a topic ha
 function update_view_count() {
 	global $bbdb, $topic, $topic_id;
 	
-	if (is_topic()) {
-		if (empty($topic->views)) {$view_count=0;} else {$view_count=$topic->views;}
+	if (is_topic()) {			
+		if (empty($topic_id)) {if (empty($topic)) {return;} else {$topic_id=$topic->topic_id;}}	// should never happen in bb_head but does for some reason in 1.0 ?
 	
+		if (empty($topic->views)) {$view_count=0;} else {$view_count=$topic->views;}
+
 		if ($view_count>=1) {
 			
 			$last_topic_id = $_SESSION['last_topic_id'];	// Pulls the session variable for the last topic we viewed
@@ -119,11 +121,11 @@ function update_view_count() {
 
 				if (bb_get_option('bb_db_version')>1600) { // bbPress 1.0
 			
-				@$bbdb->query("UPDATE $bbdb->meta SET meta_value=meta_value+1 WHERE object_type='bb_topic' AND object_id=$topic_id AND meta_key='views' LIMIT 1");
+				@$bbdb->query("UPDATE $bbdb->meta SET meta_value=meta_value+1 WHERE object_type = 'bb_topic' AND object_id = $topic_id AND meta_key='views' LIMIT 1");
 			
 				} else { // 0.7 - 0.9
 			
-				@$bbdb->query("UPDATE $bbdb->topicmeta SET meta_value=meta_value+1 WHERE topic_id=$topic_id AND meta_key='views' LIMIT 1");
+				@$bbdb->query("UPDATE $bbdb->topicmeta SET meta_value=meta_value+1 WHERE topic_id = $topic_id AND meta_key='views' LIMIT 1");
 			
 				}
 			

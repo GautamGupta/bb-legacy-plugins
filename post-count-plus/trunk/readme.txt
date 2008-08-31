@@ -2,7 +2,7 @@
 Tags: posts, count, post count, titles, custom titles, _ck_
 Contributors: _ck_
 Requires at least: 0.8.2
-Tested up to: trunk alpha 1075
+Tested up to: 0.9.0.2
 Stable tag: trunk
 Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
 
@@ -21,6 +21,10 @@ custom titles based on either post count or membership length & role.
 
 * A demo can be seen at any topic on http://bbShowcase.org/forums/
 good example: http://bbshowcase.org/forums/topic/new-bbpress-theme-futurekind
+
+= Why does the user's info repeat twice in their posts? =
+
+* This is a bug in an early version of bbPress 1.0 alpha. Please upgrade your bbPress to the newest 1.0
 
 == Installation ==
 
@@ -63,6 +67,12 @@ any template by using direct calls, ie. `<?php post_count_plus($user->ID); ?>`
 = Version 1.1.2 (2008-04-27) =
 
 * don't activate if inside a feed 
+
+= Version 1.1.6 (2008-08-31) =
+
+* admin function externalized to reduce code size for most users
+* bug fix for automatic post count inserted into profile
+* now compatible with 1.0
 
 == To Do ==
 

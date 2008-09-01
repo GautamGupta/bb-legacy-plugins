@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.9
+Version: 0.1.10
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -71,7 +71,7 @@ $bb_attachments['errors']=array("ok","uploaded file exceeds UPLOAD_MAX_FILESIZE 
 add_action( 'bb_init', 'bb_attachments_init');
 add_action( 'bb_post.php', 'bb_attachments_process_post');
 add_filter('post_text', 'bb_attachments_bbcode',250);	
-bb_register_activation_hook( __FILE__,  'bb_attachments_install');
+bb_register_activation_hook(str_replace(array(str_replace("/","\\",BB_PLUGIN_DIR),str_replace("/","\\",BB_CORE_PLUGIN_DIR)),array("user#","core#"),__FILE__), 'bb_attachments_install');
 
 function bb_attachments_init() {
 global $bbdb, $bb_attachments;

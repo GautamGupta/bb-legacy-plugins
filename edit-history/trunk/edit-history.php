@@ -5,7 +5,7 @@ Description: Allows you to see a detailed history of exactly what has been chang
 Plugin URI: http://bbpress.org/plugins/topic/102
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.2
+Version: 0.0.3
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -16,10 +16,10 @@ $edit_history['view_level']='participate'; 	// participate/moderate/administrate
 
 /*    stop editing here   */
 
-bb_register_activation_hook( __FILE__,  'edit_history_create_table');
 add_filter( 'post_edit_uri', 'edit_history_link');
 add_action( 'bb_update_post', 'edit_history_update_post');
 add_action( 'bb_init', 'edit_history_init');
+bb_register_activation_hook(str_replace(array(str_replace("/","\\",BB_PLUGIN_DIR),str_replace("/","\\",BB_CORE_PLUGIN_DIR)),array("user#","core#"),__FILE__),'edit_history_create_table');
 
 function edit_history_init() {
 global $bbdb, $post_id, $bb_post, $topic;
@@ -51,7 +51,7 @@ foreach ($edit_history as $edit) {
 <div class="threadpost">
 	<?php $link=get_user_name($edit->user_id); //  user_profile_link($id) ?>
 	<div><span style="background:#eeee00;">&nbsp;<?php printf( __('Edited %s ago by %s'), bb_since($edit->time), $link); ?>&nbsp;</span></div>
-	<div class="post"><?php  echo balanceTags(apply_filters( 'post_text', edit_history_visual($bb_post->post_text, $newer), $bb_post->post_id),true); ?></div>
+	<div class="post"><?php  echo force_balance_tags(apply_filters( 'post_text', edit_history_visual($bb_post->post_text, $newer), $bb_post->post_id)); ?></div>
 	<div class="poststuff"><?php printf( __('Edited %s ago by %s'), bb_since($edit->time), $link); ?></div>
 </div>
 </li>
@@ -130,13 +130,15 @@ function edit_history_diff($old, $new) {
 
 function edit_history_visual($old, $new) {
 	$diff = edit_history_diff(edit_history_split($old),edit_history_split($new));
-	// echo "<code>"; print_r($diff); echo "</code>";
+	// if (bb_current_user_can('administrate')) {echo "<code>"; print_r($diff); echo "</code>";}
 	foreach($diff as $k){
 		if (is_array($k)) {
 			$d=(!empty($k['d'])?implode(' ',$k['d']):'');
 			$i=(!empty($k['i'])?implode(' ',$k['i']):'');
 			if ($d && $i && str_replace("</p>","",$d)==str_replace("</p>","",$k['i'][0])) {$ret.=$k['i'][0]; unset($d); unset($k['i'][0]); $i=implode(' ',$k['i']);}	
 			if ($d && $i && substr($d,-6)=="<br />" && substr($i,-6)=="<br />") {$d=substr($d,0,-6);}			
+			// to do: strip end tags in $d that have no start tags as they will be in $i  - also for ending bbcode tags			
+			// if ($d && $i) {$d=force_balance_tags(post_text($d));}
 			$ret .= (!empty($d)?"<del style='background:#ffdddd;'>".str_replace("<p>","</del><p><del style='background:#ffdddd;'>",$d)."</del> ":'').
 				(!empty($i)?"<ins style='text-decoration:none; background:#ddFFdd;'>".str_replace("<p>","</ins><p><ins style='text-decoration:none; background:#ddFFdd;'>",$i)."</ins> ":'');			
 		} else { $ret .= $k . ' ';}

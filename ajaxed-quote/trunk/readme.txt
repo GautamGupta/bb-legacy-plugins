@@ -20,8 +20,7 @@ Among added features: the suggested ones in the comments of the original plugin,
 
 1. Upload the folder `ajaxed-quote` to your `/my-plugins/` directory.
 1. Modify your `post.php` template to include the quote link, outputs "Quote" by default: `<?php bb_quote_link(); ?>`
-1. Modify your `post-form.php` template to include the function `bb_quote_post`. Example: 
-`<textarea name="post_content" cols="50" rows="8" id="post_content" tabindex="3">
+1. Modify your `post-form.php` template to include the function `bb_quote_post`. Example: `<textarea name="post_content" cols="50" rows="8" id="post_content" tabindex="3">
 <?php if (function_exists('bb_quote_post')) bb_quote_post(); ?>
 </textarea>`
 1. You're done :)

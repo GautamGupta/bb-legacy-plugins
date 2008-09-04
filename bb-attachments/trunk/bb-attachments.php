@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.10
+Version: 0.1.11
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -44,6 +44,8 @@ $bb_attachments['inline']['width']=590;		// max inline image width in pixels (fo
 $bb_attachments['inline']['height']=590;		// max inline image height in pixels (for display, real height unlimited)
 $bb_attachments['inline']['solution']="resize";	// resize|frame - images can be either resized or CSS framed to meet above requirement
 									// only resize is supported at this time
+$bb_attachments['inline']['auto']=true;		// auto insert uploaded images into post
+
 $bb_attachments['style']=".bb_attachments_link, .bb_attachments_link img {border:0; text-decoration:none; background:none;} #thread .post li {clear:none;}";
 
 // stop editing here (advanced user settings below)
@@ -246,7 +248,7 @@ $user_id=bb_get_current_user_info( 'id' );
 if (!isset($_FILES['bb_attachments']) || !is_array($_FILES['bb_attachments']) || !$user_id || !$post_id || !bb_current_user_can('edit_post',$post_id) || !bb_current_user_can($bb_attachments['role']['upload'])) {return;}	
 
 $user_ip=$_SERVER["REMOTE_ADDR"];  	// $GLOBALS["HTTP_SERVER_VARS"]["REMOTE_ADDR"];
-$time=time();						
+$time=time();	$inject="";					
 
 $bb_post=bb_get_post($post_id);  $topic_id=$bb_post->topic_id; 	// fetch related topic
 $topic_attachments=intval(bb_get_topicmeta($topic_id,"bb_attachments"));	// generally how many on topic (may be off if post moved)
@@ -330,11 +332,25 @@ while(list($key,$value) = each($_FILES['bb_attachments']['name'])) {
 			if ($id>0) {$bbdb->query("UPDATE  bb_attachments SET `status` = $status WHERE `id` = $id");}
 			$error=""; if ($_FILES['bb_attachments']['error'][$key]>0) {$error=" (".$bb_attachments['errors'][$_FILES['bb_attachments']['error'][$key]].") ";}
 			$output.="<li><span style='color:red'><strong>$filename "." <span class='num'>(".round($size/1024,1)." KB)</span> ".__('error:')." ".$bb_attachments['status'][$status]."</strong>$error</span></li>";
-		} else {$output.="<li><span style='color:green'><strong>$filename "." <span class='num'>(".round($size/1024,1)." KB)</span> ".__('successful')."</strong></span></li>";}
+		} else {$output.="<li><span style='color:green'><strong>$filename "." <span class='num'>(".round($size/1024,1)." KB)</span> ".__('successful')."</strong></span></li>";			 
+			if ($bb_attachments['inline']['auto']) {
+		 	if ($display) {
+		 		$location = bb_attachments_location();	 $can_inline=true;
+	     			if (!($bb_attachments['role']['inline']=="read" || bb_current_user_can($bb_attachments['role']['inline']))) {$can_inline=false;}
+				if ($location=="edit.php" && $can_inline) {
+					$output.='<scr'.'ipt type="text/javascript" defer="defer">			
+					bbat_field = document.getElementsByTagName("textarea")[0];
+					bbat_value=" [attachment="+'.$post_id.'+","+'.$id.'+"] ";
+					bbat_field.value += bbat_value;</script>';
+				} // above auto-injects newly uploaded attachment if edit form present
+			} else {	$inject.=" [attachment=$post_id,$id]";}
+			}
+		}
 	} // end !$empty
 } // end while
 $output.="</ol>";
-if ($display) {echo $output;}
+if ($display) {echo $output;} 
+elseif (!empty($inject) && $bb_attachments['inline']['auto']) {$bb_post->post_text=apply_filters('edit_text', $bb_post->post_text.$inject); bb_insert_post($bb_post);} // auto-inject 
 bb_update_topicmeta( $topic_id, 'bb_attachments', $topic_attachments+$offset);
 }
 

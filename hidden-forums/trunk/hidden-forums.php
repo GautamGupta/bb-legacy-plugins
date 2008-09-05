@@ -5,7 +5,7 @@ Description:  Make selected forums completely hidden except to certain members o
 Plugin URI:  http://bbpress.org/plugins/topic/105
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.2
+Version: 0.0.3
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -67,13 +67,16 @@ if (!empty($hidden_forums_list)) {
 	$hidden_forums_list=implode(",",array_keys($hidden_forums_list));
  
 	$filters=array(
-	'get_forums', 	'get_topic', 'get_thread', 'get_thread_post_ids',	
+	'get_topic', 'get_thread', 'get_thread_post_ids',	
 	'get_latest_posts', 'get_latest_topics', 'get_latest_forum_posts',	
 	'get_recent_user_replies', 'get_recent_user_threads',	'get_recent_user_replies',
 	'get_sticky_topics', 'get_tagged_topics', 	'bb_is_first',	
-	'bb_recent_search', 	'bb_relevant_search'
+	'bb_recent_search', 	'bb_relevant_search', 'get_forums'
 	);
-	foreach ($filters as $filter) {add_action($filter.'_where','hidden_forums_filter');}	
+	if (bb_get_option('bb_db_version')>1600) {	// bbPress 1.0 workaround, needs work
+		if (!is_topic()) {unset($filters[0]);} else {add_action('get_topic_where','hidden_forums_filter_once',20);}
+	}       			
+	foreach ($filters as $filter) {add_filter($filter.'_where','hidden_forums_filter');}
 	foreach ($bb_views as $key=>$value) {add_action('bb_view_'.$key.'_where','hidden_forums_filter');}
 }
 
@@ -89,6 +92,8 @@ function hidden_forums_filter($where='') {
 	$prefix=""; if (strpos($where," t.")) {$prefix="t.";} elseif (strpos($where," p.")) {$prefix="p.";}
 	return $where.((empty($where)) ? " WHERE " : " AND ").$prefix."forum_id NOT IN ($hidden_forums_list) ";
 }
+
+function hidden_forums_filter_once($where='') {remove_filter('get_topic_where','hidden_forums_filter'); return $where;}	// 1.0 workaround
 
 function hidden_forums_label($title,$id) {
 	global $hidden_forums;

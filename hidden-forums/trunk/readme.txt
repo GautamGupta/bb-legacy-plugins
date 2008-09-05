@@ -2,15 +2,15 @@
 Tags: hidden, hide, private, restrict, secret, forum,forums, _ck_
 Contributors: _ck_
 Requires at least: 0.9
-Tested up to: 0.9
+Tested up to: trunk
 Stable tag: trunk
 Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
 
-Make selected forums completely hidden except to certain members or roles. Uses streamlined code and methods in  bbPress 0.9 to be faster than previous solutions without their quirks.
+Make selected forums completely hidden except to certain members or roles. Uses streamlined code and methods in  bbPress 0.9 to be faster than previous solutions without their quirks. Now 1.0 compatible.
 
 == Description ==
 
-Make selected forums completely hidden except to certain members or roles. Uses streamlined code and methods in  bbPress 0.9 to be faster than previous solutions without their quirks.
+Make selected forums completely hidden except to certain members or roles. Uses streamlined code and methods in  bbPress 0.9 to be faster than previous solutions without their quirks. Now 1.0 compatible.
 
 == Installation ==
 
@@ -53,6 +53,10 @@ Make selected forums completely hidden except to certain members or roles. Uses 
 = Version 0.0.2 (2008-04-28) =
 
 * bug fix for duplicate label when editing hidden topics
+
+= Version 0.0.3 (2008-09-05) =
+
+* workaround for get_topic caching issue with new bbPress 1.0 method
 
 == To Do ==
 

@@ -73,32 +73,32 @@ function wiki_post_create_link($x) {
 function wiki_post_create_user() {
 	global $wiki_post, $bbdb;
 	$user_id=$bbdb->get_var("SELECT ID FROM $bbdb->users WHERE user_login = '".$wiki_post['name']."' LIMIT 1");
-	if (!$user_id) {
+
 		@require_once( BB_PATH . BB_INC . 'registration-functions.php');		
 		// if ( $user_id = bb_new_user( $wiki_post['name'], $email, bb_get_option('uri'), 0 ) ) {
 		// 	   bb_new_user( $user_login, $user_email, $user_url, $user_status = 1 )	
 		// screw it, 1.0 breaks everything, we'll just do it ourselves
 		
 		$user_login = sanitize_user($wiki_post['name'], true );	
-		$user_nicename = $_user_nicename = bb_user_nicename_sanitize( $user_login );		
-		while ( is_numeric($user_nicename) || $existing_user = bb_get_user_by_nicename( $user_nicename ) )
-			$user_nicename = bb_slug_increment($_user_nicename, $existing_user->user_nicename, 50);
+		$display_name = $user_login;
+		$user_nicename = bb_user_nicename_sanitize( $user_login );		
+		// while ( is_numeric($user_nicename) || $existing_user = bb_get_user_by_nicename( $user_nicename ) )
+		//	$user_nicename = bb_slug_increment($_user_nicename, $existing_user->user_nicename, 50);
 	
 		$user_email=bb_get_option('from_email'); if (empty($user_email)) {$user_email=bb_get_option('admin_email');}
-		$user_url = bb_fix_link(bb_get_option('uri'));
+		$user_url = ""; 	// bb_fix_link(bb_get_option('uri'));
 		$user_registered = bb_current_time('mysql');
 		$password = wp_generate_password();
 		$user_pass = wp_hash_password( $password );
 		$user_status=0;
+		$compact=compact( 'user_login', 'user_pass', 'user_nicename', 'display_name', 'user_email', 'user_url', 'user_registered', 'user_status' );
 
-		$bbdb->insert( $bbdb->users,
-			compact( 'user_login', 'user_pass', 'user_nicename', 'user_email', 'user_url', 'user_registered', 'user_status' )		
-		);	
-		$user_id = $bbdb->insert_id;
+		if (empty($user_id)) {@$bbdb->insert( $bbdb->users, $compact); $user_id = $bbdb->insert_id;}
+		else {@$bbdb->update( $bbdb->users, $compact,  array( 'ID' => $user_id));}		 
 
 		bb_update_usermeta( $user_id, $bbdb->prefix . 'capabilities', array('throttle'=>true, 'member' => true) );
 		bb_update_usermeta( $user_id, $bbdb->prefix . 'title', $wiki_post['name']);			
-	}
+
 return $user_id;	
 }
 

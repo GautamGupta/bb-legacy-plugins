@@ -70,3 +70,7 @@ Output includes current server load, page render vs mysql query time, slowest qu
 = Version 0.2.1 (2008-08-06) =
 
 * 0.2.1	: set priority to dead last so ALL queries are tracked in bb_foot, another BB_IS_ADMIN bug
+
+= Version 0.2.2 (2008-09-05) =
+
+* 0.2.2	: adds function trace available in bbPress 1.0 - would like to replace with enhanced/deeper trace someday

@@ -2,7 +2,7 @@
 Tags: hidden, hide, private, restrict, secret, forum,forums, _ck_
 Contributors: _ck_
 Requires at least: 0.9
-Tested up to: trunk
+Tested up to: 0.9
 Stable tag: trunk
 Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
 

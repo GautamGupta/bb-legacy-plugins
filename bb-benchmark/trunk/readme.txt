@@ -2,7 +2,7 @@
 Tags: _ck_, performance, speed, benchmark, mysql, queries, cache, caching, faster
 Contributors: _ck_
 Requires at least: 0.8
-Tested up to: trunk alpha 1075
+Tested up to: trunk
 Stable tag: trunk
 Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
 

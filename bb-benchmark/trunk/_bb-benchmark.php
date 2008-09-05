@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/65
 Description: Prints simple benchmarks and mysql diagnostics, hidden in page footers for administrators. Based on Jerome Lavigne's Query Diagnostics for WordPress.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.2.1
+Version: 0.2.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -76,7 +76,10 @@ if (bb_current_user_can( 'administrate' ) )  :
 	echo " === mysql queries used === \n\n";		
 	
 	// print_r($bbdb->queries);	
-	$test=$bbdb->queries; foreach (array_keys($test) as $key) {echo " # ".($key+1)." : ".round($test[$key][1],4)." seconds\n".ereg_replace("--","- - ",$test[$key][0])."\n\n";}
+	$test=$bbdb->queries; 
+	foreach (array_keys($test) as $key) {
+		echo " # ".($key+1)." : ".round($test[$key][1],4)." seconds".(isset($test[$key][2]) ? "     function ".$test[$key][2] : "")."\n".ereg_replace("--","- - ",$test[$key][0])."\n\n";
+	}
 			
 	echo "\n\n === executed files === \n";
 	$included_files = get_included_files();
@@ -92,7 +95,7 @@ if (bb_current_user_can( 'administrate' ) )  :
 endif;	
 }
 add_action('bb_foot', 'bb_benchmark_output',999);
-add_action('bb_admin_footer', 'bb_benchmark_output');
+add_action('bb_admin_footer', 'bb_benchmark_output',999);
 
 // global $bb_current_user;  if ($bb_current_user->data->bb_capabilities['keymaster']) :
 
@@ -116,5 +119,31 @@ add_action( 'bb_plugins_loaded', 'bb_benchmark_template_timer' );
 add_action( 'bb_init', 'bb_benchmark_template_timer' );
 add_action( 'bb_index.php_pre_db', 'bb_benchmark_template_timer' );
 add_action( 'bb_index.php', 'bb_benchmark_template_timer' );
+
+
+function bb_benchmark_get_caller() {		// not used here yet - just for reminder/storage
+	if ( !is_callable('debug_backtrace') ) {return '';}		// requires PHP 4.3+			
+
+	$bt = debug_backtrace(); $caller = ''; $tail= '';
+
+	foreach ( $bt as $trace ) {
+		if ( @$trace['class'] == __CLASS__ )
+			continue;
+		elseif ( strtolower(@$trace['function']) == 'call_user_func_array' )
+			continue;
+		elseif ( strtolower(@$trace['function']) == 'apply_filters' )
+			continue;
+		elseif ( strtolower(@$trace['function']) == 'do_action' )
+			continue;
+		elseif ( strtolower(@$trace['function']) == 'query' ) {$tail=" (query) ".$tail; continue;}
+		elseif ( strtolower(@$trace['function']) == 'bb_query' ) {$tail=" (bb_query) ".$tail; continue;}
+		elseif ( strtolower(@$trace['function']) == 'bb_append_meta' )  {$tail=" (bb_append_meta) ".$tail; continue;}
+
+		$caller = $trace['function'].$tail;
+		break;
+	}
+		return $caller;
+}
+
 
 ?>

@@ -5,7 +5,7 @@ Description:  Make selected forums completely hidden except to certain members o
 Plugin URI:  http://bbpress.org/plugins/topic/105
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.3
+Version: 0.0.4
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -81,8 +81,8 @@ if (!empty($hidden_forums_list)) {
 }
 
 if (!empty($hidden_forums['label']) && $hidden_forums_list!=array_flip($hidden_forums['hidden_forums'])) {
-	add_filter( 'get_forum_name', 'hidden_forums_label', 10,2);
-	add_filter( 'get_topic_title', 'hidden_forums_label_topic', 10,2);
+	add_filter( 'get_forum_name', 'hidden_forums_label',11,2);
+	add_filter( 'topic_title', 'hidden_forums_label_topic',11,2);
 	add_action('pre_edit_form', 'hidden_forums_label_topic_stop');
 }
 }
@@ -106,5 +106,5 @@ function hidden_forums_label_topic($title,$id) {
 	return ((in_array($forum_id,$hidden_forums['hidden_forums'])) ? $hidden_forums['label'] : "").$title;		
 }	
 
-function hidden_forums_label_topic_stop() {remove_filter( 'get_topic_title', 'hidden_forums_label_topic', 10);}
+function hidden_forums_label_topic_stop() {remove_filter( 'topic_title', 'hidden_forums_label_topic',11);}
 ?>

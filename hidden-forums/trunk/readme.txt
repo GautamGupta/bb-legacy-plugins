@@ -58,6 +58,10 @@ Make selected forums completely hidden except to certain members or roles. Uses 
 
 * workaround for get_topic caching issue with new bbPress 1.0 method
 
+= Version 0.0.4 (2008-09-05) =
+
+* fix to allow optional image as hidden forum indicator instead of just text
+
 == To Do ==
 
 * admin menu

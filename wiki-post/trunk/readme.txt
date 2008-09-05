@@ -41,6 +41,7 @@ For now you must edit the wiki-post.php directly to change default options.
 * 0.0.1 	wiki-post is born 
 * 0.1.0	first public beta release
 * 0.1.1 a few minor tweaks
+* 0.1.5	compatibility fix for bbPress 1.0 (use  ?reset_wiki_post)
 	
 == To Do ==
 

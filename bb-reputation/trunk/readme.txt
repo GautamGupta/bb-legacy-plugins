@@ -59,3 +59,7 @@ This is a very early release for the adventurous. Allows members to award Reputa
 * admin (or you can also allow mods) can apply negative points for deductions
 
 *  bug fix for incorrect name displayed in reputation history
+
+= Version 0.0.3 (2008-09-06) =
+
+* compatibility fix for 1.0

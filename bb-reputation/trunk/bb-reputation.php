@@ -5,7 +5,7 @@ Description:  Allows the forum and members to award Reputation or "Karma" points
 Plugin URI:  http://bbpress.org/plugins/topic/97
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.4
+Version: 0.0.5
 
 license: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -25,7 +25,8 @@ function bb_reputation_initialize() { global $bb_reputation;
 $bb_reputation['automatic']=true;			// add reputation info automatically into topic posts
 $bb_reputation['fix_kakumei']=false;		// hack CSS to fix for Kakumei (and Kakumei based) themes BEFORE version 0.9
 
-$bb_reputation['label']=__('Reputation');		// what to call them, ie. Reputation, Karma, Points, BB$'s, etc.
+$bb_reputation['link']='Reputation';		// the tab name, this needs to be bbpress url acceptable, mostly english only
+$bb_reputation['label']=__('Reputation');		// what to call them, ie. Reputation, Karma, Points, BB$'s, etc. 
 $bb_reputation['unit']=__('Points');			// measuring unit, ie. Points, Dollars, Pounds, etc.
 $bb_reputation['action']=__('Give Reputation Points');	// description of the action
 $bb_reputation['label_history']=__('Latest Reputation Received');	// title for history
@@ -97,7 +98,7 @@ if ($user_id && !isset($user->bb_reputation) && ($bb_reputation['points_per_post
 	bb_update_meta( $user_id, 'bb_reputation', $reputation, 'user' );
 }
 $link=''; if ($bb_reputation['members_can_award'] && bb_current_user_can($bb_reputation['member_award_role']) && $user_id != bb_get_current_user_info( 'id' )) {$link='<a class="bb_reputation_link" title="'.$bb_reputation['action'].'" href="#post-'.$post_id.'" onClick="bb_reputation('.$post_id.');return false;">+</a>';}
-$output='<div class="bb_reputation"><a href="'.get_profile_tab_link( $user_id, $bb_reputation['label'] ).'">'.$bb_reputation['label'].':<span class="bb_number">'.bb_number_format_i18n($reputation).'</span></a>'.$link;		
+$output='<div class="bb_reputation"><a href="'.get_profile_tab_link( $user_id, $bb_reputation['link'] ).'">'.$bb_reputation['label'].':<span class="bb_number">'.bb_number_format_i18n($reputation).'</span></a>'.$link;		
 if ($bb_reputation['show_bar']) {$width=round(($bb_reputation['bar_width']*$reputation/(100*ceil(($reputation+1)/100)))/5)*5;$output.='<div class="bb_reputation_bar" style="width:'.$width.'px;">&nbsp;</div>';}
 echo $output.'</div>';
 }
@@ -206,7 +207,7 @@ if (!$self) {	// I have no idea exactly why this is but apparently bb_profile_me
 		if ($bb_reputation['history_public']) {
 			$role="";  // $role="read";
 		} else {$role="edit_user";}
-	add_profile_tab($bb_reputation['label'], $role, $role, __FILE__ );	
+	add_profile_tab($bb_reputation['link'], $role, $role, __FILE__ );	
 	}
 }		
 }

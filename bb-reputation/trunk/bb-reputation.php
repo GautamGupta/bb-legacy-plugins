@@ -5,7 +5,7 @@ Description:  Allows the forum and members to award Reputation or "Karma" points
 Plugin URI:  http://bbpress.org/plugins/topic/97
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.3
+Version: 0.0.4
 
 license: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -73,7 +73,7 @@ $bb_reputation['points_per_topic']=intval($bb_reputation['points_per_topic']);	/
 bb_reputation_process_request();
 
 if (is_topic()) {
-	if ($bb_reputation['automatic']) {add_filter( 'post_author_title', 'bb_reputation_filter',250);}
+	if ($bb_reputation['automatic']) {add_filter( 'post_author_title', 'bb_reputation_filter',250); add_filter( 'post_author_title_link', 'bb_reputation_filter',250);}
 	add_action('bb_head', 'bb_reputation_add_css');
 	add_action('bb_foot', 'bb_reputation_form');
 } else {

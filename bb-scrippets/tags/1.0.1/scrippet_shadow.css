@@ -1,0 +1,21 @@
+/*  As seen on A List Apart 
+	http://www.alistapart.com/articles/cssdropshadows/ 
+*/
+
+div.scrippet {
+	border: none;
+}
+
+
+div.scrippet-shadow {
+	border: none;
+	background: url(images/shadowAlpha.png) no-repeat bottom right !important;
+	background: url(images/shadow.gif) no-repeat bottom right;
+	padding: 0 6px 6px 0 !important;
+}
+
+div.inner-shadow {
+	background: none !important;
+	background: url(images/shadow2.gif) no-repeat left top;
+	border: 1px solid #aaa;
+  }

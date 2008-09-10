@@ -1,11 +1,11 @@
 <?php
 /*
-Plugin Name: Private Forums
-Plugin URI: http://www.adityanaik.com/projects/plugins/bb-private-forums/
-Description: Regulate Access to forums in bbPress
-Author: Aditya Naik
-Version: 5.0
-Author URI: http://www.adityanaik.com/
+Plugin Name: Forum Redirector
+Plugin URI: http://bbpress.org/plugins/topic/forum-redirector/
+Description: Use forum redirection to get to another link when clicking on a chosen forum
+Author: Benjamin Davison
+Version: 0.01
+Author URI: http://www.thesaferoom.org
 */
 
 	//HOOK
@@ -16,7 +16,6 @@ function check_forum_redirect($forum_id) {
 	$redirection_forum = 2;
 	if($forum_id == $redirection_forum) {
 		wp_redirect('http://localhost/old/bbpress/topic.php?id=6');
-		var_dump($redirection_forum);
 	}
 }
 

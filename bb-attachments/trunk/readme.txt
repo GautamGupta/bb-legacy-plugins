@@ -55,7 +55,9 @@ Please note there are important security considerations when allowing uploads of
 * 0.1.7 bug squashed for IIS ?
 * 0.1.8 workaround for lack of apache_request_headers, javascript insert bug
 * 0.1.9 handle missing inline images a bit better with "x" icon
+* 0.1.10 bug fix for bbPress activation hook on Windows servers
 * 0.1.11 now can auto-insert images into post after upload (default)
+* 0.1.12 filter switch to get_post_text and thumbnail bug fix (props BarnRacoon)
 	
 == To Do ==
 

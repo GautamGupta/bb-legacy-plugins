@@ -72,7 +72,7 @@ $bb_attachments['errors']=array("ok","uploaded file exceeds UPLOAD_MAX_FILESIZE 
 
 add_action( 'bb_init', 'bb_attachments_init');
 add_action( 'bb_post.php', 'bb_attachments_process_post');
-add_filter('get_post_text', 'bb_attachments_bbcode',250);	
+add_filter('post_text', 'bb_attachments_bbcode',250);	
 bb_register_activation_hook(str_replace(array(str_replace("/","\\",BB_PLUGIN_DIR),str_replace("/","\\",BB_CORE_PLUGIN_DIR)),array("user#","core#"),__FILE__), 'bb_attachments_install');
 
 function bb_attachments_init() {
@@ -103,7 +103,7 @@ if ($bb_attachments['title'] && !is_topic()) {add_filter('topic_title', 'bb_atta
 
 if (isset($_GET["new"]) || is_topic() || is_forum()) {
 	add_action( 'bb_topic.php', 'bb_attachments_cache' );	
-	add_filter('get_post_text', 'bb_attachments_post_footer',4);
+	add_filter('post_text', 'bb_attachments_post_footer',4);
 	add_filter('post_edit_uri', 'bb_attachments_link');
 
 	if (bb_current_user_can($bb_attachments['role']['upload'])) {

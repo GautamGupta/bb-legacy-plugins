@@ -2,10 +2,10 @@
 /*
 Plugin Name: PollDaddy for bbPress
 Plugin URI: http://bbpress.org/plugins/topic/polldaddy-for-bbpress/
-Description: Allow users to place PollDaddy polls in your bbPress posts. This plugin will only work with version 1.0-beta of bbPress and above.
+Description: Allow users to place PollDaddy polls in your bbPress posts.
 Author: Sam Bauers
 Author URI: http://unlettered.org/
-Version: 1.0.1
+Version: 1.0.2
 */
 
 

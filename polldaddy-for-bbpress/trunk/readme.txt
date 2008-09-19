@@ -1,4 +1,4 @@
-=== Support Forum ===
+=== PollDaddy for bbPress ===
 Contributors: SamBauers
 Tags: PollDaddy, polls, voting
 Requires at least: 0.9

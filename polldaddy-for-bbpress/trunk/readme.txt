@@ -3,7 +3,7 @@ Contributors: SamBauers
 Tags: PollDaddy, polls, voting
 Requires at least: 0.9
 Tested up to: 1.0-alpha-2
-Stable tag: 1.0
+Stable tag: 1.0.1
 
 Adds the ability to insert PollDaddy hosted polls into posts.
 
@@ -48,3 +48,5 @@ See accompanying license.txt file for details.
 
 * 1.0 : 
   <br />Initial Release
+* 1.0.1 : 
+  <br />Fix a major error in the readme.txt title

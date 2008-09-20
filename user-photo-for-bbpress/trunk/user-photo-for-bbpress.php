@@ -405,7 +405,7 @@ function bb_get_photo($id) {
 	if ($avatar = bb_get_usermeta($id, 'userphoto_image_file'))
 		return '<img class="avatar" src="' . USERPHOTO_URL . $avatar . '" alt="" />';
 	else if (USE_GRAVATARS_IF_NO_PHOTO)
-		return original_bb_get_avatar($id, bb_get_option('userphoto_thumb_dimension'));
+		return original_bb_get_avatar($id, bb_get_option('userphoto_maximum_dimension'));
 		
 	return false;
 }

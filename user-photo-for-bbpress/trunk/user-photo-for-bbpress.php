@@ -14,7 +14,9 @@ if (!defined('ABSPATH'))
 
 define('USERPHOTO_PATH', ABSPATH . "my-plugins/user-photo-for-bbpress/avatars/");
 define('USERPHOTO_URL', bb_get_option('uri') . 'my-plugins/user-photo-for-bbpress/avatars/');
-	
+
+define('USE_GRAVATARS_IF_NO_PHOTO', 0);	
+
 define('USERPHOTO_FULL_SIZE', 150);
 define('USERPHOTO_THUMBNAIL_SIZE', 80);
 define('USERPHOTO_JPEG_COMPRESSION', 90);
@@ -322,17 +324,89 @@ function userphoto_resize_image($filename, $newFilename, $maxdimension, &$error)
 
 /// Avatar/Photo display
 
+if (USE_GRAVATARS_IF_NO_PHOTO):
+/// This is the original function. We'll use the original if no photo was found.
+function original_bb_get_avatar( $id_or_email, $size = 80, $default = '' ) {
+	if ( !bb_get_option('avatars_show') )
+		return false;
+
+	if ( !is_numeric($size) )
+		$size = 80;
+
+	if ( $email = bb_get_user_email($id_or_email) ) {
+		$class = 'photo ';
+	} else {
+		$class = '';
+		$email = $id_or_email;
+	}
+
+	if ( !$email )
+		$email = '';
+
+	if ( empty($default) )
+		$default = bb_get_option('avatars_default');
+
+	switch ($default) {
+		case 'logo':
+			$default = '';
+			break;
+		case 'monsterid':
+		case 'wavatar':
+		case 'identicon':
+			break;
+		case 'default':
+		default:
+			$default = 'http://www.gravatar.com/avatar/ad516503a11cd5ca435acc9bb6523536?s=' . $size;
+			// ad516503a11cd5ca435acc9bb6523536 == md5('unknown@gravatar.com')
+			break;
+			break;
+	}
+
+	$src = 'http://www.gravatar.com/avatar/';
+	$class .= 'avatar avatar-' . $size;
+
+	if ( !empty($email) ) {
+		$src .= md5( strtolower( $email ) );
+	} else {
+		$src .= 'd41d8cd98f00b204e9800998ecf8427e';
+		// d41d8cd98f00b204e9800998ecf8427e == md5('')
+		$class .= ' avatar-noemail';
+	}
+
+	$src .= '?s=' . $size;
+	$src .= '&amp;d=' . urlencode( $default );
+
+	$rating = bb_get_option('avatars_rating');
+	if ( !empty( $rating ) )
+		$src .= '&amp;r=' . $rating;
+
+	$avatar = '<img alt="" src="' . $src . '" class="' . $class . '" style="height:' . $size . 'px; width:' . $size . 'px;" />';
+
+	return apply_filters('bb_get_avatar', $avatar, $id_or_email, $size, $default);
+}
+endif;
+
 if (!function_exists('bb_get_avatar')):
 function bb_get_avatar($id) {
+	if (!bb_get_option('avatars_show'))
+		return false;
+		
 	if ($avatar = bb_get_usermeta($id, 'userphoto_thumb_file'))
 		return '<img class="avatar" src="' . USERPHOTO_URL . $avatar . '" alt="" />';
+	else if (USE_GRAVATARS_IF_NO_PHOTO)
+		return original_bb_get_avatar($id, bb_get_option('userphoto_thumb_dimension'));
+		
 	return false;
 }
 endif;
 
 function bb_get_photo($id) {
+		
 	if ($avatar = bb_get_usermeta($id, 'userphoto_image_file'))
 		return '<img class="avatar" src="' . USERPHOTO_URL . $avatar . '" alt="" />';
+	else if (USE_GRAVATARS_IF_NO_PHOTO)
+		return original_bb_get_avatar($id, bb_get_option('userphoto_thumb_dimension'));
+		
 	return false;
 }
 

@@ -3,7 +3,7 @@
 Plugin Name: User Photo for bbPress
 Plugin URI: http://alumnos.dcc.uchile.cl/~egraells/
 Description: Allows users to associate photos and avatars with their accounts by accessing their Profile page. Based on the User Photo plugin for WordPress.
-Version: 1.0
+Version: 1.1
 Author: Eduardo Graells
 Author URI: http://alumnos.dcc.uchile.cl/~egraells
 License: GPL3
@@ -405,7 +405,7 @@ function bb_get_photo($id) {
 	if ($avatar = bb_get_usermeta($id, 'userphoto_image_file'))
 		return '<img class="avatar" src="' . USERPHOTO_URL . $avatar . '" alt="" />';
 	else if (USE_GRAVATARS_IF_NO_PHOTO)
-		return original_bb_get_avatar($id, bb_get_option('userphoto_thumb_dimension'));
+		return original_bb_get_avatar($id, bb_get_option('userphoto_maximum_dimension'));
 		
 	return false;
 }

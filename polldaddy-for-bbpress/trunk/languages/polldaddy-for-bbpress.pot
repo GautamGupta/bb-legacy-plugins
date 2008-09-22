@@ -1,12 +1,12 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Sam Bauers
+# POT file for bbPress plugin "PollDaddy for bbPress".
+# Copyright (C) 2008 Sam Bauers
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: PollDaddy for bbPress 1.0.3\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/polldaddy-for-bbpress\n"
 "POT-Creation-Date: 2008-09-22 14:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"

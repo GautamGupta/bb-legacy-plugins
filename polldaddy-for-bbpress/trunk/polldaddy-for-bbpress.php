@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/polldaddy-for-bbpress/
 Description: Allow users to place PollDaddy polls in your bbPress posts.
 Author: Sam Bauers
 Author URI: http://unlettered.org/
-Version: 1.0.2
+Version: 1.0.3
 */
 
 
@@ -131,7 +131,7 @@ function bb_polldaddy_admin_page()
 	<?php printf(__('<a href="%s">PollDaddy</a> is a free hosted polls service where you can create polls to include in your bbPress topics.', 'polldaddy-for-bbpress'), 'http://polldaddy.com/'); ?>
 </p>
 
-<form class="settings" method="post" action="<?php bb_uri('bb-admin/admin-base.php', array('plugin' => 'bb_polldaddy_admin_page'), BB_URI_CONTEXT_FORM_ACTION + BB_URI_CONTEXT_BB_ADMIN); ?>">
+<form class="settings" method="post" action="admin-base.php?plugin=bb_polldaddy_admin_page">
 	<fieldset>
 		<legend><?php _e('Options', 'polldaddy-for-bbpress'); ?></legend>
 		

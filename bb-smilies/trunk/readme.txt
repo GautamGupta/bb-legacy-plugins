@@ -51,6 +51,10 @@ Or build your own. Just make sure you follow the style in `package-config.php`
 
 * trailing space on smilie insertion removed (leading space still required unless on start of new line)
 
+= Version 0.0.4 (2008-09-24) =
+
+* compatibility fix for 1.0 topic-edit-page
+
 == To Do ==
 
 * ajax-ish behaviors

@@ -14,7 +14,7 @@ Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
 
 function bbcode_buttons() { 
 global $bb_current_user;
-if ($bb_current_user->ID && (isset($_GET['new']) || in_array(bb_get_location(),array('topic-page','tag-page','forum-page')))) {
+if ($bb_current_user->ID && (isset($_GET['new']) || in_array(bb_get_location(),array('topic-page','tag-page','forum-page','topic-edit-page')))) {
 $tags = bb_allowed_tags();
 echo  "<scr"."ipt type='text/javascript' defer='defer'>
 	function BBcodeButtons_init() {

@@ -5,13 +5,13 @@ Description:  Adds clickable smilies (emoticons) to bbPress.  No template edits 
 Plugin URI:  http://bbpress.org/plugins/topic/121
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.3
+Version: 0.0.4
 */
 
 $bb_smilies['icon_set']="default";  // change this to the exact directory name (case sensitive) if you want to switch icon package sets
 $bb_smilies['popup'] = true;	  	// true = popup panel of smilies /  false = visible above text area always
 
-$bb_smilies['css'] = ".bb_smilies {border:0; vertical-align: top; padding-top:3px;}
+$bb_smilies['css'] = ".bb_smilies {border:0; vertical-align: middle; padding-bottom:1px;}
 .bb_smilies {cursor: pointer; cursor: hand;}
 #bb_smilies_clicker {position: absolute; float: right; visibility: hidden; background: buttonface; width: 150px; border:2px inset buttonface; font: 1.2em times, serif;}
 #bb_smilies_clicker img {padding:5px;}
@@ -24,12 +24,13 @@ $bb_smilies['icon_path']=rtrim(dirname(__FILE__),' /\\').'/'.$bb_smilies['icon_s
 $bb_smilies['icon_url']=bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),"\\"),array("","/"),dirname(__FILE__)),' /\\').'/'.$bb_smilies['icon_set'].'/'; 
 
 add_filter('post_text', 'bb_smilies_convert');
+add_filter('pm_text', 'bb_smilies_convert');  // support private messages plugin
 add_action('bb_head','bb_smilies_css');
 add_action('bb_foot', 'bb_smilies_clicker');
 
 function bb_smilies_clicker() {
 global $bb_smilies, $bb_current_user;
-if ($bb_current_user->ID && (isset($_GET['new']) || in_array(bb_get_location(),array('topic-page','tag-page','forum-page')))) {
+if ($bb_current_user->ID && (isset($_GET['new']) || in_array(bb_get_location(),array('topic-page','tag-page','forum-page','topic-edit-page')))) {
 @include($bb_smilies['icon_path']."package-config.php");
 echo  "<scr"."ipt type='text/javascript' defer='defer'>
 

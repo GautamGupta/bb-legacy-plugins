@@ -57,6 +57,7 @@ Version History:
 		  Add Bulgarian language files (Nikolay Bachiyski)
 		  Add Japanese language files (Nikolay Bachiyski)
 3.0.5	: Register views on 'bb_init' instead of on plugin load (Nikolay Bachiyski)
+		  Move images to a subdirectory (Sam Bauers)
 */
 
 
@@ -221,7 +222,7 @@ class Support_Forum
 		if (defined('SUPPORT_FORUM_ICON_URI')) {
 			$this->iconURI = SUPPORT_FORUM_ICON_URI;
 		} else {
-			$this->iconURI = bb_get_plugin_uri($this->basename);
+			$this->iconURI = bb_get_plugin_uri($this->basename) . 'images/';
 		}
 		
 		$this->posterSetable = bb_get_option('support_forum_poster_setable');

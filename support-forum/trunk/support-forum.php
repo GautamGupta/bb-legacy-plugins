@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/support-forum/
 Description: Changes the forum to a support forum and adds functionality to mark topics resolved, not resolved or not a support question
 Author: Aditya Naik, Sam Bauers
 Author URI: http://bbpress.org/plugins/topic/support-forum/other_notes/
-Version: 3.0.4
+Version: 3.0.5
 
 Version History:
 1.0		: Initial Release (Aditya Naik)
@@ -56,16 +56,17 @@ Version History:
 		  Move en_US pot file to just support-forum.pot (Nikolay Bachiyski)
 		  Add Bulgarian language files (Nikolay Bachiyski)
 		  Add Japanese language files (Nikolay Bachiyski)
+3.0.5	: Register views on 'bb_init' instead of on plugin load (Nikolay Bachiyski)
 */
 
 
 /**
- * Support forum for bbPress version 3.0.4
+ * Support forum for bbPress version 3.0.5
  * 
  * ----------------------------------------------------------------------------------
  * 
  * Copyright (C) 2007 Aditya Naik (so1oonnet@gmail.com)
- * Copyright (C) 2007 Sam Bauers (sam@viveka.net.au)
+ * Copyright (C) 2007 Sam Bauers (sam@automattic.com)
  * 
  * ----------------------------------------------------------------------------------
  * 
@@ -92,19 +93,16 @@ Version History:
  * ----------------------------------------------------------------------------------
  * 
  * @author    Aditya Naik <so1oonnet@gmail.com>
- * @author    Sam Bauers <sam@viveka.net.au>
+ * @author    Sam Bauers <sam@automattic.com>
  * @copyright 2007 Aditya Naik
  * @copyright 2007 Sam Bauers
  * @license   http://www.gnu.org/licenses/gpl.txt GNU General Public License v2
- * @version   3.0.4
+ * @version   3.0.5
  **/
 
 
 /**
  * Wrapper class for the Support forum plugin
- *
- * @author  Sam Bauers
- * @version 3.0.4
  **/
 class Support_Forum
 {
@@ -775,8 +773,7 @@ $support_forum = new Support_Forum();
 
 
 if ($support_forum->isActive()) {
-	$support_forum->registerViews();
-	
+	add_action('bb_init', array(&$support_forum, 'registerViews'));
 	add_action('topicmeta', array(&$support_forum, 'topicMeta'));
 	add_action('bb_init', array(&$support_forum, 'setTopicStatusProcess'));
 	add_filter('topic_class', array(&$support_forum, 'addTopicClass'));

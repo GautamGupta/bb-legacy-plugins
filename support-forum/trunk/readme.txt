@@ -149,3 +149,4 @@ See accompanying license.txt file for details.
   <br />Add Japanese language files
 * 3.0.5 :
   <br />Register views on 'bb_init' instead of on plugin load
+  <br />Move images to a subdirectory

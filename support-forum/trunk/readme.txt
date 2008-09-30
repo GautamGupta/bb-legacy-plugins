@@ -3,7 +3,7 @@ Contributors: so1o, mdawaffe, SamBauers
 Tags: support, forums
 Requires at least: 0.9
 Tested up to: 0.9.0.2
-Stable tag: 3.0.4
+Stable tag: 3.0.5
 
 Adds the ability to set a support status on topics in selected forums.
 
@@ -54,7 +54,7 @@ will need to be logged in as a keymaster.
 
 == License ==
 
-Support forum version 3.0.4<br />
+Support forum version 3.0.5<br />
 Copyright (C) 2007 Aditya Naik (http://www.adityanaik.com/)<br />
 Copyright (C) 2007 Sam Bauers (http://unlettered.org/)
 
@@ -147,3 +147,5 @@ See accompanying license.txt file for details.
   <br />Move en_US pot file to just support-forum.pot
   <br />Add Bulgarian language files
   <br />Add Japanese language files
+* 3.0.5 :
+  <br />Register views on 'bb_init' instead of on plugin load

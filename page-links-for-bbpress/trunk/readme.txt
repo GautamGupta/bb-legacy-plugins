@@ -2,15 +2,15 @@
 Contributors: SamBauers
 Tags: topics navigation pages
 Requires at least: 0.80
-Tested up to: 1.0 alpha build 788
-Stable tag: 1.0.3
+Tested up to: 1.0 alpha build 1773
+Stable tag: 1.0.4
 
 Adds links to pages within a topic in the topic lists
 
 == License ==
 
-Page links for bbPress version 1.0.3
-Copyright (C) 2007 Sam Bauers (sam@viveka.net.au)
+Page links for bbPress version 1.0.4
+Copyright (C) 2008 Sam Bauers (http://unlettered.org/)
 
 Page links for bbPress comes with ABSOLUTELY NO WARRANTY
 This is free software, and you are welcome to redistribute
@@ -22,6 +22,9 @@ See accompanying license.txt file for details.
 
 This plugin adds cute little page links next to the topic title in
 topic lists.
+
+The functionality of this plugin is built-in to bbPress 1.0 - do not
+use this plugin with bbPress 1.0, use the topic page links function instead.
 
 == Installation ==
 
@@ -42,3 +45,5 @@ the root directory of your forum.
   <br />Added compatibility with "Front Page Topics" plugin
 * 1.0.3 :
   <br />Determine path to CSS file based on the location of this file
+* 1.0.4 :
+  <br />Fixed division by zero error

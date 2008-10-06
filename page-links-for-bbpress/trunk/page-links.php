@@ -1,22 +1,23 @@
 <?php
 /*
 Plugin Name: Page links
-Plugin URI: http://bbpress.org/plugins/topic/43
+Plugin URI: http://bbpress.org/plugins/topic/page-links-for-bbpress/
 Description: Adds page links to topic lists
 Author: Sam Bauers
-Version: 1.0.3
-Author URI: 
+Version: 1.0.4
+Author URI: http://unlettered.org/
 
 Version History:
 1.0 	: Initial Release
 1.0.1	: Fixed a bug relating to earlier versions, suppressed a PHP warning
 1.0.2	: Added compatibility with "Front Page Topics" plugin
 1.0.3	: Determine path to CSS file based on the location of this file
+1.0.4	: Fixed division by zero error
 */
 
 /*
-Page links for bbPress version 1.0.3
-Copyright (C) 2007 Sam Bauers (sam@viveka.net.au)
+Page links for bbPress version 1.0.4
+Copyright (C) 2008 Sam Bauers
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -64,7 +65,9 @@ function page_links_add_links($title)
 	
 	if ($perPage = bb_get_option('front_page_topics')) {
 		$perPage = $perPage['topic-page'];
-	} else {
+	}
+	
+	if (!$perPage) {
 		$perPage = bb_get_option('page_topics');
 	}
 	

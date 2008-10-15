@@ -76,6 +76,14 @@ be sure to let me know if you find some and I will address them as time permits.
 
 * first public release
 
+= Version 1.0.3 (2008-10-15) =
+
+* speed up by moving definitions to init instead of each post pass 
+
+* security issue fix where IMG tag supported even when "allow images" plugin disabled - can be turned back on, see first few lines of plugin
+
+* pre tag added
+
 == To Do ==
 
 * enforce limits for [SIZE] and [COLOR] BBcodes

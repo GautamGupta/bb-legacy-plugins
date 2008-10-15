@@ -54,3 +54,7 @@ To see a demonstration, create an account at http://bbShowcase.org read some pos
 = Version 0.8.9 (2008-05-11) =
 
 * now can also indicate topics with new posts since last login (in alternate color/style than previously read topics)
+
+= Version 0.9.1 (2008-10-15) =
+
+* minor 1.0 compatibility fix

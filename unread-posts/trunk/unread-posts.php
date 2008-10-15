@@ -5,7 +5,7 @@ Description:  Indicates previously read topics with new unread posts. Features "
 Plugin URI:  http://bbpress.org/plugins/topic/78
 Author: _ck_
 Author URI: http://bbshowcase.org
-Version: 0.9.0
+Version: 0.9.1
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 */
@@ -91,8 +91,8 @@ function up_mark_all_read() {	// actually, just delete all it's meta and start f
 global $bb_current_user;	
 	bb_delete_usermeta($bb_current_user->ID, "up_read_topics");
 	bb_delete_usermeta($bb_current_user->ID, "up_last_posts");
-	up_last_login($bb_current_user->ID);	// trick last login to current time to force no-highlighting (ruins real last login though)	
-	wp_redirect(str_replace(array("mark_all_topics_read","clear_all_topics_read"),"",$GLOBALS["HTTP_SERVER_VARS"]["REQUEST_URI"]));			
+	up_last_login($bb_current_user->ID);	// trick last login to current time to force no-highlighting (ruins real last login though)			
+	wp_redirect(remove_query_arg(array("mark_all_topics_read","clear_all_topics_read")));
 } 
 
 function up_update_all_read() {	// catches up all topics tracked instead of purging list - props kaviaar
@@ -104,8 +104,8 @@ global $bbdb,$bb_current_user;
 		$up_last_posts=$bbdb->get_col("SELECT topic_last_post_id FROM $bbdb->topics WHERE topic_id IN ($up_read_topics) ORDER BY field(topic_id,$up_read_topics)");		
 		bb_update_usermeta($bb_current_user->ID, "up_read_topics",$up_read_topics);  // needs to resave because of trim
 		bb_update_usermeta($bb_current_user->ID, "up_last_posts",implode(",",$up_last_posts));
-	}
-	wp_redirect(str_replace(array("update_all_topics_read","catch_all_topics_read"),"",$GLOBALS["HTTP_SERVER_VARS"]["REQUEST_URI"]));	
+	}	
+	wp_redirect(remove_query_arg(array("update_all_topics_read","catch_all_topics_read")));	
 } 
 
 function up_update_topics_read() {

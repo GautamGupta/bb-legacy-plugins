@@ -2,8 +2,8 @@
 /*
 Plugin Name: bbPress Tweets
 Plugin URI:  http://shuttlex.blogdns.net
-Description:  Show users latest twitter on profile page
-Version: 0.2
+Description:  Lets the user choose to show his or hers latest Tweet on their profile page and/or posts
+Version: 0.3
 Author: RuneG
 Author URI: http://shuttlex.blogdns.net
 
@@ -17,6 +17,7 @@ Instructions:   install, activate, tinker with settings in admin menu
 Version History:
 0.1 	: First public release
 0.2		: Fixed problem avatars did not show. This happend if bb-avatars where not in use.
+0.3		: Added the possibility to show of the latest tweet under every post from the user
 */
 
 function fetch_user_twitter($user_id) {
@@ -33,6 +34,7 @@ if (bb_current_user_can( 'edit_profile', $user->ID )  &&  bb_is_user_logged_in()
 	$twitter = fetch_user_twitter($user_id);
 	$user = bb_get_user( $user_id );
 	$tweets_on = $user->twitter_on;
+	$tweets_on_post = $user->twitter_on_post;
 	
 ?><fieldset>
 <legend><?php  _e('Twitter')?></legend>
@@ -49,6 +51,17 @@ if ($tweets_on == "yes"){
 <?php } else { ?>
 <input name="show_tweets" value="tweets_on" type="checkbox"/></td>
 <?php } ?>
+</tr>
+<tr>
+<td>Show your latest <em>tweet</em> under each post?</td><td>
+<?php
+if ($tweets_on_post == "yes"){
+?>
+<input name="show_tweets_post" value="tweets_on_post" type="checkbox" checked="checked"/></td>
+<?php } else { ?>
+<input name="show_tweets_post" value="tweets_on_post" type="checkbox"/></td>
+<?php } ?>
+</tr>
 </table>
 </fieldset>
 <?php 
@@ -64,8 +77,14 @@ function update_user_twitter() {
 	} else {
 	$tweets_on = "no";
 	}
+	if ($_POST['show_tweets_post']){
+	$tweets_on_post = "yes";
+	} else {
+	$tweets_on_post = "no";
+	}
 	bb_update_usermeta($user_id, "twitter",$twitter);
 	bb_update_usermeta($user_id, "twitter_on",$tweets_on);
+	bb_update_usermeta($user_id, "twitter_on_post",$tweets_on_post);
 	
 	
 	
@@ -83,7 +102,7 @@ if ( !is_bb_profile() ){
  echo "";
  } else {
  if ($tweets_on == "yes"){
-_e('<h4>Siste Tweet : </h4><code>
+_e('<h4>Latest Tweet : </h4><code>
 	<ul id="twitter_update_list"></ul>
 	<script type="text/javascript" src="http://twitter.com/javascripts/blogger.js"></script>
 	<script type="text/javascript" src="http://twitter.com/statuses/user_timeline/'.$twitter.'.json?callback=twitterCallback2&count=1"></script></code><br/>');
@@ -92,6 +111,25 @@ _e('<h4>Siste Tweet : </h4><code>
  }}
  
 }
+
+function tweet_on_post($text) {
+global $bb_post;
+$user_id=$bb_post->poster_id;
+$twitter = bb_get_usermeta($user_id,twitter);
+$user = bb_get_user( $user_id );
+$tweets_on_post = $user->twitter_on_post;
+if ($tweets_on_post == "yes"){
+$text .= ('
+	<p id="twitter_update_list">
+	<script type="text/javascript" src="http://twitter.com/javascripts/blogger.js"></script>
+	<script type="text/javascript" src="http://twitter.com/statuses/user_timeline/'.$twitter.'.json?callback=twitterCallback2&count=1"></script></code></small></p><br/>');
+} else {
+$text = $text;
+}
+return $text; 
+}
+
+add_filter('post_text','tweet_on_post',6);
 
 function tweet_start(){
 global $user_id, $bb_twitter,$bb_current_user;
@@ -105,7 +143,7 @@ if ( !is_bb_profile() ){
  $tweet_print = "";
  } else {
  if ($tweets_on == "yes"){
-$tweet_print = ('<h4>Siste Tweet : </h4><code>
+$tweet_print = ('<h4>Latest Tweet : </h4><code>
 	<ul id="twitter_update_list"></ul>
 	<script type="text/javascript" src="http://twitter.com/javascripts/blogger.js"></script>
 	<script type="text/javascript" src="http://twitter.com/statuses/user_timeline/'.$twitter.'.json?callback=twitterCallback2&count=1"></script></code><br/>');

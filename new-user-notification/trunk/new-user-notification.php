@@ -30,7 +30,7 @@ function new_user_notification($user_id=0) {
 	
 	$message .= sprintf(__('Profile: %s'), get_user_profile_link($user_id)) . "\r\n\r\n";
 		
-$to=bb_get_option('admin_email'); if (!$to) {$to=bb_get_option('from_email');}
+$to=bb_get_option('from_email'); if (!$to) {$to=bb_get_option('admin_email');}
 @bb_mail($to , sprintf(__('[%s] New User Registration'), bb_get_option('name')), $message, '' );
 }
 

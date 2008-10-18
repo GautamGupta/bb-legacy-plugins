@@ -2,7 +2,7 @@
 Tags: register, registration, new user, notification, email, _ck_
 Contributors: _ck_
 Requires at least: 0.8.2
-Tested up to: 0.8 branch
+Tested up to: trunk
 Stable tag: trunk
 Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
 
@@ -38,4 +38,4 @@ Notifies the keymaster by email that a new user has registered.
 
 = Version 0.0.2 (2008-04-20) =
 
-* deals with bbPress change from admin_email to from_email
+* fix for bbPress change from admin_email to from_email

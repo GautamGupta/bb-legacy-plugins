@@ -97,7 +97,7 @@ function hidden_forums_filter_once($where='') {remove_filter('get_topic_where','
 
 function hidden_forums_label($title,$id) {
 	global $hidden_forums;
-	 return ((in_array($id,$hidden_forums['hidden_forums'])) ? $hidden_forums['label'] : "").$title;		
+	 return (!isset($_GET['action']) && (in_array($id,$hidden_forums['hidden_forums'])) ? $hidden_forums['label'] : "").$title;		
 }	
 
 function hidden_forums_label_topic($title,$id) {

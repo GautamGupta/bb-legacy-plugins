@@ -3,7 +3,7 @@
 Plugin Name: bb-Lightbox2
 Plugin URI: http://bbpress.ru/
 Description: Used to overlay images on the current page. Lightbox JS v2.2 by <a href="http://www.huddletogether.com/projects/lightbox2/" title="Lightbox JS v2.2 ">Lokesh Dhakar</a>. This plugin is based on "Lightbox 2" plugin for WordPress. Example: http://www.sablinov.ru/forums/topic/1
-Version: 0.2
+Version: 0.25
 Author: A1ex
 Author URI: http://bbpress.ru
 */
@@ -87,7 +87,7 @@ function ImgTumb($image_path, $image_file)
  if(!$tumbs_path) {
    $tumbs_path = BBPATH.'tumbs/';
  }
-  if(!$tumbs_url) {
+ if(!$tumbs_url) {
    $tumbs_url = bb_get_option('uri').'tumbs/';
  }
  $tumb_name = 'tumb_'.md5($image_path).'_'.$image_file;
@@ -98,52 +98,39 @@ function ImgTumb($image_path, $image_file)
  {
   $image = $image_path;
   $this_type = GetImgType($image);
-  switch($this_type)
+  // Get new dimensions
+  list($image_width, $image_height) = getimagesize($image);
+  if ($image_width<=$tumb_width && $image_height<=$tumb_height) {
+	copy ($image, $tumb_path);
+  }
+  else
   {
-   case "gif":
-     // Get new dimensions
-     list($image_width, $image_height) = getimagesize($image);
-     $ratio = $image_width/$image_height;
-     if ($tumb_width/$tumb_height > $ratio) {
-       $tumb_width = $tumb_height*$ratio;
-     } else {
-       $tumb_height = $tumb_width/$ratio;
-     }
-	 $tumb_image = imagecreatetruecolor($tumb_width, $tumb_height);
-   	 $image = imagecreatefromgif($image);
-     imagecopyresampled($tumb_image, $image, 0, 0, 0, 0, $tumb_width, $tumb_height, $image_width, $image_height);
-     imagegif($tumb_image, $tumb_path);
-     break;
-
-   case "jpg":
-     // Get new dimensions
-     list($image_width, $image_height) = getimagesize($image);
-     $ratio = $image_width/$image_height;
-     if ($tumb_width/$tumb_height > $ratio) {
-       $tumb_width = $tumb_height*$ratio;
-     } else {
-       $tumb_height = $tumb_width/$ratio;
-     }
-	 $tumb_image = imagecreatetruecolor($tumb_width, $tumb_height);
-	 $image = imagecreatefromjpeg($image);
-     imagecopyresampled($tumb_image, $image, 0, 0, 0, 0, $tumb_width, $tumb_height, $image_width, $image_height);
-     imagejpeg($tumb_image, $tumb_path);
-     break;
-
-   case "png":
-     // Get new dimensions
-     list($image_width, $image_height) = getimagesize($image);
-     $ratio = $image_width/$image_height;
-     if ($tumb_width/$tumb_height > $ratio) {
-       $tumb_width = $tumb_height*$ratio;
-     } else {
-       $tumb_height = $tumb_width/$ratio;
-     }
-     $tumb_image = imagecreatetruecolor($tumb_width, $tumb_height);
-     $image = imagecreatefrompng($image);
-     imagecopyresampled($tumb_image, $image, 0, 0, 0, 0, $tumb_width, $tumb_height, $image_width, $image_height);
-     imagepng($tumb_image, $tumb_path);
-     break;
+	$ratio = $image_width/$image_height;
+	if ($tumb_width/$tumb_height > $ratio) {
+		$tumb_width = $tumb_height*$ratio;
+	} else {
+		$tumb_height = $tumb_width/$ratio;
+	}
+	$tumb_image = imagecreatetruecolor($tumb_width, $tumb_height);
+  
+	switch($this_type)
+	{
+	  case "gif":
+		$image = imagecreatefromgif($image);
+		imagecopyresampled($tumb_image, $image, 0, 0, 0, 0, $tumb_width, $tumb_height, $image_width, $image_height);
+		imagegif($tumb_image, $tumb_path);
+		break;
+      case "jpg":
+		$image = imagecreatefromjpeg($image);
+		imagecopyresampled($tumb_image, $image, 0, 0, 0, 0, $tumb_width, $tumb_height, $image_width, $image_height);
+		imagejpeg($tumb_image, $tumb_path);
+		break;
+      case "png":
+		$image = imagecreatefrompng($image);
+		imagecopyresampled($tumb_image, $image, 0, 0, 0, 0, $tumb_width, $tumb_height, $image_width, $image_height);
+		imagepng($tumb_image, $tumb_path);
+		break;
+	}
   }
  }
  return $tumb_url;

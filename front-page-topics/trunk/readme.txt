@@ -42,6 +42,10 @@ Set custom topic or post count limits for nearly every kind of bbPress page whil
 
 * first public release after several informal versions posted around the bbPress.org forums
 
+= Version 0.0.2 (2008-10-27) =
+
+* first attempt at workaround for bbPress 1.0a2 topic_page_links() 
+
 == To Do ==
 
 * optionally calculate number of stickies on a page and enforce topic count limit including stickies (overriding bbPress's default behaviour)

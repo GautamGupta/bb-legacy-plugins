@@ -1,17 +1,17 @@
 <?php
 /*
 Plugin Name: Topics Per Page
-Plugin URI: http://bbpress.org/plugins/topic/3
-Description:  Set custom topic or post count limits for nearly every kind of bbPress page while still calculating direct post links correctly. (now 1.0 compatible)
+Plugin URI: http://bbpress.org/plugins/topic/topics-per-page
+Description:  Set custom topic or post count limits for nearly every kind of bbPress page while still calculating direct post links correctly.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.1
+Version: 0.0.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
 */
 
-$topics_per_page=array(				// edit the numbers below as desired - no fancy admin page for maximum performance
+$topics_per_page=array(		// edit the numbers below as desired - no fancy admin page for maximum performance
 			'front-page' 	     => 15  ,
 			'forum-page'	     => 20  ,	// stickies are added to these numbers, not included, because of bbPress design
 			'topic-page' 	     => 10  ,	// this is actually number of posts on a topic page
@@ -30,8 +30,9 @@ add_action( 'bb_get_option_page_topics', 'topics_per_page',200);
 add_filter( 'get_post_link','topics_per_page_fix_link',10, 2);
 
 function topics_per_page($limit) {	 	// set custom topics per page limits
-global $topics_per_page, $topics_per_page_fix_link; 
-if (!$topics_per_page_fix_link) {$location = bb_get_location();} else {$location="topic-page";}
+global $topics_per_page, $topics_per_page_fix_link, $topics, $topic; 
+if ($topics_per_page_fix_link) {$location="topic-page";} 
+else {$location=bb_get_location(); if (($location!="topic-page") && $topics && $topic && $topic->topic_id==get_topic_id(0)) {$location="topic-page";}} 
 if (isset($topics_per_page[$location])) {return $topics_per_page[$location];}
 return $limit;
 }
@@ -49,7 +50,7 @@ if ($topic && $topic->topic_last_post_id==$post_id) {
 		if ($test->topic_last_post_id==$post_id) {$topic_id=$test->topic_id; $page=get_page_number( $test->topic_posts ); break;}
 	}
 }
-if (!$topic_id) {	// all other cache lookup attempts have failed, let bbPress do a db lookup
+if (!$topic_id) {	// all other cache lookup attempts have failed, do a manual lookup
 	$bb_post = bb_get_post( get_post_id( $post_id ) );
 	$topic_id=$bb_post->topic_id;
 	$page = get_page_number( $bb_post->post_position );

@@ -3,7 +3,7 @@ Contributors: nyousefi
 Tags: screenwriting, scrippets, scrippet, screenplay, film scripts, movie scripts
 Requires at least: 1.5
 Tested up to: 2.6.1
-Stable tag: 1.0.1
+Stable tag: 1.1
 
 This plugin converts text entered in the Scrippet format to properly styled HTML.
 
@@ -51,6 +51,18 @@ There are bees in the toliet!
 
 Note: Scrippet text must be wrapped in [scrippet][/scrippet] blocks, and it must have correct line spaces between screenplay elements.
 
+You can make text bold, italic, or underlined by in the following ways:
+
+= Bold =
+* Wrap the text in double asterisks (**bold**) or [b][/b].
+
+= Italic =
+* Wrap the text in single asterisks (*italic*) or [i][/i].
+
+= Underline =
+* Wrap the text in underscores (_underline_) or [u][/u].
+
+Please note: text styling does not work for transitions. Sorry.
 
 == Frequently Asked Questions ==
 
@@ -68,10 +80,10 @@ However, if those options are insufficient, you can modify the scrippets.css fil
 
 == Screenshots ==
 
-Shows the a full formatted Scrippet using the Drop Shadow border style.
+1. Shows the a full formatted Scrippet using the Drop Shadow border style.
 
 == Release Notes ==
-
+* 1.1   - Added support for bold, italic, and underlined text.
 * 1.0 - Release!
 
 == References ==

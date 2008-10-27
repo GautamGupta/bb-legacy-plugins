@@ -74,6 +74,15 @@ function scrippetize($text, $wrap_before = '', $wrap_after = '') {
     $pattern[] = '/<p class="action">[\n\s]*?<\/p>/';
     $replace[] = "";
 
+	// Styling
+	$pattern[] = '/(\*{2}|\[b\])(.*?)(\*{2}|\[\/b\])/';
+	$replace[] = '<b>\2</b>';
+	
+	$pattern[] = '/(\*{1}|\[i\])(.*?)(\*{1}|\[\/i\])/';
+	$replace[] = '<i>\2</i>';
+
+	$pattern[] = '/(_|\[u\])(.*?)(_|\[\/u\])/';
+	$replace[] = '<u>\2</u>';	
 
     // Find all the scrippet blocks.
     // Only text between matched scrippet blocks will be processed by the text replacement.

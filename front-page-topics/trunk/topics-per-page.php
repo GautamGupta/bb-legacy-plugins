@@ -29,7 +29,9 @@ $topics_per_page=array(		// edit the numbers below as desired - no fancy admin p
 add_filter( 'bb_get_option_page_topics', 'topics_per_page',200);
 add_filter( 'get_post_link','topics_per_page_fix_link',10, 2);
 add_filter( 'get_topic_page_links_per_page', 'topics_per_page_fix_topic_links');
-add_filter( 'bb_get_option_front_page_topics', 'topics_per_page_fix_topic_links');	 // backward-compatibility fix for old front page topic plugin
+add_filter( 'bb_get_option_front_page_topics', 'front_page_topics_fetch');	 // backward-compatibility fix for old front page topic plugin
+
+function front_page_topics_fetch($limit) {global $topics_per_page;  return $topics_per_page;}
 
 function topics_per_page($limit) {	 	// set custom topics per page limits
 global $topics_per_page, $topics_per_page_fix_link, $topics, $topic, $topic_id; 

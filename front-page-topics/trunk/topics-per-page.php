@@ -32,7 +32,7 @@ add_filter( 'get_post_link','topics_per_page_fix_link',10, 2);
 function topics_per_page($limit) {	 	// set custom topics per page limits
 global $topics_per_page, $topics_per_page_fix_link, $topics, $topic; 
 if ($topics_per_page_fix_link) {$location="topic-page";} 
-else {$location=bb_get_location(); if (($location!="topic-page") && !empty($topics) && $topic && isset($topics[$topic->topic_id]) ) {$location="topic-page";}} 
+else {$location=bb_get_location(); if (($location!="topic-page") && !empty($topics) && isset($topic) && !empty($topic->topic_id) && isset($topics[$topic->topic_id])) {$location="topic-page";}} 
 if (isset($topics_per_page[$location])) {return $topics_per_page[$location];}
 return $limit;
 }

@@ -28,12 +28,20 @@ $topics_per_page=array(		// edit the numbers below as desired - no fancy admin p
 
 add_action( 'bb_get_option_page_topics', 'topics_per_page',200);
 add_filter( 'get_post_link','topics_per_page_fix_link',10, 2);
+add_filter( 'get_topic_page_links_per_page', 'topics_per_page_fix_topic_links');
 
 function topics_per_page($limit) {	 	// set custom topics per page limits
-global $topics_per_page, $topics_per_page_fix_link, $topics, $topic; 
-if ($topics_per_page_fix_link) {$location="topic-page";} 
-else {$location=bb_get_location(); if (($location!="topic-page") && !empty($topics) && isset($topic) && !empty($topic->topic_id) && isset($topics[$topic->topic_id])) {$location="topic-page";}} 
+global $topics_per_page, $topics_per_page_fix_link, $topics, $topic, $topic_id; 
+if ($topics_per_page_fix_link) {$location="topic-page";} else {$location=bb_get_location();} 
 if (isset($topics_per_page[$location])) {return $topics_per_page[$location];}
+return $limit;
+}
+
+function topics_per_page_fix_topic_links($limit) {	// er, thanks Sam, I think - 1.0a2 fix
+global $topics_per_page_fix_link;
+$topics_per_page_fix_link=true;
+$limit=topics_per_page($limit);
+$topics_per_page_fix_link=false; 
 return $limit;
 }
 

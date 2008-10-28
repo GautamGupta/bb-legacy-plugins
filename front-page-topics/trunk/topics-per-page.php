@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/topics-per-page
 Description:  Set custom topic or post count limits for nearly every kind of bbPress page while still calculating direct post links correctly.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.2
+Version: 0.0.3
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
@@ -26,9 +26,10 @@ $topics_per_page=array(		// edit the numbers below as desired - no fancy admin p
 
 /*   stop editing here   */
 
-add_action( 'bb_get_option_page_topics', 'topics_per_page',200);
+add_filter( 'bb_get_option_page_topics', 'topics_per_page',200);
 add_filter( 'get_post_link','topics_per_page_fix_link',10, 2);
 add_filter( 'get_topic_page_links_per_page', 'topics_per_page_fix_topic_links');
+add_filter( 'bb_get_option_front_page_topics', 'topics_per_page_fix_topic_links');	 // backward-compatibility fix for old front page topic plugin
 
 function topics_per_page($limit) {	 	// set custom topics per page limits
 global $topics_per_page, $topics_per_page_fix_link, $topics, $topic, $topic_id; 
@@ -38,11 +39,7 @@ return $limit;
 }
 
 function topics_per_page_fix_topic_links($limit) {	// er, thanks Sam, I think - 1.0a2 fix
-global $topics_per_page_fix_link;
-$topics_per_page_fix_link=true;
-$limit=topics_per_page($limit);
-$topics_per_page_fix_link=false; 
-return $limit;
+global $topics_per_page;  return isset($topics_per_page['topic-page']) ? $topics_per_page['topic-page'] : $limit;
 }
 
 function topics_per_page_fix_link($link,$post_id) { 		// required to calculate correct post/page jumps into topic pages

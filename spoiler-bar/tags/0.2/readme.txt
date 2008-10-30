@@ -33,7 +33,8 @@ If you want to integrate this with quick tags (http://www.40annibuttati.it/comme
 = PHP CHANGES =
 
 Find:
-edButtons.push(
+<pre>
+	edButtons.push(
 		new edButton(
 			'ed_img'
 			,'IMG'
@@ -42,11 +43,11 @@ edButtons.push(
 			,'m'
 			,-1
 		)
-	);
+	);</pre>
 
 Add below:
 
-// Added for spoiler tags
+<pre>// Added for spoiler tags
 	edButtons.push(
 		new edButton(
 			'ed_spoiler'
@@ -55,11 +56,12 @@ Add below:
 			,'</spoiler>'
 			,'s'
 		)
-	);
+	);</pre>
 
-= JAVASCRIPT CHANGES=
+= JAVASCRIPT CHANGES =
 
 Find:
+<pre>
 		new edButton(
 			'ed_img'
 			,'IMG'
@@ -69,9 +71,10 @@ Find:
 			,-1
 		)
 	); // special case
-
+</pre>
 
 Add below:
+<pre>
 		new edButton(
 			'ed_spoiler'
 			,'SPOILER'
@@ -80,3 +83,4 @@ Add below:
 			,'s'
 		)
 	);
+</pre>

@@ -1,4 +1,4 @@
-=== Allow Images ===
+=== Spoiler Tags ===
 Tags: html, spoiler
 Contributors: ipstenu
 Requires at least: Unknown

@@ -20,11 +20,11 @@ Upload the files
 Add .spoiler {} to your CSS file
 
 EXAMPLE:
-.spoiler
+`.spoiler
 {
         background: #000000;
         color: #000000;
-}
+}`
 
 == Integration with QuickTags==
 
@@ -33,7 +33,7 @@ If you want to integrate this with quick tags (http://www.40annibuttati.it/comme
 = PHP CHANGES =
 
 Find:
-<pre>
+`
 	edButtons.push(
 		new edButton(
 			'ed_img'
@@ -43,11 +43,11 @@ Find:
 			,'m'
 			,-1
 		)
-	);</pre>
+	);`
 
 Add below:
 
-<pre>// Added for spoiler tags
+`// Added for spoiler tags
 	edButtons.push(
 		new edButton(
 			'ed_spoiler'
@@ -56,12 +56,12 @@ Add below:
 			,'</spoiler>'
 			,'s'
 		)
-	);</pre>
+	);`
 
 = JAVASCRIPT CHANGES =
 
 Find:
-<pre>
+`
 		new edButton(
 			'ed_img'
 			,'IMG'
@@ -71,10 +71,10 @@ Find:
 			,-1
 		)
 	); // special case
-</pre>
+`
 
 Add below:
-<pre>
+`
 		new edButton(
 			'ed_spoiler'
 			,'SPOILER'
@@ -83,4 +83,4 @@ Add below:
 			,'s'
 		)
 	);
-</pre>
+`

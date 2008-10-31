@@ -1,21 +1,20 @@
 === Spoiler Tags ===
 Tags: html, spoiler
-Contributors: ipstenu
+Contributors: ipstenu, _ck_
 Requires at least: Unknown
 Tested up to: 1.0alpha2
-Stable Tag: 0.2
+Stable Tag: 0.4
 
 Allow users to include &lt;spoiler&gt;&lt;/spoiler&gt; tags in their posts.
 
 == Description ==
 
-With this plugin, users can spoiler bar text so it will show up hidden. Users will then have to highlight the text to see the spoilers
+With this plugin, users can spoiler bar text so it will show up hidden. Users will then have to highlight the text to see the spoilers.
 
+As of v.3, thanks to _ck_, it has been updated to work with the <a href="http://bbpress.org/plugins/topic/bbcode-lite/"BBCode plugin</a> as well!
 == Installation ==
 
-Create the folder `spoiler-tags` in the bbPress' `my-plugins/` directory.
-
-Upload the files
+Create the folder `spoiler-tags` in the bbPress' `my-plugins/` directory and upload the files.
 
 Add .spoiler {} to your CSS file
 
@@ -26,11 +25,23 @@ EXAMPLE:
         color: #000000;
 }`
 
-== Integration with QuickTags==
+== Frequently Asked Questions ==
 
-If you want to integrate this with quick tags (http://www.40annibuttati.it/comment-quicktags-for-bbpress/)
+= How can I change the colors? =
 
-= PHP CHANGES =
+Straight CSS, baby!
+
+`.spoiler
+{
+        background: #000000;
+        color: #000000;
+}`
+
+= How can I integrate with QuickTags=
+
+<a href="http://bbpress.org/plugins/topic/quicktags-4-bbpress/">Quick Tags</a> are those neat-o buttons that let users click to add HTML.
+
+<strong> In comment_QT_4_bbpress.php </strong>
 
 Find:
 `
@@ -58,7 +69,7 @@ Add below:
 		)
 	);`
 
-= JAVASCRIPT CHANGES =
+<strong>In js_quicktags.js</strong>
 
 Find:
 `
@@ -84,3 +95,17 @@ Add below:
 		)
 	);
 `
+
+= How do I integrate with bbCode Buttons? =
+<a href="http://bbpress.org/plugins/topic/bbcode-buttons/">BBcode Buttons</a> are the buttons for BBcode (rather than HTML, glad you followed me there).
+
+<strong>In BBcode-buttons.php</strong>
+
+Find: 
+`BBcodeButtons.push(new BBcodeButton('ed_li','LI','[*]','[/*]','l','','list item'));";`
+
+Add below:
+`BBcodeButtons.push(new BBcodeButton('ed_spoiler','SPOILER','[spoiler]','[/spoiler]','r','','spoiler'));";`
+
+<strong>In BBcode-buttons.js</strong>
+???

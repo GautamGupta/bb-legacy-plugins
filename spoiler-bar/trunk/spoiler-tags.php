@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/spoiler-bar/
 Description: Allows <spoiler></spoiler> tags to be posted in your forums.
 Author: Mika A. Epstein
 Author URI: http://ipstenu.org/
-Version: 0.1
+Version: 0.2
 */
 
 // You can add more tags here

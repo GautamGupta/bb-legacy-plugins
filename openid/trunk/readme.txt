@@ -30,12 +30,15 @@ Version 0.0.1 is an early alpha for bug and compatibility testing and does not s
 * There is a replacement `login-form.php` that you can replace in the default kakumei `login-form.php` and it should work okay on some other themes too. 
 
 * Edit your `login.php` template and between the first H3 and H2 place `do_action('openid_login');`
+`
 ie.
-`<h3 class="bbcrumb">...`
 
-`do_action('openid_login');`
+<h3 class="bbcrumb">...
 
-`<h2 id="userlogin">...`
+do_action('openid_login');
+
+<h2 id="userlogin">...
+`
 
 * Test the following once the above is completed:
 

@@ -85,9 +85,9 @@ elseif (isset($_GET['openid_mode'])) {
 			wp_set_auth_cookie( (int) $openid_user_id, 0 );	// 0 = don't remember, short login, todo: use form value
 			do_action('bb_user_login', (int) $openid_user_id );		
 			openid_redirect();			
-		} else { 	 // openid is valid but no user_id, we need to create a user
-			echo $openid;
-			exit;
+		} else { 	 // openid is valid but no user_id, we need to create a user			
+			$error="Sorry, account creation is not supported yet.<br>The following OpenID is not attached to any forum account:<br>$openid";
+			openid_redirect($error);			
 		}
 		
 	}

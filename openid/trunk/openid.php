@@ -11,8 +11,6 @@ License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
 */
 
-// error_reporting(E_ALL);
-
 $openid_options['profile_text']="OpenID";
 $openid_options['add_text']="Add OpenID providers to your account:";
 $openid_options['remove_text']="Remove OpenID provider";
@@ -22,12 +20,16 @@ $openid_options['whitelist']="";  // todo
 $openid_options['blacklist']="";  // todo
 $openid_options['icon']=bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),"\\"),array("","/"),dirname(__FILE__)),' /\\').'/openid.png'; 
 
+/*  stop editing here  */
+
 add_action('bb_init', 'openid');
 add_action('bb_init', 'openid_remove');
 add_action('extra_profile_info', 'openid_profile_edit',100);
 add_action('openid_login','openid_login');
 
 if (isset($_GET['openid_help'])) {echo "<body style='font-size:14px;margin-left:75px;' onload='document.getElementById(\"openid_help\").style.visibility=\"visible\";'>"; openid_help(); exit;}
+
+// error_reporting(E_ALL);
 
 function openid() {
 global $openid_options, $bb_current_user, $bbdb; 

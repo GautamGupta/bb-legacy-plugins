@@ -1,4 +1,4 @@
-=== All Settings ===
+=== OpenID for bbPress ===
 Tags: _ck_, OpenID
 Contributors: _ck_
 Requires at least: 0.9

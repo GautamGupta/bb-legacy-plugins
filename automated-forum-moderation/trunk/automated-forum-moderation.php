@@ -69,6 +69,7 @@ function automated_forum_moderation_jit_blocking($post_text, $post_id, $topic_id
 	if (strlen($post_text) < $automated_forum_moderation_data['min_chars']) {
 		bb_die(__('You need to actually submit some content!'));
 	}
+	return $post_text;
 }
 
 if (is_topic()) {

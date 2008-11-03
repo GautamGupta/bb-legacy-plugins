@@ -65,12 +65,12 @@ function automated_forum_moderation_jit_blocking($post_text, $post_id, $topic_id
 	}
 	if (count(explode(' ', $post_text)) < $automated_forum_moderation_data['min_words']) {
 		if ($is_new_topic)
-			bb_delete_topic($topic_id);
+			bb_delete_topic($topic_id, 1);
 		bb_die(__('You need to actually submit some content!'));
 	}
 	if (strlen($post_text) < $automated_forum_moderation_data['min_chars']) {
 		if ($is_new_topic)
-			bb_delete_topic($topic_id);
+			bb_delete_topic($topic_id, 1);
 		bb_die(__('You need to actually submit some content!'));
 	}
 	return $post_text;

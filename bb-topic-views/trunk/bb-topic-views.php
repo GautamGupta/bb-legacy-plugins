@@ -208,7 +208,7 @@ function most_viewed_table ( $list_length = '10') {
 	<table id="most_viewed">
 	<tr><th>Topic</th><th>Views</th><th>Posts</th><th>Last Poster</th><th>Freshness</th></tr>
 	
-	<?	
+	<?php
 	foreach ($most_viewed as $row) { 
 		$topic_id = $row->topic_id;
 		$topic = get_topic ($topic_id);

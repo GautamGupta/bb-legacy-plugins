@@ -5,7 +5,7 @@ Description: Blocks common (and sometimes accidental) human-generated spam autom
 Plugin URI: http://llamaslayers.net/daily-llama/tag/automated-forum-moderation/
 Author: Nightgunner5
 Author URI: http://llamaslayers.net/daily-llama/
-Version: 0.1.1
+Version: 0.1.2
 */
 
 $automated_forum_moderation_data = array(
@@ -64,13 +64,17 @@ function automated_forum_moderation_jit_blocking($post_text, $post_id, $topic_id
 		$is_new_topic = true;
 	}
 	if (count(explode(' ', $post_text)) < $automated_forum_moderation_data['min_words']) {
-		if ($is_new_topic)
+		if ($is_new_topic) {
+			error_reporting(E_ALL ^ (E_WARNING & E_NOTICE)); // Hack to remove php error caused by no posts being in the topic yet.
 			bb_delete_topic($topic_id, 1);
+		}
 		bb_die(__('You need to actually submit some content!'));
 	}
 	if (strlen($post_text) < $automated_forum_moderation_data['min_chars']) {
-		if ($is_new_topic)
+		if ($is_new_topic) {
+			error_reporting(E_ALL ^ (E_WARNING & E_NOTICE)); // Hack to remove php error caused by no posts being in the topic yet.
 			bb_delete_topic($topic_id, 1);
+		}
 		bb_die(__('You need to actually submit some content!'));
 	}
 	return $post_text;

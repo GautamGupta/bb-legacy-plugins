@@ -31,13 +31,15 @@ EXAMPLE:
 
 Straight CSS, baby!
 
-`.spoiler
+`
+.spoiler
 {
         background: #000000;
         color: #000000;
-}`
+}
+`
 
-= How can I integrate with QuickTags=
+= How can I integrate with QuickTags =
 
 <a href="http://bbpress.org/plugins/topic/quicktags-4-bbpress/">Quick Tags</a> are those neat-o buttons that let users click to add HTML.
 
@@ -108,4 +110,5 @@ Add below:
 `BBcodeButtons.push(new BBcodeButton('ed_spoiler','SPOILER','[spoiler]','[/spoiler]','r','','spoiler'));";`
 
 <strong>In BBcode-buttons.js</strong>
-???
+
+There's probably some change here, but I'm not sure what as I don't use BBCode.

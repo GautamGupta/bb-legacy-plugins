@@ -11,7 +11,7 @@ Allow users to include &lt;spoiler&gt;&lt;/spoiler&gt; tags in their posts.
 
 With this plugin, users can spoiler bar text so it will show up hidden. Users will then have to highlight the text to see the spoilers.
 
-As of v.3, thanks to _ck_, it has been updated to work with the <a href="http://bbpress.org/plugins/topic/bbcode-lite/"BBCode plugin</a> as well!
+As of v.3, thanks to _ck_, it has been updated to work with the <a href="http://bbpress.org/plugins/topic/bbcode-lite/">BBCode plugin</a> as well!
 == Installation ==
 
 Create the folder `spoiler-tags` in the bbPress' `my-plugins/` directory and upload the files.

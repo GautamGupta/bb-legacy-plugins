@@ -47,7 +47,6 @@ function automated_forum_moderation_jit_blocking($post_text, $post_id, $topic_id
 	global $bbdb, $automated_forum_moderation_data;
 	$last_post_in_topic = $bbdb->get_row($bbdb->prepare('SELECT `post_id`, `poster_id`, `post_time`, `forum_id` FROM `'.$bbdb->posts.'` WHERE `topic_id` = %s AND `post_status` = \'0\' ORDER BY `post_time` DESC, `post_position` ASC LIMIT 1', $topic_id)); // Only get what we need
 	if ($last_post_in_topic !== null) {
-		$is_new_topic = false;
 		$last_post_time = $last_post_in_topic->post_time;
 		$last_post_is_current_user = ($last_post_in_topic->poster_id == bb_get_current_user_info('ID'));
 		$forum_id = $last_post_in_topic->forum_id;

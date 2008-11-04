@@ -22,7 +22,7 @@ Now adds the ability to do pagination on the front page with the latest discussi
 
 * Activate plugin
 
-* If you'd like to add pagination (page numbers) on the front page, simply add to your `front-page.php` template `<div class="nav"><?php front_page_pages(); ?></div>` before `<?php endforeach; endif; // $topics ?>
+* If you'd like to add pagination (page numbers) on the front page, simply add to your `front-page.php` template `<div class="nav"><?php front_page_pages(); ?></div>` AFTER `<?php endforeach; endif; // $topics ?>
 </table>`
 
 * If you use rewrite slugs you MUST add the following rule to your `.htaccess` file `RewriteRule ^page/([0-9]+)/?$ /forums/?page=$1 [L,QSA]` anywhere before `</IfModule>` where `/forums/` is the path to your bbpress install.

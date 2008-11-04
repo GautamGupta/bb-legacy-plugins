@@ -76,7 +76,7 @@ return $limit;
 
 function front_page_pages() {
 global $page, $bbdb; 
-echo get_page_number_links( $page, $bbdb->get_var("SELECT SUM(topics) FROM $bbdb->forums")); 
+echo apply_filters( 'topic_pages', get_page_number_links( $page, $bbdb->get_var("SELECT SUM(topics) FROM $bbdb->forums")),0); 
 }
 
 ?>

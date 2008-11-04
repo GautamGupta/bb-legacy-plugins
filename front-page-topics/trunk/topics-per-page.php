@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/topics-per-page
 Description:  Set custom topic or post count limits for nearly every kind of bbPress page while still calculating direct post links correctly.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.3
+Version: 0.0.4
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
@@ -30,6 +30,7 @@ add_filter( 'bb_get_option_page_topics', 'topics_per_page',200);
 add_filter( 'get_post_link','topics_per_page_fix_link',10, 2);
 add_filter( 'get_topic_page_links_per_page', 'topics_per_page_fix_topic_links');
 add_filter( 'bb_get_option_front_page_topics', 'front_page_topics_fetch');	 // backward-compatibility fix for old front page topic plugin
+add_filter('get_latest_topics_limit','front_page_pagination',999);
 
 function front_page_topics_fetch($limit) {global $topics_per_page;  return $topics_per_page;}
 
@@ -65,6 +66,17 @@ if (!$topic_id) {	// all other cache lookup attempts have failed, do a manual lo
 $topic_link=get_topic_link( $topic_id, $page )."#post-$post_id";
 $topics_per_page_fix_link=false; 
 return  $topic_link;
+}
+
+function front_page_pagination($limit="") {
+global $page; 
+if (is_front() && $page>1) {$where.=" OFFSET ".($page-1)*bb_get_option('page_topics');}
+return $limit;
+}
+
+function front_page_pages() {
+global $page, $bbdb; 
+echo get_page_number_links( $page, $bbdb->get_var("SELECT SUM(topics) FROM $bbdb->forums")); 
 }
 
 ?>

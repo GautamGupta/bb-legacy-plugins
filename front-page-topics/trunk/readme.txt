@@ -10,7 +10,9 @@ Set custom topic or post count limits for nearly every kind of bbPress page whil
 
 == Description ==
 
-Set custom topic or post count limits for nearly every kind of bbPress page while still calculating direct post links correctly. (now 1.0 compatible)
+Set custom topic or post count limits for nearly every kind of bbPress page while still calculating direct post links correctly. (now 1.0 compatible).
+
+Now adds the ability to do pagination on the front page with the latest discussions.
 
 == Installation ==
 
@@ -19,6 +21,12 @@ Set custom topic or post count limits for nearly every kind of bbPress page whil
 * Add the `topics-per-page.php` file to bbPress' `my-plugins/` directory
 
 * Activate plugin
+
+* If you'd like to add pagination (page numbers) on the front page, simply add to your `front-page.php` template `<div class="nav"><?php front_page_pages(); ?></div>` before `<?php endforeach; endif; // $topics ?>
+</table>`
+
+* If you use rewrite slugs you MUST add the following rule to your `.htaccess` file `RewriteRule ^page/([0-9]+)/?$ /forums/?page=$1 [L,QSA]` anywhere before `</IfModule>` where `/forums/` is the path to your bbpress install.
+
 
 == Frequently Asked Questions ==
 
@@ -45,6 +53,10 @@ Set custom topic or post count limits for nearly every kind of bbPress page whil
 = Version 0.0.2 (2008-10-27) =
 
 * first attempt at workaround for bbPress 1.0a2 topic_page_links() 
+
+= Version 0.0.4 {2008-11-04) =
+
+* now adds the ability to do pagination on the front page with the latest discussions
 
 == To Do ==
 

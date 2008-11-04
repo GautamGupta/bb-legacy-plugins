@@ -70,7 +70,7 @@ return  $topic_link;
 
 function front_page_pagination($limit="") {
 global $page; 
-if (is_front() && $page>1) {$where.=" OFFSET ".($page-1)*bb_get_option('page_topics');}
+if (is_front() && $page>1) {$limit.=" OFFSET ".($page-1)*bb_get_option('page_topics');}
 return $limit;
 }
 

@@ -1,0 +1,45 @@
+
+/* We want author above post */
+div.threadauthor {
+    float: none;
+}
+
+/* Make post and author line up */
+div.threadpost {
+    margin-left: 0px;
+}
+
+/* No li markings on the subthreads */
+ol.list\:post {
+    list-style-image: none;
+    list-style-position: outside;
+    list-style-type: none;
+}
+
+/* Borders and spacing around each post */
+#thread li {
+    border: 1px solid #DDDDDD;
+    margin: 10px;
+}
+
+/* Fix spacing */
+#thread li ol {
+    margin: 10px;
+}
+
+
+li {
+    background-color: #eeeeee;
+}
+
+ol.alt {
+    background-color: #eeeeee;
+}
+
+ol.alt li, ol.alt li div.threadpost {
+    background-color: #ffffff;
+};
+
+ol.alt li ol li, ol.alt li ol li div.threadpost {
+    background-color: #eeeeee;
+};

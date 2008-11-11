@@ -3,7 +3,7 @@
 Plugin Name: Human Test for bbPress
 Plugin URI:  http://bbpress.org/plugins/topic/77
 Description:  uses various methods to exclude bots from registering (and eventually posting) on bbPress
-Version: 0.7.2
+Version: 0.7.3
 Author: _ck_
 Author URI: http://bbshowcase.org
 
@@ -34,13 +34,13 @@ if (human_register_page()) :  //  only display on register.php and hide on profi
 	echo '<fieldset><legend>'.__("Please prove you are human").'</legend><table width="100%"><tr class="required"><th scope="row" nowrap>';
 	echo '<script language="JavaScript" type="text/javascript">document.write("'.$question.'");</script>';	// write question with javascript
 	echo '<noscript><i>'.__("registration requires JavaScript").'</i></noscript>';	// warn no-script users 
-	echo '</th><td width="72%"><input name="human_test" type="text" id="human_test" size="30" maxlength="140" value="" />';	// answer field
+	echo '</th><td width="72%"><input name="human_test" type="text" id="human_test" size="30" maxlength="140" value="" autocomplete="off" />';	// answer field
 	echo '<input type="hidden" name = "'.session_name().'" value = "'.session_id().'" />';	// improved session support without cookies or urls
 	echo '</td></tr></table></fieldset>';
 
 endif;
 } 
-add_action( 'extra_profile_info', 'human_registration_test');	// attach to register.php
+add_action( 'extra_profile_info', 'human_registration_test',11);	// attach to register.php
 
 function human_test_check() {
 if (human_register_page()) :  //  only display on register.php and hide on profile page
@@ -58,7 +58,14 @@ if (human_register_page()) :  //  only display on register.php and hide on profi
 		
 		if ($human_test !=$compare) {				
 			// echo $human_test." - ".$compare; exit();	// debug
-			bb_die(__("Humans only please").". ".__("If you are not a bot").", <a href='register.php'>".__("please go back and try again")."</a>.");				
+			// bb_die(__("Humans only please").". ".__("If you are not a bot").", <a href='register.php'>".__("please go back and try again")."</a>.");
+			bb_get_header();
+			echo "<br clear='both' /><h2 id='register' style='margin-left:2em;'>".__("Error")."</h2><p align='center'><font size='+1'>".
+			__("Humans only please").". ".__("If you are not a bot").", <br />
+			<a href='register.php'>".__("please go back and try again")."</a>.
+			</font></p><br />";
+			bb_get_footer();
+			exit;				
 			// todo: limit registration attempts through session count
 		} else {	
 			 // passed test		

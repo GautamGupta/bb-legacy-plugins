@@ -60,6 +60,10 @@ Eventually will add image based (captcha style) writing as well as "negative fie
 
 * don't start session if already started to behave with other plugins that use sessions
 
+= Version 0.7.3 (2008-11-09) =
+
+* use themed error page instead of ugly bb_die
+
 == To Do ==
 
 * "negative fields" that are hidden and supposed to remain blank but spam bots try to fill, therefore fail

@@ -1,5 +1,5 @@
 === Disable Display Name  ===
-Tags: display name, displayname, _ck_
+Tags: user_login, display_name, username, display name, displayname, _ck_
 Contributors: _ck_
 Requires at least: 0.9
 Tested up to: trunk

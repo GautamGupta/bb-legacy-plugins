@@ -44,7 +44,7 @@ $mini_stats['style_graph']="
 .mini_stats_graph2 {margin:1em 5px; width:48%; word-spacing:0;}
 .mini_stats_graph2 TD {text-align:left; vertical-align: middle; padding: 0 2px; height:20px;}
 .mini_stats_graph2 TD div {float: left; height:8px; font-size:1px; line-height:1px;  margin: 2px 5px 0 0; border-bottom: 1px solid #000000;}
-.mini_stats_graph .alt TD {border-top:1px solid #444; letter-spacing:-1.2px;}
+.mini_stats_graph .alt TD {border-top:1px solid #444; letter-spacing:-1.5px;}
 h3 {font-size:1.3em; position:relative; bottom: -10px; margin-top:-10px;}
 #latest th {text-align:center;}
 .widefat td {padding:0.5em;}

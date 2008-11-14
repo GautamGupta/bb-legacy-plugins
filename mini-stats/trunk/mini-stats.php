@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/mini-stats
 Description: Some simple forum statistics.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.1
+Version: 0.0.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -37,21 +37,34 @@ $mini_stats['style']="
 ";
 
 $mini_stats['style_graph']="
-.mini_stats_graph {border:1px solid #aabbcc; float:left; font-size:11px; letter-spacing:-1px; word-spacing:-1px; border: 0; border-collapse: collapse; width:100%; margin:1em 0;}
-.mini_stats_graph TD {white-space:nowrap; overflow:hidden; text-align:center; border:0; border-collapse: collapse;}
+.mini_stats_graph {font-family:arial,san-serif; font-size:11px; border:1px solid #aabbcc; float:left; letter-spacing:-1px; word-spacing:-1px; border: 0; border-collapse: collapse; width:100%; margin:1em 0;}
+.mini_stats_graph TD {font-family:arial,san-serif; font-size:11px; white-space:nowrap; overflow:hidden; text-align:center; border:0; border-collapse: collapse;}
 .mini_stats_graph TD div {font-size:1px;background:#aabbcc; margin: 0 1px; border-right: 1px solid #000000; border-top: 1px solid #dedede; border-left: 1px solid #dedede;}
 .mini_stats_graph TD span {width:100%;white-space:nowrap;}
 .mini_stats_graph2 {margin:1em 5px; width:48%; word-spacing:0;}
 .mini_stats_graph2 TD {text-align:left; vertical-align: middle; padding: 0 2px; height:20px;}
 .mini_stats_graph2 TD div {float: left; height:8px; font-size:1px; line-height:1px;  margin: 2px 5px 0 0; border-bottom: 1px solid #000000;}
-.mini_stats_graph .alt TD {border-top:1px solid #444; letter-spacing:-2px;}
+.mini_stats_graph .alt TD {border-top:1px solid #444; letter-spacing:-1.2px;}
 h3 {font-size:1.3em; position:relative; bottom: -10px; margin-top:-10px;}
 #latest th {text-align:center;}
+.widefat td {padding:0.5em;}
+.widefat td.num {text-align:center;}
+.wrap {padding:0 3em 2em 3em;}
 ";
 
 /*  stop editing here  */
 
 if (isset($_GET[$mini_stats['trigger']])) {add_action('bb_init','mini_stats_init');}
+
+if ((defined('BB_IS_ADMIN') && BB_IS_ADMIN) || !(strpos($_SERVER['REQUEST_URI'],"/bb-admin/")===false)) { // "stub" only load functions if in admin 	
+	if (isset($_GET['plugin']) && $_GET['plugin']=="mini_stats_admin") { // load entire core only when needed
+	@require_once("mini-stats-init.php");
+	add_action( 'bb_admin_head','mini_stats_header',100); 
+	add_action('bb_admin_head','mini_stats_graph_header',100); 
+	} 
+	function mini_stats_admin_page() {global $bb_submenu; $bb_submenu['content.php'][] = array(__('Mini Stats'), 'administrate', 'mini_stats_admin');}
+	add_action( 'bb_admin_menu_generator', 'mini_stats_admin_page',200);	// try to be last menu feature		
+}
 
 // statistics hooks
 add_action('bb_head','mini_stats_header',100); 

@@ -1,5 +1,15 @@
 <?php
 
+if ((defined('BB_IS_ADMIN') && BB_IS_ADMIN) || !(strpos($_SERVER['REQUEST_URI'],"/bb-admin/")===false)) {
+
+function mini_stats_admin() { 
+if (!bb_current_user_can('administrate'))  {die();}
+global $mini_stats;
+mini_stats_graphs();
+if (empty($_GET[$mini_stats['trigger']]))  {mini_stats_statistics();}
+}
+
+} else {
 add_action('bb_head','mini_stats_graph_header',100); 
 
 bb_get_header(); 
@@ -9,6 +19,7 @@ if (empty($_GET[$mini_stats['trigger']]))  {mini_stats_statistics();}
 echo '<br clear="both" />';
 bb_get_footer(); 
 exit;
+}
 
 function mini_stats_graph_header() {global $mini_stats;  echo '<style type="text/css">'.$mini_stats['style_graph'].'</style>';}
 
@@ -37,8 +48,8 @@ $day=$day-24*3600;
 $empty=array_reverse($empty);
 
 if (bb_current_user_can('administrate')) {
-echo '<div style="float:right; font-size:12px; margin:0 0 -12px 0;">'.(empty($_GET[$mini_stats['trigger']]) ? '' : '[<a href="?'.$mini_stats['trigger'].'">'.__('reset').'</a>] ')
-.'[<a href="?'.$mini_stats['trigger'].'='.date('Y-n-j',$time-31*24*3600).'">'.__('last month').'</a>] [<a href="?'.$mini_stats['trigger'].'='.(date('Y',$time)-1).'-'.date('n-j',$time).'">'.__('last year').'</a>]</div>';
+echo '<div style="float:right; font-size:12px; margin:0 0 -12px 0;">'.(empty($_GET[$mini_stats['trigger']]) ? '' : __('from').' '.date('M j, Y',$time).' [<a href="'.add_query_arg($mini_stats['trigger'],"").'">'.__('reset').'</a>] ')
+.'[<a href="'.add_query_arg($mini_stats['trigger'],date('Y-n-j',$time-31*24*3600)).'">'.__('previous month').'</a>] [<a href="'.add_query_arg($mini_stats['trigger'],(date('Y',$time)-1).'-'.date('n-j',$time)).'">'.__('previous year').'</a>]</div>';
 }
 
 for ($loop=1; $loop<=3; $loop++) {
@@ -164,7 +175,7 @@ $statistics["top_topics_by_views"] = bb_append_meta( $topics, 'topic' );
 
 ?>
 
-<table style="width:49%;margin:0 0 1em 0;clear:none;float:left;" id="latest">
+<table style="width:49%;margin:0 0 1em 0;clear:none;float:left;" id="latest" class="widefat">
 <thead>
 <tr><th>Totals</th><th>#</th></tr>
 </thead>
@@ -178,7 +189,7 @@ echo  "<tr".get_alt_class('plugin', $class)."><td> Total ".ucwords($total).":</t
 </tbody>
 </table>
 
-<table style="width:49%;margin:0 0 1em 0;clear:none;float:right;" id="latest">
+<table style="width:49%;margin:0 0 1em 0;clear:none;float:right;" id="latest" class="widefat">
 <thead>
 <tr><th>Averages</th><th>#</th></tr>
 </thead>
@@ -194,7 +205,7 @@ echo  "<tr".get_alt_class('plugin', $class)."><td> Average ".ucwords($average)."
 
 <br clear="both" />
 
-<table style="width:49%;margin:0 0 1em 0;clear:none;float:left;" id="latest">
+<table style="width:49%;margin:0 0 1em 0;clear:none;float:left;" id="latest" class="widefat">
 <thead>
 <tr><th>Top Topics (by posts)</th><th>#</th></tr>
 </thead>
@@ -207,7 +218,7 @@ echo  "<tr".get_alt_class('plugin', $class)."><td> <a href='".get_topic_link($to
 </tbody>
 </table>
 
-<table style="width:49%;margin:0 0 1em 0;clear:none;float:right;" id="latest">
+<table style="width:49%;margin:0 0 1em 0;clear:none;float:right;" id="latest" class="widefat">
 <thead>
 	<tr><th>Top Topics (by views)</th><th>#</th></tr>
 </thead>
@@ -222,7 +233,7 @@ echo  "<tr".get_alt_class('plugin', $class)."><td> <a href='".get_topic_link($to
 
 <br clear="both" />
 
-<table style="width:49%;margin:0 0 1em 0;clear:none;float:left;" id="latest">
+<table style="width:49%;margin:0 0 1em 0;clear:none;float:left;" id="latest" class="widefat">
 <thead>
 <tr><th>Oldest Members</th><th>#</th></tr>
 </thead>
@@ -238,7 +249,7 @@ echo  "<tr".get_alt_class('plugin', $class)."><td> <a href='" . attribute_escape
 </tbody>
 </table>
 
-<table style="width:49%;margin:0 0 1em 0;clear:none;float:right;" id="latest">
+<table style="width:49%;margin:0 0 1em 0;clear:none;float:right;" id="latest" class="widefat">
 <thead>
 <tr><th>Newest  Members</th><th>#</th></tr>
 </thead>
@@ -256,7 +267,7 @@ echo  "<tr".get_alt_class('plugin', $class)."><td> <a href='" . attribute_escape
 
 <br clear="both" />
 
-<table style="width:49%;margin:0 0 1em 0;clear:none;float:left;" id="latest">
+<table style="width:49%;margin:0 0 1em 0;clear:none;float:left;" id="latest" class="widefat">
 <thead>
 <tr><th>Top Posters</th><th>#</th></tr>
 </thead>
@@ -272,7 +283,7 @@ echo  "<tr".get_alt_class('plugin', $class)."><td> <a href='" . attribute_escape
 </tbody>
 </table>
 
-<table style="width:49%;margin:0 0 1em 0;clear:none;float:right;" id="latest">
+<table style="width:49%;margin:0 0 1em 0;clear:none;float:right;" id="latest" class="widefat">
 <thead>
 <tr><th>Top Topic Starters</th><th>#</th></tr>
 </thead>

@@ -17,7 +17,8 @@ I am now separating some functionality from Mini Track into Mini Stats to reduce
 Automatically inserts into the footer, no template edits required unless you want custom placement.
 You can see the full display at  `your-forum-url.com/?mini-stats` or click on the pie graph icon in the footer.
 
-Example:  http://bbshowcase.org/forums/?mini-stats
+Example:  
+http://bbshowcase.org/forums/?mini-stats
 
 == Installation ==
 
@@ -44,6 +45,17 @@ $bb->load_options = true;
 
 == Frequently Asked Questions ==
 
+= I don't want members to see this, only admin, how can I do that? =
+
+* change the settings at the top of the plugin:
+
+`
+$mini_stats['statistics_in_footer']=false;
+$mini_stats['level']="administrate"; 
+`	
+
+* Then you can see the stats by manually going to your-forum-name.com/?mini-stats or under the admin menu,  Manage -> Mini Stats
+
 = Why doesn't the newly registered names update after I delete a member ? =
 
 * bbPress doesn't have a hook right now for that, instead try adding or deleting a post instead and it will re-sync 
@@ -58,7 +70,14 @@ $bb->load_options = true;
 
 == History ==
 
-= Version 0.0.1 (2008-11-14) =
+= Version 0.0.1 (2008-11-13) =
 
 * first public release
 
+= Version 0.0.2 (2008-11-14) =
+
+* now available via admin menu, Manage ->  Mini Stats   (looks better in 0.9 than 1.0)
+
+== To Do ==
+
+* fix buggy width on graphs when dates are too wide

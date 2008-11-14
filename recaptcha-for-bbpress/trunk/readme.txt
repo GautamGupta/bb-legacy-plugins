@@ -48,6 +48,10 @@ THE SOFTWARE.
 
 == History ==
 
+= Version 1.1 (2008-11-15) =
+
+* Simplified some code.
+
 = Version 1.0 (2008-11-14) =
 
 *   Initial release

@@ -1,0 +1,64 @@
+=== Mini Stats  ===
+Tags: statistics, members, posts, topics, _ck_
+Contributors: _ck_
+Requires at least: 0.9
+Tested up to: trunk
+Stable tag: trunk
+Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+
+Shows some simple forum statistics at the bottom of your pages and links to a full summary display.
+
+== Description ==
+
+Shows some simple forum statistics at the bottom of your pages and links to a full summary display.
+
+I am now separating some functionality from Mini Track into Mini Stats to reduce complexity and make features optional.
+
+Automatically inserts into the footer, no template edits required unless you want custom placement.
+You can see the full display at  `your-forum-url.com/?mini-stats` or click on the pie graph icon in the footer.
+
+Example:  http://bbshowcase.org/forums/?mini-stats
+
+== Installation ==
+
+* Install the complete `mini-stats/`  directory into  `my-plugins/` and activate.
+
+* Change defaults if desired by editing options at the top of the plugin until an admin menu is made.
+
+*  This plugin inserts itself into the footer automatically, no template edits required unless you want custom placement.
+
+* ONLY if you want CUSTOM placement, edit your `footer.php` template (or other template) to add  the info like so:
+`
+	<div id="footer">
+		<?php mini_stats(1);  // general statistics ?>
+		<p><?php printf(__('%1$s is proudly powered by <a href="%2$s">bbPress</a>.'), bb_option('name'), "http://bbpress.org") ?></p>
+	</div>
+
+`
+In the above example the (1) indicates don't show extended info, ie. usernames.  (2) would also show usernames.
+
+* it is highly recommend you put this line in your `bb-config.php`  which will help with database performance on active forums by loading all  bbPress options at once instead of piecemeal
+`
+$bb->load_options = true;
+`
+
+== Frequently Asked Questions ==
+
+= Why doesn't the newly registered names update after I delete a member ? =
+
+* bbPress doesn't have a hook right now for that, instead try adding or deleting a post instead and it will re-sync 
+
+== License ==
+
+* CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
+
+== Donate ==
+
+* http://amazon.com/paypage/P2FBORKDEFQIVM
+
+== History ==
+
+= Version 0.0.1 (2008-11-14) =
+
+* first public release
+

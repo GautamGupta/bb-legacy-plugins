@@ -24,7 +24,7 @@ function nospamuser_check($type, $data) {
 
 function nospamuser_check_email($r, $email) {
 	if ($r) {
-		$response = nopsamuser_check('email', $email);
+		$response = nospamuser_check('email', $email);
 		if ($response) bb_die('Your email address has been marked as spam by StopForumSpam.com.  Contact the forum administrator if you are not a spambot.');
 		return $r;
 	} else return $r;
@@ -32,7 +32,7 @@ function nospamuser_check_email($r, $email) {
 
 function nospamuser_check_username($username) {
 	if ($username) {
-		$response = nopsamuser_check('username', $username);
+		$response = nospamuser_check('username', $username);
 		if ($response) bb_die('Your username has been marked as spam by StopForumSpam.com.  Contact the forum administrator if you are not a spambot.');
 		return $username;
 	} else return $username;

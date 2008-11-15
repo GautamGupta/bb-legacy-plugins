@@ -16,8 +16,10 @@ Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
 
 $mini_stats['statistics_in_footer']=true;			// true = automatic, no edits,  false =  manual placement via mini_stats();
 $mini_stats['statistics_only_on_front_page']=false;	// every page or only front-page
-$mini_stats['show_new_members']=true;			// show names of newest registered members
-$mini_stats['new_members']=3;		// how many new members to show if enabled;
+$mini_stats['disable_footer']=false;			// disable footer feature entirely (for extremely active forums)
+
+$mini_stats['show_new_members']=true;		// show names of newest registered members in footer
+$mini_stats['new_members']=3;			// how many new members to show if enabled in footer
 
 $mini_stats['trigger']="mini-stats";		// URL line option to show stats,  ie.  ?mini-stats
 $mini_stats['level']="read"; 			// read/participate/moderate/administrate  (access level, read = anyone)
@@ -44,7 +46,7 @@ $mini_stats['style_graph']="
 .mini_stats_graph2 {margin:1em 5px; width:48%; word-spacing:0;}
 .mini_stats_graph2 TD {text-align:left; vertical-align: middle; padding: 0 2px; height:20px;}
 .mini_stats_graph2 TD div {float: left; height:8px; font-size:1px; line-height:1px;  margin: 2px 5px 0 0; border-bottom: 1px solid #000000;}
-.mini_stats_graph .alt TD {border-top:1px solid #444; letter-spacing:-1.5px;}
+.mini_stats_graph .alt TD {border-top:1px solid #444; letter-spacing:-1.6px;}
 h3 {font-size:1.3em; position:relative; bottom: -10px; margin-top:-10px;}
 #latest th {text-align:center;}
 .widefat td {padding:0.5em;}
@@ -67,6 +69,7 @@ if ((defined('BB_IS_ADMIN') && BB_IS_ADMIN) || !(strpos($_SERVER['REQUEST_URI'],
 }
 
 // statistics hooks
+if (!$mini_stats['disable_footer']) {
 add_action('bb_head','mini_stats_header',100); 
 if ($mini_stats['statistics_in_footer']) {add_action('bb_foot','mini_stats',200);}
 add_action( 'bb_new_post','mini_stats_update');
@@ -74,6 +77,7 @@ add_action( 'bb_delete_post','mini_stats_update');
 add_action('register_user','mini_stats_update');
 add_action('user_register','mini_stats_update');
 // add_action('profile_edited', 'mini_stats_update');	// unfortunately no clean way to hook cap changes if set inactive
+}
 
 function mini_stats_header() {global $mini_stats;  echo '<style type="text/css">'.$mini_stats['style'].'</style>';}
 

@@ -56,6 +56,12 @@ $bb->load_options = true;
 
 * first public release for proof-of-concept feedback
 
+= Version 0.0.2 (2008-11-15) =
+
+* significant mysql speedup via custom query - now only uses 2 queries regardless of number of tags or results
+
+* optional message if no related topics found
+
 == To Do ==
 
 * reduce tag queries to single query for performance (0.9 vs 1.0 difficulty)

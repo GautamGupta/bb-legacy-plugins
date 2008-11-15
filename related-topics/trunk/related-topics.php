@@ -17,6 +17,7 @@ $related_topics['topicmeta_position']=250; 	 // position in topicmeta items, hig
 $related_topics['minimum_tag_match']=1;	 // how many tags must match to be related
 $related_topics['maximum_count']=5;		 // how many related items at most
 $related_topics['label']=__("Related Topics:");
+$related_topics['no_related']="<small>(".__("no related topics found").")</small>";	  // message to display when no matches found (or blank)
 
 /*  stop editing here  */
 
@@ -25,7 +26,7 @@ if ($related_topics['automatic_in_topicmeta']) {add_action('topicmeta','related_
 
 function related_topics($topic_id=0,$before="<li>",$after="</li>") {
 global $related_topics, $topic;
-//   if (!bb_current_user_can('administrate')) {return;}	// debug
+// if (!bb_current_user_can('administrate')) {return;}	// debug
 if (empty($topic_id)) {$topic_id=$topic->topic_id;}
 $tags=get_topic_tags($topic_id);
 if (empty($tags)) {return;}
@@ -47,19 +48,22 @@ if (!empty($tag_count)) {
 		$final[]=$related_topic;		
 	}
 
-	$output=$before.$related_topics['label']."<ol style='margin-left:1.5em;'>"; 
+	$output=$before.$related_topics['label']."<ol class='related_topics' style='margin:0.15em 0 0 1.5em;'>"; 
 	$links=related_topics_get_links($final);
-	foreach ($final as $related_topic) {$output.="<li>$links[$related_topic]</li>";} 	//  ($tag_count[$related_topic] - $related_topic)  // debug
+	foreach ($final as $related_topic) {
+		if (!empty($links[$related_topic])) {$output.="<li>$links[$related_topic]</li>";}  //  ($tag_count[$related_topic] - $related_topic)  // debug
+	} 	
 	$output.="</ol>".$after;
 	echo $output;
-} // empty tag_count
+} elseif ($related_topics['no_related']) {echo $before.$related_topics['no_related'].$after;}
 
 }
 
 function related_topics_get_links($list) {
-global $bbdb;
-	$topics=$bbdb->get_results("SELECT topic_id,topic_slug,topic_title FROM $bbdb->topics WHERE topic_id IN (".implode(',',$list).")");
-	
+global $bbdb;	
+	$where = apply_filters('get_latest_topics_where',"WHERE topic_status=0 ");
+	$topics=$bbdb->get_results("SELECT topic_id,topic_slug,topic_title FROM $bbdb->topics $where AND topic_id IN (".implode(',',$list).")");
+	$links=array();
 	$rewrite = bb_get_option( 'mod_rewrite' );
 	if ( $rewrite ) {if ( $rewrite === 'slugs' ) {$column = 'topic_slug';} else {$column = 'topic_id';}}
 	foreach ($topics as $topic) {
@@ -68,7 +72,7 @@ global $bbdb;
 		} else {					
 			$link=add_query_arg('id',$topic->topic_id, bb_get_option('uri').'topic.php');
 		}	
-		$links[$topic->topic_id]="<a href='$link'>$topic->topic_title</a>";
+		$links[$topic->topic_id]="<a href='".attribute_escape($link)."'>$topic->topic_title</a>";
 	}
 return $links;	
 }

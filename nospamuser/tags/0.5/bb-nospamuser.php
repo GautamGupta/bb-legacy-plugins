@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: bb-NoSpamUser
-Version: 0.6
+Version: 0.5
 Plugin URI: http://danielgilbert.de/nospamuser/
 Description: Prevents known Spam Users from registering on your forum.
 Author: Daniel Gilbert

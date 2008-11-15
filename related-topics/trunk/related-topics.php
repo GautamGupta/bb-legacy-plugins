@@ -25,14 +25,14 @@ add_action('related_topic','related_topics');
 if ($related_topics['automatic_in_topicmeta']) {add_action('topicmeta','related_topics',$related_topics['topicmeta_position']);}
 
 function related_topics($topic_id=0,$before="<li>",$after="</li>") {
-global $related_topics, $topic, $bbdb;
+global $related_topics, $tags, $topic, $bbdb;
 //  if (!bb_current_user_can('administrate')) {return;}	// debug
 if (empty($topic_id)) {$topic_id=$topic->topic_id;}
-$tags=get_topic_tags($topic_id);
+if ($topic_id==$topic->topic_id) {$topic_tags=$tags;} else {$topic_tags=get_topic_tags($topic_id);}   // speedup with global copy
 
-if (!empty($tags)) {
-// foreach ($tags as $tag) {$tag_topics=bb_get_tagged_topic_ids($tag->tag_id); foreach ($tag_topics as $related_topic) {@$tag_count[$related_topic]++;}}  // old slow method, cross compatible
-foreach ($tags as $tag) {$ids[$tag->tag_id]=$tag->tag_id;} $ids=implode(',',$ids);
+if (!empty($topic_tags)) {
+// foreach ($topic_tags as $tag) {$tag_topics=bb_get_tagged_topic_ids($tag->tag_id); foreach ($tag_topics as $related_topic) {@$tag_count[$related_topic]++;}}  // old slow method, cross compatible
+foreach ($topic_tags as $tag) {$ids[$tag->tag_id]=$tag->tag_id;} $ids=implode(',',$ids);
 if (defined('BACKPRESS_PATH')) {$query="SELECT object_id as topic_id FROM $bbdb->term_relationships WHERE term_taxonomy_id IN ($ids)";}
 else {$query="SELECT topic_id FROM $bbdb->tagged WHERE tag_id IN ($ids)";}
 $tag_topics=$bbdb->get_results($query);

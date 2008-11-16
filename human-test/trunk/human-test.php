@@ -59,6 +59,7 @@ if (human_register_page()) :  //  only display on register.php and hide on profi
 		if ($human_test !=$compare) {				
 			// echo $human_test." - ".$compare; exit();	// debug
 			// bb_die(__("Humans only please").". ".__("If you are not a bot").", <a href='register.php'>".__("please go back and try again")."</a>.");
+			bb_send_headers();
 			bb_get_header();
 			echo "<br clear='both' /><h2 id='register' style='margin-left:2em;'>".__("Error")."</h2><p align='center'><font size='+1'>".
 			__("Humans only please").". ".__("If you are not a bot").", <br />

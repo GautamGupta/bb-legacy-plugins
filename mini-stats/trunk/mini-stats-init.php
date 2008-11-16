@@ -1,6 +1,8 @@
 <?php
 
 if ((defined('BB_IS_ADMIN') && BB_IS_ADMIN) || !(strpos($_SERVER['REQUEST_URI'],"/bb-admin/")===false)) {
+add_action( 'bb_admin_head','mini_stats_header',100); 
+add_action('bb_admin_head','mini_stats_graph_header',100); 
 
 function mini_stats_admin() { 
 if (!bb_current_user_can('administrate'))  {die();}
@@ -12,6 +14,7 @@ if (empty($_GET[$mini_stats['trigger']]))  {mini_stats_statistics();}
 } else {
 add_action('bb_head','mini_stats_graph_header',100); 
 
+bb_send_headers();
 bb_get_header(); 
 echo '<h3 class="bbcrumb"><a href="'.bb_get_option('uri').'">'.bb_get_option('name').'</a> &raquo; '.__('Statistics').'</h3>';
 mini_stats_graphs();

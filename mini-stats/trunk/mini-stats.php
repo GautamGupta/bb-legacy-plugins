@@ -61,8 +61,6 @@ if (isset($_GET[$mini_stats['trigger']])) {add_action('bb_init','mini_stats_init
 if ((defined('BB_IS_ADMIN') && BB_IS_ADMIN) || !(strpos($_SERVER['REQUEST_URI'],"/bb-admin/")===false)) { // "stub" only load functions if in admin 	
 	if (isset($_GET['plugin']) && $_GET['plugin']=="mini_stats_admin") { // load entire core only when needed
 	@require_once("mini-stats-init.php");
-	add_action( 'bb_admin_head','mini_stats_header',100); 
-	add_action('bb_admin_head','mini_stats_graph_header',100); 
 	} 
 	function mini_stats_admin_page() {global $bb_submenu; $bb_submenu['content.php'][] = array(__('Mini Stats'), 'administrate', 'mini_stats_admin');}
 	add_action( 'bb_admin_menu_generator', 'mini_stats_admin_page',200);	// try to be last menu feature		

@@ -5,17 +5,21 @@ Description:  Indicates previously read topics with new unread posts. Features "
 Plugin URI:  http://bbpress.org/plugins/topic/78
 Author: _ck_
 Author URI: http://bbshowcase.org
-Version: 0.9.1
+Version: 0.9.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 */
 
 $unread_posts['style']=".unread_posts {color:#0000AA;}"	// optional style for topics read with new posts
-			    .".unread_login  {color:#000080;}";	// optional style for topics with new posts since last login
+			    .".unread_login  {color:#000080;}"	// optional style for topics with new posts since last login
+			    .".unread_posts_row {}"			// table row class
+			    .".unread_login_row {}";			// table row class
 
 $unread_posts['indicate_forums']=false;		// should forums also be highlighted if there are new posts (note: causes extra query)
 
 $unread_posts['indicate_last_login']=true;	// should topics be highlighted if new posts since last login (regardless if previously read)
+
+$unread_posts['add_row_class']=false;		// also add row class
 
 $unread_posts['topics_per_user']=100;		// how many topics to watch for each user - on a fast, small forum you could probably do 1000 
 
@@ -40,6 +44,7 @@ if ($bb_current_user->ID  && !is_bb_feed()) {	// only bother with the overhead i
 			$up_read_topics=explode(",",$user->up_read_topics);  settype($up_read_topics,"array"); // unpack once, use many times
 			$up_last_posts=explode(",",$user->up_last_posts); settype($up_last_posts,"array");	 // unpack once, use many times			
 			add_filter('topic_title', 'up_mark_title_unread');
+			if ($unread_posts['add_row_class']) {$add_filter( 'topic_class', 'up_mark_row_unread');}
 			add_filter('topic_link', 'up_mark_link_unread');	// props kaviaar
 			if ($unread_posts['style']) {add_action('bb_head', 'up_add_css');}		
 			if ($unread_posts['indicate_forums'] && in_array(bb_get_location(),array('front-page','forum-page'))) {add_filter( 'get_forum_name', 'up_mark_forum_unread' ,10,2);}
@@ -85,6 +90,14 @@ global $topic, $up_read_topics, $up_last_posts,$up_last_login;
 	if ($up_key!=false &&  $up_last_posts[$up_key]!=$topic->topic_last_post_id) {$title = '<span class="unread_posts">' . $title . '</span>';}
 	elseif ($up_last_login && $up_key==false && strtotime($topic->topic_time)>=$up_last_login) {$title = '<span class="unread_login">' . $title . '</span>';}	
 return $title;
+}
+
+function up_mark_row_unread($class)  {
+global $topic, $up_read_topics, $up_last_posts,$up_last_login;		
+	$up_key=array_search($topic->topic_id ,$up_read_topics);	
+	if ($up_key!=false &&  $up_last_posts[$up_key]!=$topic->topic_last_post_id) {$class[]="unread_posts_row";}
+	elseif ($up_last_login && $up_key==false && strtotime($topic->topic_time)>=$up_last_login) {$class[]="unread_login_row";}	
+return $class;
 }
 
 function up_mark_all_read() {	// actually, just delete all it's meta and start fresh - eventually this could be made to just remove topics in one sub-forum only

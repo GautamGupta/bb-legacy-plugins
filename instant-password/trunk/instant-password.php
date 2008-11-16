@@ -61,6 +61,7 @@ return $password;
 }
 
 function instant_password_error($error) {
+bb_send_headers();
 bb_get_header();
 echo "<br clear='both' /><h2 id='register' style='margin-left:2em;'>".__("Error")."</h2><p align='center'><font size='+1'>".
 	$error.", <br />

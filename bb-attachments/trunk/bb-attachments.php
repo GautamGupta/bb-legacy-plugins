@@ -88,7 +88,8 @@ if (isset($_GET['bb_attachments'])) {
 		else {bb_attachments_download();}
 	} else { 
 		if (bb_attachments_location()!='edit.php') {
-			bb_repermalink();					
+			bb_repermalink();
+			bb_send_headers();					
 			bb_get_header();		
 			bb_attachments($post_id);
 			bb_get_footer();

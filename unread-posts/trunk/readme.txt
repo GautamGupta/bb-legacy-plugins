@@ -58,3 +58,7 @@ To see a demonstration, create an account at http://bbShowcase.org read some pos
 = Version 0.9.1 (2008-10-15) =
 
 * minor 1.0 compatibility fix
+
+= Version 0.9.2 (2008-11-16) =
+
+* now adds class 'unread_posts_row' and 'unread_login_row' to table rows for easier CSS styling

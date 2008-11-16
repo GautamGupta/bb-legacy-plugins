@@ -28,6 +28,7 @@ $bb_post = bb_get_post( $post_id );
 if (bb_current_user_can( 'edit_post', $post_id)) {
 $topic = get_topic($bb_post->topic_id);
 $edit_history=$bbdb->get_results("SELECT * FROM bb_edit_history WHERE post_id = $post_id ORDER BY time DESC LIMIT 999");
+bb_send_headers();
 bb_get_header();
 ?>
 <h3 class="bbcrumb"><a href="<?php bb_option('uri'); ?>"><?php bb_option('name'); ?></a> &raquo; <a href="<?php topic_link(); ?>"><?php topic_title( $bb_post->topic_id ); ?></a> &raquo; <a href="<?php post_link($bb_post->post_id); ?>"><?php _e('Post'); ?> <?php echo $bb_post->post_position; ?></a> &raquo;  <?php _e('Edit History'); ?></h3>

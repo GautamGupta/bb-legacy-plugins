@@ -6,13 +6,13 @@ Tested up to: trunk
 Stable tag: trunk
 Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
 
-Displays a list of related topics based on tags (and eventually keywords and manual selection). No template edits required.
+Displays a list of related topics based on tags and keywords. No template edits required.
 
 == Description ==
 
-Displays a list of related topics based on tags (and eventually keywords and manual selection). No template edits required.
+Displays a list of related topics based on tags and keywords. No template edits required.
 
-This early release is a proof-of-concept and only uses tags to find matches for now. 
+View any topic on http://bbShowcase.org to see a demonstration.
 
 == Installation ==
 
@@ -20,12 +20,14 @@ This early release is a proof-of-concept and only uses tags to find matches for 
 
 * Change defaults if desired by editing options at the top of the plugin until an admin menu is made. 
 
-*  This plugin inserts itself into the topicmeta at the top of each topic automatically, no template edits required unless you want custom placement.
+* This plugin inserts itself into the topicmeta at the top of each topic automatically, no template edits required unless you want custom placement.
 
 * ONLY if you want CUSTOM placement, edit your `topic.php` template (or other template) to add  the info like so:
 `	
 <?php do_action('related_topics'); ?>
+`
 	or
+`
 <?php related_topics(); ?>
 `
 The first method is prefered because if you deactivate the plugin, you won't get errors. 
@@ -35,12 +37,13 @@ But the second method will allow you to specify options like topic id and altern
 `
 $bb->load_options = true;
 `
+* very large/active forums may want to turn off the title keyword search and just use tags until caching is added, check loads when viewing topics
 
 == Frequently Asked Questions ==
 
 = How does this determine related topics? =
 
-* It scores topics higher based on multiple tag matches and younger topic age.
+* It scores topics higher based on multiple tag matches, keywords in topic titles and younger topic age.
 
 == License ==
 
@@ -62,13 +65,14 @@ $bb->load_options = true;
 
 * optional message if no related topics found
 
+= Version 0.0.3 (2008-11-16) =
+
+* now can also search titles for keywords, especially handy if it's a new topic or no tags yet - this feature is on by default
+ - very large forums may want to turn this feature off as there is no fulltext index on titles and it may be too slow until caching is added
+
 == To Do ==
 
-* reduce tag queries to single query for performance (0.9 vs 1.0 difficulty)
-
-* also check topic titles for keyword matches
-
-* eventually check posts for keyword matches (this feature may take some time due to technical limitations)
+* eventually check posts for keyword matches (this feature may take some time due to performance/technical limitations)
 
 * cache results (current adds a few queries per topic view)
 

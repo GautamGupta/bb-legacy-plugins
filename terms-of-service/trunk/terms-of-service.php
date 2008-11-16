@@ -37,6 +37,7 @@ function terms_of_service_check() {	// examine the answer
 }
 
 function terms_of_service_get() {	
+	bb_send_headers();
 	bb_get_header();	?>
 	<h3 class="bbcrumb"><a href="<?php bb_option('uri'); ?>"><?php bb_option('name'); ?></a> &raquo; <?php _e('Terms of Service'); ?></h3>
 	<div class="indent">

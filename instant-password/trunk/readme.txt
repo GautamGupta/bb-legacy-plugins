@@ -12,7 +12,7 @@ Allows users to pick their own password during registration and log in immediate
 
 Allows users to pick their own password during registration and log in immediately without checking email. No template edits required.
 
-When using this, It is highly recommended to also use the Human Test plugin to prevent instant spambot registration.
+When using this, it is highly recommended to also use the Human Test plugin to prevent instant spambot registration.
 
 == Installation ==
 

@@ -70,10 +70,18 @@ $bb->load_options = true;
 * now can also search titles for keywords, especially handy if it's a new topic or no tags yet - this feature is on by default
  - very large forums may want to turn this feature off as there is no fulltext index on titles and it may be too slow until caching is added
 
-== To Do ==
+= Version 0.0.4 (2008-11-17) =
 
-* eventually check posts for keyword matches (this feature may take some time due to performance/technical limitations)
+* now caches results (default 10 minutes) to eliminate extra load, auto-refresh on tag changes
+
+* stop words added to improve title keyword scan (non-english forums will need to change)
+
+== To Do ==
 
 * cache results (current adds a few queries per topic view)
 
 * manual add / manual exclude related topics to list
+
+* cross search title keywords to tags and visa-versa
+
+* eventually check posts for keyword matches (this feature may take some time due to performance/technical limitations)

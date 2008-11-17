@@ -62,3 +62,7 @@ To see a demonstration, create an account at http://bbShowcase.org read some pos
 = Version 0.9.2 (2008-11-16) =
 
 * now adds class 'unread_posts_row' and 'unread_login_row' to table rows for easier CSS styling
+
+= Version 0.9.3 (2008-11-17) =
+
+* can now do row class instead of just titles for forums too, bug fix for old forum method (did it ever work?)

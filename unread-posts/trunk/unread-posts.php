@@ -44,7 +44,7 @@ if ($bb_current_user->ID  && !is_bb_feed()) {	// only bother with the overhead i
 			$up_read_topics=explode(",",$user->up_read_topics);  settype($up_read_topics,"array"); // unpack once, use many times
 			$up_last_posts=explode(",",$user->up_last_posts); settype($up_last_posts,"array");	 // unpack once, use many times			
 			add_filter('topic_title', 'up_mark_title_unread');
-			if ($unread_posts['add_row_class']) {$add_filter( 'topic_class', 'up_mark_row_unread');}
+			if ($unread_posts['add_row_class']) {add_filter( 'topic_class', 'up_mark_row_unread');}
 			add_filter('topic_link', 'up_mark_link_unread');	// props kaviaar
 			if ($unread_posts['style']) {add_action('bb_head', 'up_add_css');}		
 			if ($unread_posts['indicate_forums'] && in_array(bb_get_location(),array('front-page','forum-page'))) {add_filter( 'get_forum_name', 'up_mark_forum_unread' ,10,2);}

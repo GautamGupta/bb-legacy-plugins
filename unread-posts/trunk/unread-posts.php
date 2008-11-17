@@ -5,21 +5,21 @@ Description:  Indicates previously read topics with new unread posts. Features "
 Plugin URI:  http://bbpress.org/plugins/topic/78
 Author: _ck_
 Author URI: http://bbshowcase.org
-Version: 0.9.2
+Version: 0.9.3
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 */
 
 $unread_posts['style']=".unread_posts {color:#0000AA;}"	// optional style for topics read with new posts
 			    .".unread_login  {color:#000080;}"	// optional style for topics with new posts since last login
-			    .".unread_posts_row {}"			// table row class
-			    .".unread_login_row {}";			// table row class
+			    .".unread_posts_row a {color:#0000AA;}"	// table row class
+			    .".unread_login_row a {color:#000080;}";	// table row class
 
 $unread_posts['indicate_forums']=false;		// should forums also be highlighted if there are new posts (note: causes extra query)
 
 $unread_posts['indicate_last_login']=true;	// should topics be highlighted if new posts since last login (regardless if previously read)
 
-$unread_posts['add_row_class']=false;		// also add row class
+$unread_posts['use_row_class']=false;		// use row class instead of just title cell
 
 $unread_posts['topics_per_user']=100;		// how many topics to watch for each user - on a fast, small forum you could probably do 1000 
 
@@ -42,12 +42,16 @@ if ($bb_current_user->ID  && !is_bb_feed()) {	// only bother with the overhead i
  		else {$up_last_login=0;} 		
 		if ($up_last_login || trim($user->up_read_topics,", ")) {
 			$up_read_topics=explode(",",$user->up_read_topics);  settype($up_read_topics,"array"); // unpack once, use many times
-			$up_last_posts=explode(",",$user->up_last_posts); settype($up_last_posts,"array");	 // unpack once, use many times			
-			add_filter('topic_title', 'up_mark_title_unread');
-			if ($unread_posts['add_row_class']) {add_filter( 'topic_class', 'up_mark_row_unread');}
+			$up_last_posts=explode(",",$user->up_last_posts); settype($up_last_posts,"array");	 // unpack once, use many times						
+			if ($unread_posts['use_row_class']) {
+				add_filter( 'topic_class', 'up_mark_topic_unread');
+				if ($unread_posts['indicate_forums'] && in_array(bb_get_location(),array('front-page','forum-page'))) {add_filter( 'bb_forum_class', 'up_mark_forum_unread');}
+			} else {
+				add_filter('topic_title', 'up_mark_topic_unread');
+				if ($unread_posts['indicate_forums'] && in_array(bb_get_location(),array('front-page','forum-page'))) {add_filter( 'get_forum_name', 'up_mark_forum_unread');}
+			}
 			add_filter('topic_link', 'up_mark_link_unread');	// props kaviaar
-			if ($unread_posts['style']) {add_action('bb_head', 'up_add_css');}		
-			if ($unread_posts['indicate_forums'] && in_array(bb_get_location(),array('front-page','forum-page'))) {add_filter( 'get_forum_name', 'up_mark_forum_unread' ,10,2);}
+			if ($unread_posts['style']) {add_action('bb_head', 'up_add_css');}					
 		}
 	}
 	
@@ -55,11 +59,8 @@ if ($bb_current_user->ID  && !is_bb_feed()) {	// only bother with the overhead i
 } 
 add_action('bb_init','unread_posts_init',200);
 
-function up_last_login($user_id) {bb_update_usermeta($user_id, "up_last_login",bb_current_time('mysql')."|".substr(bb_get_usermeta($user_id, 'up_last_login'),0,19));}
-add_action('bb_user_login', 'up_last_login' );
-
-function up_mark_forum_unread($title,$id) {
-global $bbdb,$bb_current_user,$unread_posts,$up_last_login,$up_forums,$up_last_login_forums;
+function up_mark_forum_unread($item) { 
+global $bbdb,$bb_current_user, $forum, $unread_posts,$up_last_login,$up_forums,$up_last_login_forums;
 if (!isset($up_forums)) {			// unfortunately requires an extra query, data impossible to store
 	$user = bb_get_user($bb_current_user->ID);  
 	if ($user->up_read_topics) {$up_forums=@$bbdb->get_col("SELECT DISTINCT forum_id FROM $bbdb->topics WHERE topic_id IN (".trim($user->up_read_topics,", ").") AND topic_last_post_id  NOT IN (".trim($user->up_last_posts,", ").") ");}
@@ -70,34 +71,39 @@ if ($unread_posts['indicate_last_login'] && !isset($up_last_login_forums)) {		//
 	if (is_array($up_last_login_forums)) {$up_last_login_forums=array_flip($up_last_login_forums);} else {$up_last_login_forums=array();}	
 }
 }
-if (isset($up_forums[$id])) {$title = '<span class="unread_posts">' . $title . '</span>';}
-elseif ($unread_posts['indicate_last_login'] && isset($up_last_login_forums[$id])) {$title = '<span class="unread_login">' . $title . '</span>';}
-return $title;
+if ($unread_posts['use_row_class']) {
+if (isset($up_forums[$forum->forum_id])) {$item=rtrim($item,'" ').' unread_posts_row"';}
+elseif ($unread_posts['indicate_last_login'] && isset($up_last_login_forums[$forum->forum_id])) {$item=rtrim($item,'" ').' unread_login_row"';}
+} else {
+if (isset($up_forums[$forum->forum_id])) {$item = '<span class="unread_posts">' . $item . '</span>';}
+elseif ($unread_posts['indicate_last_login'] && isset($up_last_login_forums[$forum->forum_id])) {$item = '<span class="unread_login">' . $item . '</span>';}
 }
+return $item;
+}
+
+function up_mark_topic_unread($item)  {
+global $topic, $unread_posts, $up_read_topics, $up_last_posts,$up_last_login;		
+	$up_key=array_search($topic->topic_id ,$up_read_topics);	
+	if ($unread_posts['use_row_class']) {
+	if ($up_key!=false &&  $up_last_posts[$up_key]!=$topic->topic_last_post_id) {$item[]="unread_posts_row";}
+	elseif ($up_last_login && $up_key==false && strtotime($topic->topic_time)>=$up_last_login) {$item[]="unread_login_row";}	
+	} else {
+	if ($up_key!=false &&  $up_last_posts[$up_key]!=$topic->topic_last_post_id) {$item = '<span class="unread_posts">' . $item . '</span>';}
+	elseif ($up_last_login && $up_key==false && strtotime($topic->topic_time)>=$up_last_login) {$item = '<span class="unread_login">' . $item . '</span>';}	
+	}
+return $item;
+}
+
+function up_add_css() {global $unread_posts; echo '<style type="text/css">'.$unread_posts['style'].'</style>'; } 
+
+function up_last_login($user_id) {bb_update_usermeta($user_id, "up_last_login",bb_current_time('mysql')."|".substr(bb_get_usermeta($user_id, 'up_last_login'),0,19));}
+add_action('bb_user_login', 'up_last_login' );
 
 function up_mark_link_unread($link)  {			// props kaviaar - makes title links jump to last unread post
 global $topic, $up_read_topics, $up_last_posts;	
 	$up_key=array_search($topic->topic_id ,$up_read_topics);	
 	if ($up_key!=false &&  $up_last_posts[$up_key]!=$topic->topic_last_post_id) {$link = get_post_link($up_last_posts[$up_key]);}
  return $link;
-}
-
-function up_add_css() {global $unread_posts; echo '<style type="text/css">'.$unread_posts['style'].'</style>'; } 
-
-function up_mark_title_unread($title)  {
-global $topic, $up_read_topics, $up_last_posts,$up_last_login;		
-	$up_key=array_search($topic->topic_id ,$up_read_topics);	
-	if ($up_key!=false &&  $up_last_posts[$up_key]!=$topic->topic_last_post_id) {$title = '<span class="unread_posts">' . $title . '</span>';}
-	elseif ($up_last_login && $up_key==false && strtotime($topic->topic_time)>=$up_last_login) {$title = '<span class="unread_login">' . $title . '</span>';}	
-return $title;
-}
-
-function up_mark_row_unread($class)  {
-global $topic, $up_read_topics, $up_last_posts,$up_last_login;		
-	$up_key=array_search($topic->topic_id ,$up_read_topics);	
-	if ($up_key!=false &&  $up_last_posts[$up_key]!=$topic->topic_last_post_id) {$class[]="unread_posts_row";}
-	elseif ($up_last_login && $up_key==false && strtotime($topic->topic_time)>=$up_last_login) {$class[]="unread_login_row";}	
-return $class;
 }
 
 function up_mark_all_read() {	// actually, just delete all it's meta and start fresh - eventually this could be made to just remove topics in one sub-forum only

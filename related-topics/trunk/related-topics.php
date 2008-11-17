@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/related-topics
 Description: Displays a list of related topics based on tags and keywords. No template edits required.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.3
+Version: 0.0.4
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -14,6 +14,11 @@ Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
 
 $related_topics['automatic_in_topicmeta']=true;  // true/false, use false for manual placement
 $related_topics['topicmeta_position']=250; 	 // position in topicmeta items, high number = lower
+
+$related_topics['maximum_items']=5;		 // display how many related items at most
+$related_topics['cache_time']=600;		 // in seconds - refreshes immediately when tags added/deleted - cache obeys hidden forums
+$related_topics['label']=__("Related Topics:");
+$related_topics['no_related']="<small>(<em>".__("no related topics found")."</em>)</small>";	  // message to display when no matches found (or blank)
 
 $related_topics['use_tags']=true;			 // use tags to find related?  true/false
 $related_topics['minimum_tag_match']=1;	 // how many tags must match to be related
@@ -24,13 +29,15 @@ $related_topics['minimum_title_match']=1;	 // how many title words must match to
 $related_topics['title_weight']=1;			 // higher number means higher importance - keep this lower than the tag weight
 $related_topics['title_word_length']=5; 		 // how long must a word in the title be for comparison
 
-$related_topics['maximum_items']=5;		 // display how many related items at most
-$related_topics['label']=__("Related Topics:");
-$related_topics['no_related']="<small>(<em>".__("no related topics found")."</em>)</small>";	  // message to display when no matches found (or blank)
-
 $related_topics['exclude_tags']="";	// comma separated list of id numbers, via admin menu coming later
 $related_topics['exclude_forums']="";	// comma separated list of id numbers, via admin menu coming later 
 $related_topics['exclude_topics']="";	// comma separated list of id numbers, via admin menu coming later 
+
+$related_topics['stop_words']= 		// stop words are removed when matching titles (don't bother with words below 4 letters)
+						// find some non-english words here: http://www.ranks.nl/resources/stopwords.html						 
+"before these being they only between this both those other through came over into under come said could same about very"
+."just after want should like does since make also each many else some well still might another from were such more what take"
+."most when than much where that must which while their never have them because will then been here with there would your";
 
 /*  stop editing here  */
 
@@ -40,13 +47,18 @@ if (empty($related_topics['exclude_tags'])) {$related_topics['exclude_tags']="0"
 if (empty($related_topics['exclude_forums'])) {$related_topics['exclude_forums']="0";}
 if (empty($related_topics['exclude_topics'])) {$related_topics['exclude_topics']="0";}
 
-add_action('related_topic','related_topics');
 if ($related_topics['automatic_in_topicmeta']) {add_action('topicmeta','related_topics',$related_topics['topicmeta_position']);}
+add_action('related_topic','related_topics');
+add_action('bb_tag_added', 'related_topics_tag_change',10,3);
+add_action('bb_pre_tag_removed', 'related_topics_tag_change',10,3);
 
 function related_topics($topic_id=0,$before="<li>",$after="</li>") {
 global $related_topics, $tags, $topic, $bbdb;
 if ($related_topics['debug'] && !bb_current_user_can('administrate')) {return;}	// debug
 if (empty($topic_id)) {$topic_id=$topic->topic_id;}
+
+if ($topic_id==$topic->topic_id && (empty($topic->related_topics) || empty($topic->related_topics->time) || time()-$topic->related_topics->time>$related_topics['cache_time'])) {
+
 if ($topic_id==$topic->topic_id) {$topic_tags=$tags;} else {$topic_tags=get_topic_tags($topic_id);}   // speedup with global copy
 
 if ($related_topics['use_tags'] && !empty($topic_tags)) {
@@ -65,8 +77,10 @@ foreach ($tag_topics as $related_topic) {@$match_count[$related_topic->topic_id]
 }
 
 if ($related_topics['use_titles']) {
+if (!is_array($related_topics['stop_words'])) {$related_topics['stop_words']=array_flip(explode(" ",$related_topics['stop_words']));}
+
 (array) $words=explode('-',$topic->topic_slug); $word0=""; $union=""; $count=0; 
-foreach ($words as $word) {if (strlen($word)>=$related_topics['title_word_length']) {if (++$count>1) {$union.=" UNION SELECT '".$word."' ";} else {$word0=$word;}}}
+foreach ($words as $word) {if (strlen($word)>=$related_topics['title_word_length'] && !isset($related_topics['stop_words'][$word])) {if (++$count>1) {$union.=" UNION SELECT '".$word."' ";} else {$word0=$word;}}}
 if ($word0) {
 $where="";
 $having="HAVING count>=".$related_topics['minimum_title_match'];
@@ -90,7 +104,20 @@ if (!empty($match_count)) {
         	$match_count=$first+$tmp+$match_count;        	        	
         	$i = $i + $num;
     	}
+} else {$match_count=array();}
 
+if ($topic_id==$topic->topic_id) {	// save/update cache
+	$topic->related_topics->cache=$match_count;
+	$topic->related_topics->time=time();
+	bb_update_topicmeta($topic_id,'related_topics',$topic->related_topics);
+}
+
+} else { 	// cache check	
+	$match_count=$topic->related_topics->cache;
+	if ($related_topics['debug']) {echo "<div style='margin:0.15em 0 -1.5em 10em'>(cached)</div>";}
+}
+
+if (!empty($match_count)) {
 	foreach ($match_count as $related_topic=>$score) {$final[]=$related_topic;	}
 	$links=related_topics_get_links($final);	
 	if (!empty($links)) {
@@ -132,6 +159,29 @@ global $related_topics, $bbdb;
 	}
 	
 return $links;	
+}
+
+function related_topics_tag_change($tag_id=0, $user_id=0, $topic_id=0) {	// clears cache when tag changes
+if (!empty($topic_id)) {
+global $related_topics;
+$topic_data=bb_get_topicmeta( $topic_id, 'related_topics');
+if (!empty($topic_data) && !empty($topic_data->time)) {
+	unset($topic_data->time); 
+	bb_update_topicmeta($topic_id,'related_topics',$topic_data);
+}
+}
+}
+
+function related_topics_updatemeta($topic_id,$meta_key='related_topics',$data) {	// trying to skip bbpress's wasteful queries - not in use yet
+if (empty($topic_id)) {return;}
+global $bbdb;
+	$data =addslashes(serialize($data));
+	if (defined('BACKPRESS_PATH'))  {	// bbPress 1.0	
+	$bbdb->query("INSERT INTO $bbdb->meta (object_id, object_type, meta_key, meta_value) VALUES ('$topic_id', 'bb_topic', '$meta_key', '$data') ON DUPLICATE KEY UPDATE `meta_value` = VALUES(`meta_value`)");
+	} else {		// bbPress 0.7 - 0.9	
+	echo "INSERT INTO $bbdb->topicmeta (topic_id, meta_key, meta_value) VALUES ('$topic_id', '$meta_key', '$data') ON DUPLICATE KEY UPDATE `meta_value` = VALUES(`meta_value`)";
+	$bbdb->query("INSERT INTO $bbdb->topicmeta (topic_id, meta_key, meta_value) VALUES ('$topic_id', '$meta_key', '$data') ON DUPLICATE KEY UPDATE `meta_value` = VALUES(`meta_value`)");	
+	} 
 }
 
 ?>

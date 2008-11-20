@@ -123,6 +123,10 @@ msgstr ""
 msgid "Update topics to version 2.x"
 msgstr ""
 
+#: support-forum.php:1028
+msgid "Save support forum settings"
+msgstr ""
+
 #: support-forum.php:1084
 msgid "Settings saved"
 msgstr ""

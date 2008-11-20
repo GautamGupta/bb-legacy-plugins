@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/support-forum/
 Description: Changes the forum to a support forum and adds functionality to mark topics resolved, not resolved or not a support question
 Author: Aditya Naik, Sam Bauers
 Author URI: http://bbpress.org/plugins/topic/support-forum/other_notes/
-Version: 3.0.5
+Version: 3.0.6
 
 Version History:
 1.0		: Initial Release (Aditya Naik)
@@ -58,11 +58,12 @@ Version History:
 		  Add Japanese language files (Nikolay Bachiyski)
 3.0.5	: Register views on 'bb_init' instead of on plugin load (Nikolay Bachiyski)
 		  Move images to a subdirectory (Sam Bauers)
+3.0.6	: Translation fixes and Portuguese (PT) language files. Fixes #16 and #17. Mad props vanillalounge (Sam Bauers)
 */
 
 
 /**
- * Support forum for bbPress version 3.0.5
+ * Support forum for bbPress version 3.0.6
  * 
  * ----------------------------------------------------------------------------------
  * 
@@ -1014,7 +1015,7 @@ function support_forum_admin_page() {
 			</span>
 		</p>
 		<input name="action" type="hidden" value="support_forum_post"/>
-		<p class="submit"><input type="submit" name="submit" value="Save support forum settings" /></p>
+		<p class="submit"><input type="submit" name="submit" value="<?php _e('Save support forum settings', 'support-forum'); ?>" /></p>
 	</form>
 	<hr />
 	<form method="post">

@@ -78,6 +78,12 @@ $mini_stats['level']="administrate";
 
 * now available via admin menu, Manage ->  Mini Stats   (looks better in 0.9 than 1.0)
 
+= Version 0.0.3 (2008-11-21) =
+
+* CSV export support, move to your desired start date and it will export all data to current date
+
+* some date range and control cleanup
+
 == To Do ==
 
 * fix buggy width on graphs when dates are too wide

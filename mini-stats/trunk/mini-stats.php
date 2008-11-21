@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/mini-stats
 Description: Some simple forum statistics.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.2
+Version: 0.0.3
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 

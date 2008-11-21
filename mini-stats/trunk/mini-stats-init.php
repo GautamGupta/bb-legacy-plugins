@@ -1,19 +1,20 @@
 <?php
 
-if ((defined('BB_IS_ADMIN') && BB_IS_ADMIN) || !(strpos($_SERVER['REQUEST_URI'],"/bb-admin/")===false)) {
+if ((defined('BB_IS_ADMIN') && BB_IS_ADMIN) || strpos($_SERVER['REQUEST_URI'],"/bb-admin/")!==false) {
+if (!empty($_GET['format'])) {
 add_action( 'bb_admin_head','mini_stats_header',100); 
 add_action('bb_admin_head','mini_stats_graph_header',100); 
-
+}
 function mini_stats_admin() { 
 if (!bb_current_user_can('administrate'))  {die();}
 global $mini_stats;
 mini_stats_graphs();
-if (empty($_GET[$mini_stats['trigger']]))  {mini_stats_statistics();}
+if (empty($_GET[$mini_stats['trigger']]) && empty($_GET['format']))  {mini_stats_statistics();}
 }
 
 } else {
+if (empty($_GET['format'])) {
 add_action('bb_head','mini_stats_graph_header',100); 
-
 bb_send_headers();
 bb_get_header(); 
 echo '<h3 class="bbcrumb"><a href="'.bb_get_option('uri').'">'.bb_get_option('name').'</a> &raquo; '.__('Statistics').'</h3>';
@@ -21,6 +22,7 @@ mini_stats_graphs();
 if (empty($_GET[$mini_stats['trigger']]))  {mini_stats_statistics();}
 echo '<br clear="both" />';
 bb_get_footer(); 
+} else {mini_stats_graphs();}	// format==CSV
 exit;
 }
 
@@ -28,31 +30,47 @@ function mini_stats_graph_header() {global $mini_stats;  echo '<style type="text
 
 function mini_stats_graphs() { 
 global $bbdb, $mini_stats;
+if (bb_current_user_can('administrate')) {
 $time=$_GET[$mini_stats['trigger']]; 
 if (empty($time)) {$time=time();} else {$time=strtotime($time); if (empty($time) || $time==-1) {$time=time();}}
+if (isset($_GET['format']) && $_GET['format']=="CSV") {$format="CSV";} else {$format="";}
+} else {$time=time(); $format="";}
 $gmt_offset=bb_get_option("gmt_offset")*3600;
-$today=gmdate("n/j",$time+$gmt_offset);
-$limit=31;
-$monthago=$time+$gmt_offset-($limit*24*3600);
-$maxheight=50;
+$day=$time+gmt_offset;
+$limit=31; $monthago=($day)-(($limit-1)*24*3600);
+if ($format=="CSV") {
+	$day=time()+$gmt_offset; $limit=ceil(($day-$monthago)/(24*3600));
+	$label[1]=__("topics"); 
+	$label[2]=__("posts");
+	$label[3]=__("registrations"); 
+} else {
+	$maxheight=50;
+	$today=gmdate("n/j",$day);
+	$label[1]=__("Daily Total Topics");
+	$label[2]=__("Daily Total Posts");
+	$label[3]=__("Daily Total Registrations");
+}
 
-$label[1]=__("Daily Total Topics");
-$label[2]=__("Daily Total Posts");
-$label[3]=__("Daily Total Registrations");
-
-$day=$time+gmt_offset; // $monthago;
-do {					
-$empty[date('Y-m-d',$day)]->time=$day;
-$empty[date('Y-m-d',$day)]->posts=0;
-$empty[date('Y-m-d',$day)]->views=0;
-$empty[date('Y-m-d',$day)]->users=0;
+$count=0; 
+do {				
+$date=gmdate('Y-m-d',$day);
+$empty[$date]->time=$day;
+$empty[$date]->topics=0;
+$empty[$date]->posts=0;
+$empty[$date]->views=0;
+$empty[$date]->users=0;
 $day=$day-24*3600;
-} while ($day>$monthago);
+$count++;
+} while ($limit>=$count); 	// ($day>$monthago);
 $empty=array_reverse($empty);
 
-if (bb_current_user_can('administrate')) {
-echo '<div style="float:right; font-size:12px; margin:0 0 -12px 0;">'.(empty($_GET[$mini_stats['trigger']]) ? '' : __('from').' '.date('M j, Y',$time).' [<a href="'.add_query_arg($mini_stats['trigger'],"").'">'.__('reset').'</a>] ')
-.'[<a href="'.add_query_arg($mini_stats['trigger'],date('Y-n-j',$time-31*24*3600)).'">'.__('previous month').'</a>] [<a href="'.add_query_arg($mini_stats['trigger'],(date('Y',$time)-1).'-'.date('n-j',$time)).'">'.__('previous year').'</a>]</div>';
+if (empty($fomat) && bb_current_user_can('administrate')) {
+echo '<div style="text-align:right; font-size:13px; margin:0 0 -9px 0;">'.(empty($_GET[$mini_stats['trigger']]) ? '' : date('M j, Y | ',$time))
+// .'[<a href="'.add_query_arg($mini_stats['trigger'],date('Y-n-j',$time-31*24*3600)).'">'.__('previous month').'</a>] [<a href="'.add_query_arg($mini_stats['trigger'],(date('Y',$time)-1).'-'.date('n-j',$time)).'">'.__('previous year').'</a>] '
+ .'<a href="'.add_query_arg($mini_stats['trigger'],(date('Y',$time)-1).'-'.date('n-j',$time)).'"> <b><<</b> '.__('year').'</a> <a href="'.add_query_arg($mini_stats['trigger'],date('Y-n-j',$time-31*24*3600)).'"> <b><</b> '.__('month').'</a> ' 
+.' < '.(empty($_GET[$mini_stats['trigger']]) ? __('current') : '<a href="'.add_query_arg($mini_stats['trigger'],"").'">'.__('current').'</a>').' > '
+ .'<a href="'.add_query_arg($mini_stats['trigger'],date('Y-n-j',$time+31*24*3600)).'">'.__('month').' <b>></b></a> <a href="'.add_query_arg($mini_stats['trigger'],(date('Y',$time)+1).'-'.date('n-j',$time)).'">'.__('year').' <b>>></b> </a> '
+.' | <a target="_blank" href="'.add_query_arg('format',"CSV").'">'.__('CSV').'</a></div>';
 }
 
 for ($loop=1; $loop<=3; $loop++) {
@@ -73,6 +91,8 @@ $query="SELECT count(*) as users, UNIX_TIMESTAMP(user_registered) as time FROM $
 
 // make missing days have zero results
 unset($fill); foreach ($results as $result) {$fill[date('Y-m-d',$result->time)]=$result;} $results=array_merge($empty,$fill);
+
+if ($format!="CSV") {
 
     $count=0; unset($values); unset($labels); unset($colors);
     foreach ($results as $result) {    	    	
@@ -114,12 +134,38 @@ $output.= "</table><br clear='both'>\n";
 
 echo $output;
 
+} else {  // CSV check
+
+	foreach ($results as $result) {    	    	
+    	        if ($loop==1) {$value=$result->topics;}    		
+    	elseif ($loop==2) {$value=$result->posts;}
+    	elseif ($loop==3) {$value=$result->users;}	
+	$CSV[gmdate("Y-m-d",$result->time+$gmt_offset)][$loop]=$value;
+	}
+
+}	 // CSV check
 }	//  end graph loops
+
+if ($format=="CSV") {
+	$output=__('date').",".implode(",",$label)."\r\n";
+	foreach ($CSV as $date=>$line) {$output.= $date.",".implode(",",$line)."\r\n";}
+//	header("Content-Type: text/plain");
+	header ("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
+	header("Pragma: hack");
+	header("Content-Type: application/octet-stream");
+	header("Content-Length: ".strlen($output));
+	header('Content-Disposition: attachment; filename="'.gmdate("Y-m-d",$time+$gmt_offset).'.csv"');
+	header("Content-Transfer-Encoding: binary");              
+	ob_clean();
+  	flush();  
+	print $output;
+	exit;
+}
+
 }
 
 function mini_stats_statistics() {
 global $bbdb;
-
 
 echo  "<br clear='both' /><h3 align='center'>".__('Statistics')."</h3>\n<br clear='both' />";
 

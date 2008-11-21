@@ -12,6 +12,9 @@ License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
 */ 
 
+add_action('bb_init', 'human_test_check');
+add_action( 'extra_profile_info', 'human_registration_test',11);
+
 function human_register_page() {	// determines if we're actually on register.php and returns true/false
 foreach ( array($_SERVER['PHP_SELF'], $_SERVER['SCRIPT_FILENAME'], $_SERVER['SCRIPT_NAME']) as $name )
 if ( false !== strpos($name, '.php') ) $file = $name;
@@ -40,7 +43,6 @@ if (human_register_page()) :  //  only display on register.php and hide on profi
 
 endif;
 } 
-add_action( 'extra_profile_info', 'human_registration_test',11);	// attach to register.php
 
 function human_test_check() {
 if (human_register_page()) :  //  only display on register.php and hide on profile page
@@ -85,6 +87,5 @@ if (human_register_page()) :  //  only display on register.php and hide on profi
 
 endif;
 } 
-add_action('bb_send_headers', 'human_test_check');	// check before headers finish sending
 
 ?>

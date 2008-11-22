@@ -34,7 +34,8 @@ function human_test_question() {
 }
 
 function human_test_post() {
-if (bb_is_user_logged_in()) {return;}	// change to anon user detection
+global $bb_current_user;
+if (!$bb_current_user->has_cap('anonymous')) {return;}	
 	$question=human_test_question();
 	echo '<p><script language="JavaScript" type="text/javascript">document.write("'.$question.'");</script>';	// write question with javascript
 	echo '<noscript><i>'.__("registration requires JavaScript").'</i></noscript>';	// warn no-script users 
@@ -63,9 +64,15 @@ if ( ( is_topic() && bb_current_user_can( 'write_post', $topic->topic_id ) && $p
 */
 
 function human_test_check() {
-$location=human_test_location();
-if (!($location=='register.php' || (!bb_is_user_logged_in() && (!empty($_GET['new']) || $location=='bb-post.php' || $location=='topic.php' || $location=='forum.php')) )) {return;}
+global $bb_current_user, $bb_roles;  
+$location=human_test_location();  if ($location=='index.php' && !empty($_GET['new'])) {$location='forum.php';}
+if ( !($location=='register.php' || ( !empty($bb_roles->roles['anonymous']) &&
+       ($location=='bb-post.php' && is_object($bb_current_user) && $bb_current_user->has_cap('anonymous')) ||
+       ($location=='forum.php' && empty($bb_current_user) && !empty($bb_roles->roles['anonymous']['capabilities']['write_topics'])) ||       
+       ($location=='topic.php'  && empty($bb_current_user) && !empty($bb_roles->roles['anonymous']['capabilities']['write_posts'])) ))) {return;}
     
+	// nocache_headers();	   // causes back button to regenerate page - unfortunate any post data is going to be lost	
+
 	// one way or another we're gonna need sessions for now
 	if (!isset($_SESSION)) {
 	// @session_cache_limiter('nocache');	// "nocache" destroys form data with back button - "public" preserves form values when hitting back	
@@ -76,11 +83,11 @@ if (!($location=='register.php' || (!bb_is_user_logged_in() && (!empty($_GET['ne
 	if ($_POST || isset($_POST['human_test'])) {
 		$human_test =  stripslashes_deep($_POST['human_test']);		
 		$compare = $_SESSION['HUMAN_TEST'];
-		$_SESSION['HUMAN_TEST']=md5(rand());	// destroy answer even when successful to prevent re-use
+		// $_SESSION['HUMAN_TEST']=md5(rand());	// destroy answer even when successful to prevent re-use
 		
 		if ($human_test !=$compare) {				
 			// echo $human_test." - ".$compare; exit();	// debug
-			// bb_die(__("Humans only please").". ".__("If you are not a bot").", <a href='register.php'>".__("please go back and try again")."</a>.");
+			// bb_die(__("Humans only please").". ".__("If you are not a bot").", <a href='register.php'>".__("please go back and try again")."</a>.");			
 			bb_send_headers();
 			bb_get_header();
 			echo "<br clear='both' /><h2 id='register' style='margin-left:2em;'>".__("Error")."</h2><p align='center'><font size='+1'>".
@@ -102,7 +109,7 @@ if (!($location=='register.php' || (!bb_is_user_logged_in() && (!empty($_GET['ne
 			*/
 		}
 	} else {	
-	$_SESSION['HUMAN_TEST']=rand(3,10);	// set answer: random math range between 3 and 10 (adjutable but recommended limit)
+	$_SESSION['HUMAN_TEST']=rand(3,10);	// set answer: random math range between 3 and 10 (adjutable but recommended limit)	
 	}
 } 
 

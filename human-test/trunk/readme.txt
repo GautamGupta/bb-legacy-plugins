@@ -1,5 +1,5 @@
 === Human Test for bbPress  ===
-Tags: bots, captcha, register, registration, _ck_
+Tags: bots, captcha, challenge, register, registration, _ck_
 Contributors: _ck_
 Requires at least: 0.8
 Tested up to: trunk
@@ -15,6 +15,8 @@ This is an easy way to stop virtually all of them.
 
 This plugin adds a new field at the bottom of your registration page with two random numbers to add together. 
 Uses a few tricks like javascript and entity encoding to slow down the smarter bots.
+
+Now supports bb-anonymous-posting plugin with challenge question automatically placed above posts/topics.
 
 No template edits or core modifications required, 100% plugin based,
 
@@ -63,6 +65,10 @@ Eventually will add image based (captcha style) writing as well as "negative fie
 = Version 0.7.3 (2008-11-09) =
 
 * use themed error page instead of ugly bb_die
+
+= Version 0.8.0 (2008-11-22) =
+
+* now supports bb-anonymous-posting plugin with challenge question automatically placed above posts/topics
 
 == To Do ==
 

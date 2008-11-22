@@ -1,7 +1,7 @@
 <?php
 
 if ((defined('BB_IS_ADMIN') && BB_IS_ADMIN) || strpos($_SERVER['REQUEST_URI'],"/bb-admin/")!==false) {
-if (!empty($_GET['format'])) {
+if (empty($_GET['format'])) {
 add_action( 'bb_admin_head','mini_stats_header',100); 
 add_action('bb_admin_head','mini_stats_graph_header',100); 
 }

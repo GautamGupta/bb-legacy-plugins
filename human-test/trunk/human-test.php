@@ -12,7 +12,7 @@ License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
 */ 
 
-add_action('bb_send_headers', 'human_test_check',99);	// block check and init sessions if needed
+add_action('bb_init', 'human_test_check',99);	// block check and init sessions if needed
 add_action('post_form_pre_post', 'human_test_post',99);	// new post
 add_action( 'extra_profile_info', 'human_test_registration',11); // registration
 

@@ -26,6 +26,15 @@ Eventually will add image based (captcha style) writing as well as "negative fie
 
 * Install, activate, and test your registration page.  No edits required.
 
+== Frequently Asked Questions ==
+
+= How can I force all users, even when logged in, to be challenged with a question before posting? =
+
+* edit the top of the plugin and set  
+`
+$human_test['on_for_members']=true;
+`
+
 == License ==
 
 * CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
@@ -66,9 +75,11 @@ Eventually will add image based (captcha style) writing as well as "negative fie
 
 * use themed error page instead of ugly bb_die
 
-= Version 0.8.0 (2008-11-22) =
+= Version 0.8.1 (2008-11-22) =
 
 * now supports bb-anonymous-posting plugin with a challenge question automatically placed above posts/topics
+
+* optional toggle to force challenge for all members, even when logged in  (edit top of plugin)
 
 == To Do ==
 

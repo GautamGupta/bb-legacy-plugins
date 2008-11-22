@@ -3,7 +3,7 @@
 Plugin Name: Human Test for bbPress
 Plugin URI:  http://bbpress.org/plugins/topic/77
 Description:  uses various methods to exclude bots from registering (and eventually posting) on bbPress
-Version: 0.8.0
+Version: 0.8.1
 Author: _ck_
 Author URI: http://bbshowcase.org
 
@@ -11,6 +11,10 @@ License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
 Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
 */ 
+
+$human_test['on_for_members']=false;	 // change this to true if you want even logged in members to be challenged when posting
+
+/*  stop editing here  */
 
 add_action('bb_init', 'human_test_check',99);	// block check and init sessions if needed
 add_action('post_form_pre_post', 'human_test_post',99);	// new post
@@ -34,8 +38,8 @@ function human_test_question() {
 }
 
 function human_test_post() {
-global $bb_current_user;
-if (!$bb_current_user->has_cap('anonymous')) {return;}	
+global $bb_current_user, $human_test;
+if (empty($human_test['on_for_members']) && !$bb_current_user->has_cap('anonymous')) {return;}	
 	$question=human_test_question();
 	echo '<p><script language="JavaScript" type="text/javascript">document.write("'.$question.'");</script>';	// write question with javascript
 	echo '<noscript><i>'.__("registration requires JavaScript").'</i></noscript>';	// warn no-script users 
@@ -64,9 +68,11 @@ if ( ( is_topic() && bb_current_user_can( 'write_post', $topic->topic_id ) && $p
 */
 
 function human_test_check() {
-global $bb_current_user, $bb_roles;  
+global $bb_current_user, $bb_roles, $human_test;  
 $location=human_test_location();  if ($location=='index.php' && !empty($_GET['new'])) {$location='forum.php';}
-if ( !($location=='register.php' || ( !empty($bb_roles->roles['anonymous']) &&
+if ( !($location=='register.php' || 
+       (!empty($human_test['on_for_members']) && !empty($bb_current_user) && !bb_current_user_can('moderate') && in_array($location,array('bb-post.php','forum.php','topic.php'))) ||
+       (!empty($bb_roles->roles['anonymous']) && 
        ($location=='bb-post.php' && is_object($bb_current_user) && $bb_current_user->has_cap('anonymous')) ||
        ($location=='forum.php' && empty($bb_current_user) && !empty($bb_roles->roles['anonymous']['capabilities']['write_topics'])) ||       
        ($location=='topic.php'  && empty($bb_current_user) && !empty($bb_roles->roles['anonymous']['capabilities']['write_posts'])) ))) {return;}
@@ -81,12 +87,12 @@ if ( !($location=='register.php' || ( !empty($bb_roles->roles['anonymous']) &&
 	@session_start();	// sent with headers - errors masked with @ if sessions started previously - which it actually has to be for the following to 
 	}
 	if ($_POST || isset($_POST['human_test'])) {
-		$human_test =  stripslashes_deep($_POST['human_test']);		
+		$human_test_post =  stripslashes($_POST['human_test']);		
 		$compare = $_SESSION['HUMAN_TEST'];
 		// $_SESSION['HUMAN_TEST']=md5(rand());	// destroy answer even when successful to prevent re-use
 		
-		if ($human_test !=$compare) {				
-			// echo $human_test." - ".$compare; exit();	// debug
+		if ($human_test_post !=$compare) {				
+			// echo $human_test_post." - ".$compare; exit();	// debug
 			// bb_die(__("Humans only please").". ".__("If you are not a bot").", <a href='register.php'>".__("please go back and try again")."</a>.");			
 			bb_send_headers();
 			bb_get_header();

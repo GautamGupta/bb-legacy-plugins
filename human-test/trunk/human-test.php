@@ -12,7 +12,7 @@ License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
 */ 
 
-$human_test['on_for_members']=true;	 // change this to true if you want even logged in members to be challenged when posting
+$human_test['on_for_members']=false;	 // change this to true if you want even logged in members to be challenged when posting
 
 /*  stop editing here  */
 

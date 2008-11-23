@@ -84,6 +84,10 @@ $mini_stats['level']="administrate";
 
 * some date range and control cleanup
 
+= Version 0.0.4 (2008-11-23) =
+
+* bug fixes for gmt offset logic and zero fill for empty dates, CSV fixes, topics per day were using end time instead of start time
+
 == To Do ==
 
 * fix buggy width on graphs when dates are too wide

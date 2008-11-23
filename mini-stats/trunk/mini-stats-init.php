@@ -36,10 +36,11 @@ if (empty($time)) {$time=time();} else {$time=strtotime($time); if (empty($time)
 if (isset($_GET['format']) && $_GET['format']=="CSV") {$format="CSV";} else {$format="";}
 } else {$time=time(); $format="";}
 $gmt_offset=bb_get_option("gmt_offset")*3600;
-$day=$time+gmt_offset;
+$day=$time=$time+$gmt_offset;
 $limit=31; $monthago=($day)-(($limit-1)*24*3600);
 if ($format=="CSV") {
-	$day=time()+$gmt_offset; $limit=ceil(($day-$monthago)/(24*3600));
+	$day=time()+$gmt_offset; 
+	$limit=ceil(($day-$monthago)/(24*3600));
 	$label[1]=__("topics"); 
 	$label[2]=__("posts");
 	$label[3]=__("registrations"); 
@@ -65,11 +66,11 @@ $count++;
 $empty=array_reverse($empty);
 
 if (empty($fomat) && bb_current_user_can('administrate')) {
-echo '<div style="text-align:right; font-size:13px; margin:0 0 -9px 0;">'.(empty($_GET[$mini_stats['trigger']]) ? '' : date('M j, Y | ',$time))
-// .'[<a href="'.add_query_arg($mini_stats['trigger'],date('Y-n-j',$time-31*24*3600)).'">'.__('previous month').'</a>] [<a href="'.add_query_arg($mini_stats['trigger'],(date('Y',$time)-1).'-'.date('n-j',$time)).'">'.__('previous year').'</a>] '
- .'<a href="'.add_query_arg($mini_stats['trigger'],(date('Y',$time)-1).'-'.date('n-j',$time)).'"> <b><<</b> '.__('year').'</a> <a href="'.add_query_arg($mini_stats['trigger'],date('Y-n-j',$time-31*24*3600)).'"> <b><</b> '.__('month').'</a> ' 
+echo '<div style="text-align:right; font-size:13px; margin:0 0 -9px 0;">'.(empty($_GET[$mini_stats['trigger']]) ? '' : gmdate('M j, Y | ',$time))
+// .'[<a href="'.add_query_arg($mini_stats['trigger'],gmdate('Y-n-j',$time-31*24*3600)).'">'.__('previous month').'</a>] [<a href="'.add_query_arg($mini_stats['trigger'],(gmdate('Y',$time)-1).'-'.gmdate('n-j',$time)).'">'.__('previous year').'</a>] '
+ .'<a href="'.add_query_arg($mini_stats['trigger'],(gmdate('Y',$time)-1).'-'.gmdate('n-j',$time)).'"> <b><<</b> '.__('year').'</a> <a href="'.add_query_arg($mini_stats['trigger'],gmdate('Y-n-j',$time-31*24*3600)).'"> <b><</b> '.__('month').'</a> ' 
 .' < '.(empty($_GET[$mini_stats['trigger']]) ? __('current') : '<a href="'.add_query_arg($mini_stats['trigger'],"").'">'.__('current').'</a>').' > '
- .'<a href="'.add_query_arg($mini_stats['trigger'],date('Y-n-j',$time+31*24*3600)).'">'.__('month').' <b>></b></a> <a href="'.add_query_arg($mini_stats['trigger'],(date('Y',$time)+1).'-'.date('n-j',$time)).'">'.__('year').' <b>>></b> </a> '
+ .'<a href="'.add_query_arg($mini_stats['trigger'],gmdate('Y-n-j',$time+31*24*3600)).'">'.__('month').' <b>></b></a> <a href="'.add_query_arg($mini_stats['trigger'],(gmdate('Y',$time)+1).'-'.gmdate('n-j',$time)).'">'.__('year').' <b>>></b> </a> '
 .' | <a target="_blank" href="'.add_query_arg('format',"CSV").'">'.__('CSV').'</a></div>';
 }
 
@@ -77,7 +78,7 @@ for ($loop=1; $loop<=3; $loop++) {
 
 if ($loop==1) {
 // topics per day
-$query="SELECT count(*) as topics, UNIX_TIMESTAMP(topic_time) as time FROM $bbdb->topics WHERE topic_status=0  AND UNIX_TIMESTAMP(topic_time)>$monthago GROUP BY DATE(topic_time) ORDER BY topic_time ASC LIMIT $limit";
+$query="SELECT count(*) as topics, UNIX_TIMESTAMP(topic_start_time) as time FROM $bbdb->topics WHERE topic_status=0  AND UNIX_TIMESTAMP(topic_start_time)>$monthago GROUP BY DATE(topic_start_time) ORDER BY topic_start_time ASC LIMIT $limit";
 }
 elseif ($loop==2) {
 // posts per day
@@ -87,20 +88,21 @@ elseif ($loop==3) {
 // registrations per day
 $query="SELECT count(*) as users, UNIX_TIMESTAMP(user_registered) as time FROM $bbdb->users WHERE user_status=0  AND UNIX_TIMESTAMP(user_registered)>$monthago GROUP BY DATE(user_registered) ORDER BY user_registered ASC LIMIT $limit";
 }
-@$results=$bbdb->get_results($query);
+@$results=$bbdb->get_results($query); 
+// print "<pre>"; foreach ($results as $result) {print $result->time." - ".."<br>";} exit;
 
 // make missing days have zero results
-unset($fill); foreach ($results as $result) {$fill[date('Y-m-d',$result->time)]=$result;} $results=array_merge($empty,$fill);
+unset($fill); foreach ($results as $result) {$fill[date('Y-m-d',$result->time+$gmt_offset)]=$result;} $results=array_merge($empty,$fill);
 
 if ($format!="CSV") {
 
     $count=0; unset($values); unset($labels); unset($colors);
-    foreach ($results as $result) {    	    	
+    foreach ($results as $date=>$result) {    	    	
     	        if ($loop==1) {$values[$count]=$result->topics;}    		
     	elseif ($loop==2) {$values[$count]=$result->posts;}
     	elseif ($loop==3) {$values[$count]=$result->users;}	
 
-    	$labels[$count]=gmdate("n/j",$result->time+$gmt_offset); 
+    	$labels[$count]=gmdate("n/j",strtotime($date));    //  gmdate("n/j",$result->time+$gmt_offset); 
     	if ($labels[$count]==$today) {$colors[$count]="#bbb";}     // #7799aa
     	$count++; if ($count>$limit) {break;}
     }    
@@ -135,12 +137,11 @@ $output.= "</table><br clear='both'>\n";
 echo $output;
 
 } else {  // CSV check
-
-	foreach ($results as $result) {    	    	
+	foreach ($results as $date=>$result) {    	    	
     	        if ($loop==1) {$value=$result->topics;}    		
     	elseif ($loop==2) {$value=$result->posts;}
     	elseif ($loop==3) {$value=$result->users;}	
-	$CSV[gmdate("Y-m-d",$result->time+$gmt_offset)][$loop]=$value;
+	$CSV[$date][$loop]=$value; 	//  gmdate("Y-m-d",strtotime($date)+$gmt_offset)  // gmdate("Y-m-d",$result->time+$gmt_offset)
 	}
 
 }	 // CSV check
@@ -148,13 +149,13 @@ echo $output;
 
 if ($format=="CSV") {
 	$output=__('date').",".implode(",",$label)."\r\n";
-	foreach ($CSV as $date=>$line) {$output.= $date.",".implode(",",$line)."\r\n";}
+	foreach ($CSV as $date=>$line) {$output.= $date.",".implode(",",$line)."\r\n";} reset($CSV);
 //	header("Content-Type: text/plain");
 	header ("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
 	header("Pragma: hack");
 	header("Content-Type: application/octet-stream");
 	header("Content-Length: ".strlen($output));
-	header('Content-Disposition: attachment; filename="'.gmdate("Y-m-d",$time+$gmt_offset).'.csv"');
+	header('Content-Disposition: attachment; filename="'.key($CSV).'.csv"');
 	header("Content-Transfer-Encoding: binary");              
 	ob_clean();
   	flush();  

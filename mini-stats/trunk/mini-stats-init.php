@@ -37,7 +37,8 @@ if (isset($_GET['format']) && $_GET['format']=="CSV") {$format="CSV";} else {$fo
 } else {$time=time(); $format="";}
 $gmt_offset=bb_get_option("gmt_offset")*3600;
 $day=$time=$time+$gmt_offset;
-$limit=31; $monthago=($day)-(($limit-1)*24*3600);
+$midnight=strtotime(gmdate('Y-m-d',$day))+$gmt_offset;
+$limit=31; $monthago=($midnight)-(($limit-1)*24*3600);
 if ($format=="CSV") {
 	$day=time()+$gmt_offset; 
 	$limit=ceil(($day-$monthago)/(24*3600));

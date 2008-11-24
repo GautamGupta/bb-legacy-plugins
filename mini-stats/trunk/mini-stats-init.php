@@ -78,21 +78,21 @@ for ($loop=1; $loop<=3; $loop++) {
 
 if ($loop==1) {
 // topics per day
-$query="SELECT count(*) as topics, UNIX_TIMESTAMP(topic_start_time) as time FROM $bbdb->topics WHERE topic_status=0  AND UNIX_TIMESTAMP(topic_start_time)>$monthago GROUP BY DATE(topic_start_time) ORDER BY topic_start_time ASC LIMIT $limit";
+$query="SELECT count(*) as topics, DATE(FROM_UNIXTIME(UNIX_TIMESTAMP(topic_start_time)+$gmt_offset)) as time FROM $bbdb->topics WHERE topic_status=0  AND UNIX_TIMESTAMP(topic_start_time)+$gmt_offset>$monthago GROUP BY DATE(FROM_UNIXTIME(UNIX_TIMESTAMP(topic_start_time)+$gmt_offset)) ORDER BY topic_start_time ASC LIMIT $limit";
 }
 elseif ($loop==2) {
 // posts per day
-$query="SELECT count(*) as posts, UNIX_TIMESTAMP(post_time) as time FROM $bbdb->posts WHERE post_status=0  AND UNIX_TIMESTAMP(post_time)>$monthago GROUP BY DATE(post_time) ORDER BY post_time ASC LIMIT $limit";
+$query="SELECT count(*) as posts, DATE(FROM_UNIXTIME(UNIX_TIMESTAMP(post_time)+$gmt_offset)) as time FROM $bbdb->posts WHERE post_status=0  AND UNIX_TIMESTAMP(post_time)+$gmt_offset>$monthago GROUP BY DATE(FROM_UNIXTIME(UNIX_TIMESTAMP(post_time)+$gmt_offset)) ORDER BY post_time ASC LIMIT $limit";
 }
 elseif ($loop==3) {
 // registrations per day
-$query="SELECT count(*) as users, UNIX_TIMESTAMP(user_registered) as time FROM $bbdb->users WHERE user_status=0  AND UNIX_TIMESTAMP(user_registered)>$monthago GROUP BY DATE(user_registered) ORDER BY user_registered ASC LIMIT $limit";
+$query="SELECT count(*) as users, DATE(FROM_UNIXTIME(UNIX_TIMESTAMP(user_registered)+$gmt_offset)) as time FROM $bbdb->users WHERE user_status=0  AND UNIX_TIMESTAMP(user_registered)+$gmt_offset>$monthago GROUP BY DATE(FROM_UNIXTIME(UNIX_TIMESTAMP(user_registered)+$gmt_offset)) ORDER BY user_registered ASC LIMIT $limit";
 }
 @$results=$bbdb->get_results($query); 
 // print "<pre>"; foreach ($results as $result) {print $result->time." - ".."<br>";} exit;
 
 // make missing days have zero results
-unset($fill); foreach ($results as $result) {$fill[date('Y-m-d',$result->time+$gmt_offset)]=$result;} $results=array_merge($empty,$fill);
+unset($fill); foreach ($results as $result) {$fill[$result->time]=$result;} $results=array_merge($empty,$fill);
 
 if ($format!="CSV") {
 

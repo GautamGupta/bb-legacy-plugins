@@ -62,6 +62,10 @@ When using this, it is highly recommended to also use the Human Test plugin to p
 * validation & error detection via javascript before submit
 * prevent username from being inside password
 
+= Version 0.0.3 (2008-11-24) =
+
+* workaround for buggy user_status change on 1st login in bbPress 0.9
+
 == To Do ==
 
 * javascript checks of password for strength and other issues before form is submitted

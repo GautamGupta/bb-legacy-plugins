@@ -15,7 +15,7 @@ Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
 if (bb_get_location()=="register-page") {
 
 add_action( 'extra_profile_info', 'instant_password',9);	
-add_action('register_user', 'instant_password_success');
+add_action('register_user', 'instant_password_success',9999); 	// as late as possible to let other plugins do their thing
 
 function instant_password() {
 echo '  <fieldset><legend>'.__("Select Password").'</legend>

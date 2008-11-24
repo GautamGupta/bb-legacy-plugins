@@ -3,7 +3,7 @@
 Plugin Name: Instant Password
 Plugin URI:  http://bbpress.org/plugins/topic/instant-password
 Description:  Allows users to pick their own password during registration and log in immediately without checking email.
-Version: 0.0.2
+Version: 0.0.3
 Author: _ck_
 Author URI: http://bbshowcase.org
 
@@ -46,6 +46,8 @@ echo '  <fieldset><legend>'.__("Select Password").'</legend>
 
 function instant_password_success($user_id=0) {
 if (!$user_id) {return;}
+global $bbdb;
+$bbdb->query("UPDATE $bbdb->users SET user_status=0 WHERE ID=$user_id LIMIT 1");	// 0.9 has a typo bug in update_user_status function
 wp_set_auth_cookie( (int) $user_id, 0 );
 do_action('bb_user_login', (int) $user_id );
 if (isset($_REQUEST['re'])) {$re=$_REQUEST['re'];} else {$re=bb_get_option('uri');}

@@ -60,6 +60,10 @@ $mini_stats['level']="administrate";
 
 * bbPress doesn't have a hook right now for that, instead try adding or deleting a post instead and it will re-sync 
 
+= Why when I register a new member they don't show up in the daily stats ? =
+
+* bbPress doesn't consider a user fully registered until they log in for the first time (it then changes their user_status from 1 to 0)
+
 == License ==
 
 * CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
@@ -87,6 +91,10 @@ $mini_stats['level']="administrate";
 = Version 0.0.4 (2008-11-23) =
 
 * bug fixes for gmt offset logic and zero fill for empty dates, CSV fixes, topics per day were using end time instead of start time
+
+= Version 0.0.5 (2008-11-25) =
+
+* re-wrote the mysql data extraction to sort manually - it was not handling gmt offset properly and cannot trust group by date results
 
 == To Do ==
 

@@ -31,29 +31,40 @@ function mini_stats_graph_header() {global $mini_stats;  echo '<style type="text
 function mini_stats_graphs() { 
 global $bbdb, $mini_stats;
 if (bb_current_user_can('administrate')) {
-$time=$_GET[$mini_stats['trigger']]; 
-if (empty($time)) {$time=time();} else {$time=strtotime($time); if (empty($time) || $time==-1) {$time=time();}}
-if (isset($_GET['format']) && $_GET['format']=="CSV") {$format="CSV";} else {$format="";}
-} else {$time=time(); $format="";}
-$gmt_offset=bb_get_option("gmt_offset")*3600;
-$day=$time=$time+$gmt_offset;
-$midnight=strtotime(gmdate('Y-m-d',$day))+$gmt_offset;
-$limit=31; $monthago=($midnight)-(($limit-1)*24*3600);
-if ($format=="CSV") {
-	$day=time()+$gmt_offset; 
-	$limit=ceil(($day-$monthago)/(24*3600));
+	$gmt_offset=bb_get_option("gmt_offset")*3600;
+	$time=time();
+
+	$endtime=$_GET[$mini_stats['trigger']]; 
+	if (empty($endtime)) {$endtime=$time;} 
+	else {$endtime=strtotime($endtime." 23:59:59 GMT"); if (empty($endtime) || $endtime==-1) {$endtime=$time;}}
+
+	if (isset($_GET['format']) && $_GET['format']=="CSV") {$format="CSV";} else {$format="";}
+} else {$endtime=$time; $format="";}
+
+$endmidnight=strtotime(gmdate('Y-m-d',$endtime)." GMT"); 
+$limit=31; $starttime=($endmidnight)-(($limit-1)*24*3600);
+$time=$time+$gmt_offset;
+
+$gmt_starttime=$starttime;
+$gmt_endtime=$endtime;
+$starttime=$starttime+$gmt_offset;
+$endtime=$endtime+$gmt_offset;
+
+if ($format=="CSV") {		
+	$endtime=$time;
+	$limit=ceil(($endtime-$starttime)/(24*3600));
 	$label[1]=__("topics"); 
 	$label[2]=__("posts");
 	$label[3]=__("registrations"); 
 } else {
 	$maxheight=50;
-	$today=gmdate("n/j",$day);
+	$today=gmdate("n/j",$time);
 	$label[1]=__("Daily Total Topics");
 	$label[2]=__("Daily Total Posts");
 	$label[3]=__("Daily Total Registrations");
 }
 
-$count=0; 
+$count=0;  $day=$starttime;
 do {				
 $date=gmdate('Y-m-d',$day);
 $empty[$date]->time=$day;
@@ -61,17 +72,17 @@ $empty[$date]->topics=0;
 $empty[$date]->posts=0;
 $empty[$date]->views=0;
 $empty[$date]->users=0;
-$day=$day-24*3600;
+$day=$day+24*3600;
 $count++;
 } while ($limit>=$count); 	// ($day>$monthago);
-$empty=array_reverse($empty);
+// $empty=array_reverse($empty);
 
 if (empty($fomat) && bb_current_user_can('administrate')) {
-echo '<div style="text-align:right; font-size:13px; margin:0 0 -9px 0;">'.(empty($_GET[$mini_stats['trigger']]) ? '' : gmdate('M j, Y | ',$time))
-// .'[<a href="'.add_query_arg($mini_stats['trigger'],gmdate('Y-n-j',$time-31*24*3600)).'">'.__('previous month').'</a>] [<a href="'.add_query_arg($mini_stats['trigger'],(gmdate('Y',$time)-1).'-'.gmdate('n-j',$time)).'">'.__('previous year').'</a>] '
- .'<a href="'.add_query_arg($mini_stats['trigger'],(gmdate('Y',$time)-1).'-'.gmdate('n-j',$time)).'"> <b><<</b> '.__('year').'</a> <a href="'.add_query_arg($mini_stats['trigger'],gmdate('Y-n-j',$time-31*24*3600)).'"> <b><</b> '.__('month').'</a> ' 
+echo '<div style="text-align:right; font-size:13px; margin:0 0 -9px 0;">'.(empty($_GET[$mini_stats['trigger']]) ? '' : gmdate('M j, Y | ',$endtime))
+// .'[<a href="'.add_query_arg($mini_stats['trigger'],gmdate('Y-n-j',$endtime-31*24*3600)).'">'.__('previous month').'</a>] [<a href="'.add_query_arg($mini_stats['trigger'],(gmdate('Y',$endtime)-1).'-'.gmdate('n-j',$endtime)).'">'.__('previous year').'</a>] '
+ .'<a href="'.add_query_arg($mini_stats['trigger'],(gmdate('Y',$endtime)-1).'-'.gmdate('n-j',$endtime)).'"> <b><<</b> '.__('year').'</a> <a href="'.add_query_arg($mini_stats['trigger'],gmdate('Y-n-j',$endtime-31*24*3600)).'"> <b><</b> '.__('month').'</a> ' 
 .' < '.(empty($_GET[$mini_stats['trigger']]) ? __('current') : '<a href="'.add_query_arg($mini_stats['trigger'],"").'">'.__('current').'</a>').' > '
- .'<a href="'.add_query_arg($mini_stats['trigger'],gmdate('Y-n-j',$time+31*24*3600)).'">'.__('month').' <b>></b></a> <a href="'.add_query_arg($mini_stats['trigger'],(gmdate('Y',$time)+1).'-'.gmdate('n-j',$time)).'">'.__('year').' <b>>></b> </a> '
+ .'<a href="'.add_query_arg($mini_stats['trigger'],gmdate('Y-n-j',$endtime+31*24*3600)).'">'.__('month').' <b>></b></a> <a href="'.add_query_arg($mini_stats['trigger'],(gmdate('Y',$endtime)+1).'-'.gmdate('n-j',$endtime)).'">'.__('year').' <b>>></b> </a> '
 .' | <a target="_blank" href="'.add_query_arg('format',"CSV").'">'.__('CSV').'</a></div>';
 }
 
@@ -79,21 +90,26 @@ for ($loop=1; $loop<=3; $loop++) {
 
 if ($loop==1) {
 // topics per day
-$query="SELECT count(*) as topics, DATE(FROM_UNIXTIME(UNIX_TIMESTAMP(topic_start_time)+$gmt_offset)) as time FROM $bbdb->topics WHERE topic_status=0  AND UNIX_TIMESTAMP(topic_start_time)+$gmt_offset>$monthago GROUP BY DATE(FROM_UNIXTIME(UNIX_TIMESTAMP(topic_start_time)+$gmt_offset)) ORDER BY topic_start_time ASC LIMIT $limit";
+$query="SELECT UNIX_TIMESTAMP(topic_start_time) as time FROM $bbdb->topics WHERE topic_status=0  AND UNIX_TIMESTAMP(topic_start_time)>=$gmt_starttime AND UNIX_TIMESTAMP(topic_start_time)<=$gmt_endtime ORDER BY topic_start_time ASC";
+$variable="topics";
 }
 elseif ($loop==2) {
 // posts per day
-$query="SELECT count(*) as posts, DATE(FROM_UNIXTIME(UNIX_TIMESTAMP(post_time)+$gmt_offset)) as time FROM $bbdb->posts WHERE post_status=0  AND UNIX_TIMESTAMP(post_time)+$gmt_offset>$monthago GROUP BY DATE(FROM_UNIXTIME(UNIX_TIMESTAMP(post_time)+$gmt_offset)) ORDER BY post_time ASC LIMIT $limit";
+$query="SELECT UNIX_TIMESTAMP(post_time) as time FROM $bbdb->posts WHERE post_status=0  AND UNIX_TIMESTAMP(post_time)>=$gmt_starttime AND UNIX_TIMESTAMP(post_time)<=$gmt_endtime ORDER BY post_time ASC";
+$variable="posts";
 }
 elseif ($loop==3) {
 // registrations per day
-$query="SELECT count(*) as users, DATE(FROM_UNIXTIME(UNIX_TIMESTAMP(user_registered)+$gmt_offset)) as time FROM $bbdb->users WHERE user_status=0  AND UNIX_TIMESTAMP(user_registered)+$gmt_offset>$monthago GROUP BY DATE(FROM_UNIXTIME(UNIX_TIMESTAMP(user_registered)+$gmt_offset)) ORDER BY user_registered ASC LIMIT $limit";
+$query="SELECT UNIX_TIMESTAMP(user_registered) as time FROM $bbdb->users WHERE user_status=0  AND UNIX_TIMESTAMP(user_registered)>=$gmt_starttime AND UNIX_TIMESTAMP(user_registered)<=$gmt_$endtime ORDER BY user_registered ASC";
+$variable="users";
 }
-@$results=$bbdb->get_results($query); 
-// print "<pre>"; foreach ($results as $result) {print $result->time." - ".."<br>";} exit;
+
+@$results=$bbdb->get_results($query);  // print "<pre>"; foreach ($results as $result) {print $result->time." - ".."<br>";} exit;
 
 // make missing days have zero results
-unset($fill); foreach ($results as $result) {$fill[$result->time]=$result;} $results=array_merge($empty,$fill);
+// unset($fill); foreach ($results as $result) {$fill[$result->time]=$result;} $results=array_merge($empty,$fill);
+
+$fill=$empty; foreach ($results as $result) {$fill[gmdate("Y-m-d",$result->time+$gmt_offset)]->$variable++;} $results=$fill;
 
 if ($format!="CSV") {
 
@@ -103,7 +119,7 @@ if ($format!="CSV") {
     	elseif ($loop==2) {$values[$count]=$result->posts;}
     	elseif ($loop==3) {$values[$count]=$result->users;}	
 
-    	$labels[$count]=gmdate("n/j",strtotime($date));    //  gmdate("n/j",$result->time+$gmt_offset); 
+    	$labels[$count]=intval(substr($date,5,2))."/".intval(substr($date,8,2));	// gmdate("n/j",strtotime($date)." GMT");    //  gmdate("n/j",$result->time+$gmt_offset); 
     	if ($labels[$count]==$today) {$colors[$count]="#bbb";}     // #7799aa
     	$count++; if ($count>$limit) {break;}
     }    

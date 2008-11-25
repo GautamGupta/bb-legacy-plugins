@@ -42,7 +42,7 @@ if (bb_current_user_can('administrate')) {
 } else {$endtime=$time; $format="";}
 
 $endmidnight=strtotime(gmdate('Y-m-d',$endtime)." 00:00:00 GMT"); 
-$limit=31; $starttime=($endmidnight)-(($limit-1)*24*3600);
+$limit=31; $starttime=($endmidnight)-($limit*24*3600);
 $time=$time+$gmt_offset;
 
 $mysql_starttime=gmdate("Y-m-d H:i:s",$starttime);
@@ -65,7 +65,7 @@ if ($format=="CSV") {
 	$label[3]=__("Daily Total Registrations");
 }
 
-$count=0;  $day=$starttime;
+$count=0;  $day=$endtime;
 do {				
 $date=gmdate('Y-m-d',$day);
 $empty[$date]->time=$day;
@@ -73,10 +73,10 @@ $empty[$date]->topics=0;
 $empty[$date]->posts=0;
 $empty[$date]->views=0;
 $empty[$date]->users=0;
-$day=$day+24*3600;
+$day=$day-24*3600;
 $count++;
 } while ($limit>=$count); 	// ($day>$monthago);
-// $empty=array_reverse($empty);
+$empty=array_reverse($empty);
 
 if (empty($fomat) && bb_current_user_can('administrate')) {
 echo '<div style="text-align:right; font-size:13px; margin:0 0 -9px 0;">'.(empty($_GET[$mini_stats['trigger']]) ? '' : gmdate('M j, Y | ',$endtime))

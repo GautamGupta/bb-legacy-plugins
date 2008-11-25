@@ -41,17 +41,18 @@ if (bb_current_user_can('administrate')) {
 	if (isset($_GET['format']) && $_GET['format']=="CSV") {$format="CSV";} else {$format="";}
 } else {$endtime=$time; $format="";}
 
-$endmidnight=strtotime(gmdate('Y-m-d',$endtime)." GMT"); 
+$endmidnight=strtotime(gmdate('Y-m-d',$endtime)." 00:00:00 GMT"); 
 $limit=31; $starttime=($endmidnight)-(($limit-1)*24*3600);
 $time=$time+$gmt_offset;
 
-$gmt_starttime=$starttime;
-$gmt_endtime=$endtime;
+$mysql_starttime=gmdate("Y:m:d H:i:s",$starttime);
+$mysql_endtime=gmdate("Y:m:d H:i:s",$endtime);
 $starttime=$starttime+$gmt_offset;
 $endtime=$endtime+$gmt_offset;
 
 if ($format=="CSV") {		
 	$endtime=$time;
+	$mysql_endtime=gmdate("Y:m:d H:i:s",$time-$gmt_offset);
 	$limit=ceil(($endtime-$starttime)/(24*3600));
 	$label[1]=__("topics"); 
 	$label[2]=__("posts");
@@ -90,17 +91,17 @@ for ($loop=1; $loop<=3; $loop++) {
 
 if ($loop==1) {
 // topics per day
-$query="SELECT UNIX_TIMESTAMP(topic_start_time) as time FROM $bbdb->topics WHERE topic_status=0  AND UNIX_TIMESTAMP(topic_start_time)>=$gmt_starttime AND UNIX_TIMESTAMP(topic_start_time)<=$gmt_endtime ORDER BY topic_start_time ASC";
+$query="SELECT UNIX_TIMESTAMP(topic_start_time) as time FROM $bbdb->topics WHERE topic_status=0  AND topic_start_time>='$mysql_starttime' AND topic_start_time<='$mysql_endtime' ORDER BY topic_start_time ASC";
 $variable="topics";
 }
 elseif ($loop==2) {
 // posts per day
-$query="SELECT UNIX_TIMESTAMP(post_time) as time FROM $bbdb->posts WHERE post_status=0  AND UNIX_TIMESTAMP(post_time)>=$gmt_starttime AND UNIX_TIMESTAMP(post_time)<=$gmt_endtime ORDER BY post_time ASC";
+$query="SELECT UNIX_TIMESTAMP(post_time) as time FROM $bbdb->posts WHERE post_status=0  AND post_time>='$mysql_starttime' AND post_time<='$mysql_endtime' ORDER BY post_time ASC";
 $variable="posts";
 }
 elseif ($loop==3) {
 // registrations per day
-$query="SELECT UNIX_TIMESTAMP(user_registered) as time FROM $bbdb->users WHERE user_status=0  AND UNIX_TIMESTAMP(user_registered)>=$gmt_starttime AND UNIX_TIMESTAMP(user_registered)<=$gmt_$endtime ORDER BY user_registered ASC";
+$query="SELECT UNIX_TIMESTAMP(user_registered) as time FROM $bbdb->users WHERE user_status=0  AND user_registered>='$mysql_starttime' AND user_registered<='$mysql_endtime' ORDER BY user_registered ASC";
 $variable="users";
 }
 

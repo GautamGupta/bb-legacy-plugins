@@ -45,14 +45,14 @@ $endmidnight=strtotime(gmdate('Y-m-d',$endtime)." 00:00:00 GMT");
 $limit=31; $starttime=($endmidnight)-(($limit-1)*24*3600);
 $time=$time+$gmt_offset;
 
-$mysql_starttime=gmdate("Y:m:d H:i:s",$starttime);
-$mysql_endtime=gmdate("Y:m:d H:i:s",$endtime);
+$mysql_starttime=gmdate("Y-m-d H:i:s",$starttime);
+$mysql_endtime=gmdate("Y-m-d H:i:s",$endtime);
 $starttime=$starttime+$gmt_offset;
 $endtime=$endtime+$gmt_offset;
 
 if ($format=="CSV") {		
 	$endtime=$time;
-	$mysql_endtime=gmdate("Y:m:d H:i:s",$time-$gmt_offset);
+	$mysql_endtime=gmdate("Y-m-d H:i:s",$time-$gmt_offset);
 	$limit=ceil(($endtime-$starttime)/(24*3600));
 	$label[1]=__("topics"); 
 	$label[2]=__("posts");

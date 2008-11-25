@@ -42,7 +42,7 @@ if (bb_current_user_can('administrate')) {
 } else {$endtime=$time; $format="";}
 
 $endmidnight=strtotime(gmdate('Y-m-d',$endtime)." 00:00:00 GMT"); 
-$limit=31; $starttime=($endmidnight)-($limit*24*3600);
+$limit=31; $starttime=($endmidnight)-(($limit-1)*24*3600);
 $time=$time+$gmt_offset;
 
 $mysql_starttime=gmdate("Y-m-d H:i:s",$starttime);
@@ -75,7 +75,7 @@ $empty[$date]->views=0;
 $empty[$date]->users=0;
 $day=$day-24*3600;
 $count++;
-} while ($limit>=$count); 	// ($day>$monthago);
+} while ($limit>$count); 	// ($day>$monthago);
 $empty=array_reverse($empty);
 
 if (empty($fomat) && bb_current_user_can('administrate')) {

@@ -3,7 +3,7 @@ Tags: recaptcha, captcha, bots, spam, users, register, registration
 Contributors: Dmitry Chestnykh
 Requires at least: 1.0-alpha1
 Tested up to: 1.0-alpha2
-Stable tag: 1.0-alpha2
+Stable tag: 1.1.1
 
 Add reCAPTCHA human test to registration page.
 
@@ -47,6 +47,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 == History ==
+
+= Version 1.1.1. (2008-11-26) =
+
+* Fixed readme.txt.
 
 = Version 1.1 (2008-11-15) =
 

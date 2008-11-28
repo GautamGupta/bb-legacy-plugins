@@ -31,7 +31,7 @@ function mini_stats_graph_header() {global $mini_stats;  echo '<style type="text
 function mini_stats_graphs() { 
 global $bbdb, $mini_stats;
 $gmt_offset=bb_get_option("gmt_offset")*3600;
-$time=time();
+$time=strtotime(gmdate('Y-m-d',time())." 23:59:59 GMT"); 
 if (bb_current_user_can('administrate')) {
 	$endtime=$_GET[$mini_stats['trigger']]; 
 	if (empty($endtime)) {$endtime=$time;} 
@@ -40,19 +40,18 @@ if (bb_current_user_can('administrate')) {
 	if (isset($_GET['format']) && $_GET['format']=="CSV") {$format="CSV";} else {$format="";}
 } else {$endtime=$time; $format="";}
 
-$endmidnight=strtotime(gmdate('Y-m-d',$endtime)." 00:00:00 GMT"); 
-$limit=31; $starttime=($endmidnight)-(($limit-1)*24*3600);
-$time=$time+$gmt_offset;
+$limit=31; $starttime=($endtime)-(($limit-1)*24*3600);
 
 $mysql_starttime=gmdate("Y-m-d H:i:s",$starttime);
 $mysql_endtime=gmdate("Y-m-d H:i:s",$endtime);
-$starttime=$starttime+$gmt_offset;
+$time=$time+$gmt_offset;
 $endtime=$endtime+$gmt_offset;
+$starttime=$starttime+$gmt_offset;
 
 if ($format=="CSV") {		
 	$endtime=$time;
 	$mysql_endtime=gmdate("Y-m-d H:i:s",$time-$gmt_offset);
-	$limit=ceil(($endtime-$starttime)/(24*3600));
+	$limit=1+floor(($endtime-$starttime)/(24*3600));
 	$label[1]=__("topics"); 
 	$label[2]=__("posts");
 	$label[3]=__("registrations"); 
@@ -64,7 +63,7 @@ if ($format=="CSV") {
 	$label[3]=__("Daily Total Registrations");
 }
 
-$count=0;  $day=$endtime;
+$count=0;  $day=$starttime;
 do {				
 $date=gmdate('Y-m-d',$day);
 $empty[$date]->time=$day;
@@ -72,10 +71,10 @@ $empty[$date]->topics=0;
 $empty[$date]->posts=0;
 $empty[$date]->views=0;
 $empty[$date]->users=0;
-$day=$day-24*3600;
+$day=$day+24*3600;
 $count++;
 } while ($limit>$count); 	// ($day>$monthago);
-$empty=array_reverse($empty);
+// $empty=array_reverse($empty);
 
 if (empty($fomat) && bb_current_user_can('administrate')) {
 echo '<div style="text-align:right; font-size:13px; margin:0 0 -9px 0;">'.(empty($_GET[$mini_stats['trigger']]) ? '' : gmdate('M j, Y | ',$endtime))

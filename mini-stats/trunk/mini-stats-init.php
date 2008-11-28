@@ -90,17 +90,17 @@ for ($loop=1; $loop<=3; $loop++) {
 
 if ($loop==1) {
 // topics per day
-$query="SELECT UNIX_TIMESTAMP(topic_start_time) as time FROM $bbdb->topics WHERE topic_status=0  AND topic_start_time>='$mysql_starttime' AND topic_start_time<='$mysql_endtime' ORDER BY topic_start_time ASC";
+$query="SELECT topic_start_time as time FROM $bbdb->topics WHERE topic_status=0  AND topic_start_time>='$mysql_starttime' AND topic_start_time<='$mysql_endtime' ORDER BY topic_start_time ASC";
 $variable="topics";
 }
 elseif ($loop==2) {
 // posts per day
-$query="SELECT UNIX_TIMESTAMP(post_time) as time FROM $bbdb->posts WHERE post_status=0  AND post_time>='$mysql_starttime' AND post_time<='$mysql_endtime' ORDER BY post_time ASC";
+$query="SELECT post_time as time FROM $bbdb->posts WHERE post_status=0  AND post_time>='$mysql_starttime' AND post_time<='$mysql_endtime' ORDER BY post_time ASC";
 $variable="posts";
 }
 elseif ($loop==3) {
 // registrations per day
-$query="SELECT UNIX_TIMESTAMP(user_registered) as time FROM $bbdb->users WHERE user_status=0  AND user_registered>='$mysql_starttime' AND user_registered<='$mysql_endtime' ORDER BY user_registered ASC";
+$query="SELECT user_registered as time FROM $bbdb->users WHERE user_status=0  AND user_registered>='$mysql_starttime' AND user_registered<='$mysql_endtime' ORDER BY user_registered ASC";
 $variable="users";
 }
 
@@ -109,7 +109,7 @@ $variable="users";
 // make missing days have zero results
 // unset($fill); foreach ($results as $result) {$fill[$result->time]=$result;} $results=array_merge($empty,$fill);
 
-$fill=$empty; foreach ($results as $result) {$fill[gmdate("Y-m-d",$result->time+$gmt_offset)]->$variable++;} $results=$fill;
+$fill=$empty; foreach ($results as $result) {$fill[gmdate("Y-m-d",strtotime($result->time." GMT")+$gmt_offset)]->$variable++;} $results=$fill;
 
 if ($format!="CSV") {
 

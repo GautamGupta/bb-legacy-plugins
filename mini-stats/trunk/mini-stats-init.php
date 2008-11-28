@@ -6,8 +6,8 @@ add_action( 'bb_admin_head','mini_stats_header',100);
 add_action('bb_admin_head','mini_stats_graph_header',100); 
 }
 function mini_stats_admin() { 
-if (!bb_current_user_can('administrate'))  {die();}
 global $mini_stats;
+if (!bb_current_user_can($mini_stats['level']))  {die();}
 mini_stats_graphs();
 if (empty($_GET[$mini_stats['trigger']]) && empty($_GET['format']))  {mini_stats_statistics();}
 }
@@ -30,10 +30,9 @@ function mini_stats_graph_header() {global $mini_stats;  echo '<style type="text
 
 function mini_stats_graphs() { 
 global $bbdb, $mini_stats;
+$gmt_offset=bb_get_option("gmt_offset")*3600;
+$time=time();
 if (bb_current_user_can('administrate')) {
-	$gmt_offset=bb_get_option("gmt_offset")*3600;
-	$time=time();
-
 	$endtime=$_GET[$mini_stats['trigger']]; 
 	if (empty($endtime)) {$endtime=$time;} 
 	else {$endtime=strtotime($endtime." 23:59:59 GMT"); if (empty($endtime) || $endtime==-1) {$endtime=$time;}}

@@ -31,9 +31,8 @@ Eventually will add image based (captcha style) writing as well as "negative fie
 = How can I force all users, even when logged in, to be challenged with a question before posting? =
 
 * edit the top of the plugin and set  
-`
+
 $human_test['on_for_members']=true;
-`
 
 == License ==
 

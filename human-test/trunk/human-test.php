@@ -3,7 +3,7 @@
 Plugin Name: Human Test for bbPress
 Plugin URI:  http://bbpress.org/plugins/topic/77
 Description:  uses various methods to exclude bots from registering (and eventually posting) on bbPress
-Version: 0.8.1
+Version: 0.8.2
 Author: _ck_
 Author URI: http://bbshowcase.org
 
@@ -68,14 +68,16 @@ if ( ( is_topic() && bb_current_user_can( 'write_post', $topic->topic_id ) && $p
 */
 
 function human_test_check() {
-global $bb_current_user, $bb_roles, $human_test;  
+global $bb_current_user, $bb_roles, $human_test;   
+if (!empty($bb_roles->roles['anonymous']['capabilities'])) {$role=$bb_roles->roles['anonymous']['capabilities'];}
+elseif (!empty($bb_roles->role_objects['anonymous']->capabilities)) {$role=$bb_roles->role_objects['anonymous']->capabilities;} 
 $location=human_test_location();  if ($location=='index.php' && !empty($_GET['new'])) {$location='forum.php';}
 if ( !($location=='register.php' || 
        (!empty($human_test['on_for_members']) && !empty($bb_current_user) && !bb_current_user_can('moderate') && in_array($location,array('bb-post.php','forum.php','topic.php'))) ||
-       (!empty($bb_roles->roles['anonymous']) && 
+       (!empty($role) && 
        ($location=='bb-post.php' && is_object($bb_current_user) && $bb_current_user->has_cap('anonymous')) ||
-       ($location=='forum.php' && empty($bb_current_user) && !empty($bb_roles->roles['anonymous']['capabilities']['write_topics'])) ||       
-       ($location=='topic.php'  && empty($bb_current_user) && !empty($bb_roles->roles['anonymous']['capabilities']['write_posts'])) ))) {return;}
+       ($location=='forum.php' && empty($bb_current_user) && !empty($role['write_topics'])) ||       
+       ($location=='topic.php'  && empty($bb_current_user) && !empty($role['write_posts'])) ))) {return;}
     
 	// nocache_headers();	   // causes back button to regenerate page - unfortunate any post data is going to be lost	
 

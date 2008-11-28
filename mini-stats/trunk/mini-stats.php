@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/mini-stats
 Description: Some simple forum statistics.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.5
+Version: 0.0.6
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -62,7 +62,7 @@ if ((defined('BB_IS_ADMIN') && BB_IS_ADMIN) || !(strpos($_SERVER['REQUEST_URI'],
 	if (isset($_GET['plugin']) && $_GET['plugin']=="mini_stats_admin") { // load entire core only when needed
 	@require_once("mini-stats-init.php");
 	} 
-	function mini_stats_admin_page() {global $bb_submenu; $bb_submenu['content.php'][] = array(__('Mini Stats'), 'administrate', 'mini_stats_admin');}
+	function mini_stats_admin_page() {global $mini_stats,$bb_submenu; $bb_submenu['content.php'][] = array(__('Mini Stats'), $mini_stats['level'], 'mini_stats_admin');}
 	add_action( 'bb_admin_menu_generator', 'mini_stats_admin_page',200);	// try to be last menu feature		
 }
 

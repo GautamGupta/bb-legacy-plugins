@@ -96,6 +96,12 @@ $mini_stats['level']="administrate";
 
 * re-wrote the mysql data extraction to sort manually - it was not handling gmt offset properly and cannot trust group by date results
 
+= Version 0.0.6 (2008-11-28) =
+
+* allow moderators to also access mini-stats via Admin menu, if access 'level' is set to moderate
+
+* bug fix for allowing non-members to see stats (when allowed)
+
 == To Do ==
 
 * fix buggy width on graphs when dates are too wide

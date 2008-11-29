@@ -31,13 +31,16 @@ function mini_stats_graph_header() {global $mini_stats;  echo '<style type="text
 function mini_stats_graphs() { 
 global $bbdb, $mini_stats;
 
-$gmt_offset=bb_get_option("gmt_offset")*3600;
-$time=strtotime(gmdate('Y-m-d',time())." 23:59:59"); 	// midnight of today's date GMT (before offset)
+$gmt_hours=intval(trim(bb_get_option("gmt_offset"))); if ($gmt_hours>0 && substr($gmt_hours,0,1)!="+") {$gmt_hours="+".$gmt_hours;}
+$gmt_offset=intval($gmt_hours)*3600;
+$time=strtotime(gmdate('Y-m-d',time())." 23:59:59 $gmt_hours"); 	// midnight of today's date in GMT (before offset)
+
+// print gmdate("r",$time)."<br>".date("r",$time)."<br>".gmdate("r",$time+$gmt_offset)."<br>".date("r",$time+$gmt_offset)."<br>"; // debug
 
 if (bb_current_user_can('administrate')) {
 	$endtime=$_GET[$mini_stats['trigger']]; 
 	if (empty($endtime)) {$endtime=$time;} 
-	else {$endtime=strtotime($endtime." 23:59:59"); if (empty($endtime) || $endtime==-1) {$endtime=$time;}}
+	else {$endtime=strtotime($endtime." 23:59:59 $gmt_time"); if (empty($endtime) || $endtime==-1) {$endtime=$time;}}
 
 	if (isset($_GET['format']) && $_GET['format']=="CSV") {$format="CSV";} else {$format="";}
 } else {$endtime=$time; $format="";}
@@ -110,7 +113,7 @@ $variable="users";
 // make missing days have zero results
 // unset($fill); foreach ($results as $result) {$fill[$result->time]=$result;} $results=array_merge($empty,$fill);
 
-$fill=$empty; foreach ($results as $result) {$fill[gmdate("Y-m-d",strtotime($result->time)+$gmt_offset)]->$variable++;} $results=$fill;
+$fill=$empty; foreach ($results as $result) {$fill[gmdate("Y-m-d",strtotime($result->time." +0000")+$gmt_offset)]->$variable++;} $results=$fill;
 
 if ($format!="CSV") {
 

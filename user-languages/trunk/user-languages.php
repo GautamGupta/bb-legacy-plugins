@@ -2,8 +2,8 @@
 /*
 Plugin Name: User Languages
 Description: Allow users to set their own language. This plugin is based on the "User Timezones" plugin.
-Plugin URI: http://bbpress.ru/downloads/plugins#user-languages
-Version: 0.1
+Plugin URI: http://bbpress.ru/downloads/plugins
+Version: 0.2
 Author: A1ex
 Author URI: http://bbpress.ru
 */
@@ -22,7 +22,8 @@ class User_Language {
 	}
 
 	function bb_get_option_language( $language ) {
-		if ( false !== $user_language = $this->get_user_language( bb_get_current_user_info( 'id' ) ) )
+		$user_language = $this->get_user_language( bb_get_current_user_info( 'id' ));
+		if ( false !== $user_language &&  'default' !== $user_language)
 			return $user_language;
 		return $language;
 	}
@@ -41,6 +42,7 @@ class User_Language {
 			<th scope="row"><label for="language"><?php _e(Language) ?>:</label></th>
 			<td>
 			<select name="language" id="language">
+						<option value="default" <?=($user_language==false)?"selected='selected'":'';?>>default</option>
 					<? foreach($languages as $key => $language):?>
 						<option value="<?=$language;?>" <?=($user_language==$language)?"selected='selected'":'';?>>
 							<?php

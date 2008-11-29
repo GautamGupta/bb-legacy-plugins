@@ -1,6 +1,6 @@
 === bb-Lightbox2 ===
 Contributors: A1ex
-Tags: A1ex, AJAX, image, lightbox, photo, picture
+Tags: A1ex, AJAX, images, lightbox, photos, pictures
 Tested up to: trunk
 Stable tag: trunk
 

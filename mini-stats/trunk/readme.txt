@@ -102,6 +102,10 @@ $mini_stats['level']="administrate";
 
 * bug fix for allowing non-members to see stats (when allowed)
 
+= Version 0.0.7 (2008-12-01) =
+
+* now detects WordPress integration and will also show graphs for comments and WP posts (articles)
+
 == To Do ==
 
 * fix buggy width on graphs when dates are too wide

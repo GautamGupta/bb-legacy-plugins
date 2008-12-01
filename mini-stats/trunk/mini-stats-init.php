@@ -29,23 +29,47 @@ exit;
 function mini_stats_graph_header() {global $mini_stats;  echo '<style type="text/css">'.$mini_stats['style_graph'].'</style>';}
 
 function mini_stats_graphs() { 
-global $bbdb, $mini_stats;
+global $bbdb, $bb, $mini_stats;
 
-$gmt_hours=intval(trim(bb_get_option("gmt_offset"))); if ($gmt_hours>0 && substr($gmt_hours,0,1)!="+") {$gmt_hours="+".$gmt_hours;}
-$gmt_offset=intval($gmt_hours)*3600;
-$time=strtotime(gmdate('Y-m-d',time())." 23:59:59 $gmt_hours"); 	// midnight of today's date in GMT (before offset)
+// putenv("TZ=PST");	 // debug
+
+if (!empty($bb->wp_table_prefix)) {$wp_table_prefix=$bb->wp_table_prefix; $loop_max=5;} else {$loop_max=3;}
+
+$gmt_offset=intval(bb_get_option("gmt_offset"))*3600;
+$time=strtotime(gmdate('Y-m-d',time()+$gmt_offset)." 23:59:59 +0000")-$gmt_offset;   // midnight of today's date in GMT (before offset)
 
 // print gmdate("r",$time)."<br>".date("r",$time)."<br>".gmdate("r",$time+$gmt_offset)."<br>".date("r",$time+$gmt_offset)."<br>"; // debug
 
-if (bb_current_user_can('administrate')) {
+if (bb_current_user_can('moderate')) {
 	$endtime=$_GET[$mini_stats['trigger']]; 
 	if (empty($endtime)) {$endtime=$time;} 
-	else {$endtime=strtotime($endtime." 23:59:59 $gmt_time"); if (empty($endtime) || $endtime==-1) {$endtime=$time;}}
-
-	if (isset($_GET['format']) && $_GET['format']=="CSV") {$format="CSV";} else {$format="";}
+	else {
+		$endtime=strtotime(gmdate('Y-m-d',strtotime($endtime." 23:59:59 +0000")+$gmt_offset)." 23:59:59 +0000"); 
+		if (empty($endtime) || $endtime==-1) {$endtime=$time;} else {$endtime=$endtime-$gmt_offset;}
+	}
+	if (isset($_GET['format']) && $_GET['format']=="CSV") {$format="CSV";} else {$format=""; $showmenu=true;}
 } else {$endtime=$time; $format="";}
 
-$limit=31; $starttime=($endtime)-(($limit-1)*24*3600);
+$limit=31; $starttime=($endtime)-(($limit-1)*24*3600); 
+
+if ($format=="CSV") {		
+	$endtime=$time;	
+	$limit=1+floor(($endtime-$starttime)/(24*3600));
+	$label[0]=__("date"); 
+	$label[1]=__("topics"); 
+	$label[2]=__("posts");
+	$label[3]=__("registrations"); 
+	$label[4]=__("wp posts"); 
+	$label[5]=__("wp comments"); 
+} else {		
+	$maxheight=50;
+	$today=gmdate("n/j",$time+$gmt_offset);
+	$label[1]=__("Daily Total Topics");
+	$label[2]=__("Daily Total Posts");
+	$label[3]=__("Daily Total Registrations");
+	$label[4]=__("Daily WP Posts");
+	$label[5]=__("Daily WP Comments");
+}
 
 $mysql_starttime=gmdate("Y-m-d H:i:s",$starttime);
 $mysql_endtime=gmdate("Y-m-d H:i:s",$endtime);
@@ -53,35 +77,22 @@ $time=$time+$gmt_offset;
 $endtime=$endtime+$gmt_offset;
 $starttime=$starttime+$gmt_offset;
 
-if ($format=="CSV") {		
-	$endtime=$time;
-	$mysql_endtime=gmdate("Y-m-d H:i:s",$time-$gmt_offset);
-	$limit=1+floor(($endtime-$starttime)/(24*3600));
-	$label[1]=__("topics"); 
-	$label[2]=__("posts");
-	$label[3]=__("registrations"); 
-} else {
-	$maxheight=50;
-	$today=gmdate("n/j",$time);
-	$label[1]=__("Daily Total Topics");
-	$label[2]=__("Daily Total Posts");
-	$label[3]=__("Daily Total Registrations");
-}
-
 $count=0;  $day=$starttime;
-do {				
+do {					// build empty date list, zero filled for database data merge
 $date=gmdate('Y-m-d',$day);
 $empty[$date]->time=$day;
 $empty[$date]->topics=0;
 $empty[$date]->posts=0;
 $empty[$date]->views=0;
 $empty[$date]->users=0;
+$empty[$date]->wp_posts=0;
+$empty[$date]->wp_comments=0;
 $day=$day+24*3600;
 $count++;
 } while ($limit>$count); 	// ($day>$monthago);
 // $empty=array_reverse($empty);
 
-if (empty($fomat) && bb_current_user_can('administrate')) {
+if (!empty($showmenu)) {
 echo '<div style="text-align:right; font-size:13px; margin:0 0 -9px 0;">'.(empty($_GET[$mini_stats['trigger']]) ? '' : gmdate('M j, Y | ',$endtime))
 // .'[<a href="'.add_query_arg($mini_stats['trigger'],gmdate('Y-n-j',$endtime-31*24*3600)).'">'.__('previous month').'</a>] [<a href="'.add_query_arg($mini_stats['trigger'],(gmdate('Y',$endtime)-1).'-'.gmdate('n-j',$endtime)).'">'.__('previous year').'</a>] '
  .'<a href="'.add_query_arg($mini_stats['trigger'],(gmdate('Y',$endtime)-1).'-'.gmdate('n-j',$endtime)).'"> <b><<</b> '.__('year').'</a> <a href="'.add_query_arg($mini_stats['trigger'],gmdate('Y-n-j',$endtime-31*24*3600)).'"> <b><</b> '.__('month').'</a> ' 
@@ -90,25 +101,31 @@ echo '<div style="text-align:right; font-size:13px; margin:0 0 -9px 0;">'.(empty
 .' | <a target="_blank" href="'.add_query_arg('format',"CSV").'">'.__('CSV').'</a></div>';
 }
 
-for ($loop=1; $loop<=3; $loop++) {
+for ($loop=1; $loop<=$loop_max; $loop++) {
 
-if ($loop==1) {
-// topics per day
-$query="SELECT topic_start_time as time FROM $bbdb->topics WHERE topic_status=0  AND topic_start_time>='$mysql_starttime' AND topic_start_time<='$mysql_endtime' ORDER BY topic_start_time ASC";
+if ($loop==1) {   // topics per day
 $variable="topics";
+$query="SELECT topic_start_time as time FROM $bbdb->topics WHERE topic_status=0  AND topic_start_time>='$mysql_starttime' AND topic_start_time<='$mysql_endtime' ORDER BY topic_start_time ASC";
 }
-elseif ($loop==2) {
-// posts per day
-$query="SELECT post_time as time FROM $bbdb->posts WHERE post_status=0  AND post_time>='$mysql_starttime' AND post_time<='$mysql_endtime' ORDER BY post_time ASC";
+elseif ($loop==2) {  // posts per day
 $variable="posts";
+$query="SELECT post_time as time FROM $bbdb->posts WHERE post_status=0  AND post_time>='$mysql_starttime' AND post_time<='$mysql_endtime' ORDER BY post_time ASC";
 }
-elseif ($loop==3) {
-// registrations per day
-$query="SELECT user_registered as time FROM $bbdb->users WHERE user_status=0  AND user_registered>='$mysql_starttime' AND user_registered<='$mysql_endtime' ORDER BY user_registered ASC";
+elseif ($loop==3) { // registrations per day
 $variable="users";
+$query="SELECT user_registered as time FROM $bbdb->users WHERE user_status=0  AND user_registered>='$mysql_starttime' AND user_registered<='$mysql_endtime' ORDER BY user_registered ASC";
+}
+elseif ($loop==4) { // WP posts per day
+$variable="wp_posts";
+$query="SELECT post_date_gmt as time FROM $wp_table_prefix"."posts WHERE post_status='publish'  AND post_date_gmt>='$mysql_starttime' AND post_date_gmt<='$mysql_endtime' ORDER BY post_date_gmt ASC";
+}
+elseif ($loop==5) { // WP comments per day
+$variable="wp_comments";
+$query="SELECT comment_date_gmt as time FROM $wp_table_prefix"."comments WHERE comment_approved='1'  AND comment_date_gmt>='$mysql_starttime' AND comment_date_gmt<='$mysql_endtime' ORDER BY comment_date_gmt ASC";
 }
 
-@$results=$bbdb->get_results($query);  // print "<pre>"; foreach ($results as $result) {print $result->time." - ".."<br>";} exit;
+@$results=$bbdb->get_results($query);     // print "<pre>"; foreach ($results as $result) {print $result->time." - ".."<br>";} exit;    // debug
+if (empty($results) && empty($format)) {continue;}
 
 // make missing days have zero results
 // unset($fill); foreach ($results as $result) {$fill[$result->time]=$result;} $results=array_merge($empty,$fill);
@@ -119,11 +136,8 @@ if ($format!="CSV") {
 
     $count=0; unset($values); unset($labels); unset($colors);
     foreach ($results as $date=>$result) {    	    	
-    	        if ($loop==1) {$values[$count]=$result->topics;}    		
-    	elseif ($loop==2) {$values[$count]=$result->posts;}
-    	elseif ($loop==3) {$values[$count]=$result->users;}	
-
-    	$labels[$count]=intval(substr($date,5,2))."/".intval(substr($date,8,2));	// gmdate("n/j",strtotime($date));    //  gmdate("n/j",$result->time+$gmt_offset); 
+	$values[$count]=$result->$variable;
+    	$labels[$count]=intval(substr($date,5,2))."/".intval(substr($date,8,2));	
     	if ($labels[$count]==$today) {$colors[$count]="#bbb";}     // #7799aa
     	$count++; if ($count>$limit) {break;}
     }    
@@ -157,19 +171,15 @@ $output.= "</table><br clear='both'>\n";
 
 echo $output;
 
-} else {  // CSV check
+} else {  // CSV
 	foreach ($results as $date=>$result) {    	    	
-    	        if ($loop==1) {$value=$result->topics;}    		
-    	elseif ($loop==2) {$value=$result->posts;}
-    	elseif ($loop==3) {$value=$result->users;}	
-	$CSV[$date][$loop]=$value; 	//  gmdate("Y-m-d",strtotime($date)+$gmt_offset)  // gmdate("Y-m-d",$result->time+$gmt_offset)
+		$CSV[$date][$loop]=$result->$variable; 	
 	}
-
 }	 // CSV check
 }	//  end graph loops
 
 if ($format=="CSV") {
-	$output=__('date').",".implode(",",$label)."\r\n";
+	$output=implode(",",$label)."\r\n";
 	foreach ($CSV as $date=>$line) {$output.= $date.",".implode(",",$line)."\r\n";} reset($CSV);
 //	header("Content-Type: text/plain");
 	header ("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
@@ -203,7 +213,7 @@ $statistics["total_posts"]=$results[0]->posts;
 $statistics["total_topics"]=$results[0]->topics;
 
 $statistics["total_members"]=$bbdb->get_var("SELECT COUNT(*) FROM $bbdb->users");
-$statistics["total_days_old"]=round((time()-strtotime($bbdb->get_var("SELECT topic_start_time FROM $bbdb->topics ORDER BY topic_start_time LIMIT 1"))) / (3600 * 24),2);
+$statistics["total_days_old"]=round((time()-strtotime($bbdb->get_var("SELECT topic_start_time FROM $bbdb->topics ORDER BY topic_start_time LIMIT 1")." +0000")) / (3600 * 24),0);
 
 if (bb_get_option('bb_db_version')>1600) { // bbPress 1.0 vs 0.9
 $statistics["total_topic_views"]= $bbdb->get_var("SELECT SUM(meta_value) FROM $bbdb->meta LEFT JOIN $bbdb->topics ON $bbdb->meta.object_id = $bbdb->topics.topic_id  WHERE $bbdb->topics.topic_status=0 AND $bbdb->meta.meta_key='views' AND $bbdb->meta.object_type='bb_topic' ");

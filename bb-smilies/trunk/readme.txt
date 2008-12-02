@@ -55,6 +55,10 @@ Or build your own. Just make sure you follow the style in `package-config.php`
 
 * compatibility fix for 1.0 topic-edit-page
 
+= Version 0.0.5 (2008-12-02) =
+
+* compatibility with anonymous posting via more natural post-form action 
+
 == To Do ==
 
 * ajax-ish behaviors

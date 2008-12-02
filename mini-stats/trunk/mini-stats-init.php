@@ -50,11 +50,11 @@ if (bb_current_user_can('moderate')) {
 	if (isset($_GET['format']) && $_GET['format']=="CSV") {$format="CSV";} else {$format=""; $showmenu=true;}
 } else {$endtime=$time; $format="";}
 
-$limit=31; $starttime=($endtime)-(($limit-1)*24*3600); 
+$limit=31; $starttime=1+$endtime-($limit*24*3600); 	// 31 days backwards plus one second to make it midnight next day
 
 if ($format=="CSV") {		
 	$endtime=$time;	
-	$limit=1+floor(($endtime-$starttime)/(24*3600));
+	$limit=1+floor(($endtime-$starttime)/(24*3600));	// calculate new number of days in date range
 	$label[0]=__("date"); 
 	$label[1]=__("topics"); 
 	$label[2]=__("posts");
@@ -71,9 +71,9 @@ if ($format=="CSV") {
 	$label[5]=__("Daily WP Comments");
 }
 
-$mysql_starttime=gmdate("Y-m-d H:i:s",$starttime);
+$mysql_starttime=gmdate("Y-m-d H:i:s",$starttime); 	 // store mysql search range
 $mysql_endtime=gmdate("Y-m-d H:i:s",$endtime);
-$time=$time+$gmt_offset;
+$time=$time+$gmt_offset;					 // now shift everything into local time
 $endtime=$endtime+$gmt_offset;
 $starttime=$starttime+$gmt_offset;
 
@@ -89,7 +89,7 @@ $empty[$date]->wp_posts=0;
 $empty[$date]->wp_comments=0;
 $day=$day+24*3600;
 $count++;
-} while ($limit>$count); 	// ($day>$monthago);
+} while ($limit>$count); 	
 // $empty=array_reverse($empty);
 
 if (!empty($showmenu)) {

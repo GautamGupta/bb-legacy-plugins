@@ -50,6 +50,12 @@ That can be incompatible with some PHP configurations. BBcode Buttons instead us
 
 * early beta release based upon a request
 
+= Version 0.0.7 (2008-12-02) =
+
+* weird bug fix from php parsing comments inside javascript
+
+* compatibility with anonymous posting via more natural post-form action 
+
 == To Do ==
 
 * lots, this is an early beta

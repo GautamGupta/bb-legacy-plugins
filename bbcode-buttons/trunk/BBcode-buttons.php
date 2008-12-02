@@ -5,16 +5,17 @@ Plugin URI: http://bbpress.org/plugins/topic/114
 Description: Automatically adds an easy access button toolbar above the post textarea to allow quick tags in BBcode. This is an enhanced replacement for the Comment Quicktags plugin. No template editing required.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.6
+Version: 0.0.7
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
 Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
 */
 
+add_action('post_form','bbcode_buttons',11);
+add_action('edit_form','bbcode_buttons',11);
+
 function bbcode_buttons() { 
-global $bb_current_user;
-if ($bb_current_user->ID && (isset($_GET['new']) || in_array(bb_get_location(),array('topic-page','tag-page','forum-page','topic-edit-page')))) {
 $tags = bb_allowed_tags();
 echo  "<scr"."ipt type='text/javascript' defer='defer'>
 	function BBcodeButtons_init() {
@@ -33,7 +34,5 @@ echo  "BBcodeButtons.push(new BBcodeButton('ed_code','CODE','[code]','[/code]','
 	BBcodeButtons.push(new BBcodeButton('ed_close','close','','','c',' ','auto-close any tags you left open'));
 	}</scr"."ipt>
 	<scr"."ipt src='" .bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),".php","\\"),array("",".js","/"),__FILE__),"/\\")."?0.0.4' type='text/javascript' defer='defer'></scr"."ipt>";
-}	
-} add_action('bb_foot', 'bbcode_buttons');	
-
+} 
 ?>

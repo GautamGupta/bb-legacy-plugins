@@ -5,7 +5,7 @@ Description:  Adds clickable smilies (emoticons) to bbPress.  No template edits 
 Plugin URI:  http://bbpress.org/plugins/topic/121
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.4
+Version: 0.0.5
 */
 
 $bb_smilies['icon_set']="default";  // change this to the exact directory name (case sensitive) if you want to switch icon package sets
@@ -26,11 +26,11 @@ $bb_smilies['icon_url']=bb_get_option('uri').trim(str_replace(array(trim(BBPATH,
 add_filter('post_text', 'bb_smilies_convert');
 add_filter('pm_text', 'bb_smilies_convert');  // support private messages plugin
 add_action('bb_head','bb_smilies_css');
-add_action('bb_foot', 'bb_smilies_clicker');
+add_action('post_form','bb_smilies_clicker',($bb_smilies['popup'] ? 20 : 9));
+add_action('edit_form','bb_smilies_clicker',($bb_smilies['popup'] ? 20 : 9));
 
 function bb_smilies_clicker() {
 global $bb_smilies, $bb_current_user;
-if ($bb_current_user->ID && (isset($_GET['new']) || in_array(bb_get_location(),array('topic-page','tag-page','forum-page','topic-edit-page')))) {
 @include($bb_smilies['icon_path']."package-config.php");
 echo  "<scr"."ipt type='text/javascript' defer='defer'>
 
@@ -40,6 +40,7 @@ function bb_smilies(myValue) {
 	else if (bb_smilies_textarea.selectionStart || bb_smilies_textarea.selectionStart == '0') {var startPos = bb_smilies_textarea.selectionStart; var endPos = bb_smilies_textarea.selectionEnd;
 		bb_smilies_textarea.value = bb_smilies_textarea.value.substring(0, startPos)+ myValue+ bb_smilies_textarea.value.substring(endPos, bb_smilies_textarea.value.length);
 	} else {bb_smilies_textarea.value += myValue; bb_smilies_textarea.focus();}
+bb_smilies_clicker.style.visibility='hidden';
 }	
 
 function bb_smilies_init() {
@@ -74,7 +75,7 @@ echo "
 ";	
 	}
 echo "
-} // if bb_smilies_textarea
+} // bb_smilies_textarea
 } // bb_smilies_init
 
 function bb_smilies_panel() {
@@ -94,7 +95,6 @@ else {document.addEventListener('load', bb_smilies_init, false);}
 
 </scr"."ipt>";
 //	<scr"."ipt src='" .bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),".php","\\"),array("",".js","/"),__FILE__),"/\\")."?0.0.4' type='text/javascript' defer='defer'></scr"."ipt>";
-}	
 } 
 
 function bb_smilies_convert($text) {

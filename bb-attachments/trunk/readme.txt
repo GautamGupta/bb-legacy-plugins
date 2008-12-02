@@ -58,6 +58,7 @@ Please note there are important security considerations when allowing uploads of
 * 0.1.10 bug fix for bbPress activation hook on Windows servers
 * 0.1.11 now can auto-insert images into post after upload (default)
 * 0.1.12 filter switch to get_post_text and thumbnail bug fix (props BarnRacoon)
+* 0.1.13 better detection and cleanup for enctype=multipart hack
 	
 == To Do ==
 

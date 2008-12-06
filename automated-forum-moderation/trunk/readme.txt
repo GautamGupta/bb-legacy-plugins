@@ -19,10 +19,10 @@ Blocks common (and sometimes accidental) human-generated spam automatically.
 
 == Changelog ==
 
-# 0.1
-  # Initial release
-# 0.1.1
-  # Auto-remove empty topics that were generated when this plugin blocked a post (due to length)
-# 0.2
-  # Discovered (and fixed) critical error that caused deletion of topics that shouldn't have been (They can be found in the deleted topics section of the admin panel)
-  # Automated Forum Moderation now completely deletes blank topics it generates instead of just marking them as deleted
+* 0.1
+  * Initial release
+* 0.1.1
+  * Auto-remove empty topics that were generated when this plugin blocked a post (due to length)
+* 0.2
+  * Discovered (and fixed) critical error that caused deletion of topics that shouldn't have been (They can be found in the deleted topics section of the admin panel)
+  * Automated Forum Moderation now completely deletes blank topics it generates instead of just marking them as deleted

@@ -12,7 +12,7 @@ $automated_forum_moderation_data = array(
 	'max_days' => 30, // Maximum time since the last post in a topic to allow posting
 	'allow_double_post' => false, // Allow posting twice (false, true, or an array of forum IDs to allow it in)
 	'allow_double_post_after' => 60, //the number of minutes since the previous post by that user (if the user is the last poster on a topic) that a new post can be made.  false if not applicable
-	'min_words' => 2, // Minimum words in a post
+	'min_words' => 1, // Minimum words in a post
 	'min_chars' => 5 // Minimum characters in a post
 );
 
@@ -25,7 +25,7 @@ if (!$automated_forum_moderation_data['allow_double_post_after'])
 
 function automated_forum_moderation_initial_blocking($retvalue, $capability, $args) {
 	global $bb_post, $automated_forum_moderation_data;
-	if ($capability == "write_post") {
+	if ($capability == 'write_post') {
 		if ((!$automated_forum_moderation_data['allow_double_post'] && $bb_post->poster_id === bb_get_current_user_info('id') && ((bb_current_time('timestamp') - bb_gmtstrtotime($bb_post->post_time))/60) < $automated_forum_moderation_data['allow_double_post_after']) || // Double posting is not allowed
 			(is_array($automated_forum_moderation_data['allow_double_post']) && (!in_array($bb_post->forum_id, $automated_forum_moderation_data['allow_double_post']) || ((bb_current_time('timestamp') - bb_gmtstrtotime($bb_post->post_time))/60) < $automated_forum_moderation_data['allow_double_post_after']) && $bb_post->poster_id === bb_get_current_user_info('id')) || // Double posting is allowed in certain forums
 			intval((bb_current_time('timestamp') - bb_gmtstrtotime($bb_post->post_time))/86400) > $automated_forum_moderation_data['max_days']) // Topic is old
@@ -38,12 +38,15 @@ function automated_forum_moderation_message() {
 	global $bb_post, $automated_forum_moderation_data;
 	if ($bb_post->poster_id === bb_get_current_user_info('id')) { ?>
 	<p>The last post on this topic is your own. Please wait until someone else replies to post again.</p>
-<?php } elseif (intval((bb_current_time('timestamp') - bb_gmtstrtotime($bb_post->post_time))/86400) > 30) { ?>
+<?php } elseif (!empty($bb_post) && intval((bb_current_time('timestamp') - bb_gmtstrtotime($bb_post->post_time))/86400) > 30) { ?>
 	<p>This topic is old. It has been automatically closed to new replies.</p>
 <?php }
 }
 
-function automated_forum_moderation_jit_blocking($post_text, $post_id, $topic_id) { // JIT = Just In Time
+function automated_forum_moderation_jit_blocking($post_text, $post_id = 'error', $topic_id = 'error') { // JIT = Just In Time
+	if (($post_id === 'error' && $topic_id === 'error') || // Other plugins might use the pre_post filter
+		($_POST['post_id'] && bb_current_user_can('edit_post', $_POST['post_id'])) // Don't bother if the post is just being edited.
+		) return $post_text;
 	global $bbdb, $automated_forum_moderation_data;
 	$last_post_in_topic = $bbdb->get_row($bbdb->prepare('SELECT `post_id`, `poster_id`, `post_time`, `forum_id` FROM `'.$bbdb->posts.'` WHERE `topic_id` = %s AND `post_status` = \'0\' ORDER BY `post_time` DESC, `post_position` ASC LIMIT 1', $topic_id)); // Only get what we need
 	if ($last_post_in_topic !== null) {

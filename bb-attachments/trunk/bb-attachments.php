@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.13
+Version: 0.1.14
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -546,9 +546,20 @@ if ($filenum>0 && bb_current_user_can($bb_attachments['role']['delete'])) {
 			@unlink($fullpath);
 			@$bbdb->query("UPDATE  bb_attachments  SET status = 1 WHERE id = $file->id LIMIT 1");			
             		}
+            		bb_attachments_recount($file->post_id);
             		if (!isset($_GET['bb_attachments'])) {wp_redirect(get_post_link($file->post_id));}			
 	}	
 }
+}
+
+function bb_attachments_recount($post_id=0,$topic_id=0) {    	// update topic icon flag and sync attachment count for topic  given a post_id
+global $bbdb; $count=0; 
+if (empty($topic_id)) {$topic_id=intval($bbdb->get_var("SELECT topic_id FROM $bbdb->posts WHERE post_id=$post_id LIMIT 1"));}
+if ($topic_id) {
+$count=intval($bbdb->get_var("SELECT count(*) FROM bb_attachments WHERE status=0 AND post_id IN (SELECT post_id FROM $bbdb->posts WHERE post_status=0 AND topic_id=$topic_id)"));
+bb_update_topicmeta( $topic_id, 'bb_attachments', $count);
+}
+return  $count;
 }
 
 function bb_attachments_cache() {

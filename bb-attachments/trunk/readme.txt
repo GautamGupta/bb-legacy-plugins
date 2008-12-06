@@ -59,6 +59,7 @@ Please note there are important security considerations when allowing uploads of
 * 0.1.11 now can auto-insert images into post after upload (default)
 * 0.1.12 filter switch to get_post_text and thumbnail bug fix (props BarnRacoon)
 * 0.1.13 better detection and cleanup for enctype=multipart hack
+* 0.1.14 now does a recount for topic after attachment deleted to possibly remove paperclip icon
 	
 == To Do ==
 

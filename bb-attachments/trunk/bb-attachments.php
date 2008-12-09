@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.14
+Version: 0.1.15
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -72,7 +72,9 @@ $bb_attachments['errors']=array("ok","uploaded file exceeds UPLOAD_MAX_FILESIZE 
 
 add_action( 'bb_init', 'bb_attachments_init');
 add_action( 'bb_post.php', 'bb_attachments_process_post');
+add_action( 'bb_delete_post', 'bb_attachments_recount');
 add_filter('post_text', 'bb_attachments_bbcode',250);	
+
 bb_register_activation_hook(str_replace(array(str_replace("/","\\",BB_PLUGIN_DIR),str_replace("/","\\",BB_CORE_PLUGIN_DIR)),array("user#","core#"),__FILE__), 'bb_attachments_install');
 
 function bb_attachments_init() {
@@ -552,11 +554,11 @@ if ($filenum>0 && bb_current_user_can($bb_attachments['role']['delete'])) {
 }
 }
 
-function bb_attachments_recount($post_id=0,$topic_id=0) {    	// update topic icon flag and sync attachment count for topic  given a post_id
+function bb_attachments_recount($post_id=0) {    	// update topic icon flag and sync attachment count for topic  given a post_id
 global $bbdb; $count=0; 
 if (empty($topic_id)) {$topic_id=intval($bbdb->get_var("SELECT topic_id FROM $bbdb->posts WHERE post_id=$post_id LIMIT 1"));}
 if ($topic_id) {
-$count=intval($bbdb->get_var("SELECT count(*) FROM bb_attachments WHERE status=0 AND post_id IN (SELECT post_id FROM $bbdb->posts WHERE post_status=0 AND topic_id=$topic_id)"));
+$count=intval($bbdb->get_var("SELECT count(*) as count FROM bb_attachments WHERE status=0 AND user_id>0 AND size>0 AND post_id IN (SELECT post_id FROM $bbdb->posts WHERE post_status=0 AND topic_id=$topic_id)"));
 bb_update_topicmeta( $topic_id, 'bb_attachments', $count);
 }
 return  $count;

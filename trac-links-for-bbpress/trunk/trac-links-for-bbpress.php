@@ -18,6 +18,7 @@ $tl_trac = 'http://trac.bbpress.org/';
 // key needs to be prepended to the code like: #BB123 or [WP4321]
 $tl_intertrac = array(
 	'BB' => 'http://trac.bbpress.org/',
+	'BP' => 'http://backpress.automattic.com/',
 	'WP' => 'http://trac.wordpress.org/'
 );
 
@@ -47,6 +48,9 @@ function tl_make_tracable( $text )
 		if ( $trac_url ) {
 			if ( !$parsed_trac_url = parse_url( $trac_url ) ) {
 				continue;
+			}
+			if ( $trac_id === 0 ) {
+				$trac_id = '';
 			}
 			$trac_url = rtrim( $trac_url, '/' ) . '/';
 			$_tracs[$i][0][0] = '#' . preg_quote( $trac_id ) . '([0-9]+)';

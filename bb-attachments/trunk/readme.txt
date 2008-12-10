@@ -1,5 +1,5 @@
 === bbPress Attachments ===
-Tags:  attachments, attachment, attach, uploads, upload, files, _ck_
+Tags:  attachments, attachment, attach, uploads, upload, files, aws, s3, _ck_
 Contributors: _ck_
 Requires at least: 0.9
 Tested up to: trunk
@@ -25,6 +25,7 @@ Please note there are important security considerations when allowing uploads of
 
 == Frequently Asked Questions ==
 
+= General =
 * demo: http://bbshowcase.org/forums/topic/new-bbpress-plugin-bbpress-attachments
 * members's ability to upload attachments is tied to their ability to edit post - ie. if edit ends in 1 hour, so does adding attachments
 * the plugin will try to create the base upload directory itself, but in most cases will fail so you need to follow the first installation step
@@ -33,6 +34,19 @@ Please note there are important security considerations when allowing uploads of
 * filesize max might be 2mb because of passthrough/readfile limit (supposedly fixed in newer PHP)
 * administrators can debug settings (ie. PHP upload limit) by adding to url `?bb_attachments_diagnostic`
 * if you get `error: denied mime`  on every upload, mime_content_type function or shell access must exist to verify mime types - otherwise you can force all types to be allowed by editing `bb-attachments.php` and adding `'application/octet-stream'` to each of the `$bb_attachments['allowed']['mime_types']` 
+
+= Amazon AWS S3 Simple Storage Service =
+* Starting with version 0.2.0 bb-attachments now supports Amazon S3 service 
+- this feature is sponsored by weddingbee.com who donated towards it and allows me to give out the code for free so be sure to thank them
+* Register at http://amazon.com/s3/ and enter your key and secret code into the bb-attachments settings
+https://aws-portal.amazon.com/gp/aws/developer/account/index.html#AccessKey
+* Files are first uploaded and stored on your own server as normal for a mirrored backup (S3 goes down occasionally)
+* Users then will be automagically routed to the S3 url instead of your local URL
+* You can setup a CNAME to make it appear as files are actually on your own server
+http://docs.amazonwebservices.com/AmazonS3/2006-03-01/VirtualHosting.html#VirtualHostingCustomURLs
+* If you have been using bb-attachments without S3, you must manually copy the existing files on your server to S3 via one of the many S3 utilities available - I will eventually make some sync routines but it might be awhile
+* If S3 goes down or you decide not to use them anymore, you can simply turn off the option and it automagically will return to using your local files
+* If an attachment is deleted, it is not remotely deleted off S3 at this time - one GB of "deleted" files only costs you 15 cents per month
 
 == License ==
 
@@ -60,6 +74,8 @@ Please note there are important security considerations when allowing uploads of
 * 0.1.12 filter switch to get_post_text and thumbnail bug fix (props BarnRacoon)
 * 0.1.13 better detection and cleanup for enctype=multipart hack
 * 0.1.14 now does a recount for topic after attachment deleted to possibly remove paperclip icon
+* 0.1.15 better recount for when posts are deleted/undeleted
+* 0.2.0  initial support for Amazon AWS S3 Simple Storage Service 
 	
 == To Do ==
 

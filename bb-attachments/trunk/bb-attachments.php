@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.15
+Version: 0.2.0
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -48,7 +48,21 @@ $bb_attachments['inline']['auto']=true;		// auto insert uploaded images into pos
 
 $bb_attachments['style']=".bb_attachments_link, .bb_attachments_link img {border:0; text-decoration:none; background:none;} #thread .post li {clear:none;}";
 
+// the following is for Amazon S3 use, get key+secret here: https://aws-portal.amazon.com/gp/aws/developer/account/index.html#AccessKey
+$bb_attachments['aws']['enable']=false;			      // Amazon AWS S3 Simple Storage Service - http://amazon.com/s3
+$bb_attachments['aws']['key']="12345678901234567890";				  // typically 20 letters+numbers
+$bb_attachments['aws']['secret']="1234567890123456789012345678901234567890";	  // must be EXACTLY 40 characters long
+
 // stop editing here (advanced user settings below)
+
+// don't edit the following aws bucket or aws url unless you know what you are doing and have aws experience
+// if you rename the bucket, files are NOT moved automatically - you must do it manually via an S3 utility
+$bb_attachments['aws']['bucket']=strtolower("bb-attachments.".preg_replace("/^(www?[0-9]*?\.)/i","",$_SERVER['HTTP_HOST']));   
+
+// base url to amazon for retrieval, or may be a cname mirror off your own domain
+// http://docs.amazonwebservices.com/AmazonS3/2006-03-01/VirtualHosting.html#VirtualHostingCustomURLs
+// cname example: bb-attachments.yoursite.com CNAME bb-attachments.yoursite.com.s3.amazonaws.com
+$bb_attachments['aws']['url']="http://".$bb_attachments['aws']['bucket'].".s3.amazonaws.com/";  
 
 $bb_attachments['path']=dirname($_SERVER['DOCUMENT_ROOT'])."/bb-attachments/";  //  make *NOT* WEB ACCESSABLE for security
 
@@ -249,7 +263,19 @@ return $output;
 }
 
 function bb_attachments_bbcode($text) {
-$text = preg_replace("/\[attachment=([0-9]+?)\,([0-9]+?)\]/sim","<a class='bb_attachments_link' href='?bb_attachments=$1&bbat=$2'><img  src='?bb_attachments=$1&bbat=$2&inline' /></a>",$text);
+global $bb_attachments,$bb_attachments_cache;
+if ($bb_attachments['aws']['enable']) {	
+	if (preg_match_all("/\[attachment=([0-9]+?)\,([0-9]+?)\]/sim",$text,$matches,PREG_SET_ORDER)) {
+		foreach ($matches as $match) {			
+			$file=$bb_attachments_cache[$match[1]][$match[2]]; 
+			$aws=$bb_attachments['aws']['url'].$file->id.'.'.$file->filename;
+			$replace="<a class='bb_attachments_link' href='?bb_attachments=".$match[1]."&bbat=".$match[2]."'><img  src='$aws' /></a>";
+			$text=str_replace($match[0],$replace,$text);
+		}
+	}	
+} else {
+$text=preg_replace("/\[attachment=([0-9]+?)\,([0-9]+?)\]/sim","<a class='bb_attachments_link' href='?bb_attachments=$1&bbat=$2'><img  src='?bb_attachments=$1&bbat=$2&inline' /></a>",$text);
+}
 return $text;
 }
 
@@ -327,7 +353,10 @@ while(list($key,$value) = each($_FILES['bb_attachments']['name'])) {
 					// file is commited here
 								
 					if (!$failed && $id>0 && @is_uploaded_file($_FILES['bb_attachments']['tmp_name'][$key]) && @move_uploaded_file($_FILES['bb_attachments']['tmp_name'][$key], $file)) {    
-						chmod("$file",0777);                           			
+						chmod("$file",0777);   
+						
+						if ($bb_attachments['aws']['enable']) {bb_attachments_aws("$dir/","$id.$filename",$mime);}    // copy to S3
+						                        			
 						$count++; $offset++;		// count how many successfully uploaded this time							
 					} else {			
 						$status=2;	// failed - not necessarily user's fault, could be filesystem	
@@ -417,8 +446,13 @@ if ($filenum>0 && ($bb_attachments['role']['download']=="read" || bb_current_use
 	if (isset($file[0]) && $file[0]->id) {
 		$file=$file[0]; $file->filename=stripslashes($file->filename);				
 		$fullpath=$bb_attachments['path'].floor($file->id/1000)."/".$file->id.".".$file->filename;
-		if (file_exists($fullpath)) {
-			@$bbdb->query("UPDATE  bb_attachments  SET downloads=downloads+1 WHERE id = $file->id LIMIT 1");
+		@$bbdb->query("UPDATE  bb_attachments  SET downloads=downloads+1 WHERE id = $file->id LIMIT 1");
+
+		if ($bb_attachments['aws']['enable']) {
+			$aws=$bb_attachments['aws']['url'].$file->id.'.'.$file->filename;
+			header('Location: '.$aws); exit;
+		}
+		elseif (file_exists($fullpath)) {			
 			if (ini_get('zlib.output_compression')) {ini_set('zlib.output_compression', 'Off');}	// fix for IE
 			header ("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
 			header("Pragma: hack");
@@ -433,7 +467,7 @@ if ($filenum>0 && ($bb_attachments['role']['download']=="read" || bb_current_use
 			fpassthru($fp);	// avoids file touch bug with readfile
 			fclose($fp);            			
             		}		
-		exit();		
+		exit;		
 	}	
 } else {echo "<scr"."ipt type='text/javascript'>alert('".__('Sorry, download is restricted.')."');</script>";}
 }
@@ -446,18 +480,28 @@ if ($filenum>0 && ($bb_attachments['role']['inline']=="read" || bb_current_user_
 	$file=$bbdb->get_results("SELECT * FROM bb_attachments WHERE id = $filenum AND status = 0 LIMIT 1");		
 	if (isset($file[0]) && $file[0]->id) {
 		$file=$file[0]; $file->filename=stripslashes($file->filename);				
-		$fullpath=$bb_attachments['path'].floor($file->id/1000)."/".$file->id.".".$file->filename;
+		$path=$bb_attachments['path'].floor($file->id/1000)."/";
+		$fullpath=$path.$file->id.".".$file->filename;
 		if (file_exists($fullpath)) {				
 			if (!list($width, $height, $type) = getimagesize($fullpath)) {exit();} // not an image?!
 			$mime=image_type_to_mime_type($type); 	// lookup number to full string
 			$mime=trim(substr($mime,0,strpos($mime.";",";")));	// trim full string if necessary					
 			
 			if ($height>$bb_attachments['inline']['height'] || $width>$bb_attachments['inline']['width']) {
-				if (!file_exists($fullpath.".resize") && !bb_attachments_resize($fullpath,$type,$width,$height)) {exit();}		
+				if (!file_exists($fullpath.".resize")) {
+					if (bb_attachments_resize($fullpath,$type,$width,$height)) {
+						if ($bb_attachments['aws']['enable']) {bb_attachments_aws($path,$file->id.'.'.$file->filename,$mime);}    // copy to S3
+					} else {	exit();}		
+				}
 				$fullpath.=".resize";
 				$file->filename.=".resize";			
 				$file->size=filesize($fullpath);
 				if (!$file->size) {exit();}
+			}
+			
+			if ($bb_attachments['aws']['enable']) {
+				$aws=$bb_attachments['aws']['url'].$file->id.'.'.$file->filename;
+				header('Location: '.$aws); exit;
 			}
 			
 			// $headers = apache_request_headers();  $ifModifiedSince=$headers['If-Modified-Since'];
@@ -663,4 +707,62 @@ if (!file_exists($bb_attachments['path'])) {		// this usually fails for open_bas
 	umask($oldumask);	
 }		
 } 
+
+function bb_attachments_aws($path,$name,$mime) { 
+global $bb_attachments;     
+if (!$bb_attachments['aws']['enable']) {return;}
+                  
+$bucket=$bb_attachments['aws']['bucket'];
+$key=$bb_attachments['aws']['key'];
+$secret=$bb_attachments['aws']['secret'];
+$date = gmdate('r'); 
+$count=0;
+$file_data = file_get_contents($path.$name); 	// doing this for files over 2MB might be impractical
+$file_length = strlen($file_data); 
+
+$fp=fsockopen("s3.amazonaws.com", 80, $errno, $errstr, 15);  if (!$fp) {return;}  // die("$errstr ($errno)\n");}
+@socket_set_blocking($socket, TRUE);
+@socket_set_timeout($socket,15);
+
+do { $count++;    // upload file
+$hmac = bb_attachments_hmac($secret,"PUT\n\n{$mime}\n{$date}\nx-amz-acl:public-read\n/{$bucket}/{$name}");
+$query = "PUT /{$bucket}/{$name} HTTP/1.1\nHost: s3.amazonaws.com\nx-amz-acl: public-read
+Connection: keep-alive\nContent-Type: {$mime}\nContent-Length: {$file_length}\nDate: $date
+Authorization: AWS {$key}:$hmac\n\n".$file_data;
+$response = bb_attachments_aws_upload($fp,$query); 
+
+if (strpos($response, '<Error>') !== false) {$count++;      // echo $response; exit;
+if (strpos($response, 'NoSuchBucket')!==false && $count==2 ) {       // make bucket on bucket error
+$hmac = bb_attachments_hmac($secret,"PUT\n\n\n{$date}\n/{$bucket}");
+$query = "PUT /{$bucket} HTTP/1.1\nHost: s3.amazonaws.com
+Connection: keep-alive\nDate: $date
+Authorization: AWS {$key}:$hmac\n\n";
+$response = bb_attachments_aws_upload($fp,$query);  if (strpos($response, '<Error>') !== false) {break;} // echo $response; exit;}
+} // bucket error
+} // upload error
+} while ($count==2);	// retry once and only once on first error
+fclose($fp);
+}
+
+function bb_attachments_aws_upload($fp,&$q) {    
+    $r="";     
+    fwrite($fp, $q);
+    while (!feof($fp)) {
+        $tr = fgets($fp, 256); $r .= $tr;
+        if (strpos($r, "\r\n\r\n")!==false && strpos($r,'Content-Length: 0') !== false) {break;}
+        if (substr($r, -7) == "\r\n0\r\n\r\n") {break;}
+    }
+return $r;
+}
+
+function bb_attachments_hmac($secret,$hmac) {
+    if (!function_exists('binsha1')) { 
+        if (version_compare(phpversion(), "5.0.0", ">=")) {function binsha1($d) { return sha1($d, true);}} 
+        else {function binsha1($d){return pack('H*', sha1($d));}}
+    }   
+    if (strlen($secret)==40) {$secret=$secret.str_repeat(chr(0),24);}
+    $ipad = str_repeat(chr(0x36), 64);
+    $opad = str_repeat(chr(0x5c), 64);     
+return base64_encode(binsha1(($secret^$opad).binsha1(($secret^$ipad).$hmac)));
+}
 ?>

@@ -38,6 +38,8 @@ Please note there are important security considerations when allowing uploads of
 = Amazon AWS S3 Simple Storage Service =
 * Starting with version 0.2.0 bb-attachments now supports Amazon S3 service 
 - this feature is sponsored by weddingbee.com who donated towards it and allows me to give out the code for free so be sure to thank them
+* this feature requires fsockopen and fwrite support which most hosts should allow 
+   but check your phpinfo if you know your host locks out some features or runs in "safe mode"
 * Register at http://amazon.com/s3/ and enter your key and secret code into the bb-attachments settings
 https://aws-portal.amazon.com/gp/aws/developer/account/index.html#AccessKey
 * Files are first uploaded and stored on your own server as normal for a mirrored backup (S3 goes down occasionally)

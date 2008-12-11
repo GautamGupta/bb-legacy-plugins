@@ -13,8 +13,8 @@ Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
 */
 
 $bb_attachments['role']['see']="read"; 		 // minimum role to see list of attachments = read/participate/moderate/administrate
-$bb_attachments['role']['inline']="read";    // minimum role to view inline images = read/participate/moderate/administrate
-$bb_attachments['role']['download']="participate";  // minimum role to download = read/participate/moderate/administrate
+$bb_attachments['role']['inline']="read";    // minimum role to view inline reduced images = read/participate/moderate/administrate
+$bb_attachments['role']['download']="participate";  // minimum role to download original = read/participate/moderate/administrate
 $bb_attachments['role']['upload']="participate";  // minimum role to upload = participate/moderate/administrate (times out with post edit time)
 $bb_attachments['role']['delete']="moderate";  // minimum role to delete = read/participate/moderate/administrate
 
@@ -450,7 +450,7 @@ if ($filenum>0 && ($bb_attachments['role']['download']=="read" || bb_current_use
 
 		if ($bb_attachments['aws']['enable']) {
 			$aws=$bb_attachments['aws']['url'].$file->id.'.'.$file->filename;
-			header('Location: '.$aws); exit;
+			header('Location: '.$aws); 
 		}
 		elseif (file_exists($fullpath)) {			
 			if (ini_get('zlib.output_compression')) {ini_set('zlib.output_compression', 'Off');}	// fix for IE
@@ -467,9 +467,9 @@ if ($filenum>0 && ($bb_attachments['role']['download']=="read" || bb_current_use
 			fpassthru($fp);	// avoids file touch bug with readfile
 			fclose($fp);            			
             		}		
-		exit;		
 	}	
-} else {echo "<scr"."ipt type='text/javascript'>alert('".__('Sorry, download is restricted.')."');</script>";}
+} else {nocache_headers(); 	echo "<html><body>".__('Sorry, download is restricted.')."<scr"."ipt type='text/javascript'>alert('".__('Sorry, download is restricted.')."');</script></body></html>";}
+exit;	// no matter what, it's over here
 }
 
 function bb_attachments_inline($filenum=0) {

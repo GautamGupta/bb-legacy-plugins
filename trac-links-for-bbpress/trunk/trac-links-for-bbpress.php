@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/trac-links-for-bbpress/
 Description: Allows the use of Trac shortcodes like #1234 for tickets and [1234] for changesets within post text.
 Author: Sam Bauers
 Author URI: http://unlettered.org/
-Version: 1.0
+Version: 1.0.1
 */
 
 
@@ -33,7 +33,7 @@ function tl_make_tracable( $text )
 		return $text;
 	}
 
-	if ( !preg_match('@(?:#[a-z0-9]+)|(?:\[[a-z0-9]+\])@i', $text ) ) {
+	if ( !preg_match('@(?:[^&]#[a-z0-9]+)|(?:\[[a-z0-9]+\])@i', $text ) ) {
 		return $text;
 	}
 
@@ -53,7 +53,7 @@ function tl_make_tracable( $text )
 				$trac_id = '';
 			}
 			$trac_url = rtrim( $trac_url, '/' ) . '/';
-			$_tracs[$i][0][0] = '#' . preg_quote( $trac_id ) . '([0-9]+)';
+			$_tracs[$i][0][0] = '[^&]#' . preg_quote( $trac_id ) . '([0-9]+)';
 			$_tracs[$i][0][1] = $trac_url . 'ticket/$1';
 			$_tracs[$i][0][2] = '#' . $trac_id . '$1';
 			$_tracs[$i][1][0] = '\[' . preg_quote( $trac_id ) . '([0-9]+)\]';

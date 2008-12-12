@@ -3,7 +3,7 @@ Contributors: SamBauers
 Tags: Trac, development
 Requires at least: 0.9
 Tested up to: 1.0-alpha-2
-Stable tag: 1.0
+Stable tag: 1.0.1
 
 Allows the use of Trac shortcodes like #1234 for tickets and [1234] for
 changesets within post text.
@@ -33,7 +33,7 @@ of the plugin file.
 
 == License ==
 
-Trac links for bbPress version 1.0<br />
+Trac links for bbPress version 1.0.1<br />
 Copyright (C) 2008 Sam Bauers (http://unlettered.org/)
 
 Trac links for bbPress comes with ABSOLUTELY NO WARRANTY
@@ -44,5 +44,7 @@ See accompanying license.txt file for details.
 
 == Version History ==
 
-* 1.0 : 
+* 1.0   :
   <br />Initial Release
+* 1.0.1 :
+  <br />Stop numbered HTML entities from being turned into links

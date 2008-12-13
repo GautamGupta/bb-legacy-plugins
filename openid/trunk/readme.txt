@@ -8,15 +8,13 @@ Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
 
 Adds OpenID login support to bbPress so users may login using an identity from another provider. 
 
-Version 0.0.1 is an early alpha for bug and compatibility testing and does not support account creation yet.
-
 == Description ==
 
 Adds OpenID login support to bbPress so users may login using an identity from another provider. 
 
 Give your members the ability to add OpenID to their account instead of using passwords, and new members can register instantly via an OpenID provider.
 
-Version 0.0.1 is an early alpha for bug and compatibility testing and does not support account creation yet.
+Account creation now supported. Attempts to get along with Instant Password plugin.
 
 == Installation ==
 
@@ -57,6 +55,10 @@ do_action('openid_login');
 
 * http://openid.net/
 
+= How do I modify my alternate login to handle OpenID ? =
+
+* You can add an input field called `openid_url` to any form and the plugin will automatically pickup on any entry.
+
 == License ==
 
 * CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
@@ -70,3 +72,7 @@ do_action('openid_login');
 = Version 0.0.1 (2008-11-01) =
 
 * public alpha test, new account creation not yet supported
+
+= Version 0.0.2 (2008-12-13) =
+
+* Account creation now supported. Attempts to get along with Instant Password plugin.

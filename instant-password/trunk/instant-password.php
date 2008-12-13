@@ -3,7 +3,7 @@
 Plugin Name: Instant Password
 Plugin URI:  http://bbpress.org/plugins/topic/instant-password
 Description:  Allows users to pick their own password during registration and log in immediately without checking email.
-Version: 0.0.3
+Version: 0.0.4
 Author: _ck_
 Author URI: http://bbshowcase.org
 
@@ -54,7 +54,13 @@ if (isset($_REQUEST['re'])) {$re=$_REQUEST['re'];} else {$re=bb_get_option('uri'
 bb_safe_redirect($re);			
 }
 
-function wp_generate_password( $length = 12, $special_chars = true ) {	// only replaces pluggable on register.php page
+if ( !function_exists( 'wp_generate_password' ) ) :
+function wp_generate_password( $length = 12, $special_chars = true ) {
+	return	bb_generate_password ($length, $special_chars);
+}
+endif;
+
+function bb_generate_password( $length = 12, $special_chars = true ) {	// only replaces pluggable on register.php page
 if (empty($_POST) || empty($_POST['password']) || empty($_POST['pass2']) || $_POST['password']!=$_POST['pass2']) {$bad=__("Your password confirmation doesn't match");}
 else {$password=trim(stripslashes($_POST['password'])); $pass2=trim(stripslashes($_POST['pass2'])); if ($password!=$pass2 || strlen($password)<6) {$bad=__("Your password is too short");}}
 if (empty($_POST['user_login']) || strpos($password,$_POST['user_login'])!==false  || strpos($_POST['user_login'],$password)!==false) {$bad=__("Your password cannot contain your username");}
@@ -108,7 +114,7 @@ function bb_new_user( $user_login, $user_email, $user_url, $user_status = 1 ) {
 	
 	$user_url = $user_url ? bb_fix_link( $user_url ) : '';
 	
-	$user_pass = wp_generate_password();	  // workaround - this line and the next are the only two different from the core
+	$user_pass = bb_generate_password();	  // workaround - this line and the next are the only two different from the core
 
 	$user = $wp_users_object->new_user( compact( 'user_login', 'user_email', 'user_url', 'user_nicename', 'user_status', 'user_pass' ) );
 	if ( is_wp_error($user) ) {

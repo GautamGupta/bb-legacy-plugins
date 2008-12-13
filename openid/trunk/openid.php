@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/openid
 Description:  Adds OpenID login support to bbPress so users may login using an identity from another provider. 
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.1
+Version: 0.0.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
@@ -14,6 +14,9 @@ Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
 $openid_options['profile_text']="OpenID";
 $openid_options['add_text']="Add OpenID providers to your account:";
 $openid_options['remove_text']="Remove OpenID provider";
+$openid_options['register_text']="Optionally register via OpenID instead of a password:";
+$openid_options['approved_text']="OpenID account approved for instant registration:";
+
 $openid_options['debug']=true;
 $openid_options['root']=bb_get_option('uri');
 $openid_options['whitelist']="";  // todo
@@ -23,9 +26,9 @@ $openid_options['icon']=bb_get_option('uri').trim(str_replace(array(trim(BBPATH,
 /*  stop editing here  */
 
 add_action('bb_init', 'openid');
-add_action('bb_init', 'openid_remove');
-add_action('extra_profile_info', 'openid_profile_edit',100);
+add_action('extra_profile_info', 'openid_profile_edit',8);
 add_action('openid_login','openid_login');
+add_action('register_user', 'openid_register_success',25); 
 
 if (isset($_GET['openid_help'])) {echo "<body style='font-size:14px;margin-left:75px;' onload='document.getElementById(\"openid_help\").style.visibility=\"visible\";'>"; openid_help(); exit;}
 
@@ -34,10 +37,28 @@ if (isset($_GET['openid_help'])) {echo "<body style='font-size:14px;margin-left:
 function openid() {
 global $openid_options, $bb_current_user, $bbdb; 
 
+openid_remove();	// check for request to remove session or attached account
+
+if (bb_get_location()=="register-page") {
+if (!empty($_POST) && function_exists('instant_password')) {	// means we are on register page and instant password is running - need password
+	if (empty($_POST['password']) || empty($_POST['pass2'])) {
+		$length=rand(12,16); $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		$password = ''; for ( $i = 0; $i < $length; $i++ ) {$password .= substr($chars, mt_rand(0, strlen($chars) - 1), 1);}
+		$_POST['password']=$_POST['pass2']=$password;
+	}	
+}
+openid_session();
+
+}
+
    if (isset($_POST['openid_url'])) {$openid_url=$_POST['openid_url'];} 
 elseif (isset($_GET['openid_url'])) {$openid_url=$_GET['openid_url'];}
 
-if (!empty($openid_url)){ 		
+if (!empty($openid_url)){ 	
+	// helpers for the services that don't recognize partial words
+	if (preg_match("/^(https?\:\/\/)?google(\.com)?\/?/simU",$openid_url)) {$openid_url="google.com/accounts/o8/id";}
+	// elseif (preg_match("/^(https?\:\/\/)?aol(\.com)?\/?/simU",$openid_url)) {$openid_url="openid.aol.com";}
+
 	@require_once('class.openid.php');
 	$openid = new OpenIDService;
 	$openid->SetIdentity($openid_url);
@@ -88,8 +109,11 @@ elseif (isset($_GET['openid_mode'])) {
 			do_action('bb_user_login', (int) $openid_user_id );		
 			openid_redirect();			
 		} else { 	 // openid is valid but no user_id, we need to create a user			
-			$error="Sorry, account creation is not supported yet.<br>The following OpenID is not attached to any forum account:<br>$openid";
-			openid_redirect($error);			
+			// $error="Sorry, account creation is not supported yet.<br>The following OpenID is not attached to any forum account:<br>$openid";
+			// openid_redirect($error);						
+			openid_session();
+			$_SESSION['OPENID']=$_GET['openid_identity'];
+			bb_safe_redirect(bb_get_option('uri')."register.php");
 		}
 		
 	}
@@ -112,23 +136,67 @@ elseif (isset($_GET['openid_mode'])) {
 }	// openid_mode
 }	
 
+function openid_session() {
+if (!isset($_SESSION)) {
+	@ini_set('session.use_trans_sid', false);
+	@ini_set("url_rewriter.tags","");
+	@session_start();	// sent with headers
+}
+}
+
+function openid_register_success($user_id=0) {
+if (!$user_id) {return;}
+openid_session();
+if (empty($_SESSION['OPENID'])) {return;}
+else {$openid[]=$_SESSION['OPENID']; unset($_SESSION['OPENID']);} 
+global $bbdb;
+$bbdb->query("UPDATE $bbdb->users SET user_status=0 WHERE ID=$user_id LIMIT 1");	// 0.9 has a typo bug in update_user_status function
+bb_update_usermeta($user_id,'openid',$openid);
+wp_set_auth_cookie( (int) $user_id, 0 );
+do_action('bb_user_login', (int) $user_id );
+if (isset($_REQUEST['re'])) {$re=$_REQUEST['re'];} else {$re=bb_get_option('uri');}
+bb_safe_redirect($re);			
+}
 
 function openid_profile_edit() {
-global $bbdb,$user_id,$openid_options;
-$user = bb_get_user( $user_id );
-if (bb_is_user_logged_in()) :
-echo '</fieldset><a name="openid"></a><fieldset><legend>'.$openid_options['profile_text'].'</legend>';
-if (isset($_GET['openid_error'])) {echo "<div onclick='this.style.display=\"none\"' style='color:#000;width:75%;overflow:hidden;padding:3px 10px;background:#FFF6BF;border:1px solid #FFD324;'>".substr(addslashes(strip_tags($_GET['openid_error'],"<br>")),0,200)."</div>";}
-echo '<p>'.$openid_options['add_text'].'</p><table><tr class="form-field"><th scope="row"><label for="openid_url">OpenID URL</label></th>';
-echo '<td><input style="width:50%;padding-left:20px;background: #fff url('.$openid_options['icon'].') no-repeat 2px 50%;" name="openid_url" id="openid_url"> [<a onclick=openid_help() href="#openid">help</a>]'; 
-openid_help(); echo '</td></tr>';
-if (!empty($user->openid)) {
-foreach ((array) $user->openid  as $url ) {
-	echo '<tr class="form-field"><th scope="row" style="padding-left:20px;background: url('.$openid_options['icon'].') no-repeat  50% 50%;"><label>[<a title="'.$openid_options['remove_text'].'" href="'.add_query_arg('remove_openid',urlencode($url)).'"><strong>x</strong></a>]</label></th><td> '.$url.' </td></tr>';
-}
-}
+global $bbdb,$user_id,$openid_options; 
+
+if (!bb_get_location()=="register-page") {echo '</fieldset>';}
+echo '<a name="openid"></a><fieldset><legend>'.$openid_options['profile_text'].'</legend>';
+
+if (!empty($_SESSION['OPENID'])) {
+	openid_session();
+	$url=$_SESSION['OPENID']; 
+	remove_action( 'extra_profile_info', 'instant_password',9);	
+	remove_action('register_user', 'instant_password_success',9999);
+	$instructions=$openid_options['approved_text'];	
+	echo '<p>'.$instructions.'</p><table><tr class="form-field"><th scope="row" style="padding-left:20px;background: url('.$openid_options['icon'].') no-repeat  50% 50%;">
+	<label>[<a title="'.$openid_options['remove_text'].'" href="'.add_query_arg('remove_openid',urlencode($url)).'"><strong>x</strong></a>]</label></th><td> '.$url.' </td></tr>';
+} else {
+	$value="";	
+	if (bb_is_user_logged_in()) {$instructions=$openid_options['add_text'];} else {$instructions=$openid_options['register_text'];	}		
+
+	if (isset($_GET['openid_error'])) {echo "<div onclick='this.style.display=\"none\"' style='color:#000;width:75%;overflow:hidden;padding:3px 10px;background:#FFF6BF;border:1px solid #FFD324;'>".substr(addslashes(strip_tags($_GET['openid_error'],"<br>")),0,200)."</div>";}
+	echo '<p>'.$instructions.'</p><table><tr class="form-field"><th scope="row"><label for="openid_url">OpenID URL</label></th>';
+	echo '<td><input onkeypress="if (event.keyCode==13) {this.form.submit(); return false;}" value="'.$value.'" style="width:50%;padding-left:20px;background: #fff url('.$openid_options['icon'].') no-repeat 2px 50%;" name="openid_url" id="openid_url"> [<a onclick=openid_help() href="#openid">help</a>]'; 
+	if ($session_id=session_id()) {
+		$session_name=session_name(); 
+		echo '<input tabindex="0" type="hidden" name = "'.$session_name.'" value = "'.$session_id.'" />';
+	}
+	openid_help(); 
+	echo '</td></tr>';
+
+	if (bb_is_user_logged_in()) {
+		$user = bb_get_user( $user_id );
+		if (!empty($user->openid)) {
+			foreach ((array) $user->openid  as $url ) {
+				echo '<tr class="form-field"><th scope="row" style="padding-left:20px;background: url('.$openid_options['icon'].') no-repeat  50% 50%;">
+					<label>[<a title="'.$openid_options['remove_text'].'" href="'.add_query_arg('remove_openid',urlencode($url)).'"><strong>x</strong></a>]</label></th><td> '.$url.' </td></tr>';
+			}
+		}
+	}
+} // session else
 echo '</table></fieldset>';
-endif;
 }
 
 function openid_login() {
@@ -170,7 +238,7 @@ There are <a target='_blank' href='http://wiki.openid.net/OpenIDServers'>dozens 
 <tr><td style='text-align:right;color:navy;'>AOL</td><td>openid.aol.com/<b>screenname</b> <em>(AIM usernames work too)</em></td></tr>
 <tr><td style='text-align:right;color:navy;'>Blogger</td><td><b>blogname</b>.blogspot.com</td></tr>
 <tr><td style='text-align:right;color:navy;'>Flickr</td><td>flickr.com/photos/<b>username</b></td></tr>
-<tr><td style='text-align:right;color:navy;'>Googe</td><td>google.com/accounts/o8/id <em>(enter exactly as is)</em></td></tr>
+<tr><td style='text-align:right;color:navy;'>Googe</td><td>google.com</td></tr>
 <tr><td style='text-align:right;color:navy;'>LiveJournal</td><td><b>username</b>.livejournal.com</td></tr>
 <tr><td style='text-align:right;color:navy;'>LiveDoor</td><td>profile.livedoor.com/<b>username</b> <em>(Japan)</em></td></tr>
 <tr><td style='text-align:right;color:navy;'>Orange</td><td>openid.orange.fr <em>(France)</em></td></tr>
@@ -183,16 +251,23 @@ There are <a target='_blank' href='http://wiki.openid.net/OpenIDServers'>dozens 
 }
 
 function openid_remove() {
-if (isset($_GET['remove_openid'])) {	
-	bb_repermalink();
-	global $bbdb,$user_id,$bb_current_user,$openid_options;
-	$user = bb_get_user( $user_id );  
-	if ($user_id==$bb_current_user->ID || bb_current_user_can('administrate')) :
-		$remove_openid=intval($_GET['remove_openid']);
-		$user->openid=(array) $user->openid;
-		$key=array_search($remove_openid,$user->openid);
-		if ($key!==false) {unset($user->openid[$key]); bb_update_usermeta($user_id,'openid',(array) $user->openid);}
-	endif;				
+if (isset($_GET['remove_openid'])) {
+	if (!bb_is_user_logged_in()) {	
+		openid_session();
+		if (!empty($_SESSION['OPENID'])) {
+			unset($_SESSION['OPENID']); 
+		}
+	} else {
+		bb_repermalink();
+		global $bbdb,$user_id,$bb_current_user,$openid_options;	
+		$user = bb_get_user( $user_id );  
+		if ($user_id==$bb_current_user->ID || bb_current_user_can('administrate')) {
+			$remove_openid=intval($_GET['remove_openid']);
+			$user->openid=(array) $user->openid;
+			$key=array_search($remove_openid,$user->openid);
+			if ($key!==false) {unset($user->openid[$key]); bb_update_usermeta($user_id,'openid',(array) $user->openid);}
+		}
+	}				
 }
 }
 

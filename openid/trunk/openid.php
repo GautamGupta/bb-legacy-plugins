@@ -47,8 +47,7 @@ if (!empty($_POST) && function_exists('instant_password')) {	// means we are on 
 		$_POST['password']=$_POST['pass2']=$password;
 	}	
 }
-openid_session();
-
+// openid_session();
 }
 
    if (isset($_POST['openid_url'])) {$openid_url=$_POST['openid_url'];} 

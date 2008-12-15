@@ -43,9 +43,9 @@ function bb_admin_post_anything_edit() {bb_admin_post_anything_post(1);}
 function bb_admin_post_anything_post($edit=0) {
 if (!bb_current_user_can('administrate')) {return;}
 global $bb_post; $checked="";
-$tags = implode('|',array_keys(bb_allowed_tags()));
+$tags=bb_allowed_tags(); $tags['br']=true; $tags['p']=true; $tags = implode('|',array_keys($tags))."|\s|\/";
 $style="margin:0.4em 0;height:1.4em; width:1.4em;".(strpos($_SERVER['HTTP_USER_AGENT'],'MSIE') ? 'font-size:1.4em;' : '')."clear:left; vertical-align:middle;";
-if (!empty($edit) && !empty($bb_post->post_text) && preg_match("/\<(?!($tags))/sim", $bb_post->post_text)) {$checked="checked='checked'";}
+if (!empty($edit) && !empty($bb_post->post_text) && preg_match("/<(?!($tags))/si", $bb_post->post_text)) {$checked="checked='checked'";}
 echo "<label><input style='$style' name='admin_post_anything' type='checkbox' value='1' $checked><strong> ".__("override posting restrictions")." </strong></label>";
 }
 ?>

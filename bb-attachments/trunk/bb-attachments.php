@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.2.0
+Version: 0.2.1
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -264,18 +264,23 @@ return $output;
 
 function bb_attachments_bbcode($text) {
 global $bb_attachments,$bb_attachments_cache;
-if ($bb_attachments['aws']['enable']) {	
+if ($bb_attachments['aws']['enable']) {	// if AWS S3 enabled, do direct inline images if possible to reduce bbpress reloading
 	if (preg_match_all("/\[attachment=([0-9]+?)\,([0-9]+?)\]/sim",$text,$matches,PREG_SET_ORDER)) {
 		foreach ($matches as $match) {			
 			$file=$bb_attachments_cache[$match[1]][$match[2]]; 
-			$aws=$bb_attachments['aws']['url'].$file->id.'.'.$file->filename;
-			$replace="<a class='bb_attachments_link' href='?bb_attachments=".$match[1]."&bbat=".$match[2]."'><img  src='$aws' /></a>";
-			$text=str_replace($match[0],$replace,$text);
+			$file->filename.=".resize";
+			$path=$bb_attachments['path'].floor($file->id/1000)."/";			
+			$fullpath=$path.$file->id.".".$file->filename;
+			if (file_exists($fullpath)) {	// it's been resized, so it's likely on AWS, show directly
+				$aws=$bb_attachments['aws']['url'].$file->id.'.'.$file->filename;
+				$replace="<a class='bb_attachments_link' href='?bb_attachments=".$match[1]."&bbat=".$match[2]."'><img  src='$aws' /></a>";
+				$text=str_replace($match[0],$replace,$text);
+			}
 		}
 	}	
-} else {
-$text=preg_replace("/\[attachment=([0-9]+?)\,([0-9]+?)\]/sim","<a class='bb_attachments_link' href='?bb_attachments=$1&bbat=$2'><img  src='?bb_attachments=$1&bbat=$2&inline' /></a>",$text);
 }
+// clean up anything left with the regular call to the inline function
+$text=preg_replace("/\[attachment=([0-9]+?)\,([0-9]+?)\]/sim","<a class='bb_attachments_link' href='?bb_attachments=$1&bbat=$2'><img  src='?bb_attachments=$1&bbat=$2&inline' /></a>",$text);
 return $text;
 }
 
@@ -488,10 +493,12 @@ if ($filenum>0 && ($bb_attachments['role']['inline']=="read" || bb_current_user_
 			$mime=trim(substr($mime,0,strpos($mime.";",";")));	// trim full string if necessary					
 			
 			if ($height>$bb_attachments['inline']['height'] || $width>$bb_attachments['inline']['width']) {
-				if (!file_exists($fullpath.".resize")) {
+				if (!file_exists($fullpath.".resize")) { 
 					if (bb_attachments_resize($fullpath,$type,$width,$height)) {
-						if ($bb_attachments['aws']['enable']) {bb_attachments_aws($path,$file->id.'.'.$file->filename.".resize",$mime);}    // copy to S3
-					} else {	exit();}		
+						if ($bb_attachments['aws']['enable']) {
+							bb_attachments_aws($path,$file->id.'.'.$file->filename.".resize",$mime);    // copy to S3
+						}
+					} else {exit;}		
 				}
 				$fullpath.=".resize";
 				$file->filename.=".resize";			
@@ -500,7 +507,7 @@ if ($filenum>0 && ($bb_attachments['role']['inline']=="read" || bb_current_user_
 			}
 			
 			if ($bb_attachments['aws']['enable']) {
-				$aws=$bb_attachments['aws']['url'].$file->id.'.'.$file->filename.".resize";
+				$aws=$bb_attachments['aws']['url'].$file->id.'.'.$file->filename;
 				header('Location: '.$aws); exit;
 			}
 			

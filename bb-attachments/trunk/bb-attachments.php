@@ -500,7 +500,7 @@ if ($filenum>0 && ($bb_attachments['role']['inline']=="read" || bb_current_user_
 			}
 			
 			if ($bb_attachments['aws']['enable']) {
-				$aws=$bb_attachments['aws']['url'].$file->id.'.'.$file->filename;
+				$aws=$bb_attachments['aws']['url'].$file->id.'.'.$file->filename.".resize";
 				header('Location: '.$aws); exit;
 			}
 			

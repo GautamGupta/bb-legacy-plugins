@@ -490,7 +490,7 @@ if ($filenum>0 && ($bb_attachments['role']['inline']=="read" || bb_current_user_
 			if ($height>$bb_attachments['inline']['height'] || $width>$bb_attachments['inline']['width']) {
 				if (!file_exists($fullpath.".resize")) {
 					if (bb_attachments_resize($fullpath,$type,$width,$height)) {
-						if ($bb_attachments['aws']['enable']) {bb_attachments_aws($path,$file->id.'.'.$file->filename,$mime);}    // copy to S3
+						if ($bb_attachments['aws']['enable']) {bb_attachments_aws($path,$file->id.'.'.$file->filename.".resize",$mime);}    // copy to S3
 					} else {	exit();}		
 				}
 				$fullpath.=".resize";

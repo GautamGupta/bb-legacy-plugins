@@ -106,6 +106,11 @@ $mini_stats['level']="administrate";
 
 * now detects WordPress integration and will also show graphs for comments and WP posts (articles)
 
+= Version 0.0.8 (2008-12-15) =
+
+* significant speedup and capacity increase by performing date grouping with offset within mysql instead of via php
+
+
 == To Do ==
 
 * fix buggy width on graphs when dates are too wide

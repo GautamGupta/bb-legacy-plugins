@@ -100,7 +100,7 @@ function initialize_view_count( $topic_id ) {	//If the view count for a topic ha
 		
 	//Adds the record to the DB so it isn't zero any longer
 	
-	if (bb_get_option('bb_db_version')>1600) {	// bbPress 1.0
+	if (defined('BACKPRESS_PATH')) {  	// bbPress 1.0
 	
 	@$bbdb->query("INSERT INTO $bbdb->meta (object_id, object_type, meta_key, meta_value) VALUES ($topic_id, 'bb_topic', 'views', $view_count)");
 	
@@ -129,7 +129,7 @@ function update_view_count() {
 				// Add 1 to $view_count and update the DB
 				$topic->views++; 
 
-				if (bb_get_option('bb_db_version')>1600) { // bbPress 1.0
+				if (defined('BACKPRESS_PATH')) {   // bbPress 1.0
 			
 				@$bbdb->query("UPDATE $bbdb->meta SET meta_value=meta_value+1 WHERE object_type = 'bb_topic' AND object_id = $topic_id AND meta_key='views' LIMIT 1");
 			
@@ -152,7 +152,7 @@ function most_viewed_list ( $list_length = '10', $before_list = '<ul>', $after_l
 	
 	global $bbdb;
 	
-	if (bb_get_option('bb_db_version')>1600) {   // bbPress 1.0
+	if (defined('BACKPRESS_PATH')) {     // bbPress 1.0
 	
 	$most_viewed = (array) $bbdb->get_results("SELECT object_id as topic_id, meta_value FROM $bbdb->meta WHERE object_type='bb_topic' AND meta_key='views' ORDER BY cast(meta_value as UNSIGNED) DESC");
 	
@@ -181,7 +181,7 @@ function most_viewed_list ( $list_length = '10', $before_list = '<ul>', $after_l
 function most_viewed_table ( $list_length = '10') {
 	global $bbdb;
 	
-	if (bb_get_option('bb_db_version')>1600) {   // bbPress 1.0
+	if (defined('BACKPRESS_PATH')) {     // bbPress 1.0
 	
 	$most_viewed = (array) $bbdb->get_results("SELECT object_id as topic_id, meta_value FROM $bbdb->meta WHERE object_type='bb_topic' AND meta_key='views' ORDER BY cast(meta_value as UNSIGNED) DESC");
 	

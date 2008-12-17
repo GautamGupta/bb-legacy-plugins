@@ -97,8 +97,8 @@ echo '<div style="text-align:right; font-size:13px; margin:0.5em 0;">';
 if (!empty($showmenu)) {
 echo (!empty($_GET[$mini_stats['trigger']]) || $limit>31  ? gmdate('M j',$starttime)." - ".gmdate('M j, Y',$endtime)." | " : "");
 // .'[<a href="'.add_query_arg($mini_stats['trigger'],gmdate('Y-n-j',$endtime-31*24*3600)).'">'.__('previous month').'</a>] [<a href="'.add_query_arg($mini_stats['trigger'],(gmdate('Y',$endtime)-1).'-'.gmdate('n-j',$endtime)).'">'.__('previous year').'</a>] '
-echo '<form style="display:inline;" method="get"><label for="days"><a name="view">'.__('view').'</a>:</label>
-<select style="outline:0;-moz-outline:0;padding:0;margin:0;border:0;background:transparent;width:6em;" name="days" onchange="this.form.submit();" >
+echo '<form style="display:inline;" method="get"><label for="days"><a style="border:0;" name="view">'.__('view').'</a>:</label>';
+echo '<select style="padding:0;margin:0;border:0;background:transparent;width:6em;" name="days" onchange="this.form.submit();" >
 <option value="31"'.($limit==31 ? ' selected="selected"' : '').'>month</option>
 <option value="93"'.($limit==93 ? ' selected="selected"' : '').'>quarter</option>
 <option value="186"'.($limit==186 ? ' selected="selected"' : '').'>&#189; year</option>

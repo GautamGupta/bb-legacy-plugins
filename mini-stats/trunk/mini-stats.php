@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/mini-stats
 Description: Some simple forum statistics.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.8
+Version: 0.0.9
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -39,19 +39,21 @@ $mini_stats['style']="
 ";
 
 $mini_stats['style_graph']="
-.mini_stats_graph {font-family:arial,san-serif; font-size:11px; border:1px solid #aabbcc; float:left; letter-spacing:-1px; word-spacing:-1px; border: 0; border-collapse: collapse; width:100%; margin:1em 0;}
+.mini_stats_graph {position:relative;font-family:arial,san-serif; font-size:11px; border:1px solid #aabbcc; float:left; letter-spacing:-1px; word-spacing:-1px; border: 0; border-collapse: collapse; width:100%; margin:1em 0;}
 .mini_stats_graph TD {font-family:arial,san-serif; font-size:11px; white-space:nowrap; overflow:hidden; text-align:center; border:0; border-collapse: collapse;}
-.mini_stats_graph TD div {font-size:1px;background:#aabbcc; margin: 0 1px; border-right: 1px solid #000000; border-top: 1px solid #dedede; border-left: 1px solid #dedede;}
+.mini_stats_graph TD div {position:relative;z-index:25;font-size:1px;background:#aabbcc; margin: 0 1px; border-right: 1px solid #000000; border-top: 1px solid #dedede; border-left: 1px solid #dedede;}
 .mini_stats_graph TD span {width:100%;white-space:nowrap;}
+.mini_stats_graph_large TD, .mini_stats_graph_large TD div {padding:0;margin:0;}
 .mini_stats_graph2 {margin:1em 5px; width:48%; word-spacing:0;}
 .mini_stats_graph2 TD {text-align:left; vertical-align: middle; padding: 0 2px; height:20px;}
 .mini_stats_graph2 TD div {float: left; height:8px; font-size:1px; line-height:1px;  margin: 2px 5px 0 0; border-bottom: 1px solid #000000;}
 .mini_stats_graph .alt TD {border-top:1px solid #444; letter-spacing:-1.6px;}
+.mini_stats_graph  TD .mini_stats_grid {font-size:11px;text-align:left;position:absolute;width:100%;background:none;border:0;border-top:1px dashed #ccc;}
 h3 {font-size:1.3em; position:relative; bottom: -10px; margin-top:-10px;}
 #latest th {text-align:center;}
 .widefat td {padding:0.5em;}
 .widefat td.num {text-align:center;}
-.wrap {padding:0 3em 2em 3em;}
+.wrap {padding:0 3em 2em 3em;overflow:hidden;}
 ";
 
 /*  stop editing here  */

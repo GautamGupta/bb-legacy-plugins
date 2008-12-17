@@ -110,6 +110,10 @@ $mini_stats['level']="administrate";
 
 * significant speedup and capacity increase by performing date grouping with offset within mysql instead of via php
 
+= Version 0.0.9 (2008-12-17) =
+
+* graphs can now display up to a year of data at a time
+
 
 == To Do ==
 

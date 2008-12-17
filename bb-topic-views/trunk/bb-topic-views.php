@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/bb-topic-views/
 Description: Counts the number of times a topic has been viewed, and allows the administrator to display the count in various places.
 Author: Mike Wittmann, _ck_
 Author URI: http://blog.wittmania.com/
-Version: 1.6.2
+Version: 1.6.3
 */
 
 // Set this to zero if you DON'T want the view count automatically appended to the topic title.  Default is 1.
@@ -60,22 +60,30 @@ you will probably want to comment out the display_view_count_title function abov
 	echo $view_count;
 }
 	
-function get_view_count ( $topic_id ) {
-	global $bbdb, $topic;
+function get_view_count ( $topic_id=0 ) {
+	global $bbdb, $topic, $bb_topic_cache; $view_count=0;
+
+	if (empty($topic_id)) {if (!empty($topic->topic_id)) {$topic_id=$topic->topic_id;} else {return 0;}}
 	
-	if (isset($topic->views) && $topic->topic_id===$topic_id) {return $topic->views;}	// bypass db for cached data
+	if (isset($topic->views) && $topic->topic_id===$topic_id) {$view_count=$topic->views;}	// bypass db for cached data
 	
-	if (bb_get_option('bb_db_version')>1600) {	// bbPress 1.0
+	elseif (defined('BACKPRESS_PATH')) {  	 // bbPress 1.0
 	
-	$view_count = $bbdb->get_var("SELECT meta_value FROM $bbdb->meta WHERE object_type='bb_topic' AND object_id = $topic_id AND meta_key='views' ");
+	$topic = wp_cache_get( $topic_id, 'bb_topic' ); 
+	
+	if (!empty($topic->views)) {$view_count= $topic->views;}
+	
+	else {$view_count = $bbdb->get_var("SELECT meta_value FROM $bbdb->meta WHERE object_type='bb_topic' AND object_id = $topic_id AND meta_key='views' ");}
 
 	} else {
 	
-	$view_count = $bbdb->get_var("SELECT meta_value FROM $bbdb->topicmeta WHERE topic_id = $topic_id AND meta_key='views'");
+	if (!empty($bb_topic_cache[$topic_id]->views)) {$view_count= $bb_topic_cache[$topic_id]->views;}
+	
+	else {$view_count = $bbdb->get_var("SELECT meta_value FROM $bbdb->topicmeta WHERE topic_id = $topic_id AND meta_key='views'");}
 	
 	}
 		
-	//If it already set, it just returns the value
+	// If it already set, it just returns the value
 
 	if ($view_count<=0) { //If the view count hasn't bee initialized yet, this will initialize the value before it is returned
 		$view_count = initialize_view_count ( $topic_id );

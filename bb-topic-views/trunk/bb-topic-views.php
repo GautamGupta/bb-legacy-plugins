@@ -69,17 +69,17 @@ function get_view_count ( $topic_id=0 ) {
 	
 	elseif (defined('BACKPRESS_PATH')) {  	 // bbPress 1.0
 	
-	$topic = wp_cache_get( $topic_id, 'bb_topic' ); 
+		$temp_topic = wp_cache_get( $topic_id, 'bb_topic' ); 
 	
-	if (!empty($topic->views)) {$view_count= $topic->views;}
+		if (!empty($temp_topic->views)) {$view_count= $temp_topic->views;}		  // bypass db for cached data
 	
-	else {$view_count = $bbdb->get_var("SELECT meta_value FROM $bbdb->meta WHERE object_type='bb_topic' AND object_id = $topic_id AND meta_key='views' ");}
+		else {$view_count = $bbdb->get_var("SELECT meta_value FROM $bbdb->meta WHERE object_type='bb_topic' AND object_id = $topic_id AND meta_key='views' ");}
 
-	} else {
+	} else {		// bbPress 0.9
 	
-	if (!empty($bb_topic_cache[$topic_id]->views)) {$view_count= $bb_topic_cache[$topic_id]->views;}
+		if (!empty($bb_topic_cache[$topic_id]->views)) {$view_count= $bb_topic_cache[$topic_id]->views;}	 // bypass db for cached data
 	
-	else {$view_count = $bbdb->get_var("SELECT meta_value FROM $bbdb->topicmeta WHERE topic_id = $topic_id AND meta_key='views'");}
+		else {$view_count = $bbdb->get_var("SELECT meta_value FROM $bbdb->topicmeta WHERE topic_id = $topic_id AND meta_key='views'");}
 	
 	}
 		

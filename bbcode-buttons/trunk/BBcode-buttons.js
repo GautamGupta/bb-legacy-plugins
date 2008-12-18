@@ -164,6 +164,7 @@ function edInsertLink(i, defaultValue) {
 	if (!edCheckOpenTags(i)) {
 		var URL = prompt('Enter the URL' ,defaultValue);
 		if (URL) {BBcodeButtons[i].tagStart = '[url=' + URL + ']'; edInsertTag(i);}
+		if (edCheckOpenTags(i)) {var myValue = prompt('Enter the text for the link', ''); edInsertContent(myValue); edInsertTag(i);}
 	}
 	else {edInsertTag(i);}
 }

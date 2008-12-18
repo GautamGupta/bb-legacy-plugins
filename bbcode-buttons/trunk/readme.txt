@@ -56,6 +56,10 @@ That can be incompatible with some PHP configurations. BBcode Buttons instead us
 
 * compatibility with anonymous posting via more natural post-form action 
 
+= Version 0.0.8 (2008-12-18) =
+
+* making links is now more intuitive by prompting for text for the link if nothing is already is selected
+
 == To Do ==
 
 * lots, this is an early beta

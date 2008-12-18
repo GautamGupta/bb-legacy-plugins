@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/114
 Description: Automatically adds an easy access button toolbar above the post textarea to allow quick tags in BBcode. This is an enhanced replacement for the Comment Quicktags plugin. No template editing required.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.7
+Version: 0.0.8
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 

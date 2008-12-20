@@ -1,0 +1,106 @@
+# POT file for bbPress plugin "PollDaddy for bbPress".
+# Copyright (C) 2008 Sam Bauers
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PollDaddy for bbPress 1.0.3\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/polldaddy-for-bbpress\n"
+"POT-Creation-Date: 2008-09-22 14:42+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: polldaddy-for-bbpress.php:20
+msgid "View Poll"
+msgstr ""
+
+#: polldaddy-for-bbpress.php:30
+msgid "<em>Sorry, polls can only be added to the first post in a thread.</em>"
+msgstr ""
+
+#: polldaddy-for-bbpress.php:35
+msgid "<em>Sorry, you do not have permission to add polls.</em>"
+msgstr ""
+
+#: polldaddy-for-bbpress.php:121 polldaddy-for-bbpress.php:128
+msgid "PollDaddy"
+msgstr ""
+
+#: polldaddy-for-bbpress.php:131
+#, php-format
+msgid ""
+"<a href=\"%s\">PollDaddy</a> is a free hosted polls service where you can "
+"create polls to include in your bbPress topics."
+msgstr ""
+
+#: polldaddy-for-bbpress.php:136
+msgid "Options"
+msgstr ""
+
+#: polldaddy-for-bbpress.php:140
+msgid "Allow on first post only"
+msgstr ""
+
+#: polldaddy-for-bbpress.php:144
+msgid "Limit inclusion of PollDaddy polls to the first post of a topic."
+msgstr ""
+
+#: polldaddy-for-bbpress.php:149
+msgid "Minimum user level"
+msgstr ""
+
+#: polldaddy-for-bbpress.php:153
+msgid "Member"
+msgstr ""
+
+#: polldaddy-for-bbpress.php:154
+msgid "Moderator"
+msgstr ""
+
+#: polldaddy-for-bbpress.php:155
+msgid "Administrator"
+msgstr ""
+
+#: polldaddy-for-bbpress.php:156
+msgid "Key Master"
+msgstr ""
+
+#: polldaddy-for-bbpress.php:158
+msgid ""
+"This option indicates the minimum level that a user must have to be able to "
+"add polls."
+msgstr ""
+
+#: polldaddy-for-bbpress.php:164
+msgid "Save Changes"
+msgstr ""
+
+#: polldaddy-for-bbpress.php:174
+msgid "PollDaddy options saved."
+msgstr ""
+
+#. Plugin Name of an extension
+msgid "PollDaddy for bbPress"
+msgstr ""
+
+#. Plugin URI of an extension
+msgid "http://bbpress.org/plugins/topic/polldaddy-for-bbpress/"
+msgstr ""
+
+#. Description of an extension
+msgid "Allow users to place PollDaddy polls in your bbPress posts."
+msgstr ""
+
+#. Author of an extension
+msgid "Sam Bauers"
+msgstr ""
+
+#. Author URI of an extension
+msgid "http://unlettered.org/"
+msgstr ""

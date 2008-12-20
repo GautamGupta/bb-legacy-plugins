@@ -2,8 +2,8 @@
 Contributors: SamBauers
 Tags: Trac, development
 Requires at least: 0.9
-Tested up to: 1.0-alpha-2
-Stable tag: 1.0.3
+Tested up to: 1.0-alpha-4
+Stable tag: 1.0.4
 
 Allows the use of Trac shortcodes like #1234 for tickets and [1234] for
 changesets within post text.
@@ -33,7 +33,7 @@ of the plugin file.
 
 == License ==
 
-Trac links for bbPress version 1.0.3<br />
+Trac links for bbPress version 1.0.4<br />
 Copyright (C) 2008 Sam Bauers (http://unlettered.org/)
 
 Trac links for bbPress comes with ABSOLUTELY NO WARRANTY
@@ -53,3 +53,5 @@ See accompanying license.txt file for details.
   <br />Stop transformation inside code blocks
 * 1.0.3 :
   <br />Catch multiline code blocks of any lettter-case
+* 1.0.4 :
+  <br />Fix problem with HTML entities

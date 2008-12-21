@@ -5,11 +5,11 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.2.1
+Version: 0.2.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
-Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate: http://bbshowcase.org/donate/
 */
 
 $bb_attachments['role']['see']="read"; 		 // minimum role to see list of attachments = read/participate/moderate/administrate
@@ -116,7 +116,7 @@ if (isset($_GET['bb_attachments'])) {
 
 if ($bb_attachments['style']) {add_action('bb_head', 'bb_attachments_add_css');}	// add css if present (including Kakumei  0.9.0.2 LI fix!)
 
-if ($bb_attachments['title'] && !is_topic()) {add_filter('topic_title', 'bb_attachments_title',200);} 
+if ($bb_attachments['title'] && !is_topic() && !is_bb_feed()) {add_filter('topic_title', 'bb_attachments_title',200);} 
 
 if (isset($_GET["new"]) || is_topic() || is_forum()) {
 	add_action( 'bb_topic.php', 'bb_attachments_cache' );	
@@ -259,11 +259,12 @@ $output.='<scr'.'ipt type="text/javascript" defer="defer">
 return false;} </script>';
 }
 }
+if (is_bb_feed()) {$output=wp_specialchars($output);}
 return $output;
 }
 
 function bb_attachments_bbcode($text) {
-global $bb_attachments,$bb_attachments_cache;
+global $bb_attachments,$bb_attachments_cache;  $uri=bb_get_option('uri');
 if ($bb_attachments['aws']['enable']) {	// if AWS S3 enabled, do direct inline images if possible to reduce bbpress reloading
 	if (preg_match_all("/\[attachment=([0-9]+?)\,([0-9]+?)\]/sim",$text,$matches,PREG_SET_ORDER)) {
 		foreach ($matches as $match) {			
@@ -273,14 +274,15 @@ if ($bb_attachments['aws']['enable']) {	// if AWS S3 enabled, do direct inline i
 			$fullpath=$path.$file->id.".".$file->filename;
 			if (file_exists($fullpath)) {	// it's been resized, so it's likely on AWS, show directly
 				$aws=$bb_attachments['aws']['url'].$file->id.'.'.$file->filename;
-				$replace="<a class='bb_attachments_link' href='?bb_attachments=".$match[1]."&bbat=".$match[2]."'><img  src='$aws' /></a>";
+				$replace="<a class='bb_attachments_link' href='$uri?bb_attachments=".$match[1]."&bbat=".$match[2]."'><img  src='$aws' /></a>";
 				$text=str_replace($match[0],$replace,$text);
 			}
 		}
 	}	
 }
 // clean up anything left with the regular call to the inline function
-$text=preg_replace("/\[attachment=([0-9]+?)\,([0-9]+?)\]/sim","<a class='bb_attachments_link' href='?bb_attachments=$1&bbat=$2'><img  src='?bb_attachments=$1&bbat=$2&inline' /></a>",$text);
+$text=preg_replace("/\[attachment=([0-9]+?)\,([0-9]+?)\]/sim","<a class='bb_attachments_link' href='$uri?bb_attachments=$1&bbat=$2'><img  src='$uri?bb_attachments=$1&bbat=$2&inline' /></a>",$text);
+if (is_bb_feed()) {$text=wp_specialchars($text);}
 return $text;
 }
 
@@ -643,7 +645,9 @@ $post_id=$bb_post->post_id;
 
 function bb_attachments_title( $title ) {
 	global $bb_attachments, $topic;
-	if ($bb_attachments['title'] && isset($topic->bb_attachments) && intval($topic->bb_attachments)>0)  {return $title.$bb_attachments['title'];}		
+	if ($bb_attachments['title'] && isset($topic->bb_attachments) && intval($topic->bb_attachments)>0)  {
+		$title=$title.$bb_attachments['title'];			
+	}
 	return $title;
 } 
 

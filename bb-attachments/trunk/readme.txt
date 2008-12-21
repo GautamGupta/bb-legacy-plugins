@@ -4,7 +4,7 @@ Contributors: _ck_
 Requires at least: 0.9
 Tested up to: trunk
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Gives members the ability to upload attachments on their posts. This is an early beta release for review. Feedback, bug reports, feature ideas, improvements are encouraged. Please note there are important security considerations when allowing uploads of any kind to your server.
 
@@ -56,7 +56,7 @@ http://docs.amazonwebservices.com/AmazonS3/2006-03-01/VirtualHosting.html#Virtua
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 
@@ -79,6 +79,7 @@ http://docs.amazonwebservices.com/AmazonS3/2006-03-01/VirtualHosting.html#Virtua
 * 0.1.15 better recount for when posts are deleted/undeleted
 * 0.2.0  initial support for Amazon AWS S3 Simple Storage Service 
 * 0.2.1	a few S3 bug fixes and speedups
+* 0.2.2	add encoding to RSS feeds, props nathany
 	
 == To Do ==
 

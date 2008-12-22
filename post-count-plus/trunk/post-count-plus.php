@@ -28,7 +28,7 @@ else {
 		// else {$user_id=bb_get_current_user_info( 'id' );}
 	} 
 	$user = bb_get_user( $user_id );
-	if ($user) {			 		
+	if (!empty($user->ID)) {			 		
 		if ($post_count_plus['custom_title']) { 
 			if ($user->title) {$title=$user->title;}
 			else {$title=post_count_plus_custom_title($user_id);}
@@ -88,7 +88,7 @@ if (!$date_format) {$date_format=$post_count_plus['join_date_format'];}
 		// else {$user_id=bb_get_current_user_info( 'id' );}
 	}
 	$user = bb_get_user( $user_id );
-	if ($user) {	 
+	if (!empty($user->ID)) {	 
 		echo  __('Joined: ').bb_gmdate_i18n(__($date_format), bb_gmtstrtotime( $user->user_registered )); 
 	}	
 }

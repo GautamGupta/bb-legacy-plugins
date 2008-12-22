@@ -95,16 +95,15 @@ if (!$date_format) {$date_format=$post_count_plus['join_date_format'];}
 
 function post_count_plus_find_title($user_id=0,$posts=0,$days=0,$role='') {	
 global $post_count_plus, $post_count_plus_title_cache;
-if ($user_id) {	
+if ($user_id) {
 	if (isset($post_count_plus_title_cache[$user_id])) {return $post_count_plus_title_cache[$user_id];}		
-	$user = bb_get_user( $user_id );
 	if (!$posts) {$posts=post_count_plus_get_count($user_id);}
 	if (!$days) {$days=intval((bb_current_time('timestamp') - bb_gmtstrtotime( $user->user_registered ))/86400);}					
-	$capabilities=(isset($user->bb_capabilities)) ? $user->bb_capabilities : $user->capabilities;  // makes compatibile for 0.8.x + trunk
-//	echo " <!-- "; var_dump($user->bb_capabilities); var_dump($user->capabilities); echo " --> ";	// diagnostic
-	if (!$role && is_array($capabilities)) {		
-		$role=array_pop(array_intersect(array_keys($capabilities),array_keys($GLOBALS['bb_roles']->role_names)));	// grabs all the roles, nice!
-//	echo " <!-- "; echo $role; var_dump($GLOBALS['bb_roles']->role_names); echo " --> ";	// diagnostic		
+	$user = bb_get_user($user_id);
+	$capabilities=(isset($user->bb_capabilities)) ? $user->bb_capabilities : $user->capabilities;  // makes compatibile for 0.8.x - 1.0a
+	if (!$role && !empty($capabilities)) {		
+		$role=reset(array_keys($capabilities)); 
+//		$role=array_pop(array_intersect(array_keys($capabilities),array_keys($GLOBALS['bb_roles']->role_names)));	// grabs all the roles, nice!
 	}
 }
 $found=0; $width=5; $rows=floor(count($post_count_plus['custom_titles'])/$width);
@@ -139,7 +138,7 @@ function post_count_plus_user_color($user_name, $user_id) {
 global $post_count_plus;
 // if (bb_get_location()=="topic-page") {
 	if ($post_count_plus['user_color']) {		
-		$found=post_count_plus_find_title($user_id);		
+		$found=post_count_plus_find_title($user_id);	
 		$color=$post_count_plus['custom_titles'][$found+4];
 		if ($color) {$user_name="<span class='post_count_plus' style='color:$color;'>$user_name</span>";}
 	}

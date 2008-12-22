@@ -5,11 +5,11 @@ Plugin URI:  http://bbpress.org/plugins/topic/83
 Description: An enhanced "user post count" with "custom titles" for topics and profiles, based on posts and membership, with cached results for faster pages. No template edits required.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 1.1.6
+Version: 1.1.7
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
-Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate: http://bbshowcase.org/donate/
 
 Instructions:   install, activate, tinker with settings in admin menu
 */
@@ -23,9 +23,9 @@ else {
 	// if (!$titlelink || $post_count_plus['custom_title']) { // calculate custom titles here
 	if (!$user_id) {
 		$location=bb_get_location(); 
-		if ($location=="topic-page") {$user_id=get_post_author_id();} 
-		elseif ($location=="profile-page") {global $user; $user_id=$user->ID;}
-		else {$user_id=bb_get_current_user_info( 'id' );}
+		if ($location=="profile-page") {global $user; $user_id=$user->ID;}
+		else {$user_id=get_post_author_id();} 
+		// else {$user_id=bb_get_current_user_info( 'id' );}
 	} 
 	$user = bb_get_user( $user_id );
 	if ($user) {			 		
@@ -45,16 +45,17 @@ else {
 echo "<p class='post_count_plus'>";
 	echo "<b>$titlelink</b><br /><small>";	
 	if ($post_count_plus['join_date']) {post_count_plus_join_date($user_id);  echo "<br />";}
-	if ($post_count_plus['post_count']) {echo __("Posts: ").bb_number_format_i18n(post_count_plus_get_count($user_id));}
+	if ($post_count_plus['post_count'] && $posts=post_count_plus_get_count($user_id)) {echo __("Posts: ").bb_number_format_i18n($posts);}
 echo "</small></p>";
 }
 }
 
 function post_count_plus_get_count($user_id=0) {
 if (!$user_id) {
-	$location=bb_get_location(); 
-	if ($location=="topic-page") {$user_id=get_post_author_id();} 
-	elseif ($location=="profile-page") {global $user; $user_id=$user->ID;}
+	$location=bb_get_location(); 	
+	if ($location=="profile-page") {global $user; $user_id=$user->ID;}
+	else {$user_id=get_post_author_id();} 
+
 }
 if ($user_id) {
 	$user=bb_get_user($user_id); 	
@@ -82,9 +83,9 @@ global $post_count_plus;
 if (!$date_format) {$date_format=$post_count_plus['join_date_format'];}
 	if (!$user_id) {
 		$location=bb_get_location(); 
-		if ($location=="topic-page") {$user_id=get_post_author_id();} 
-		elseif ($location=="profile-page") {global $user; $user_id=$user->ID;}
-		else {$user_id=bb_get_current_user_info( 'id' );}
+		if ($location=="profile-page") {global $user; $user_id=$user->ID;}
+		else {$user_id=get_post_author_id();} 
+		// else {$user_id=bb_get_current_user_info( 'id' );}
 	}
 	$user = bb_get_user( $user_id );
 	if ($user) {	 
@@ -142,7 +143,6 @@ global $post_count_plus;
 		$color=$post_count_plus['custom_titles'][$found+4];
 		if ($color) {$user_name="<span class='post_count_plus' style='color:$color;'>$user_name</span>";}
 	}
-// }
 return $user_name;
 }
 
@@ -155,13 +155,12 @@ return $r;
 
 function post_count_plus_user_link( $url, $user_id) {	// forces links to profile instead of author's url on topic pages
 global $post_count_plus;
-if (bb_get_location()=="topic-page") {
+// if (bb_get_location()=="topic-page") {
 	switch ($post_count_plus['user_link']) :
 		case "Profile" : return attribute_escape( get_user_profile_link( $user_id)); break;
 		case "Author URL" : return $url; break;
 		case "Nothing" : return ""; break;
 	endswitch;
-}
 return $url;
 }
 

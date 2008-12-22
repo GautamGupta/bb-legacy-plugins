@@ -3,13 +3,13 @@
 Plugin Name: Human Test for bbPress
 Plugin URI:  http://bbpress.org/plugins/topic/77
 Description:  uses various methods to exclude bots from registering (and eventually posting) on bbPress
-Version: 0.8.2
+Version: 0.8.3
 Author: _ck_
 Author URI: http://bbshowcase.org
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
-Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate: http://bbshowcase.org/donate/
 */ 
 
 $human_test['on_for_members']=false;	 // change this to true if you want even logged in members to be challenged when posting
@@ -43,9 +43,9 @@ if ((empty($human_test['on_for_members']) || bb_current_user_can('moderate')) &&
 	$question=human_test_question();
 	echo '<p><script language="JavaScript" type="text/javascript">document.write("'.$question.'");</script>';	// write question with javascript
 	echo '<noscript><i>'.__("registration requires JavaScript").'</i></noscript>';	// warn no-script users 
-	echo '<input name="human_test" type="text" id="human_test" size="15" maxlength="140" value="" autocomplete="off" /> ';  // answer field
+	echo '<input name="human_test" type="text" id="human_test" size="15" maxlength="140" value="" autocomplete="off" tabindex="2" /> ';  // answer field
 	echo '('.__('required').')';
-	echo '<input type="hidden" name = "'.session_name().'" value = "'.session_id().'" /></p>';	// improved session support without cookies or urls
+	echo '<input tabindex="0" type="hidden" name = "'.session_name().'" value = "'.session_id().'" /></p>';	// improved session support without cookies or urls
 } 
 
 function human_test_registration() {
@@ -89,8 +89,10 @@ if ( !($location=='register.php' ||
 	@session_start();	// sent with headers - errors masked with @ if sessions started previously - which it actually has to be for the following to 
 	}
 	if ($_POST || isset($_POST['human_test'])) {
-		$human_test_post =  stripslashes($_POST['human_test']);		
-		$compare = $_SESSION['HUMAN_TEST'];
+		if (empty($_POST['human_test'])) {$_POST['human_test']="";}
+		else {$human_test_post =  stripslashes($_POST['human_test']);}
+		if (empty($_SESSION['HUMAN_TEST'])) {$compare=rand(9,9999999);}	 // this should not happen unless sessions malfunction
+		else {$compare = $_SESSION['HUMAN_TEST'];}
 		// $_SESSION['HUMAN_TEST']=md5(rand());	// destroy answer even when successful to prevent re-use
 		
 		if ($human_test_post !=$compare) {				

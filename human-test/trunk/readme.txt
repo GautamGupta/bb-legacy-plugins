@@ -4,7 +4,7 @@ Contributors: _ck_
 Requires at least: 0.8
 Tested up to: trunk
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Uses various methods to exclude bots from registering (and eventually posting) on bbPress, including math, captcha and "negative fields".
 
@@ -40,7 +40,7 @@ $human_test['on_for_members']=true;
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 

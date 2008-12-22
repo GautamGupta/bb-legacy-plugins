@@ -4,7 +4,7 @@ Contributors: _ck_
 Requires at least: 0.9
 Tested up to: trunk
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 When editing a post, this allows you to see some of the previous posts in the topic. No template edits required.
 
@@ -23,10 +23,14 @@ You do not need to edit any template (theme) page for the feature.
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 
 = Version 0.0.1 (2008-11-08) =
 
 * first public release
+
+= Version 0.0.2 (2008-12-22) =
+
+* better pre-caching to reduce queries

@@ -4,7 +4,7 @@ Contributors: _ck_
 Requires at least: 0.8.2
 Tested up to: 0.9.0.2
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 == Description ==
 
@@ -43,7 +43,7 @@ any template by using direct calls, ie. `<?php post_count_plus($user->ID); ?>`
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 
@@ -73,6 +73,10 @@ any template by using direct calls, ie. `<?php post_count_plus($user->ID); ?>`
 * admin function externalized to reduce code size for most users
 * bug fix for automatic post count inserted into profile
 * now compatible with 1.0
+
+= Version 1.1.7 (2008-12-22) =
+
+* bug fixes for when detecting user id on non-topic pages 
 
 == To Do ==
 

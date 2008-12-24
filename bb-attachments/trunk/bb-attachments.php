@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.2.2
+Version: 0.2.3
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -309,7 +309,8 @@ while(list($key,$value) = each($_FILES['bb_attachments']['name'])) {
 		
 		// don't trust these, check after upload $_FILES['bb_attachments']['type']   $_FILES['bb_attachments']['size']			
 		
-		$filename=trim(str_replace($strip,'_',stripslashes($value)));	// sanitize filename further ???	
+		$filename=trim(str_replace($strip,'_',stripslashes($value)));	// sanitize filename further ???			
+		if (empty($filename)) {$filename="unknown";}
 			
 		if (intval($_FILES['bb_attachments']['error'][$key])==0 && $_FILES['bb_attachments']['size'][$key]>0) {		
 		
@@ -709,7 +710,12 @@ $bbdb->query("CREATE TABLE IF NOT EXISTS `bb_attachments` (
 		`filename`     	varchar(255) 	         NOT NULL default '',
 		PRIMARY KEY (id),
 		INDEX (`post_id`)
-		)");	
+		) CHARSET utf8  COLLATE utf8_general_ci");	
+		
+$bbdb->query("ALTER TABLE `bb_attachments` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci,
+CHANGE `ext` `ext` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+CHANGE `mime` `mime` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+CHANGE `filename` `filename` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL");
 
 if (!file_exists($bb_attachments['path'])) {		// this usually fails for open_basedir or safe-mode but we'll give it a shot
 	$oldumask = umask(0);

@@ -80,6 +80,7 @@ http://docs.amazonwebservices.com/AmazonS3/2006-03-01/VirtualHosting.html#Virtua
 * 0.2.0  initial support for Amazon AWS S3 Simple Storage Service 
 * 0.2.1	a few S3 bug fixes and speedups
 * 0.2.2	add encoding to RSS feeds, props nathany
+* 0.2.3	changed database table to UTF-8 instead of latin for proper filename support
 	
 == To Do ==
 

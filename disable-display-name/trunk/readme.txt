@@ -4,15 +4,17 @@ Contributors: _ck_
 Requires at least: 0.9
 Tested up to: trunk
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
-Blocks the alternate Display Name functionality in bbPress 1.x to prevent spoofing other members and admin.
+Blocks the alternate Display Name functionality in bbPress 1.x to prevent spoofing other members/admin.
 
 == Description ==
 
-Blocks the alternate Display Name functionality in bbPress 1.x to prevent spoofing other members and admin.
+Blocks the alternate Display Name functionality in bbPress 1.x to prevent spoofing other members/admin.
 
-While some are fond of it, I've never liked the Display Name ability in WordPress as it's open to abuse. Now that bbPress has it, here's a way to disable it if you wish.
+While some are fond of it, I've never liked the Display Name ability in WordPress as it's open to abuse. 
+
+Now that bbPress has it, here's a way to disable it if you wish. Forces the user's login name to be used always.
 
 == Installation ==
 
@@ -24,13 +26,17 @@ While some are fond of it, I've never liked the Display Name ability in WordPres
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 
 = Version 0.0.1 (2008-11-09) =
 
 * Disable Display Name is born
+
+= Version 0.0.2 (2008-12-26) =
+
+* post author fix
 
 == To Do ==
 

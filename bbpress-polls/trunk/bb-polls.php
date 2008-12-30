@@ -5,25 +5,15 @@ Description:  allows users to add polls to topics, with optional ajax-like actio
 Plugin URI:  http://bbpress.org/plugins/topic/62
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.5.5
+Version: 0.5.6
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
-
-Instructions:   install, activate, check admin menu for options.
-
-To Do: 
-	* polls should be able to close with topic
-	* allow results to display by number of votes
-	* display a poll anywhere within bbpress templates
-	* display all polls on a single page
-	* better editing / vote count editing 
-	* see who voted
-	* better poll styles (colors / graphics)
 */
 
 global $bb_polls;
 
 add_action( 'bb_send_headers', 'bb_polls_initialize');	// bb_init
+add_action( 'bb_post.php', 'bb_polls_save_on_new' );	// catch $_POST on new topic for new poll
 
 function bb_polls_initialize() {	
 	global $bb_polls, $bb_polls_type, $bb_polls_label;
@@ -35,13 +25,21 @@ function bb_polls_initialize() {
 		}
 	}
 	bb_polls_add_header(); 	// add_action('bb_send_headers', 'bb_polls_add_header');	
-	if (is_topic()) {		// this eventually may have to be added on an admin page
+	$bb_polls['icon']=bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),"\\"),array("","/"),dirname(__FILE__)),' /\\').'/icon.png'; 
+		
+	$ask_during_new=($bb_polls['ask_during_new'] && $bb_polls['use_ajax'] && (isset($_GET['new']) || is_forum())) ? true : false;
+	if (is_topic() || $ask_during_new) {		// this eventually may have to be added on an admin page
 		add_action('bb_head', 'bb_polls_add_css');
 		add_action('bb_head','bb_polls_add_javascript');
-		add_action('topicmeta','bb_polls_pre_poll',200);
+		add_action('topicmeta','bb_polls_pre_poll',200);		
+		if ($ask_during_new) {add_action('post_form','bb_polls_pre_topic',9);}
 	} else {
-		add_filter('topic_title', 'bb_polls_title');
-	}	
+		add_filter('topic_title', 'bb_polls_title',100);		
+	}		
+}
+
+function bb_polls_pre_topic($topic_id=0, $edit_poll=0) { 
+	echo "<h3 style='margin:1em 0 0 0;'>".__('Polls')."</h3><ul style='list-style:none;margin:0 0 1em 0;'>"; bb_polls_pre_poll(0,0); echo "</ul>"; 
 }
 
 function bb_polls_pre_poll($topic_id, $edit_poll=0) { 
@@ -68,7 +66,9 @@ if ($edit_poll || ! isset($topic->poll_options)) {	// no saved poll question wit
  				bb_polls_show_poll_setup_form($topic_id,1,1);  				
  		} else {	
 			// ask if they want to start a new poll
-				echo '<li id="bb_polls"><a class="nowrap" onClick="if (window.bb_polls_insert_ajax) {bb_polls_start_new_poll_ajax();return false;}" href="'.add_query_arg( 'start_new_poll', '1').'">'.$bb_polls['poll_question'].'</a></li>'; 
+			echo '<li id="bb_polls"><a class="nowrap" onClick="if (window.bb_polls_insert_ajax) {bb_polls_start_new_poll_ajax();return false;}" href="'.add_query_arg( 'start_new_poll', '1').'">'
+				.(!empty($bb_polls['use_icon']) && $bb_polls['use_icon']!="no" ? "<img align='absmiddle' border='0' src='".$bb_polls['icon']."' /> " : "")
+				.$bb_polls['poll_question'].'</a></li>'; 
 		
 		} } }	// end new poll question + end show start_new_poll form 
 
@@ -104,7 +104,7 @@ global $bb_polls,$topic,$poll_options;
 if (!$topic_id || $topic_id != $topic->topic_id) {if (!isset($topic)) {bb_repermalink();} $topic_id=get_topic_id(); $topic = get_topic($topic_id);}
 if (isset($topic->poll_options)) {if (!isset($poll_options)) {$poll_options=$topic->poll_options;}} else {$poll_options=NULL;}
 if (isset($poll_options) && !is_array($poll_options)) {$poll_options=unserialize(substr($poll_options,2));}   // trick bb_press to keep poll data unserialized
-return $topic_id;
+return intval($topic_id);
 }
 
 function bb_polls_has_voted($user_id,$topic_id) {    
@@ -241,10 +241,13 @@ bb_update_topicmeta( $topic_id, 'poll_options', '..'.serialize($poll_options)); 
 function bb_polls_show_poll_setup_form($topic_id,$display=1,$edit_poll=0) {
 global $bb_polls,$topic,$poll_options;
 if (($edit_poll==0 && bb_current_user_can($bb_polls['minimum_add_level'])) || bb_current_user_can('administrate')) {
-$topic_id=bb_polls_check_cache($topic_id);
-
-$output='<form action="'.remove_query_arg(array('start_new_poll','edit_poll','delete_poll','show_poll_vote_form_ajax','show_poll_setup_form_ajax','bb_polls_cache')).'" method="post"><p>'.$bb_polls['poll_instructions'].'</p>';
-			
+$topic_id=bb_polls_check_cache($topic_id); $output="";
+if (is_topic()) {
+$output.='<form action="'.remove_query_arg(array('start_new_poll','edit_poll','delete_poll','show_poll_vote_form_ajax','show_poll_setup_form_ajax','bb_polls_cache')).'" method="post">';
+}
+$output.='<p>'
+	.(!empty($bb_polls['use_icon']) && $bb_polls['use_icon']!="no" ? "<img align='absmiddle' border='0' src='".$bb_polls['icon']."' /> " : "")
+	.$bb_polls['poll_instructions'].'</p>';			
 $output.='<div class="poll_label">'.$bb_polls['label_question_text'].' : <br /><input name="poll_question" type="text" style="width:98%" maxlength="'.$bb_polls['max_length'].'" value="'.$poll_options['poll_question'].'" /></div>';
 			
 $output.='<div class="poll_label"><span class="nowrap"><input name="poll_multiple_choice" style="vertical-align:middle;height:1.3em;width:1.3em;" type="radio" value="0" ';
@@ -261,18 +264,30 @@ for ($i=1; $i<=$bb_polls['max_options']; $i++) {
 } // loop 
 if ($bb_polls['max_options']>4 && !$poll_options[5]) {$output.='</div>';}
 		
-$output.='<p class="poll_footer">
-<input class="submit" type="button"  value="'.$bb_polls['label_cancel_text'].'" onClick="document.location='."'".remove_query_arg(array('start_new_poll','edit_poll','delete_poll','show_poll_vote_form_ajax','show_poll_setup_form_ajax','bb_polls_cache'))."'".'" /> 
-<input class="submit" type="submit"  value="'.$bb_polls['label_save_text'].'" /></p></form>';
+$output.='<p class="poll_footer">';
+// <input class="submit" type="button"  value="'.$bb_polls['label_cancel_text'].'" onClick="document.location='."'".remove_query_arg(array('start_new_poll','edit_poll','delete_poll','show_poll_vote_form_ajax','show_poll_setup_form_ajax','bb_polls_cache'))."'".'" /> 
+$output.='<input class="submit" type="button"  value="'.$bb_polls['label_cancel_text'].'" onClick="bb_polls.innerHTML=bb_polls_cancel; return false;" /> 
+<input class="submit" type="submit"  value="'.$bb_polls['label_save_text'].'" /></p>';
+if (is_topic()) {$output.='</form>';}
 $output=stripslashes($output);if ($display) {echo '<li id="bb_polls" class="extra-caps-row">'.$output.'</li>';} else {return $output;}
 }
 }
 
 function bb_polls_title( $title ) {
 	global $bb_polls, $topic;
-	if ($bb_polls['label_poll_text'] && isset($topic->poll_options) && !is_topic())  {return '['.$bb_polls['label_poll_text'].'] '.$title;}		
+	if (isset($topic->poll_options)) {
+		if ($bb_polls['use_icon']=="left") {$title="<img align='absmiddle' border='0' src='".$bb_polls['icon']."' /> ".$title;}
+		elseif ($bb_polls['use_icon']=="right") {$title=$title." <img align='absmiddle' border='0' src='".$bb_polls['icon']."' />";}
+		if ($bb_polls['label_poll_text']) {$title='['.$bb_polls['label_poll_text'].'] '.$title;}		
+	}
 	return $title;
 } 
+
+function bb_polls_save_on_new($post_id=0) {
+	if (isset($_POST['poll_question'])) {	// save new poll setup from _post data 
+		bb_polls_save_poll_setup(0);				
+	}	
+}
 
 function bb_polls_add_header() { 
 	if (isset($_POST['poll_question'])) {	// save new poll setup from _post data 
@@ -325,8 +340,7 @@ $topic_id=bb_polls_check_cache($topic_id);
 echo '<scr'.'ipt type="text/javascript" defer="defer">
 <!--
 var dhead = document.getElementsByTagName("head")[0];
-var bb_polls_script = null;
-var bb_polls_htmldata = null;
+var bb_polls, bb_polls_cancel, bb_polls_script = null, bb_polls_htmldata = null;
 
 function append_dhead(bb_polls_src) {
 if (bb_polls_script) {dhead.removeChild(bb_polls_script);}
@@ -343,7 +357,11 @@ function bb_polls_insert_ajax(htmldata) {
 bb_polls_htmldata = unescape(htmldata);
 setTimeout("bb_polls_insert_ajax_delayed()",20);
 }
-function bb_polls_insert_ajax_delayed() {document.getElementById("bb_polls").innerHTML=bb_polls_htmldata;}
+function bb_polls_insert_ajax_delayed() {
+	bb_polls=document.getElementById("bb_polls");
+	bb_polls_cancel=bb_polls.innerHTML;
+	bb_polls.innerHTML=bb_polls_htmldata;
+}
 ';
 
 // only add new poll support if they can add and there's no poll already 

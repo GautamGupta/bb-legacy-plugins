@@ -4,20 +4,18 @@ Contributors: _ck_
 Requires at least: 0.8.2
 Tested up to: trunk
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 == Description ==
 
-This plugin allows polls to be added to any topic in bbPress.
-There are many powerful options for administrators.
-
-This is a beta release without an admin menu (coming soon).
-For now you must edit the bb-polls.php directly to change default options.
+Now you can allow polls to be added to any topic in bbPress.
+There are many powerful options via the admin menu.
 
 == Installation ==
 
 1. Add the "bb-polls.php" file to bbPress "my-plugins/" directory and activate. 
 2. Check under the admin menu for "bbPress Polls" options.
+3. No template edits required.
 
 == License ==
 
@@ -25,10 +23,11 @@ For now you must edit the bb-polls.php directly to change default options.
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 
+* 0.5.6	2008-December-30 optional ability to create poll during new topic submission, optional icon without CSS editing
 * 0.5.5	2008-August-27 serious ajax bug with data loss fixed, admin functions externalized
 * 0.5.4	2008-March-14 new poll form (and edit form) remotely loaded when in "ajax" mode
 * 0.5.3	2008-March-14 javascript payload is now kept as small as possible 

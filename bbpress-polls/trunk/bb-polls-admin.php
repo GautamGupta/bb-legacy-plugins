@@ -19,7 +19,7 @@ function bb_polls_admin() {
 				<tbody>
 					<?php
 					
-					foreach(array_keys( $bb_polls_type) as $key) {
+					foreach($bb_polls_type as $key=>$value) {
 					
 					// if ($key=="style") {echo "<div id='bb_polls_rollup' style='display:none;'>";}
 					
@@ -71,6 +71,7 @@ function bb_polls_admin() {
 
 function bb_polls_process_post() {
 global $bb_polls, $bb_polls_type, $bb_polls_label;
+bb_polls_strings();
 	if (bb_current_user_can('administrate')) {
 		if (isset($_REQUEST['bb_polls_reset'])) {
 			unset($bb_polls); 		
@@ -81,7 +82,7 @@ global $bb_polls, $bb_polls_type, $bb_polls_label;
 		}		
 		elseif (isset($_POST['submit']) && isset($_POST['bb_polls'])) {
 							
-			foreach(array_keys( $bb_polls) as $key) {
+			foreach($bb_polls_type as $key=>$value) {
 				if (isset($_POST[$key])) {$bb_polls[$key]=$_POST[$key];}
 			}
 		
@@ -104,6 +105,8 @@ if (empty($bb_polls)) {
 	$bb_polls['minimum_delete_level']="administrate";   // who can edit polls = participate / moderate / administrate  (watchout for typos)
 
 	$bb_polls['only_topic_author_can_add']=true;   // false=anyone can add a poll to any topic /  true=only the topic starter (admin can always add)
+	$bb_polls['ask_during_new']=false;	 // insert poll form/css/javascript on new topic creation pages
+	
 	$bb_polls['show_poll_on_which_pages']="both";    // show poll only on pages = first / last / both / all
 		
 	$bb_polls['add_within_hours']=3;   // how many hours later can a poll be added 	(for users/moderator - admin can always add)
@@ -118,9 +121,10 @@ if (empty($bb_polls)) {
 	
 	$bb_polls['use_ajax']=true;		// true = enables ajax-ish behaviours, still works without javascript  / false = typical page refreshes
 	$bb_polls['test_mode']=false;	// if set to "true" allows multiple votes per person for testing purposes only
+	$bb_polls['use_icon']="right";
 
 	$bb_polls['style']=
-	"#bb_polls {list-style: none; width:400px; line-height:120%; margin:5px 0; padding:5px; border:1px solid #ADADAD;  font-size:90%; color:#000; background:#eee; }
+	"#bb_polls {list-style: none; width:35em; line-height:120%; margin:5px 0; padding:5px; border:1px solid #ADADAD;  font-size:90%; color:#000; background:#eee; }
 	#bb_polls .submit {cursor: pointer; cursor: hand; text-align:center; padding:2px 5px;}
 	#bb_polls .nowrap {white-space:nowrap;}
 	#bb_polls p {margin:15px 0;padding:0;}
@@ -167,6 +171,8 @@ if ((defined('BB_IS_ADMIN') && BB_IS_ADMIN) || strpos($_SERVER['REQUEST_URI'],"/
 	$bb_polls_type['minimum_delete_level']="participate,moderate,administrate";
 	
 	$bb_polls_type['only_topic_author_can_add']="binary";
+	$bb_polls_type['ask_during_new']="binary";
+	
 	$bb_polls_type['show_poll_on_which_pages']="first,last,both,all";	
 		
 	$bb_polls_type['add_within_hours']="1,2,6,12,24,48,72,999999";
@@ -182,8 +188,9 @@ if ((defined('BB_IS_ADMIN') && BB_IS_ADMIN) || strpos($_SERVER['REQUEST_URI'],"/
 	$bb_polls_type['use_ajax']="binary";
 	$bb_polls_type['test_mode']="binary";
 
-	$bb_polls_type['style']="textarea";
-						
+	$bb_polls_type['use_icon']="right,left,no";
+	$bb_polls_type['style']="textarea";	
+					
 	$bb_polls_type['poll_question']="text";
 	$bb_polls_type['poll_instructions']="text";
 	$bb_polls_type['label_single']="text";
@@ -210,6 +217,8 @@ if ((defined('BB_IS_ADMIN') && BB_IS_ADMIN) || strpos($_SERVER['REQUEST_URI'],"/
 	$bb_polls_label['minimum_delete_level']=__("At what level can users DELETE a poll?");
 
 	$bb_polls_label['only_topic_author_can_add']=__("Only the topic starter can add a poll?");
+	$bb_polls_label['ask_during_new']=__("Ask for poll during new topic creation? (requires AJAX on)");
+
 	$bb_polls_label['show_poll_on_which_pages']=__("Show poll only on which topic pages?");
 		
 	$bb_polls_label['add_within_hours']=__("How many hours later can a poll be ADDED?");
@@ -224,9 +233,10 @@ if ((defined('BB_IS_ADMIN') && BB_IS_ADMIN) || strpos($_SERVER['REQUEST_URI'],"/
 	
 	$bb_polls_label['use_ajax']=__("Use AJAX-like actions if javascript enabled?");
 	$bb_polls_label['test_mode']=__("Enable TEST MODE (multiple votes per person)?");
-
-	$bb_polls_label['style']=__("Custom CSS style for polls:");
-
+	
+	$bb_polls_label['use_icon']=__("Append icon to title when poll present?");
+	$bb_polls_label['style']=__("Custom CSS style for polls:");	
+	
 	$bb_polls_label['poll_question']=__("Question to ask to start poll:");
 	$bb_polls_label['poll_instructions']=__("Instructions to add poll:");
 	$bb_polls_label['label_single']=__("Label for single vote selections:");

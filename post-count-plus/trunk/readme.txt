@@ -78,6 +78,10 @@ any template by using direct calls, ie. `<?php post_count_plus($user->ID); ?>`
 
 * bug fixes for when detecting user id on non-topic pages 
 
+= Version 1.1.8 (2008-12-31) =
+
+* optionally include WordPress comment counts in total post counts (does not update automatically from WordPress side yet)
+
 == To Do ==
 
 * Better instructions for all the options, code cleanup

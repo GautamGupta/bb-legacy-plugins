@@ -54,9 +54,12 @@ $ask_during_new=($topic_id==0 && $minimum_add_level && $bb_polls['ask_during_new
 if (!$edit_poll && isset($_GET['edit_poll'])) {$edit_poll= intval($_GET['edit_poll']);}
 if ($edit_poll || ! isset($topic->poll_options)) {	// no saved poll question with options
 
-	if ($administrator || $ask_during_new || ($minimum_add_level  &&  ! ( $bb_polls['only_topic_author_can_add'] && $topic->topic_poster!=$user_id))) {	// 1
-	if ($administrator || $ask_during_new || (! ($bb_polls['add_within_hours'] &&  $bb_polls['add_within_hours']<(time()-bb_gmtstrtotime($topic->topic_start_time))/3600))) {	// 2
-	if ($administrator || $ask_during_new || (! ($bb_polls['close_with_topic'] && $topic->topic_open!=1 ))) {	// 3
+	if ($administrator || $ask_during_new || 
+		($minimum_add_level
+		&& !($bb_polls['only_topic_author_can_add'] && $topic->topic_poster!=$user_id)
+		&& !($bb_polls['add_within_hours'] &&  $bb_polls['add_within_hours']<(time()-bb_gmtstrtotime($topic->topic_start_time))/3600) 
+	 	&& !($bb_polls['close_with_topic'] && $topic->topic_open!=1)
+	 	)) {
 	
 		if (isset($_POST['poll_question'])) {	 // save new poll setup from _post data 
 				bb_polls_save_poll_setup($topic_id);						
@@ -75,7 +78,7 @@ if ($edit_poll || ! isset($topic->poll_options)) {	// no saved poll question wit
 		
 		} } }	// end new poll question + end show start_new_poll form 
 
-	} } }  // 1 2 3  checks for allowed settings to start/edit poll 
+	}    // 1 2 3  checks for allowed settings to start/edit poll 
 
 } else {		// there's a saved poll question with options
 
@@ -324,7 +327,7 @@ function bb_polls_add_header() {
 	if (isset($_GET['show_poll_setup_form_ajax'])) {
 		$topic_id=intval($_GET['show_poll_setup_form_ajax']);
 		header("Content-Type: application/x-javascript");
-		echo 'bb_polls_insert_ajax("'.mysql_escape_string(bb_polls_show_poll_setup_form($topic_id,0,1)).'")';
+		echo 'bb_polls_insert_ajax("'.mysql_escape_string(bb_polls_show_poll_setup_form($topic_id,0,0)).'")';
 		exit();
 	}
 	if (isset($_GET['add_vote_ajax'])) {

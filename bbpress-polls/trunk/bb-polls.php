@@ -49,12 +49,14 @@ if ($bb_polls['minimum_view_level']=="read" || bb_current_user_can($bb_polls['mi
 $topic_id=bb_polls_check_cache($topic_id);
 $user_id=bb_get_current_user_info( 'id' );
 $administrator=bb_current_user_can('administrate');
+$minimum_add_level=bb_current_user_can($bb_polls['minimum_add_level']);
+$ask_during_new=($topic_id==0 && $minimum_add_level && $bb_polls['ask_during_new'] && $bb_polls['use_ajax'] && (isset($_GET['new']) || is_forum())) ? true : false;
 if (!$edit_poll && isset($_GET['edit_poll'])) {$edit_poll= intval($_GET['edit_poll']);}
 if ($edit_poll || ! isset($topic->poll_options)) {	// no saved poll question with options
 
-	if ($administrator || (bb_current_user_can($bb_polls['minimum_add_level'])  &&  ! ( $bb_polls['only_topic_author_can_add'] && $topic->topic_poster!=$user_id))) {	// 1
-	if ($administrator || (! ( $bb_polls['add_within_hours'] &&  $bb_polls['add_within_hours']<(time()-bb_gmtstrtotime($topic->topic_start_time))/3600))) {	// 2
-	if ($administrator || (! ($bb_polls['close_with_topic'] && $topic->topic_open!=1 ))) {	// 3
+	if ($administrator || $ask_during_new || ($minimum_add_level  &&  ! ( $bb_polls['only_topic_author_can_add'] && $topic->topic_poster!=$user_id))) {	// 1
+	if ($administrator || $ask_during_new || (! ($bb_polls['add_within_hours'] &&  $bb_polls['add_within_hours']<(time()-bb_gmtstrtotime($topic->topic_start_time))/3600))) {	// 2
+	if ($administrator || $ask_during_new || (! ($bb_polls['close_with_topic'] && $topic->topic_open!=1 ))) {	// 3
 	
 		if (isset($_POST['poll_question'])) {	 // save new poll setup from _post data 
 				bb_polls_save_poll_setup($topic_id);						

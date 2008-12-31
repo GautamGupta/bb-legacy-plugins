@@ -130,16 +130,19 @@ if (empty($bb_polls)) {
 	#bb_polls p {margin:15px 0;padding:0;}
 	#bb_polls .poll_question, #bb_polls .poll_footer {font-weight:bold; text-align:center; color:#2E6E15;}
 	#bb_polls .poll_label {font-weight:bold; margin:1em 0 1em 1em;}								
-	#bb_polls .poll_option {margin:2px 0 -2px 0; text-align:center;font-weight:bold; font-size:9px; line-height:5px; padding:2px 1px;  border:1px solid #303030; color:#fff; }
+	#bb_polls .poll_option {overflow:hidden; white-space:nowrap; margin:2px 0 -2px 0; text-align:center; font-size:11px; line-height:9px; padding:1px 0 0 0;  border:1px solid #303030; color:#fff; }
 	#bb_polls .poll_option1 {background:red;}
 	#bb_polls .poll_option2 {background:green;}
 	#bb_polls .poll_option3 {background:blue;}
 	#bb_polls .poll_option4 {background:orange;}
 	#bb_polls .poll_option5 {background:purple;}
 	#bb_polls .poll_option6 {background:pink;}
-	#bb_polls .poll_option7 {background:yellow;}
+	#bb_polls .poll_option7 {background:olive;}
 	#bb_polls .poll_option8 {background:navy;}
-	#bb_polls .poll_option9 {background:grey;}
+	#bb_polls .poll_option9 {background:teal;}	
+	#bb_polls .poll_option10 {background:aqua;}
+	#bb_polls .poll_option11 {background:maroon;}
+	#bb_polls .poll_option12 {background:fuchsia;}
 	";			
 					
 	$bb_polls['poll_question']=__("Would you like to add a poll to this topic for members to vote on?");

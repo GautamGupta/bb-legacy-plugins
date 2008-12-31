@@ -5,7 +5,7 @@ Description:  allows users to add polls to topics, with optional ajax-like actio
 Plugin URI:  http://bbpress.org/plugins/topic/62
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.5.6
+Version: 0.5.7
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 */
@@ -157,7 +157,7 @@ global $bb_polls,$topic,$poll_options;
 $administrator=bb_current_user_can('administrate');
 if ($bb_polls['minimum_view_level']=="read" || bb_current_user_can($bb_polls['minimum_view_level']) ) {
 $topic_id=bb_polls_check_cache($topic_id);
-$output='<div class="poll_question">'.$bb_polls['label_poll_text'].': '.$poll_options['poll_question'].'</div>';
+$output='<div class="poll_question">'.__('poll').': '.$poll_options['poll_question'].'</div>';
 
 if (!$poll_options['poll_multiple_choice'] && isset($poll_options['poll_count_0'])) {$real_vote_count=intval($poll_options['poll_count_0']);}
 else {$real_vote_count=0; if ($poll_options['poll_multiple_choice']) {for ($i=1; $i<=$bb_polls['max_options']; $i++) {if (isset($poll_options['poll_count_'.$i])) {$real_vote_count+=intval($poll_options['poll_count_'.$i]);}}}}
@@ -192,7 +192,7 @@ if (bb_current_user_can($bb_polls['minimum_vote_level'])) {
 $topic_id=bb_polls_check_cache($topic_id);
 if ($poll_options['poll_multiple_choice']==1) {$poll_type="checkbox";} else {$poll_type="radio";}
 $output='<form action="'.remove_query_arg(array('start_new_poll','edit_poll','delete_poll','show_poll_vote_form_ajax','show_poll_setup_form_ajax','bb_polls_cache')).'" method="post" name="bb_polls" onSubmit="if (window.bb_polls_insert_ajax) {bb_polls_add_vote_ajax();return false;}">
-	 <div class="poll_question">'.$bb_polls['label_poll_text'].': '.$poll_options['poll_question'].'</div>';
+	 <div class="poll_question">'.__('poll').': '.$poll_options['poll_question'].'</div>';
 for ($i=1; $i<=$bb_polls['max_options']; $i++) {
 	if (isset($poll_options[$i])) {
 		if ($poll_options['poll_multiple_choice']==1) {$poll_name="poll_vote_".$i;} else {$poll_name="poll_vote_0";}

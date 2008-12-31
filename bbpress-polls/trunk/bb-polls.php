@@ -40,17 +40,18 @@ function bb_polls_initialize() {
 }
 
 function bb_polls_pre_topic($topic_id=0, $edit_poll=0) { 
+	global $topic; $topic=false; 	// bbpress loop bug
 	echo "<h3 style='margin:1em 0 0 0;'>".__('Polls')."</h3><ul style='list-style:none;margin:0 0 1em 0;'>"; bb_polls_pre_poll(0,0); echo "</ul>"; 
 }
 
 function bb_polls_pre_poll($topic_id, $edit_poll=0) { 
 global $bb_polls,$topic,$poll_options,$page;
 if ($bb_polls['minimum_view_level']=="read" || bb_current_user_can($bb_polls['minimum_view_level']) ) :   
-$topic_id=bb_polls_check_cache($topic_id);
+$topic_id=bb_polls_check_cache($topic_id);  
 $user_id=bb_get_current_user_info( 'id' );
 $administrator=bb_current_user_can('administrate');
 $minimum_add_level=bb_current_user_can($bb_polls['minimum_add_level']);
-$ask_during_new=($topic_id==0 && $minimum_add_level && $bb_polls['ask_during_new'] && $bb_polls['use_ajax'] && (isset($_GET['new']) || is_forum())) ? true : false;
+$ask_during_new=(empty($topic_id) && $minimum_add_level && $bb_polls['ask_during_new'] && $bb_polls['use_ajax'] && (isset($_GET['new']) || is_forum())) ? true : false;
 if (!$edit_poll && isset($_GET['edit_poll'])) {$edit_poll= intval($_GET['edit_poll']);}
 if ($edit_poll || ! isset($topic->poll_options)) {	// no saved poll question with options
 

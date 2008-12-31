@@ -319,27 +319,28 @@ function bb_polls_add_header() {
 	}				
 	if (isset($_GET['show_poll_results_ajax'])) {
 		$topic_id=intval($_GET['show_poll_results_ajax']);
-		header("Content-Type: application/x-javascript");
-		echo 'bb_polls_insert_ajax("'.mysql_escape_string(bb_polls_show_poll_results($topic_id,0)).'")';
+		header("Content-Type: application/x-javascript; charset=utf-8");
+		echo 'bb_polls_insert_ajax("'.mysql_escape_string(bb_polls_show_poll_results($topic_id,0)).'");';
 		exit();
 	}
 	if (isset($_GET['show_poll_vote_form_ajax'])) {
 		$topic_id=intval($_GET['show_poll_vote_form_ajax']);
-		header("Content-Type: application/x-javascript");
-		echo 'bb_polls_insert_ajax("'.mysql_escape_string(bb_polls_show_poll_vote_form($topic_id,0)).'")';
+		header("Content-Type: application/x-javascript; charset=utf-8");
+		echo 'bb_polls_insert_ajax("'.mysql_escape_string(bb_polls_show_poll_vote_form($topic_id,0)).'");';
 		exit();
 	}	
 	if (isset($_GET['show_poll_setup_form_ajax'])) {
 		$topic_id=intval($_GET['show_poll_setup_form_ajax']);
-		header("Content-Type: application/x-javascript");
-		echo 'bb_polls_insert_ajax("'.mysql_escape_string(bb_polls_show_poll_setup_form($topic_id,0,0)).'")';
+		header("Content-Type: application/x-javascript; charset=utf-8");
+		echo 'bb_polls_insert_ajax("'.mysql_escape_string(bb_polls_show_poll_setup_form($topic_id,0,0)).'");';
+		echo 'setTimeout("document.forms.postform.poll_question.focus()",50);';
 		exit();
 	}
 	if (isset($_GET['add_vote_ajax'])) {
 		$topic_id=intval($_GET['add_vote_ajax']);
 		bb_polls_add_vote(bb_get_current_user_info( 'id' ),$topic_id);
-		header("Content-Type: application/x-javascript");
-		echo 'bb_polls_insert_ajax("'.mysql_escape_string(bb_polls_show_poll_results($topic_id,0)).'")';
+		header("Content-Type: application/x-javascript; charset=utf-8");
+		echo 'bb_polls_insert_ajax("'.mysql_escape_string(bb_polls_show_poll_results($topic_id,0)).'");';
 		exit();
 	}			
 } 

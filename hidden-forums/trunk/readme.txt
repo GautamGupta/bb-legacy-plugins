@@ -4,7 +4,7 @@ Contributors: _ck_
 Requires at least: 0.9
 Tested up to: trunk
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Make selected forums completely hidden except to certain members or roles. Uses streamlined code and methods in  bbPress 0.9 to be faster than previous solutions without their quirks. Now 1.0 compatible.
 
@@ -42,7 +42,7 @@ Make selected forums completely hidden except to certain members or roles. Uses 
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 

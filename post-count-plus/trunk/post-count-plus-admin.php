@@ -28,7 +28,7 @@ function post_count_plus_admin() {
 					$post_count_plus['custom_titles'][3]=__("Minimum Role");
 					$post_count_plus['custom_titles'][4]=__("Color");
 					
-					foreach(array_keys( $post_count_plus_type) as $key) {
+					foreach( $post_count_plus_type as $key=>$discard) {
 					$post_count_plus[$key]=stripslashes_deep($post_count_plus[$key]);					
 					$colspan= (substr($post_count_plus_type[$key],0,strpos($post_count_plus_type[$key].",",","))=="array") ? "2" : "1";
 						?>
@@ -89,7 +89,7 @@ function post_count_plus_admin() {
 }
 
 function post_count_plus_process_post() {
-global $post_count_plus;
+global $post_count_plus, $post_count_plus_type, $post_count_plus_label;
 	if (bb_current_user_can('administrate')) {
 		if (isset($_REQUEST['post_count_plus_reset'])) {
 			unset($post_count_plus); 		
@@ -102,7 +102,7 @@ global $post_count_plus;
 		elseif (isset($_REQUEST['post_count_plus_recount'])) {post_count_plus_recount();}
 		elseif (isset($_POST['submit']) && isset($_POST['post_count_plus'])) {
 							
-			foreach(array_keys( $post_count_plus) as $key) {
+			foreach($post_count_plus_type as $key=>$discard) {
 				if (isset($_POST[$key])) {$post_count_plus[$key]=$_POST[$key];}
 			}
 			$found=0; $width=5; $rows=floor(count($post_count_plus['custom_titles'])/$width);
@@ -119,11 +119,23 @@ global $post_count_plus;
 add_action( 'bb_admin-header.php','post_count_plus_process_post');
 
 function post_count_plus_recount() { 	// count function to re-sync all user post counts and keep extra queries low
-	 global $bbdb; 	
+	 global $post_count_plus,$bb,$bbdb; 	
 	// echo "<html><body><h1>Post Count Plus</h1><h2>counting posts for all users...</h2><pre>";
+	
+	if ($post_count_plus['wp_comments'] && !empty($bb->wp_table_prefix)) {		
+		$query="SELECT COALESCE(poster_id,user_id) as user_id,'post_count',COALESCE(post_count,0)+COALESCE(comment_count,0) as meta_value
+			FROM (SELECT poster_id,  count(post_status) as post_count FROM $bbdb->posts WHERE post_status=0 GROUP BY poster_id) as t1 
+			LEFT join (SELECT user_id,count(comment_approved) as comment_count 
+			FROM  $bb->wp_table_prefix"."comments WHERE comment_approved=1 GROUP BY user_id) as t2 
+			ON t1.poster_id=t2.user_id";		
+	} else {	
+		$query="SELECT poster_id as user_id,'post_count',count(post_status) as meta_value 
+			FROM $bbdb->posts WHERE post_status = 0 GROUP BY poster_id";
+	}
+	
 	$status1=$bbdb->query("DELETE FROM $bbdb->usermeta  WHERE meta_key = 'post_count'");
-	$status2=$bbdb->query("INSERT INTO  $bbdb->usermeta  (user_id, meta_key, meta_value) ".
-	"SELECT poster_id as user_id,'post_count',count(*) as meta_value FROM $bbdb->posts WHERE post_status = 0 GROUP BY poster_id");
+	$status2=$bbdb->query("INSERT INTO  $bbdb->usermeta  (user_id, meta_key, meta_value) $query");
+	
 	// echo "<h3>".mysql_affected_rows(). " users counted and inserted.</h3></pre>";
 	// echo "<b><a href='".remove_query_arg('post_count_plus_recount')."'>return to forum</a></b>";
 	// echo "<scr"."ipt>setTimeout(".'"'."window.location='".remove_query_arg('post_count_plus_recount')."'".'"'.",3000);</scr"."ipt>"; exit();	

@@ -5,7 +5,7 @@ Plugin URI:  http://bbpress.org/plugins/topic/83
 Description: An enhanced "user post count" with "custom titles" for topics and profiles, based on posts and membership, with cached results for faster pages. No template edits required.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 1.1.7
+Version: 1.1.8
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -60,10 +60,19 @@ if (!$user_id) {
 if ($user_id) {
 	$user=bb_get_user($user_id); 	
 	$posts=$user->post_count;  // bb_get_usermeta( $user_id, 'post_count');	// even this should be bypassed at some point with a simple cache check & mysql query - sometimes causes 2 queries
-	if (!$posts) {
-		global $bbdb; $posts=$bbdb->get_var("SELECT count(*) FROM $bbdb->posts WHERE poster_id = $user_id AND post_status = 0");
+	if (strlen($posts)==0) {
+		global $post_count_plus,$bb,$bbdb;  $posts=0; $comments=0;
+		$query="SELECT count(post_status) FROM $bbdb->posts WHERE post_status=0 AND poster_id=$user_id";
+		$posts=intval($bbdb->get_var($query));
+		
+		if ($post_count_plus['wp_comments'] && !empty($bb->wp_table_prefix)) {		
+			$query="SELECT COUNT( comment_approved ) FROM $bb->wp_table_prefix"."comments WHERE comment_approved=1 AND user_id=$user_id";
+			$comments=intval($bbdb->get_var($query));
+			$posts+=$comments;
+		}		
+		
 		// bb_update_usermeta( $user_id, 'post_count', $posts);  // uses too many queries, we'll do it directly
-		// $bbdb->query("INSERT INTO $bbdb->usermeta  (user_id, meta_key, meta_value)  VALUES ('".$user_id."', 'post_count', '".$posts."') ");		
+		// $bbdb->query("INSERT INTO $bbdb->usermeta  (user_id, meta_key, meta_value)  VALUES ('".$user_id."', 'post_count', '".$posts."') ");				
 		bb_update_meta( $user_id, "post_count", $posts, 'user' );
 	}
 }	
@@ -182,6 +191,7 @@ function post_count_plus_initialize() {
 	if (!isset($post_count_plus)) {$post_count_plus = bb_get_option('post_count_plus');
 		if (!$post_count_plus) {
 		$post_count_plus['activate']=true;
+		$post_count_plus['wp_comments']=false;
 		$post_count_plus['post_count']=true;
 		$post_count_plus['join_date']=true;		
 		$post_count_plus['custom_title']=true;
@@ -210,6 +220,7 @@ function post_count_plus_initialize() {
 		$post_count_plus['custom_titles'][4]=__("Color");					
 		
 		$post_count_plus_label['activate']=__("Use features without template editing ?");
+		$post_count_plus_label['wp_comments']=__("Include WordPress comment counts in post counts ?");
 		$post_count_plus_label['post_count']=__("Show post counts for users in topic pages ?");
 		$post_count_plus_label['join_date']=__("Show joined date for users in topic pages ?");
 		$post_count_plus_label['custom_title']=__("Show custom titles based on posts & membership ?");
@@ -222,6 +233,7 @@ function post_count_plus_initialize() {
 		$post_count_plus_label['custom_titles']=__("<h2>Custom Titles</h2>Enter any special titles given based upon number of posts, days of membership, and/or role.<br>Each field is optional, but at least one minimum is required.<br />");
 
 		$post_count_plus_type['activate']="binary";		
+		$post_count_plus_type['wp_comments']="binary";
 		$post_count_plus_type['post_count']="binary";
 		$post_count_plus_type['join_date']="binary";				
 		$post_count_plus_type['custom_title']="binary";						

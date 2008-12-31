@@ -248,8 +248,8 @@ bb_update_topicmeta( $topic_id, 'poll_options', '..'.serialize($poll_options)); 
 function bb_polls_show_poll_setup_form($topic_id,$display=1,$edit_poll=0) {
 global $bb_polls,$topic,$poll_options;
 if (($edit_poll==0 && bb_current_user_can($bb_polls['minimum_add_level'])) || bb_current_user_can('administrate')) {
-$topic_id=bb_polls_check_cache($topic_id); $output="";
-if (is_topic()) {
+$is_topic=is_topic(); $topic_id=bb_polls_check_cache($topic_id); $output="";
+if ($is_topic) {
 $output.='<form action="'.remove_query_arg(array('start_new_poll','edit_poll','delete_poll','show_poll_vote_form_ajax','show_poll_setup_form_ajax','bb_polls_cache')).'" method="post">';
 }
 $output.='<p>'
@@ -271,11 +271,15 @@ for ($i=1; $i<=$bb_polls['max_options']; $i++) {
 } // loop 
 if ($bb_polls['max_options']>4 && !$poll_options[5]) {$output.='</div>';}
 		
+if ($is_topic) {
 $output.='<p class="poll_footer">';
 // <input class="submit" type="button"  value="'.$bb_polls['label_cancel_text'].'" onClick="document.location='."'".remove_query_arg(array('start_new_poll','edit_poll','delete_poll','show_poll_vote_form_ajax','show_poll_setup_form_ajax','bb_polls_cache'))."'".'" /> 
-$output.='<input class="submit" type="button"  value="'.$bb_polls['label_cancel_text'].'" onClick="bb_polls.innerHTML=bb_polls_cancel; return false;" /> 
-<input class="submit" type="submit"  value="'.$bb_polls['label_save_text'].'" /></p>';
-if (is_topic()) {$output.='</form>';}
+$output.='<input class="submit" type="button"  value="'.$bb_polls['label_cancel_text'].'" onClick="bb_polls.innerHTML=bb_polls_cancel; return false;" /> ';
+$output.='<input class="submit" type="submit"  value="'.$bb_polls['label_save_text'].'" /></p></form>';
+} else {
+$output.=' &nbsp; <input class="submit" type="button"  value="'.$bb_polls['label_cancel_text'].'" onClick="bb_polls.innerHTML=bb_polls_cancel; return false;" /><br />';
+}
+
 $output=stripslashes($output);if ($display) {echo '<li id="bb_polls" class="extra-caps-row">'.$output.'</li>';} else {return $output;}
 }
 }

@@ -27,13 +27,14 @@ function bb_polls_initialize() {
 	bb_polls_add_header(); 	// add_action('bb_send_headers', 'bb_polls_add_header');	
 	$bb_polls['icon']=bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),"\\"),array("","/"),dirname(__FILE__)),' /\\').'/icon.png'; 
 		
+	$is_topic=is_topic();
 	$ask_during_new=($bb_polls['ask_during_new'] && $bb_polls['use_ajax'] && (isset($_GET['new']) || is_forum())) ? true : false;
-	if (is_topic() || $ask_during_new) {		// this eventually may have to be added on an admin page
+	if ($is_topic || $ask_during_new) {		// this eventually may have to be added on an admin page
 		add_action('bb_head', 'bb_polls_add_css');
 		add_action('bb_head','bb_polls_add_javascript');
 		add_action('topicmeta','bb_polls_pre_poll',200);		
 		if ($ask_during_new) {add_action('post_form','bb_polls_pre_topic',9);}
-	} if (!is_topic()) {
+	} if (!$is_topic) {
 		add_filter('topic_title', 'bb_polls_title',100);		
 	}		
 }

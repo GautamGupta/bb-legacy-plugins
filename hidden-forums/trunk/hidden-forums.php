@@ -5,11 +5,11 @@ Description:  Make selected forums completely hidden except to certain members o
 Plugin URI:  http://bbpress.org/plugins/topic/105
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.4
+Version: 0.0.5
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
-Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate: http://bbshowcase.org/donate/
 
 Instructions:  add hidden forum list and exceptions below, install, activate 
 */
@@ -42,9 +42,9 @@ $hidden_forums['label']="[H] ";	// text, html, css or image to indicate hidden f
 add_action('bb_init','hidden_forums_init',200);
 
 function hidden_forums_init() {
-global $hidden_forums, $hidden_forums_list, $hidden_forums_array, $bb_views, $bb_current_user;
+global $hidden_forums, $hidden_forums_list, $hidden_forums_array, $bb_views, $bb_current_user,$forum_id;
 
-$id=(isset($bb_current_user)) ? $bb_current_user->ID : 0;
+$id=(!empty($bb_current_user)) ? intval($bb_current_user->ID) : 0;
 $hidden_forums_list=array_flip($hidden_forums['hidden_forums']);
 
 if ($id>0) {	// if id=0, don't bother searching allowed exceptions
@@ -63,6 +63,15 @@ if ((isset($_GET['listforums']) || isset($_GET['forumlist'])) && 'keymaster'==@r
 }
 
 if (!empty($hidden_forums_list)) {
+	if (is_forum()) {
+		bb_repermalink();
+		if (!empty($forum_id) && isset($hidden_forums_list[$forum_id])) {	// user is where they shouldn't be, die
+			nocache_headers();
+			bb_safe_redirect(bb_get_option('uri'));
+			exit;
+		}
+	}
+	
 	$hidden_forums_array=$hidden_forums_list;
 	$hidden_forums_list=implode(",",array_keys($hidden_forums_list));
  

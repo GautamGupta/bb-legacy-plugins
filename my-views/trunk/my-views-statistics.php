@@ -26,6 +26,7 @@ add_filter('bb_views', 'my_views_statistics_filter');
 
 function my_views_statistics_view($view) {
 	if ($view=="stats" || $view=="statistics") :	
+		bb_send_headers();
 		bb_get_header();
 		my_views_header(1);
 		my_views_statistics();

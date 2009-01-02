@@ -25,8 +25,11 @@ function my_views_installed_available_plugins_filter( $passthrough ) {
 add_filter('bb_views', 'my_views_installed_available_plugins_filter');  
 }
 
+add_action( 'bb_custom_view', 'my_views_available_plugins_view' );
+
 function my_views_installed_plugins_view($view) {
-	if ($view=="installed-plugins") :	
+	if ($view=="installed-plugins") :
+		bb_send_headers();	
 		bb_get_header();
 		my_views_header(1);
 		my_views_installed_plugins();
@@ -39,6 +42,7 @@ add_action( 'bb_custom_view', 'my_views_installed_plugins_view' );
 
 function my_views_available_plugins_view($view) {
 	if ($view=="available-plugins") :
+		bb_send_headers();
 		bb_get_header();
 		my_views_header(1);
 		my_views_available_plugins(); 
@@ -47,7 +51,6 @@ function my_views_available_plugins_view($view) {
 		exit();
 	endif;
 } 
-add_action( 'bb_custom_view', 'my_views_available_plugins_view' );
 
 function my_views_installed_plugins() {
 

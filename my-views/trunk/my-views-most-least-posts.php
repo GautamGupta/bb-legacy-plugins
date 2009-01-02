@@ -1,11 +1,11 @@
 <?php
 /*
-Plugin Name: My Posts module - Most/Least Posts
-Description: This plugin is part of the My Posts plugin. It adds Most/Least Posts to the list of views.		
+Plugin Name: My Views module - Most/Least Posts
+Description: This plugin is part of the My Views plugin. It adds Most/Least Posts to the list of views.		
 Plugin URI:  http://bbpress.org/plugins/topic/67
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.1
+Version: 0.1.3
 */ 
 
 if (is_callable('bb_register_view')) {	// Build 876+   alpha trunk
@@ -15,13 +15,13 @@ if (is_callable('bb_register_view')) {	// Build 876+   alpha trunk
 
 } else {		// Build 214-875	(0.8.2.1)
 
-function most_posts_filter($passthrough) {
+function my_views_most_posts_filter($passthrough) {
 	global $views;
 	$views["most-posts"] = "Topics with the most posts";
 	$views["least-posts"] = "Topics with the least posts";
 	return $passthrough;
 }
-add_filter('bb_views', 'most_posts_filter');
+add_filter('bb_views', 'my_views_most_posts_filter');
 }
 
 function most_posts( $view ) {

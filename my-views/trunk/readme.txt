@@ -2,9 +2,9 @@
 Tags: view, views, most viewed, least viewed, my topics, _ck_
 Contributors: _ck_
 Requires at least: 0.8.2
-Tested up to:  0.9.0.2
+Tested up to:  trunk
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 
 My Views is a powerful addition to the default "views" in bbPress. It will let you customize output and adds several new views.
@@ -18,17 +18,17 @@ My Views consists of a main plugin and several optional "module" plugins that ca
 1. Install and activate my-views.php plugin
 2. Optionally install bb-Topic-Views plugin and Plugin Browser for bbPress if desired
 3. Install and activate optional My Views module plugins as desired. 
-4. Edit "view.php" template and place `<? my_views_header(); ?>` just after `<h3>..</h3>` breadcrumb section  
+4. Edit "view.php" template and place `<?php my_views_header(); ?>` just after `<h3>..</h3>` breadcrumb section  
 5. Adjust display order and/or hide undesired views (currently only by editing my-views.php, admin menu coming soon)
-6. Optionally edit "front-page.php" and "forum.php" templates to show `<? echo $forum->views; ?>;` in desired column
+6. Optionally edit "front-page.php" and "forum.php" templates to show `<?php echo $forum->views; ?>;` in desired column
 
 == Frequently Asked Questions ==
 
 = My Views adds the following features to bbPress Views: =
     * adds html page titles to Views which are missing by bbPress default
-    * adds proper view title and dropdown Views box  if you edit "view.php" template and put <? my_views_header(); ?> after <h3>..</h3> section
-    * adds optional dropdown views list  anywhere you put <? my_views_dropdown(); ?> in your templates (themes)
-    * adds forum total view count if bb-Topic-Views is installed. Edit "front-page.php" template to show <? echo $forum->views; ?>; in desired column.
+    * adds proper view title and dropdown Views box  if you edit "view.php" template and put <?php my_views_header(); ?> after <h3>..</h3> section
+    * adds optional dropdown views list  anywhere you put <?php my_views_dropdown(); ?> in your templates (themes)
+    * adds forum total view count if bb-Topic-Views is installed. Edit "front-page.php" template to show <?php echo $forum->views; ?>; in desired column.
 
 = Built-in bbPress Views =
     * Topics with no replies		(no-replies)
@@ -40,6 +40,7 @@ My Views consists of a main plugin and several optional "module" plugins that ca
     * Topics I've Participated In	(my-posts)
     * Topics with the most posts	(most-posts)
     * Topics with the least posts	(least-posts)
+    * Topics with new posts		(new-posts)
     
 = Extended bbPress Views by My Views if optional "bb Topic Views" plugin by Mike Wittmann is installed http://bbpress.org/plugins/topic/53  =
     * Topics with the most views	(most-views)
@@ -49,6 +50,9 @@ My Views consists of a main plugin and several optional "module" plugins that ca
 = Extended bbPress Views by My Views if optional "Plugin Browser for bbPress" plugin by Sam Bauers is installed http://bbpress.org/plugins/topic/57 =
    * Installed bbPress Plugins	(installed-plugins)
    * Available bbPress Plugins	(available-plugins)
+
+= Extended bbPress Views by My Views if optional "bbPress Polls" plugin by _ck_ is installed =
+   * Topics with Polls			(polls)
 
 = Extended bbPress Views by My Views if optional " bbPress Theme Switcher" plugin by _ck_ is installed =
    * Installed bbPress Themes  	(available-themes)
@@ -62,7 +66,7 @@ My Views consists of a main plugin and several optional "module" plugins that ca
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 
@@ -104,7 +108,13 @@ Version 0.1.1 (2008-04-21)
 
 Version 0.1.2 (2008-08-19)
 
-* 	additional view: "Topics with new posts"  (requires Unread Posts plugin by _ck_ ) Part of "started-participated" view.
+* 	additional view: "Topics with new posts"  (requires Unread Posts plugin by _ck_ ) - part of "started/participated" module
+
+Version 0.1.3 (2009-01-01)
+
+*	additional view module: "Topics with polls"
+*	better mysql query for most/least views
+*	bbPress 1.0 compatibility fix for most/least views
 
 == To Do ==
 

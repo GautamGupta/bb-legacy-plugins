@@ -5,11 +5,11 @@ Description:  My Views is a powerful addition to the default "views" in bbPress.
 Plugin URI:  http://bbpress.org/plugins/topic/67
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.2
+Version: 0.1.3
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
-Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate: http://bbshowcase.org/donate/
 */
 
 function my_views_init() {	//	to do: make much nicer with admin interface
@@ -18,8 +18,8 @@ global $my_views;
 $my_views['remove_views']=array("weird-view1","weird-view2");	// remove any views by slug name, built-in or from my-views, example: "untagged"
 
 $my_views['prefered_order']=array(	// force views to list in the order that you desire
-	"latest-discussions","no-replies","untagged","my-topics","my-posts","new-posts","most-views","most-posts","least-views","least-posts","support-forum-no",
-	"installed-plugins","available-plugins","installed-themes","available-themes","statistics"
+	"latest-discussions","no-replies","untagged","my-topics","my-posts","new-posts","most-views","most-posts","least-views","least-posts",
+	"polls","support-forum-no","installed-plugins","available-plugins","installed-themes","available-themes","statistics"
 	);
 
 $my_views['view_pages_label']=__("pages: ");
@@ -147,16 +147,16 @@ function ts_makeSortable(table) {
     for (var i=0;i<firstRow.cells.length;i++) {
         var cell = firstRow.cells[i];
         var txt = ts_getInnerText(cell);
-        cell.innerHTML = '<a href="#" class="sortheader" '+ 
+        cell.innerHTML = '<a href="#" target="_self" class="sortheader" '+ 
         'onclick="ts_resortTable(this, '+i+');return false;">' + 
-        txt+'<span class="sortarrow">&nbsp;&uarr;&darr;</span></a>';
+        txt+'<span class="sortarrow">&nbsp;&nbsp;&#8597;</span></a>';
     }
 }
 
 function ts_getInnerText(el) {
 	if (typeof el == "string") return el;
 	if (typeof el == "undefined") { return el };
-	if (el.innerText) return el.innerText;	//Not needed but it is faster
+	if (el.innerText) {if (el.innerText=="") {return el.innerHTML;} else {return el.innerText;}}   //Not needed but it is faster
 	var str = "";
 	
 	var cs = el.childNodes;
@@ -171,6 +171,7 @@ function ts_getInnerText(el) {
 				break;
 		}
 	}
+	if (str=="") {return el.innerHTML;}
 	return str;
 }
 
@@ -296,11 +297,13 @@ function ts_sort_numeric(a,b) {
 }
 
 function ts_sort_caseinsensitive(a,b) {
+try {
     aa = ts_getInnerText(a.cells[SORT_COLUMN_INDEX]).toLowerCase();
     bb = ts_getInnerText(b.cells[SORT_COLUMN_INDEX]).toLowerCase();
     if (aa==bb) return 0;
     if (aa<bb) return -1;
     return 1;
+} catch(dummy) {return 0;}    
 }
 
 function ts_sort_default(a,b) {

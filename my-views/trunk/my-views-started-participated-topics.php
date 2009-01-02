@@ -23,7 +23,7 @@ add_action('bb_init', 'my_views_add_started_participated_topics');
 
 } else {		// Build 214-875	(0.8.2.1)
 
-function my_views_filter( $passthrough ) {
+function my_views_started_participated_filter( $passthrough ) {
 	global $views;
 	$views['latest-discussions'] = "Latest Discussions";
 	if (bb_is_user_logged_in()) {
@@ -33,8 +33,10 @@ function my_views_filter( $passthrough ) {
 	}
 	return $passthrough;
 }
-add_filter('bb_views', 'my_views_filter');
+add_filter('bb_views', 'my_views_started_participated_filter');
 }
+
+add_action( 'bb_custom_view', 'my_views_action' );
 
 function my_views_action( $view ) {
 global $bbdb, $topics, $view_count, $page; 
@@ -52,9 +54,9 @@ if ($view=='latest-discussions' || ($user_id && ($view=='my-topics' || $view=='m
 		}
 		elseif ($view=='my-posts') {
 		
-		// limit *9 is a lazy work around to avoid a join, as topic_static=0 in next query filters out deleted
+		// limit *9 is a lazy workaround to avoid a join, as topic_static=0 in next query filters out deleted
 		$my_posts = $bbdb->get_results("SELECT topic_id FROM $bbdb->posts WHERE post_status=0 AND poster_id=$user_id ORDER BY cast(post_id as UNSIGNED) DESC LIMIT ".$limit*9);
-		foreach (array_keys($my_posts) as $i) {$trans[$my_posts[$i]->topic_id] =& $my_posts[$i];} 
+		foreach ($my_posts as $i=>$discard) {$trans[$my_posts[$i]->topic_id] =& $my_posts[$i];} 
 		unset($my_posts); 	 // huge query, release memory
 		$ids = join(',', array_keys($trans));			// this eventually needs to be enhanced to filter/split the array for pagination - could get HUGE
 		$where = $where." AND topic_id IN ($ids) ";			
@@ -75,8 +77,5 @@ if ($view=='latest-discussions' || ($user_id && ($view=='my-topics' || $view=='m
 	$topics = $bbdb->get_results("SELECT * ".$query.$restrict);
 	$topics = bb_append_meta( $topics, 'topic' );	
 }
-
 }
-add_action( 'bb_custom_view', 'my_views_action' );
-
 ?>

@@ -14,7 +14,7 @@ $append_to_title = 1;
 /*  stop editing here */
 
 // only executes if option is set to 1 above
-if ($append_to_title && (is_front() || is_forum() || is_tags())) {add_filter('topic_title', 'view_count_append_to_title', 99);}
+if ($append_to_title && (is_front() || is_forum() || is_tags() || is_view())) {add_filter('topic_title', 'view_count_append_to_title', 99);}
 
 add_filter('bb_head', 'update_view_count');
 add_action('bb_init', 'views_session_check');

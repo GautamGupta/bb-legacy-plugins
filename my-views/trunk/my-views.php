@@ -18,7 +18,7 @@ global $my_views;
 $my_views['remove_views']=array("weird-view1","weird-view2");	// remove any views by slug name, built-in or from my-views, example: "untagged"
 
 $my_views['prefered_order']=array(	// force views to list in the order that you desire
-	"latest-discussions","no-replies","untagged","my-topics","my-posts","new-posts","most-views","most-posts","least-views","least-posts",
+	"latest-discussions","subscribed-topics","no-replies","untagged","my-topics","my-posts","new-posts","most-views","most-posts","least-views","least-posts",
 	"polls","support-forum-no","installed-plugins","available-plugins","installed-themes","available-themes","statistics"
 	);
 

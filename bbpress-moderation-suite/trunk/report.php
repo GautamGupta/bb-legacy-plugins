@@ -33,11 +33,11 @@ if (!defined('BB_PATH') && isset($_GET['report'])) {
 	elseif (file_exists('../../bb-load.php'))
 		require_once '../../bb-load.php';
 	if (strtoupper($_SERVER['REQUEST_METHOD']) === 'GET') {
-		if (!bb_verify_nonce($_GET['_nonce'], 'bbmodsuite-report-' . $_GET['report'])) bb_die(__('Invalid report'));
+		if (!bb_verify_nonce($_GET['_nonce'], 'bbmodsuite-report-' . $_GET['report'])) bb_die(__('Invalid report', 'bbpress-moderation-suite'));
 
 		global $forums, $bb_post;
 		$bb_post = bb_get_post($_GET['report']);
-		if ($bb_post->post_status) bb_die(__('Invalid report'));
+		if ($bb_post->post_status) bb_die(__('Invalid report', 'bbpress-moderation-suite'));
 
 		function bbmodsuite_report_form_uri($a, $b) {
 			if ($b === 'bb-post.php') return str_replace('\\', '/', substr(BB_PLUGIN_URL, 0, -1) . str_replace(realpath(BB_PLUGIN_DIR), '', dirname(__FILE__)) . '/' . basename(__FILE__) . '?report=' . $_GET['report']);
@@ -56,7 +56,7 @@ if (!defined('BB_PATH') && isset($_GET['report'])) {
 		
 		bb_load_template('front-page.php');
 	} else {
-		if (!($_POST['report_reason'] === '0' || array_key_exists($_POST['report_reason'], bbmodsuite_report_reasons()))) bb_die(__('Invalid report'));
+		if (!($_POST['report_reason'] === '0' || array_key_exists($_POST['report_reason'], bbmodsuite_report_reasons()))) bb_die(__('Invalid report', 'bbpress-moderation-suite'));
 		$report_reason = $_POST['report_reason'];
 		$report_content = htmlspecialchars($_POST['report_content']);
 		$reported_post = $_GET['report'];
@@ -64,7 +64,7 @@ if (!defined('BB_PATH') && isset($_GET['report'])) {
 		$reported_at = bb_current_time('mysql');
 		global $bbdb;
 		$bbdb->insert($bbdb->prefix . 'bbmodsuite_reports', compact('report_reason', 'report_content', 'reported_post', 'report_from', 'reported_at'));
-		bb_die('<p>Your report was submitted. The moderation staff will review the post in question.</p>');
+		bb_die(__('<p>Your report was submitted. The moderation staff will review the post in question.</p>', 'bbpress-moderation-suite'));
 	}
 }
 
@@ -131,20 +131,20 @@ function bbpress_moderation_suite_report() { ?>
 <fieldset>
 	<div>
 		<label for="resolve_type">
-			<?php _e('Method of Resolving'); ?>
+			<?php _e('Method of Resolving', 'bbpress-moderation-suite'); ?>
 		</label>
 		<div>
 			<select name="resolve_type" id="resolve_type" tabindex="1">
 <?php foreach (bbmodsuite_report_resolve_types() as $id => $reason) { ?>
 				<option value="<?php echo $id; ?>"><?php echo $reason; ?></option>
 <?php } ?>
-				<option value="0" selected="selected"><?php _e('Other') ?></option>
+				<option value="0" selected="selected"><?php _e('Other', 'bbpress-moderation-suite') ?></option>
 			</select>
 		</div>
 	</div>
 	<div>
 		<label for="resolve_content">
-			<?php _e('Notes'); ?>
+			<?php _e('Notes', 'bbpress-moderation-suite'); ?>
 		</label>
 		<div>
 			<textarea id="resolve_content" name="resolve_content" rows="15" cols="43"></textarea>
@@ -153,24 +153,24 @@ function bbpress_moderation_suite_report() { ?>
 </fieldset>
 <fieldset class="submit">
 	<?php bb_nonce_field('bbmodsuite-report-resolve-submit_' . $_GET['report']); ?>
-	<input class="submit" type="submit" name="submit" value="<?php _e('Resolve') ?>" />
+	<input class="submit" type="submit" name="submit" value="<?php _e('Resolve', 'bbpress-moderation-suite') ?>" />
 </fieldset>
 </form>
 <?php	break;
 	case 'resolved_reports':
 		global $bbdb;
 		$reports = $bbdb->get_results('SELECT ID, report_reason, report_from, reported_post, report_content, resolved_by, resolve_type, resolve_content FROM `' . $bbdb->prefix . 'bbmodsuite_reports` WHERE `report_type`=\'resolved\'');
-		$reasons = bbmodsuite_report_reasons() + array(__('Other'));
-		$resolve_types = bbmodsuite_report_resolve_types() + array(__('Other'));
-?><h2><?php _e('Resolved Reports'); ?></h2>
+		$reasons = bbmodsuite_report_reasons() + array(__('Other', 'bbpress-moderation-suite'));
+		$resolve_types = bbmodsuite_report_resolve_types() + array(__('Other', 'bbpress-moderation-suite'));
+?><h2><?php _e('Resolved Reports', 'bbpress-moderation-suite'); ?></h2>
 <table class="widefat">
 	<thead>
 		<tr>
-			<th><?php _e('Reported By'); ?></th>
-			<th><?php _e('Description'); ?></th>
-			<th><?php _e('Resolved By'); ?></th>
-			<th><?php _e('Notes'); ?></th>
-			<th class="action"><?php _e('Actions'); ?></th>
+			<th><?php _e('Reported By', 'bbpress-moderation-suite'); ?></th>
+			<th><?php _e('Description', 'bbpress-moderation-suite'); ?></th>
+			<th><?php _e('Resolved By', 'bbpress-moderation-suite'); ?></th>
+			<th><?php _e('Notes', 'bbpress-moderation-suite'); ?></th>
+			<th class="action"><?php _e('Actions', 'bbpress-moderation-suite'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -198,7 +198,7 @@ function bbpress_moderation_suite_report() { ?>
 				<?php echo stripslashes(bb_autop($report->resolve_content)); ?>
 			</td>
 			<td class="action">
-				<a target="_blank" href="<?php post_link($report->reported_post); ?>"><?php _e('View reported post'); ?></a>
+				<a target="_blank" href="<?php post_link($report->reported_post); ?>"><?php _e('View reported post', 'bbpress-moderation-suite'); ?></a>
 			</td>
 		</tr>
 
@@ -212,42 +212,42 @@ function bbpress_moderation_suite_report() { ?>
 	break;
 	case 'admin':
 		if (bb_current_user_can('use_keys')) { ?>
-<h2>Administration</h2>
+<h2><?php _e('Administration', 'bbpress-moderation-suite'); ?></h2>
 <?php if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if (bb_verify_nonce($_POST['_wpnonce'], 'bbmodsuite-report-admin')) {
 		$report_types = trim($_POST['report_types']);
 		$resolve_types = trim($_POST['resolve_types']);
 		bb_update_option('bbmodsuite_report_types', $report_types);
 		bb_update_option('bbmodsuite_report_resolve_types', $resolve_types); ?>
-<div class="updated"><p><?php _e('Settings successfully saved.') ?></p></div>
+<div class="updated"><p><?php _e('Settings successfully saved.', 'bbpress-moderation-suite') ?></p></div>
 <?php } else { ?>
-<div class="error"><p><?php _e('Saving the settings failed.') ?></p></div>
+<div class="error"><p><?php _e('Saving the settings failed.', 'bbpress-moderation-suite') ?></p></div>
 <?php }
 } ?>
 <form class="settings" method="post" action="<?php bb_uri('bb-admin/admin-base.php', array('page' => 'admin', 'plugin' => 'bbpress_moderation_suite_report'), BB_URI_CONTEXT_FORM_ACTION + BB_URI_CONTEXT_BB_ADMIN); ?>">
 <fieldset>
 	<div>
 		<label for="report_types">
-			<?php _e('Report types'); ?>
+			<?php _e('Report types', 'bbpress-moderation-suite'); ?>
 		</label>
 		<div>
 			<textarea id="report_types" name="report_types" rows="15" cols="43"><?php bb_form_option('bbmodsuite_report_types'); ?></textarea>
-			<p><?php _e('Fill this box with generic reasons to report posts. (One per line)'); ?></p>
+			<p><?php _e('Fill this box with generic reasons to report posts. (One per line)', 'bbpress-moderation-suite'); ?></p>
 		</div>
 	</div>
 	<div>
 		<label for="resolve_types">
-			<?php _e('Resolve types'); ?>
+			<?php _e('Resolve types', 'bbpress-moderation-suite'); ?>
 		</label>
 		<div>
 			<textarea id="resolve_types" name="resolve_types" rows="15" cols="43"><?php bb_form_option('bbmodsuite_report_resolve_types'); ?></textarea>
-			<p><?php _e('Fill this box with generic ways of resolving reports. (One per line)'); ?></p>
+			<p><?php _e('Fill this box with generic ways of resolving reports. (One per line)', 'bbpress-moderation-suite'); ?></p>
 		</div>
 	</div>
 </fieldset>
 <fieldset class="submit">
 	<?php bb_nonce_field('bbmodsuite-report-admin'); ?>
-	<input class="submit" type="submit" name="submit" value="<?php _e('Save Changes') ?>" />
+	<input class="submit" type="submit" name="submit" value="<?php _e('Save Changes', 'bbpress-moderation-suite') ?>" />
 </fieldset>
 </form>
 <?php		break;
@@ -256,14 +256,14 @@ function bbpress_moderation_suite_report() { ?>
 	default:
 		global $bbdb;
 		$reports = $bbdb->get_results('SELECT ID, report_reason, report_from, reported_post, report_content FROM `' . $bbdb->prefix . 'bbmodsuite_reports` WHERE `report_type`=\'new\'');
-		$reasons = bbmodsuite_report_reasons() + array(__('Other'));
-?><h2><?php _e('New Reports'); ?></h2>
+		$reasons = bbmodsuite_report_reasons() + array(__('Other', 'bbpress-moderation-suite'));
+?><h2><?php _e('New Reports', 'bbpress-moderation-suite'); ?></h2>
 <table class="widefat">
 	<thead>
 		<tr>
-			<th><?php _e('Reported By'); ?></th>
-			<th><?php _e('Description'); ?></th>
-			<th class="action"><?php _e('Actions'); ?></th>
+			<th><?php _e('Reported By', 'bbpress-moderation-suite'); ?></th>
+			<th><?php _e('Description', 'bbpress-moderation-suite'); ?></th>
+			<th class="action"><?php _e('Actions', 'bbpress-moderation-suite'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -287,7 +287,7 @@ function bbpress_moderation_suite_report() { ?>
 				<?php echo stripslashes(bb_autop($report->report_content)); ?>
 			</td>
 			<td class="action">
-				<a target="_blank" href="<?php post_link($report->reported_post); ?>"><?php _e('View reported post'); ?></a><br />
+				<a target="_blank" href="<?php post_link($report->reported_post); ?>"><?php _e('View reported post', 'bbpress-moderation-suite'); ?></a><br />
 				<a href="<?php echo $resolve_url; ?>">Resolve</a>
 			</td>
 		</tr>
@@ -304,7 +304,7 @@ function bbpress_moderation_suite_report() { ?>
 
 function bbmodsuite_report_admin_add() {
 	global $bb_submenu;
-	$bb_submenu['content.php'][] = array(__('Reports'), 'moderate', 'bbpress_moderation_suite_report');
+	$bb_submenu['content.php'][] = array(__('Reports', 'bbpress-moderation-suite'), 'moderate', 'bbpress_moderation_suite_report');
 }
 add_action('bb_admin_menu_generator', 'bbmodsuite_report_admin_add');
 
@@ -385,8 +385,8 @@ function bbmodsuite_report_header() {
 			);
 	$number = number_format(bbmodsuite_report_count('new'));
 	if ($number == 0) return;
-	if ($number == 1) echo '<div class="reports_waiting"><p><a href="' . $link . '">There is a new report waiting for you!</a></p></div>';
-	else echo '<div class="reports_waiting"><p><a href="' . $link . '">There are <span>' . $number . '</span> new reports waiting for you!</a></p></div>';
+	if ($number == 1) echo '<div class="reports_waiting"><p><a href="' . $link . '">' . __('There is a new report waiting for you!', 'bbpress-moderation-suite') . '</a></p></div>';
+	else echo '<div class="reports_waiting"><p><a href="' . $link . '">' . sprintf(__('There are <span>%s</span> new reports waiting for you!', 'bbpress-moderation-suite'), $number) . '</a></p></div>';
 }
 add_action('bb_logged-in.php', 'bbmodsuite_report_header');
 add_action('bb_login-form.php', 'bbmodsuite_report_header');
@@ -403,10 +403,10 @@ function bbmodsuite_report_link($parts) {
 		$post_author_id = get_post_author_id($post_id);
 		$post_author = new WP_User($post_author_id);
 		if ($post_author_id != bb_get_current_user_info('ID') && !$post_author->has_cap('moderate')) {
-			$title = __('Report this post to a moderator.');
-			$bbreport_confirm = __('Are you sure you want to report this post?');
+			$title = __('Report this post to a moderator.', 'bbpress-moderation-suite');
+			$bbreport_confirm = __('Are you sure you want to report this post?', 'bbpress-moderation-suite');
 			$bbreport_href = str_replace('\\', '/', substr(BB_PLUGIN_URL, 0, -1) . str_replace(realpath(BB_PLUGIN_DIR), '', dirname(__FILE__)) . '/' . basename(__FILE__));
-			$parts[] = '<a class="report_post" title="' . $title . '" href="' . $bbreport_href . '?report=' . $post_id . '&amp;_nonce=' . bb_create_nonce('bbmodsuite-report-' . $post_id) . '">'.__("Report").'</a>';
+			$parts[] = '<a class="report_post" title="' . $title . '" href="' . $bbreport_href . '?report=' . $post_id . '&amp;_nonce=' . bb_create_nonce('bbmodsuite-report-' . $post_id) . '">'.__("Report", 'bbpress-moderation-suite').'</a>';
 		}
 	}
 	return $parts;

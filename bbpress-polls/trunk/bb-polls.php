@@ -34,7 +34,7 @@ function bb_polls_initialize() {
 		add_action('bb_head','bb_polls_add_javascript');
 		add_action('topicmeta','bb_polls_pre_poll',200);		
 		if ($ask_during_new) {add_action('post_form','bb_polls_pre_topic',9);}
-	} if (!$is_topic) {
+	} if (!$is_topic && !is_bb_feed()) {
 		add_filter('topic_title', 'bb_polls_title',100);		
 	}		
 }

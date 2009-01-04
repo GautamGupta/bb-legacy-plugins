@@ -97,6 +97,10 @@ function bbmodsuite_report_admin_css() { ?>
 #bbAdminSubSubMenu li.current a {
 	color: rgb(230, 145, 0);
 }
+
+#bbBody div.updated p, #bbBody div.error p {
+	margin: 0;
+}
 /* ]]> */
 </style>
 <?php }

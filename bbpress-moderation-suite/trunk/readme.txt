@@ -15,11 +15,11 @@ bbPress Moderation Suite is a set of tools to help moderate your forums.  There 
 
 Report allows users on your forum to report posts to the moderators on your forum. Believe me, if your moderators go on your forums regularly, they'll see the reports very quickly.
 
-= Mod Log =
+= Ban Plus =
 
 Being programmed.
 
-= Ban Plus =
+= Mod Log =
 
 Being programmed.
 

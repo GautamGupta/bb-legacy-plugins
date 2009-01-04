@@ -1,6 +1,9 @@
 <?php
 
-/* Post Count Plus - admin functions */
+/*  Post Count Plus - admin functions  */
+
+add_action( 'bb_admin-header.php','post_count_plus_process_post');
+add_action('bb_recount_list','post_count_plus_recount_list',200);
 
 function post_count_plus_admin() {
 	global $post_count_plus, $post_count_plus_type, $post_count_plus_label;			
@@ -28,7 +31,7 @@ function post_count_plus_admin() {
 					$post_count_plus['custom_titles'][3]=__("Minimum Role");
 					$post_count_plus['custom_titles'][4]=__("Color");
 					
-					foreach( $post_count_plus_type as $key=>$discard) {
+					foreach($post_count_plus_type as $key=>$discard) {
 					$post_count_plus[$key]=stripslashes_deep($post_count_plus[$key]);					
 					$colspan= (substr($post_count_plus_type[$key],0,strpos($post_count_plus_type[$key].",",","))=="array") ? "2" : "1";
 						?>
@@ -89,7 +92,7 @@ function post_count_plus_admin() {
 }
 
 function post_count_plus_process_post() {
-global $post_count_plus, $post_count_plus_type, $post_count_plus_label;
+global $bb,$bbdb,$post_count_plus, $post_count_plus_type, $post_count_plus_label;
 	if (bb_current_user_can('administrate')) {
 		if (isset($_REQUEST['post_count_plus_reset'])) {
 			unset($post_count_plus); 		
@@ -107,22 +110,27 @@ global $post_count_plus, $post_count_plus_type, $post_count_plus_label;
 			}
 			$found=0; $width=5; $rows=floor(count($post_count_plus['custom_titles'])/$width);
 			for ($i=1; $i<$rows; $i++) {	// filter typed in settings here for correctness	
-			if ($post_count_plus['custom_titles'][$i*$width+3]) { // strip down roles to lowercase no spaces - could actually try to match real role names?
+			if (!empty($post_count_plus['custom_titles'][$i*$width+3])) { // strip down roles to lowercase no spaces - could actually try to match real role names?
 				$post_count_plus['custom_titles'][$i*$width+3]=str_replace(" ","",strtolower($post_count_plus['custom_titles'][$i*$width+3]));
 			}} 
 			bb_update_option('post_count_plus',$post_count_plus);
-			bb_admin_notice('<b>Post Count Plus: '.__('All Settings Saved.').'</b>');
+			if (!empty($post_count_plus['wp_comments']) && !empty($bb->wp_table_prefix)) {
+				$bbdb->query("DELETE FROM $bb->wp_table_prefix"."options WHERE option_name='post_count_plus'");
+				$query="INSERT INTO $bb->wp_table_prefix"."options (`autoload`,`option_name`,`option_value`) 
+	    			VALUES ('yes','post_count_plus','".mysql_real_escape_string(serialize($post_count_plus))."') ";
+				$bbdb->query($query);
+			}
+			bb_admin_notice('<strong>Post Count Plus: '.__('All Settings Saved.').'</strong>');
 			// unset($GLOBALS['post_count_plus']); $post_count_plus = bb_get_option('post_count_plus');
 		}
 	}
 }
-add_action( 'bb_admin-header.php','post_count_plus_process_post');
 
 function post_count_plus_recount() { 	// count function to re-sync all user post counts and keep extra queries low
-	 global $post_count_plus,$bb,$bbdb; 	
+	 global $bb,$bbdb,$post_count_plus;
 	// echo "<html><body><h1>Post Count Plus</h1><h2>counting posts for all users...</h2><pre>";
 	
-	if ($post_count_plus['wp_comments'] && !empty($bb->wp_table_prefix)) {		
+	if (!empty($post_count_plus['wp_comments']) && !empty($bb->wp_table_prefix)) {		
 		$query="SELECT COALESCE(poster_id,user_id) as user_id,'post_count',COALESCE(post_count,0)+COALESCE(comment_count,0) as meta_value
 			FROM (SELECT poster_id,  count(post_status) as post_count FROM $bbdb->posts WHERE post_status=0 GROUP BY poster_id) as t1 
 			LEFT join (SELECT user_id,count(comment_approved) as comment_count 
@@ -146,6 +154,5 @@ function post_count_plus_recount_list(){
 global $recount_list;
 $recount_list[123] = array('post_count_plus_recount', __('Rebuild Post Count For All Users'));
 }	
-add_action('bb_recount_list','post_count_plus_recount_list',200);
 
 ?>

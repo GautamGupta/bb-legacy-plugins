@@ -47,7 +47,7 @@ function wiki_post_initialize() {
 	if (is_topic()) {					
 		add_action('topicmeta','wiki_post_create_link',200);
 		add_filter('post_text','wiki_post_footer',5);
-	} else {
+	} elseif (!is_bb_feed()) {
 		add_filter('topic_title', 'wiki_post_title',200);
 	}	
 	add_filter('bb_current_user_can', 'wiki_post_allow_edit',200,3);		

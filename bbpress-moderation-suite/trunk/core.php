@@ -80,7 +80,7 @@ function bbpress_moderation_suite() {
 	global $bbmodsuite_plugins, $bbmodsuite_active_plugins;
 ?>
 <h2><?php _e('bbPress Moderation Suite', 'bbpress-moderation-suite'); ?></h2>
-
+<p><?php _e('bbPress Moderation Suite is a set of tools to help moderate your forums.  There are multiple parts, each able to function separately from the others.  You can activate or deactivate each part separately.  It even includes an uninstaller so if you don\'t want to use a part anymore, you can remove all of its database usage!', 'bbpress-moderation-suite') ?></p>
 <table class="widefat">
 	<thead>
 		<tr>

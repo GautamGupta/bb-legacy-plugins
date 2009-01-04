@@ -1,0 +1,184 @@
+# SOME DESCRIPTIVE TITLE.
+# This file is put in the public domain.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/bbpress-moderation-suite\n"
+"POT-Creation-Date: 2009-01-03 23:27+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: core.php:15 report.php:409
+msgid "Report"
+msgstr ""
+
+#: core.php:16
+msgid "Allows users to report posts for consideration by the moderation team."
+msgstr ""
+
+#: core.php:30 core.php:75
+msgid "bbPress Moderation Suite"
+msgstr ""
+
+#: core.php:48
+#, php-format
+msgid "Plugin \"%s\" <strong>activated</strong>"
+msgstr ""
+
+#: core.php:57
+#, php-format
+msgid "Plugin \"%s\" <strong>deactivated</strong>"
+msgstr ""
+
+#: core.php:66
+#, php-format
+msgid ""
+"Plugin \"%s\" <strong>deactivated</strong> and <strong>uninstalled</strong>"
+msgstr ""
+
+#: core.php:80
+msgid "Moderation Assistants"
+msgstr ""
+
+#: core.php:81 report.php:170 report.php:265
+msgid "Description"
+msgstr ""
+
+#: core.php:82 report.php:173 report.php:266
+msgid "Actions"
+msgstr ""
+
+#: core.php:92
+msgid "Activate"
+msgstr ""
+
+#: core.php:97
+msgid "Deactivate"
+msgstr ""
+
+#: core.php:136
+msgid "Uninstall"
+msgstr ""
+
+#: report-form.php:6
+msgid "Report this post"
+msgstr ""
+
+#: report-form.php:8
+msgid "What is your reason for reporting this post?"
+msgstr ""
+
+#: report-form.php:13 report.php:141 report.php:163 report.php:164
+#: report.php:259
+msgid "Other"
+msgstr ""
+
+#: report-form.php:18
+msgid "Please give more information: (Plain text only, no HTML allowed.)"
+msgstr ""
+
+#: report-form.php:23
+msgid "Send Report &raquo;"
+msgstr ""
+
+#: report.php:36 report.php:40 report.php:59
+msgid "Invalid report"
+msgstr ""
+
+#: report.php:67
+msgid ""
+"<p>Your report was submitted. The moderation staff will review the post in "
+"question.</p>"
+msgstr ""
+
+#: report.php:134
+msgid "Method of Resolving"
+msgstr ""
+
+#: report.php:147 report.php:172
+msgid "Notes"
+msgstr ""
+
+#: report.php:156
+msgid "Resolve"
+msgstr ""
+
+#: report.php:165
+msgid "Resolved Reports"
+msgstr ""
+
+#: report.php:169 report.php:264
+msgid "Reported By"
+msgstr ""
+
+#: report.php:171
+msgid "Resolved By"
+msgstr ""
+
+#: report.php:201 report.php:290
+msgid "View reported post"
+msgstr ""
+
+#: report.php:215
+msgid "Administration"
+msgstr ""
+
+#: report.php:222
+msgid "Settings successfully saved."
+msgstr ""
+
+#: report.php:224
+msgid "Saving the settings failed."
+msgstr ""
+
+#: report.php:231
+msgid "Report types"
+msgstr ""
+
+#: report.php:235
+msgid "Fill this box with generic reasons to report posts. (One per line)"
+msgstr ""
+
+#: report.php:240
+msgid "Resolve types"
+msgstr ""
+
+#: report.php:244
+msgid "Fill this box with generic ways of resolving reports. (One per line)"
+msgstr ""
+
+#: report.php:250
+msgid "Save Changes"
+msgstr ""
+
+#: report.php:260
+msgid "New Reports"
+msgstr ""
+
+#: report.php:307
+msgid "Reports"
+msgstr ""
+
+#: report.php:388
+msgid "There is a new report waiting for you!"
+msgstr ""
+
+#: report.php:389
+#, php-format
+msgid "There are <span>%s</span> new reports waiting for you!"
+msgstr ""
+
+#: report.php:406
+msgid "Report this post to a moderator."
+msgstr ""
+
+#: report.php:407
+msgid "Are you sure you want to report this post?"
+msgstr ""

@@ -8,7 +8,7 @@ Author URI: http://bbShowcase.org
 Version: 0.0.4
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
-Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate: http://bbshowcase.org/donate/
 */
 
 $topics_per_page=array(		// edit the numbers below as desired - no fancy admin page for maximum performance
@@ -75,8 +75,11 @@ return $limit;
 }
 
 function front_page_pages() {
-global $page, $bbdb; 
-echo apply_filters( 'topic_pages', get_page_number_links( $page, $bbdb->get_var("SELECT SUM(topics) FROM $bbdb->forums")),0); 
+global $page, $bbdb, $forums; $total=0;
+// $total=$bbdb->get_var("SELECT SUM(topics) FROM $bbdb->forums");
+if (empty($forums)) {$forums=get_forums();}
+foreach ($forums as  $forum) {$total+=$forum->topics;}
+echo apply_filters( 'topic_pages', get_page_number_links( $page, $total),0); 
 }
 
 ?>

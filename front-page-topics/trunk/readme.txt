@@ -4,7 +4,7 @@ Contributors: _ck_, mdawaffe
 Requires at least: 0.9
 Tested up to: trunk
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Set custom topic or post count limits for nearly every kind of bbPress page while still calculating direct post links correctly. (now 1.0 compatible)
 
@@ -42,7 +42,7 @@ Now adds the ability to do pagination on the front page with the latest discussi
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 

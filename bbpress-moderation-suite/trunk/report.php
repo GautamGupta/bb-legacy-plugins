@@ -104,10 +104,10 @@ add_action('bbpress_moderation_suite_report_pre_head', create_function('', "add_
 
 function bbpress_moderation_suite_report() { ?>
 <ul id="bbAdminSubSubMenu">
-	<li<?php if (!in_array($_GET['page'], array('resolve_reports', 'new_reports', 'resolved_reports', 'resolve_report', 'admin')) || $_GET['page'] === 'new_reports') { ?> class="current"<?php } ?>><a href="<?php echo bb_get_uri('bb-admin/admin-base.php', array('plugin' => 'bbpress_moderation_suite_report', 'page' => 'new_reports'), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN); ?>"><span>New</span></a></li>
-	<li<?php if ($_GET['page'] === 'resolved_reports') { ?> class="current"<?php } ?>><a href="<?php echo bb_get_uri('bb-admin/admin-base.php', array('plugin' => 'bbpress_moderation_suite_report', 'page' => 'resolved_reports'), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN); ?>"><span>Resolved</span></a></li>
-	<?php if ($_GET['page'] === 'resolve_reports') { ?><li class="current"><a href="#"><span>Resolve</span></a></li><?php } ?>
-	<?php if (bb_current_user_can('use_keys')) { ?><li<?php if ($_GET['page'] === 'admin') { ?> class="current"<?php } ?>><a href="<?php echo bb_get_uri('bb-admin/admin-base.php', array('plugin' => 'bbpress_moderation_suite_report', 'page' => 'admin'), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN); ?>"><span>Administration</span></a></li><?php } ?>
+	<li<?php if (!in_array($_GET['page'], array('resolve_reports', 'resolved_reports', 'resolve_report', 'admin'))) { ?> class="current"<?php } ?>><a href="<?php echo bb_get_uri('bb-admin/admin-base.php', array('plugin' => 'bbpress_moderation_suite_report', 'page' => 'new_reports'), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN); ?>"><span><?php _e('New', 'bbpress-moderation-suite') ?></span></a></li>
+	<li<?php if ($_GET['page'] === 'resolved_reports') { ?> class="current"<?php } ?>><a href="<?php echo bb_get_uri('bb-admin/admin-base.php', array('plugin' => 'bbpress_moderation_suite_report', 'page' => 'resolved_reports'), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN); ?>"><span><?php _e('Resolved', 'bbpress-moderation-suite') ?></span></a></li>
+	<?php if ($_GET['page'] === 'resolve_reports') { ?><li class="current"><a href="#"><span><?php _e('Resolve', 'bbpress-moderation-suite') ?></span></a></li><?php } ?>
+	<?php if (bb_current_user_can('use_keys')) { ?><li<?php if ($_GET['page'] === 'admin') { ?> class="current"<?php } ?>><a href="<?php echo bb_get_uri('bb-admin/admin-base.php', array('plugin' => 'bbpress_moderation_suite_report', 'page' => 'admin'), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN); ?>"><span><?php _e('Administration', 'bbpress-moderation-suite') ?></span></a></li><?php } ?>
 </ul>
 <?php
 	switch ($_GET['page']) {
@@ -117,16 +117,16 @@ function bbpress_moderation_suite_report() { ?>
 		if (trim($_POST['resolve_content']) && ($_POST['resolve_type'] === '0' || array_key_exists((int) $_POST['resolve_type'], bbmodsuite_report_resolve_types())))
 			$report_id = $bbdb->get_var($bbdb->prepare('SELECT `ID` FROM `' . $bbdb->prefix . 'bbmodsuite_reports` WHERE `report_type`=\'new\' AND `ID`=%d', $_GET['report']));
 		if (!$report_id) { ?>
-<div class="error"><p>Invalid resolve attempt.</p></div>
+<div class="error"><p><?php _e('Invalid resolve attempt.', 'bbpress-moderation-suite') ?></p></div>
 <?php	} else {
 			if ($bbdb->update($bbdb->prefix . 'bbmodsuite_reports', array('report_type' => 'resolved', 'resolve_content' => htmlspecialchars(trim($_POST['resolve_content'])), 'resolved_at' => bb_current_time('mysql'), 'resolved_by' => bb_get_current_user_info('ID'), 'resolve_type' => (int) $_POST['resolve_type']), array('ID' => $report_id))) { ?>
-<div class="updated"><p>Successfully resolved report.</p></div>
+<div class="updated"><p><?php _e('Successfully resolved report.', 'bbpress-moderation-suite') ?></p></div>
 <?php		}
 		}
 		break;
 	case 'resolve_reports':
 		if (!bb_verify_nonce($_GET['_wpnonce'], 'bbmodsuite-report-resolve_' . $_GET['report'])) return; ?>
-<h2>Resolve Report #<?php echo $_GET['report'] ?></h2>
+<h2><?php printf(__('Resolve Report #%d', 'bbpress-moderation-suite'), $_GET['report']) ?></h2>
 <form class="settings" method="post" action="<?php bb_uri('bb-admin/admin-base.php', array('page' => 'resolve_report', 'report' => $_GET['report'], 'plugin' => 'bbpress_moderation_suite_report'), BB_URI_CONTEXT_FORM_ACTION + BB_URI_CONTEXT_BB_ADMIN); ?>">
 <fieldset>
 	<div>

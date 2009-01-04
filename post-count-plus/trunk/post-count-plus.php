@@ -5,7 +5,7 @@ Plugin URI:  http://bbpress.org/plugins/topic/83
 Description: An enhanced "user post count" with "custom titles" for topics and profiles, based on posts and membership, with cached results for faster pages. No template edits required.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 1.1.8
+Version: 1.1.9
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -15,6 +15,14 @@ Instructions:   install, activate, tinker with settings in admin menu
 */
 
 global $post_count_plus;
+add_action('bb_new_post', 'post_count_plus_update',200);
+if (!is_bb_feed()) {add_action( 'bb_init', 'post_count_plus_initialize');}
+
+if ((defined('BB_IS_ADMIN') && BB_IS_ADMIN) || !(strpos($_SERVER['REQUEST_URI'],"/bb-admin/")===false)) { // "stub" only load functions if in admin 
+	function post_count_plus_add_admin_page() {bb_admin_add_submenu(__('Post Count Plus'), 'administrate', 'post_count_plus_admin');}
+	add_action( 'bb_admin_menu_generator', 'post_count_plus_add_admin_page' );	
+	if (isset($_GET['plugin']) && $_GET['plugin']=="post_count_plus_admin") {require_once("post-count-plus-admin.php");} // load entire core only when needed
+}
 
 function post_count_plus($user_id=0, $posts_only=0, $titlelink='') {
 global $post_count_plus;
@@ -43,7 +51,7 @@ else {
 	}
 
 echo "<p class='post_count_plus'>";
-	echo "<b>$titlelink</b><br /><small>";	
+	echo "<strong>$titlelink</strong><br /><small>";	
 	if ($post_count_plus['join_date']) {post_count_plus_join_date($user_id);  echo "<br />";}
 	if ($post_count_plus['post_count'] && $posts=post_count_plus_get_count($user_id)) {echo __("Posts: ").bb_number_format_i18n($posts);}
 echo "</small></p>";
@@ -51,11 +59,10 @@ echo "</small></p>";
 }
 
 function post_count_plus_get_count($user_id=0) {
-if (!$user_id) {
+if (empty($user_id)) {
 	$location=bb_get_location(); 	
 	if ($location=="profile-page") {global $user; $user_id=$user->ID;}
 	else {$user_id=get_post_author_id();} 
-
 }
 if ($user_id) {
 	$user=bb_get_user($user_id); 	
@@ -82,10 +89,12 @@ if ($posts) {return  $posts;} else {return 0;}
 function post_count_plus_update() {
 // $user_id = bb_get_current_user_info( 'id' );  $posts=intval(bb_get_usermeta( $user_id, 'post_count'));
 // if ($user_id && $posts) {global $bbdb; $bbdb->query("UPDATE $bbdb->usermeta SET meta_value = '".($posts+1)."' WHERE user_id = '".$user_id."' AND meta_key = 'post_count' LIMIT 1");}
-global $bb_current_user; $user_id=$bb_current_user->ID;    
-if ($user_id) {$user=bb_get_user($user_id); bb_update_meta( $user_id, "post_count", (intval($user->post_count)+1), 'user' );}
+global $bb_current_user; 
+if (!empty($bb_current_user->ID)) {
+	$user_id=$bb_current_user->ID;    
+	$user=bb_get_user($user_id); bb_update_meta( $user_id, "post_count", (intval($user->post_count)+1), 'user' );
+}
 } 
-add_action('bb_new_post', 'post_count_plus_update',200);
 
 function post_count_plus_join_date($user_id=0,$date_format='') {
 global $post_count_plus; 
@@ -184,8 +193,6 @@ function post_count_plus_add_css() { global $post_count_plus;  echo '<style type
 
 function post_count_plus_filter($titlelink) {post_count_plus(0,0,$titlelink); return '';}	// only if automatic inserts are selected
 
-if (!is_bb_feed()) {add_action( 'bb_init', 'post_count_plus_initialize');}
-
 function post_count_plus_initialize() {
 	global $bb, $bb_current_user, $post_count_plus, $post_count_plus_type, $post_count_plus_label;
 	if (!isset($post_count_plus)) {$post_count_plus = bb_get_option('post_count_plus');
@@ -267,11 +274,5 @@ function post_count_plus_user_cache() {
 		if ( $topics ) {foreach ( $topics as $topic ) { $ids[$topic->topic_last_poster]=$topic->topic_last_poster; }} 
 		if (isset($ids)) {bb_cache_users($ids);}
 	}
-}
-
-if ((defined('BB_IS_ADMIN') && BB_IS_ADMIN) || !(strpos($_SERVER['REQUEST_URI'],"/bb-admin/")===false)) { // "stub" only load functions if in admin 
-	function post_count_plus_add_admin_page() {bb_admin_add_submenu(__('Post Count Plus'), 'administrate', 'post_count_plus_admin');}
-	add_action( 'bb_admin_menu_generator', 'post_count_plus_add_admin_page' );	
-	if (isset($_GET['plugin']) && $_GET['plugin']=="post_count_plus_admin") {require_once("post-count-plus-admin.php");} // load entire core only when needed
 }
 ?>

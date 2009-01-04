@@ -2,7 +2,7 @@
 Tags: posts, count, post count, titles, custom titles, _ck_
 Contributors: _ck_
 Requires at least: 0.8.2
-Tested up to: 0.9.0.2
+Tested up to: 1.0a4
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 
@@ -14,7 +14,7 @@ for the  fastest performance possible with the fewest database queries.
 
 == Frequently Asked Questions ==
 
-* No template edits required of any kind.
+* No template edits required of any kind (within bbPress)
 
 * Optionally  shows join date (member since)  next to posts, as well as 
 custom titles based on either post count or membership length & role.
@@ -25,6 +25,18 @@ good example: http://bbshowcase.org/forums/topic/new-bbpress-theme-futurekind
 = Why does the user's info repeat twice in their posts? =
 
 * This is a bug in an early version of bbPress 1.0 alpha. Please upgrade your bbPress to the newest 1.0
+
+= How do I access post counts and titles from WordPress? =
+
+* install into WordPress  wp-post-count-plus.php  helper plugin
+* it is HIGHLY recommend to install the wp-cache-users.php plugin for WordPress to reduce queries
+* helper plugin supports two basic functions within WordPress:
+* wp_post_count_plus_get_count() - raw post count for user, example use:
+`<?php echo number_format_i18n(wp_post_count_plus_get_count()); ?> posts`
+* wp_post_count_plus_custom_title() - custom calculated title for user, example use:
+`<?php echo wp_post_count_plus_custom_title(); ?>`
+or in post template:
+`<?php echo wp_post_count_plus_custom_title(get_the_author_ID()); ?>`
 
 == Installation ==
 
@@ -81,6 +93,16 @@ any template by using direct calls, ie. `<?php post_count_plus($user->ID); ?>`
 = Version 1.1.8 (2008-12-31) =
 
 * optionally include WordPress comment counts in total post counts (does not update automatically from WordPress side yet)
+
+= Version 1.1.9 (2009-01-03) =
+
+* now supports two basic functions from the WordPress side via helper plugin 
+* wp_post_count_plus_get_count() - raw post count for user, example use:
+`<?php echo number_format_i18n(wp_post_count_plus_get_count()); ?> posts`
+* wp_post_count_plus_custom_title() - custom calculated title for user, example use:
+`<?php echo wp_post_count_plus_custom_title(); ?>`
+or in post template:
+`<?php echo wp_post_count_plus_custom_title(get_the_author_ID()); ?>`
 
 == To Do ==
 

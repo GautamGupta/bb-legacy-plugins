@@ -4,7 +4,7 @@ Contributors: _ck_
 Requires at least: 0.8.2
 Tested up to: trunk
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Adds `forum_last_poster()`, `forum_time()`, `forum_last_post_link()` and other functions to bbPress to mimic the topic tables' FRESHNESS column. Requires simple template edits.
 
@@ -46,17 +46,17 @@ High performance: uses only a single extra query regardless of the number of for
 
 = What functions are available? =
 
-* forum_last_poster()
+* forum_last_poster() - echos last poster's name (enhanced by Post Count Plus)
 
-* get_forum_last_poster() 
+* get_forum_last_poster() - returns last poster's name
 
-* forum_time()
+* forum_time() - echos last topic time of forum
 
-* get_forum_time()
+* get_forum_time()  - returns last topic time of forum
 
-* forum_last_post_link()
+* forum_last_post_link() - echos link to most recent post of most recent topic in forum
 
-* get_forum_last_post_link() 
+* get_forum_last_post_link() - returns link to most recent post of most recent topic in forum
 
 == License ==
 
@@ -64,7 +64,7 @@ High performance: uses only a single extra query regardless of the number of for
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 
@@ -75,6 +75,11 @@ High performance: uses only a single extra query regardless of the number of for
 = Version 0.0.3 (2008-08-16) =
 
 * unfortunately the join query does not handle deleted topics correctly and returns no results for that forum, so have to use subquery :-(
+
+= Version 0.0.4 (2008-01-04) =
+
+* cache non-indexed query
+* compatibility with bbPress 1.0a5+
 
 == To Do ==
 

@@ -119,7 +119,7 @@ function bbpress_moderation_suite_report() { ?>
 		if (!$report_id) { ?>
 <div class="error"><p>Invalid resolve attempt.</p></div>
 <?php	} else {
-			if ($bbdb->update($bbdb->prefix . 'bbmodsuite_reports', array('report_type' => 'resolved', 'resolve_content' => trim($_POST['resolve_content']), 'resolved_at' => bb_current_time('mysql'), 'resolved_by' => bb_get_current_user_info('ID'), 'resolve_type' => (int) $_POST['resolve_type']), array('ID' => $report_id))) { ?>
+			if ($bbdb->update($bbdb->prefix . 'bbmodsuite_reports', array('report_type' => 'resolved', 'resolve_content' => htmlspecialchars(trim($_POST['resolve_content'])), 'resolved_at' => bb_current_time('mysql'), 'resolved_by' => bb_get_current_user_info('ID'), 'resolve_type' => (int) $_POST['resolve_type']), array('ID' => $report_id))) { ?>
 <div class="updated"><p>Successfully resolved report.</p></div>
 <?php		}
 		}
@@ -188,7 +188,7 @@ function bbpress_moderation_suite_report() { ?>
 					), 'bbmodsuite-report-resolve_' . $report->ID);
 ?>
 
-		<tr<?php alt_class( 'reported_post'); ?>>
+		<tr<?php alt_class('reported_post'); ?>>
 			<td><?php echo get_user_display_name($report->report_from); ?></td>
 			<td><strong><?php echo $reasons[$report->report_reason]; ?></strong>
 				<?php echo stripslashes(bb_autop($report->report_content)); ?>

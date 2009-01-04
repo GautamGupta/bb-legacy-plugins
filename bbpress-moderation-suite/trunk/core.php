@@ -5,21 +5,28 @@ Description: A set of tools to help moderate your forums.
 Plugin URI: http://llamaslayers.net/daily-llama/tag/bbpress-moderation-suite
 Author: Nightgunner5
 Author URI: http://llamaslayers.net/
-Version: 0.1-alpha1
+Version: 0.1-alpha2
 */
 
 function bbmodsuite_init() {
-	global $bbmod_plugins, $active_bbmod_plugins;
-	$bbmod_plugins = array(
+	global $bbmodsuite_plugins, $bbmodsuite_active_plugins;
+	$bbmodsuite_plugins = array(
 		'report' => array(
 			'name' => __('Report', 'bbpress-moderation-suite'),
 			'description' => '<p>' . __('Allows users to report posts for consideration by the moderation team.', 'bbpress-moderation-suite') . '</p>',
-			'filename' => 'report.php'
+			'filename' => 'report.php',
+			'panel' => 'bbpress_moderation_suite_report'
+		),
+		'banplus' => array(
+			'name' => __('Ban Plus', 'bbpress-moderation-suite'),
+			'description' => '<p>' . __('Implements advanced banning features like temporary banning and automated banning (if used with the Warnings assistant)  Ban Plus does not use the core rank system, so removing the plugin will unban everyone banned using this method.', 'bbpress-moderation-suite') . '</p>',
+			'filename' => 'ban-plus.php',
+			'panel' => 'bbpress_moderation_suite_ban_plus'
 		)
 	);
-	$active_bbmod_plugins = (array) bb_get_option('bbpress_moderation_suite_helpers');
-	foreach ($active_bbmod_plugins as $plugin) {
-		require_once $bbmod_plugins[$plugin]['filename'];
+	$bbmodsuite_active_plugins = (array) bb_get_option('bbpress_moderation_suite_helpers');
+	foreach ($bbmodsuite_active_plugins as $plugin) {
+		require_once $bbmodsuite_plugins[$plugin]['filename'];
 	}
 }
 add_action('bb_init', 'bbmodsuite_init');
@@ -33,44 +40,44 @@ function bbmodsuite_admin_add() {
 add_action('bb_admin_menu_generator', 'bbmodsuite_admin_add');
 
 function bbmodsuite_admin_parse() {
-	global $bbmod_plugins, $active_bbmod_plugins;
+	global $bbmodsuite_plugins, $bbmodsuite_active_plugins;
 	$plugin = $_GET['mod_helper'];
 	$action = $_GET['action'];
 	if ($plugin && $action && bb_verify_nonce($_GET['_wpnonce'], $action . '-plugin_' . $plugin)) {
 		switch ($action) {
 			case 'activate':
-				if (in_array($plugin, $active_bbmod_plugins) ||
-					!isset($bbmod_plugins[$plugin])) break;
-				$active_bbmod_plugins[] = $plugin;
-				bb_update_option('bbpress_moderation_suite_helpers', $active_bbmod_plugins);
-				require_once $bbmod_plugins[$plugin]['filename'];
+				if (in_array($plugin, $bbmodsuite_active_plugins) ||
+					!isset($bbmodsuite_plugins[$plugin])) break;
+				$bbmodsuite_active_plugins[] = $plugin;
+				bb_update_option('bbpress_moderation_suite_helpers', $bbmodsuite_active_plugins);
+				require_once $bbmodsuite_plugins[$plugin]['filename'];
 				call_user_func('bbmodsuite_' . $plugin . '_install');
-				bb_admin_notice(sprintf(__('Plugin "%s" <strong>activated</strong>', 'bbpress-moderation-suite'), $bbmod_plugins[$plugin]['name']));
+				bb_admin_notice(sprintf(__('Plugin "%s" <strong>activated</strong>', 'bbpress-moderation-suite'), $bbmodsuite_plugins[$plugin]['name']));
 				break;
 			case 'deactivate':
-				if (!in_array($plugin, $active_bbmod_plugins) ||
-					!isset($bbmod_plugins[$plugin])) break;
-				$active_bbmod_plugins = array_flip($active_bbmod_plugins);
-				unset($active_bbmod_plugins[$plugin]);
-				$active_bbmod_plugins = array_flip($active_bbmod_plugins);
-				bb_update_option('bbpress_moderation_suite_helpers', $active_bbmod_plugins);
-				bb_admin_notice(sprintf(__('Plugin "%s" <strong>deactivated</strong>', 'bbpress-moderation-suite'), $bbmod_plugins[$plugin]['name']));
+				if (!in_array($plugin, $bbmodsuite_active_plugins) ||
+					!isset($bbmodsuite_plugins[$plugin])) break;
+				$bbmodsuite_active_plugins = array_flip($bbmodsuite_active_plugins);
+				unset($bbmodsuite_active_plugins[$plugin]);
+				$bbmodsuite_active_plugins = array_flip($bbmodsuite_active_plugins);
+				bb_update_option('bbpress_moderation_suite_helpers', $bbmodsuite_active_plugins);
+				bb_admin_notice(sprintf(__('Plugin "%s" <strong>deactivated</strong>', 'bbpress-moderation-suite'), $bbmodsuite_plugins[$plugin]['name']));
 			case 'uninstall':
-				if (!in_array($plugin, $active_bbmod_plugins) ||
-					!isset($bbmod_plugins[$plugin])) break;
-				$active_bbmod_plugins = array_flip($active_bbmod_plugins);
-				unset($active_bbmod_plugins[$plugin]);
-				$active_bbmod_plugins = array_flip($active_bbmod_plugins);
-				bb_update_option('bbpress_moderation_suite_helpers', $active_bbmod_plugins);
+				if (!in_array($plugin, $bbmodsuite_active_plugins) ||
+					!isset($bbmodsuite_plugins[$plugin])) break;
+				$bbmodsuite_active_plugins = array_flip($bbmodsuite_active_plugins);
+				unset($bbmodsuite_active_plugins[$plugin]);
+				$bbmodsuite_active_plugins = array_flip($bbmodsuite_active_plugins);
+				bb_update_option('bbpress_moderation_suite_helpers', $bbmodsuite_active_plugins);
 				call_user_func('bbmodsuite_' . $plugin . '_uninstall');
-				bb_admin_notice(sprintf(__('Plugin "%s" <strong>deactivated</strong> and <strong>uninstalled</strong>', 'bbpress-moderation-suite'), $bbmod_plugins[$plugin]['name']));
+				bb_admin_notice(sprintf(__('Plugin "%s" <strong>deactivated</strong> and <strong>uninstalled</strong>', 'bbpress-moderation-suite'), $bbmodsuite_plugins[$plugin]['name']));
 		}
 	}
 }
 add_action('bbpress_moderation_suite_pre_head', 'bbmodsuite_admin_parse');
 
 function bbpress_moderation_suite() {
-	global $bbmod_plugins, $active_bbmod_plugins;
+	global $bbmodsuite_plugins, $bbmodsuite_active_plugins;
 ?>
 <h2><?php _e('bbPress Moderation Suite', 'bbpress-moderation-suite'); ?></h2>
 
@@ -85,12 +92,12 @@ function bbpress_moderation_suite() {
 	<tbody>
 
 <?php
-	foreach ( $bbmod_plugins as $plugin => $plugin_data ) :
+	foreach ( $bbmodsuite_plugins as $plugin => $plugin_data ) :
 		$class = '';
 		$action = 'activate';
 		$action_class = 'edit';
 		$action_text = __('Activate', 'bbpress-moderation-suite');
-		if ( in_array($plugin, $active_bbmod_plugins) ) {
+		if ( in_array($plugin, $bbmodsuite_active_plugins) ) {
 			$class =  'active';
 			$action = 'deactivate';
 			$action_class = 'delete';
@@ -119,7 +126,7 @@ function bbpress_moderation_suite() {
 			</td>
 			<td class="action">
 				<a class="<?php echo $action_class; ?>" href="<?php echo $href; ?>"><?php echo $action_text; ?></a>
-<?php if (in_array($plugin, $active_bbmod_plugins)) { ?>
+<?php if (in_array($plugin, $bbmodsuite_active_plugins)) { ?>
 				<a class="delete" href="<?php echo attribute_escape(
 	bb_nonce_url(
 		bb_get_uri(
@@ -134,7 +141,18 @@ function bbpress_moderation_suite() {
 		'uninstall-plugin_' . $plugin
 	)
 ); ?>"><?php _e('Uninstall', 'bbpress-moderation-suite'); ?></a>
-<?php } ?>
+<?php if (!empty($plugin_data['panel'])) { ?>
+			<a href="<?php echo attribute_escape(
+	bb_get_uri(
+		'bb-admin/admin-base.php',
+		array(
+			'plugin' => $plugin_data['panel']
+		),
+		BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
+	)
+); ?>"><?php _e('Administration', 'bbpress-moderation-suite'); ?></a>
+<?php }
+} ?>
 			</td>
 		</tr>
 

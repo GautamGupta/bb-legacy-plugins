@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/subscribe-to-topic
 Description: Allows members to track and/or receive email notifications (instant, daily, weekly) for new posts on topics.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.1
+Version: 0.0.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -202,10 +202,12 @@ $results=$bbdb->get_col($query); $count=$results[0]; $current=0; $post_id=0; if 
 $output="<li id='subscribe_to_topic'>";
 if ($count) {$output.= bb_number_format_i18n($count)." ".$subscribe_to_topic['labels']['subscribed'];} else {$output.=$subscribe_to_topic['labels']['subscribe'];}
 if (!empty($bb_current_user->ID)) {
-$output.=" <form method='get' style='display:inline;'><input type='hidden' name='topic_id' value='$topic->topic_id' />
+$output.=" <form method='get' style='display:inline;' action='". $_SERVER['REQUEST_URI']."'><input type='hidden' name='topic_id' value='$topic->topic_id' />
 (<select style='color:Highlight;background:transparent;border:0;' name='subscribe_to_topic' onchange='this.form.submit();'>\n"; 
 foreach ($subscribe_to_topic['levels'] as $key=>$level) {$output.="<option value='$key' ".($current==$key ? "selected='selected'" : "").">&nbsp;$level&nbsp; </option>\n";}
-$output.="</select>)</form>";
+$output.="</select>)";
+if (!empty($_GET)) {foreach ($_GET as $key=>$value) {$output.="<input type='hidden' name='$key' value='$value' />";}}
+$output.="</form>";
 }
 echo $output,"</li>\n";
 if ($current) {

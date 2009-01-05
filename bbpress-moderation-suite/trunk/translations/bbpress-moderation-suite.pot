@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/bbpress-moderation-suite\n"
-"POT-Creation-Date: 2009-01-04 23:37+0000\n"
+"POT-Creation-Date: 2009-01-05 23:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,6 +28,11 @@ msgstr ""
 
 #: ban-plus.php:143 ban-plus.php:153
 msgid "Ban a user"
+msgstr ""
+
+#: ban-plus.php:144 ban-plus.php:245 core.php:160 report.php:114
+#: report.php:219 warning.php:86
+msgid "Administration"
 msgstr ""
 
 #: ban-plus.php:150 ban-plus.php:213
@@ -71,6 +76,7 @@ msgid "How long will the ban last?"
 msgstr ""
 
 #: ban-plus.php:183 ban-plus.php:279 report.php:151 report.php:176
+#: warning.php:135 warning.php:209
 msgid "Notes"
 msgstr ""
 
@@ -111,10 +117,6 @@ msgstr ""
 msgid "Failed to save options."
 msgstr ""
 
-#: ban-plus.php:245 core.php:153 report.php:114 report.php:219
-msgid "Administration"
-msgstr ""
-
 #: ban-plus.php:250
 msgid "Minimum user level to ban"
 msgstr ""
@@ -141,7 +143,7 @@ msgstr ""
 msgid "Save settings"
 msgstr ""
 
-#: ban-plus.php:276
+#: ban-plus.php:276 warning.php:178
 msgid "User"
 msgstr ""
 
@@ -153,7 +155,8 @@ msgstr ""
 msgid "Until"
 msgstr ""
 
-#: ban-plus.php:280 core.php:89 report.php:177 report.php:270
+#: ban-plus.php:280 core.php:96 report.php:177 report.php:270 warning.php:180
+#: warning.php:210
 msgid "Actions"
 msgstr ""
 
@@ -165,7 +168,7 @@ msgstr ""
 msgid "Ban Plus"
 msgstr ""
 
-#: core.php:15 report.php:413
+#: core.php:15 report.php:412
 msgid "Report"
 msgstr ""
 
@@ -181,27 +184,38 @@ msgid ""
 "this method."
 msgstr ""
 
-#: core.php:37 core.php:82
+#: core.php:27 warning.php:236
+msgid "Warning"
+msgstr ""
+
+#: core.php:28
+msgid ""
+"Allows moderators and higher to warn users that break rules. Can be set to "
+"automatically block or (if Ban Plus is active) temporarily ban problematic "
+"users from the forums."
+msgstr ""
+
+#: core.php:44 core.php:89
 msgid "bbPress Moderation Suite"
 msgstr ""
 
-#: core.php:55
+#: core.php:62
 #, php-format
 msgid "Plugin \"%s\" <strong>activated</strong>"
 msgstr ""
 
-#: core.php:64
+#: core.php:71
 #, php-format
 msgid "Plugin \"%s\" <strong>deactivated</strong>"
 msgstr ""
 
-#: core.php:73
+#: core.php:80
 #, php-format
 msgid ""
 "Plugin \"%s\" <strong>deactivated</strong> and <strong>uninstalled</strong>"
 msgstr ""
 
-#: core.php:83
+#: core.php:90
 msgid ""
 "bbPress Moderation Suite is a set of tools to help moderate your forums.  "
 "There are multiple parts, each able to function separately from the others.  "
@@ -210,23 +224,23 @@ msgid ""
 "of its database usage!"
 msgstr ""
 
-#: core.php:87
+#: core.php:94
 msgid "Moderation Assistants"
 msgstr ""
 
-#: core.php:88 report.php:174 report.php:269
+#: core.php:95 report.php:174 report.php:269
 msgid "Description"
 msgstr ""
 
-#: core.php:99
+#: core.php:106
 msgid "Activate"
 msgstr ""
 
-#: core.php:104
+#: core.php:111
 msgid "Deactivate"
 msgstr ""
 
-#: core.php:143
+#: core.php:150
 msgid "Uninstall"
 msgstr ""
 
@@ -239,7 +253,7 @@ msgid "What is your reason for reporting this post?"
 msgstr ""
 
 #: report-form.php:13 report.php:145 report.php:167 report.php:168
-#: report.php:263
+#: report.php:263 warning.php:129 warning.php:215
 msgid "Other"
 msgstr ""
 
@@ -269,7 +283,7 @@ msgstr ""
 msgid "Resolved"
 msgstr ""
 
-#: report.php:113 report.php:160
+#: report.php:113 report.php:160 report.php:295
 msgid "Resolve"
 msgstr ""
 
@@ -330,7 +344,7 @@ msgstr ""
 msgid "Fill this box with generic ways of resolving reports. (One per line)"
 msgstr ""
 
-#: report.php:254
+#: report.php:254 warning.php:166
 msgid "Save Changes"
 msgstr ""
 
@@ -355,6 +369,60 @@ msgstr ""
 msgid "Report this post to a moderator."
 msgstr ""
 
-#: report.php:411
-msgid "Are you sure you want to report this post?"
+#: warning.php:19
+msgid "Give this user a warning."
+msgstr ""
+
+#: warning.php:33
+msgid "Warn"
+msgstr ""
+
+#: warning.php:84 warning.php:174
+msgid "Users with warnings"
+msgstr ""
+
+#: warning.php:85 warning.php:113
+msgid "Warn a user"
+msgstr ""
+
+#: warning.php:106
+msgid "User successfully warned."
+msgstr ""
+
+#: warning.php:109
+msgid "Invalid warning attempt"
+msgstr ""
+
+#: warning.php:122
+#, php-format
+msgid "Reason for warning %s"
+msgstr ""
+
+#: warning.php:144
+msgid "Warn user"
+msgstr ""
+
+#: warning.php:157
+msgid "Possible reasons for warning users"
+msgstr ""
+
+#: warning.php:179
+msgid "Warnings"
+msgstr ""
+
+#: warning.php:197
+msgid "View warnings"
+msgstr ""
+
+#: warning.php:204
+#, php-format
+msgid "Warnings given to user \"%s\""
+msgstr ""
+
+#: warning.php:208
+msgid "Given by"
+msgstr ""
+
+#: warning.php:224
+msgid "View post"
 msgstr ""

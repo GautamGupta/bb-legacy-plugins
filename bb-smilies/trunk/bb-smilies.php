@@ -31,7 +31,7 @@ add_action('edit_form','bbClicker',($bb_smilies['popup'] ? 20 : 9));
 
 function bbClicker() {
 global $bb_smilies, $bb_current_user;
-@require_once($bb_smilies['icon_path']."package-config.php");
+@include($bb_smilies['icon_path']."package-config.php");
 echo  "<scr"."ipt type='text/javascript' defer='defer'>
 
 if (window.attachEvent) {window.attachEvent('onload', bb_smilies_init);} 
@@ -48,13 +48,14 @@ bbClicker.style.visibility='hidden';
 }	
 
 function bb_smilies_init() {
-if (!bbField) {bbField = document.getElementsByTagName('textarea')[0];}
+if (typeof bbField == 'undefined') {bbField = document.getElementsByTagName('textarea')[0];}
 if (bbField) { 
 	bb_smilies_html='";
 	echo '<img  onclick="bb_smilies_panel()" src="'. $bb_smilies['icon_url'] . $wp_smilies[":)"] .'" title="'.__('Insert Smilies').'" class="bb_smilies" /> ';
 echo "';
-	bb_smilies_panel_html='";
-	foreach(array_unique($wp_smilies) as $smiley => $img) {
+	bb_smilies_panel_html='"; 
+	$unique=array_unique($wp_smilies);
+	foreach($unique as $smiley => $img) {
 	echo '<img onclick=bb_smilies("'.addslashes(trim($smiley)).'")  src="'. $bb_smilies['icon_url'] . $img .'" title="'. htmlspecialchars(trim($smiley), ENT_QUOTES) .'" class="bb_smilies" /> ';
 	}
 echo "';

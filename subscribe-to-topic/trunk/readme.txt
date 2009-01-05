@@ -49,6 +49,10 @@ but if it's a very large site you'll probably have to pay a whitelisting service
 
 * early alpha release for testing, feedback and bug reports
 
+= Version 0.0.2 (2009-01-05) =
+
+* bug fix for those who do not use pretty-permalinks
+
 == To Do ==
 
 * bcc research to send only one email notify to many members

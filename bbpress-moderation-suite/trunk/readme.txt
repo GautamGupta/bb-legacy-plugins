@@ -1,7 +1,7 @@
 === bbPress Moderation Suite ===
 Contributors: Nightgunner5
-Tags: moderation
-Requires at least: 0.9
+Tags: moderation, banning, ban, report post, report
+Requires at least: 1.0-alpha
 Tested up to: trunk
 Stable tag: 0.1-alpha2
 

@@ -3,7 +3,7 @@ Contributors: sambauers
 Tags: PollDaddy, polls, voting
 Requires at least: 0.9
 Tested up to: 1.0-alpha-2
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 
 Adds the ability to insert PollDaddy hosted polls into posts.
 
@@ -35,7 +35,7 @@ will need to be logged in as a keymaster.
 
 == License ==
 
-PollDaddy for bbPress version 1.0.4<br />
+PollDaddy for bbPress version 1.0.5<br />
 Copyright (C) 2008 Sam Bauers (http://unlettered.org/)
 
 PollDaddy for bbPress comes with ABSOLUTELY NO WARRANTY
@@ -56,3 +56,5 @@ See accompanying license.txt file for details.
   <br />Remove call to bb_uri() - it's in bbPress 1.0 only
 * 1.0.4 :
   <br />Load plugin text domain
+* 1.0.5 :
+  <br />Actually make it work with bbPress 0.9.x

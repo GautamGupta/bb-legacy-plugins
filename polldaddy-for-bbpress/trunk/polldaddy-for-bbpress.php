@@ -60,6 +60,8 @@ function bb_polldaddy_preg( $post_text, $post_id )
 		$callback = 'bb_polldaddy_permission_error_handler';
 	}
 
+	global $bb_polldaddy_user_class;
+
 	if ( !$user = new $bb_polldaddy_user_class( $user_id ) ) {
 		$callback = 'bb_polldaddy_permission_error_handler';
 	}
@@ -95,6 +97,8 @@ function bb_polldaddy_shortcode( $post_text, $post_id )
 		add_shortcode( 'polldaddy', 'bb_polldaddy_permission_error_handler' );
 		return $post_text;
 	}
+
+	global $bb_polldaddy_user_class;
 
 	if ( !$user = new $bb_polldaddy_user_class( $user_id ) ) {
 		remove_shortcode( 'polldaddy' );

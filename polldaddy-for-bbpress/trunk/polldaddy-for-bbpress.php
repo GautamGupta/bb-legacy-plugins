@@ -27,6 +27,9 @@ if ( class_exists( 'BB_User' ) ) {
 
 function bb_polldaddy_get_poll_script( $poll )
 {
+	// Remove quote entities
+	$poll = preg_replace( array( '/&quot;/i', '/&#0*39;/', '/&#x0*27;/i', '/&#0*34;/', '/&#x0*22;/i' ), '', $poll );
+	$poll = trim( $poll );
 	return '<script type="text/javascript" language="javascript" src="http://s3.polldaddy.com/p/' . $poll . '.js"></script><noscript><a href ="http://answers.polldaddy.com/poll/' . $poll . '" >' . __( 'View Poll', 'polldaddy-for-bbpress' ) . '</a></noscript>';
 }
 
@@ -70,7 +73,7 @@ function bb_polldaddy_preg( $post_text, $post_id )
 		$callback = 'bb_polldaddy_permission_error_handler';
 	}
 
-	$post_text = preg_replace_callback( '@\[polldaddy poll=(?:"|\')?([0-9]+)(?:"|\')?\]@', $callback, $post_text );
+	$post_text = preg_replace_callback( '@\[\s*polldaddy\s*poll=([^\]]+)\]@', $callback, $post_text );
 	return $post_text;
 }
 
@@ -126,6 +129,10 @@ if ( !BB_IS_ADMIN ) {
 	return;
 }
 
+// Add filters for the admin area
+add_action( 'bb_admin_menu_generator', 'bb_polldaddy_admin_page_add' );
+add_action( 'bb_admin-header.php', 'bb_polldaddy_admin_page_process' );
+
 // Backwards compatibility
 if ( !function_exists( 'checked' ) ) {
 	function checked( $checked, $current )
@@ -133,8 +140,8 @@ if ( !function_exists( 'checked' ) ) {
 		if ( $checked == $current ) {
 			echo ' checked="checked"';
 		}
+		return;
 	}
-	return;
 }
 
 // Backwards compatibility
@@ -147,10 +154,6 @@ if ( !function_exists( 'selected' ) ) {
 		return;
 	}
 }
-
-// Add filters for the admin area
-add_action( 'bb_admin_menu_generator', 'bb_polldaddy_admin_page_add' );
-add_action( 'bb_admin-header.php', 'bb_polldaddy_admin_page_process' );
 
 function bb_polldaddy_admin_page_add()
 {

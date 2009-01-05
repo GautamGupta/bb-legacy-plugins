@@ -408,9 +408,8 @@ function bbmodsuite_report_link($parts) {
 		$post_author = new WP_User($post_author_id);
 		if ($post_author_id != bb_get_current_user_info('ID') && !$post_author->has_cap('moderate')) {
 			$title = __('Report this post to a moderator.', 'bbpress-moderation-suite');
-			$bbreport_confirm = __('Are you sure you want to report this post?', 'bbpress-moderation-suite');
-			$bbreport_href = str_replace('\\', '/', substr(BB_PLUGIN_URL, 0, -1) . str_replace(realpath(BB_PLUGIN_DIR), '', dirname(__FILE__)) . '/' . basename(__FILE__));
-			$parts[] = '<a class="report_post" title="' . $title . '" href="' . $bbreport_href . '?report=' . $post_id . '&amp;_nonce=' . bb_create_nonce('bbmodsuite-report-' . $post_id) . '">'.__("Report", 'bbpress-moderation-suite').'</a>';
+			$href = str_replace('\\', '/', substr(BB_PLUGIN_URL, 0, -1) . str_replace(realpath(BB_PLUGIN_DIR), '', dirname(__FILE__)) . '/' . basename(__FILE__));
+			$parts[] = '<a class="report_post" title="' . $title . '" href="' . $href . '?report=' . $post_id . '&amp;_nonce=' . bb_create_nonce('bbmodsuite-report-' . $post_id) . '">'.__("Report", 'bbpress-moderation-suite').'</a>';
 		}
 	}
 	return $parts;

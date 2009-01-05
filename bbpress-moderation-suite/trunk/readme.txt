@@ -21,7 +21,7 @@ Ban Plus allows temporary bans with notes on why the ban occurred. There are saf
 
 = Warning =
 
-Being programmed.
+Allows moderators to warn users about rule breaking.
 
 = Mod Log =
 

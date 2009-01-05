@@ -22,8 +22,15 @@ function bbmodsuite_init() {
 			'description' => '<p>' . __('Implements advanced banning features like temporary banning and automated banning (if used with the Warnings assistant)  Ban Plus does not use the core rank system, so removing the plugin will unban everyone banned using this method.', 'bbpress-moderation-suite') . '</p>',
 			'filename' => 'ban-plus.php',
 			'panel' => 'bbpress_moderation_suite_ban_plus'
+		),
+		'warning' => array(
+			'name' => __('Warning', 'bbpress-moderation-suite'),
+			'description' => '<p>' . __('Allows moderators and higher to warn users that break rules. Can be set to automatically block or (if Ban Plus is active) temporarily ban problematic users from the forums.', 'bbpress-moderation-suite') . '</p>',
+			'filename' => 'warning.php',
+			'panel' => 'bbpress_moderation_suite_warning'
 		)
 	);
+	load_plugin_textdomain('bbpress-moderation-suite', dirname(__FILE__) . '/translations');
 	$bbmodsuite_active_plugins = (array) bb_get_option('bbpress_moderation_suite_helpers');
 	foreach ($bbmodsuite_active_plugins as $plugin) {
 		require_once $bbmodsuite_plugins[$plugin]['filename'];

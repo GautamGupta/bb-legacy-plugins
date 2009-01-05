@@ -3,8 +3,8 @@ else if (window.addEventListener) {window.addEventListener("load", BBcodeButtons
 else {document.addEventListener("load", BBcodeButtonsToolbar, false);}
 
 function BBcodeButtonsToolbar() {
-myField = document.getElementsByTagName("textarea")[0];  
-if (myField) { 
+if (typeof bbField == 'undefined') {bbField = document.getElementsByTagName('textarea')[0];}
+if (bbField) { 
 smilieCount=0, BBcodeButtons = new Array(), edOpenTags = new Array(); 
 BBcodeButtons_init(); var buttonhtml=""; for (i = 0; i < BBcodeButtons.length; i++) {
 if (BBcodeButtons[i].access) {var accesskey = ' accesskey = "' + BBcodeButtons[i].access + '"'} else {var accesskey = '';}
@@ -18,13 +18,13 @@ var CSS='float:left; border: 1px outset; color: black; background: buttonface; p
 var stylesheet = document.styleSheets[document.styleSheets.length-1];
 if (stylesheet.addRule) {stylesheet.addRule(".ed_button", CSS);} else {if (stylesheet.insertRule) {stylesheet.insertRule(".ed_button {"+CSS+"}",stylesheet);}}
 
-myField.setAttribute("style", "clear:both;"); 	// fix textarea to clear toolbar
+bbField.setAttribute("style", "clear:both;"); 	// fix textarea to clear toolbar
 bbcode_buttons = document.createElement("div");
 bbcode_buttons.setAttribute("id", "bbcode_buttons"); 
 // bbcode_buttons.setAttribute("style", "background: buttonface;"); 
 // bbcode_buttons.style.backgroundColor="buttonface";
 bbcode_buttons.innerHTML=buttonhtml;
-myField.parentNode.insertBefore(bbcode_buttons,myField);
+bbField.parentNode.insertBefore(bbcode_buttons,bbField);
 }
 }
 
@@ -81,7 +81,7 @@ function edCloseAllTags() {
 function edInsertTag(i) {
 	//IE support
 	if (document.selection) {
-		myField.focus();
+		bbField.focus();
 		sel = document.selection.createRange();
 		if (sel.text.length > 0) {
 			sel.text = BBcodeButtons[i].tagStart + sel.text + BBcodeButtons[i].tagEnd;
@@ -96,66 +96,66 @@ function edInsertTag(i) {
 				edRemoveTag(i);
 			}
 		}
-		myField.focus();
+		bbField.focus();
 	}
 	//MOZILLA/NETSCAPE support
-	else if (myField.selectionStart || myField.selectionStart == '0') {
-		var startPos = myField.selectionStart;
-		var endPos = myField.selectionEnd;
+	else if (bbField.selectionStart || bbField.selectionStart == '0') {
+		var startPos = bbField.selectionStart;
+		var endPos = bbField.selectionEnd;
 		var cursorPos = endPos;
-		var scrollTop = myField.scrollTop;
+		var scrollTop = bbField.scrollTop;
 		if (startPos != endPos) {
-			myField.value = myField.value.substring(0, startPos)
+			bbField.value = bbField.value.substring(0, startPos)
 			              + BBcodeButtons[i].tagStart
-			              + myField.value.substring(startPos, endPos) 
+			              + bbField.value.substring(startPos, endPos) 
 			              + BBcodeButtons[i].tagEnd
-			              + myField.value.substring(endPos, myField.value.length);
+			              + bbField.value.substring(endPos, bbField.value.length);
 			cursorPos += BBcodeButtons[i].tagStart.length + BBcodeButtons[i].tagEnd.length;
 		}
 		else {
 			if (!edCheckOpenTags(i) || BBcodeButtons[i].tagEnd == '') {
-				myField.value = myField.value.substring(0, startPos) 
+				bbField.value = bbField.value.substring(0, startPos) 
 				              + BBcodeButtons[i].tagStart
-				              + myField.value.substring(endPos, myField.value.length);
+				              + bbField.value.substring(endPos, bbField.value.length);
 				edAddTag(i);
 				cursorPos = startPos + BBcodeButtons[i].tagStart.length;
 			}
 			else {
-				myField.value = myField.value.substring(0, startPos) 
+				bbField.value = bbField.value.substring(0, startPos) 
 				              + BBcodeButtons[i].tagEnd
-				              + myField.value.substring(endPos, myField.value.length);
+				              + bbField.value.substring(endPos, bbField.value.length);
 				edRemoveTag(i);
 				cursorPos = startPos + BBcodeButtons[i].tagEnd.length;
 			}
 		}
-		myField.focus();
-		myField.selectionStart = cursorPos;
-		myField.selectionEnd = cursorPos;
-		myField.scrollTop = scrollTop;
+		bbField.focus();
+		bbField.selectionStart = cursorPos;
+		bbField.selectionEnd = cursorPos;
+		bbField.scrollTop = scrollTop;
 	}
 	else {
-		if (!edCheckOpenTags(i) || BBcodeButtons[i].tagEnd == '') {myField.value += BBcodeButtons[i].tagStart; edAddTag(i);}
-		else {myField.value += BBcodeButtons[i].tagEnd; edRemoveTag(i);}
-		myField.focus();
+		if (!edCheckOpenTags(i) || BBcodeButtons[i].tagEnd == '') {bbField.value += BBcodeButtons[i].tagStart; edAddTag(i);}
+		else {bbField.value += BBcodeButtons[i].tagEnd; edRemoveTag(i);}
+		bbField.focus();
 	}
 }
 
 function edInsertContent(myValue) {
 	//IE support
-	if (document.selection) {myField.focus(); sel = document.selection.createRange(); sel.text = myValue; myField.focus();}
+	if (document.selection) {bbField.focus(); sel = document.selection.createRange(); sel.text = myValue; bbField.focus();}
 	//MOZILLA/NETSCAPE support
-	else if (myField.selectionStart || myField.selectionStart == '0') {
-		var startPos = myField.selectionStart;
-		var endPos = myField.selectionEnd;
-		var scrollTop = myField.scrollTop;
-		myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
-		myField.focus();
-		myField.selectionStart = startPos + myValue.length;
-		myField.selectionEnd = startPos + myValue.length;
-		myField.scrollTop = scrollTop;
+	else if (bbField.selectionStart || bbField.selectionStart == '0') {
+		var startPos = bbField.selectionStart;
+		var endPos = bbField.selectionEnd;
+		var scrollTop = bbField.scrollTop;
+		bbField.value = bbField.value.substring(0, startPos) + myValue + bbField.value.substring(endPos, bbField.value.length);
+		bbField.focus();
+		bbField.selectionStart = startPos + myValue.length;
+		bbField.selectionEnd = startPos + myValue.length;
+		bbField.scrollTop = scrollTop;
 	} else {
-		myField.value += myValue;
-		myField.focus();
+		bbField.value += myValue;
+		bbField.focus();
 	}
 }
 

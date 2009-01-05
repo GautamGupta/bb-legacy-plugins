@@ -23,7 +23,7 @@ function bbmodsuite_banplus_set_ban($user_id, $type = 'temp', $length = 86400, $
 	if ($user_id === bb_get_current_user_info('ID'))
 		return false;
 
-	$user = new WP_User($user_id);
+	$user = class_exists('BP_User') ? new BP_User($user_id) : new WP_User($user_id);
 	if (($user->has_cap('moderate') && !bb_current_user_can('administrate')) || ($user->has_cap('administrate') && !bb_current_user_can('use_keys')))
 		return false;
 

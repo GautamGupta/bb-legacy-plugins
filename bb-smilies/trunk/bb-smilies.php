@@ -5,7 +5,7 @@ Description:  Adds clickable smilies (emoticons) to bbPress.  No template edits 
 Plugin URI:  http://bbpress.org/plugins/topic/121
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.5
+Version: 0.0.6
 */
 
 $bb_smilies['icon_set']="default";  // change this to the exact directory name (case sensitive) if you want to switch icon package sets
@@ -13,12 +13,12 @@ $bb_smilies['popup'] = true;	  	// true = popup panel of smilies /  false = visi
 
 $bb_smilies['css'] = ".bb_smilies {border:0; vertical-align: middle; padding-bottom:1px;}
 .bb_smilies {cursor: pointer; cursor: hand;}
-#bb_smilies_clicker {position: absolute; float: right; visibility: hidden; background: buttonface; width: 150px; border:2px inset buttonface; font: 1.2em times, serif;}
-#bb_smilies_clicker img {padding:5px;}
+#bbClicker {position: absolute; float: right; visibility: hidden; background: buttonface; width: 150px; border:2px inset buttonface; font: 1.2em times, serif;}
+#bbClicker img {padding:5px;}
 #bb_smilies_toggle {float:right; padding: 0px 6px 1px 6px; margin: 1px 7px 2px 0; font: 1.2em times, serif; word-spacing: -1px; height: 16px; vertical-align:middle; line-height:16px;');}
 ";
 
-/* stop editing here */
+/*  stop editing here  */
 
 $bb_smilies['icon_path']=rtrim(dirname(__FILE__),' /\\').'/'.$bb_smilies['icon_set'].'/'; 
 $bb_smilies['icon_url']=bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),"\\"),array("","/"),dirname(__FILE__)),' /\\').'/'.$bb_smilies['icon_set'].'/'; 
@@ -26,26 +26,30 @@ $bb_smilies['icon_url']=bb_get_option('uri').trim(str_replace(array(trim(BBPATH,
 add_filter('post_text', 'bb_smilies_convert');
 add_filter('pm_text', 'bb_smilies_convert');  // support private messages plugin
 add_action('bb_head','bb_smilies_css');
-add_action('post_form','bb_smilies_clicker',($bb_smilies['popup'] ? 20 : 9));
-add_action('edit_form','bb_smilies_clicker',($bb_smilies['popup'] ? 20 : 9));
+add_action('post_form','bbClicker',($bb_smilies['popup'] ? 20 : 9));
+add_action('edit_form','bbClicker',($bb_smilies['popup'] ? 20 : 9));
 
-function bb_smilies_clicker() {
+function bbClicker() {
 global $bb_smilies, $bb_current_user;
-@include($bb_smilies['icon_path']."package-config.php");
+@require_once($bb_smilies['icon_path']."package-config.php");
 echo  "<scr"."ipt type='text/javascript' defer='defer'>
 
-function bb_smilies(myValue) {
-	myValue=' '+myValue;	
-	if (document.selection) {bb_smilies_textarea.focus();sel = document.selection.createRange();sel.text = myValue;}
-	else if (bb_smilies_textarea.selectionStart || bb_smilies_textarea.selectionStart == '0') {var startPos = bb_smilies_textarea.selectionStart; var endPos = bb_smilies_textarea.selectionEnd;
-		bb_smilies_textarea.value = bb_smilies_textarea.value.substring(0, startPos)+ myValue+ bb_smilies_textarea.value.substring(endPos, bb_smilies_textarea.value.length);
-	} else {bb_smilies_textarea.value += myValue; bb_smilies_textarea.focus();}
-bb_smilies_clicker.style.visibility='hidden';
+if (window.attachEvent) {window.attachEvent('onload', bb_smilies_init);} 
+else if (window.addEventListener) {window.addEventListener('load', bb_smilies_init, false);} 
+else {document.addEventListener('load', bb_smilies_init, false);}
+
+function bb_smilies(bbValue) {
+	bbValue=' '+bbValue;	
+	if (document.selection) {bbField.focus();sel = document.selection.createRange();sel.text = bbValue;}
+	else if (bbField.selectionStart || bbField.selectionStart == '0') {var startPos = bbField.selectionStart; var endPos = bbField.selectionEnd;
+		bbField.value = bbField.value.substring(0, startPos)+ bbValue+ bbField.value.substring(endPos, bbField.value.length);
+	} else {bbField.value += bbValue; bbField.focus();}
+bbClicker.style.visibility='hidden';
 }	
 
 function bb_smilies_init() {
-bb_smilies_textarea = document.getElementsByTagName('textarea')[0];
-if (bb_smilies_textarea) { 
+if (!bbField) {bbField = document.getElementsByTagName('textarea')[0];}
+if (bbField) { 
 	bb_smilies_html='";
 	echo '<img  onclick="bb_smilies_panel()" src="'. $bb_smilies['icon_url'] . $wp_smilies[":)"] .'" title="'.__('Insert Smilies').'" class="bb_smilies" /> ';
 echo "';
@@ -54,44 +58,40 @@ echo "';
 	echo '<img onclick=bb_smilies("'.addslashes(trim($smiley)).'")  src="'. $bb_smilies['icon_url'] . $img .'" title="'. htmlspecialchars(trim($smiley), ENT_QUOTES) .'" class="bb_smilies" /> ';
 	}
 echo "';
-	bb_smilies_textarea.setAttribute('style', 'clear:both;'); 	
+	bbField.setAttribute('style', 'clear:both;'); 	
 	bb_smilies_toggle= document.createElement('div');	
 	bb_smilies_toggle.setAttribute('id', 'bb_smilies_toggle'); 	
 
 "; 	if ($bb_smilies['popup']) { 
 echo "
 	bb_smilies_toggle.innerHTML=bb_smilies_html;
-	bb_smilies_textarea.parentNode.insertBefore(bb_smilies_toggle,bb_smilies_textarea);
+	bbField.parentNode.insertBefore(bb_smilies_toggle,bbField);
 	
-	bb_smilies_clicker= document.createElement('div');
-	bb_smilies_clicker.setAttribute('id', 'bb_smilies_clicker'); 		
-	bb_smilies_clicker.innerHTML=bb_smilies_panel_html;
-	bb_smilies_textarea.parentNode.insertBefore(bb_smilies_clicker,bb_smilies_textarea);
+	bbClicker= document.createElement('div');
+	bbClicker.setAttribute('id', 'bbClicker'); 		
+	bbClicker.innerHTML=bb_smilies_panel_html;
+	bbField.parentNode.insertBefore(bbClicker,bbField);
 ";	
 	} else {
 echo "
 	bb_smilies_toggle.innerHTML=bb_smilies_panel_html;
-	bb_smilies_textarea.parentNode.insertBefore(bb_smilies_toggle,bb_smilies_textarea);
+	bbField.parentNode.insertBefore(bb_smilies_toggle,bbField);
 ";	
 	}
 echo "
-} // bb_smilies_textarea
+} // bbField
 } // bb_smilies_init
 
 function bb_smilies_panel() {
-	if (bb_smilies_clicker.style.visibility!='visible') {	
-	// var obj = bb_smilies_textarea; var pos = {x: obj.offsetLeft||0, y: obj.offsetTop||0};	
+	if (bbClicker.style.visibility!='visible') {	
+	// var obj = bbField; var pos = {x: obj.offsetLeft||0, y: obj.offsetTop||0};	
 	// while(obj = obj.offsetParent) { pos.x += obj.offsetLeft||0; pos.y += obj.offsetTop||0; }		
-	// bb_smilies_clicker.style.left = pos.x + 'px';  
-	// bb_smilies_clicker.style.top = pos.y + 'px';	
-	bb_smilies_clicker.style.left =  (bb_smilies_textarea.offsetLeft + bb_smilies_textarea.offsetWidth) - (3 + bb_smilies_clicker.offsetWidth + bb_smilies_toggle.offsetWidth) + 'px'; 
-	bb_smilies_clicker.style.visibility='visible';		
-	} else {bb_smilies_clicker.style.visibility='hidden';}  
+	// bbClicker.style.left = pos.x + 'px';  
+	// bbClicker.style.top = pos.y + 'px';	
+	bbClicker.style.left =  (bbField.offsetLeft + bbField.offsetWidth) - (3 + bbClicker.offsetWidth + bb_smilies_toggle.offsetWidth) + 'px'; 
+	bbClicker.style.visibility='visible';		
+	} else {bbClicker.style.visibility='hidden';}  
 }
-
-if (window.attachEvent) {window.attachEvent('onload', bb_smilies_init);} 
-else if (window.addEventListener) {window.addEventListener('load', bb_smilies_init, false);} 
-else {document.addEventListener('load', bb_smilies_init, false);}
 
 </scr"."ipt>";
 //	<scr"."ipt src='" .bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),".php","\\"),array("",".js","/"),__FILE__),"/\\")."?0.0.4' type='text/javascript' defer='defer'></scr"."ipt>";

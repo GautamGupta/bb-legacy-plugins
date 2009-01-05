@@ -4,7 +4,7 @@ Contributors: _ck_
 Requires at least: 0.8.2
 Tested up to: trunk
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Adds clickable smilies (emoticons) to bbPress.  No template edits required. Streamlined for low overhead. Uses swappable icon sets.
 
@@ -33,7 +33,7 @@ Or build your own. Just make sure you follow the style in `package-config.php`
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 

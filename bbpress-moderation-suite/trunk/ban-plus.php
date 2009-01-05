@@ -141,7 +141,7 @@ function bbpress_moderation_suite_ban_plus() { ?>
 <ul id="bbAdminSubSubMenu">
 	<li<?php if (!in_array($_GET['page'], array('new_ban', 'admin'))) { ?> class="current"<?php } ?>><a href="<?php echo bb_get_uri('bb-admin/admin-base.php', array('plugin' => 'bbpress_moderation_suite_ban_plus', 'page' => 'current_bans'), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN); ?>"><span><?php _e('Current bans', 'bbpress-moderation-suite') ?></span></a></li>
 	<li<?php if ($_GET['page'] === 'new_ban') { ?> class="current"<?php } ?>><a href="<?php echo bb_nonce_url(bb_get_uri('bb-admin/admin-base.php', array('plugin' => 'bbpress_moderation_suite_ban_plus', 'page' => 'new_ban'), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN), 'bbmodsuite-banplus-new'); ?>"><span><?php _e('Ban a user', 'bbpress-moderation-suite') ?></span></a></li>
-	<?php if (bb_current_user_can('use_keys')) { ?><li<?php if ($_GET['page'] === 'admin') { ?> class="current"<?php } ?>><a href="<?php echo bb_get_uri('bb-admin/admin-base.php', array('plugin' => 'bbpress_moderation_suite_ban_plus', 'page' => 'admin'), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN); ?>"><span>Administration</span></a></li><?php } ?>
+	<?php if (bb_current_user_can('use_keys')) { ?><li<?php if ($_GET['page'] === 'admin') { ?> class="current"<?php } ?>><a href="<?php echo bb_get_uri('bb-admin/admin-base.php', array('plugin' => 'bbpress_moderation_suite_ban_plus', 'page' => 'admin'), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN); ?>"><span><?php _e('Administration', 'bbpress-moderation-suite') ?></span></a></li><?php } ?>
 </ul>
 <?php switch ($_GET['page']) {
 	case 'new_ban':

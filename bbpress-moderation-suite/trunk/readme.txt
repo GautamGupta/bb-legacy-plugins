@@ -19,11 +19,11 @@ Report allows users on your forum to report posts to the moderators on your foru
 
 Ban Plus allows temporary bans with notes on why the ban occurred. There are safety features to prevent Moderators from banning Keymasters.
 
-= Mod Log =
+= Warning =
 
 Being programmed.
 
-= Warning =
+= Mod Log =
 
 Being programmed.
 

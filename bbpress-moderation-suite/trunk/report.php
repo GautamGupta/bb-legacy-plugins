@@ -292,7 +292,7 @@ function bbpress_moderation_suite_report() { ?>
 			</td>
 			<td class="action">
 				<a target="_blank" href="<?php post_link($report->reported_post); ?>"><?php _e('View reported post', 'bbpress-moderation-suite'); ?></a><br />
-				<a href="<?php echo $resolve_url; ?>">Resolve</a>
+				<a href="<?php echo $resolve_url; ?>"><?php _e('Resolve', 'bbpress-moderation-suite') ?></a>
 			</td>
 		</tr>
 
@@ -405,7 +405,7 @@ function bbmodsuite_report_link($parts) {
 	$post_id = get_post_id();
 	if (bb_current_user_can('participate') && !bb_current_user_can('delete_post', $post_id)) {
 		$post_author_id = get_post_author_id($post_id);
-		$post_author = new WP_User($post_author_id);
+		$post_author = class_exists('BP_User') ? new BP_User($post_author_id) : new WP_User($post_author_id);
 		if ($post_author_id != bb_get_current_user_info('ID') && !$post_author->has_cap('moderate')) {
 			$title = __('Report this post to a moderator.', 'bbpress-moderation-suite');
 			$href = str_replace('\\', '/', substr(BB_PLUGIN_URL, 0, -1) . str_replace(realpath(BB_PLUGIN_DIR), '', dirname(__FILE__)) . '/' . basename(__FILE__));

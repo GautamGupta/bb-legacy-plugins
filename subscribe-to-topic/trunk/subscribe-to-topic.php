@@ -171,7 +171,7 @@ $message = __("There is a new post on [%1\$s] \n\nReply by: %2\$s \n%3\$s \n\n\n
 foreach ($emails as $email){
 	mail($email->user_email,$subject,sprintf($message,$topic->topic_title,$user_name,$topic_link,$unsubscribe),$from_email,"-odb");	  // odq = queue only
 	$ids[$email->user_id]=$email->user_id;
-	print "$email->user_email <br>\n";	
+	// print "$email->user_email <br>\n";	
 }
 if (!empty($ids)) {
 	$ids=implode(',',$ids); $time=time();

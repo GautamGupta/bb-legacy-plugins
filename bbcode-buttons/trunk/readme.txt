@@ -4,7 +4,7 @@ Contributors: _ck_
 Requires at least: 0.8.2
 Tested up to: trunk
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Automatically adds an easy access button toolbar above the post textarea to allow quick tags in BBcode. This is an enhanced replacement for the Comment Quicktags plugin. No template editing required.
 
@@ -42,7 +42,7 @@ That can be incompatible with some PHP configurations. BBcode Buttons instead us
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 
@@ -59,6 +59,10 @@ That can be incompatible with some PHP configurations. BBcode Buttons instead us
 = Version 0.0.8 (2008-12-18) =
 
 * making links is now more intuitive by prompting for text for the link if nothing is already is selected
+
+= Version 0.0.9 (2009-01-10) =
+
+* change in method of injecting stylesheet for opera compatibility
 
 == To Do ==
 

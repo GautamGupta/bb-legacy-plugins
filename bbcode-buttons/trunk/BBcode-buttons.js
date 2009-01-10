@@ -6,17 +6,22 @@ function BBcodeButtonsToolbar() {
 if (typeof bbField == 'undefined') {bbField = document.getElementsByTagName('textarea')[0];}
 if (bbField) { 
 smilieCount=0, BBcodeButtons = new Array(), edOpenTags = new Array(); 
-BBcodeButtons_init(); var buttonhtml=""; for (i = 0; i < BBcodeButtons.length; i++) {
+BBcodeButtons_init(); var buttonhtml=""; 
+for (i = 0; i < BBcodeButtons.length; i++) {
 if (BBcodeButtons[i].access) {var accesskey = ' accesskey = "' + BBcodeButtons[i].access + '"'} else {var accesskey = '';}
 buttonhtml+='<div title="' + BBcodeButtons[i].title + '" id="' + BBcodeButtons[i].id + '" style="' + BBcodeButtons[i].style + '" ' + accesskey + ' class="ed_button" ';	
 buttonhtml+='onmouseover="edOver(this);" onmouseout="edOut(this);" onclick="edClick('+ i+');">' + BBcodeButtons[i].display + '</div>';
 }
 
-var CSS='float:left; border: 1px outset; color: black; background: buttonface; padding: 0px 6px 1px 6px; margin: 1px 7px 2px 0;'
+var CSS='#bbcode_buttons div {float:left; border: 1px outset; color: black; background: buttonface; padding: 0px 6px 1px 6px; margin: 1px 7px 2px 0;'
 	+'font: 1.2em times, serif; word-spacing: -1px; height: 16px; vertical-align:middle; line-height:16px;'
-	+'text-align:center; position:relative; cursor: pointer; cursor: hand;';
-var stylesheet = document.styleSheets[document.styleSheets.length-1];
-if (stylesheet.addRule) {stylesheet.addRule(".ed_button", CSS);} else {if (stylesheet.insertRule) {stylesheet.insertRule(".ed_button {"+CSS+"}",stylesheet);}}
+	+'text-align:center; position:relative; cursor: pointer; cursor: hand;}';
+
+var stylesheet = document.createElement('style'); stylesheet.type = 'text/css';
+if (stylesheet.styleSheet){stylesheet.styleSheet.cssText = CSS;} 
+else {stylesheet.appendChild(document.createTextNode(CSS));}
+var head = document.getElementsByTagName('head')[0];
+head.appendChild(stylesheet);
 
 bbField.setAttribute("style", "clear:both;"); 	// fix textarea to clear toolbar
 bbcode_buttons = document.createElement("div");

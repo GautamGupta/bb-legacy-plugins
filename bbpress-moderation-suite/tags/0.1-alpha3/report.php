@@ -229,7 +229,9 @@ function bbpress_moderation_suite_report() { ?>
 <?php } else { ?>
 <div class="error"><p><?php _e('Saving the settings failed.', 'bbpress-moderation-suite') ?></p></div>
 <?php }
-} ?>
+}
+$options = bb_get_option('bbmodsuite_report_options');
+?>
 <form class="settings" method="post" action="<?php bb_uri('bb-admin/admin-base.php', array('page' => 'admin', 'plugin' => 'bbpress_moderation_suite_report'), BB_URI_CONTEXT_FORM_ACTION + BB_URI_CONTEXT_BB_ADMIN); ?>">
 <fieldset>
 	<div>
@@ -237,7 +239,7 @@ function bbpress_moderation_suite_report() { ?>
 			<?php _e('Report types', 'bbpress-moderation-suite'); ?>
 		</label>
 		<div>
-			<textarea id="report_types" name="report_types" rows="15" cols="43"><?php attribute_escape($options['bbmodsuite_report_types']); ?></textarea>
+			<textarea id="report_types" name="report_types" rows="15" cols="43"><?php echo attribute_escape($options['types']); ?></textarea>
 			<p><?php _e('Fill this box with generic reasons to report posts. (One per line)', 'bbpress-moderation-suite'); ?></p>
 		</div>
 	</div>

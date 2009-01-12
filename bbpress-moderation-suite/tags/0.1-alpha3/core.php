@@ -5,7 +5,7 @@ Description: A set of tools to help moderate your forums.
 Plugin URI: http://llamaslayers.net/daily-llama/tag/bbpress-moderation-suite
 Author: Nightgunner5
 Author URI: http://llamaslayers.net/
-Version: 0.1-alpha2
+Version: 0.1-alpha3
 */
 
 function bbmodsuite_init() {

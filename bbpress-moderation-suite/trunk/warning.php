@@ -38,7 +38,10 @@ function bbmodsuite_warning_link($parts) {
 add_filter('bb_post_admin', 'bbmodsuite_warning_link');
 
 function bbmodsuite_warning_types() {
-	return (array) bb_get_option('bbmodsuite_warning_types');
+	$types = explode("\n", ".\n" . bb_get_option('bbmodsuite_warning_types'));
+	$types = array_filter($types);
+	unset($types[0]);
+	return $types;
 }
 
 function bbmodsuite_warning_admin_css() { ?>

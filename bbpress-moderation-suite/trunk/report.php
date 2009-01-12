@@ -18,13 +18,14 @@ function bbmodsuite_report_install() {
 	`resolved_at` datetime,
 	PRIMARY KEY (`ID`)
 )');
+	if (!bb_get_option('bbmodsuite_report_options'))
+		bb_update_option('bbmodsuite_report_options', array('min_level' => 'moderate', 'max_level' => 'moderate', 'types' => '', 'resolve_types' => ''));
 }
 
 function bbmodsuite_report_uninstall() {
 	global $bbdb;
 	$bbdb->query('DROP TABLE `' . $bbdb->prefix . 'bbmodsuite_reports`');
-	bb_delete_option('bbmodsuite_report_types');
-	bb_delete_option('bbmodsuite_report_resolve_types');
+	bb_delete_option('bbmodsuite_report_options');
 }
 
 if (!defined('BB_PATH') && isset($_GET['report'])) {
@@ -219,10 +220,11 @@ function bbpress_moderation_suite_report() { ?>
 <h2><?php _e('Administration', 'bbpress-moderation-suite'); ?></h2>
 <?php if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if (bb_verify_nonce($_POST['_wpnonce'], 'bbmodsuite-report-admin')) {
-		$report_types = trim($_POST['report_types']);
+		$types = trim($_POST['report_types']);
 		$resolve_types = trim($_POST['resolve_types']);
-		bb_update_option('bbmodsuite_report_types', $report_types);
-		bb_update_option('bbmodsuite_report_resolve_types', $resolve_types); ?>
+		$min_level = in_array($_POST['min_level'], array('moderate', 'administrate', 'use_keys')) ? $_POST['min_level'] : 'moderate';
+		$max_level = in_array($_POST['max_level'], array('moderate', 'administrate', 'use_keys', 'none')) ? $_POST['max_level'] : 'moderate';
+		bb_update_option('bbmodsuite_report_options', compact('types', 'resolve_types', 'min_level', 'max_level')); ?>
 <div class="updated"><p><?php _e('Settings successfully saved.', 'bbpress-moderation-suite') ?></p></div>
 <?php } else { ?>
 <div class="error"><p><?php _e('Saving the settings failed.', 'bbpress-moderation-suite') ?></p></div>
@@ -235,7 +237,7 @@ function bbpress_moderation_suite_report() { ?>
 			<?php _e('Report types', 'bbpress-moderation-suite'); ?>
 		</label>
 		<div>
-			<textarea id="report_types" name="report_types" rows="15" cols="43"><?php bb_form_option('bbmodsuite_report_types'); ?></textarea>
+			<textarea id="report_types" name="report_types" rows="15" cols="43"><?php attribute_escape($options['bbmodsuite_report_types']); ?></textarea>
 			<p><?php _e('Fill this box with generic reasons to report posts. (One per line)', 'bbpress-moderation-suite'); ?></p>
 		</div>
 	</div>
@@ -244,8 +246,35 @@ function bbpress_moderation_suite_report() { ?>
 			<?php _e('Resolve types', 'bbpress-moderation-suite'); ?>
 		</label>
 		<div>
-			<textarea id="resolve_types" name="resolve_types" rows="15" cols="43"><?php bb_form_option('bbmodsuite_report_resolve_types'); ?></textarea>
+			<textarea id="resolve_types" name="resolve_types" rows="15" cols="43"><?php echo attribute_escape($options['resolve_types']); ?></textarea>
 			<p><?php _e('Fill this box with generic ways of resolving reports. (One per line)', 'bbpress-moderation-suite'); ?></p>
+		</div>
+	</div>
+	<div>
+		<label for="min_level">
+			<?php _e('Minimum level', 'bbpress-moderation-suite'); ?>
+		</label>
+		<div>
+			<select id="min_level" name="min_level">
+				<option value="moderate"<?php if ($options['min_level'] === 'moderate') { ?> selected="selected"<?php } ?>><?php _e('Moderator') ?></option>
+				<option value="administrate"<?php if ($options['min_level'] === 'administrate') { ?> selected="selected"<?php } ?>><?php _e('Administrator') ?></option>
+				<option value="use_keys"<?php if ($options['min_level'] === 'use_keys') { ?> selected="selected"<?php } ?>><?php _e('Keymaster') ?></option>
+			</select>
+			<p><?php _e('What should the minimum user level to view and resolve reports be?', 'bbpress-moderation-suite'); ?></p>
+		</div>
+	</div>
+	<div>
+		<label for="max_level">
+			<?php _e('Maximum level', 'bbpress-moderation-suite'); ?>
+		</label>
+		<div>
+			<select id="max_level" name="max_level">
+				<option value="moderate"<?php if ($the_options['min_level'] === 'moderate') { ?> selected="selected"<?php } ?>><?php _e('Moderator') ?></option>
+				<option value="administrate"<?php if ($the_options['min_level'] === 'administrate') { ?> selected="selected"<?php } ?>><?php _e('Administrator') ?></option>
+				<option value="use_keys"<?php if ($the_options['min_level'] === 'use_keys') { ?> selected="selected"<?php } ?>><?php _e('Keymaster') ?></option>
+				<option value="none"<?php if ($the_options['min_level'] === 'none') { ?> selected="selected"<?php } ?>><?php _e('None', 'bbpress-moderation-suite') ?></option>
+			</select>
+			<p><?php _e('What should the maximum user level able to be reported be?', 'bbpress-moderation-suite'); ?></p>
 		</div>
 	</div>
 </fieldset>
@@ -308,7 +337,8 @@ function bbpress_moderation_suite_report() { ?>
 
 function bbmodsuite_report_admin_add() {
 	global $bb_submenu;
-	$bb_submenu['content.php'][] = array(__('Reports', 'bbpress-moderation-suite'), 'moderate', 'bbpress_moderation_suite_report');
+	$options = bb_get_option('bbmodsuite_report_options');
+	$bb_submenu['content.php'][] = array(__('Reports', 'bbpress-moderation-suite'), $options['min_level'], 'bbpress_moderation_suite_report');
 }
 add_action('bb_admin_menu_generator', 'bbmodsuite_report_admin_add');
 
@@ -364,14 +394,16 @@ function bbmodsuite_report_css() {
 add_action('bb_head', 'bbmodsuite_report_css');
 
 function bbmodsuite_report_reasons() {
-	$reasons = explode("\n", ".\n" . bb_get_option('bbmodsuite_report_types'));
+	$options = bb_get_option('bbmodsuite_report_options');
+	$reasons = explode("\n", ".\n" . $options['types']);
 	$reasons = array_filter($reasons);
 	unset($reasons[0]);
 	return $reasons;
 }
 
 function bbmodsuite_report_resolve_types() {
-	$reasons = explode("\n", ".\n" . bb_get_option('bbmodsuite_report_resolve_types'));
+	$options = bb_get_option('bbmodsuite_report_options');
+	$reasons = explode("\n", ".\n" . $options['resolve_types']);
 	$reasons = array_filter($reasons);
 	unset($reasons[0]);
 	return $reasons;
@@ -406,10 +438,8 @@ function bbmodsuite_report_link($parts) {
 	if (bb_current_user_can('participate') && !bb_current_user_can('delete_post', $post_id)) {
 		$post_author_id = get_post_author_id($post_id);
 		$post_author = class_exists('BP_User') ? new BP_User($post_author_id) : new WP_User($post_author_id);
-		if ($post_author_id != bb_get_current_user_info('ID')
-		// PUT TWO SLASHES BEFORE THE NEXT LINE IF YOU THINK MODERATORS AND ADMINISTRATORS SHOULD NOT BE "ABOVE THE LAW"
-			&& !$post_author->has_cap('moderate')
-		) {
+		$options = bb_get_option('bbmodsuite_report_options');
+		if ($post_author_id != bb_get_current_user_info('ID') && ($options['max_level'] === 'none' || !$post_author->has_cap($options['max_level']))) {
 			$title = __('Report this post to a moderator.', 'bbpress-moderation-suite');
 			$href = str_replace('\\', '/', substr(BB_PLUGIN_URL, 0, -1) . str_replace(realpath(BB_PLUGIN_DIR), '', dirname(__FILE__)) . '/' . basename(__FILE__));
 			$parts[] = '<a class="report_post" title="' . $title . '" href="' . $href . '?report=' . $post_id . '&amp;_nonce=' . bb_create_nonce('bbmodsuite-report-' . $post_id) . '">'.__("Report", 'bbpress-moderation-suite').'</a>';

@@ -406,7 +406,10 @@ function bbmodsuite_report_link($parts) {
 	if (bb_current_user_can('participate') && !bb_current_user_can('delete_post', $post_id)) {
 		$post_author_id = get_post_author_id($post_id);
 		$post_author = class_exists('BP_User') ? new BP_User($post_author_id) : new WP_User($post_author_id);
-		if ($post_author_id != bb_get_current_user_info('ID') && !$post_author->has_cap('moderate')) {
+		if ($post_author_id != bb_get_current_user_info('ID')
+		// PUT TWO SLASHES BEFORE THE NEXT LINE IF YOU THINK MODERATORS AND ADMINISTRATORS SHOULD NOT BE "ABOVE THE LAW"
+			&& !$post_author->has_cap('moderate')
+		) {
 			$title = __('Report this post to a moderator.', 'bbpress-moderation-suite');
 			$href = str_replace('\\', '/', substr(BB_PLUGIN_URL, 0, -1) . str_replace(realpath(BB_PLUGIN_DIR), '', dirname(__FILE__)) . '/' . basename(__FILE__));
 			$parts[] = '<a class="report_post" title="' . $title . '" href="' . $href . '?report=' . $post_id . '&amp;_nonce=' . bb_create_nonce('bbmodsuite-report-' . $post_id) . '">'.__("Report", 'bbpress-moderation-suite').'</a>';

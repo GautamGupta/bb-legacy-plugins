@@ -85,6 +85,11 @@ add_action('bbpress_moderation_suite_pre_head', 'bbmodsuite_admin_parse');
 
 function bbpress_moderation_suite() {
 	global $bbmodsuite_plugins, $bbmodsuite_active_plugins;
+if (strncmp(dirname(__FILE__), realpath(BB_PLUGIN_DIR), strlen(realpath(BB_PLUGIN_DIR)))) {
+?>
+<div class="error"><p style="margin:0"><?php printf(__('Your <code>%1$s</code> folder needs to be moved to the <code>my-plugins</code> folder.  It is currently in the <code>%2$s</code> folder.', 'bbpress-moderation-suite'), basename(dirname(__FILE__)), basename(dirname(dirname(__FILE__)))); ?></p></div>
+<?php
+}
 ?>
 <h2><?php _e('bbPress Moderation Suite', 'bbpress-moderation-suite'); ?></h2>
 <p><?php _e('bbPress Moderation Suite is a set of tools to help moderate your forums.  There are multiple parts, each able to function separately from the others.  You can activate or deactivate each part separately.  It even includes an uninstaller so if you don\'t want to use a part anymore, you can remove all of its database usage!', 'bbpress-moderation-suite') ?></p>

@@ -2,16 +2,39 @@
 
 /* This is not an individual plugin, but a part of the bbPress Moderation Suite. */
 
-function bbmodsuite_warning_install() {}
+function bbmodsuite_warning_install() {
+	if (!bb_get_option('bbmodsuite_warning_options'))
+		bb_update_option('bbmodsuite_warning_options', array('types' => '', 'min_level' => 'moderate', 'cron_every' => 604800, 'expire_time' => 7776000));
+}
 
 function bbmodsuite_warning_uninstall() {
 	global $bbdb;
 	$bbdb->query("DELETE FROM `$bbdb->usermeta` WHERE `meta_key`='bbmodsuite_warnings' OR `meta_key`='bbmodsuite_warnings_count'");
-	bb_delete_option('bbmodsuite_warning_types');
+	bb_delete_option('bbmodsuite_warning_options');
 }
 
-function bbmodsuite_warning_link($parts) { 
-	if (bb_current_user_can('moderate')) {
+function bbmodsuite_warning_cron() {
+	global $bbdb;
+	$now = time();
+	$options = bb_get_option('bbmodsuite_warning_options');
+	$all_warnings = $bbdb->get_results("SELECT `user_id`, `meta_value` FROM `$bbdb->usermeta` WHERE `meta_key`='bbmodsuite_warnings'");
+	foreach ($all_warnings as $i => $warnings) {
+		foreach ($warnings as $j => $warning) {
+			if ($warning['date'] < time() - $options['expire_time'])
+				unset($warnings[$j]);
+		}
+		if ($all_warnings[$i] !== $warnings) {
+			$warnings = array_values($warnings);
+			bb_update_usermeta($i, 'bbmodsuite_warnings', $warnings);
+			bb_update_usermeta($i, 'bbmodsuite_warnings_count', count($warnings));
+		}
+	}
+	wp_schedule_single_event(time() + $options['cron_every'], 'bbmodsuite_warning_cron');
+}
+
+function bbmodsuite_warning_link($parts) {
+	$options = bb_get_option('bbmodsuite_warning_options');
+	if (bb_current_user_can($options['min_level'])) {
 		$post_id = get_post_id();
 		$user_id = get_post_author_id($post_id);
 		$user = class_exists('BP_User') ? new BP_User($user_id) : new WP_User($user_id);
@@ -38,7 +61,8 @@ function bbmodsuite_warning_link($parts) {
 add_filter('bb_post_admin', 'bbmodsuite_warning_link');
 
 function bbmodsuite_warning_types() {
-	$types = explode("\n", ".\n" . bb_get_option('bbmodsuite_warning_types'));
+	$options = bb_get_option('bbmodsuite_warning_options');
+	$types = explode("\n", ".\n" . $options['types']);
 	$types = array_filter($types);
 	unset($types[0]);
 	return $types;
@@ -100,6 +124,7 @@ function bbpress_moderation_suite_warning() { ?>
 			$warnings[] = array(
 				'from' => bb_get_current_user_info('ID'),
 				'type' => $warn_type,
+				'date' => time(),
 				'notes' => bb_autop(htmlspecialchars(trim($_POST['warn_content']))),
 				'post' => $_GET['post']
 			);
@@ -149,18 +174,65 @@ function bbpress_moderation_suite_warning() { ?>
 </form>
 <?php break;
 	case 'admin':
-		if (bb_current_user_can('use_keys')) {
-			if ($_SERVER['REQUEST_METHOD'] === 'POST') { 
-				
-			} else { ?>
-<form class="settings" method="post" action="<?php bb_uri('bb-admin/admin-base.php', array('page' => 'admin', 'user' => $_GET['user'], 'post' => $_GET['post'], 'plugin' => 'bbpress_moderation_suite_warning'), BB_URI_CONTEXT_FORM_ACTION + BB_URI_CONTEXT_BB_ADMIN); ?>">
+		if (bb_current_user_can('use_keys')) { ?>
+<h2><?php _e('Administration', 'bbpress-moderation-suite') ?></h2>
+<?php		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+				$types = trim($_POST['warn_types']);
+				$min_level = in_array($_POST['min_level'], array('moderate', 'administrate', 'use_keys')) ? $_POST['min_level'] : 'moderate';
+				$cron_every = (int) $_POST['cron_every'];
+				if ($cron_every === 0)
+					$cron_every = 1;
+				$cron_every *= 604800;
+				$expire_time = (int) $_POST['expire_time'];
+				if ($expire_time === 0)
+					$expire_time = 3;
+				$expire_time *= 2592000;
+				bb_update_option('bbmodsuite_warning_options', compact('types', 'min_level', 'cron_every', 'expire_time'));
+				wp_clear_scheduled_hook('bbmodsuite_warning_cron');
+				wp_schedule_single_event(time() + $cron_every, 'bbmodsuite_warning_cron'); ?>
+<div class="updated"><p><?php _e('Settings successfully saved.', 'bbpress-moderation-suite') ?></p></div>
+<?php		}
+			$options = bb_get_option('bbmodsuite_warning_options');
+?>
+<form class="settings" method="post" action="<?php bb_uri('bb-admin/admin-base.php', array('page' => 'admin', 'plugin' => 'bbpress_moderation_suite_warning'), BB_URI_CONTEXT_FORM_ACTION + BB_URI_CONTEXT_BB_ADMIN); ?>">
 <fieldset>
 	<div>
 		<label for="warn_types">
 			<?php _e('Possible reasons for warning users', 'bbpress-moderation-suite') ?>
 		</label>
 		<div>
-			<textarea id="warn_types" name="warn_types" rows="15" cols="43"><?php bb_form_option('bbmodsuite_warning_types') ?></textarea>
+			<textarea id="warn_types" name="warn_types" rows="15" cols="43"><?php echo attribute_escape($options['types']) ?></textarea>
+		</div>
+	</div>
+	<div>
+		<label for="min_level">
+			<?php _e('Minimum level', 'bbpress-moderation-suite'); ?>
+		</label>
+		<div>
+			<select id="min_level" name="min_level">
+				<option value="moderate"<?php if ($options['min_level'] === 'moderate') { ?> selected="selected"<?php } ?>><?php _e('Moderator') ?></option>
+				<option value="administrate"<?php if ($options['min_level'] === 'administrate') { ?> selected="selected"<?php } ?>><?php _e('Administrator') ?></option>
+				<option value="use_keys"<?php if ($options['min_level'] === 'use_keys') { ?> selected="selected"<?php } ?>><?php _e('Keymaster') ?></option>
+			</select>
+			<p><?php _e('What should the minimum user level to warn users be?', 'bbpress-moderation-suite'); ?></p>
+		</div>
+	</div>
+	<div>
+		<label for="cron_every">
+			<?php _e('Check interval', 'bbpress-moderation-suite'); ?>
+		</label>
+		<div>
+			<input id="cron_every" name="cron_every" class="text short" type="text" value="<?php echo $options['cron_every'] / 604800 ?>" /> weeks
+			<p><?php _e('How long should bbPress Moderation Suite wait between checks for expired warnings?', 'bbpress-moderation-suite'); ?></p>
+		</div>
+	</div>
+	<div>
+		<label for="expire_time">
+			<?php _e('Expiration time', 'bbpress-moderation-suite'); ?>
+		</label>
+		<div>
+			<input id="expire_time" name="expire_time" class="text short" type="text" value="<?php echo $options['expire_time'] / 2592000 ?>" /> months
+			<p><?php _e('How old should warnings be for bbPress Moderation Suite to delete them?', 'bbpress-moderation-suite'); ?></p>
 		</div>
 	</div>
 </fieldset>
@@ -169,8 +241,7 @@ function bbpress_moderation_suite_warning() { ?>
 	<input class="submit" type="submit" name="submit" value="<?php _e('Save Changes', 'bbpress-moderation-suite') ?>" />
 </fieldset>
 </form>
-<?php		}
-			break;
+<?php		break;
 		}
 	default: if (empty($_GET['user'])) {
 		global $bbdb; ?>

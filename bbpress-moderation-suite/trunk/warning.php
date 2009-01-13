@@ -47,7 +47,7 @@ function bbmodsuite_warning_cron() {
 		}
 		if ($all_warnings[$i] !== $warnings) {
 			$warnings = array_values($warnings);
-			bbmodsuite_warning_update_user_ban($i, count($warnings));
+			bbmodsuite_warning_update_user_ban($i, count($warnings), true);
 			bb_update_usermeta($i, 'bbmodsuite_warnings', $warnings);
 			bb_update_usermeta($i, 'bbmodsuite_warnings_count', count($warnings));
 		}
@@ -55,7 +55,7 @@ function bbmodsuite_warning_cron() {
 	wp_schedule_single_event(time() + $options['cron_every'], 'bbmodsuite_warning_cron');
 }
 
-function bbmodsuite_warning_update_user_ban($user_id, $warning_count) {
+function bbmodsuite_warning_update_user_ban($user_id, $warning_count, $cron = false) {
 	if (!$user_id = bb_get_user_id($user_id)) return;
 	if (!function_exists('bbmodsuite_banplus_set_ban')) return;
 	$ban = 0;
@@ -64,12 +64,12 @@ function bbmodsuite_warning_update_user_ban($user_id, $warning_count) {
 		$options = $bbmodsuite_cache['warning'];
 		foreach ($options['ban'] as $_ban) {
 			if ($_ban['at'] <= $warning_count)
-				$ban = $_ban['length'] * $_ban['multiplier'];
+				$ban = $_ban;
 		}
 	}
-	if ($ban === 0)
-		return bbmodsuite_banplus_set_ban($user_id, 'unban');
-	return bbmodsuite_banplus_set_ban($user_id, 'temp', $ban, __('Automated ban from Warning moderation helper', 'bbpress-moderation-suite'));
+	if ($ban['at'] === $warning_count && $cron === false)
+		return bbmodsuite_banplus_set_ban($user_id, 'temp', $ban['length'] * $ban['multiplier'], __('Automated ban from Warning moderation helper', 'bbpress-moderation-suite'));
+	return true;
 }
 
 function bbmodsuite_warning_link($parts) {

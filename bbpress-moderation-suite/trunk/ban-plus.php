@@ -6,6 +6,8 @@ function bbmodsuite_banplus_install() {
 	if (bb_get_option('bbmodsuite_banplus_options')) return;
 	bb_update_option('bbmodsuite_banplus_current_bans', array());
 	bb_update_option('bbmodsuite_banplus_options', array('min_level' => 'moderate'));
+	global $bbmodsuite_cache;
+	$bbmodsuite_cache['banplus'] = array('bans' => array(), 'options' => array('min_level' => 'moderate'));
 }
 
 function bbmodsuite_banplus_uninstall() {
@@ -66,7 +68,7 @@ function bbmodsuite_banplus_set_ban($user_id, $type = 'temp', $length = 86400, $
 }
 
 function bbmodsuite_banplus_init() {
-	$current_bans = (array) bb_get_option('bbmodsuite_banplus_current_bans');
+	$current_bans = $bbmodsuite_cache['banplus']['bans'] || (array) bb_get_option('bbmodsuite_banplus_current_bans');
 	$changed = false;
 	foreach ($current_bans as $user_id => $ban) {
 		if ($ban['until'] < time()) {
@@ -76,11 +78,14 @@ function bbmodsuite_banplus_init() {
 	}
 	if ($changed)
 		bb_update_option('bbmodsuite_banplus_current_bans', $current_bans);
+	if (empty($bbmodsuite_cache['banplus']))
+		$bbmodsuite_cache['banplus'] = array('bans' => $current_bans, 'options' => bb_get_option('bbmodsuite_banplus_options'));
 }
 bbmodsuite_banplus_init();
 
 function bbmodsuite_banplus_maybe_block_user() {
-	$current_bans = bb_get_option('bbmodsuite_banplus_current_bans');
+	global $bbmodsuite_cache;
+	$current_bans = $bbmodsuite_cache['banplus']['bans'];
 	if (!empty($current_bans[bb_get_current_user_info('ID')])) {
 		switch ($current_bans[bb_get_current_user_info('ID')]['type']) {
 		case 'temp':
@@ -224,7 +229,8 @@ function bbpress_moderation_suite_ban_plus() { ?>
 		}
 	case 'admin':
 		if (bb_current_user_can('use_keys') && $_GET['page'] === 'admin') {
-			$the_options = bb_get_option('bbmodsuite_banplus_options');
+			global $bbmodsuite_cache;
+			$the_options = $bbmodsuite_cache['banplus']['options'];
 			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				if (bb_verify_nonce($_POST['_wpnonce'], 'bbmodsuite-banplus-admin-submit')) {
 					$change = false;
@@ -268,7 +274,8 @@ function bbpress_moderation_suite_ban_plus() { ?>
 			break;
 		}
 	default:
-		$current_bans = (array) bb_get_option('bbmodsuite_banplus_current_bans');
+		global $bbmodsuite_cache;
+		$current_bans = $bbmodsuite_cache['banplus']['bans'];
 ?><h2><?php _e('Current bans', 'bbpress-moderation-suite'); ?></h2>
 <table class="widefat">
 	<thead>
@@ -319,8 +326,8 @@ function bbpress_moderation_suite_ban_plus() { ?>
 }
 
 function bbmodsuite_banplus_admin_add() {
-	global $bb_submenu;
-	$the_options = bb_get_option('bbmodsuite_banplus_options');
+	global $bb_submenu, $bbmodsuite_cache;
+	$the_options = $bbmodsuite_cache['banplus']['options'];
 	$bb_submenu['users.php'][] = array(__('Ban Plus', 'bbpress-moderation-suite'), $the_options['min_level'], 'bbpress_moderation_suite_ban_plus');
 }
 add_action('bb_admin_menu_generator', 'bbmodsuite_banplus_admin_add');

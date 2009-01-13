@@ -3,7 +3,7 @@
 /* This is not an individual plugin, but a part of the bbPress Moderation Suite. */
 
 function bbmodsuite_report_install() {
-	global $bbdb;
+	global $bbdb, $bbmodsuite_cache;
 	$bbdb->query('CREATE TABLE IF NOT EXISTS `' . $bbdb->prefix . 'bbmodsuite_reports` (
 	`ID` int(10) NOT NULL auto_increment,
 	`report_reason` int(10) NOT NULL default \'0\',
@@ -18,14 +18,22 @@ function bbmodsuite_report_install() {
 	`resolved_at` datetime,
 	PRIMARY KEY (`ID`)
 )');
-	if (!bb_get_option('bbmodsuite_report_options'))
+	if (!$bbmodsuite_cache['report'] = bb_get_option('bbmodsuite_report_options')) {
 		bb_update_option('bbmodsuite_report_options', array('min_level' => 'moderate', 'max_level' => 'moderate', 'types' => '', 'resolve_types' => ''));
+		$bbmodsuite_cache['report'] = array('min_level' => 'moderate', 'max_level' => 'moderate', 'types' => '', 'resolve_types' => '');
+	}
 }
 
 function bbmodsuite_report_uninstall() {
 	global $bbdb;
 	$bbdb->query('DROP TABLE `' . $bbdb->prefix . 'bbmodsuite_reports`');
 	bb_delete_option('bbmodsuite_report_options');
+}
+
+function bbmodsuite_report_init() {
+	global $bbmodsuite_cache;
+	if (empty($bbmodsuite_cache['report']))
+		$bbmodsuite_cache['report'] = bb_get_option('bbmodsuite_report_options');
 }
 
 if (!defined('BB_PATH') && isset($_GET['report'])) {
@@ -230,7 +238,8 @@ function bbpress_moderation_suite_report() { ?>
 <div class="error"><p><?php _e('Saving the settings failed.', 'bbpress-moderation-suite') ?></p></div>
 <?php }
 }
-$options = bb_get_option('bbmodsuite_report_options');
+global $bbmodsuite_cache;
+$options = $bbmodsuite_cache['report'];
 ?>
 <form class="settings" method="post" action="<?php bb_uri('bb-admin/admin-base.php', array('page' => 'admin', 'plugin' => 'bbpress_moderation_suite_report'), BB_URI_CONTEXT_FORM_ACTION + BB_URI_CONTEXT_BB_ADMIN); ?>">
 <fieldset>
@@ -338,8 +347,8 @@ $options = bb_get_option('bbmodsuite_report_options');
 }
 
 function bbmodsuite_report_admin_add() {
-	global $bb_submenu;
-	$options = bb_get_option('bbmodsuite_report_options');
+	global $bb_submenu, $bbmodsuite_cache;
+	$options = $bbmodsuite_cache['report'];
 	$bb_submenu['content.php'][] = array(__('Reports', 'bbpress-moderation-suite'), $options['min_level'], 'bbpress_moderation_suite_report');
 }
 add_action('bb_admin_menu_generator', 'bbmodsuite_report_admin_add');
@@ -396,7 +405,8 @@ function bbmodsuite_report_css() {
 add_action('bb_head', 'bbmodsuite_report_css');
 
 function bbmodsuite_report_reasons() {
-	$options = bb_get_option('bbmodsuite_report_options');
+	global $bbmodsuite_cache;
+	$options = $bbmodsuite_cache['report'];
 	$reasons = explode("\n", ".\n" . $options['types']);
 	$reasons = array_filter($reasons);
 	unset($reasons[0]);
@@ -404,7 +414,8 @@ function bbmodsuite_report_reasons() {
 }
 
 function bbmodsuite_report_resolve_types() {
-	$options = bb_get_option('bbmodsuite_report_options');
+	global $bbmodsuite_cache;
+	$options = $bbmodsuite_cache['report'];
 	$reasons = explode("\n", ".\n" . $options['resolve_types']);
 	$reasons = array_filter($reasons);
 	unset($reasons[0]);
@@ -440,7 +451,8 @@ function bbmodsuite_report_link($parts) {
 	if (bb_current_user_can('participate') && !bb_current_user_can('delete_post', $post_id)) {
 		$post_author_id = get_post_author_id($post_id);
 		$post_author = class_exists('BP_User') ? new BP_User($post_author_id) : new WP_User($post_author_id);
-		$options = bb_get_option('bbmodsuite_report_options');
+		global $bbmodsuite_cache;
+		$options = $bbmodsuite_cache['report'];
 		if ($post_author_id != bb_get_current_user_info('ID') && ($options['max_level'] === 'none' || !$post_author->has_cap($options['max_level']))) {
 			$title = __('Report this post to a moderator.', 'bbpress-moderation-suite');
 			$href = str_replace('\\', '/', substr(BB_PLUGIN_URL, 0, -1) . str_replace(realpath(BB_PLUGIN_DIR), '', dirname(__FILE__)) . '/' . basename(__FILE__));

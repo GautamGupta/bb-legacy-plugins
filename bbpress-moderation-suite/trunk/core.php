@@ -9,7 +9,7 @@ Version: 0.1-alpha4
 */
 
 function bbmodsuite_init() {
-	global $bbmodsuite_plugins, $bbmodsuite_active_plugins;
+	global $bbmodsuite_plugins, $bbmodsuite_active_plugins, $bbmodsuite_cache;
 	$bbmodsuite_plugins = array(
 		'report' => array(
 			'name' => __('Report', 'bbpress-moderation-suite'),
@@ -32,7 +32,9 @@ function bbmodsuite_init() {
 	);
 	load_plugin_textdomain('bbpress-moderation-suite', dirname(__FILE__) . '/translations');
 	$bbmodsuite_active_plugins = (array) bb_get_option('bbpress_moderation_suite_helpers');
+	$bbmodsuite_cache = array();
 	foreach ($bbmodsuite_active_plugins as $plugin) {
+		$bbmodsuite_cache[$plugin] = array();
 		require_once $bbmodsuite_plugins[$plugin]['filename'];
 	}
 }

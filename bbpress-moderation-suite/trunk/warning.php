@@ -3,8 +3,17 @@
 /* This is not an individual plugin, but a part of the bbPress Moderation Suite. */
 
 function bbmodsuite_warning_install() {
-	if (!bb_get_option('bbmodsuite_warning_options'))
-		bb_update_option('bbmodsuite_warning_options', array('types' => '', 'min_level' => 'moderate', 'cron_every' => 604800, 'expire_time' => 7776000));
+	$change = false;
+	if (!$options = bb_get_option('bbmodsuite_warning_options')) {
+		bb_update_option('bbmodsuite_warning_options', array('types' => '', 'min_level' => 'moderate', 'cron_every' => 604800, 'expire_time' => 7776000, 'ban' => array()));
+		return;
+	}
+	if (!isset($options['ban'])) {
+		$options['ban'] = array();
+		$change = true;
+	}
+	if ($change)
+		bb_update_option('bbmodsuite_warning_options', $options);
 }
 
 function bbmodsuite_warning_uninstall() {
@@ -30,6 +39,22 @@ function bbmodsuite_warning_cron() {
 		}
 	}
 	wp_schedule_single_event(time() + $options['cron_every'], 'bbmodsuite_warning_cron');
+}
+
+function bbmodsuite_warning_update_user_ban($user_id, $warning_count) {
+	if (!$user_id = bb_get_user_id($user_id)) return;
+	if (!function_exists('bbmodsuite_banplus_set_ban')) return;
+	$ban = 0;
+	if ($warning_count) {
+		$options = bb_get_option('bbmodsuite_warning_options');
+		foreach ($options['ban'] as $_ban) {
+			if ($_ban['at'] <= $warning_count)
+				$ban = $_ban['length'] * $_ban['multiplier'];
+		}
+	}
+	if ($ban === 0)
+		return bbmodsuite_banplus_set_ban($user_id, 'unban');
+	return bbmodsuite_banplus_set_ban($user_id, 'temp', $ban, __('Automated ban from Warning moderation helper', 'bbpress-moderation-suite'));
 }
 
 function bbmodsuite_warning_link($parts) {
@@ -98,13 +123,18 @@ function bbmodsuite_warning_admin_css() { ?>
 	color: rgb(230, 145, 0);
 }
 
-#bbBody div.updated p, #bbBody div.error p {
+#bbBody div.updated p, #bbBody div.error p, #bbBody form.settings div.updated p, #bbBody form.settings div.error p {
 	margin: 0;
+}
+
+form.settings div.updated {
+	background-color: #ffffe0;
+	margin-top: 1em;
 }
 /* ]]> */
 </style>
 <?php }
-add_action('bbpress_moderation_suite_warning_pre_head', create_function('', "add_action('bb_admin_head', 'bbmodsuite_warning_admin_css');"));
+add_action('bbpress_moderation_suite_warning_pre_head', create_function('', "add_action('bb_admin_head','bbmodsuite_warning_admin_css');wp_enqueue_script('jquery');"));
 
 function bbpress_moderation_suite_warning() { ?>
 <ul id="bbAdminSubSubMenu">
@@ -128,6 +158,7 @@ function bbpress_moderation_suite_warning() { ?>
 				'notes' => bb_autop(htmlspecialchars(trim($_POST['warn_content']))),
 				'post' => $_GET['post']
 			);
+			bbmodsuite_warning_update_user_ban($_GET['user'], count($warnings));
 			bb_mail(bb_get_user_email($_GET['user']), 'Warning', htmlspecialchars(trim($_POST['warn_content'])));
 			bb_update_usermeta($_GET['user'], 'bbmodsuite_warnings', $warnings);
 			bb_update_usermeta($_GET['user'], 'bbmodsuite_warnings_count', count($warnings)); ?>
@@ -164,6 +195,7 @@ function bbpress_moderation_suite_warning() { ?>
 		</label>
 		<div>
 			<textarea id="warn_content" name="warn_content" rows="15" cols="43"></textarea>
+			<p><?php _e('This <strong>will</strong> be shown to the user.', 'bbpress-moderation-suite') ?></p>
 		</div>
 	</div>
 </fieldset>
@@ -187,7 +219,19 @@ function bbpress_moderation_suite_warning() { ?>
 				if ($expire_time === 0)
 					$expire_time = 3;
 				$expire_time *= 2592000;
-				bb_update_option('bbmodsuite_warning_options', compact('types', 'min_level', 'cron_every', 'expire_time'));
+				$ban = array();
+				foreach ($_POST['ban'] as $i => $the_ban) {
+					$the_ban = (int) $the_ban;
+					if (!$the_ban) continue;
+					$ban_at = (int) $_POST['banat'][$i];
+					if (!$ban_at || isset($ban[$ban_at])) continue;
+					$mult = (int) $_POST['banmultiplier'][$i];
+					if (!$mult) continue;
+					$ban[$ban_at] = array('at' => $ban_at, 'length' => $the_ban, 'multiplier' => $mult);
+				}
+				ksort($ban);
+				$ban = array_values($ban);
+				bb_update_option('bbmodsuite_warning_options', compact('types', 'min_level', 'cron_every', 'expire_time', 'ban'));
 				wp_clear_scheduled_hook('bbmodsuite_warning_cron');
 				wp_schedule_single_event(time() + $cron_every, 'bbmodsuite_warning_cron'); ?>
 <div class="updated"><p><?php _e('Settings successfully saved.', 'bbpress-moderation-suite') ?></p></div>
@@ -235,6 +279,61 @@ function bbpress_moderation_suite_warning() { ?>
 			<p><?php _e('How old should warnings be for bbPress Moderation Suite to delete them?', 'bbpress-moderation-suite'); ?></p>
 		</div>
 	</div>
+</fieldset>
+<?php global $bbmodsuite_active_plugins; if (!in_array('banplus', $bbmodsuite_active_plugins)) { ?>
+<div class="updated"><p><?php _e('Ban Plus is not active. The banning settings will be saved, but not used.', 'bbpress-moderation-suite') ?></p></div>
+<?php } ?>
+<fieldset id="banning-options">
+<?php for ($i = 0; $i < count($options['ban']); $i++) { ?>
+	<div>
+		<label for="banat[<?php echo $i ?>]">
+			<?php _e('Ban automatically after:', 'bbpress-moderation-suite') ?>
+		</label>
+		<div>
+			<input type="text" class="text short" id="banat[<?php echo $i ?>]" name="banat[]" value="<?php echo $options['ban'][$i]['at'] ?>" />
+			<?php _e(' warnings, for ', 'bbpress-moderation-suite') ?>
+			<input type="text" class="text short" id="ban[<?php echo $i ?>]" name="ban[]" value="<?php echo $options['ban'][$i]['length'] ?>" />
+			<select name="banmultiplier[]" id="banmultiplier[<?php echo $i ?>]">
+				<option value="60"<?php if ($options['ban'][$i]['multiplier'] === 60) { ?> selected="selected"<?php } ?>><?php _e('minutes', 'bbpress-moderation-suite') ?></option>
+				<option value="3600"<?php if ($options['ban'][$i]['multiplier'] === 3600) { ?> selected="selected"<?php } ?>><?php _e('hours', 'bbpress-moderation-suite') ?></option>
+				<option value="86400"<?php if ($options['ban'][$i]['multiplier'] === 86400) { ?> selected="selected"<?php } ?>><?php _e('days', 'bbpress-moderation-suite') ?></option>
+				<option value="604800"<?php if ($options['ban'][$i]['multiplier'] === 604800) { ?> selected="selected"<?php } ?>><?php _e('weeks', 'bbpress-moderation-suite') ?></option>
+				<option value="2592000"<?php if ($options['ban'][$i]['multiplier'] === 2592000) { ?> selected="selected"<?php } ?>><?php _e('months', 'bbpress-moderation-suite') ?></option>
+			</select>
+		</div>
+	</div>
+<?php } ?>
+<noscript>
+	<div>
+		<label for="banat[<?php echo $i ?>]">
+			<?php _e('Ban automatically after:', 'bbpress-moderation-suite') ?>
+		</label>
+		<div>
+			<input type="text" class="text short" id="banat[<?php echo $i ?>]" name="banat[]" />
+			<?php _e(' warnings, for ', 'bbpress-moderation-suite') ?>
+			<input type="text" class="text short" id="ban[<?php echo $i ?>]" name="ban[]" />
+			<select name="banmultiplier[]" id="banmultiplier[<?php echo $i ?>]">
+				<option value="60"><?php _e('minutes', 'bbpress-moderation-suite') ?></option>
+				<option value="3600"><?php _e('hours', 'bbpress-moderation-suite') ?></option>
+				<option value="86400" selected="selected"><?php _e('days', 'bbpress-moderation-suite') ?></option>
+				<option value="604800"><?php _e('weeks', 'bbpress-moderation-suite') ?></option>
+				<option value="2592000"><?php _e('months', 'bbpress-moderation-suite') ?></option>
+			</select>
+		</div>
+	</div>
+</noscript>
+	<script type="application/javascript">
+	// <![CDATA[
+		jQuery(function ($) {
+			var currentID = <?php echo $i ?>;
+			function appendBanBox() {
+				var id = currentID++;
+				$('<div/>').append($('<label/>').attr('for', 'banat[' + id + ']').text('<?php echo addslashes(__('Ban automatically after:', 'bbpress-moderation-suite')) ?>')).append($('<div/>').append($('<input type="text"/>').addClass('text short').attr({id: 'banat[' + id + ']', name: 'banat[]'})).append('<?php echo addslashes(__(' warnings, for ')) ?>').append($('<input type="text"/>').addClass('text short').attr({id: 'ban[' + id + ']', name: 'ban[]'})).append('<select id="banmultiplier[' + id + ']" name="banmultiplier[]"><option value="60"><?php echo addslashes(__('minutes', 'bbpress-moderation-suite')) ?></option><option value="3600"><?php echo addslashes(__('hours', 'bbpress-moderation-suite')) ?></option><option value="86400" selected="selected"><?php echo addslashes(__('days', 'bbpress-moderation-suite')) ?></option><option value="604800"><?php echo addslashes(__('weeks', 'bbpress-moderation-suite')) ?></option><option value="2592000"><?php echo addslashes(__('months', 'bbpress-moderation-suite')) ?></option></select>')).insertBefore('#banning-options>:last');
+			}
+			$('<div/>').append($('<input type="button"/>').val('<?php echo addslashes(__('Add more', 'bbpress-moderation-suite')) ?>').addClass('submit').click(function(){appendBanBox()})).appendTo('#banning-options');
+		})
+	// ]]>
+	</script>
 </fieldset>
 <fieldset class="submit">
 	<?php bb_nonce_field('bbmodsuite-warning-admin'); ?>

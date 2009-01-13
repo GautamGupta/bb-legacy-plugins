@@ -11,6 +11,8 @@ A set of tools to help moderate your forums.
 
 bbPress Moderation Suite is a set of tools to help moderate your forums. There are multiple parts, each able to function separately from the others. You can activate or deactivate each part separately.  It even includes an uninstaller so if you don't want to use a part anymore, you can remove all of its database usage!
 
+*Remember to tell me (either on my blog or on this plugin page) if you find anything that isn't working at "100% awesome".*
+
 = Report =
 
 Report allows users on your forum to report posts to the moderators on your forum. Believe me, if your moderators go on your forums regularly, they'll see the reports very quickly.
@@ -21,7 +23,7 @@ Ban Plus allows temporary bans with notes on why the ban occurred. There are saf
 
 = Warning =
 
-Allows moderators to warn users about rule breaking.  ***Warning: This is very new functionality and probably has quite a few glitches.  Remember to tell me (either on my blog or on this plugin page) if you find anything that isn't working at "100% awesome".***
+Allows moderators to warn users about rule breaking.
 
 = Mod Log =
 
@@ -60,3 +62,5 @@ Your theme is using old functions.  Find `<?php post_ip_link(); ?> <?php post_ed
 	* Warning added. ***Early version, lots of bugs***
 	* Report only uses one bb_options entry. The downside: You need to de- and re-activate this Moderation Helper, and it **will** forget your settings.
 	* A few "idiot checks" have been added. Don't worry if you trigger one. It doesn't *necessarily* mean you're an idiot.
+* 0.1-alpha4
+	* Warning **actually works** now.

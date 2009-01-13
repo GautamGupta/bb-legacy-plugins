@@ -24,16 +24,21 @@ function bbmodsuite_warning_uninstall() {
 
 function bbmodsuite_warning_cron() {
 	global $bbdb;
-	$now = time();
 	$options = bb_get_option('bbmodsuite_warning_options');
-	$all_warnings = $bbdb->get_results("SELECT `user_id`, `meta_value` FROM `$bbdb->usermeta` WHERE `meta_key`='bbmodsuite_warnings'");
+	$the_warnings = $bbdb->get_results("SELECT `user_id`, `meta_value` FROM `$bbdb->usermeta` WHERE `meta_key`='bbmodsuite_warnings'");
+	$now = time();
+	$all_warnings = array();
+	foreach ($the_warnings as $warnings) {
+		$all_warnings[$warnings->user_id] = unserialize($warnings->meta_value);
+	}
 	foreach ($all_warnings as $i => $warnings) {
 		foreach ($warnings as $j => $warning) {
-			if ($warning['date'] < time() - $options['expire_time'])
+			if ($warning['date'] < $now - $options['expire_time'])
 				unset($warnings[$j]);
 		}
 		if ($all_warnings[$i] !== $warnings) {
 			$warnings = array_values($warnings);
+			bbmodsuite_warning_update_user_ban($i, count($warnings));
 			bb_update_usermeta($i, 'bbmodsuite_warnings', $warnings);
 			bb_update_usermeta($i, 'bbmodsuite_warnings_count', count($warnings));
 		}

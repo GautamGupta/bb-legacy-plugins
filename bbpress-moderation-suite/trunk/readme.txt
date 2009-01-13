@@ -64,3 +64,4 @@ Your theme is using old functions.  Find `<?php post_ip_link(); ?> <?php post_ed
 	* A few "idiot checks" have been added. Don't worry if you trigger one. It doesn't *necessarily* mean you're an idiot.
 * 0.1-alpha4
 	* Warning **actually works** now.
+	* Options are now cached, so each individual mod helper will not ask the database for its options multiple times per pageload.

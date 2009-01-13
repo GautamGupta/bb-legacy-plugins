@@ -3,11 +3,13 @@
 /* This is not an individual plugin, but a part of the bbPress Moderation Suite. */
 
 function bbmodsuite_warning_install() {
-	$change = false;
-	if (!$options = bb_get_option('bbmodsuite_warning_options')) {
+	global $bbmodsuite_cache;
+	if (!$bbmodsuite_cache['warning'] = bb_get_option('bbmodsuite_warning_options')) {
 		bb_update_option('bbmodsuite_warning_options', array('types' => '', 'min_level' => 'moderate', 'cron_every' => 604800, 'expire_time' => 7776000, 'ban' => array()));
+		$bbmodsuite_cache['warning'] = array('types' => '', 'min_level' => 'moderate', 'cron_every' => 604800, 'expire_time' => 7776000, 'ban' => array());
 		return;
 	}
+	$change = false;
 	if (!isset($options['ban'])) {
 		$options['ban'] = array();
 		$change = true;
@@ -23,8 +25,8 @@ function bbmodsuite_warning_uninstall() {
 }
 
 function bbmodsuite_warning_cron() {
-	global $bbdb;
-	$options = bb_get_option('bbmodsuite_warning_options');
+	global $bbdb, $bbmodsuite_cache;
+	$options = $bbmodsuite_cache['warning'];
 	$the_warnings = $bbdb->get_results("SELECT `user_id`, `meta_value` FROM `$bbdb->usermeta` WHERE `meta_key`='bbmodsuite_warnings'");
 	$now = time();
 	$all_warnings = array();
@@ -51,7 +53,8 @@ function bbmodsuite_warning_update_user_ban($user_id, $warning_count) {
 	if (!function_exists('bbmodsuite_banplus_set_ban')) return;
 	$ban = 0;
 	if ($warning_count) {
-		$options = bb_get_option('bbmodsuite_warning_options');
+		global $bbmodsuite_cache;
+		$options = $bbmodsuite_cache['warning'];
 		foreach ($options['ban'] as $_ban) {
 			if ($_ban['at'] <= $warning_count)
 				$ban = $_ban['length'] * $_ban['multiplier'];
@@ -63,7 +66,8 @@ function bbmodsuite_warning_update_user_ban($user_id, $warning_count) {
 }
 
 function bbmodsuite_warning_link($parts) {
-	$options = bb_get_option('bbmodsuite_warning_options');
+	global $bbmodsuite_cache;
+	$options = $bbmodsuite_cache['warning'];
 	if (bb_current_user_can($options['min_level'])) {
 		$post_id = get_post_id();
 		$user_id = get_post_author_id($post_id);
@@ -91,7 +95,8 @@ function bbmodsuite_warning_link($parts) {
 add_filter('bb_post_admin', 'bbmodsuite_warning_link');
 
 function bbmodsuite_warning_types() {
-	$options = bb_get_option('bbmodsuite_warning_options');
+	global $bbmodsuite_cache;
+	$options = $bbmodsuite_cache['warning'];
 	$types = explode("\n", ".\n" . $options['types']);
 	$types = array_filter($types);
 	unset($types[0]);
@@ -241,7 +246,8 @@ function bbpress_moderation_suite_warning() { ?>
 				wp_schedule_single_event(time() + $cron_every, 'bbmodsuite_warning_cron'); ?>
 <div class="updated"><p><?php _e('Settings successfully saved.', 'bbpress-moderation-suite') ?></p></div>
 <?php		}
-			$options = bb_get_option('bbmodsuite_warning_options');
+			global $bbmodsuite_cache;
+			$options = $bbmodsuite_cache['warning'];
 ?>
 <form class="settings" method="post" action="<?php bb_uri('bb-admin/admin-base.php', array('page' => 'admin', 'plugin' => 'bbpress_moderation_suite_warning'), BB_URI_CONTEXT_FORM_ACTION + BB_URI_CONTEXT_BB_ADMIN); ?>">
 <fieldset>

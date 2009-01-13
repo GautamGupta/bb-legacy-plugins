@@ -24,6 +24,13 @@ function bbmodsuite_warning_uninstall() {
 	bb_delete_option('bbmodsuite_warning_options');
 }
 
+function bbmodsuite_warning_init() {
+	global $bbmodsuite_cache;
+	if (empty($bbmodsuite_cache['warning']))
+		$bbmodsuite_cache['warning'] = bb_get_option('bbmodsuite_warning_options');
+}
+add_action('bbmodsuite_init', 'bbmodsuite_warning_init');
+
 function bbmodsuite_warning_cron() {
 	global $bbdb, $bbmodsuite_cache;
 	$options = $bbmodsuite_cache['warning'];
@@ -242,6 +249,8 @@ function bbpress_moderation_suite_warning() { ?>
 				ksort($ban);
 				$ban = array_values($ban);
 				bb_update_option('bbmodsuite_warning_options', compact('types', 'min_level', 'cron_every', 'expire_time', 'ban'));
+				global $bbmodsuite_cache;
+				$bbmodsuite_cache['warning'] = compact('types', 'min_level', 'cron_every', 'expire_time', 'ban');
 				wp_clear_scheduled_hook('bbmodsuite_warning_cron');
 				wp_schedule_single_event(time() + $cron_every, 'bbmodsuite_warning_cron'); ?>
 <div class="updated"><p><?php _e('Settings successfully saved.', 'bbpress-moderation-suite') ?></p></div>

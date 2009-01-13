@@ -68,7 +68,7 @@ function bbmodsuite_banplus_set_ban($user_id, $type = 'temp', $length = 86400, $
 }
 
 function bbmodsuite_banplus_init() {
-	$current_bans = $bbmodsuite_cache['banplus']['bans'] || (array) bb_get_option('bbmodsuite_banplus_current_bans');
+	$current_bans = (array) bb_get_option('bbmodsuite_banplus_current_bans');
 	$changed = false;
 	foreach ($current_bans as $user_id => $ban) {
 		if ($ban['until'] < time()) {

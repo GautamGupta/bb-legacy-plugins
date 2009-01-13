@@ -37,6 +37,7 @@ function bbmodsuite_init() {
 		$bbmodsuite_cache[$plugin] = array();
 		require_once $bbmodsuite_plugins[$plugin]['filename'];
 	}
+	do_action('bbmodsuite_init');
 }
 add_action('bb_init', 'bbmodsuite_init');
 

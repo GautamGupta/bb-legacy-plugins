@@ -78,6 +78,7 @@ function bbmodsuite_banplus_init() {
 	}
 	if ($changed)
 		bb_update_option('bbmodsuite_banplus_current_bans', $current_bans);
+	global $bbmodsuite_cache;
 	if (empty($bbmodsuite_cache['banplus']))
 		$bbmodsuite_cache['banplus'] = array('bans' => $current_bans, 'options' => bb_get_option('bbmodsuite_banplus_options'));
 }

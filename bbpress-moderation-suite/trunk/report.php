@@ -35,6 +35,7 @@ function bbmodsuite_report_init() {
 	if (empty($bbmodsuite_cache['report']))
 		$bbmodsuite_cache['report'] = bb_get_option('bbmodsuite_report_options');
 }
+add_action('bbmodsuite_init', 'bbmodsuite_report_init');
 
 if (!defined('BB_PATH') && isset($_GET['report'])) {
 	if (file_exists('../bb-load.php'))

@@ -1,0 +1,5 @@
+== Version 1.0.1 ==
+
+Corrected an issue where Ads would only be displayed to the Admin.
+The first post of any page can now be an Ad.
+Filters are no longer used and instead an included post.php file must be used.

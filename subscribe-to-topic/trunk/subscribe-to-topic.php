@@ -198,9 +198,11 @@ if (!empty($bb_current_user->ID)) {
 	$query.=" UNION ALL (SELECT type FROM subscribe_to_topic WHERE topic=$topic->topic_id AND user=$bb_current_user->ID LIMIT 1) 
 		      UNION ALL (SELECT post FROM subscribe_to_topic WHERE topic=$topic->topic_id AND user=$bb_current_user->ID LIMIT 1) ";
 }
-$results=$bbdb->get_col($query); $count=$results[0]; $current=0; $post_id=0; if (isset($results[1])) {$current=intval($results[1]); $post_id=intval($results[2]);}
+$results=$bbdb->get_col($query); $count=$results[0]; $current=0; $post_id=0; 
+if (isset($results[1])) {$current=intval($results[1]); $post_id=intval($results[2]);} 
 $output="<li id='subscribe_to_topic'>";
-if ($count) {$output.= bb_number_format_i18n($count)." ".$subscribe_to_topic['labels']['subscribed'];} else {$output.=$subscribe_to_topic['labels']['subscribe'];}
+if ($count) {$output.= bb_number_format_i18n($count)." ".$subscribe_to_topic['labels']['subscribed'];} 
+elseif (!empty($bb_current_user->ID)) {$output.=$subscribe_to_topic['labels']['subscribe'];} else {return;}
 if (!empty($bb_current_user->ID)) {
 $output.=" <form method='get' style='display:inline;' action='". $_SERVER['REQUEST_URI']."'><input type='hidden' name='topic_id' value='$topic->topic_id' />
 (<select style='color:Highlight;background:transparent;border:0;' name='subscribe_to_topic' onchange='this.form.submit();'>\n"; 

@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/topics-per-page
 Description:  Set custom topic or post count limits for nearly every kind of bbPress page while still calculating direct post links correctly.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.4
+Version: 0.0.5
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 Donate: http://bbshowcase.org/donate/
@@ -70,7 +70,7 @@ return  $topic_link;
 
 function front_page_pagination($limit="") {
 global $page; 
-if (is_front() && $page>1) {$limit.=" OFFSET ".($page-1)*bb_get_option('page_topics');}
+if (!defined('BACKPRESS_PATH') && is_front() && $page>1) {$limit.=" OFFSET ".($page-1)*bb_get_option('page_topics');}
 return $limit;
 }
 

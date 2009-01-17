@@ -60,6 +60,10 @@ anywhere before `</IfModule>` where `/forums/` is the path to your bbpress insta
 
 * now adds the ability to do pagination on the front page with the latest discussions
 
+= Version 0.0.5 {2009-1-17) =
+
+* better bbPress 1.0a  compatibility for front-page pagination
+
 == To Do ==
 
 * optionally calculate number of stickies on a page and enforce topic count limit including stickies (overriding bbPress's default behaviour)

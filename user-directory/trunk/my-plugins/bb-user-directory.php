@@ -5,7 +5,7 @@ Plugin URI: http://devt.caffeinatedbliss.com/bbpress/user-directory
 Description: Lists users of the forum, linking to their profiles
 Author: Paul Hawke
 Author URI: http://paul.caffeinatedbliss.com/
-Version: 0.2
+Version: 0.3
 */
 
 function ud_user_list() {

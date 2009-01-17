@@ -1,6 +1,13 @@
+=== BBPress User Directory ===
+Contributors: paulhawke
+Tags: user, directory, members, list, messaging
+Requires at least: 0.9.0.3
+Tested up to: 0.1-alpha4
+Stable tag: 0.1-alpha4
+
 == Description ==
 
-This plugin generates a clean user-facing user directory.  The plugin detects the presence of the excellent Private Messaging plugin and if the facility is available, it adds a link to send a private message to any given user in the directory. Similarly the plugin detects if Wordpress integration is enabled, and if Wordpress profile editing has been used to set a given user’s ‘display name’.
+This plugin generates a clean user-facing user directory (ie. no admin functionality).  The plugin detects the presence of the excellent Private Messaging plugin and if the facility is available, it adds a link to send a private message to any given user in the directory. Similarly the plugin detects if Wordpress integration is enabled, and if Wordpress profile editing has been used to set a given user’s ‘display name’.
 
 == Screenshots ==
 

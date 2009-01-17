@@ -79,6 +79,7 @@ global $page, $bbdb, $forums; $total=0;
 // $total=$bbdb->get_var("SELECT SUM(topics) FROM $bbdb->forums");
 if (empty($forums)) {$forums=get_forums();}
 foreach ($forums as  $forum) {$total+=$forum->topics;}
+$last=substr($_SERVER['REQUEST_URI'],-1,1); if ($last=="?" || $last=="&") {$_SERVER['REQUEST_URI']=substr($_SERVER['REQUEST_URI'],0,-1);}
 echo apply_filters( 'topic_pages', get_page_number_links( $page, $total),0); 
 }
 

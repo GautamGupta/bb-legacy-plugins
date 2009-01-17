@@ -4,9 +4,8 @@ Plugin Name: BBPress User Directory
 Plugin URI: http://devt.caffeinatedbliss.com/bbpress/user-directory
 Description: Lists users of the forum, linking to their profiles
 Author: Paul Hawke
-Change Log: 0.1 Initial cut
 Author URI: http://paul.caffeinatedbliss.com/
-Version: 0.1
+Version: 0.2
 */
 
 function ud_user_list() {

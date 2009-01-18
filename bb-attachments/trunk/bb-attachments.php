@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.2.3
+Version: 0.2.4
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -188,7 +188,7 @@ if ($post_id && ($bb_attachments['role']['see']=="read" || bb_current_user_can($
 	$time=time()-60; $can_delete=false; $self=false; $admin=false; $filter=true;   // " AND status = 0 "; 	// speedup checks with flag	
 	if ($bb_current_user->ID==get_post_author_id( $post_id )) {$self=true;}
 	if ((!is_topic() || isset($_GET['bb_attachments'])) && bb_current_user_can('moderate')) {$filter=""; $admin=bb_current_user_can('administrate');} 	 
-	if (bb_current_user_can($bb_attachments['role']['delete'])) {$can_delete=true;}
+	if (bb_current_user_can($bb_attachments['role']['delete']) && bb_current_user_can( 'edit_post', $post_id)) {$can_delete=true;}
 	
 	$location = bb_attachments_location();	 $can_inline=true;
 	if (!($bb_attachments['role']['inline']=="read" || bb_current_user_can($bb_attachments['role']['inline']))) {$can_inline=false;}
@@ -595,7 +595,7 @@ $filenum=intval($filenum);
 if ($filenum==0 && isset($_GET['bbat_delete'])) {$filenum=intval($_GET['bbat_delete']);}
 if ($filenum>0 && bb_current_user_can($bb_attachments['role']['delete'])) {
 	$file=$bbdb->get_results("SELECT * FROM bb_attachments WHERE id = $filenum AND status = 0 LIMIT 1");		
-	if (isset($file[0]) && $file[0]->id) {
+	if (isset($file[0]) && $file[0]->id && bb_current_user_can( 'edit_post', $file[0]->post_id)) {
 		$file=$file[0]; $file->filename=stripslashes($file->filename);				
 		$fullpath=$bb_attachments['path'].floor($file->id/1000)."/".$file->id.".".$file->filename;
 		if (file_exists($fullpath)) {

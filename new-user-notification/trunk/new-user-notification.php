@@ -9,7 +9,7 @@ Version: 0.0.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
-Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate: http://bbshowcase.org/donate/
 */
 
 add_action('bb_new_user', 'new_user_notification');
@@ -22,7 +22,7 @@ function new_user_notification($user_id=0) {
 	$message .= sprintf(__('Username: %s'), stripslashes($user->user_login)) . "\r\n\r\n";
 	$message .= sprintf(__('E-mail: %s'), stripslashes($user->user_email)) . "\r\n\r\n";	
 		
-	$message .= sprintf(__('Agent: %s'), substr(stripslashes($_SERVER["HTTP_USER_AGENT"]),0,80)) . "\r\n\r\n";	
+	$message .= sprintf(__('Agent: %s'), substr(stripslashes($_SERVER["HTTP_USER_AGENT"]),0,255)) . "\r\n\r\n";	
 	$message .= sprintf(__('IP: %s'), $_SERVER['REMOTE_ADDR']) . "\r\n\r\n";	
 	
 	// $host = `host $_SERVER['REMOTE_ADDR']`;  	$host=end(explode(' ',$host));    	$host=substr($host,0,strlen($host)-2);	// safer rDNS process with timeout

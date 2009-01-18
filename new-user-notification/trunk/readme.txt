@@ -4,7 +4,7 @@ Contributors: _ck_
 Requires at least: 0.8.2
 Tested up to: trunk
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Notifies the keymaster by email that a new user has registered.
 
@@ -28,7 +28,7 @@ Notifies the keymaster by email that a new user has registered.
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 

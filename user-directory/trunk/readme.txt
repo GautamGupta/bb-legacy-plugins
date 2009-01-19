@@ -16,7 +16,7 @@ This plugin generates a clean user-facing user directory (ie. no admin functiona
 
 == Installation ==
 
-There are three files included in the download. Installing them is simple, feel free to rename the `members.php` file to whatever you want, and copy it to your main bbPress installation directory. You will want to add a link to this file in your template. 
+There are three files in the download that need to be installed, the rest are there for documentation. Installing them is simple, feel free to rename the `members.php` file to whatever you want, and copy it to your main bbPress installation directory. You will want to add a link to this file in your template. 
 
 The `bb-user-directory.php` file needs to go into your `my-plugins` directory.  If you dont have one, you can create it so that it lives alongside your `bb-plugins` directory.  Alternatively, `bb-user-directory.php` can be dropped directly in to your `bb-plugins` directory.
 
@@ -33,6 +33,10 @@ Firstly, have you installed and activated the plugin?  See the installation inst
 Secondly, if the plugin is being reported as active, did you add a link to the `members.php` file?  The link needs to be in your active theme - under the "Views" section would be a good location.
 
 == Change Log ==
+
+= Version 0.3 =
+
+Bumped the version number (0.2 --> 0.3) to indicate passing a milestone: the readme.txt now passes validation!
 
 = Version 0.2 =
 

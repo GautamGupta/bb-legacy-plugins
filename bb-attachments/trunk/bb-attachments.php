@@ -236,7 +236,7 @@ if ($post_id && ($bb_attachments['role']['see']=="read" || bb_current_user_can($
 				}
 
 				if ($attachment->status==0 && $location=="edit.php" && $can_inline) {				
-					$fullpath=$bb_attachments['path'].floor($file->id/1000)."/".$attachment->id.".".$attachment->filename;
+					$fullpath=$bb_attachments['path'].floor($attachment->id/1000)."/".$attachment->id.".".$attachment->filename;
 					if (list($width, $height, $type) = getimagesize($fullpath)) {								
 						$output.=" [<strong><a href='#' onclick='bbat_inline_insert($attachment->post_id,$attachment->id); return false;'>".__("INSERT")."</a></strong>] ";	
 					}
@@ -383,11 +383,11 @@ while(list($key,$value) = each($_FILES['bb_attachments']['name'])) {
 			$error=""; if ($_FILES['bb_attachments']['error'][$key]>0) {$error=" (".$bb_attachments['errors'][$_FILES['bb_attachments']['error'][$key]].") ";}
 			$output.="<li><span style='color:red'><strong>$filename "." <span class='num'>(".round($size/1024,1)." KB)</span> ".__('error:')." ".$bb_attachments['status'][$status]."</strong>$error</span></li>";
 		} else {$output.="<li><span style='color:green'><strong>$filename "." <span class='num'>(".round($size/1024,1)." KB)</span> ".__('successful')."</strong></span></li>";			 
-			if ($bb_attachments['inline']['auto']) {
+			if ($bb_attachments['inline']['auto'] && list($width, $height, $type) = getimagesize($file)) {
 		 	if ($display) {
 		 		$location = bb_attachments_location();	 $can_inline=true;
 	     			if (!($bb_attachments['role']['inline']=="read" || bb_current_user_can($bb_attachments['role']['inline']))) {$can_inline=false;}
-				if ($location=="edit.php" && $can_inline) {
+				if ($location=="edit.php" && $can_inline) {			
 					$output.='<scr'.'ipt type="text/javascript" defer="defer">			
 					bbat_field = document.getElementsByTagName("textarea")[0];
 					bbat_value=" [attachment="+'.$post_id.'+","+'.$id.'+"] ";

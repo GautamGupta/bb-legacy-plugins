@@ -5,11 +5,11 @@ Plugin URI: http://bbpress.org/plugins/topic/mini-stats
 Description: Some simple forum statistics.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.9
+Version: 0.1.0
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
-Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate: http://bbshowcase.org/donate/
 */
 
 // place a link anywhere in your templates you want to link to statistics with the trigger, ie.  <a href="?mini-stats">statistics</a>

@@ -33,6 +33,7 @@ global $bbdb, $bb, $mini_stats;
 // putenv("TZ=PST");	 // debug
 
 if (!empty($bb->wp_table_prefix)) {$wp_table_prefix=$bb->wp_table_prefix; $loop_max=5;} else {$loop_max=3;}
+if (function_exists('pm_install_check')) {$privatemessages=$bbdb->get_var("SHOW TABLES LIKE '%_privatemessages'"); if (!empty($privatemessages)) {$loop_max=6;}}
 
 $gmt_offset=intval(bb_get_option("gmt_offset"))*3600;
 $time=strtotime(gmdate('Y-m-d',time()+$gmt_offset)." 23:59:59 +0000")-$gmt_offset;   // midnight of today's date in GMT (before offset)
@@ -61,6 +62,7 @@ if (!empty($format)) {
 	$label[3]=__("registrations"); 
 	$label[4]=__("wp posts"); 
 	$label[5]=__("wp comments"); 
+	$label[6]=__("private messages");
 } else {		
 	$maxheight=($limit>31) ? 75 : 50;
 	$today=gmdate("Y-m-d",$time+$gmt_offset);
@@ -69,6 +71,7 @@ if (!empty($format)) {
 	$label[3]=__("Daily Total Registrations");
 	$label[4]=__("Daily WP Posts");
 	$label[5]=__("Daily WP Comments");
+	$label[6]=__("Daily Private Messages");
 }
 
 $mysql_starttime=gmdate("Y-m-d H:i:s",$starttime); 	 // store mysql search range
@@ -129,13 +132,17 @@ elseif ($loop==3) { // registrations per day
 $variable="users";
 $query="SELECT DATE(DATE_ADD(user_registered,INTERVAL $gmt_offset SECOND)) as time,count(*) as $variable FROM $bbdb->users WHERE user_status=0  AND user_registered>='$mysql_starttime' AND user_registered<='$mysql_endtime' GROUP BY time ORDER BY user_registered ASC";
 }
-elseif ($loop==4) { // WP posts per day
+elseif ($loop==4 && !empty($wp_table_prefix)) { // WP posts per day
 $variable="wp_posts";
 $query="SELECT DATE(DATE_ADD(post_date_gmt,INTERVAL $gmt_offset SECOND)) as time,count(*) as $variable FROM $wp_table_prefix"."posts WHERE post_status='publish'  AND post_date_gmt>='$mysql_starttime' AND post_date_gmt<='$mysql_endtime'  GROUP BY time ORDER BY post_date_gmt ASC";
 }
-elseif ($loop==5) { // WP comments per day
+elseif ($loop==5 && !empty($wp_table_prefix)) { // WP comments per day
 $variable="wp_comments";
 $query="SELECT DATE(DATE_ADD(comment_date_gmt,INTERVAL $gmt_offset SECOND)) as time,count(*) as $variable FROM $wp_table_prefix"."comments WHERE comment_approved='1'  AND comment_date_gmt>='$mysql_starttime' AND comment_date_gmt<='$mysql_endtime' GROUP BY time ORDER BY comment_date_gmt ASC";
+}
+elseif ($loop==6 && !empty($privatemessages)) { // PM's per day
+$variable="private_messages";
+ $query="SELECT DATE(DATE_ADD(created_on,INTERVAL $gmt_offset SECOND)) as time,count(*) as $variable FROM $privatemessages  WHERE created_on>='$mysql_starttime' AND created_on<='$mysql_endtime' GROUP BY time ORDER BY created_on ASC";
 }
 
 $results=$bbdb->get_results($query);     // print "<pre>"; foreach ($results as $result) {print $result->time." - ".."<br>";} exit;    // debug
@@ -165,9 +172,9 @@ if ($limit>31) {
 $height=(1+$multiply*$values[$peak[0]]);
 $height2=$height/2; $value2=intval($height2/$multiply); $height2=(1+$multiply*$value2);
 $height=$height-$height2;
-$output.="<td style='width:1%;padding:0 7px 0 0;'><div  class='mini_stats_grid' style='margin-top:-$height"."px;'> ".$values[$peak[0]]."</div>";
+$output.="<td style='width:1%;padding:0 1em 0 0;'><div  class='mini_stats_grid' style='margin-top:-$height"."px;'>".$values[$peak[0]]."</div>";
 if ($value2>0) {
-$output.="<div class='mini_stats_grid'> ".$value2."</div><div style='border:0;width:0px;background:none;height:".$height2."px;'></div>";
+$output.="<div class='mini_stats_grid'>".$value2."</div><div style='border:0;width:0px;background:none;height:".$height2."px;'></div>";
 }
 $output.="</div></td>";
 }
@@ -186,15 +193,17 @@ $output.="</tr>".($legend ? "<tr class='alt'>".$legend."</tr>" : "")."</table></
 echo $output;
 
 } else {  // CSV
-	foreach ($results as $date=>$result) {$CSV[$date][$loop]=$result->$variable;} unset($results);
+	if (!empty($results)) {foreach ($results as $date=>$result) {$CSV[$date][$loop]=$result->$variable;} unset($results);}
 
 }	 // CSV check
 }	//  end graph loops
 
 if (!empty($format)) {
-	$output=implode(",",$label)."\r\n";
-	foreach ($CSV as $date=>$line) {$output.= $date.",".implode(",",$line)."\r\n";} 
-	reset($CSV); 	$filename=key($CSV).'.csv'; unset($CSV); $size=strlen($output);	
+	$keys=(array) $label[0] + reset($CSV); $filename=key($CSV).'.csv';		
+	unset($labels); foreach ($keys as $key=>$value) {$labels[$key]=$label[$key];}
+	$output=implode(",",$labels)."\r\n";
+	foreach ($CSV as $date=>$line) {$output.= $date.",".implode(",",$line)."\r\n";} 	
+	 unset($CSV); $size=strlen($output);	
 	header("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
 if ($format=="CSV") {
 	header("Pragma: hack");

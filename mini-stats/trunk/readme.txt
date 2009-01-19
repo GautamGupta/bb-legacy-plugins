@@ -4,7 +4,7 @@ Contributors: _ck_
 Requires at least: 0.9
 Tested up to: trunk
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Shows some simple forum statistics at the bottom of your pages and links to a full summary display.
 
@@ -70,7 +70,7 @@ $mini_stats['level']="administrate";
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 
@@ -114,6 +114,9 @@ $mini_stats['level']="administrate";
 
 * graphs can now display up to a year of data at a time
 
+= Version 0.1.0 (2009-01-18) =
+
+* now automatically shows private messages sent per day when using bb-privatemessages
 
 == To Do ==
 

@@ -34,6 +34,11 @@ Secondly, if the plugin is being reported as active, did you add a link to the `
 
 == Change Log ==
 
+= Version 0.4 =
+
+* Added an automatic "nofollow" onto links in the user directory (Thanks 'Malice' for the suggestion)
+* Added pagination (initially hard-coded to 20 per-page, config to come later - thanks to 'johnjamesjacoby' for the suggestion)
+
 = Version 0.3 =
 
 Bumped the version number (0.2 --> 0.3) to indicate passing a milestone: the readme.txt now passes validation!

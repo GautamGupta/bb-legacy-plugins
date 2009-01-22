@@ -32,6 +32,10 @@ Firstly, have you installed and activated the plugin?  See the installation inst
 
 Secondly, if the plugin is being reported as active, did you add a link to the `members.php` file?  The link needs to be in your active theme - under the "Views" section would be a good location.
 
+= Can I change the pagination links? =
+
+Yes and no.  In version 0.4 all you can do is change the styling of the <div> that the links live in.  Look for a <div> with an ID of `pagination`.  In a later version there will be more options in the admin area to control pagination.
+
 == Change Log ==
 
 = Version 0.4 =

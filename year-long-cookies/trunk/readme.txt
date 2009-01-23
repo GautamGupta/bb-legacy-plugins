@@ -2,11 +2,11 @@
 Tags: _ck_, integration, login, cookie, cookies
 Contributors: _ck_
 Requires at least: 0.8
-Tested up to: trunk alpha 1075
+Tested up to: trunk
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
-Force login cookies to last a year instead of the default two days (or two weeks). Works with both the old 0.8.x password method and the new method in the trunk.
+Force login cookies to last a year instead of the default two days (or two weeks). Works with 0.8.x, 0.9.x and 1.0a
 
 == Description ==
 
@@ -26,11 +26,15 @@ Force login cookies to last a year instead of the default two days (or two weeks
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 
-= Version 1.1 (2008-02-16) =
+= Version 0.0.2 (2009-01-23) =
+
+* update to deal with the mess in bbPress 1.0 alpha
+
+= Version 0.0.1 (2008-02-16) =
 
 * first public release
 	

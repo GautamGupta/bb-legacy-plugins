@@ -1,16 +1,55 @@
 <?php
 /*
 Plugin Name:  Year Long Cookies - Remember Me
-Description:  Force login cookies to last a year instead of the default two days (or two weeks). Works with both the old 0.8.x password method and the new technique in the trunk.
+Description:  Force login cookies to last a year instead of the default two days (or two weeks). Works with 0.8.x, 0.9.x and 1.0a
 Plugin URI:  http://bbpress.org/plugins/topic/87
 Author: _ck_
 Author URI: http://bbshowcase.org
-Version: 0.01
+Version: 0.0.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 */ 
 
-if (defined('BB_SECRET_KEY')) {  		// new password method
+if (defined('BACKPRESS_PATH')) {   //  1.0a+
+
+if ( !function_exists('bb_login') ) :
+function bb_login( $login, $password, $remember = false ) {
+	$user = bb_check_login( $login, $password );
+	if ( $user && !is_wp_error( $user ) ) {
+		bb_set_auth_cookie( $user->ID,true);		// true normally is 1209600 (2 weeks)  vs 172800 (2 days)
+		do_action('bb_user_login', (int) $user->ID );
+	}
+	
+	return $user;
+}
+endif;
+
+if ( !function_exists( 'bb_set_auth_cookie' ) ) :
+function bb_set_auth_cookie( $user_id, $remember = false, $secure = '' ) {
+	global $wp_auth_object;
+
+	if ( $remember ) {
+		$expiration = $expire = time() + 31536000; 		// previously 1209600 (2 weeks) now set to a year
+	} else {
+		$expiration = time() + 172800;
+		$expire = 0;
+	}
+	
+	if ( '' === $secure )
+		$secure = bb_is_ssl() ? true : false;
+
+	if ( $secure ) {
+		$scheme = 'secure_auth';
+	} else {
+		$scheme = 'auth';
+	}
+
+	$wp_auth_object->set_auth_cookie( $user_id, $expiration, $expire, $scheme );
+	$wp_auth_object->set_auth_cookie( $user_id, $expiration, $expire, 'logged_in' );
+}
+endif;
+
+} elseif (defined('BB_SECRET_KEY')) {  	// 0.9
 
 if ( !function_exists('bb_login') ) :
 function bb_login($login, $password) {
@@ -45,7 +84,7 @@ function wp_set_auth_cookie($user_id, $remember = false) {
 }
 endif;
 
-} else {		// old password method
+} else {	      // very old password method for 0.8
 
 if ( !function_exists('bb_login') ) :
 function bb_login($login, $password) {

@@ -30,13 +30,6 @@ function bbmodsuite_report_uninstall() {
 	bb_delete_option('bbmodsuite_report_options');
 }
 
-function bbmodsuite_report_init() {
-	global $bbmodsuite_cache;
-	if (empty($bbmodsuite_cache['report']))
-		$bbmodsuite_cache['report'] = bb_get_option('bbmodsuite_report_options');
-}
-add_action('bbmodsuite_init', 'bbmodsuite_report_init');
-
 if (!defined('BB_PATH') && isset($_GET['report'])) {
 	if (file_exists('../bb-load.php'))
 		require_once '../bb-load.php';
@@ -77,6 +70,13 @@ if (!defined('BB_PATH') && isset($_GET['report'])) {
 		bb_die(__('<p>Your report was submitted. The moderation staff will review the post in question.</p>', 'bbpress-moderation-suite'));
 	}
 }
+
+function bbmodsuite_report_init() {
+	global $bbmodsuite_cache;
+	if (empty($bbmodsuite_cache['report']))
+		$bbmodsuite_cache['report'] = bb_get_option('bbmodsuite_report_options');
+}
+add_action('bbmodsuite_init', 'bbmodsuite_report_init');
 
 function bbmodsuite_report_admin_css() { ?>
 <style type="text/css">

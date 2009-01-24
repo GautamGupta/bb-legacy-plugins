@@ -59,6 +59,10 @@ Or build your own. Just make sure you follow the style in `package-config.php`
 
 * compatibility with anonymous posting via more natural post-form action 
 
+= Version 0.0.7 (2009-01-23) =
+
+* auto-insert clicker for private messages plugin
+
 == To Do ==
 
 * ajax-ish behaviors

@@ -230,6 +230,7 @@ if (empty($post_id)) {return;}
 if (empty($bb_post->post_id) || $bb_post->post_id!=$post_id) {$bb_post=bb_get_post($post_id);}
 $post_meta_cache[$bb_post->post_id]=$bb_post->post_id;
 $meta=$bbdb->get_results("SELECT post_id,post_meta FROM ".$bb_table_prefix."postmeta WHERE post_id=$post_id LIMIT 1");
+if (empty($meta)) {return;}
 if (defined('BACKPRESS_PATH')) {$bb10=true;} else {global $bb_post_cache; $bb10=false;}
 foreach($meta as $value) {
 	$value->post_meta=unserialize($value->post_meta);

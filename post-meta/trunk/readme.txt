@@ -19,7 +19,7 @@ It has the default code to demonstrate fields like WordPress's 'Name', 'Email' a
 Post Meta is very complicated as it has to "trick" bbPress in several places while getting along 
 with other plugins so please test extensively for compatibility before using on a live site.
 
-Human Test plugin or some kind of plugin Captcha is highly recommended when allowing anonymous posts.
+Human Test plugin or some kind of Captcha plugin is highly recommended when allowing anonymous posts.
 
 == Installation ==
 
@@ -37,7 +37,7 @@ Human Test plugin or some kind of plugin Captcha is highly recommended when allo
 
 == Screenshots ==
 
-1. Post Meta working with BB Anonymous Posting and Human Test (and Post Count Plus)
+1. Post Meta working with BB Anonymous Posting and Human Test (also visible: Post Count Plus and Related Topics)
 
 == License ==
 

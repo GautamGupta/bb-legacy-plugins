@@ -38,6 +38,13 @@ Yes and no.  In version 0.4 all you can do is change the styling of the <div> th
 
 == Change Log ==
 
+= Version 0.5 =
+
+* Added an informational admin page
+* Complete re-write to make the display pluggable
+* Added a sort order parameter to the call for a user list
+* Pulled the plugin into a directory and broke up the large source file into several smaller ones.
+
 = Version 0.4 =
 
 * Added an automatic "nofollow" onto links in the user directory (Thanks 'Malice' for the suggestion)

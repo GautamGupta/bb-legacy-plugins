@@ -5,7 +5,7 @@ Plugin URI:  http://bbpress.org/plugins/topic/83
 Description: WordPress helper plugin for bbPress's Post Count Plus
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 1.1.9
+Version: 1.1.10
 */
 
 $bb_table_prefix="bb_"; 	// change this if you use another prefix for bbPress tables
@@ -30,11 +30,18 @@ if (!empty($user_id)) {
 	if (!empty($user->post_count)) {$posts=intval($user->post_count);}
 	else {
 		global $bb_table_prefix,$wpdb; 		
+		/*   // is this query failing when there are no forum posts?
 		$query="SELECT COALESCE(post_count,0)+COALESCE(comment_count,0) as meta_value 
 		FROM (SELECT count(post_status) as post_count FROM $bb_table_prefix"."posts WHERE post_status=0 AND poster_id=1 GROUP BY poster_id) as t1 
 		JOIN (SELECT count(comment_approved) as comment_count 
-		FROM  $wpdb->comments WHERE comment_approved=1 AND user_id=1 GROUP BY user_id) as t2";
+		FROM  $wpdb->comments WHERE comment_approved=1 AND user_id=1 GROUP BY user_id) as t2";		
+		*/			
+		$query="SELECT COUNT(post_status) FROM $bb_table_prefix"."posts WHERE post_status=0 AND poster_id=$user_id";
 		$posts=intval($wpdb->get_var($query));		
+		$query="SELECT COUNT( comment_approved ) FROM $wpdb->comments WHERE comment_approved=1 AND user_id=$user_id";
+		$comments=intval($wpdb->get_var($query));
+		$posts+=$comments;
+		
 		update_usermeta( $user_id, "post_count", $posts);
 	}
 }	

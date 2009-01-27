@@ -9,14 +9,16 @@ function post_count_plus_admin() {
 	global $post_count_plus, $post_count_plus_type, $post_count_plus_label;			
 	?>
 		<div style="text-align:right;margin-bottom:-1.5em;">
-			[ <a title="recommended occasionally to speed up page loads or re-sync counts" href="<?php echo add_query_arg('post_count_plus_recount','1',remove_query_arg('post_count_plus_reset')); ?>">Rebuild Post Count For All Users</a> ]
+			[ <a href="<?php echo add_query_arg('post_count_plus_stats','1',remove_query_arg(array('post_count_plus_recount','post_count_plus_reset'))); ?>">Stats</a> ]
 			&nbsp;&nbsp;&nbsp;&nbsp;
-			[ <a href="<?php echo add_query_arg('post_count_plus_reset','1',remove_query_arg('post_count_plus_recount')); ?>">Reset All Settings To Defaults</a> ] 			
+			[ <a title="recommended occasionally to speed up page loads or re-sync counts" href="<?php echo add_query_arg('post_count_plus_recount','1',remove_query_arg(array('post_count_plus_stats','post_count_plus_reset'))); ?>">Rebuild Post Count For All Users</a> ]
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			[ <a href="<?php echo add_query_arg('post_count_plus_reset','1',remove_query_arg(array('post_count_plus_stats','post_count_plus_recount'))); ?>">Reset All Settings To Defaults</a> ] 			
 		</div>
 		
 		<h2>Post Count Plus</h2>
 		
-		<form method="post" name="post_count_plus_form" id="post_count_plus_form" action="<?php echo remove_query_arg(array('post_count_plus_reset','post_count_plus_recount')); ?>">
+		<form method="post" name="post_count_plus_form" id="post_count_plus_form" action="<?php echo remove_query_arg(array('post_count_plus_stats','post_count_plus_reset','post_count_plus_recount')); ?>">
 		<input type=hidden name="post_count_plus" value="1">
 			<table class="widefat">
 				<thead>
@@ -94,7 +96,8 @@ function post_count_plus_admin() {
 function post_count_plus_process_post() {
 global $bb,$bbdb,$post_count_plus, $post_count_plus_type, $post_count_plus_label;
 	if (bb_current_user_can('administrate')) {
-		if (isset($_REQUEST['post_count_plus_reset'])) {
+		if (isset($_REQUEST['post_count_plus_stats'])) {post_count_plus_stats();}
+		elseif (isset($_REQUEST['post_count_plus_reset'])) {
 			unset($post_count_plus); 		
 			bb_delete_option('post_count_plus');
 			post_count_plus_initialize();			
@@ -154,5 +157,44 @@ function post_count_plus_recount_list(){
 global $recount_list;
 $recount_list[123] = array('post_count_plus_recount', __('Rebuild Post Count For All Users'));
 }	
+
+function post_count_plus_stats() {	
+global $bbdb, $post_count_plus;
+$width=5; $rows=floor(count($post_count_plus['custom_titles'])/$width);
+for ($i=1; $i<$rows; $i++) {
+if ($post_count_plus['custom_titles'][$i*$width]) {
+	$posts0=$post_count_plus['custom_titles'][$i*$width+1];
+	$days0=$post_count_plus['custom_titles'][$i*$width+2];
+	$role0=$post_count_plus['custom_titles'][$i*$width+3];		
+	// if ((!$posts0 || $posts>=$posts0) && (!$days0 || $days>=$days0) && (!$role0 || $role==$role0)) {$found=$i*$width;}
+	$query="SELECT count(ID) FROM $bbdb->users 
+			LEFT JOIN $bbdb->usermeta ON ID=user_id WHERE user_status=0 ";
+			
+	 if (!empty($role0) && $role0!="member") {$query.=" AND meta_key='bb_capabilities' AND meta_value LIKE '%$role0%' ";}
+	 else { 
+	 	if (strlen($posts0)>0) {
+	 	$query.=" AND  meta_key = 'post_count' AND CAST(meta_value as UNSIGNED)>=$posts0 ";
+	 	$max_posts=$post_count_plus['custom_titles'][($i+1)*$width+1];
+	 	if (!empty($max_posts)) {$query.=" AND CAST(meta_value as UNSIGNED)<$max_posts ";}
+	 	}
+	 	if (strlen($days0)>0) 	{
+	 	$currdate=gmdate('Y-m-d');
+	 	$query.=" AND DATEDIFF('$currdate',user_registered)>=$days0 ";
+	 	$max_days=$post_count_plus['custom_titles'][($i+1)*$width+2];
+	 	// if (!empty($max_days)) {$query.=" AND DATEDIFF('$currdate',user_registered)<$max_days ";}
+	 	}	 
+	 			
+	 }	
+	$queries[$post_count_plus['custom_titles'][$i*$width]]=$query;
+}	
+} // $i
+$output="";
+foreach ($queries as $key=>$query) {
+	$output.="$key :: ";
+	$output.=$bbdb->get_var($query);
+	$output.="<br> \n";
+}
+bb_admin_notice($output);
+}
 
 ?>

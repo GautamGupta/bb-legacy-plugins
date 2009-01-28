@@ -39,7 +39,7 @@ $mini_stats['style']="
 ";
 
 $mini_stats['style_graph']="
-.mini_stats_graph {position:relative;font-family:arial,san-serif; font-size:11px; border:1px solid #aabbcc; float:left; letter-spacing:-1px; word-spacing:-1px; border: 0; border-collapse: collapse; width:100%; margin:1em 0;}
+.mini_stats_graph {position:relative;font-family:arial,san-serif; font-size:11px; border:1px solid #aabbcc; letter-spacing:-1px; word-spacing:-1px; border: 0; border-collapse: collapse; width:100%; margin:1em 0;}
 .mini_stats_graph TD {font-family:arial,san-serif; font-size:11px; white-space:nowrap; overflow:hidden; text-align:center; border:0; border-collapse: collapse;}
 .mini_stats_graph TD div {position:relative;z-index:25;font-size:1px;background:#aabbcc; margin: 0 1px; border-right: 1px solid #000000; border-top: 1px solid #dedede; border-left: 1px solid #dedede;}
 .mini_stats_graph TD span {width:100%;white-space:nowrap;}

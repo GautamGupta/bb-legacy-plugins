@@ -7,7 +7,7 @@ Stable tag: 0.1-alpha4
 
 == Description ==
 
-This plugin generates a clean user-facing user directory (ie. no admin functionality).  The plugin detects the presence of the excellent Private Messaging plugin and if the facility is available, it adds a link to send a private message to any given user in the directory. Similarly the plugin detects if Wordpress integration is enabled, and if Wordpress profile editing has been used to set a given user’s ‘display name’.
+This plugin generates a clean user-facing user directory which is extensible to allow other plugins to add to the content that it displays. By default the plugin detects the presence of the excellent Private Messaging plugin and if the facility is available, it adds a link to send a private message to any given user in the directory. Similarly the plugin detects if Wordpress integration is enabled, and if Wordpress profile editing has been used to set a given user’s ‘display name’.
 
 == Screenshots ==
 
@@ -16,13 +16,13 @@ This plugin generates a clean user-facing user directory (ie. no admin functiona
 
 == Installation ==
 
-There are three files in the download that need to be installed, the rest are there for documentation. Installing them is simple, feel free to rename the `members.php` file to whatever you want, and copy it to your main bbPress installation directory. You will want to add a link to this file in your template. 
+There are two files and one directory in the download that need to be installed, the rest are there for documentation. Installing them is simple, feel free to rename the `members.php` file to whatever you want, and copy it to your main bbPress installation directory. You will want to add a link to this file in your template.
 
-The `bb-user-directory.php` file needs to go into your `my-plugins` directory.  If you dont have one, you can create it so that it lives alongside your `bb-plugins` directory.  Alternatively, `bb-user-directory.php` can be dropped directly in to your `bb-plugins` directory.
+The `bb-user-directory` directory needs to go into your `my-plugins` directory. If you dont have one, you can create it so that it lives alongside your `bb-plugins` directory. Alternatively, `bb-user-directory` can be dropped directly in to your `bb-plugins` directory.
 
-Lastly the `userdirectory.php` file needs to be dropped into your active theme directory. 
+Lastly the `userdirectory.php` file needs to be dropped into your active theme directory.
 
-The files are packaged in the correct directories, so you may be able to unzip and upload directly to your bbPress installation, assuming you rename the *your-theme* directory appropriately. Oh, and don’t forget to Activate the plugin!
+The files are packaged in the correct directories, so you may be able to unzip and upload directly to your bbPress installation, assuming you rename the "your-theme" directory appropriately. Oh, and don’t forget to Activate the plugin!
 
 == Frequently Asked Questions ==
 
@@ -41,7 +41,7 @@ Yes and no.  In version 0.4 all you can do is change the styling of the <div> th
 = Version 0.5 =
 
 * Added an informational admin page
-* Complete re-write to make the display pluggable
+* Complete re-write to make the it pluggable and extension easier
 * Added a sort order parameter to the call for a user list
 * Pulled the plugin into a directory and broke up the large source file into several smaller ones.
 

@@ -10,28 +10,30 @@
     } else if ($current > $pagecount) {
         $current = $pagecount;
     }
-    $users = ud_user_list($current); 
+    $users = ud_user_list($current, 'user_registered DESC'); 
+    
+    $columnNames = ud_get_column_names();    
+    $columnHeaderRenderers = ud_get_column_header_renderers();
+    $columnRenderers = ud_get_column_renderers();
+	$displayColumns = ud_sanity_check_columns($columnNames, $columnHeaderRenderers, $columnRenderers);
 ?>
 <table id="forumlist">
-<thead><tr><?php if (function_exists('bb_get_pm_link')) { echo '<th>&nbsp;</th>'; } ?><th>User</th><th>Website</th><th>Registered</th></tr></thead>
+<thead><tr><?php
+foreach( $displayColumns as $columnName ) {
+	echo '<th>';
+	echo call_user_func($columnHeaderRenderers[$columnName], $columnName);
+	echo '</th>';
+}
+?></th></tr></thead>
 <tbody>
 <?php foreach ( $users as $user ) { ?>
-<tr<?php topic_class(); ?>>
-<?php if (function_exists('bb_get_pm_link')) {
-	echo '<td align="center">';
-	ud_tiny_user_pm_link($user->ID);
-	echo "</td>\n";
-} ?>
-<td><?php echo '<a href="'.get_user_profile_link($user->ID).'">'.(empty($user->display_name) ? $user->user_nicename : $user->display_name).'</a>'; ?></td>
-<td><?php
-if (isset($user->user_url) && strlen($user->user_url) > 7) {
-	echo '<a href="' . $user->user_url . '" rel="nofollow">' . $user->user_url . '</a>'; 
-} else {
-	echo '&nbsp;';
-} 
-?></td>
-<td><?php echo $user->user_registered; ?></td>
-</tr>
+<tr<?php topic_class(); ?>><?php
+foreach( $displayColumns as $columnName ) {
+	echo '<td>';
+	echo call_user_func($columnRenderers[$columnName], $columnName, $user);
+	echo '</td>';
+}
+?></tr>
 <?php } ?>
 </tbody>
 </table>

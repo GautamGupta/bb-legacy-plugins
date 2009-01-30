@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.2.4
+Version: 0.2.5
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -133,12 +133,20 @@ if (isset($_GET["new"]) || is_topic() || is_forum()) {
 			// insane bbPress workaround - adds multipart enctype to the new post form via uri patch
 			function bb_attachments_enctype() {
 			global $topic,$forum;
-				if ( ( is_topic() && bb_current_user_can( 'write_post', $topic->topic_id ) ) || ( !is_topic() && bb_current_user_can( 'write_topic', $forum->forum_id ) ) ) {
+				if ( ( is_topic() && bb_current_user_can( 'write_post', $topic->topic_id ) ) || ( !is_topic() && bb_current_user_can( 'write_topic', $forum->forum_id ) ) ) {					
+					add_filter( 'bb_get_uri', 'bb_attachments_uri_10',999,3);					
 					add_filter( 'bb_get_option_uri','bb_attachments_uri',999);
 					add_action('post_form','bb_attachments_remove_uri',999);
 					add_action('post_post_form','bb_attachments_remove_uri',999);
 				}
 			}
+			function bb_attachments_uri_10($uri,$resource='',$context='') {
+				if (strpos($uri,"bb-post.php")!==false && $context && defined('BB_URI_CONTEXT_FORM_ACTION') && $context==BB_URI_CONTEXT_FORM_ACTION) {
+					bb_attachments_remove_uri();
+					return $uri.'"  enctype="multipart/form-data" hack="';
+				}
+				return $uri;
+			}			
 			function bb_attachments_uri($uri) { 
 				// if (strpos($uri,'bb-post.php')===false) {return $uri;}				
 				bb_attachments_remove_uri();
@@ -146,6 +154,7 @@ if (isset($_GET["new"]) || is_topic() || is_forum()) {
 			} 
 			function bb_attachments_remove_uri($x="") {
 				remove_filter( 'bb_get_option_uri','bb_attachments_uri',999); 
+				remove_filter( 'bb_get_uri', 'bb_attachments_uri_10',999);
 			}
 		}
 	}					

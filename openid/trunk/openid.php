@@ -8,7 +8,7 @@ Author URI: http://bbShowcase.org
 Version: 0.0.2
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
-Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate: http://bbshowcase.org/donate/
 */
 
 $openid_options['profile_text']="OpenID";
@@ -17,7 +17,7 @@ $openid_options['remove_text']="Remove OpenID provider";
 $openid_options['register_text']="Optionally register via OpenID instead of a password:";
 $openid_options['approved_text']="OpenID account approved for instant registration:";
 
-$openid_options['debug']=true;
+$openid_options['debug']=false;	// true = some debug info on process
 $openid_options['root']=bb_get_option('uri');
 $openid_options['whitelist']="";  // todo
 $openid_options['blacklist']="";  // todo

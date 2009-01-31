@@ -4,7 +4,7 @@ Contributors: _ck_
 Requires at least: 0.9
 Tested up to: trunk
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Adds OpenID login support to bbPress so users may login using an identity from another provider. 
 
@@ -65,7 +65,7 @@ do_action('openid_login');
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 

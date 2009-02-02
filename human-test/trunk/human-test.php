@@ -3,7 +3,7 @@
 Plugin Name: Human Test for bbPress
 Plugin URI:  http://bbpress.org/plugins/topic/77
 Description:  uses various methods to exclude bots from registering (and eventually posting) on bbPress
-Version: 0.8.3
+Version: 0.9.0
 Author: _ck_
 Author URI: http://bbshowcase.org
 
@@ -30,7 +30,14 @@ function human_test_question() {
 	$compare=$_SESSION['HUMAN_TEST'];	// grab correct answer from pre-stored session data	
 	$xht=rand(2,$compare-1); 
 	$yht=$compare-$xht;
-	$question=__("How much does")." ".$xht." + ".$yht." = ";	
+	$question=human_test_encode(__("How much does")." ".$xht." + ");
+	$question.="<span style='display:none;'>".human_test_encode(rand(0,9))."</span>";
+	$question.="<span style=''>".human_test_encode($yht." = ")."</span>";
+	$question.="<span style='display:none;'>".human_test_encode(rand(0,9))."</span>";	
+	return $question;
+}
+
+function human_test_encode($question) {
 	$string = htmlentities($question, HTML_ENTITIES);     
 	$string = preg_split("//", $string, -1, PREG_SPLIT_NO_EMPTY);
 	$ord = 0;  for ( $i = 0; $i < count($string); $i++ ) {$ord = ord($string[$i]);          $string[$i] = '&#' . $ord . ';'; }
@@ -43,8 +50,9 @@ if ((empty($human_test['on_for_members']) || bb_current_user_can('moderate')) &&
 	$question=human_test_question();
 	echo '<p><script language="JavaScript" type="text/javascript">document.write("'.$question.'");</script>';	// write question with javascript
 	echo '<noscript><i>'.__("registration requires JavaScript").'</i></noscript>';	// warn no-script users 
-	echo '<input name="human_test" type="text" id="human_test" size="15" maxlength="140" value="" autocomplete="off" tabindex="2" /> ';  // answer field
+	echo '<input name="human_test" type="text" id="ht_test" size="15" maxlength="100" value="" autocomplete="off" tabindex="2" /> ';  // answer field
 	echo '('.__('required').')';
+	echo '<input tabindex="0" name = "ht_confirm" id="ht_confirm" style="display:none;visibility:hidden;" value = "" />';	
 	echo '<input tabindex="0" type="hidden" name = "'.session_name().'" value = "'.session_id().'" /></p>';	// improved session support without cookies or urls
 } 
 
@@ -54,8 +62,9 @@ if (human_test_location()!="register.php") {return;}  //  only display on regist
 	echo '<fieldset><legend>'.__("Please prove you are human").'</legend><table width="100%"><tr class="required"><th scope="row" nowrap>';
 	echo '<script language="JavaScript" type="text/javascript">document.write("'.$question.'");</script>';	// write question with javascript
 	echo '<noscript><i>'.__("registration requires JavaScript").'</i></noscript>';	// warn no-script users 
-	echo '</th><td width="72%"><input name="human_test" type="text" id="human_test" size="30" maxlength="140" value="" autocomplete="off" />';	// answer field
-	echo '<input type="hidden" name = "'.session_name().'" value = "'.session_id().'" />';	// improved session support without cookies or urls
+	echo '</th><td width="72%"><input name="ht_test" type="text" id="ht_test" size="30" maxlength="100" value="" autocomplete="off" />';	// answer field
+	echo '<input tabindex="0" name = "ht_confirm" id="confirm" style="display:none;visibility:hidden;" value = "" />';	
+	echo '<input tabindex="0" type="hidden" name = "'.session_name().'" value = "'.session_id().'" />';	// improved session support without cookies or urls	
 	echo '</td></tr></table></fieldset>';
 } 
 
@@ -88,14 +97,14 @@ if ( !($location=='register.php' ||
 	@ini_set("url_rewriter.tags","");
 	@session_start();	// sent with headers - errors masked with @ if sessions started previously - which it actually has to be for the following to 
 	}
-	if ($_POST || isset($_POST['human_test'])) {
-		if (empty($_POST['human_test'])) {$_POST['human_test']="";}
-		else {$human_test_post =  stripslashes($_POST['human_test']);}
+	if ($_POST || isset($_POST['ht_test'])) {
+		if (empty($_POST['ht_test'])) {$_POST['ht_test']="";}
+		else {$human_test_post =  stripslashes($_POST['ht_test']);}
 		if (empty($_SESSION['HUMAN_TEST'])) {$compare=rand(9,9999999);}	 // this should not happen unless sessions malfunction
 		else {$compare = $_SESSION['HUMAN_TEST'];}
 		// $_SESSION['HUMAN_TEST']=md5(rand());	// destroy answer even when successful to prevent re-use
 		
-		if ($human_test_post !=$compare) {				
+		if ($human_test_post !=$compare || !empty($_POST['ht_confirm'])) {				
 			// echo $human_test_post." - ".$compare; exit();	// debug
 			// bb_die(__("Humans only please").". ".__("If you are not a bot").", <a href='register.php'>".__("please go back and try again")."</a>.");			
 			bb_send_headers();

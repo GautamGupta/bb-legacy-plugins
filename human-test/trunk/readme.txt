@@ -80,9 +80,11 @@ $human_test['on_for_members']=true;
 
 * optional toggle to force challenge for all members, even when logged in  (edit top of plugin)
 
-== To Do ==
+= Version 0.9.0 (2009-02-02) =
 
-* "negative fields" that are hidden and supposed to remain blank but spam bots try to fill, therefore fail
+* change things slightly to confuse spam bots, more to come
+
+== To Do ==
 
 * optionally write questions in captcha-like graphics (tricks spammers to enter graphic as code instead of answer)
 

@@ -26,7 +26,8 @@ There are many powerful options via the admin menu.
 * http://bbshowcase.org/donate/
 
 == History ==
-
+* 0.5.8 2009-02-02 bug fix to handle single and double quotes in poll questions and voting options
+* 0.5.7 2009-01-04 do not modify topic titles when in RSS feeds
 * 0.5.6	2008-December-30 optional ability to create poll during new topic submission, optional icon without CSS editing
 * 0.5.5	2008-August-27 serious ajax bug with data loss fixed, admin functions externalized
 * 0.5.4	2008-March-14 new poll form (and edit form) remotely loaded when in "ajax" mode

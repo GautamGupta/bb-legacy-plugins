@@ -5,7 +5,7 @@ Description:  allows users to add polls to topics, with optional ajax-like actio
 Plugin URI:  http://bbpress.org/plugins/topic/62
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.5.7
+Version: 0.5.8
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 */
@@ -197,7 +197,7 @@ $output='<form action="'.remove_query_arg(array('start_new_poll','edit_poll','de
 for ($i=1; $i<=$bb_polls['max_options']; $i++) {
 	if (isset($poll_options[$i])) {
 		if ($poll_options['poll_multiple_choice']==1) {$poll_name="poll_vote_".$i;} else {$poll_name="poll_vote_0";}
-		$output.= '<p><input type="'.$poll_type.'" name="'.$poll_name.'" value="'.$i.'" /> '.$poll_options[$i].' </p>';
+		$output.= '<p><input type="'.$poll_type.'" name="'.$poll_name.'" value="'.htmlentities($i, ENT_QUOTES).'" /> '.$poll_options[$i].' </p>';
 	}
 }
 $output.= '<p class="poll_footer"><input class="submit" type="submit"  name="poll_vote" value="'.$bb_polls['label_vote_text'].'" /></p>
@@ -255,7 +255,7 @@ $output.='<form action="'.remove_query_arg(array('start_new_poll','edit_poll','d
 $output.='<p>'
 	.(!empty($bb_polls['use_icon']) && $bb_polls['use_icon']!="no" ? "<img align='absmiddle' border='0' src='".$bb_polls['icon']."' /> " : "")
 	.$bb_polls['poll_instructions'].'</p>';			
-$output.='<div class="poll_label">'.$bb_polls['label_question_text'].' : <br /><input name="poll_question" type="text" style="width:98%" maxlength="'.$bb_polls['max_length'].'" value="'.$poll_options['poll_question'].'" /></div>';
+$output.='<div class="poll_label">'.$bb_polls['label_question_text'].' : <br /><input name="poll_question" type="text" style="width:98%" maxlength="'.$bb_polls['max_length'].'" value="'.htmlentities($poll_options['poll_question'], ENT_QUOTES).'" /></div>';
 			
 $output.='<div class="poll_label"><span class="nowrap"><input name="poll_multiple_choice" style="vertical-align:middle;height:1.3em;width:1.3em;" type="radio" value="0" ';
 $output.=($poll_options['poll_multiple_choice']) ? ' ' : ' checked="checked" ';
@@ -267,7 +267,7 @@ for ($i=1; $i<=$bb_polls['max_options']; $i++) {
 	if ($i==5 && $bb_polls['max_options']>4 && !$poll_options[5]) {	// more options input fields hidden until asked for
 		$output.='<a href="javascript:void(0)" onClick="this.style.display='."'none'".'; document.getElementById('."'poll_more_options'".').style.display='."'block'".'">[+] '.$bb_polls['label_option_text'].'</a><div id="poll_more_options" style="display:none;">';
 	}
-	$output.='<div class="poll_label">'.$bb_polls['label_option_text'].' #'.$i.' : <br /><input name="poll_option_'.$i.'" type="text" style="width:98%" maxlength="'.$bb_polls['max_length'].'" value="'.$poll_options[$i].'" /></div>';
+	$output.='<div class="poll_label">'.$bb_polls['label_option_text'].' #'.$i.' : <br /><input name="poll_option_'.$i.'" type="text" style="width:98%" maxlength="'.$bb_polls['max_length'].'" value="'.htmlentities($poll_options[$i], ENT_QUOTES).'" /></div>';
 } // loop 
 if ($bb_polls['max_options']>4 && !$poll_options[5]) {$output.='</div>';}
 		

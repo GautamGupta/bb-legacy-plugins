@@ -3,10 +3,10 @@
 Plugin Name: bbPress Theme Switcher
 Plugin URI: http://bbpress.org/plugins/topic/70
 Description: Allows your members and guests to switch between themes. Optional timer to return to default theme.
-Version: 1.1.5
+Version: 1.1.6
 Author: _ck_
 Author URI:  http://bbshowcase.org
-Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate: http://bbshowcase.org/donate/
 
 Inspired by Ryan Boren's WordPress theme switcher which was adapted from Alex King's WordPress style switcher http://www.alexking.org/software/wordpress/
 
@@ -26,11 +26,16 @@ If you would like a dropdown box rather than a list, add this:
 
 */ 
 
-$bbhash=$bb->wp_siteurl ? md5($bb->wp_siteurl) : md5($bb_table_prefix);   // $bbhash is not available before plugins load in 0.8.2.x :-(
-bb_ts_set_theme_cookie(180);	//  60 seconds * 3 = 180. Set for 3 minute demo timeout - increase if you want a longer timeout 
+$bb_ts['timeout']=180;  	 //  default 3 minute demo timeout - increase if you want a longer timeout 
+$bb_ts['exclude']=array('random-theme','another-theme');	//  themes to not show in list - use local path short name, not formal name, ie. 'kakumei-blue'
 
-if (!(strpos("bbshowcase.org",$GLOBALS["HTTP_SERVER_VARS"]["SERVER_NAME"])===false)) {
-$bb_ts_optional_text = '<b><font color=red style="size:24px">keep _ck_ coding</font> >> <a style="color:blue;text-decoration:underline;" target=_blank href="http://amazon.com/paypage/P2FBORKDEFQIVM">donate $1</a> << </b> &nbsp;&nbsp;&nbsp;&nbsp;';
+/*  stop editing here  */
+
+$bbhash=$bb->wp_siteurl ? md5($bb->wp_siteurl) : md5($bb_table_prefix);   // $bbhash is not available before plugins load in 0.8.2.x :-(
+bb_ts_set_theme_cookie($bb_ts['timeout']);	
+
+if (strpos("bbshowcase.org",$_SERVER["SERVER_NAME"])!==false) {
+$bb_ts_optional_text = '<b><font color=red style="size:24px">keep _ck_ coding</font> >> <a style="color:blue;text-decoration:underline;" target=_blank href="http://bbshowcase.org/donate/">donate $1</a> << </b> &nbsp;&nbsp;&nbsp;&nbsp;';
 }
 
 add_filter('bb_template','bb_ts_add_dropdown',100,2);    //  disable this line if you don't want the switcher inserted automatically
@@ -42,7 +47,7 @@ function bb_ts_add_dropdown($template='',$file='') {
 global $bb_ts_add_dropdown, $bb_ts_optional_text; 
 if ($file=='' || ($file=="footer.php" && !$bb_ts_add_dropdown)){
 $bb_ts_add_dropdown=true;
-echo '<form style="display:block;float:right;clear:both;padding:5px;white-space:nowrap;text-align:right;">'
+echo '<form style="display:block;float:right;clear:both;padding:5px; margin:-5px 0 5px 0; white-space:nowrap;text-align:right;">'
 .$bb_ts_optional_text.__('Theme Switcher').': ';bb_theme_switcher('dropdown'); echo '</form>';
 }
 return $template;	
@@ -128,11 +133,13 @@ function bb_ts_get_template($template) {
 
 
 function bb_theme_switcher($style = "text") { 
-	global $bbhash;
+	global $bbhash, $bb_ts;
 	$themes = bb_get_all_themes();
 	
 	$default_theme=str_replace(array('core#', 'user#'),'', bb_get_option('bb_active_theme'));
 	if (!array_key_exists($default_theme, $themes)) {$default_theme =array_search($default_theme,$themes);}
+	
+	if (!empty($bb_ts['exclude'])) {foreach ($bb_ts['exclude'] as $exclude) {unset($themes[$exclude]);}}
 		
 	if (count($themes) > 1) {
 		$theme_names = array_keys($themes);

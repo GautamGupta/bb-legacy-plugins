@@ -100,7 +100,7 @@ function initialize_view_count( $topic_id ) {	//If the view count for a topic ha
 	$view_count = $topic->topic_posts; 	//Sets the new record to the number of posts that have been made in a topic
 		
 	//Adds the record to the DB so it isn't zero any longer
-	
+	/*  // this is broken somehow - occasionally inserts multiple topic_ids of zero because bbpress doesn't keep unique index on meta
 	if (defined('BACKPRESS_PATH')) {  	// bbPress 1.0
 	
 	@$bbdb->query("INSERT INTO $bbdb->meta (object_id, object_type, meta_key, meta_value) VALUES ($topic_id, 'bb_topic', 'views', $view_count)");
@@ -109,7 +109,10 @@ function initialize_view_count( $topic_id ) {	//If the view count for a topic ha
 	
 	@$bbdb->query("INSERT INTO $bbdb->topicmeta (topic_id, meta_key, meta_value) VALUES ($topic_id, 'views', $view_count)");
 	
-	} 
+	}
+	*/
+	bb_delete_meta( $topic_id, 'views', 0, 'topic' );		
+	bb_update_meta( $topic_id, 'views', $view_count, 'topic' );
 	
 	return $view_count;
 }

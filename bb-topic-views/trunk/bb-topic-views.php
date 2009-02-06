@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/bb-topic-views/
 Description: Counts the number of times a topic has been viewed, and allows the administrator to display the count in various places.
 Author: Mike Wittmann, _ck_
 Author URI: http://blog.wittmania.com/
-Version: 1.6.3
+Version: 1.6.4
 */
 
 // Set this to zero if you DON'T want the view count automatically appended to the topic title.  Default is 1.
@@ -18,6 +18,7 @@ if ($append_to_title && (is_front() || is_forum() || is_tags() || is_view())) {a
 
 add_filter('bb_head', 'update_view_count');
 add_action('bb_init', 'views_session_check');
+bb_register_activation_hook(str_replace(array(str_replace("/","\\",BB_PLUGIN_DIR),str_replace("/","\\",BB_CORE_PLUGIN_DIR)),array("user#","core#"),__FILE__), 'bb_topic_views_install');
 
 //Force bbpress to open a session, if it hasn't already, which will help to avoid double-counting views (see below)
 function views_session_check () {
@@ -233,5 +234,17 @@ function most_viewed_table ( $list_length = '10') {
 	</table>
 	<?php
 }
+
+function bb_topic_views_install() {
+global $bbdb;
+	if (defined('BACKPRESS_PATH')) {  	 // bbPress 1.0	
+		$query="DELETE FROM $bbdb->meta WHERE object_type='bb_topic' AND meta_key='views' AND cast(meta_value as UNSIGNED)=0 ";
+	} else {		// bbPress 0.9			
+		$query="DELETE FROM $bbdb->topicmeta WHERE meta_key='views' AND cast(meta_value as UNSIGNED)=0 ";
+	}
+	$bbdb->get_var($query);	// db cleanup for duplicate entries
+
+// SELECT * FROM bb_topicmeta WHERE meta_key='views' AND topic_id IN (SELECT topic_id FROM `bb_topicmeta` WHERE meta_key='views' group by topic_id having count(meta_value)>1 ORDER BY topic_id)
+}	
 
 ?>

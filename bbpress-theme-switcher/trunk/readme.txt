@@ -4,7 +4,7 @@ Contributors: _ck_
 Requires at least: 0.8
 Tested up to: trunk
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Allow your forum visitors to switch between any themes you have installed. 
 Automatically (optionally) inserts dropdown in bottom right of all themes. 
@@ -42,7 +42,7 @@ This will create a list of themes for your readers to select.
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 
@@ -69,3 +69,7 @@ This will create a list of themes for your readers to select.
 = Version 1.1.5 (2008-3-14) =
 
 * update to deal with 0.9 function name change from bb_get_active_theme_folder() to bb_get_active_theme_directory()
+
+= Version 1.1.6 (2009-2-05) =
+
+* allow exclusion of some themes by name

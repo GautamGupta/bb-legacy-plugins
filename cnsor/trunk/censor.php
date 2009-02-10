@@ -62,7 +62,8 @@ function censor_admin_page_process() {
 			// Words
 			if ($_POST['censor_words']) {
 				$words = explode("\n", $_POST['censor_words']);
-				for($i = 0; $i < sizeof($words); $i++) $words[$i] = trim($words[$i]);
+				$numwords = sizeof($words);
+				for($i = 0; $i < $numwords; $i++) $words[$i] = trim($words[$i]);
 				bb_update_option('censor_words', $words);
 			} else {
 				bb_delete_option('censor_words');
@@ -73,8 +74,11 @@ function censor_admin_page_process() {
 
 function censor_activate()
 {
-	$file = dirname(__FILE__).'/words.txt';
-	$words = file($file, FILE_IGNORE_NEW_LINES);
+	include(dirname(__FILE__).'/words.php');
+	//$words = file($file, FILE_IGNORE_NEW_LINES);
+	$words = explode("\n", $badwords);
+        $numwords = sizeof($words);
+        for($i = 0; $i < $numwords; $i++) $words[$i] = trim($words[$i]);
 	bb_update_option('censor_words', $words);
 }
 
@@ -87,7 +91,8 @@ function censor_post_text($post) {
 		$words[$key] = '/\b('.preg_quote($word).')\b/i';
 	}
 	$replace = array();
-	for($i = 0; $i < sizeof($words); $i++) {
+	$numwords = sizeof($words);
+	for($i = 0; $i < $numwords; $i++) {
 		array_push($replace, "****");
 	}
 	$clean_post = preg_replace($words, $replace, $post);
@@ -102,7 +107,8 @@ function censor_check_tag($ttid = 0, $uid = 0, $tid = 0) {
         if ($words[0]=='') return $post;
 
 	$tag = bb_get_tag($ttid);
-        if(in_array($tag->name, $words))
+	$words = array_flip($words);
+        if(isset($words[$tag->name]))
 		bb_destroy_tag($ttid);
 
         return $ttid;

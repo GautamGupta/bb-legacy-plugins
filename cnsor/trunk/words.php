@@ -1,3 +1,6 @@
+<?php
+
+$badwords = <<<EOS
 anus
 arse
 arsehole
@@ -265,3 +268,6 @@ wetback
 whore
 whorebag
 wop
+EOS;
+
+?>

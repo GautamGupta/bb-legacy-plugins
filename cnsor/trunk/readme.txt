@@ -1,5 +1,5 @@
 === C*nsor ===
-Tags: censor, bad words, swear, swearing
+Tags: censor, bad words, swear, swearing, terryjsmith, b5media
 Contributors: terryjsmith
 Requires at least: 0.9
 Tested up to: 1.0-alpha-6

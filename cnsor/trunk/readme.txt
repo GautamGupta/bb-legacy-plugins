@@ -1,6 +1,6 @@
 === C*nsor ===
 Tags: censor, bad words, swear, swearing
-Contributors: mikenolan, terryjsmith
+Contributors: terryjsmith
 Requires at least: 0.9
 Tested up to: 1.0-alpha-6
 Stable Tag: trunk

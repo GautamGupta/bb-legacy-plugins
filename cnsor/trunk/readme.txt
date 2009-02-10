@@ -1,4 +1,4 @@
-=== Censor ===
+=== C*nsor ===
 Tags: censor, bad words, swear, swearing
 Contributors: mikenolan, terryjsmith
 Requires at least: 0.9

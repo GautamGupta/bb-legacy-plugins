@@ -13,9 +13,6 @@ Censors posts for bad words, replacing them with asterisk or disallowing them as
 
 == Installation ==
 
-Unzip the files to your `/my-plugins/` or `/bb-plugins/` directory.
-
-== Configuration ==
-
-The plugin provides an admin interface for activating the filter and entering words to match.
+* Unzip the files to your `/my-plugins/` or `/bb-plugins/` directory.
+* Navigate to Plugins -> Censor Posts, check the Enable censor checkbox and click Update
 

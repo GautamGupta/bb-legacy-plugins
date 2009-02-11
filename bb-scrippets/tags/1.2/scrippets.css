@@ -1,0 +1,62 @@
+/*
+	Scrippet.css
+	Scrippet is a CSS template designed for including short sections of screenplay-formatted material in blog posts.
+	Originally developed by John August - johnaugust.com
+	Last modified 8/21/08
+*/
+
+
+div.scrippet {
+	width: 400px;
+	background: #fffffc;
+	color: #000000;
+	border: 1px solid #333;
+	padding: 5px 14px 15px 14px !important;
+	margin-bottom: 16px !important;
+	margin-left: 20px !important;
+}
+
+.scrippet p {
+	font: 12px/14px Courier, "Courier New", monospace !important;
+    text-align: left !important;
+	letter-spacing: 0 !important;
+	margin-top: 0px !important;
+	margin-bottom: 0px !important;
+}
+
+.sceneheader,
+.action,
+.character {
+	padding-top: 1.5ex !important;
+}
+
+.action {
+	padding-right: 5% !important;
+	font-size: 12px !important;
+	line-height: 14px !important;
+}
+
+
+.character {
+	padding-left: 40% !important;
+}
+
+.dialogue {
+	padding-left: 20% !important;
+	padding-right: 20% !important;
+}
+
+.parenthetical {
+	padding-left: 32% !important;
+	padding-right: 30% !important;
+}
+
+.dialogue + .parenthetical {
+	padding-bottom: 0 !important;
+}
+
+.transition {
+	padding-top: 3ex !important;
+	padding-left: 65% !important;
+	padding-bottom: 1.5ex !important;
+}

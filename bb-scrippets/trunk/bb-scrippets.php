@@ -5,7 +5,7 @@ Plugin URI: http://scrippets.org
 Description: Modifies screenplay format text for inclusion in web pages. Based on the scrippet concept and original code by <a href="http://johnaugust.com">John August</a>.
 Author: Nima Yousefi
 Author URI: http://equinox-of-insanity.com
-Version: 1.1
+Version: 1.2
 
 This plugin uses the function found in the file "scrippetize.php" to create the
 formatted HTML.

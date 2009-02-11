@@ -3,7 +3,7 @@ Contributors: nyousefi
 Tags: screenwriting, scrippets, scrippet, screenplay, film scripts, movie scripts
 Requires at least: 1.5
 Tested up to: 2.6.1
-Stable tag: 1.1
+Stable tag: 1.2
 
 This plugin converts text entered in the Scrippet format to properly styled HTML.
 
@@ -83,6 +83,7 @@ However, if those options are insufficient, you can modify the scrippets.css fil
 1. Shows the a full formatted Scrippet using the Drop Shadow border style.
 
 == Release Notes ==
+* 1.2   - Fixed "FOREST" bug, added version number to scrippetize.php
 * 1.1   - Added support for bold, italic, and underlined text.
 * 1.0 - Release!
 

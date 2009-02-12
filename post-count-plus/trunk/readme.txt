@@ -104,6 +104,10 @@ any template by using direct calls, ie. `<?php post_count_plus($user->ID); ?>`
 or in post template:
 `<?php echo wp_post_count_plus_custom_title(get_the_author_ID()); ?>`
 
+= Version 1.1.10 (2009-02-11) =
+
+* bug fix for days registered during title calculation
+
 == To Do ==
 
 * Better instructions for all the options, code cleanup

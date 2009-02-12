@@ -5,7 +5,7 @@ Plugin URI:  http://bbpress.org/plugins/topic/83
 Description: An enhanced "user post count" with "custom titles" for topics and profiles, based on posts and membership, with cached results for faster pages. No template edits required.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 1.1.9
+Version: 1.1.10
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -113,11 +113,11 @@ if (!$date_format) {$date_format=$post_count_plus['join_date_format'];}
 
 function post_count_plus_find_title($user_id=0,$posts=0,$days=0,$role='') {	
 global $post_count_plus, $post_count_plus_title_cache;
-if ($user_id) {
+if ($user_id) {	
 	if (isset($post_count_plus_title_cache[$user_id])) {return $post_count_plus_title_cache[$user_id];}		
 	if (!$posts) {$posts=post_count_plus_get_count($user_id);}
-	if (!$days) {$days=intval((bb_current_time('timestamp') - bb_gmtstrtotime( $user->user_registered ))/86400);}					
 	$user = bb_get_user($user_id);
+	if (!$days) {$days=intval((bb_current_time('timestamp') - bb_gmtstrtotime( $user->user_registered ))/86400);}						
 	$capabilities=(isset($user->bb_capabilities)) ? $user->bb_capabilities : $user->capabilities;  // makes compatibile for 0.8.x - 1.0a
 	if (!$role && !empty($capabilities)) {		
 		$role=reset(array_keys($capabilities)); 

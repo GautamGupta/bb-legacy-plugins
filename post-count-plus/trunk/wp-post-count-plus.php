@@ -65,8 +65,8 @@ if (empty($user_id)) {global $comment; if (!empty($comment->user_id)) {$user_id=
 if (!empty($user_id)) {
 	if (isset($post_count_plus_title_cache[$user_id])) {return $post_count_plus_title_cache[$user_id];}		
 	if (!$posts) {$posts=wp_post_count_plus_get_count($user_id);}
-	if (!$days) {$days=intval((time() - strtotime($user->user_registered.' GMT'))/86400);}					
 	$user = get_userdata($user_id);
+	if (!$days) {$days=intval((time() - strtotime($user->user_registered.' GMT'))/86400);}						
 	$capabilities=(isset($user->bb_capabilities)) ? $user->bb_capabilities : $user->capabilities;  // makes compatibile for 0.8.x - 1.0a
 	if (!$role && !empty($capabilities)) {		
 		$role=reset(array_keys($capabilities)); 

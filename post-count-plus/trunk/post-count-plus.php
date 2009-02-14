@@ -263,7 +263,7 @@ function post_count_plus_initialize() {
 		add_filter( 'post_delete_link', 'post_count_plus_delete_link_cleanup',10,3);
 		add_action('bb_head', 'post_count_plus_user_cache');
 	}
-	add_filter( 'get_user_link','post_count_plus_user_link',200,2);
+	if (bb_get_location()!="profile-page") {add_filter( 'get_user_link','post_count_plus_user_link',200,2);}
 }	
 
 function post_count_plus_user_cache() {

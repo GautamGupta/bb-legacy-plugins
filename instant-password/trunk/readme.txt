@@ -2,9 +2,9 @@
 Tags: register, registration, password, _ck_
 Contributors: _ck_
 Requires at least: 0.9
-Tested up to: trunk
+Tested up to: 1.0 alpha 5
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Allows users to pick their own password during registration and log in immediately without checking email. No template edits required.
 
@@ -48,7 +48,7 @@ When using this, it is highly recommended to also use the Human Test plugin to p
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 

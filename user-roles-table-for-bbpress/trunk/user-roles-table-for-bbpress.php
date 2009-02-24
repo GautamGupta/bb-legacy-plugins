@@ -253,7 +253,16 @@ if ( !BB_IS_ADMIN ) {
 // Load the gettext textdomain
 load_plugin_textdomain( 'user-roles-table-for-bbpress', dirname( __FILE__ ) . '/languages' );
 
-// Define this function so that the potentially slow one doesn't get run on the admin dashboard
+// Define these functions so that the potentially slow ones don't get run on the admin dashboard
+if ( !function_exists( 'get_total_users' ) ) {
+	function get_total_users()
+	{
+		global $bbdb;
+		$total = $bbdb->get_var('SELECT COUNT(DISTINCT(`user_id`)) FROM `' . $bbdb->userroles . '`;');
+		return $total;
+	}
+}
+
 if ( !function_exists( 'get_recent_registrants' ) ) {
 	function get_recent_registrants( $num = 0 )
 	{

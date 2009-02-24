@@ -1,0 +1,129 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Sam Bauers
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/user-roles-table-for-bbpress\n"
+"POT-Creation-Date: 2008-12-20 08:19+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: user-roles-table-for-bbpress.php:259 user-roles-table-for-bbpress.php:266
+msgid "User Roles Table"
+msgstr ""
+
+#: user-roles-table-for-bbpress.php:268
+msgid ""
+"<p>The <em>User Roles Table</em> plugin provides a faster way to look up "
+"user roles for certain functions using a dedicated roles table.</p><p>The "
+"table is created on plugin activation if it doesn't already exist, but the "
+"initial roles need to be copied to it manually here."
+msgstr ""
+
+#: user-roles-table-for-bbpress.php:275
+msgid "Stop"
+msgstr ""
+
+#: user-roles-table-for-bbpress.php:276
+msgid ""
+"This action will stop bbPress from referring to the user roles table to "
+"obtain user role information."
+msgstr ""
+
+#: user-roles-table-for-bbpress.php:280
+msgid "Stop User Roles Table"
+msgstr ""
+
+#: user-roles-table-for-bbpress.php:286
+msgid "Start"
+msgstr ""
+
+#: user-roles-table-for-bbpress.php:287
+msgid ""
+"This action will create the user roles table if it doesn't exist and then "
+"synchronise it with existing roles data from the usermeta table."
+msgstr ""
+
+#: user-roles-table-for-bbpress.php:288 user-roles-table-for-bbpress.php:303
+#: user-roles-table-for-bbpress.php:315
+msgid ""
+"WARNING!: This action could take a long time on a site with lots of users."
+msgstr ""
+
+#: user-roles-table-for-bbpress.php:292
+msgid "Start User Roles Table"
+msgstr ""
+
+#: user-roles-table-for-bbpress.php:301
+msgid "Repair"
+msgstr ""
+
+#: user-roles-table-for-bbpress.php:302
+msgid ""
+"This action will synchronise the roles stored in the standard usermeta "
+"location with the user roles table."
+msgstr ""
+
+#: user-roles-table-for-bbpress.php:307
+msgid "Repair User Roles Table"
+msgstr ""
+
+#: user-roles-table-for-bbpress.php:313
+msgid "Rebuild"
+msgstr ""
+
+#: user-roles-table-for-bbpress.php:314
+msgid ""
+"This action will recreate the user roles table from scratch and then "
+"populate it with existing roles data from the usermeta table."
+msgstr ""
+
+#: user-roles-table-for-bbpress.php:319
+msgid "Rebuild User Roles Table"
+msgstr ""
+
+#: user-roles-table-for-bbpress.php:338
+msgid "User Roles Table has been started."
+msgstr ""
+
+#: user-roles-table-for-bbpress.php:340
+msgid "User Roles Table has been stopped."
+msgstr ""
+
+#: user-roles-table-for-bbpress.php:342
+msgid "User Roles Table has been repaired."
+msgstr ""
+
+#: user-roles-table-for-bbpress.php:344
+msgid "User Roles Table has been rebuilt."
+msgstr ""
+
+#. Plugin Name of an extension
+msgid "User Roles Table for bbPress"
+msgstr ""
+
+#. Plugin URI of an extension
+msgid "http://bbpress.org/plugins/topic/user-roles-table-for-bbpress/"
+msgstr ""
+
+#. Description of an extension
+msgid ""
+"Stores user roles in a separate roles table for faster reading purposes, "
+"helps speed up queries based on roles for sites with lots of users."
+msgstr ""
+
+#. Author of an extension
+msgid "Sam Bauers"
+msgstr ""
+
+#. Author URI of an extension
+msgid "http://unlettered.org/"
+msgstr ""

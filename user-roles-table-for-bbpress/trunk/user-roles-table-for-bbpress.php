@@ -4,7 +4,7 @@ Plugin Name: User Roles Table for bbPress
 Plugin URI: http://bbpress.org/plugins/topic/user-roles-table-for-bbpress/
 Description: Stores user roles in a separate roles table for faster reading purposes, helps speed up queries based on roles for sites with lots of users.
 Author: Sam Bauers
-Version: 1.0
+Version: 1.1
 Author URI: http://unlettered.org/
 */
 
@@ -35,8 +35,11 @@ function bb_urt_add_table()
 {
 	global $bbdb;
 	global $bb_table_prefix;
-	$bbdb->tables['userroles'] = false;
-	$bbdb->set_prefix( $bb_table_prefix, array( 'userroles' => false ) );
+
+	if ( !isset( $bbdb->tables['userroles'] ) ) {
+		$bbdb->tables['userroles'] = false;
+		$bbdb->set_prefix( $bb_table_prefix, array( 'userroles' => false ) );
+	}
 }
 
 add_action( 'bb_init', 'bb_urt_add_table' );
@@ -64,7 +67,8 @@ function bb_urt_create_table()
 
 	require_once( BB_PATH . 'bb-admin/includes/functions.bb-upgrade.php' );
 	require_once( BB_PATH . 'bb-admin/includes/defaults.bb-schema.php' );
-	$delta = bb_sql_delta($bb_queries);
+	require_once( BACKPRESS_PATH . 'class.bp-sql-schema-parser.php' );
+	$delta = BP_SQL_Schema_Parser::delta( $bbdb, $bb_queries );
 
 	if ( is_array( $delta ) ) {
 		$log = $delta;
@@ -99,10 +103,10 @@ function bb_urt_populate_table()
 	global $bbdb;
 	global $wp_roles;
 
-	$first_user = 0;
-	$last_user = 1000;
+	$offset = 0;
 
-	while ( $users = $bbdb->get_results( "SELECT `umeta_id`, `user_id`, `meta_value` FROM `{$bbdb->usermeta}` WHERE `meta_key` = '{$bbdb->prefix}capabilities' AND `user_id` > $first_user AND `user_id` <= $last_user ORDER BY `user_id` ASC;" ) ) {
+	while ( $users = $bbdb->get_results( "SELECT `umeta_id`, `user_id`, `meta_value` FROM `{$bbdb->usermeta}` WHERE `meta_key` = '{$bbdb->prefix}capabilities' ORDER BY `user_id` ASC LIMIT {$offset},1000;" ) ) {
+
 		foreach ( $users as $user ) {
 			// find any usermeta capabilites that are roles, and insert them as userroles rows
 			$caps = unserialize( $user->meta_value );
@@ -117,8 +121,7 @@ function bb_urt_populate_table()
 			}
 		}
 
-		$first_user = (int) $user->user_id;
-		$last_user = $first_user + 1000;
+		$offset += 1000;
 		$bbdb->queries = array();
 	}
 
@@ -250,6 +253,14 @@ if ( !BB_IS_ADMIN ) {
 // Load the gettext textdomain
 load_plugin_textdomain( 'user-roles-table-for-bbpress', dirname( __FILE__ ) . '/languages' );
 
+// Define this function so that the potentially slow one doesn't get run on the admin dashboard
+if ( !function_exists( 'get_recent_registrants' ) ) {
+	function get_recent_registrants( $num = 0 )
+	{
+		return false;
+	}
+}
+
 // Add filters for the admin area
 add_action( 'bb_admin_menu_generator', 'bb_urt_admin_page_add' );
 add_action( 'bb_admin-header.php', 'bb_urt_admin_page_process' );
@@ -376,7 +387,7 @@ function bb_urt_admin_page_process()
 			bb_urt_drop_table();
 			bb_urt_install( true );
 			bb_urt_populate_table();
-
+			
 			$goback = add_query_arg( 'rebuilt', 'true', bb_urt_remove_query_args( wp_get_referer() ) );
 			bb_safe_redirect( $goback );
 		}

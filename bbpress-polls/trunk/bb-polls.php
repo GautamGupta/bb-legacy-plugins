@@ -5,7 +5,7 @@ Description:  allows users to add polls to topics, with optional ajax-like actio
 Plugin URI:  http://bbpress.org/plugins/topic/62
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.5.8
+Version: 0.5.9
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 */
@@ -51,6 +51,7 @@ $topic_id=bb_polls_check_cache($topic_id);
 $user_id=bb_get_current_user_info( 'id' );
 $administrator=bb_current_user_can('administrate');
 $minimum_add_level=bb_current_user_can($bb_polls['minimum_add_level']);
+$minimum_edit_level=bb_current_user_can($bb_polls['minimum_edit_level']);
 $ask_during_new=(empty($topic_id) && $minimum_add_level && $bb_polls['ask_during_new'] && $bb_polls['use_ajax'] && (isset($_GET['new']) || is_forum())) ? true : false;
 if (!$edit_poll && isset($_GET['edit_poll'])) {$edit_poll= intval($_GET['edit_poll']);}
 if ($edit_poll || ! isset($topic->poll_options)) {	// no saved poll question with options
@@ -58,7 +59,9 @@ if ($edit_poll || ! isset($topic->poll_options)) {	// no saved poll question wit
 	if ($administrator || $ask_during_new || 
 		($minimum_add_level
 		&& !($bb_polls['only_topic_author_can_add'] && $topic->topic_poster!=$user_id)
-		&& !($bb_polls['add_within_hours'] &&  $bb_polls['add_within_hours']<(time()-bb_gmtstrtotime($topic->topic_start_time))/3600) 
+		&& !($bb_polls['add_within_hours'] && $bb_polls['add_within_hours']<(time()-bb_gmtstrtotime($topic->topic_start_time))/3600) 
+		&& !($edit_poll && $minimum_edit_level && $topic->topic_poster==$user_id && 
+		        $bb_polls['edit_within_hours'] && $bb_polls['edit_within_hours']<(time()-bb_gmtstrtotime($topic->topic_start_time))/3600)
 	 	&& !($bb_polls['close_with_topic'] && $topic->topic_open!=1)
 	 	)) {
 	
@@ -209,25 +212,35 @@ if ($display) {echo '<li id="bb_polls">'.$output.'</li>';} else {return $output;
 }
 
 function bb_polls_edit_link() {
-global $bb_polls,$topic,$poll_options;
+global $bb_polls,$topic,$poll_options; $output=''; $can_edit=false; $can_delete=false;
 $administrator=bb_current_user_can('administrate');
-if ($administrator) { 
-$output= '<a onClick="return confirm('."'".$bb_polls['label_warning_text']."'".')"  href="'
-	.add_query_arg('delete_poll','1',remove_query_arg(array('edit_poll','poll_question','show_poll_results','start_new_poll'))).'">'.$bb_polls['label_delete_text'].'</a>';
-$output.=' | ';	
+$user_id=bb_get_current_user_info( 'id' );
+if (bb_current_user_can($bb_polls['minimum_edit_level']) 
+&& !($bb_polls['only_topic_author_can_add'] && $topic->topic_poster!=$user_id)		
+&& !($bb_polls['edit_within_hours'] && $bb_polls['edit_within_hours']<(time()-bb_gmtstrtotime($topic->topic_start_time))/3600)) {$can_edit=true;}
+if ($topic->topic_poster==$user_id && bb_current_user_can($bb_polls['minimum_delete_level'])
+&& !($bb_polls['edit_within_hours'] && $bb_polls['edit_within_hours']<(time()-bb_gmtstrtotime($topic->topic_start_time))/3600)) {$can_delete=true;}
+if ($administrator || $can_delete) { 
+$output.= '<a onClick="return confirm('."'".$bb_polls['label_warning_text']."'".')"  href="'
+	.add_query_arg('delete_poll','1',remove_query_arg(array('edit_poll','poll_question','show_poll_results','start_new_poll'))).'">'.$bb_polls['label_delete_text'].'</a> | ';
+}
+if ($administrator || $can_edit) {
 $output.= '<a onClick="if (window.bb_polls_insert_ajax) {bb_polls_edit_poll_ajax(); return false;}"  href="'
 	.add_query_arg('edit_poll','1',remove_query_arg(array('poll_question','show_poll_results','start_new_poll'))).'">'.$bb_polls['label_edit_text'].'</a>';
-return $output;
 }
-return '';
+return $output;
 }
 
 function bb_polls_delete_poll() {
+global $bb_polls; $can_delete=false;
 $administrator=bb_current_user_can('administrate');
-if ($administrator) { 
-	$topic_id=bb_polls_check_cache($topic_id);		
-	bb_delete_topicmeta($topic_id, 'poll_options');
-}
+$user_id=bb_get_current_user_info( 'id' );
+$topic_id=bb_polls_check_cache($topic_id);
+$topic=get_topic($topic_id);
+if (empty($topic_id) || empty($topic)) {return;}
+if ($topic->topic_poster==$user_id && bb_current_user_can($bb_polls['minimum_delete_level'])
+&& !($bb_polls['edit_within_hours'] && $bb_polls['edit_within_hours']<(time()-bb_gmtstrtotime($topic->topic_start_time))/3600)) {$can_delete=true;}
+if ($administrator || $can_delete) {	bb_delete_topicmeta($topic_id, 'poll_options');}
 }
 
 function bb_polls_save_poll_setup($topic_id=0) {
@@ -247,7 +260,9 @@ bb_update_topicmeta( $topic_id, 'poll_options', '..'.serialize($poll_options)); 
 
 function bb_polls_show_poll_setup_form($topic_id,$display=1,$edit_poll=0) {
 global $bb_polls,$topic,$poll_options;
-if (($edit_poll==0 && bb_current_user_can($bb_polls['minimum_add_level'])) || bb_current_user_can('administrate')) {
+if (($edit_poll==0 && bb_current_user_can($bb_polls['minimum_add_level']))
+     || ($edit_poll && bb_current_user_can($bb_polls['minimum_edit_level'])) 
+     || bb_current_user_can('administrate')) {
 $is_topic=is_topic(); $topic_id=bb_polls_check_cache($topic_id); $output="";
 if ($is_topic) {
 $output.='<form action="'.remove_query_arg(array('start_new_poll','edit_poll','delete_poll','show_poll_vote_form_ajax','show_poll_setup_form_ajax','bb_polls_cache')).'" method="post">';

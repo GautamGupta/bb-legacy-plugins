@@ -2,7 +2,7 @@
 Tags: vote, votes, voting, poll, polls, polling, _ck_
 Contributors: _ck_
 Requires at least: 0.8.2
-Tested up to: trunk
+Tested up to: 1.0 alpha 5
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 
@@ -26,6 +26,7 @@ There are many powerful options via the admin menu.
 * http://bbshowcase.org/donate/
 
 == History ==
+* 0.5.9 2009-02-22 added checks for user levels when editing and deleting polls
 * 0.5.8 2009-02-02 bug fix to handle single and double quotes in poll questions and voting options
 * 0.5.7 2009-01-04 do not modify topic titles when in RSS feeds
 * 0.5.6	2008-December-30 optional ability to create poll during new topic submission, optional icon without CSS editing

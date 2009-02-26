@@ -12,9 +12,11 @@ Allows bbPress 0.9 to use WordPress 2.7 or 2.8 cookies during stand-alone (simpl
 
 Allows bbPress 0.9 to use WordPress 2.7 or 2.8 cookies during stand-alone (simple) integration.
 
-This plugin is very alpha and has only been tested on a very basic setup. It should be safe to use as it doesn't change any data.
+This plugin is very alpha and has only been tested on a very basic setup, however it should be safe to try as it doesn't change any data.
 
 It can only be used on stand-alone (simple) integration, not "deep" or "full" integration.
+
+NOTE: you cannot downgrade from bbPress to 1.0 to 0.9 without converting database, this plugin does NOT do that for you.
 
 == Installation ==
 
@@ -31,6 +33,8 @@ It can only be used on stand-alone (simple) integration, not "deep" or "full" in
 * If you have any trouble, just delete the plugin and the previous cookie method will be used instead.
 
 * REMEMBER: you must set the path and domain of your cookies to be inclusive in both WP and bbPress (ie. root / )
+
+* NOTE: you cannot downgrade from bbPress to 1.0 to 0.9 without converting the database, this plugin does NOT do that for you.
 
 == Frequently Asked Questions ==
 

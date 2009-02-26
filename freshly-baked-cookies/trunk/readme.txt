@@ -30,9 +30,17 @@ It can only be used on stand-alone (simple) integration, not "deep" or "full" in
 
 * If you have any trouble, just delete the plugin and the previous cookie method will be used instead.
 
+* REMEMBER: you must set the path and domain of your cookies to be inclusive in both WP and bbPress (ie. root / )
+
 == Frequently Asked Questions ==
 
 *  coming soon
+
+* REMEMBER: you must set the path and domain of your cookies to be inclusive in both WP and bbPress (ie. root / )
+ie. If WordPress is under  "/blog/"    and   bbPress is under "/forums/"  the default cookie paths will not work for you.
+However if bbPress is "underneath" WordPress, you may not have to adjust anything.
+See my general integration guide here:
+http://bbpress.org/forums/topic/wordpress-and-bbpress-integration-101
 
 == License ==
 

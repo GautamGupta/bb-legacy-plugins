@@ -46,6 +46,8 @@ However if bbPress is "underneath" WordPress, you may not have to adjust anythin
 See my general integration guide here:
 http://bbpress.org/forums/topic/wordpress-and-bbpress-integration-101
 
+* Alternately you can try this other method of downgrading the cookies in WordPress 2.7 to the old 2.5 method which will work with bbPress 0.9 (and might work with deep integration) http://superann.com/2009/02/26/wordpress-26-27-bbpress-09-cookie-integration-plugin/
+
 == License ==
 
 * CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/

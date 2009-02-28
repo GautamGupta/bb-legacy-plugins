@@ -122,7 +122,7 @@ if ($counter) {$counter=0; foreach ($backticks[0] as $backtick)  {++$counter; $o
 return $output;
 }
 
-function bb_smilies_prep($string) {return "/(\s|^)".preg_quote(trim($string),'/')."(\s|$)/";}
+function bb_smilies_prep($string) {return "/(\s|^|\&\#60\;p\&\#62\;)".preg_quote(trim($string),'/')."(\s|$|\&\#60\;br \/\&\#62\;)/";}
 
 function bb_smilies_css() {global $bb_smilies; echo '<style type="text/css">'.$bb_smilies['css'].'</style>';} // inject css
  
@@ -132,7 +132,7 @@ global $bb_smilies, $bb_smilies_search, $bb_smilies_replace, $bb_smilies_prep;
 $is_bb_feed=is_bb_feed();
 
 foreach($wp_smilies as $smiley => $img) { 	
-	$replace=' <img src="'. $bb_smilies['icon_url'] . $img .'" title="'. htmlspecialchars(trim($smiley), ENT_QUOTES) .'" class="bb_smilies" /> ';
+	$replace='$1 <img src="'. $bb_smilies['icon_url'] . $img .'" title="'. htmlspecialchars(trim($smiley), ENT_QUOTES) .'" class="bb_smilies" /> $2';
 	if (is_bb_feed()) {$replace=wp_specialchars($replace);}
 	$bb_smilies_replace[] = $replace;
 	$bb_smilies_search[] = $smiley;

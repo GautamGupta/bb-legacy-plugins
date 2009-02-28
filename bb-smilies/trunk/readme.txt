@@ -2,7 +2,7 @@
 Tags: smilies, smileys, emoticons, _ck_
 Contributors: _ck_
 Requires at least: 0.8.2
-Tested up to: trunk
+Tested up to: 1.0 alpha 5
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 
@@ -62,6 +62,10 @@ Or build your own. Just make sure you follow the style in `package-config.php`
 = Version 0.0.7 (2009-01-23) =
 
 * auto-insert clicker for private messages plugin
+
+= Version 0.0.8 (2009-02-28) =
+
+* don't process posts on feeds
 
 == To Do ==
 

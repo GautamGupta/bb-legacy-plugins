@@ -24,7 +24,6 @@ $bb_smilies['icon_path']=rtrim(dirname(__FILE__),' /\\').'/'.$bb_smilies['icon_s
 $bb_smilies['icon_url']=bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),"\\"),array("","/"),dirname(__FILE__)),' /\\').'/'.$bb_smilies['icon_set'].'/'; 
 
 add_filter('post_text', 'bb_smilies_convert');
-add_action('bb_init','bb_smilies_init');
 add_action('bb_head','bb_smilies_css');
 add_action('post_form','bbClicker',($bb_smilies['popup'] ? 20 : 9));
 add_action('edit_form','bbClicker',($bb_smilies['popup'] ? 20 : 9));
@@ -33,8 +32,8 @@ add_filter('pm_text', 'bb_smilies_convert');  // support private messages plugin
 if (bb_find_filename($_SERVER['REQUEST_URI'])=='pm.php') {add_action('bb_foot','bbClicker',($bb_smilies['popup'] ? 20 : 9));}
 
 function bbClicker() {
-global $bb_smilies, $bb_current_user;
-@include($bb_smilies['icon_path']."package-config.php");
+global $wp_smilies, $bb_smilies, $bb_current_user;
+if (empty($wp_smilies)) {@include($bb_smilies['icon_path']."package-config.php");}
 echo  "<scr"."ipt type='text/javascript' defer='defer'>
 
 if (window.attachEvent) {window.attachEvent('onload', bb_smilies_init);} 
@@ -104,6 +103,8 @@ function bb_smilies_panel() {
 function bb_smilies_convert($text) {
 global $bb_smilies, $bb_smilies_search, $bb_smilies_replace, $bb_smilies_prep;
 
+if (empty($bb_smilies_prep)) {bb_smilies_init();}
+
 $counter=0;  // filter out all backtick code first
 if (preg_match_all("|\<code\>(.*?)\<\/code\>|sim", $text, $backticks)) {foreach ($backticks[0] as $backtick) {++$counter; $text=str_replace($backtick,"_bb_smilies_".$counter."_",$text);}}
 
@@ -127,8 +128,8 @@ function bb_smilies_prep($string) {return "/(\s|^|\&\#60\;p\&\#62\;)".preg_quote
 function bb_smilies_css() {global $bb_smilies; echo '<style type="text/css">'.$bb_smilies['css'].'</style>';} // inject css
  
 function bb_smilies_init() {
-global $bb_smilies, $bb_smilies_search, $bb_smilies_replace, $bb_smilies_prep;
-@include($bb_smilies['icon_path']."package-config.php");
+global $wp_smilies, $bb_smilies, $bb_smilies_search, $bb_smilies_replace, $bb_smilies_prep;
+if (empty($wp_smilies)) {@include($bb_smilies['icon_path']."package-config.php");}
 $is_bb_feed=is_bb_feed();
 
 foreach($wp_smilies as $smiley => $img) { 	

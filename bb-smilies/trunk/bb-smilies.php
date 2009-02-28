@@ -5,7 +5,7 @@ Description:  Adds clickable smilies (emoticons) to bbPress.  No template edits 
 Plugin URI:  http://bbpress.org/plugins/topic/121
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.7
+Version: 0.0.8
 */
 
 $bb_smilies['icon_set']="default";  // change this to the exact directory name (case sensitive) if you want to switch icon package sets
@@ -23,6 +23,7 @@ $bb_smilies['css'] = ".bb_smilies {border:0; vertical-align: middle; padding-bot
 $bb_smilies['icon_path']=rtrim(dirname(__FILE__),' /\\').'/'.$bb_smilies['icon_set'].'/'; 
 $bb_smilies['icon_url']=bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),"\\"),array("","/"),dirname(__FILE__)),' /\\').'/'.$bb_smilies['icon_set'].'/'; 
 
+if (!is_bb_feed()) {
 add_filter('post_text', 'bb_smilies_convert');
 add_action('bb_head','bb_smilies_css');
 add_action('post_form','bbClicker',($bb_smilies['popup'] ? 20 : 9));
@@ -30,6 +31,7 @@ add_action('edit_form','bbClicker',($bb_smilies['popup'] ? 20 : 9));
 
 add_filter('pm_text', 'bb_smilies_convert');  // support private messages plugin
 if (bb_find_filename($_SERVER['REQUEST_URI'])=='pm.php') {add_action('bb_foot','bbClicker',($bb_smilies['popup'] ? 20 : 9));}
+}
 
 function bbClicker() {
 global $bb_smilies, $bb_current_user;

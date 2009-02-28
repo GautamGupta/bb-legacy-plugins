@@ -2,7 +2,7 @@
 Tags:  attachments, attachment, attach, uploads, upload, files, aws, s3, _ck_
 Contributors: _ck_
 Requires at least: 0.9
-Tested up to: trunk
+Tested up to: 1.0 alpha 5
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 
@@ -83,6 +83,7 @@ http://docs.amazonwebservices.com/AmazonS3/2006-03-01/VirtualHosting.html#Virtua
 * 0.2.3	changed database table to UTF-8 instead of latin for proper filename support
 * 0.2.4	security fix for when delete level set to participate - user can only delete attachment if they can edit post
 * 0.2.5 multipart fix for bbPress 1.0a6 switch to bb_get_uri
+* 0.2.6 bug fix for handling encoding during feeds (encode self, not entire post text)
 	
 == To Do ==
 

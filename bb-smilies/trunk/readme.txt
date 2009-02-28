@@ -65,7 +65,7 @@ Or build your own. Just make sure you follow the style in `package-config.php`
 
 = Version 0.0.8 (2009-02-28) =
 
-* don't process posts on feeds
+* encode images when inside feeds
 
 == To Do ==
 

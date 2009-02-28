@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.2.5
+Version: 0.2.6
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -284,14 +284,16 @@ if ($bb_attachments['aws']['enable']) {	// if AWS S3 enabled, do direct inline i
 			if (file_exists($fullpath)) {	// it's been resized, so it's likely on AWS, show directly
 				$aws=$bb_attachments['aws']['url'].$file->id.'.'.$file->filename;
 				$replace="<a class='bb_attachments_link' href='$uri?bb_attachments=".$match[1]."&bbat=".$match[2]."'><img  src='$aws' /></a>";
+				if (is_bb_feed()) {$replace=wp_specialchars($replace);}
 				$text=str_replace($match[0],$replace,$text);
 			}
 		}
 	}	
 }
 // clean up anything left with the regular call to the inline function
-$text=preg_replace("/\[attachment=([0-9]+?)\,([0-9]+?)\]/sim","<a class='bb_attachments_link' href='$uri?bb_attachments=$1&bbat=$2'><img  src='$uri?bb_attachments=$1&bbat=$2&inline' /></a>",$text);
-if (is_bb_feed()) {$text=wp_specialchars($text);}
+$replace="<a class='bb_attachments_link' href='$uri?bb_attachments=$1&bbat=$2'><img  src='$uri?bb_attachments=$1&bbat=$2&inline' /></a>";
+if (is_bb_feed()) {$replace=wp_specialchars($replace);}
+$text=preg_replace("/\[attachment=([0-9]+?)\,([0-9]+?)\]/sim",$replace,$text);
 return $text;
 }
 

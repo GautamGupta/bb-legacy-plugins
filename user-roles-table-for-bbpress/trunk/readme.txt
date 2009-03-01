@@ -3,7 +3,7 @@ Contributors: sambauers
 Tags: optimisation, speed, administration
 Requires at least: 1.0-alpha-5
 Tested up to: 1.0-alpha-7
-Stable tag: 1.1
+Stable tag: 1.2
 
 Stores user roles in a separate roles table for faster reading purposes,
 helps speed up some queries based on roles for sites with lots of users.
@@ -44,7 +44,7 @@ will need to be logged in as a keymaster.
 
 == License ==
 
-User Roles Table for bbPress version 1.1<br />
+User Roles Table for bbPress version 1.2<br />
 Copyright (C) 2008 Sam Bauers (http://unlettered.org/)
 
 User Roles Table for bbPress comes with ABSOLUTELY NO WARRANTY
@@ -60,3 +60,5 @@ See accompanying license.txt file for details.
 * 1.1 :
   <br />Better table population and bbdb setup
   <br />Now kills the recently registered list on the dashboard
+* 1.2 :
+  <br />Various bug fixes

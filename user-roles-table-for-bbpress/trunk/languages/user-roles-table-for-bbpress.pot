@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/user-roles-table-for-bbpress\n"
-"POT-Creation-Date: 2008-12-20 08:19+0000\n"
+"POT-Creation-Date: 2009-03-01 10:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: user-roles-table-for-bbpress.php:259 user-roles-table-for-bbpress.php:266
+#: user-roles-table-for-bbpress.php:278 user-roles-table-for-bbpress.php:285
 msgid "User Roles Table"
 msgstr ""
 
-#: user-roles-table-for-bbpress.php:268
+#: user-roles-table-for-bbpress.php:287
 msgid ""
 "<p>The <em>User Roles Table</em> plugin provides a faster way to look up "
 "user roles for certain functions using a dedicated roles table.</p><p>The "
@@ -28,81 +28,81 @@ msgid ""
 "initial roles need to be copied to it manually here."
 msgstr ""
 
-#: user-roles-table-for-bbpress.php:275
+#: user-roles-table-for-bbpress.php:294
 msgid "Stop"
 msgstr ""
 
-#: user-roles-table-for-bbpress.php:276
+#: user-roles-table-for-bbpress.php:295
 msgid ""
 "This action will stop bbPress from referring to the user roles table to "
 "obtain user role information."
 msgstr ""
 
-#: user-roles-table-for-bbpress.php:280
+#: user-roles-table-for-bbpress.php:299
 msgid "Stop User Roles Table"
 msgstr ""
 
-#: user-roles-table-for-bbpress.php:286
+#: user-roles-table-for-bbpress.php:305
 msgid "Start"
 msgstr ""
 
-#: user-roles-table-for-bbpress.php:287
+#: user-roles-table-for-bbpress.php:306
 msgid ""
 "This action will create the user roles table if it doesn't exist and then "
 "synchronise it with existing roles data from the usermeta table."
 msgstr ""
 
-#: user-roles-table-for-bbpress.php:288 user-roles-table-for-bbpress.php:303
-#: user-roles-table-for-bbpress.php:315
+#: user-roles-table-for-bbpress.php:307 user-roles-table-for-bbpress.php:322
+#: user-roles-table-for-bbpress.php:334
 msgid ""
 "WARNING!: This action could take a long time on a site with lots of users."
 msgstr ""
 
-#: user-roles-table-for-bbpress.php:292
+#: user-roles-table-for-bbpress.php:311
 msgid "Start User Roles Table"
 msgstr ""
 
-#: user-roles-table-for-bbpress.php:301
+#: user-roles-table-for-bbpress.php:320
 msgid "Repair"
 msgstr ""
 
-#: user-roles-table-for-bbpress.php:302
+#: user-roles-table-for-bbpress.php:321
 msgid ""
 "This action will synchronise the roles stored in the standard usermeta "
 "location with the user roles table."
 msgstr ""
 
-#: user-roles-table-for-bbpress.php:307
+#: user-roles-table-for-bbpress.php:326
 msgid "Repair User Roles Table"
 msgstr ""
 
-#: user-roles-table-for-bbpress.php:313
+#: user-roles-table-for-bbpress.php:332
 msgid "Rebuild"
 msgstr ""
 
-#: user-roles-table-for-bbpress.php:314
+#: user-roles-table-for-bbpress.php:333
 msgid ""
 "This action will recreate the user roles table from scratch and then "
 "populate it with existing roles data from the usermeta table."
 msgstr ""
 
-#: user-roles-table-for-bbpress.php:319
+#: user-roles-table-for-bbpress.php:338
 msgid "Rebuild User Roles Table"
 msgstr ""
 
-#: user-roles-table-for-bbpress.php:338
+#: user-roles-table-for-bbpress.php:357
 msgid "User Roles Table has been started."
 msgstr ""
 
-#: user-roles-table-for-bbpress.php:340
+#: user-roles-table-for-bbpress.php:359
 msgid "User Roles Table has been stopped."
 msgstr ""
 
-#: user-roles-table-for-bbpress.php:342
+#: user-roles-table-for-bbpress.php:361
 msgid "User Roles Table has been repaired."
 msgstr ""
 
-#: user-roles-table-for-bbpress.php:344
+#: user-roles-table-for-bbpress.php:363
 msgid "User Roles Table has been rebuilt."
 msgstr ""
 

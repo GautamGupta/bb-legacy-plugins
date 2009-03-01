@@ -34,15 +34,14 @@ function bb_urt_get_option( $option )
 function bb_urt_add_table()
 {
 	global $bbdb;
-	global $bb_table_prefix;
 
-	if ( !isset( $bbdb->tables['userroles'] ) ) {
+	if ( !isset( $bbdb->tables['userroles'] ) || !isset( $bbdb->userroles ) ) {
 		$bbdb->tables['userroles'] = false;
-		$bbdb->set_prefix( $bb_table_prefix, array( 'userroles' => false ) );
+		$bbdb->set_prefix( $bbdb->prefix, array( 'userroles' => false ) );
 	}
 }
 
-add_action( 'bb_init', 'bb_urt_add_table' );
+add_action( 'bb_plugins_loaded', 'bb_urt_add_table', 1 );
 
 function bb_urt_upgrade_schema( $schema )
 {

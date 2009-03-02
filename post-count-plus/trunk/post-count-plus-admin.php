@@ -133,19 +133,49 @@ function post_count_plus_recount() { 	// count function to re-sync all user post
 	 global $bb,$bbdb,$post_count_plus;
 	// echo "<html><body><h1>Post Count Plus</h1><h2>counting posts for all users...</h2><pre>";
 	
+	if (!empty($post_count_plus['read_only'])) {
+		bb_admin_notice('<b>Post Count Plus: '.__('Recount not performed. This install is set to Read Only')); 
+		return;	
+	}
+	
 	if (!empty($post_count_plus['wp_comments']) && !empty($bb->wp_table_prefix)) {		
-		$query="SELECT COALESCE(poster_id,user_id) as user_id,'post_count',COALESCE(post_count,0)+COALESCE(comment_count,0) as meta_value
-			FROM (SELECT poster_id,  count(post_status) as post_count FROM $bbdb->posts WHERE post_status=0 GROUP BY poster_id) as t1 
-			LEFT join (SELECT user_id,count(comment_approved) as comment_count 
-			FROM  $bb->wp_table_prefix"."comments WHERE comment_approved=1 GROUP BY user_id) as t2 
-			ON t1.poster_id=t2.user_id";		
+		if (!empty($post_count_plus['additional_bbpress'])) {
+			(array) $add_bbpress=explode(",",$post_count_plus['additional_bbpress']);
+			array_walk($add_bbpress,"trim");				
+		}
+		if (!empty($post_count_plus['additional_wordpress'])) {
+			(array) $add_wordpress=explode(",",$post_count_plus['additional_wordpress']);
+			array_walk($add_wordpress,"trim");				
+		}				
+		$add_bbpress[]=$bbdb->posts;  $add_bbpress=array_flip($add_bbpress); $add_bbpress=array_keys($add_bbpress);
+		$add_wordpress[]=$bb->wp_table_prefix."comments"; $add_wordpress=array_flip($add_wordpress); $add_wordpress=array_keys($add_wordpress);
+
+		$user_id=""; $meta_value=""; $from="";
+		foreach ($add_bbpress as $key=>$bbpress) {
+			$user_id.="bb$key.poster_id,"; 
+			$meta_value.="COALESCE(bb$key.post_count,0)+";
+			if ($key>0) {$from.=" LEFT JOIN ";} 
+			$from.=" (SELECT poster_id,  count(post_status) as post_count FROM $bbpress WHERE post_status=0 GROUP BY poster_id) as bb$key ";
+			if ($key>0) {$from.=" ON bb0.poster_id=bb$key.poster_id ";}
+		}
+		foreach ($add_wordpress as $key=>$wordpress) {
+			$user_id.="wp$key.user_id,"; 
+			$meta_value.="COALESCE(wp$key.comment_count,0)+";
+			$from.=" LEFT JOIN "; 
+			$from.=" (SELECT user_id,count(comment_approved) as comment_count FROM $wordpress WHERE comment_approved=1 GROUP BY user_id) as wp$key ";
+			$from.=" ON bb0.poster_id=wp$key.user_id "; 			
+		}
+		$user_id=trim($user_id,", "); $meta_value=trim($meta_value,"+ ");
+
+		$query="SELECT 'post_count',COALESCE($user_id) as user_id,$meta_value as meta_value FROM $from";	
+		
 	} else {	
-		$query="SELECT poster_id as user_id,'post_count',count(post_status) as meta_value 
-			FROM $bbdb->posts WHERE post_status = 0 GROUP BY poster_id";
+		$query="SELECT 'post_count',poster_id as user_id,count(post_status) as meta_value 
+				FROM $bbdb->posts WHERE post_status = 0 GROUP BY poster_id";
 	}
 	
 	$status1=$bbdb->query("DELETE FROM $bbdb->usermeta  WHERE meta_key = 'post_count'");
-	$status2=$bbdb->query("INSERT INTO  $bbdb->usermeta  (user_id, meta_key, meta_value) $query");
+	$status2=$bbdb->query("INSERT INTO  $bbdb->usermeta  (meta_key, user_id, meta_value) $query");
 	
 	// echo "<h3>".mysql_affected_rows(). " users counted and inserted.</h3></pre>";
 	// echo "<b><a href='".remove_query_arg('post_count_plus_recount')."'>return to forum</a></b>";

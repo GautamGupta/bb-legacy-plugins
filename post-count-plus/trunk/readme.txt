@@ -2,7 +2,7 @@
 Tags: posts, count, post count, titles, custom titles, _ck_
 Contributors: _ck_
 Requires at least: 0.8.2
-Tested up to: 1.0a4
+Tested up to: 1.0 alpha 5
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 
@@ -107,6 +107,11 @@ or in post template:
 = Version 1.1.10 (2009-02-11) =
 
 * bug fix for days registered during title calculation
+
+= Version 1.1.11 (2009-03-02) =
+
+* allow unlimited additional bbPress post tables and additional WordPress comment tables to be included in counts
+* allow some installs to remain "read only" and not update post counts
 
 == To Do ==
 

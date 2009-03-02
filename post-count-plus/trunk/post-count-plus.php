@@ -5,7 +5,7 @@ Plugin URI:  http://bbpress.org/plugins/topic/83
 Description: An enhanced "user post count" with "custom titles" for topics and profiles, based on posts and membership, with cached results for faster pages. No template edits required.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 1.1.10
+Version: 1.1.11
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -15,7 +15,6 @@ Instructions:   install, activate, tinker with settings in admin menu
 */
 
 global $post_count_plus;
-add_action('bb_new_post', 'post_count_plus_update',200);
 if (!is_bb_feed()) {add_action( 'bb_init', 'post_count_plus_initialize');}
 
 if ((defined('BB_IS_ADMIN') && BB_IS_ADMIN) || !(strpos($_SERVER['REQUEST_URI'],"/bb-admin/")===false)) { // "stub" only load functions if in admin 
@@ -80,7 +79,7 @@ if ($user_id) {
 		
 		// bb_update_usermeta( $user_id, 'post_count', $posts);  // uses too many queries, we'll do it directly
 		// $bbdb->query("INSERT INTO $bbdb->usermeta  (user_id, meta_key, meta_value)  VALUES ('".$user_id."', 'post_count', '".$posts."') ");				
-		bb_update_meta( $user_id, "post_count", $posts, 'user' );
+		if (empty($post_count_plus['read_only'])) {bb_update_meta( $user_id, "post_count", $posts, 'user' );}
 	}
 }	
 if ($posts) {return  $posts;} else {return 0;}
@@ -198,6 +197,7 @@ function post_count_plus_initialize() {
 	if (!isset($post_count_plus)) {$post_count_plus = bb_get_option('post_count_plus');
 		if (!$post_count_plus) {
 		$post_count_plus['activate']=true;
+		$post_count_plus['read_only']=false;
 		$post_count_plus['wp_comments']=false;
 		$post_count_plus['post_count']=true;
 		$post_count_plus['join_date']=true;		
@@ -206,7 +206,9 @@ function post_count_plus_initialize() {
 		$post_count_plus['user_color']=true;
 		$post_count_plus['user_link']="Profile";
 		$post_count_plus['title_link']="Profile";
-		$post_count_plus['join_date_format']="M 'y";	
+		$post_count_plus['join_date_format']="M 'y";
+		$post_count_plus['additional_bbpress']="";
+		$post_count_plus['additional_wordpress']="";
 		$post_count_plus['style']=".post_count_plus {color:SlateGray; line-height:150%; white-space:nowrap;}\n.post_count_plus a {color:DarkCyan;}\n#thread .post li {clear:none;}";
 		$post_count_plus['custom_titles']=array(
 		"New Title",	"Minimum Posts", "Minimum Days", "Minimum Role", "Color",
@@ -227,6 +229,7 @@ function post_count_plus_initialize() {
 		$post_count_plus['custom_titles'][4]=__("Color");					
 		
 		$post_count_plus_label['activate']=__("Use features without template editing ?");
+		$post_count_plus_label['read_only']=__("Read Only - display but don't update ?");
 		$post_count_plus_label['wp_comments']=__("Include WordPress comment counts in post counts ?");
 		$post_count_plus_label['post_count']=__("Show post counts for users in topic pages ?");
 		$post_count_plus_label['join_date']=__("Show joined date for users in topic pages ?");
@@ -236,10 +239,13 @@ function post_count_plus_initialize() {
 		$post_count_plus_label['user_link']=__("Where should their USERNAME link to?");		
 		$post_count_plus_label['title_link']=__("Where should their TITLE link to?");
 		$post_count_plus_label['join_date_format']=__("Custom <a target=_blank href='http://php.net/date#function.date'>format</a> for user joined date:");
+		$post_count_plus_label['additional_bbpress']=__("Include additional bbPress post tables:");
+		$post_count_plus_label['additional_wordpress']=__("Include additional WordPress comment tables:");
 		$post_count_plus_label['style']=__("Custom style for post author info:");
 		$post_count_plus_label['custom_titles']=__("<h2>Custom Titles</h2>Enter any special titles given based upon number of posts, days of membership, and/or role.<br>Each field is optional, but at least one minimum is required.<br />");
 
 		$post_count_plus_type['activate']="binary";		
+		$post_count_plus_type['read_only']="binary";
 		$post_count_plus_type['wp_comments']="binary";
 		$post_count_plus_type['post_count']="binary";
 		$post_count_plus_type['join_date']="binary";				
@@ -249,9 +255,12 @@ function post_count_plus_initialize() {
 		$post_count_plus_type['user_link']="Profile,Author URL,Nothing";
 		$post_count_plus_type['title_link']="Profile,Author URL,Nothing";
 		$post_count_plus_type['join_date_format']="input";
+		$post_count_plus_type['additional_bbpress']="input";
+		$post_count_plus_type['additional_wordpress']="input";
 		$post_count_plus_type['style']="textarea";
 		$post_count_plus_type['custom_titles']="array,5,10";		
 	// }
+	if (empty($post_count_plus['read_only'])) {add_action('bb_new_post', 'post_count_plus_update',200);}
 	if ($post_count_plus['profile_insert']) {add_filter( 'get_profile_info_keys','post_count_plus_profile_key',200);}
 	if ($post_count_plus['activate']) {add_filter( 'post_author_title', 'post_count_plus_filter'); add_filter( 'post_author_title_link', 'post_count_plus_filter');}
 	if ($post_count_plus['style']) {add_action('bb_head', 'post_count_plus_add_css');}	

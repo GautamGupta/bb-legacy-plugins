@@ -5,7 +5,7 @@ Description:  Allows bbPress 0.9 to use WordPress 2.7 or 2.8 cookies during stan
 Plugin URI:  http://bbpress.org/plugins/topic/freshly-baked-cookies
 Author: _ck_
 Author URI: http://bbshowcase.org
-Version: 0.0.1
+Version: 0.0.2
 */ 
 
 define('LOGGED_IN_KEY',   'replace this with your WP key');	// get this from wp-config.php
@@ -13,7 +13,7 @@ define('LOGGED_IN_SALT', 'replace this');			// get this from http://your-site.co
 
 /*   stop editing here   */
 
-define('COOKIEHASH', md5($bb->wp_siteurl));					// if you set a custom COOKIEHASH for some reason, you'll have to edit this
+define('COOKIEHASH', md5(rtrim($bb->wp_siteurl, "/")));			// if you set a custom COOKIEHASH for some reason, you'll have to edit this
 define('LOGGED_IN_COOKIE', 'wordpress_logged_in_' . COOKIEHASH);	// you only have to edit this if you changed WordPress's cookie name
 
 /*   seriously, stop editing here   */

@@ -5,11 +5,11 @@ Description:  Allows the forum and members to award Reputation or "Karma" points
 Plugin URI:  http://bbpress.org/plugins/topic/97
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.5
+Version: 0.0.6
 
 license: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
-donate: http://amazon.com/paypage/P2FBORKDEFQIVM
+donate: http://bbshowcase.org/donate/
 
 to do:
 * ajax-ish behaviours
@@ -88,6 +88,7 @@ function bb_reputation($post_id=0) {
 global $bb_reputation;
 $post_id= intval(get_post_id( $post_id )); 	
 if ($post_id) {$user_id=get_post_author_id($post_id);} else {global $user; $user_id=$user->ID;}
+if (empty($user_id)) {return;}
 $user = bb_get_user( $user_id ); 
 $reputation=intval($user->bb_reputation);		
 if ($user_id && !isset($user->bb_reputation) && ($bb_reputation['points_per_post'] || $bb_reputation['points_per_topic'])) {
@@ -108,7 +109,7 @@ global $bb_reputation;
 if (!$bb_reputation['members_can_award'] || !bb_current_user_can($bb_reputation['member_award_role'])) {return false;}	// security checks
 $post_id= intval(get_post_id( $post_id )); 	
 if ($post_id) {$user_id=get_post_author_id($post_id);} else {global $user; $user_id=$user->ID;}	
-$reason=str_replace('|','-',stripslashes(substr(trim($reason),0,$bb_reputation['reason_length'])));
+$reason=strip_tags(str_replace('|','-',stripslashes(substr(trim($reason),0,$bb_reputation['reason_length']))));
 $from_id=bb_get_current_user_info( 'id' );
 if (!$from_id || !$user_id || !$reason || $user_id == $from_id) {return false;}		// can't do anything without both or if giving to themselves
 $user = bb_get_user( $user_id ); 
@@ -214,6 +215,7 @@ if (!$self) {	// I have no idea exactly why this is but apparently bb_profile_me
 
 elseif ($bb_reputation['history_profile'])  :		// we're in the profile tab, is it enabled?
 
+bb_send_headers();
 bb_get_header();
 ?>
 <h3 class="bbcrumb"><a href="<?php bb_option('uri'); ?>"><?php bb_option('name'); ?></a> &raquo; <a href="<?php echo get_user_profile_link($user->ID ).'">'.__("Profile"); ?></a> &raquo; <?php echo $bb_reputation['label']; ?></h3>
@@ -245,7 +247,7 @@ for ($offset=$rows-1; $offset>=0; $offset--) { ?>
 	echo __('on').' <a href="' . get_post_link($matches[$y+2] ) . '">&ldquo;' . get_topic_title($bb_post->topic_id) . '&rdquo;</a> ';
 	}
 	echo "<span style='white-space:nowrap'>".__('gave')." ".$matches[$y+3]." ".$bb_reputation['unit']." "; 
-	echo __('for')." ".$matches[$y+4]."</span>"; 
+	echo __('for')." ".strip_tags($matches[$y+4])."</span>"; 
 	?>
 </li>
 <?php } ?>

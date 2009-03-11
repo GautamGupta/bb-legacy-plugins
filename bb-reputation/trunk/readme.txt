@@ -2,9 +2,9 @@
 Tags: reputation, karma, points, cash, currency, bank, _ck_
 Contributors: _ck_
 Requires at least: 0.8.3
-Tested up to: trunk
+Tested up to: 0.9.x
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 This is a very early release for the adventurous. Allows members to award Reputation (or "Karma") points to other members for their posts. Can optionally be used as a pseudo currency (ie. "forum dollars").
 
@@ -46,7 +46,7 @@ This is a very early release for the adventurous. Allows members to award Reputa
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 
@@ -63,3 +63,7 @@ This is a very early release for the adventurous. Allows members to award Reputa
 = Version 0.0.3 (2008-09-06) =
 
 * compatibility fix for 1.0
+
+= Version 0.0.6 (2009-03-10) =
+
+* serious XSS fix - please update immediately - props mciarlo

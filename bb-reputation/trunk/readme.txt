@@ -8,9 +8,13 @@ Donate link: http://bbshowcase.org/donate/
 
 This is a very early release for the adventurous. Allows members to award Reputation (or "Karma") points to other members for their posts. Can optionally be used as a pseudo currency (ie. "forum dollars").
 
+PLEASE DO NOT USE VERSIONS BEFORE 0.0.6, UPDATE IMMEDIATELY
+
 == Description ==
 
 This is a very early release for the adventurous. Allows members to award Reputation (or "Karma") points to other members for their posts. Can optionally be used as a pseudo currency (ie. "forum dollars").
+
+PLEASE DO NOT USE VERSIONS BEFORE 0.0.6, UPDATE IMMEDIATELY
 
 == Installation ==
 

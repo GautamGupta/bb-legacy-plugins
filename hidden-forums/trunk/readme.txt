@@ -2,7 +2,7 @@
 Tags: hidden, hide, private, restrict, secret, forum,forums, _ck_
 Contributors: _ck_
 Requires at least: 0.9
-Tested up to: trunk
+Tested up to: 1.0 alpha 5
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 
@@ -61,6 +61,10 @@ Make selected forums completely hidden except to certain members or roles. Uses 
 = Version 0.0.4 (2008-09-05) =
 
 * fix to allow optional image as hidden forum indicator instead of just text
+
+= Version 0.0.5 (2009-03-12) =
+
+* fix for user favorites rss feed
 
 == To Do ==
 

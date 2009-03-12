@@ -76,7 +76,7 @@ if (!empty($hidden_forums_list)) {
 	$hidden_forums_list=implode(",",array_keys($hidden_forums_list));
  
 	$filters=array(	
-	'get_topic','get_thread','get_thread_post_ids',	
+	'get_forums','get_topic','get_thread','get_thread_post_ids',	
 	'get_latest_posts','get_latest_topics','get_latest_forum_posts',	
 	'get_recent_user_replies','get_recent_user_threads','get_user_favorites',
 	'get_sticky_topics','get_tagged_topics','get_tagged_topic_posts',	

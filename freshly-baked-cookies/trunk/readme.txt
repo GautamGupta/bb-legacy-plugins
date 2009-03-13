@@ -62,6 +62,10 @@ http://bbpress.org/forums/topic/wordpress-and-bbpress-integration-101
 
 * first public alpha release
 
+= Version 0.0.3 (2009-03-12) =
+
+* more complete WP cookie emulation with auth + logged_in cookies - props Txanny
+
 == To Do ==
 
 * admin menu

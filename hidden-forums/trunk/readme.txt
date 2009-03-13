@@ -36,6 +36,10 @@ Make selected forums completely hidden except to certain members or roles. Uses 
 
 * Please report this immediately. Are you using older plugins? Please let me know what the are. Please make sure if you are using "My Views" that it is at least version 0.1.1
 
+= Doesn't work ?! =
+
+* some people have reported problems when using  multiviews in the .htaccess file - switch to the rewrite rules method
+
 == License ==
 
 * CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
@@ -65,6 +69,10 @@ Make selected forums completely hidden except to certain members or roles. Uses 
 = Version 0.0.5 (2009-03-12) =
 
 * fix for user favorites rss feed
+
+= Version 0.0.6 (2009-03-12) =
+
+* experimental optional add-on for Hidden Forums to hide tags that belong to Hidden Forums
 
 == To Do ==
 

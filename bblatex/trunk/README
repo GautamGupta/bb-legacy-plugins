@@ -1,0 +1,85 @@
+Plugin Name: bbPress LaTeX
+Plugin URI: http://www.math.ntnu.no/~stacey/HowDidIDoThat/bbPress/bbPressLaTeX
+Description: Add LaTeX support to bbPress
+Version: 0.2
+Author: Andrew Stacey
+Author URI: http://www.math.ntnu.no/~stacey
+
+History:
+  Loosely based on the wordpress plugin 'easy LaTeX'
+   by Manoj Thulasidas (www.thulasidas.com)
+
+
+INSTALLATION:
+
+1. Unzip bbLaTeX.zip into the my-plugins directory of your bbPress
+    installation
+2. Go to the admin page and in the 'plugins' menu you should see a
+    submenu 'bbLaTeX configuration'.  Follow the instructions there.
+
+In slightly more detail, the plugin needs a cache to work.  The plugin will
+tell you what to do to get this cache, but the basic steps are:
+
+1. chmod 777 <directory containing bbLaTeX.php>
+2. Click on the 'create cache' directory
+3. chmod 755 <directory containing bbLaTeX.php>
+
+If you want to put the cache somewhere else, that's fine.  Just change the
+relevant option on the configuration page.
+
+REQUIREMENTS:
+
+php with the GD library compiled in.
+
+This script uses a public latex server so does not require latex to be
+installed on the local system.
+
+USAGE:
+
+The configuration panel gives several options for font size, colours, and so
+forth.  These should be self-explanatory.  Note that the background
+transparency works by setting one colour to be transparent so there can be
+"edge effects" round the text.  It is probably best to set the background to
+be white or black when using transparency.
+
+To use in posts, surround the mathematics by the appropriate tags and it will
+be converted into an image.  The image is cached so that the server only gets
+hit once per unique request.
+
+OTHER NOTES:
+
+The script actually translates the tags into an "internal standard", which is
+the dummy '<bblatex> .. </bblatex>' tag.  This means that changing the input
+tags later on does not change earlier posts - the mathematics is displayed
+exactly as it was before.  As well as this robustness, this makes it easier
+for other filters to ignore the mathematics (e.g. markdown can be easily told
+to ignore bblatex tags), and means that if the cache is lost then everything
+can be easily rebuilt.
+
+
+TO DO:
+
+* When editing a post, the mathematics is displayed as being between <bblatex>
+tags, this should probably be changed to the current tag.
+
+* Allow for easy switching from a latex server to, say, a mimetex server
+(currently requires editing the code).
+
+
+
+Copyright (C) 2009 Andrew Stacey
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+

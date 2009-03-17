@@ -74,6 +74,10 @@ Make selected forums completely hidden except to certain members or roles. Uses 
 
 * experimental optional add-on for Hidden Forums to hide tags that belong to Hidden Forums
 
+= Version 0.0.7 (2009-03-17) =
+
+* yet more workarounds for bbPress 1.0  (broken get_forum)
+
 == To Do ==
 
 * admin menu

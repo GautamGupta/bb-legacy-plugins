@@ -5,7 +5,7 @@ Description:  Make selected forums completely hidden except to certain members o
 Plugin URI:  http://bbpress.org/plugins/topic/105
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.6
+Version: 0.0.7
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -75,18 +75,20 @@ if (!empty($hidden_forums_list)) {
 	$hidden_forums_array=$hidden_forums_list;
 	$hidden_forums_list=implode(",",array_keys($hidden_forums_list));
  
-	$filters=array(	
-	'get_forum','get_forums','get_topic','get_thread','get_thread_post_ids',	
+	$filters=array(	// do not change filter order,  get_topic needs to be first
+	'get_topic','get_thread','get_thread_post_ids','get_forums',	
 	'get_latest_posts','get_latest_topics','get_latest_forum_posts',	
 	'get_recent_user_replies','get_recent_user_threads','get_user_favorites',
 	'get_sticky_topics','get_tagged_topics','get_tagged_topic_posts',	
 	'bb_recent_search','bb_relevant_search','bb_get_first_post','bb_is_first'	
-	);
+	);	
+	
 	if (defined('BACKPRESS_PATH')) { 	// bbPress 1.0 workaround, needs work
 		if (!is_topic()) {unset($filters[0]);} else {add_action('get_topic_where','hidden_forums_filter_once',20);}
 	}       			
-	foreach ($filters as $filter) {add_filter($filter.'_where','hidden_forums_filter');}
+	foreach ($filters as $filter) {add_filter($filter.'_where','hidden_forums_filter',20);}
 	foreach ($bb_views as $key=>$value) {add_action('bb_view_'.$key.'_where','hidden_forums_filter');}
+	add_filter('get_forum_where','hidden_forums_filter_and',20);	  // bbPress 1.0 is broken so AND must be forced manually
 }
 
 if (!empty($hidden_forums['label']) && $hidden_forums_list!=array_flip($hidden_forums['hidden_forums'])) {
@@ -99,10 +101,16 @@ if (!empty($hidden_forums['label']) && $hidden_forums_list!=array_flip($hidden_f
 function hidden_forums_filter($where='') {
 	global $hidden_forums_list; 
 	$prefix=""; if (strpos($where," t.")) {$prefix="t.";} elseif (strpos($where," p.")) {$prefix="p.";}
-	return $where.((empty($where)) ? " WHERE " : " AND ").$prefix."forum_id NOT IN ($hidden_forums_list) ";
+	return $where.(empty($where) ? " WHERE " : " AND ").$prefix."forum_id NOT IN ($hidden_forums_list) ";
 }
 
-function hidden_forums_filter_once($where='') {remove_filter('get_topic_where','hidden_forums_filter'); return $where;}	// 1.0 workaround
+function hidden_forums_filter_and($where='') {
+	global $hidden_forums_list; 
+	$prefix=""; if (strpos($where," t.")) {$prefix="t.";} elseif (strpos($where," p.")) {$prefix="p.";}
+	return $where." AND ".$prefix."forum_id NOT IN ($hidden_forums_list) ";
+}
+
+function hidden_forums_filter_once($where='') {remove_filter('get_topic_where','hidden_forums_filter',20); return $where;}	// 1.0 workaround
 
 function hidden_forums_label($title,$id) {
 	global $hidden_forums;

@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/subscribe-to-topic
 Description: Allows members to track and/or receive email notifications (instant, daily, weekly) for new posts on topics.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.2
+Version: 0.0.3
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -219,7 +219,7 @@ if ($high_id) {$bbdb->query("UPDATE subscribe_to_topic SET post=$high_id WHERE t
 }
 
 function stt_install() {
-global $bbdb;
+global $bbdb; 
 $bbdb->query("CREATE TABLE IF NOT EXISTS `subscribe_to_topic` (
 		`user` 	int(10)	 UNSIGNED NOT NULL default '0',
 		`topic` 	int(10)	 UNSIGNED NOT NULL default '0',		
@@ -237,7 +237,7 @@ function stt_add_profile_tab() {
 global $self, $subscribe_to_topic;
 if (!$self) {	// I have no idea exactly why this is but apparently bb_profile_menu action is called twice? bug?	
 	if ($subscribe_to_topic['public']) {$role=""; } else {$role="edit_user";}
-	add_profile_tab($subscribe_to_topic['tab'], $role, $role, __FILE__ );		
+	add_profile_tab($subscribe_to_topic['tab'], 'edit_favorites', $role, __FILE__ );		
 }		
 }
 

@@ -2,7 +2,7 @@
 Tags: email,notify,subscribe, _ck_
 Contributors: _ck_
 Requires at least: 0.9
-Tested up to: trunk
+Tested up to: 1.0 alpha 5
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 
@@ -52,6 +52,10 @@ but if it's a very large site you'll probably have to pay a whitelisting service
 = Version 0.0.2 (2009-01-05) =
 
 * bug fix for those who do not use pretty-permalinks
+
+= Version 0.0.3 (2009-03-20) =
+
+* bug fix for missing subscriptions tab for regular members
 
 == To Do ==
 

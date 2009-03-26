@@ -88,14 +88,17 @@ if (isset($_GET['user_text']))       {$user_text = $bbdb->escape(substr($_GET['u
 if (isset($_GET['user_status']))  {$user_status = $bbdb->escape(substr($_GET['user_status'],0,3));} else {$user_status="0";}
 if (isset($_GET['user_role']))      {$user_role = $bbdb->escape(substr($_GET['user_role'],0,30));} else {$user_role="";}
 if (isset($_GET['user_order']))   {$user_order = ($_GET['user_order']=="ASC") ? "ASC" : "DESC";} else {$user_order="DESC";}
+if (isset($_GET['no_posts']))       {$no_posts = intval($_GET['no_posts']);} else {$no_posts = 0;}
 if (isset($_GET['exact_match'])) {$exact_match = intval($_GET['exact_match']);} else {$exact_match = 0;}
 if (isset($_GET['per_page']))      {$per_page = intval($_GET['per_page']);} else {$per_page="20";} 
 $offset = (intval($page) -1) *  $per_page;  		// if (isset($_GET['page']))  {} else {$offset = 0;}
 
 $query="";
+
 if ($user_role) {	
-	$query.="LEFT JOIN $bbdb->usermeta ON ID=user_id WHERE (meta_key='$bbdb->prefix"."capabilities' AND meta_value LIKE '%:\"$user_role\";%' )";
+	$query.="LEFT JOIN $bbdb->usermeta as meta ON ID=meta.user_id WHERE (meta_key='$bbdb->prefix"."capabilities' AND meta_value LIKE '%:\"$user_role\";%' )";
 }
+
 if ($user_text) {	
 	if (empty($query)) {$query.=" WHERE ";} else {$query.=" AND ";}
 	$query.="(";
@@ -105,6 +108,16 @@ if ($user_text) {
 	$query.=" OR ";
 	$query.=($exact_match) ? " (user_email REGEXP '[[:<:]]".$user_text."[[:>:]]') " : " (user_email LIKE '%$user_text%') ";
 	$query.=")";
+}
+
+// users with no posts or comments
+if ($no_posts) {
+if (empty($query)) {$query.=" WHERE ";} else {$query.=" AND ";}
+$query.=" poster_id is NULL ";
+$query=" LEFT JOIN $bbdb->posts ON ID=poster_id ".$query;
+if (!empty($bb->wp_table_prefix)) {
+		$query="LEFT JOIN $bb->wp_table_prefix"."comments as comments ON ID=comments.user_id ".$query." AND comments.user_id is NULL ";		
+}
 }
 
 $query="FROM $bbdb->users ".$query;
@@ -170,17 +183,17 @@ $query="FROM $bbdb->users ".$query;
 </fieldset>
 */ ?>
 
-	<fieldset><legend>User Status &hellip;</legend>
+	<!-- fieldset><legend>User Status &hellip;</legend>
 		<select name="user_status" id="user-status">			
 			<option value="active" <?php echo ($user_status=="active") ? 'selected="selected"' : ''; ?>>Active</option>
 			<option value="deleted" <?php echo ($user_status=="deleted") ? 'selected="selected"' : ''; ?>>Deleted</option>			
 			<option value="all" <?php echo ($user_status=="all") ? 'selected="selected"' : ''; ?>>All</option>
 		</select>
-	</fieldset>
+	</fieldset -->
 
 	<fieldset><legend>User Role &hellip;</legend>
 		<select name="user_role" id="user-role">			
-			<option value="" <?php echo ($user_status=="any") ? 'selected="selected"' : ''; ?>>Any</option>
+			<option value="" <?php echo ($user_role=="any") ? 'selected="selected"' : ''; ?>>Any</option>
 			
 			<?php  global $bb_roles;  $roles=array_keys($bb_roles->role_names);
 			foreach ($roles as $role) {					
@@ -209,11 +222,15 @@ $query="FROM $bbdb->users ".$query;
 		</select>
 	</fieldset>
 
-	<fieldset><legend>Exact Match</legend>
-	<input type="hidden" name="plugin" value="mass_delete_users"  />
-	<span style="padding-left:1em;"><input style="height:1.4em;width:1.4em;" name="exact_match" id="exact-match" class="checkbox" type="checkbox" value="1" <?php echo ($exact_match) ? 'checked="checked"' : ''; ?> /></span>
+	<fieldset><legend>No Posts</legend>
+	<span style="padding-left:1em;"><input style="margin-top:0.4em; height:1.4em;width:1.4em;" name="no_posts" id="no-posts" class="checkbox" type="checkbox" value="1" <?php echo ($no_posts) ? 'checked="checked"' : ''; ?> /></span>
+	</fieldset>
+
+	<fieldset><legend>Exact Match</legend>	
+	<span style="padding-left:1em;"><input style="margin-top:0.4em; height:1.4em;width:1.4em;" name="exact_match" id="exact-match" class="checkbox" type="checkbox" value="1" <?php echo ($exact_match) ? 'checked="checked"' : ''; ?> /></span>
     	<span style="padding-left:1em;" class=submit><input class=submit type="submit" name="submit" value="<?php _e('Search') ?> &raquo;"  /></span>
     	<span style="padding-left:1em;" class=submit><input onclick="window.location='<?php echo bb_get_option('uri') . 'bb-admin/' . bb_get_admin_tab_link("mass_delete_users"); ?>'" class=submit type="reset" name="reset" value="<?php _e('Clear') ?>"  /></span>
+    	<input type="hidden" name="plugin" value="mass_delete_users"  />
     	</fieldset>
     
  </form>

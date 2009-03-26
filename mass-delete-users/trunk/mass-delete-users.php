@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/mass-delete-users
 Description:  Allows administrators to physically delete multiple users at once from the bbPress / WordPress database based on a variety of search attributes.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.2
+Version: 0.0.3
 */
 
 if ((defined('BB_IS_ADMIN') && BB_IS_ADMIN) || !(strpos($_SERVER['REQUEST_URI'],"/bb-admin/")===false)) { // "stub" only load functions if in admin 	

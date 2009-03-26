@@ -48,6 +48,10 @@ Set user to INACTIVE instead to prevent re-use of the username.
 
 * alpha release for public testing
 
+= Version 0.0.3 (2009-03-25) =
+
+* now can filter by users with no forum posts or WP comments
+
 == To Do ==
 
 * backup option with undelete ability

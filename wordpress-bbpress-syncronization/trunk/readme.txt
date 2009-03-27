@@ -28,13 +28,14 @@ DONE:
 *   Settings page
 *   Syncronizing plugin status in WordPress and bbPress
 *   bbPress forum selection
+*   Showing post excerpt in bbPress topic beginning
+*   Optional quoting first post in topic
 
 TODO:
 
 *   Catch post deletion in WordPress
 *   Catch topic deletion in bbPress
 *   WordPress anonymous user info sycronization
-*   Showing post excerpt in bbPress topic beginning
 
 YOU MAY HELP:
 

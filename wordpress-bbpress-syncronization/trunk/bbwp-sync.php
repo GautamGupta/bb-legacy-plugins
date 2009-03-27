@@ -24,7 +24,6 @@ if (substr($_SERVER['PHP_SELF'], -13) != 'bbwp-sync.php')
 } else
 {
 	// listening commands from WordPress part
-	error_log(11111111111);
 	bbwp_listener();
 }
 
@@ -135,10 +134,9 @@ function create_bb_topic()
 	$topic_id = bb_insert_topic(array('topic_title' => stripslashes($_POST['topic']), 'forum_id' => bb_get_option('bbwp_forum_id'), 'tags' => stripslashes($_POST['tags'])));
 	$post_id = bb_insert_post(array('topic_id' => $topic_id, 'post_text' => stripslashes($_POST['post_content'])));
 	bb_delete_post($post_id, status_wp2bb($_POST['comment_approved']));
-	// TODO: catch result!
-	$result = add_table_item($_POST["post_id"], $_POST["comment_id"], $topic_id, $post_id);
+	$result = add_table_item($_POST["post_id"], 0, $topic_id, $post_id);
 	$data = serialize(array("topic_id" => $topic_id, "post_id" => $post_id, "result" => $result));
-	echo "$data";
+	echo $data;
 }
 
 function continue_bb_topic()
@@ -148,14 +146,19 @@ function continue_bb_topic()
 	bb_delete_post($post_id, status_wp2bb($_POST['comment_approved']));
 	$result = add_table_item($_POST['post_id'], $_POST['comment_id'], $row['bb_topic_id'], $post_id);
 	$data = serialize(array("topic_id" => $row['bb_topic_id'], "post_id" => $post_id, "result" => $result));
-	echo "$data";
+	echo $data;
 }
 
 function edit_bb_post()
 {
-	$row = get_table_item('wp_comment_id', $_POST["comment_id"]);
+	if (isset($_POST['get_row_by']) && $_POST['get_row_by'] == 'wp_post')
+		$row = get_table_item('wp_post_id', $_POST["post_id"]);
+	else
+		$row = get_table_item('wp_comment_id', $_POST["comment_id"]);
 	// FIXME: delete <p> from beginning and </p> from the end
 	$_POST['post_content'] = str_replace(array('<p>', '</p>'), '', $_POST['post_content']);
+	// remove filters to save formatting
+	remove_all_filters('pre_post');
 	bb_insert_post(array('post_text' => $_POST['post_content'], 'post_id' => $row['bb_post_id'], 'topic_id' => $row['bb_topic_id']));
 	bb_delete_post($row['bb_post_id'], status_wp2bb($_POST['comment_approved']));
 }
@@ -430,7 +433,7 @@ function bbwp_options()
 		</div>
 		</div>
 		<div>
-		<label for="anonymous_user">
+		<label for="enable_plugin">
 			<?php _e('Enable plugin'); ?>
 		</label>
 		<div>

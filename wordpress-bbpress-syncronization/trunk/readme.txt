@@ -1,6 +1,8 @@
 === WordPress-bbPress syncronization ===
 Contributors: bobrik
 Requires at least: 1.0alpha6
+Tested up to: 1.0alpha6
+Stable tag: 0.2
 
 Sync your WordPress comments to bbPress forum and back.
 
@@ -44,3 +46,10 @@ YOU MAY HELP:
 *   Bug reporting
 
 Made for news.vitebsk.cc
+
+== Changelog ==
+
+Version 0.2 (27.03.2008):
+
+*   Showing post excerpt in bbPress topic beginning
+*   Optional quoting first post in topic

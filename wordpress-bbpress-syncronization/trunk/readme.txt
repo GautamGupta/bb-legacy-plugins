@@ -2,7 +2,7 @@
 Contributors: bobrik
 Requires at least: 1.0alpha6
 Tested up to: 1.0alpha6
-Stable tag: 0.2
+Stable tag: 0.3
 
 Sync your WordPress comments to bbPress forum and back.
 
@@ -48,6 +48,10 @@ YOU MAY HELP:
 Made for news.vitebsk.cc
 
 == Changelog ==
+
+Version 0.22 (28.03.2008):
+
+*   Fixed broken links inserting in first topic post
 
 Version 0.2 (27.03.2008):
 

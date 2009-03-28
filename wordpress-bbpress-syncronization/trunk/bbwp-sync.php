@@ -4,7 +4,7 @@ Plugin Name: bbPress-WordPress syncronization
 Plugin URI: http://bobrik.name
 Description: Sync your WordPress comments to bbPress forum and back.
 Author: Ivan Babrou <ibobrik@gmail.com>
-Version: 0.2
+Version: 0.3
 Author URI: http://bobrik.name
 */
 
@@ -132,7 +132,8 @@ function bbwp_listener()
 function create_bb_topic()
 {
 	$topic_id = bb_insert_topic(array('topic_title' => stripslashes($_POST['topic']), 'forum_id' => bb_get_option('bbwp_forum_id'), 'tags' => stripslashes($_POST['tags'])));
-	$post_id = bb_insert_post(array('topic_id' => $topic_id, 'post_text' => stripslashes($_POST['post_content'])));
+	remove_all_filters('pre_post');
+	$post_id = bb_insert_post(array('topic_id' => $topic_id, 'post_text' => str_replace('\"', '"', $_POST['post_content'])));
 	bb_delete_post($post_id, status_wp2bb($_POST['comment_approved']));
 	$result = add_table_item($_POST["post_id"], 0, $topic_id, $post_id);
 	$data = serialize(array("topic_id" => $topic_id, "post_id" => $post_id, "result" => $result));
@@ -159,7 +160,7 @@ function edit_bb_post()
 	$_POST['post_content'] = str_replace(array('<p>', '</p>'), '', $_POST['post_content']);
 	// remove filters to save formatting
 	remove_all_filters('pre_post');
-	bb_insert_post(array('post_text' => $_POST['post_content'], 'post_id' => $row['bb_post_id'], 'topic_id' => $row['bb_topic_id']));
+	bb_insert_post(array('post_text' => str_replace('\"', '"', $_POST['post_content']), 'post_id' => $row['bb_post_id'], 'topic_id' => $row['bb_topic_id']));
 	bb_delete_post($row['bb_post_id'], status_wp2bb($_POST['comment_approved']));
 }
 

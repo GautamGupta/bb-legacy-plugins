@@ -24,7 +24,7 @@ note the space between the quotes
 
 * Install, activate plugin
 
-* To rebuild the list of languages in the dropdown you must deactivate/reactivate the plugin
+* To rebuild the list of languages, deactivate/reactivate the plugin or put `?bb_language_switcher_update` on your URL
 
 == Frequently Asked Questions ==
 
@@ -47,4 +47,10 @@ note the space between the quotes
 = Version 0.0.1 (2009-03-27) =
 
 *   first public alpha release
+
+= Version 0.0.2 (2009-03-28) =
+
+*   sort languages alphabetically
+*   show 2-letter country code next to language name if available
+*   optional URL to rebuild language list in addition to activation
 

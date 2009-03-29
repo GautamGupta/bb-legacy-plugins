@@ -3,32 +3,27 @@
 Plugin Name: bbPress Language Switcher
 Plugin URI: http://bbpress.org/plugins/topic/bbpress-language-switcher
 Description: Allows any user (guest or member) to select a different bbPress language for templates.
-Version: 0.0.2
+Version: 0.0.3
 Author: _ck_
 Author URI:  http://bbshowcase.org
 Donate: http://bbshowcase.org/donate/
 */ 
-/*
-1. You MUST change in your bb-config.php :  define('BBLANG', ' ');  
-note the space betweent the quotes - if you do not already have an alternate language set.
 
-2. Put .mo language files into  bb-includes/languages/   
-or define your own path with:  define('BB_LANG_DIR', '/your-custom-path/');  
-
-3. Place dropdown anywhere you'd like via:  `<?php do_action('bb_language_switcher',''); ?>`
-
-4. To rebuild the list of languages in the dropdown, deactivate/reactivate the plugin or put ?bb_language_switcher_update on your URL
-
-5. Users must have cookies enabled for language switch to work
-*/
+define('BB_LANG_USE_FILE_META',false);	// change to true to scan inside of .mo files for language name, set to 'only' or 'force' to ONLY use file meta
 
 /*  stop editing here  */
 
 bb_language_switcher_set_cookie();
 add_filter('locale', 'bb_language_switcher_filter');
 add_action('bb_language_switcher','bb_language_switcher');
-bb_register_activation_hook(str_replace(array(str_replace("/","\\",BB_PLUGIN_DIR),str_replace("/","\\",BB_CORE_PLUGIN_DIR)),array("user#","core#"),__FILE__), 'bb_language_switcher_update');
-if (isset($_GET['bb_language_switcher_update'])) {add_action('bb_init','bb_language_switcher_update');}
+
+// admin hooks
+if (defined('BB_IS_ADMIN') && BB_IS_ADMIN && ((isset($_GET['name']) && strpos(strtolower($_GET['name']),"language+switcher")) || (isset($_GET['plugin']) && strpos($_GET['plugin'],basename(__FILE__)) ))) {
+	@require_once("bb-language-switcher-admin.php");	
+	bb_register_activation_hook(str_replace(array(str_replace("/","\\",BB_PLUGIN_DIR),str_replace("/","\\",BB_CORE_PLUGIN_DIR)),array("user#","core#"),__FILE__), 'bb_language_switcher_update');
+}
+if (isset($_GET['bb_language_switcher_update'])) {require_once("bb-language-switcher-admin.php"); add_action('bb_init','bb_language_switcher_update');}
+if (isset($_GET['bb_language_switcher_debug'])) {require_once("bb-language-switcher-admin.php"); add_action('bb_init','bb_language_switcher_debug');}
 
 function bb_language_switcher_filter($locale='') {if (!empty($_COOKIE['bblang_'.BB_HASH])) {$locale=bb_language_switcher_get_cookie();} return $locale;}
 
@@ -59,32 +54,6 @@ function bb_language_switcher($ignore='') {				// builds and displays the langua
 	}
 	$output.="</select></span>\n";
 	echo $output;
-}
-
-function bb_language_switcher_update() {		// reads the .mo files and looks for the formal language name automagically
-	if (!bb_current_user_can('administrate')) {return;}
-	$languages=bb_glob(BB_LANG_DIR.'*.mo');
-	foreach ($languages as $language) {	
-		unset($match); $content="";
-		$handle = fopen($language, "rb");
-		while (!feof($handle)) {
-			$content.=fread($handle, 8192);
-			if (preg_match("/X\-Poedit\-Language\:(.+?)\n/i",$content,$match)) {continue;}	// language name in English from poedit meta data
-			if (strlen($content)>81920) {$content=substr($content,-8192);}
-		}		
-		unset($content);
-		fclose($handle);
-		if (!empty($match[1])) {
-			preg_match("/.*[\/](.+?)\.mo$/i",$language,$lang);		// filename
-			$lang=trim($lang[1]); if (strlen($lang)==5) {$cn=" (".substr($lang,-2).") ";} else {$cn="";}
-			$list[$lang]=trim($match[1]).$cn;
-		}
-	}	
-if (!empty($list)) {
-	$list['']="English";
-	asort($list); 
-	bb_update_option('bb_language_switcher',$list);
-}	
 }
 
 ?>

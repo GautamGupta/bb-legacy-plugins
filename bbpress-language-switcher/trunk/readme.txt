@@ -1,5 +1,5 @@
 === bbPress Language Switcher  ===
-Tags: _ck_, language, i18n, i10n, internationalization, translate, translation, mo, po, poedit
+Tags: _ck_, language, i18n, L10n, internationalization, translate, translation, mo, po, poedit
 Contributors: _ck_
 Requires at least: 0.9
 Tested up to: 1.0 alpha 5
@@ -24,7 +24,7 @@ note the space between the quotes
 
 * Install, activate plugin
 
-* To rebuild the list of languages, deactivate/reactivate the plugin or put `?bb_language_switcher_update` on your URL
+* To rebuild the list of languages, either deactivate/reactivate the plugin or add to your URL `?bb_language_switcher_update`
 
 == Frequently Asked Questions ==
 
@@ -33,6 +33,13 @@ note the space between the quotes
 * You can define your own custom path to .mo files with:  `define('BB_LANG_DIR', '/your-custom-path/');`  
 
 * To rebuild the list of languages in the dropdown you must deactivate/reactivate the plugin
+
+* To see a plain list of processed languages, add to your URL `?bb_language_switcher_debug`
+
+* You can force or disable file scan by editing near the top of the plugin and changing 
+ define('BB_LANG_USE_FILE_META',false);	
+ change to true to scan inside of .mo files for language name, 
+ set to 'only' or 'force' to ONLY use file meta
 
 == License ==
 
@@ -54,3 +61,8 @@ note the space between the quotes
 *   show 2-letter country code next to language name if available
 *   optional URL to rebuild language list in addition to activation
 
+= Version 0.0.3 (2009-03-29) =
+
+*   use list of language codes as primary lookup (iso639)
+*   debug mode for admin
+*   externalized admin functions

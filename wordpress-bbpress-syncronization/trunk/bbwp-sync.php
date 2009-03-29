@@ -156,6 +156,8 @@ function edit_bb_post()
 		$row = get_table_item('wp_post_id', $_POST["post_id"]);
 	else
 		$row = get_table_item('wp_comment_id', $_POST["comment_id"]);
+	// updating topic title
+	bb_insert_topic(array('topic_title' => $_POST['topic_title'], 'topic_id' => $row['bb_topic_id']));
 	// FIXME: delete <p> from beginning and </p> from the end
 	$_POST['post_content'] = str_replace(array('<p>', '</p>'), '', $_POST['post_content']);
 	// remove filters to save formatting

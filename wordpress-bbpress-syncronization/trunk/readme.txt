@@ -1,5 +1,6 @@
 === WordPress-bbPress syncronization ===
 Contributors: bobrik
+Tags: bbPress, post, comment, integration, forum
 Requires at least: 1.0alpha6
 Tested up to: 1.0alpha6
 Stable tag: 0.3
@@ -23,7 +24,7 @@ DONE:
 
 *   Creating topic for new comments on post and continuing conversation
 *   Mirroring comment/forum post changes WordPress to bbPress and back
-*   Mirroring comment/forum post status (spam, unapproved, apprved)
+*   Mirroring comment/forum post status (spam, unapproved, approved)
 *   Anonymous comment mirroring
 *   Syncronizing conversation status (open or closed)
 *   Using secret key authorization between parts
@@ -49,7 +50,11 @@ Made for news.vitebsk.cc
 
 == Changelog ==
 
-Version 0.22 (28.03.2008):
+Version 0.4 (dd.mm.yyyy):
+
+*   Updating topic title with post title updating
+
+Version 0.3 (28.03.2008):
 
 *   Fixed broken links inserting in first topic post
 

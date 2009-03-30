@@ -3,10 +3,10 @@
 Plugin Name: Super Search
 Plugin URI:  http://bbpress.org/plugins/topic/super-search
 Description:  radically improves the search in bbPress with many advanced options
-Version: 0.0.2
+Version: 0.0.3
 Author: _ck_
 Author URI: http://bbshowcase.org
-Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate: http://bbshowcase.org/donate/
 */ 
 
 add_action( 'do_search', 'super_search_init');

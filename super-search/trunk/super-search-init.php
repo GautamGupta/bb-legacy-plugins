@@ -176,7 +176,7 @@ endforeach; endif;
 <?php  
 	echo paginate_links( array(	
 	'base' => preg_replace('![&?]page=[0-9]+!', '',$_SERVER['REQUEST_URI'].'%_%'),
-	'format' => '&page=%#%','total' => ceil($total/bb_get_option('page_topics')),'current' => $page,'add_args' => array() ));
+	'format' => '&page=%#%','total' => ceil($total/bb_get_option('page_topics')),'current' => $page,'add_args' => false ));
 ?>
 </div>
 
@@ -344,7 +344,7 @@ if ($SSrequest['regex']) {
 
 $search=" ".stripslashes($ss)." ";
 
-$search=preg_replace('/[^a-zA-Z0-9-\s\*\+\-\'\"]/', '', $search); 		// strip punctuation - todo: check for regex option and leave alone, also: foreign languages?
+// $search=preg_replace('/[^a-zA-Z0-9-\s\*\+\-\'\"]/', '', $search); 		// strip punctuation - todo: check for regex option and leave alone, also: foreign languages?
 
 preg_match_all('/( AND | NOT | OR | \+| \-|)"([^"]+?)"/smU',$search, $phrases); // [0]=full match [1]=prefix [2]=phrases without quotes
 
@@ -383,7 +383,8 @@ if ($COLLATE) {$plain=preg_replace("/$COLLATE/","",$plain);}
 $plain=preg_replace("/post\_text[ ]+/","",$plain);
 $plain=preg_replace("/LIKE[ ]+\'\%(.+?)\%\'/"," $1 ",$plain);
 $plain=preg_replace("/AND[ ](NOT[ ]+)?+REGEXP[ ]+\'.+?\'\)/","",$plain);
-$plain=preg_replace("/[^a-z0-9*\'\" ]+?/i","",$plain);
+// $plain=preg_replace("/[^a-z0-9*\'\" ]+?/i","",$plain);	// punctuation cleanup
+$plain=preg_replace("/[\(\)]+?/i","",$plain);
 } // end regex check
 
 echo '<h2 class="indent">'.__('Search for').': <font color="blue">'.wp_specialchars($plain).'</font></h2>';

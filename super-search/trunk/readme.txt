@@ -2,7 +2,7 @@
 Tags: search, find, google, _ck_
 Contributors: _ck_
 Requires at least: 0.9
-Tested up to: trunk
+Tested up to: 1.0 alpha 5
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 
@@ -50,6 +50,10 @@ Adds Google-like search ability to your bbPress forum, with many advanced option
 = Version 0.0.2 (2008-12-07) =
 
 *   First public alpha release for testing and feedback.
+
+= Version 0.0.3 (2009-03-29) =
+
+*   Don't strip all non A-Z to allow non-english languages to work - may need more testing
 
 == To Do ==
 

@@ -17,12 +17,14 @@ Allows any user (guest or member) to select a different bbPress language for tem
 * Place dropdown anywhere you'd like in templates via:  `<?php do_action('bb_language_switcher',''); ?>`
 
 * If you do not already have an alternate language set,
-You MUST change in your bb-config.php :  `define('BBLANG', ' ');` 
+you MUST change in your bb-config.php :  `define('BB_LANG', ' ');` 
 note the space between the quotes
 
-* Put any .mo language files into  `bb-includes/languages/`
+* bbpress 0.9 - put any .mo language files into  `bb-includes/languages/`  
 
-* Install, activate plugin
+* bbPress 1.0 - put any .mo language files into  `my-languages/` 
+
+* Copy `bb-language-switcher/` directory to `my-plugins/`  and activate plugin
 
 * To rebuild the list of languages, either deactivate/reactivate the plugin or add to your URL `?bb_language_switcher_update`
 
@@ -66,3 +68,7 @@ note the space between the quotes
 *   use list of language codes as primary lookup (iso639)
 *   debug mode for admin
 *   externalized admin functions
+
+= Version 0.0.4 (2009-03-30) =
+
+*   update to BB_LANG from BBLANG (deprecated) and some code cleanup

@@ -276,7 +276,7 @@ function add_wp_comment($post, $wp_post_id)
 {
 	$request = array(
 		'action' => 'add_comment',
-		'post_text' => $post->post_text,
+		'post_text' => apply_filters('post_text', $post->post_text),
 		'post_id' => $post->post_id,
 		'post_status' => $post->post_status,
 		'topic_id' => $post->topic_id,
@@ -293,7 +293,7 @@ function edit_wp_comment($post, $comment_id)
 	global $bbdb;
 	$request = array(
 		'action' => 'edit_comment',
-		'post_text' => $bbdb->get_var("SELECT post_text FROM ".$bbdb->prefix."posts WHERE post_id = ".$post->post_id),
+		'post_text' => apply_filters('post_text', $bbdb->get_var("SELECT post_text FROM ".$bbdb->prefix."posts WHERE post_id = ".$post->post_id)),
 		'post_status' => $bbdb->get_var("SELECT post_status FROM ".$bbdb->prefix."posts WHERE post_id = ".$post->post_id),
 		'comment_id' => $comment_id,
 	);
@@ -537,6 +537,9 @@ function check_bb_settings()
 		return 3; // forum id not found;
 	if (!bb_get_user(bb_get_option('bbwp_anonymous_user_id')))
 		return 4; // anonymous user id not found
+	$active_plugins = $bbdb->get_var('SELECT meta_value FROM '.$bbdb->prefix.'meta WHERE object_type = "bb_option" AND meta_key = "active_plugins"');
+	if (strpos($active_plugins, 'wordpress-bbpress-syncronization/bbwp-sync.php') === false)
+		return 5; // bbpress part not activated
 	return 0; // everything is ok
 }
 
@@ -552,6 +555,8 @@ function bb_status_error($code)
 		return __('Invalid forum id');
 	elseif ($code == 4)
 		return __('Invalid anonymous user id');
+	elseif ($code == 5)
+		return __('bbPress part not activated');
 }
 
 function set_wp_plugin_status($status)

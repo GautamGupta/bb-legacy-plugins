@@ -53,6 +53,10 @@ Made for news.vitebsk.cc
 Version 0.4 (dd.mm.yyyy):
 
 *   Updating topic title with post title updating
+*   Checking for plugin activity state
+*   Applying filters before syncronization, you may widely use plugins
+*   New post option, now you may switch comment syncronization on/off for post
+*   Variuos bugfixes
 
 Version 0.3 (28.03.2008):
 

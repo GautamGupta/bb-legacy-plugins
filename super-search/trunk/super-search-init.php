@@ -225,7 +225,7 @@ if (isset($SSrequest[$name])) {
 		if ((is_array($SSrequest[$name]) && $value && in_array($value,$SSrequest[$name]))  || (!is_array($SSrequest[$name]) &&  $value==$SSrequest[$name])) {
 			$output.= ($SuperSearch[$name][1]=="select") ? 'selected' : ' checked ';
 		} 
-	} else {$output.=' value="'.htmlentities(stripslashes($SSrequest[$name]), ENT_QUOTES).'" ';}		//search bar 		// todo: verifiy allowed values	
+	} else {$output.=' value="'.wp_specialchars( stripslashes($SSrequest[$name]), true).'" ';}		//search bar 		// todo: verifiy allowed values	
 } else  {
 	if ($value) {$output.=' value="'.addslashes($value).'" ';}
 	else {$output.=' value="'.addslashes($SuperSearch[$name][3]).'" ';}
@@ -384,7 +384,7 @@ $plain=preg_replace("/post\_text[ ]+/","",$plain);
 $plain=preg_replace("/LIKE[ ]+\'\%(.+?)\%\'/"," $1 ",$plain);
 $plain=preg_replace("/AND[ ](NOT[ ]+)?+REGEXP[ ]+\'.+?\'\)/","",$plain);
 // $plain=preg_replace("/[^a-z0-9*\'\" ]+?/i","",$plain);	// punctuation cleanup
-$plain=preg_replace("/[\(\)]+?/i","",$plain);
+$plain=stripslashes(preg_replace("/[\(\)]+?/i","",$plain));
 } // end regex check
 
 echo '<h2 class="indent">'.__('Search for').': <font color="blue">'.wp_specialchars($plain).'</font></h2>';

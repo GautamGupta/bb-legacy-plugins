@@ -3,13 +3,15 @@ Contributors: bobrik
 Tags: bbPress, post, comment, integration, forum
 Requires at least: 1.0alpha6
 Tested up to: 1.0alpha6
-Stable tag: 0.3
+Stable tag: 0.4
 
 Sync your WordPress comments to bbPress forum and back.
 
 == Description ==
 
 THIS IS TWO PARTS PLUGIN! YOU NEED TO SET UP SAME PLUGIN FOR BBPRESS TOO!
+
+Please install latest versions of both parts!
 
 When you post comment to WordPress it automatically mirroring in bbPress and back.
 Please note, only beta now. See below how you can help.
@@ -25,6 +27,7 @@ DONE:
 *   Creating topic for new comments on post and continuing conversation
 *   Mirroring comment/forum post changes WordPress to bbPress and back
 *   Mirroring comment/forum post status (spam, unapproved, approved)
+*   Per-post enable/disable for comment syncronization
 *   Anonymous comment mirroring
 *   Syncronizing conversation status (open or closed)
 *   Using secret key authorization between parts
@@ -33,6 +36,7 @@ DONE:
 *   bbPress forum selection
 *   Showing post excerpt in bbPress topic beginning
 *   Optional quoting first post in topic
+*   Correct displaying even you use markup plugins
 
 TODO:
 
@@ -50,7 +54,7 @@ Made for news.vitebsk.cc
 
 == Changelog ==
 
-Version 0.4 (dd.mm.yyyy):
+Version 0.4 (31.04.2008):
 
 *   Updating topic title with post title updating
 *   Checking for plugin activity state

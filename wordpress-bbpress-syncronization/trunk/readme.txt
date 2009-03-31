@@ -3,13 +3,13 @@ Contributors: bobrik
 Tags: bbPress, post, comment, integration, forum
 Requires at least: 1.0alpha6
 Tested up to: 1.0alpha6
-Stable tag: 0.4
+Stable tag: 0.4.1
 
 Sync your WordPress comments to bbPress forum and back.
 
 == Description ==
 
-THIS IS TWO PARTS PLUGIN! YOU NEED TO SET UP SAME PLUGIN FOR BBPRESS TOO!
+**THIS IS TWO PARTS PLUGIN! YOU NEED TO SET UP SAME PLUGIN FOR BBPRESS TOO!**
 
 Please install latest versions of both parts!
 
@@ -21,6 +21,10 @@ REQUIREMENTS:
 *   php-curl module must be installed (may be changed in next versions)
 *   WordPress user database must be integrated with bbPress
 *   Plugin must be installed and correctly configured in both systems
+
+NOTES:
+
+*   Please install plugin into **my-plugins** directory, **not bb-plugins**
 
 DONE:
 
@@ -53,6 +57,12 @@ YOU MAY HELP:
 Made for news.vitebsk.cc
 
 == Changelog ==
+
+Version 0.4.1 (31.04.2008):
+
+*   Added option for default comments syncronization status setting
+*   Fixed bug with incorrect sycronization
+*   Fixed bug with escaping html codes in syncronization
 
 Version 0.4 (31.04.2008):
 

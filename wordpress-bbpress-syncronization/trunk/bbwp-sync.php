@@ -4,7 +4,7 @@ Plugin Name: bbPress-WordPress syncronization
 Plugin URI: http://bobrik.name
 Description: Sync your WordPress comments to bbPress forum and back.
 Author: Ivan Babrou <ibobrik@gmail.com>
-Version: 0.4
+Version: 0.4.1
 Author URI: http://bobrik.name
 */
 
@@ -129,11 +129,21 @@ function bbwp_listener()
 	}
 }
 
+function bbwp_do_sync()
+{
+	if (bb_get_option('bbwp_plugin_status') != 'enabled')
+		return false;
+	global $bbwp_plugin;
+	if (!$bbwp_plugin)
+		return false;
+	return true;
+}
+
 function create_bb_topic()
 {
 	$topic_id = bb_insert_topic(array('topic_title' => stripslashes($_POST['topic']), 'forum_id' => bb_get_option('bbwp_forum_id'), 'tags' => stripslashes($_POST['tags'])));
 	remove_all_filters('pre_post');
-	$post_id = bb_insert_post(array('topic_id' => $topic_id, 'post_text' => str_replace('\"', '"', $_POST['post_content'])));
+	$post_id = bb_insert_post(array('topic_id' => $topic_id, 'post_text' => stripslashes($_POST['post_content'])));
 	bb_delete_post($post_id, status_wp2bb($_POST['comment_approved']));
 	$result = add_table_item($_POST["post_id"], 0, $topic_id, $post_id);
 	$data = serialize(array("topic_id" => $topic_id, "post_id" => $post_id, "result" => $result));
@@ -143,6 +153,7 @@ function create_bb_topic()
 function continue_bb_topic()
 {
 	$row = get_table_item('wp_post_id', $_POST["post_id"]);
+	remove_all_filters('pre_post');
 	$post_id = bb_insert_post(array("topic_id" => $row['bb_topic_id'], "post_text" => stripslashes($_POST["post_content"])));
 	bb_delete_post($post_id, status_wp2bb($_POST['comment_approved']));
 	$result = add_table_item($_POST['post_id'], $_POST['comment_id'], $row['bb_topic_id'], $post_id);
@@ -159,11 +170,9 @@ function edit_bb_post()
 	// updating topic title
 	if (isset($_POST['topic_title']))
 		bb_insert_topic(array('topic_title' => $_POST['topic_title'], 'topic_id' => $row['bb_topic_id']));
-	// FIXME: delete <p> from beginning and </p> from the end
-	$_POST['post_content'] = str_replace(array('<p>', '</p>'), '', $_POST['post_content']);
 	// remove filters to save formatting
 	remove_all_filters('pre_post');
-	bb_insert_post(array('post_text' => str_replace('\"', '"', $_POST['post_content']), 'post_id' => $row['bb_post_id'], 'topic_id' => $row['bb_topic_id']));
+	bb_insert_post(array('post_text' => stripslashes($_POST['post_content']), 'post_id' => $row['bb_post_id'], 'topic_id' => $row['bb_topic_id']));
 	bb_delete_post($row['bb_post_id'], status_wp2bb($_POST['comment_approved']));
 }
 
@@ -234,15 +243,8 @@ function detele_talbe_item($field, $value)
 
 function afteredit($id)
 {
-	if (bb_get_option('bbwp_plugin_status') != 'enabled')
+	if (!bbwp_do_sync())
 		return;
-	// error_log("bbpress: afteredit");
-	global $bbwp_plugin;
-	if (!$bbwp_plugin)
-	{
-		// we don't need endless loop ;)
-		return;
-	}
 	$post = bb_get_post($id);
 	$row = get_table_item('bb_post_id', $post->post_id);
 	if ($row)
@@ -254,15 +256,8 @@ function afteredit($id)
 
 function afterpost($id)
 {
-	if (bb_get_option('bbwp_plugin_status') != 'enabled')
+	if (!bbwp_do_sync())
 		return;
-	// error_log("bbpress: afterpost");
-	global $bbwp_plugin;
-	if (!$bbwp_plugin)
-	{
-		// we don't need endless loop ;)
-		return;
-	}
 	$post = bb_get_post($id);
 	$row = get_table_item('bb_topic_id', $post->topic_id);
 	if ($row)
@@ -302,15 +297,8 @@ function edit_wp_comment($post, $comment_id)
 
 function afterclosing($id)
 {
-	if (bb_get_option('bbwp_plugin_status') != 'enabled')
+	if (!bbwp_do_sync())
 		return;
-	// error_log("bbpress: afterclosing");
-	global $bbwp_plugin;
-	if (!$bbwp_plugin)
-	{
-		// we don't need endless loop ;)
-		return;
-	}
 	global $bbdb;
 	$wp_post_id = $bbdb->get_var("SELECT wp_post_id FROM ".$bbdb->prefix."bbwp_ids WHERE bb_topic_id = ".$id);
 	$request = array(
@@ -322,15 +310,8 @@ function afterclosing($id)
 
 function afteropening($id)
 {
-	if (bb_get_option('bbwp_plugin_status') != 'enabled')
+	if (!bbwp_do_sync())
 		return;
-	// error_log("bbpress: afteropening");
-	global $bbwp_plugin;
-	if (!$bbwp_plugin)
-	{
-		// we don't need endless loop ;)
-		return;
-	}
 	global $bbdb;
 	$wp_post_id = $bbdb->get_var("SELECT wp_post_id FROM ".$bbdb->prefix."bbwp_ids WHERE bb_topic_id = ".$id);
 	$request = array(
@@ -619,13 +600,7 @@ function edit_bb_tags()
 
 function pretagremove($id)
 {
-	global $bbwp_plugin;
-	if (!$bbwp_plugin)
-	{
-		// we don't need endless loop ;)
-		return;
-	}
-	if (bb_get_option('bbwp_plugin_status') != 'enabled')
+	if (!bbwp_do_sync())
 		return;
 	global $topic;
 	$row = get_table_item('bb_topic_id', $topic->topic_id);

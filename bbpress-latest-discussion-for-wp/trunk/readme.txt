@@ -32,6 +32,11 @@ Examples of use:
 
 == Version History ==
 
+Version 0.9.1 (2009-04-02):
+
+* Add function to check what permalink type Bbpress use.
+* Add more class option to style the table.
+
 Version 0.9 (2007-04-25):
 
 * Add option to display last poster and forum category. Props James Zapico.

@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/openid
 Description:  Adds OpenID login support to bbPress so users may login using an identity from another provider. 
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.2
+Version: 0.0.3
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 Donate: http://bbshowcase.org/donate/
@@ -147,7 +147,7 @@ function openid_register_success($user_id=0) {
 if (!$user_id) {return;}
 openid_session();
 if (empty($_SESSION['OPENID'])) {return;}
-else {$openid[]=$_SESSION['OPENID']; unset($_SESSION['OPENID']);} 
+else {$openid[]=$_SESSION['OPENID']; $_SESSION['OPENID']=""; unset($_SESSION['OPENID']);} 
 global $bbdb;
 $bbdb->query("UPDATE $bbdb->users SET user_status=0 WHERE ID=$user_id LIMIT 1");	// 0.9 has a typo bug in update_user_status function
 bb_update_usermeta($user_id,'openid',$openid);
@@ -254,6 +254,7 @@ if (isset($_GET['remove_openid'])) {
 	if (!bb_is_user_logged_in()) {	
 		openid_session();
 		if (!empty($_SESSION['OPENID'])) {
+			$_SESSION['OPENID']="";
 			unset($_SESSION['OPENID']); 
 		}
 	} else {

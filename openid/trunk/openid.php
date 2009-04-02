@@ -29,6 +29,7 @@ add_action('bb_init', 'openid');
 add_action('extra_profile_info', 'openid_profile_edit',8);
 add_action('openid_login','openid_login');
 add_action('register_user', 'openid_register_success',25); 
+add_action('bb_user_logout', 'openid_logout');
 
 if (isset($_GET['openid_help'])) {echo "<body style='font-size:14px;margin-left:75px;' onload='document.getElementById(\"openid_help\").style.visibility=\"visible\";'>"; openid_help(); exit;}
 
@@ -218,6 +219,10 @@ if (isset($_GET['openid_error'])) {echo "<div onclick='this.style.display=\"none
 </fieldset>
 </form>
 <?php
+}
+
+function openid_logout() {
+	@$_SESSION['OPENID']="";
 }
 
 function openid_help() {

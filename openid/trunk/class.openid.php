@@ -347,18 +347,18 @@ class OpenIDService{
 		return $servers[0];
 	}
 	
-	function GetRedirectURL(){
+	function GetRedirectURL(){	 // modified
         $params = array();
         $params['openid.return_to'] = urlencode($this->URLs['approved']);
         if($this->version == "2.0"){
             $params['openid.ns'] = urlencode($this->openid_ns);
-            $params['openid.claimed_id'] = urlencode("http://specs.openid.net/auth/2.0/identifier_select"); // $this->openid_url_identity
+            $params['openid.claimed_id'] = urlencode("http://specs.openid.net/auth/2.0/identifier_select"); // $this->openid_url_identity  // fixup
             $params['openid.realm'] = urlencode($this->URLs['trust_root']);
         }else{
             $params['openid.trust_root'] = urlencode($this->URLs['trust_root']);
         }
         $params['openid.mode'] = 'checkid_setup';
-        $params['openid.identity'] = urlencode($this->openid_url_identity);
+        $params['openid.identity'] = urlencode("http://specs.openid.net/auth/2.0/identifier_select"); // urlencode($this->openid_url_identity); // fixup
 		
 		if (isset($this->fields['required'])
 		  && (count($this->fields['required']) > 0)) {

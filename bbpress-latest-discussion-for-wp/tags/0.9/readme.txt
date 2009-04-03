@@ -1,4 +1,5 @@
 === Bbpress Latest Discussion ===
+Donate link: http://www.atsutane.net/
 Tags: bbpress, wordpress, latest, discussion
 Contributors: Atsutane
 Requires at least: 0.8
@@ -17,7 +18,7 @@ The administrator can also set the behavior for this plugin. Even if your bbpres
 
 Simply download the Zip-Archive and extract all files into your wp-content/plugins/ directory. Then go into your WordPress administration page, click on Plugins and activate it. Go to BbLD Option page, to setup this plugin.
 
-== Configuration ==
+== Frequently Asked Questions ==
 
 I’ve created three template tags you can use in your pages:
 
@@ -31,6 +32,11 @@ Examples of use:
 `<?php wp_bb_get_discuss_sidebar(); ?>`
 
 == Version History ==
+
+Version 0.9.1 (2009-04-02):
+
+* Add function to check what permalink type Bbpress use.
+* Add more class option to style the table.
 
 Version 0.9 (2007-04-25):
 

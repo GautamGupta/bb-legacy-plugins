@@ -67,8 +67,7 @@ if ( !empty( $_POST['mass_delete_users_delete_users'] ) ) :
 		// $bb_user_id = $bbdb->get_var("SELECT post_id FROM $bbdb->posts WHERE post_id = $bb_post");
 		// $authordata = bb_get_usermeta( $bbdb->get_var("SELECT poster_id FROM $bbdb->posts WHERE ID = $bb_user_id") );
 		if ( bb_current_user_can('edit_users') ) {  // , $bb_user_id) ) {  
-			if ( !empty( $_POST['mass_delete_users_delete_button'] ) ) {bb_delete_user( $bb_user_id, 1 );}
-			// if ( !empty( $_POST['mass_delete_users_undelete_button'] ) ) {bb_delete_post( $bb_user_id, 0 );}		
+			if ( !empty( $_POST['mass_delete_users_delete_button'] ) ) {bb_delete_user( $bb_user_id, 0 );}			
 			++$i;
 		}
 	endforeach;
@@ -223,12 +222,15 @@ $query="FROM $bbdb->users ".$query;
 	</fieldset>
 
 	<fieldset><legend>No Posts</legend>
-	<span style="padding-left:1em;"><input style="margin-top:0.4em; height:1.4em;width:1.4em;" name="no_posts" id="no-posts" class="checkbox" type="checkbox" value="1" <?php echo ($no_posts) ? 'checked="checked"' : ''; ?> /></span>
+	<span style="padding-left:1em;"><input style="margin:0.4em 0 0 1em; height:1.4em;width:1.4em;" name="no_posts" id="no-posts" class="checkbox" type="checkbox" value="1" <?php echo ($no_posts) ? 'checked="checked"' : ''; ?> /></span>
 	</fieldset>
 
 	<fieldset><legend>Exact Match</legend>	
-	<span style="padding-left:1em;"><input style="margin-top:0.4em; height:1.4em;width:1.4em;" name="exact_match" id="exact-match" class="checkbox" type="checkbox" value="1" <?php echo ($exact_match) ? 'checked="checked"' : ''; ?> /></span>
-    	<span style="padding-left:1em;" class=submit><input class=submit type="submit" name="submit" value="<?php _e('Search') ?> &raquo;"  /></span>
+	<span style="padding-left:1em;"><input style="margin:0.4em 0 0 1em; height:1.4em;width:1.4em;" name="exact_match" id="exact-match" class="checkbox" type="checkbox" value="1" <?php echo ($exact_match) ? 'checked="checked"' : ''; ?> /></span>
+    	</fieldset>
+
+    	<fieldset>
+    	<span class=submit><input class=submit type="submit" name="submit" value="<?php _e('Search') ?> &raquo;"  /></span>
     	<span style="padding-left:1em;" class=submit><input onclick="window.location='<?php echo bb_get_option('uri') . 'bb-admin/' . bb_get_admin_tab_link("mass_delete_users"); ?>'" class=submit type="reset" name="reset" value="<?php _e('Clear') ?>"  /></span>
     	<input type="hidden" name="plugin" value="mass_delete_users"  />
     	</fieldset>

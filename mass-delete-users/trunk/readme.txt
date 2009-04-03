@@ -52,6 +52,10 @@ Set user to INACTIVE instead to prevent re-use of the username.
 
 * now can filter by users with no forum posts or WP comments
 
+= Version 0.0.4 (2009-04-03) =
+
+* bug fix for wrong option on api delete (accidentally still worked on bbPress 0.9 but fatal in 1.0)
+
 == To Do ==
 
 * backup option with undelete ability

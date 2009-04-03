@@ -66,18 +66,18 @@ function wpbb_trim($paragraph, $limit) {
 function wpbb_permalink($type,$topicid) {
 	global $wpdb,$BbLD_version;
 	if (get_option('wpbb_permalink')) {
-		$perma_type = $wpdb->get_row("SELECT * FROM `bb_topicmeta` WHERE `meta_key` LIKE 'mod_rewrite' LIMIT 1");
+		$perma_type = $wpdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."topicmeta` WHERE `meta_key` LIKE 'mod_rewrite' LIMIT 1");
 		$metakey = $perma_type->meta_value;
 		if ($metakey == 1) {
 			$permalink = get_option('wpbb_path') . '/'. $type . '/' . $topicid;
 		}
 		else {
 			if ($type == 'topic') {
-				$get_title = $wpdb->get_row("SELECT * FROM `bb_topics` WHERE `topic_id` LIKE '$topicid' LIMIT 1");
+				$get_title = $wpdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."topics` WHERE `topic_id` LIKE '$topicid' LIMIT 1");
 				$permalink = get_option('wpbb_path') . '/topic/' . $get_title->topic_slug;
 			}
 			else {
-				$get_title = $wpdb->get_row("SELECT * FROM `bb_forums` WHERE `forum_id` LIKE '$topicid' LIMIT 1");
+				$get_title = $wpdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."forums` WHERE `forum_id` LIKE '$topicid' LIMIT 1");
 				$permalink = get_option('wpbb_path') . '/forum/' . $get_title->forum_slug;
 			}			
 		}

@@ -4,7 +4,7 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/
 Description: Put bbpress Latest Discussions on your wp page.
 Author: Atsutane Shirane
-Version: 0.9
+Version: 0.9.1
 Author URI: http://www.atsutane.net/
 */
 

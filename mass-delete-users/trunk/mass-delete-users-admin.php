@@ -228,8 +228,8 @@ $query="FROM $bbdb->users ".$query;
 	<fieldset><legend>Exact Match</legend>	
 	<span style="padding-left:1em;"><input style="margin:0.4em 0 0 1em; height:1.4em;width:1.4em;" name="exact_match" id="exact-match" class="checkbox" type="checkbox" value="1" <?php echo ($exact_match) ? 'checked="checked"' : ''; ?> /></span>
     	</fieldset>
-
-    	<fieldset>
+    	
+    	<fieldset><legend> </legend>	
     	<span class=submit><input class=submit type="submit" name="submit" value="<?php _e('Search') ?> &raquo;"  /></span>
     	<span style="padding-left:1em;" class=submit><input onclick="window.location='<?php echo bb_get_option('uri') . 'bb-admin/' . bb_get_admin_tab_link("mass_delete_users"); ?>'" class=submit type="reset" name="reset" value="<?php _e('Clear') ?>"  /></span>
     	<input type="hidden" name="plugin" value="mass_delete_users"  />

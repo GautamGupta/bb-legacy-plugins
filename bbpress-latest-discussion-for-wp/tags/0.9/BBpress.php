@@ -9,7 +9,7 @@ Author URI: http://www.atsutane.net/
 */
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '0.9';
+$BbLD_version = '0.9.1';
 
 if (!defined('ABSPATH')) die("Aren't you supposed to come here via WP-Admin?");
 
@@ -62,6 +62,32 @@ function wpbb_trim($paragraph, $limit) {
 	return $text;
 }
 
+### Function: Permalink Data
+function wpbb_permalink($type,$topicid) {
+	global $wpdb,$BbLD_version;
+	if (get_option('wpbb_permalink')) {
+		$perma_type = $wpdb->get_row("SELECT * FROM `bb_topicmeta` WHERE `meta_key` LIKE 'mod_rewrite' LIMIT 1");
+		$metakey = $perma_type->meta_value;
+		if ($metakey == 1) {
+			$permalink = get_option('wpbb_path') . '/'. $type . '/' . $topicid;
+		}
+		else {
+			if ($type == 'topic') {
+				$get_title = $wpdb->get_row("SELECT * FROM `bb_topics` WHERE `topic_id` LIKE '$topicid' LIMIT 1");
+				$permalink = get_option('wpbb_path') . '/topic/' . $get_title->topic_slug;
+			}
+			else {
+				$get_title = $wpdb->get_row("SELECT * FROM `bb_forums` WHERE `forum_id` LIKE '$topicid' LIMIT 1");
+				$permalink = get_option('wpbb_path') . '/forum/' . $get_title->forum_slug;
+			}			
+		}
+	}
+	else {
+		$permalink = get_option('wpbb_path') . '/'. $type . '.php?id=' . $topicid;
+	}
+	return $permalink;
+}
+
 ### Function: BBpress Latest Discussions Option
 function wp_bb_option() {
 	global $wpdb,$BbLD_version;
@@ -94,7 +120,7 @@ function wp_bb_option() {
 	<strong><?php _e('Version:'); ?></strong> <?php echo $BbLD_version; ?></p>
 	<p><strong><?php _e('ToDo List:'); ?></strong></p>
 	<ul>
-		<li>None</li>
+		<li>Clean up the code</li>
 	</ul>
 	<p><?php _e('If you have any suggestion or feedback. Feel free to post it'); ?> <a href="http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/"><?php _e('here'); ?></a>.</p>
 	<h2><?php _e('BBpress Option'); ?></h2>
@@ -210,18 +236,22 @@ function wp_bb_get_discuss() {
 					<th>' . __("Last Poster") . '</th>
 				</tr>
 		';
+		$misc_no = 0;
 		foreach ( $bbtopic as $bbtopic ) {
-			$title_text = wpbb_trim($bbtopic->topic_title, get_option('wpbb_slimit'));
-			echo "
-				<tr class=\"alt\">
-			";
-			if (get_option('wpbb_permalink')) {
-				echo '<td><a href="' . get_option('wpbb_path') . '/topic/' . $bbtopic->topic_id . '">' . __("$title_text") . '</a></td>';
+			if ($misc_no == 0) {
+				$misc_no = $misc_no + 1;
+				$tr_class = 'alt';
 			}
 			else {
-				echo '<td><a href="' . get_option('wpbb_path') . '/topic.php?id=' . $bbtopic->topic_id . '">' . __("$title_text") . '</a></td>';
+				$misc_no = $misc_no - 1;
+				$tr_class = 'alt1';
 			}
-			echo '<td class="num">' . __("$bbtopic->topic_posts") . '</td>';
+			$title_text = wpbb_trim($bbtopic->topic_title, get_option('wpbb_slimit'));
+			echo '
+				<tr class="'.$tr_class.'">
+				<td><a href="' . wpbb_permalink('topic',$bbtopic->topic_id) .'">' . __("$title_text") . '</a></td>
+				<td class="num">' . __("$bbtopic->topic_posts") . '</td>
+			';
 			if (get_option('wpbb_intergrated')) {
 				$wpuid = $wpdb->get_row("SELECT * FROM ".$table_prefix."users WHERE user_login = '$bbtopic->topic_last_poster_name'");
 				if ($wpuid) {
@@ -305,14 +335,8 @@ function wp_bb_get_discuss_sidebar() {
 			else {
 				$bbforum = $wpdb->get_row("SELECT * FROM ".get_option('wpbb_bbprefix')."forums WHERE forum_id = '$bbtopic->forum_id'");
 			}
-			if (get_option('wpbb_permalink')) {
-				echo '<li><a href="' . get_option('wpbb_path') . '/topic/' . $bbtopic->topic_id . '">' . __("$title_text") . '</a><br />';
-				$forum_url = get_option('wpbb_path') . '/forum/' . $bbtopic->forum_id;
-			}
-			else {
-				echo '<li><a href="' . get_option('wpbb_path') . '/topic.php?id=' . $bbtopic->topic_id . '">' . __("$title_text") . '</a><br />';
-				$forum_url = get_option('wpbb_path') . '/forum.php?id=' . $bbtopic->forum_id;
-			}
+			echo '<li><a href="' . wpbb_permalink('topic',$bbtopic->topic_id) .'">' . __("$title_text") . '</a><br />';
+			$forum_url = wpbb_permalink('forum',$bbtopic->topic_id);
 			if (get_option('wpbb_intergrated')) {
 				$wpuid = $wpdb->get_row("SELECT * FROM ".$table_prefix."users WHERE user_login = '$bbtopic->topic_last_poster_name'");
 				if ($wpuid) {
@@ -359,14 +383,8 @@ function bbld_widget($args) {
 			else {
 				$bbforum = $wpdb->get_row("SELECT * FROM ".get_option('wpbb_bbprefix')."forums WHERE forum_id = '$bbtopic->forum_id'");
 			}
-			if (get_option('wpbb_permalink')) {
-				echo '<li><a href="' . get_option('wpbb_path') . '/topic/' . $bbtopic->topic_id . '">' . __("$title_text") . '</a><br />';
-				$forum_url = get_option('wpbb_path') . '/forum/' . $bbtopic->forum_id;
-			}
-			else {
-				echo '<li><a href="' . get_option('wpbb_path') . '/topic.php?id=' . $bbtopic->topic_id . '">' . __("$title_text") . '</a><br />';
-				$forum_url = get_option('wpbb_path') . '/forum.php?id=' . $bbtopic->forum_id;
-			}
+			echo '<li><a href="' . wpbb_permalink('topic',$bbtopic->topic_id) .'">' . __("$title_text") . '</a><br />';
+			$forum_url = wpbb_permalink('forum',$bbtopic->topic_id);
 			if (get_option('wpbb_intergrated')) {
 				$wpuid = $wpdb->get_row("SELECT * FROM ".$table_prefix."users WHERE user_login = '$bbtopic->topic_last_poster_name'");
 				if ($wpuid) {

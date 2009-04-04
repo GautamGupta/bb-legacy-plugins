@@ -4,14 +4,14 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/
 Description: Put bbpress Latest Discussions on your wp page.
 Author: Atsutane Shirane
-Version: 1.0
+Version: 1.0.1
 Author URI: http://www.atsutane.net/
 */
 
 $plugin_dir = basename(dirname(__FILE__));
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '1.0';
+$BbLD_version = '1.0.1';
 
 
 if (!defined('ABSPATH')) die("Aren't you supposed to come here via WP-Admin?");
@@ -154,9 +154,13 @@ function bbld_intergrated($name) {
 	if (get_option('wpbb_intergrated')) {
 		$wpuid = $wpdb->get_row("SELECT * FROM ".$table_prefix."users WHERE user_login = '$name'");
 		if ($wpuid) {
-			$user_forum_data = "$name";
 			$user_forum_data = get_userdata($wpuid->ID);
-			$euser = $user_forum_data->display_name;
+			if ($user_forum_data->display_name) {
+				$euser = $user_forum_data->display_name;
+			}
+			else {
+				$euser = $name;
+			}
 		}
 		else {
 			$euser = $name;

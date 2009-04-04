@@ -2,13 +2,15 @@
 Tags: integration, admin, keymaster, _ck_
 Contributors: _ck_
 Requires at least: 0.8.2
-Tested up to: trunk alpha 1075
+Tested up to: 1.0 alpha 5 alpha 1075
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 == Description ==
 
-* Restores keymaster access to control panel on bbPress and/or WordPress integration. This is an auto-load plugin and must have a leading underscore "_". Put into your plugin directory, access bbPress and/or WordPress once and then delete it from the directory.
+Restores keymaster access to control panel on bbPress and/or WordPress integration. 
+This is an auto-load plugin and must have a leading underscore "_". 
+Put into your plugin directory, access bbPress and/or WordPress once and then delete it from the directory.
 
 == Installation ==
 
@@ -16,9 +18,9 @@ Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
 
 == Frequently Asked Questions ==
 
- * This plugin assumes your keymaster is user id #1. It is rare but possible you are no longer user #1 if you have deleted your original keymaster. In which case this won't work. Future versions may be able to find other admin users to fix.
+* This plugin assumes your keymaster is user id #1. It is rare but possible you are no longer user #1 if you have deleted your original keymaster. In which case this won't work. Future versions may be able to find other admin users to fix.
  
- * Do not leave this plugin installed. Once it fixes the problem it should be deleted from the server.
+* Do not leave this plugin installed. Once it fixes the problem it should be deleted from the server.
 
 == License ==
 
@@ -26,7 +28,7 @@ Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 

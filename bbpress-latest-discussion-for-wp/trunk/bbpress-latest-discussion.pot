@@ -1,0 +1,171 @@
+# SOME DESCRIPTIVE TITLE.
+# This file is put in the public domain.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/bbpress-latest-discussion\n"
+"POT-Creation-Date: 2009-04-04 10:45+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: BBpress.php:66
+msgid "BBpress Latest Discussions Option"
+msgstr ""
+
+#: BBpress.php:66
+msgid "BbLD Option"
+msgstr ""
+
+#: BBpress.php:178
+msgid "Last Post By: "
+msgstr ""
+
+#: BBpress.php:183
+msgid "Inside: "
+msgstr ""
+
+#: BBpress.php:196
+msgid "Discussion Forum"
+msgstr ""
+
+#: BBpress.php:197
+msgid "Topic"
+msgstr ""
+
+#: BBpress.php:198
+msgid "Posts"
+msgstr ""
+
+#: BBpress.php:199
+msgid "Last Poster"
+msgstr ""
+
+#: BBpress.php:277
+msgid "BbLD Widget Title:"
+msgstr ""
+
+#: BBpress.php:359
+msgid "BBpress Latest Discussions"
+msgstr ""
+
+#: BBpress.php:364
+msgid "Bbpress URL:"
+msgstr ""
+
+#: BBpress.php:368
+msgid "Post Limit:"
+msgstr ""
+
+#: BBpress.php:370
+msgid "Set the number of topic you want to show."
+msgstr ""
+
+#: BBpress.php:373
+msgid "Text Limit:"
+msgstr ""
+
+#: BBpress.php:375
+msgid "Set the length of text you want to show"
+msgstr ""
+
+#: BBpress.php:378
+msgid "Bbpress DB Prefix:"
+msgstr ""
+
+#: BBpress.php:380
+msgid ""
+"Enter the table prefix for your bbPress installation. The table prefix is "
+"found in your bbPress installation's config.php file."
+msgstr ""
+
+#: BBpress.php:383
+msgid "Bbpress Permalink:"
+msgstr ""
+
+#: BBpress.php:386
+msgid "Only use this if you already enable permalink inside Bbpress."
+msgstr ""
+
+#: BBpress.php:390
+msgid "Bbpress Last Poster:"
+msgstr ""
+
+#: BBpress.php:393
+msgid ""
+"Check this option if you want to display the username of the last poster."
+msgstr ""
+
+#: BBpress.php:397
+msgid "Bbpress Inside:"
+msgstr ""
+
+#: BBpress.php:400
+msgid "Check this option if you want the \"inside\" link to appear."
+msgstr ""
+
+#: BBpress.php:404
+msgid "Wordpress/Bbpress Integration:"
+msgstr ""
+
+#: BBpress.php:407
+msgid ""
+"Check this option if you intergrated your wordpress installation with "
+"bbpress installation."
+msgstr ""
+
+#: BBpress.php:411
+msgid "Exclude Forums:"
+msgstr ""
+
+#: BBpress.php:431
+msgid "onews_archives.asp"
+msgstr ""
+
+#: BBpress.php:433
+msgid "There is no forum to be display."
+msgstr ""
+
+#: BBpress.php:439
+msgid "External DB:"
+msgstr ""
+
+#: BBpress.php:442
+msgid ""
+"Only enable this option if your Bbpress database is not the same as "
+"Wordpress database."
+msgstr ""
+
+#: BBpress.php:446
+msgid "Bbpress DB User:"
+msgstr ""
+
+#: BBpress.php:450
+msgid "Bbpress DB Pass:"
+msgstr ""
+
+#: BBpress.php:454
+msgid "Bbpress DB Name:"
+msgstr ""
+
+#: BBpress.php:458
+msgid "Bbpress DB Host:"
+msgstr ""
+
+#: BBpress.php:463
+msgid "Update Option &raquo;"
+msgstr ""
+
+#: BBpress.php:468
+msgid "BbLD Templates System"
+msgstr ""
+
+#: BBpress.php:517
+msgid "Save Templates Change &raquo;"
+msgstr ""

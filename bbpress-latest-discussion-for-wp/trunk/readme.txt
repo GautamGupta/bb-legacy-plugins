@@ -1,10 +1,10 @@
 === Bbpress Latest Discussion ===
 Donate link: http://www.atsutane.net/
-Tags: bbpress, wordpress, latest, discussion
+Tags: bbpress, wordpress, latest, discussion, bbld, widget, plugin, sidebar, post, page
 Contributors: Atsutane
 Requires at least: 0.8
-Tested up to: 0.8
-Stable Tag: 0.9
+Tested up to: 0.9.0.4
+Stable Tag: 1.0
 
 This plugin will generates Latest Discussion list from your bbpress forum into your wordpress page.
 
@@ -14,13 +14,17 @@ This plugin will generates Latest Discussion list from your bbpress forum into y
 
 The administrator can also set the behavior for this plugin. Even if your bbpress is not intergrated with your wordpress. U still can use this plugin with a little change on the option page.
 
+Bbpress Latest Discussion has been around since almost 2 years ago at Bbpress.org
+
 == Installation ==
 
-Simply download the Zip-Archive and extract all files into your wp-content/plugins/ directory. Then go into your WordPress administration page, click on Plugins and activate it. Go to BbLD Option page, to setup this plugin.
+Simply download the Zip-Archive and extract all folder into your wp-content/plugins/ directory. Then go into your WordPress administration page, click on Plugins and activate it. Go to BbLD Option page, to setup this plugin.
 
-== Frequently Asked Questions ==
+make sure the path become like this `wp-content/plugins/bbpress-latest-discussion/`
 
-I’ve created three template tags you can use in your pages:
+It is to make sure that wordpress find the plugin correctly so it can check for new update.
+
+I’ve created two template tags you can use in your pages:
 
 1. `wp_bb_get_discuss()` : Show Bbpress latest discussion on wp static page.
 2. `wp_bb_get_discuss_sidebar()` : Show Bbpress latest discussion on wp sidebar.
@@ -31,7 +35,36 @@ Examples of use:
 
 `<?php wp_bb_get_discuss_sidebar(); ?>`
 
+== Frequently Asked Questions ==
+
+How to fix/use permalink?
+
+1. Please make sure u check the button "Bbpress Permalink" inside BbLD Option page.
+
+How to use different database?
+
+1. Make sure you check "External DB" option and input the data for your external database.
+
+== Screenshots ==
+
+1. BbLD New Admin Page
+2. BbLD Template system
+3. Sample shot how BbLD do the job
+4. Sample shot how BbLD do the job
+
 == Version History ==
+
+Version 1.0 (2009-04-04):
+
+* New Admin Option Page.
+* New templates system.
+* Add support for widget control.
+* Major clean up code.
+
+Version 0.9.2 (2009-04-02):
+
+* Clean up some code
+* Add pot file support
 
 Version 0.9.1 (2009-04-02):
 

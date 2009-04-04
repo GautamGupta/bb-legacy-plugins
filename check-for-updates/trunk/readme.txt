@@ -6,11 +6,13 @@ Tested up to: 1.0 alpha 5
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 
-Shows which bbPress plugins may be out of date. 
+Shows which bbPress plugins may be out of date. Avoid plugin security issues and bugs by checking periodically.
 
 == Description ==
 
 Shows which bbPress plugins may be out of date. 
+
+Avoid plugin security issues and bugs by checking periodically.
 
 == Installation ==
 

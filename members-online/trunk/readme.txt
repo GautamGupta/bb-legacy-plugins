@@ -1,5 +1,5 @@
 === Members Online  ===
-Tags: statistics, track, tracking, online, onlinelist, _ck_
+Tags: statistics, track, tracking, activity, online, onlinelist, _ck_
 Contributors: _ck_
 Requires at least: 0.9
 Tested up to: 1.0 alpha 5

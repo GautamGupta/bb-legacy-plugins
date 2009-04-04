@@ -19,7 +19,6 @@ $members_online['timeout'] = 10;	 //  (minutes) how long should members be consi
 
 /*    stop editing here    */
 
-
 $members_online['timeout']*=60;	// convert to seconds
 
 add_action('bb_init','members_online',99);
@@ -33,15 +32,13 @@ add_filter( 'post_author_title', 'members_online_post',100);
 add_filter( 'post_author_title_link', 'members_online_post',100);
 }
 
-
 function members_online_footer() {
-global $members_online;
-if (is_front()) {
+	if (!is_front()) {return;}
+	global $members_online;
 	echo "<div class='members_online' style='text-align:center; width:760px; margin:0 auto;'>
 	<div style='text-align:left;'><h2>".__('Members Online')."</h2>
-	<strong>".__('now').' :</strong> '; members_online_now();
-	echo "<br /><strong>".__('today').' :</strong> '; members_online_today(); echo "</div>";
-}
+	<p><strong>".__('now').' :</strong> '; members_online_now();
+	echo "<br /><strong>".__('today').' :</strong> '; members_online_today(); echo "</p></div>";
 }
 
 function members_online($action='') {
@@ -90,12 +87,17 @@ function members_online_today() {
 }
 
 function members_online_post($titlelink='') {
-global $bbdb, $bb_post, $members_online; static $ids;
+global $bbdb, $posts, $bb_post, $members_online; static $ids;
 if (isset($bb_post) && !empty($bb_post->poster_id)) {
 	if (!isset($ids)) {
 		$time=time()-$members_online['timeout'];
-		$ids=$bbdb->get_col("SELECT user_id FROM $bbdb->usermeta  WHERE meta_key='last_online' AND cast(meta_value AS unsigned)>'$time'");
-		$ids=array_flip($ids);
+		if (!empty($posts)) {
+		$keys=array_keys($posts);	 //  weird PHP bug where I can't loop through $posts directly?
+		foreach ($keys as $key) {if (!empty($posts[$key]->poster_id)) {$members[$posts[$key]->poster_id]=$posts[$key]->poster_id;} } 
+		$members=implode(',',$members); 
+		} else {$members=$bb_post->poster_id;}
+		$ids=$bbdb->get_col("SELECT user_id FROM $bbdb->usermeta  WHERE user_id IN ($members) AND meta_key='last_online' AND cast(meta_value AS unsigned)>'$time'");		
+		$ids=array_flip($ids);		
 	}
 	if (isset($ids[$bb_post->poster_id])) {echo "<div style='color:#00aa00'>".__("online")."</div>";} 
 	else {echo "<div style='color:#aaa'>".__("offline")."</div>";} 

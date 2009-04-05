@@ -54,9 +54,17 @@ How to use different database?
 
 == Version History ==
 
+Version 1.0.3 (2009-04-06):
+
+* Remove permalink option. Now BbLD will auto detect.
+* Remove last poster & inside option. Using template for sidebar display.
+* Remove Wordpress/Bbpress Integration option. Now BbLD will auto use display name if exist.
+* Add templates system for sidebar display.
+* Add support for multi active plugin
+
 Version 1.0.2 (2009-04-05):
 
-* Fix a wrong text for exclude forum.
+* Fix wrong text inside option page.
 
 Version 1.0.1 (2009-04-05):
 

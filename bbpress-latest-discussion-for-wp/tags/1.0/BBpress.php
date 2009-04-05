@@ -2,17 +2,19 @@
 /*
 Plugin Name: BBpress Latest Discussions
 Plugin URI: http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/
-Description: Put bbpress Latest Discussions on your wp page.
+Description: This plugin will generates Latest Discussion list from your bbpress forum into your wordpress. It has the ability to generate latest discussion on sidebar also. The administrator can also set the behavior for this plugin. Even if your bbpress is not intergrated with your wordpress. U still can use this plugin with a little change on the option page. Bbpress Latest Discussion has been around since almost 2 years ago at Bbpress.org.
 Author: Atsutane Shirane
-Version: 1.0.2
+Version: 1.0.3
 Author URI: http://www.atsutane.net/
 */
 
 $plugin_dir = basename(dirname(__FILE__));
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '1.0.2';
+$BbLD_version = '1.0.3';
 
+### BBLD basic function for external DB
+$exbbdb = new wpdb(get_option('wpbb_dbuser'), get_option('wpbb_dbpass'), get_option('wpbb_dbname'), get_option('wpbb_dbhost'));
 
 if (!defined('ABSPATH')) die("Aren't you supposed to come here via WP-Admin?");
 
@@ -23,13 +25,30 @@ function bbld_textdomain() {
 }
 
 ### Function: Install BbLD Configuration
-$install = (basename($_SERVER['SCRIPT_NAME']) == 'plugins.php' && isset($_GET['activate']));;
+$install = (basename($_SERVER['SCRIPT_NAME']) == 'plugins.php' && (isset($_GET['activate']) || isset($_GET['activate-multi'])));
 if ($install) {
 	bbld_install();
 }
 
+function bbld_preinstall() {
+	global $BbLD_version;
+	$BbLD_ver = get_option('wpbb_version');
+	$BbLD_status = get_option('wpbb_status');
+	if (($BbLD_ver != $BbLD_version) && ($BbLD_status == 'install')) {
+		// Use for remove some old data
+		delete_option('wpbb_permalink');
+		delete_option('wpbb_intergrated');
+		delete_option('wpbb_lastposter');
+		delete_option('wpbb_inside');
+		update_option('wpbb_version', $BbLD_version);
+	}
+}
+
 function bbld_install() {
+	global $BbLD_version;
+	bbld_preinstall(); // For remove and add new data
 	if (get_option('wpbb_status') == FALSE) {
+		update_option('wpbb_version', $BbLD_version);
 		$bbpath = '/bbpress'; // Adjust the path to suit your bbpress location. Example: '/forums'
 		$wpbburl = get_settings('home') . $bbpath;
 		update_option('wpbb_path', $wpbburl);
@@ -39,8 +58,6 @@ function bbld_install() {
 		update_option('wpbb_bbprefix', $bbdb_prefix);
 		$limit = '100';
 		update_option('wpbb_slimit', $limit);
-		update_option('wpbb_permalink', false);
-		update_option('wpbb_intergrated', false);
 		update_option('wpbb_exdb', false);
 		update_option('wpbb_dbuser', DB_USER);
 		update_option('wpbb_dbpass', DB_PASSWORD);
@@ -48,8 +65,6 @@ function bbld_install() {
 		update_option('wpbb_dbhost', DB_HOST);
 		$install_status = 'install';
 		update_option('wpbb_status', $install_status);
-		update_option('wpbb_lastposter', true);
-		update_option('wpbb_inside', true);
 		$head_data = '<div id=\"discussions\"><h2>%BBLD_TITLE%</h2><table id=\"latest\"><tr><th>%BBLD_TOPIC%</th><th>%BBLD_POST%</th><th>%BBLD_LPOSTER%</th></tr>';
 		update_option('wpbb_pagepost_header', $head_data);
 		$body_data = '<tr class="%BBLD_CLASS%"><td><a href="%BBLD_URL%">%BBLD_TOPIC%</a></td><td class="num">%BBLD_POST%</td><td class="num">%BBLD_LPOSTER%</td></tr>';
@@ -57,6 +72,8 @@ function bbld_install() {
 		update_option('wpbb_pagepost_footer', '</table></div>');
 		update_option('wpbb_sidebar_title', '<h2>Forum Last %BBLD_LIMIT% Discussions</h2>');
 		update_option("wpbb_widget_title", 'Forum Last %BBLD_LIMIT% Discussions');
+		$sidebar_data = '<li><a href="%BBLD_URL%">%BBLD_TOPIC%</a><br /><small>Last Post By: %BBLD_LPOSTER%<br/>Inside: <a href="%BBLD_FURL%">%BBLD_FORUM%</a></small></li>';
+		update_option('wpbb_sidebar_display', $sidebar_data);
 	}
 }
 
@@ -81,22 +98,20 @@ function wpbb_trim($paragraph, $limit) {
 ### Function: Permalink Data
 function wpbb_permalink($type,$topicid) {
 	global $wpdb,$BbLD_version;
-	if (get_option('wpbb_permalink')) {
-		$perma_type = $wpdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."topicmeta` WHERE `meta_key` LIKE 'mod_rewrite' LIMIT 1");
-		$metakey = $perma_type->meta_value;
-		if ($metakey == 1) {
-			$permalink = get_option('wpbb_path') . '/'. $type . '/' . $topicid;
+	$perma_type = $wpdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."topicmeta` WHERE `meta_key` LIKE 'mod_rewrite' LIMIT 1");
+	$metakey = $perma_type->meta_value;
+	if ($metakey == 1) {
+		$permalink = get_option('wpbb_path') . '/'. $type . '/' . $topicid;
+	}
+	elseif ($metakey == 'slugs') {
+		if ($type == 'topic') {
+			$get_title = $wpdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."topics` WHERE `topic_id` LIKE '$topicid' LIMIT 1");
+			$permalink = get_option('wpbb_path') . '/topic/' . $get_title->topic_slug;
 		}
 		else {
-			if ($type == 'topic') {
-				$get_title = $wpdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."topics` WHERE `topic_id` LIKE '$topicid' LIMIT 1");
-				$permalink = get_option('wpbb_path') . '/topic/' . $get_title->topic_slug;
-			}
-			else {
-				$get_title = $wpdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."forums` WHERE `forum_id` LIKE '$topicid' LIMIT 1");
-				$permalink = get_option('wpbb_path') . '/forum/' . $get_title->forum_slug;
-			}			
-		}
+			$get_title = $wpdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."forums` WHERE `forum_id` LIKE '$topicid' LIMIT 1");
+			$permalink = get_option('wpbb_path') . '/forum/' . $get_title->forum_slug;
+		}			
 	}
 	else {
 		$permalink = get_option('wpbb_path') . '/'. $type . '.php?id=' . $topicid;
@@ -124,21 +139,27 @@ function bbld_filter_forums() {
 }
 
 ### Function: Get forum data
-function bbld_getdata($type,$forum_slimit) {
-	global $wpdb;
+function bbld_getdata($type,$forum_slimit = 0) {
+	global $wpdb,$exbbdb;
 	if ($type == 'topic') {
 		$filter = bbld_filter_forums();
 		if (get_option('wpbb_exdb')) {
-			$exbbdb = new wpdb(get_option('wpbb_dbuser'), get_option('wpbb_dbpass'), get_option('wpbb_dbname'), get_option('wpbb_dbhost'));
 			$bbtopic = $exbbdb->get_results("SELECT * FROM ".get_option('wpbb_bbprefix')."topics ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
 		}
 		else {
 			$bbtopic = $wpdb->get_results("SELECT * FROM ".get_option('wpbb_bbprefix')."topics ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
 		}
 	}
+	elseif ($type == 'exclude') {
+		if (get_option('wpbb_exdb')) {
+			$bbtopic = $exbbdb->get_results("SELECT * FROM ".get_option('wpbb_bbprefix')."forums ORDER BY forum_order ASC");
+		}
+		else {
+			$bbtopic = $wpdb->get_results("SELECT * FROM ".get_option('wpbb_bbprefix')."forums ORDER BY forum_order ASC");
+		}
+	}
 	else {
 		if (get_option('wpbb_exdb')) {
-			$exbbdb = new wpdb(get_option('wpbb_dbuser'), get_option('wpbb_dbpass'), get_option('wpbb_dbname'), get_option('wpbb_dbhost'));
 			$bbtopic = $exbbdb->get_row("SELECT * FROM ".get_option('wpbb_bbprefix')."forums WHERE forum_id = '$forum_slimit'");
 		}
 		else {
@@ -151,16 +172,11 @@ function bbld_getdata($type,$forum_slimit) {
 ### Function: BBpress display name
 function bbld_intergrated($name) {
 	global $wpdb,$table_prefix;
-	if (get_option('wpbb_intergrated')) {
-		$wpuid = $wpdb->get_row("SELECT * FROM ".$table_prefix."users WHERE user_login = '$name'");
-		if ($wpuid) {
-			$user_forum_data = get_userdata($wpuid->ID);
-			if ($user_forum_data->display_name) {
-				$euser = $user_forum_data->display_name;
-			}
-			else {
-				$euser = $name;
-			}
+	$wpuid = $wpdb->get_row("SELECT * FROM ".$table_prefix."users WHERE user_login = '$name'");
+	if ($wpuid) {
+		$user_forum_data = get_userdata($wpuid->ID);
+		if ($user_forum_data->display_name) {
+			$euser = $user_forum_data->display_name;
 		}
 		else {
 			$euser = $name;
@@ -170,24 +186,6 @@ function bbld_intergrated($name) {
 		$euser = $name;
 	}
 	return $euser;
-}
-
-### Function: BBpress Extra Post Info
-function bbld_extra_info($poster_name, $forum_name, $forum_url) {
-	$lastposter = get_option('wpbb_lastposter');
-	$inside = get_option('wpbb_inside');
-	if ($lastposter || $inside) {
-		echo '<small>';
-		if ($lastposter) {
-			echo __('Last Post By: ', 'bbpress-latest-discussion') . $poster_name;
-			if ($inside)
-				echo '<br/>';
-		}
-		if ($inside) {
-			echo __('Inside: ', 'bbpress-latest-discussion') . '<a href="'.$forum_url.'">' . __("$forum_name", 'bbpress-latest-discussion') . '</a>';
-		}
-		echo '</small>';
-	}
 }
 
 ### Function: BBpress Latest Discussions Page Display
@@ -237,9 +235,13 @@ function bbld_getside() {
 			$bbforum = bbld_getdata('forum',$bbtopic->forum_id);
 			$forum_url = wpbb_permalink('forum',$bbtopic->topic_id);
 			$last_poster = bbld_intergrated($bbtopic->topic_last_poster_name);
-			echo '<li><a href="' . wpbb_permalink('topic',$bbtopic->topic_id) .'">' . __("$title_text", 'bbpress-latest-discussion') . '</a><br />';
-			bbld_extra_info($last_poster,$bbforum->forum_name, $forum_url);
-			echo "</li>";
+			$template_data_sidebar = stripslashes(get_option('wpbb_sidebar_display'));
+			$template_data_sidebar = str_replace("%BBLD_URL%", wpbb_permalink('topic',$bbtopic->topic_id), $template_data_sidebar);
+			$template_data_sidebar = str_replace("%BBLD_TOPIC%", $title_text, $template_data_sidebar);
+			$template_data_sidebar = str_replace("%BBLD_FURL%", $forum_url, $template_data_sidebar);
+			$template_data_sidebar = str_replace("%BBLD_FORUM%", $bbforum->forum_name, $template_data_sidebar);
+			$template_data_sidebar = str_replace("%BBLD_LPOSTER%", $last_poster, $template_data_sidebar);
+			echo $template_data_sidebar;
 		}
 	}
 }
@@ -318,14 +320,15 @@ echo '<script type="text/javascript">
 			case "sidebar_title":
 				default_template = "<h2>Forum Last %BBLD_LIMIT% Discussions</h2>";
 				break;
+			case "sidebar_display":
+				default_template = "<li><a href=\"%BBLD_URL%\">%BBLD_TOPIC%</a><br /><small>Last Post By: %BBLD_LPOSTER%<br/>Inside: <a href=\"%BBLD_FURL%\">%BBLD_FORUM%</a></small></li>";
+				break;
 		}
 		document.getElementById("bbld_" + template).value = default_template;
 	}
 /* ]]> */
 </script>';
 }
-
-require_once(ABSPATH . WPINC . '/rss.php');
 
 ### Function: BBpress Latest Discussions Option
 function wp_bb_option() {
@@ -336,16 +339,12 @@ function wp_bb_option() {
 		update_option('wpbb_path', $test);
 		update_option('wpbb_slimit', $_POST['bbslimit']);
 		update_option('wpbb_limit', $_POST['bblimit']);
-		update_option('wpbb_permalink', $_POST['wpbb_permalink']);
-		update_option('wpbb_intergrated', $_POST['wpbb_intergrated']);
 		update_option('wpbb_bbprefix', $_POST['bbprefix']);
 		update_option('wpbb_exdb', $_POST['use_outdb']);
 		update_option('wpbb_dbuser', $_POST['bbuser']);
 		update_option('wpbb_dbpass', $_POST['bbpass']);
 		update_option('wpbb_dbname', $_POST['bbname']);
 		update_option('wpbb_dbhost', $_POST['bbhost']);
-		update_option('wpbb_lastposter', $_POST['wpbb_lastposter']);
-		update_option('wpbb_inside', $_POST['wpbb_inside']);
 		update_option('wpbb_exclude', $_POST['wpbb_exclude']);
 		$update_msg = "<div id='message' class='updated fade'><p>BBpress Latest Discussions options saved successfully.</p></div>";
 	}
@@ -354,6 +353,7 @@ function wp_bb_option() {
 		update_option('wpbb_pagepost_body', $_POST['bbld_postpage_body']);
 		update_option('wpbb_pagepost_footer', $_POST['bbld_postpage_footer']);
 		update_option('wpbb_sidebar_title', $_POST['bbld_sidebar_title']);
+		update_option('wpbb_sidebar_display', $_POST['bbld_sidebar_display']);
 		$update_msg = "<div id='message' class='updated fade'><p>BBpress Latest Discussions templates saved successfully.</p></div>";
 	}
 ?>
@@ -383,40 +383,12 @@ function wp_bb_option() {
 <td><input name="bbprefix" type="text" id="bbprefix"  value="<?php echo get_option('wpbb_bbprefix'); ?>" class="small-text" />
 <span class="setting-description"><?php _e("Enter the table prefix for your bbPress installation. The table prefix is found in your bbPress installation's config.php file.", 'bbpress-latest-discussion'); ?></span></td>
 </tr>
-<tr valign="top">
-<th scope="row"><?php _e('Bbpress Permalink:', 'bbpress-latest-discussion'); ?></th>
-<td> <fieldset><legend class="hidden">wpbb_permalink</legend><label for="wpbb_permalink">
-<input name="wpbb_permalink" type="checkbox" id="wpbb_permalink" value="wpbb_permalink" <?php if (get_option('wpbb_permalink')) { echo('checked="checked"'); } ?> />
-<?php _e('Only use this if you already enable permalink inside Bbpress.', 'bbpress-latest-discussion'); ?></label>
-</fieldset></td>
-</tr>
-<tr valign="top">
-<th scope="row"><?php _e('Bbpress Last Poster:', 'bbpress-latest-discussion'); ?></th>
-<td> <fieldset><legend class="hidden">wpbb_lastposter</legend><label for="wpbb_lastposter">
-<input name="wpbb_lastposter" type="checkbox" id="wpbb_lastposter" value="wpbb_lastposter" <?php if (get_option('wpbb_lastposter')) { echo('checked="checked"'); } ?> />
-<?php _e('Check this option if you want to display the username of the last poster.', 'bbpress-latest-discussion'); ?></label>
-</fieldset></td>
-</tr>
-<tr valign="top">
-<th scope="row"><?php _e('Bbpress Inside:', 'bbpress-latest-discussion'); ?></th>
-<td> <fieldset><legend class="hidden">wpbb_inside</legend><label for="wpbb_inside">
-<input name="wpbb_inside" type="checkbox" id="wpbb_inside" value="wpbb_inside" <?php if (get_option('wpbb_inside')) { echo('checked="checked"'); } ?> />
-<?php _e('Check this option if you want the "inside" link to appear.', 'bbpress-latest-discussion'); ?></label>
-</fieldset></td>
-</tr>
-<tr valign="top">
-<th scope="row"><?php _e('Wordpress/Bbpress Integration:', 'bbpress-latest-discussion'); ?></th>
-<td> <fieldset><legend class="hidden">wpbb_intergrated</legend><label for="wpbb_intergrated">
-<input name="wpbb_intergrated" type="checkbox" id="wpbb_intergrated" value="wpbb_intergrated" <?php if (get_option('wpbb_intergrated')) { echo('checked="checked"'); } ?> />
-<?php _e('Check this option if you intergrated your wordpress installation with bbpress installation.', 'bbpress-latest-discussion'); ?></label>
-</fieldset></td>
-</tr>
 <tr>
 <th scope="row"><?php _e('Exclude Forums:', 'bbpress-latest-discussion'); ?></th>
 <td>
 	<fieldset><legend class="hidden">Date Format</legend>
 		<?php
-			$request = $wpdb->get_results("SELECT * FROM ".get_option('wpbb_bbprefix')."forums ORDER BY forum_order ASC");
+			$request = bbld_getdata('exclude');
 			$exclude_chk = get_option('wpbb_exclude');
 			if ($request) {
 				foreach ($request as $request) {
@@ -515,6 +487,20 @@ function wp_bb_option() {
 	<p><input class="button-primary" type="button" name="RestoreDefault" value="Restore Default Template" onclick="bbld_default_templates('sidebar_title');" class="button" /></p>
 </th>
 <td><textarea name="bbld_sidebar_title" rows="10" cols="50" id="bbld_sidebar_title" class="large-text code"><?php echo htmlspecialchars(stripslashes(get_option('wpbb_sidebar_title'))); ?></textarea></td>
+</tr>
+
+<tr valign="top">
+<th scope="row">
+	<p><strong>BbLD Sidebar Display:</strong></p>
+	<p>Allowed Variables:</p>
+	<p style="margin: 2px 0">- %BBLD_URL%</p>
+	<p style="margin: 2px 0">- %BBLD_TOPIC%</p>
+	<p style="margin: 2px 0">- %BBLD_FURL%</p>
+	<p style="margin: 2px 0">- %BBLD_FORUM%</p>
+	<p style="margin: 2px 0">- %BBLD_LPOSTER%</p>
+	<p><input class="button-primary" type="button" name="RestoreDefault" value="Restore Default Template" onclick="bbld_default_templates('sidebar_display');" class="button" /></p>
+</th>
+<td><textarea name="bbld_sidebar_display" rows="10" cols="50" id="bbld_sidebar_display" class="large-text code"><?php echo htmlspecialchars(stripslashes(get_option('wpbb_sidebar_display'))); ?></textarea></td>
 </tr>
 </table>
 <p class="submit">

@@ -54,6 +54,10 @@ How to use different database?
 
 == Version History ==
 
+Version 1.0.2 (2009-04-05):
+
+* Fix a wrong text for exclude forum.
+
 Version 1.0.1 (2009-04-05):
 
 * Fix a work-around for display name.

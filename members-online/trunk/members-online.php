@@ -97,7 +97,7 @@ if (isset($bb_post) && !empty($bb_post->poster_id)) {
 		$members=implode(',',$members); 
 		} else {$members=$bb_post->poster_id;}
 		$ids=$bbdb->get_col("SELECT user_id FROM $bbdb->usermeta  WHERE user_id IN ($members) AND meta_key='last_online' AND cast(meta_value AS unsigned)>'$time'");		
-		$ids=array_flip($ids);		
+		if (is_array($ids)) {$ids=array_flip($ids);}
 	}
 	if (isset($ids[$bb_post->poster_id])) {echo "<div style='color:#00aa00'>".__("online")."</div>";} 
 	else {echo "<div style='color:#aaa'>".__("offline")."</div>";} 

@@ -2,7 +2,7 @@
 Tags: bots, captcha, challenge, register, registration, _ck_
 Contributors: _ck_
 Requires at least: 0.8
-Tested up to: trunk
+Tested up to: 1.0 alpha 5
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 
@@ -83,6 +83,10 @@ $human_test['on_for_members']=true;
 = Version 0.9.0 (2009-02-02) =
 
 * change things slightly to confuse spam bots, more to come
+
+= Version 0.9.1 (2009-04-07) =
+
+* missed a change that caused anon posts to always fail, sorry
 
 == To Do ==
 

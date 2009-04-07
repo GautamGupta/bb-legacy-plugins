@@ -3,7 +3,7 @@
 Plugin Name: Human Test for bbPress
 Plugin URI:  http://bbpress.org/plugins/topic/77
 Description:  uses various methods to exclude bots from registering (and eventually posting) on bbPress
-Version: 0.9.0
+Version: 0.9.1
 Author: _ck_
 Author URI: http://bbshowcase.org
 
@@ -50,7 +50,7 @@ if ((empty($human_test['on_for_members']) || bb_current_user_can('moderate')) &&
 	$question=human_test_question();
 	echo '<p><script language="JavaScript" type="text/javascript">document.write("'.$question.'");</script>';	// write question with javascript
 	echo '<noscript><i>'.__("registration requires JavaScript").'</i></noscript>';	// warn no-script users 
-	echo '<input name="human_test" type="text" id="ht_test" size="15" maxlength="100" value="" autocomplete="off" tabindex="2" /> ';  // answer field
+	echo '<input name="ht_test" type="text" id="ht_test" size="15" maxlength="100" value="" autocomplete="off" tabindex="2" /> ';  // answer field
 	echo '('.__('required').')';
 	echo '<input tabindex="0" name = "ht_confirm" id="ht_confirm" style="display:none;visibility:hidden;" value = "" />';	
 	echo '<input tabindex="0" type="hidden" name = "'.session_name().'" value = "'.session_id().'" /></p>';	// improved session support without cookies or urls
@@ -82,7 +82,7 @@ if (!empty($bb_roles->roles['anonymous']['capabilities'])) {$role=$bb_roles->rol
 elseif (!empty($bb_roles->role_objects['anonymous']->capabilities)) {$role=$bb_roles->role_objects['anonymous']->capabilities;} 
 $location=human_test_location();  if ($location=='index.php' && !empty($_GET['new'])) {$location='forum.php';}
 if ( !($location=='register.php' || 
-       (!empty($human_test['on_for_members']) && !empty($bb_current_user) && !bb_current_user_can('moderate') && in_array($location,array('bb-post.php','forum.php','topic.php'))) ||
+       (!empty($human_test['on_for_members']) && !empty($bb_current_user->ID) && !bb_current_user_can('moderate') && in_array($location,array('bb-post.php','forum.php','topic.php'))) ||
        (!empty($role) && 
        ($location=='bb-post.php' && is_object($bb_current_user) && $bb_current_user->has_cap('anonymous')) ||
        ($location=='forum.php' && empty($bb_current_user) && !empty($role['write_topics'])) ||       
@@ -97,7 +97,7 @@ if ( !($location=='register.php' ||
 	@ini_set("url_rewriter.tags","");
 	@session_start();	// sent with headers - errors masked with @ if sessions started previously - which it actually has to be for the following to 
 	}
-	if ($_POST || isset($_POST['ht_test'])) {
+	if (!empty($_POST) || isset($_POST['ht_test'])) { 
 		if (empty($_POST['ht_test'])) {$_POST['ht_test']="";}
 		else {$human_test_post =  stripslashes($_POST['ht_test']);}
 		if (empty($_SESSION['HUMAN_TEST'])) {$compare=rand(9,9999999);}	 // this should not happen unless sessions malfunction
@@ -111,8 +111,8 @@ if ( !($location=='register.php' ||
 			bb_get_header();
 			echo "<br clear='both' /><h2 id='register' style='margin-left:2em;'>".__("Error")."</h2><p align='center'><font size='+1'>".
 			__("Humans only please").". ".__("If you are not a bot").", <br />
-			".__("please go back and try again").".
-			</font></p><br />";
+			".__("please go back and try again").			
+			".</font></p><br />";
 			bb_get_footer();
 			exit;				
 			// todo: limit registration attempts through session count

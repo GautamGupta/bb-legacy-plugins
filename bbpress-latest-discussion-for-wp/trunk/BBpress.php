@@ -4,14 +4,14 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/
 Description: This plugin will generates Latest Discussion list from your bbpress forum into your wordpress. It has the ability to generate latest discussion on sidebar also. The administrator can also set the behavior for this plugin. Even if your bbpress is not intergrated with your wordpress. U still can use this plugin with a little change on the option page. Bbpress Latest Discussion has been around since almost 2 years ago at Bbpress.org.
 Author: Atsutane Shirane
-Version: 1.0.3
+Version: 1.0.4
 Author URI: http://www.atsutane.net/
 */
 
 $plugin_dir = basename(dirname(__FILE__));
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '1.0.3';
+$BbLD_version = '1.0.4';
 
 ### BBLD basic function for external DB
 $exbbdb = new wpdb(get_option('wpbb_dbuser'), get_option('wpbb_dbpass'), get_option('wpbb_dbname'), get_option('wpbb_dbhost'));
@@ -34,7 +34,7 @@ function bbld_preinstall() {
 	global $BbLD_version;
 	$BbLD_ver = get_option('wpbb_version');
 	$BbLD_status = get_option('wpbb_status');
-	if (($BbLD_ver != $BbLD_version) && ($BbLD_status == 'install')) {
+	if (($BbLD_ver <= '1.0.3') && ($BbLD_status == 'install')) {
 		// Use for remove some old data
 		delete_option('wpbb_permalink');
 		delete_option('wpbb_intergrated');
@@ -233,7 +233,7 @@ function bbld_getside() {
 		foreach ( $bbtopic as $bbtopic ) {
 			$title_text = wpbb_trim($bbtopic->topic_title, get_option('wpbb_slimit'));
 			$bbforum = bbld_getdata('forum',$bbtopic->forum_id);
-			$forum_url = wpbb_permalink('forum',$bbtopic->topic_id);
+			$forum_url = wpbb_permalink('forum',$bbtopic->forum_id);
 			$last_poster = bbld_intergrated($bbtopic->topic_last_poster_name);
 			$template_data_sidebar = stripslashes(get_option('wpbb_sidebar_display'));
 			$template_data_sidebar = str_replace("%BBLD_URL%", wpbb_permalink('topic',$bbtopic->topic_id), $template_data_sidebar);

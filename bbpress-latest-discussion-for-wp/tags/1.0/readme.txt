@@ -54,6 +54,10 @@ How to use different database?
 
 == Version History ==
 
+Version 1.0.4 (2009-04-07):
+
+* Fix wrong id number use on forum url. Report by matiaspunx.
+
 Version 1.0.3 (2009-04-06):
 
 * Remove permalink option. Now BbLD will auto detect.

@@ -4,14 +4,21 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/
 Description: This plugin will generates Latest Discussion list from your bbpress forum into your wordpress. It has the ability to generate latest discussion on sidebar also. The administrator can also set the behavior for this plugin. Even if your bbpress is not intergrated with your wordpress. U still can use this plugin with a little change on the option page. Bbpress Latest Discussion has been around since almost 2 years ago at Bbpress.org.
 Author: Atsutane Shirane
-Version: 1.0.4
+Version: 1.1
 Author URI: http://www.atsutane.net/
 */
 
 $plugin_dir = basename(dirname(__FILE__));
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '1.0.4';
+$BbLD_version = '1.1';
+
+### BBpress Latest Discussions Advertisment
+add_action('wp_head', 'bbld');
+function bbld() {
+	global $BbLD_version;
+	echo '<!--- BBpress Latest Discussions v'.$BbLD_version.': http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/ --->';
+}
 
 ### BBLD basic function for external DB
 $exbbdb = new wpdb(get_option('wpbb_dbuser'), get_option('wpbb_dbpass'), get_option('wpbb_dbname'), get_option('wpbb_dbhost'));
@@ -98,20 +105,30 @@ function wpbb_trim($paragraph, $limit) {
 ### Function: Permalink Data
 function wpbb_permalink($type,$topicid) {
 	global $wpdb,$BbLD_version;
-	$perma_type = $wpdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."topicmeta` WHERE `meta_key` LIKE 'mod_rewrite' LIMIT 1");
-	$metakey = $perma_type->meta_value;
-	if ($metakey == 1) {
-		$permalink = get_option('wpbb_path') . '/'. $type . '/' . $topicid;
+	$perma_type = bbld_getdata('permalink');
+	if ($perma_type) {
+		$metakey = $perma_type->meta_value;
 	}
-	elseif ($metakey == 'slugs') {
-		if ($type == 'topic') {
-			$get_title = $wpdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."topics` WHERE `topic_id` LIKE '$topicid' LIMIT 1");
-			$permalink = get_option('wpbb_path') . '/topic/' . $get_title->topic_slug;
+	else {
+		$perma_type = bbld_getdata('permalink2');
+		if ($perma_type) {
+			$metakey = $perma_type->meta_value;
+		}
+	}
+	if ($perma_type && $metakey) {
+		if ($metakey == 1) {
+			$permalink = get_option('wpbb_path') . '/'. $type . '/' . $topicid;
 		}
 		else {
-			$get_title = $wpdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."forums` WHERE `forum_id` LIKE '$topicid' LIMIT 1");
-			$permalink = get_option('wpbb_path') . '/forum/' . $get_title->forum_slug;
-		}			
+			if ($type == 'topic') {
+				$get_title = bbld_getdata('permalink_topic',$topicid);
+				$permalink = get_option('wpbb_path') . '/topic/' . $get_title->topic_slug;
+			}
+			else {
+				$get_title = bbld_getdata('permalink_forum',$topicid);
+				$permalink = get_option('wpbb_path') . '/forum/' . $get_title->forum_slug;
+			}			
+		}
 	}
 	else {
 		$permalink = get_option('wpbb_path') . '/'. $type . '.php?id=' . $topicid;
@@ -122,7 +139,7 @@ function wpbb_permalink($type,$topicid) {
 ### Function: Filter forum to exclude some forum
 function bbld_filter_forums() {
 	global $wpdb;
-	$request = $wpdb->get_results("SELECT * FROM ".get_option('wpbb_bbprefix')."forums ORDER BY forum_order ASC");
+	$request = bbld_getdata('exclude');
 	$exclude_chk = get_option('wpbb_exclude');
 	if ($request) {
 		foreach($request as $request) {
@@ -156,6 +173,38 @@ function bbld_getdata($type,$forum_slimit = 0) {
 		}
 		else {
 			$bbtopic = $wpdb->get_results("SELECT * FROM ".get_option('wpbb_bbprefix')."forums ORDER BY forum_order ASC");
+		}
+	}
+	elseif ($type == 'permalink') {
+		if (get_option('wpbb_exdb')) {
+			$bbtopic = $exbbdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."topicmeta` WHERE `meta_key` LIKE 'mod_rewrite' LIMIT 1");
+		}
+		else {
+			$bbtopic = $wpdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."topicmeta` WHERE `meta_key` LIKE 'mod_rewrite' LIMIT 1");
+		}
+	}
+	elseif ($type == 'permalink2') {
+		if (get_option('wpbb_exdb')) {
+			$bbtopic = $exbbdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."meta` WHERE `meta_key` LIKE 'mod_rewrite' LIMIT 1");
+		}
+		else {
+			$bbtopic = $wpdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."meta` WHERE `meta_key` LIKE 'mod_rewrite' LIMIT 1");
+		}
+	}
+	elseif ($type == 'permalink_topic') {
+		if (get_option('wpbb_exdb')) {
+			$bbtopic = $exbbdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."topics` WHERE `topic_id` LIKE '$topicid' LIMIT 1");
+		}
+		else {
+			$bbtopic = $wpdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."topics` WHERE `topic_id` LIKE '$topicid' LIMIT 1");
+		}
+	}
+	elseif ($type == 'permalink_forum') {
+		if (get_option('wpbb_exdb')) {
+			$bbtopic = $exbbdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."forums` WHERE `forum_id` LIKE '$topicid' LIMIT 1");
+		}
+		else {
+			$bbtopic = $wpdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."forums` WHERE `forum_id` LIKE '$topicid' LIMIT 1");
 		}
 	}
 	else {

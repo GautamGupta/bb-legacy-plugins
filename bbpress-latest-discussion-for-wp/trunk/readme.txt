@@ -16,6 +16,8 @@ The administrator can also set the behavior for this plugin. Even if your bbpres
 
 Bbpress Latest Discussion has been around since almost 2 years ago at Bbpress.org
 
+Currently support bbPress `0.9.0.4` and `1.0-Alpha-6`
+
 == Installation ==
 
 Simply download the Zip-Archive and extract all folder into your wp-content/plugins/ directory. Then go into your WordPress administration page, click on Plugins and activate it. Go to BbLD Option page, to setup this plugin.
@@ -53,6 +55,13 @@ How to use different database?
 4. Sample shot how BbLD do the job
 
 == Version History ==
+
+Version 1.1 (2009-04-08):
+
+* Fix permalink structure to match BBPress 1.0 Alpha-6. Report by irina57.
+* Change how BbLD read permalink data
+* Change how BbLD read exclude data
+* Fix several external db option
 
 Version 1.0.4 (2009-04-07):
 

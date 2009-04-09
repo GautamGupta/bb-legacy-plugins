@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/104
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.2.6
+Version: 0.2.7
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -81,6 +81,8 @@ $bb_attachments['status']=array("ok","deleted","failed","denied extension","deni
 
 $bb_attachments['errors']=array("ok","uploaded file exceeds UPLOAD_MAX_FILESIZE in php.ini","uploaded file exceeds MAX_FILE_SIZE in the HTML form",
 "uploaded file was only partially uploaded","no file was uploaded","temporary folder missing","failed to write file to disk","file upload stopped by PHP extension");
+
+$bb_attachments['db']="bb_attachments";   //   $bbdb->prefix."attachments";  // database name - force to "bb_attachments" if you need compatibility with an old install
 
 // really stop editing!
 
@@ -203,7 +205,7 @@ if ($post_id && ($bb_attachments['role']['see']=="read" || bb_current_user_can($
 	if (!($bb_attachments['role']['inline']=="read" || bb_current_user_can($bb_attachments['role']['inline']))) {$can_inline=false;}
 		
 	if (!isset($bb_attachments_cache[$post_id])) {
-		$bb_attachments_cache[$post_id]=$bbdb->get_results("SELECT * FROM bb_attachments WHERE post_id = $post_id ORDER BY time DESC LIMIT 999");
+		$bb_attachments_cache[$post_id]=$bbdb->get_results("SELECT * FROM ".$bb_attachments['db']." WHERE post_id = $post_id ORDER BY time DESC LIMIT 999");
 	}			
 
 	if (count($bb_attachments_cache[$post_id])) {
@@ -309,7 +311,7 @@ $time=time();	$inject="";
 
 $bb_post=bb_get_post($post_id);  $topic_id=$bb_post->topic_id; 	// fetch related topic
 $topic_attachments=intval(bb_get_topicmeta($topic_id,"bb_attachments"));	// generally how many on topic (may be off if post moved)
-$count = intval($bbdb->get_var("SELECT COUNT(*) FROM bb_attachments WHERE post_id = $post_id AND status = 0")); // how many currently on post
+$count = intval($bbdb->get_var("SELECT COUNT(*) FROM ".$bb_attachments['db']." WHERE post_id = $post_id AND status = 0")); // how many currently on post
 $offset=0;	// counter for this pass
 $strip = array(' ','`','"','\'','\\','/','..','__');  // filter for filenames
 $maxlength=bb_attachments_lookup($bb_attachments['max']['filename']);
@@ -327,12 +329,19 @@ while(list($key,$value) = each($_FILES['bb_attachments']['name'])) {
 		
 			$ext = (strrpos($filename, '.')===false) ? "" : trim(strtolower(substr($filename, strrpos($filename, '.')+1)));
 						
-			if (strlen($filename)>$maxlength) {$filename=substr($filename,0,$maxlength-strlen($ext)+1).".".$ext;}	// fix filename length
-						
-			$tmp=$_FILES['bb_attachments']['tmp_name'][$key];
-			$size=filesize($tmp);	
-			$mime=bb_attachments_mime_type($tmp); 				
-   			$status=0; $id=0;
+			if (strlen($filename)>$maxlength) {$filename=substr($filename,0,$maxlength-strlen($ext)+1).".".$ext;}	// fix filename length					
+			
+			$tmp=$bb_attachments['path'].md5(rand(0,99999).time().$_FILES['bb_attachments']['tmp_name'][$key]);	// make random temp name that can't be guessed
+
+			if (@is_uploaded_file($_FILES['bb_attachments']['tmp_name'][$key]) && @move_uploaded_file($_FILES['bb_attachments']['tmp_name'][$key], $tmp)) {    
+				$size=filesize($tmp);	
+				$mime=bb_attachments_mime_type($tmp); 				
+   				$status=0; $id=0;
+   			} else {
+   				$status=2;	//   file move to temp name failed for some unknown reason
+   				$size=$_FILES['bb_attachments']['size'][$key];	// we'll trust the upload sequence for the size since it doesn't matter, it failed
+   				$mime=""; $id=0;
+   			}
    			
    			if ($status==0 && !in_array($ext,bb_attachments_lookup($bb_attachments['allowed']['extensions']))) {$status=3;}	// disallowed extension
    			if ($status==0 && !in_array($mime,bb_attachments_lookup($bb_attachments['allowed']['mime_types']))) {$status=4;}	// disallowed mime
@@ -342,7 +351,7 @@ while(list($key,$value) = each($_FILES['bb_attachments']['name'])) {
     			if ($size>0 && $filename) {	// we still save the status code if any but don't copy file until status = 0
       								
 				$failed=$bbdb->get_var("
-				INSERT INTO bb_attachments( `time`  , `post_id` , `user_id`, `user_ip`, `status` , `size` , `ext` , `mime` , `filename` )
+				INSERT INTO ".$bb_attachments['db']." ( `time`  , `post_id` , `user_id`, `user_ip`, `status` , `size` , `ext` , `mime` , `filename` )
 				VALUES ('$time', '$post_id' ,  '$user_id' , inet_aton('$user_ip') , $status, '$size', '".addslashes($ext)."', '$mime', '".addslashes($filename)."')				
 				");
 				
@@ -371,8 +380,9 @@ while(list($key,$value) = each($_FILES['bb_attachments']['name'])) {
 					
 					// file is commited here
 								
-					if (!$failed && $id>0 && @is_uploaded_file($_FILES['bb_attachments']['tmp_name'][$key]) && @move_uploaded_file($_FILES['bb_attachments']['tmp_name'][$key], $file)) {    
-						chmod("$file",0777);   
+					if (!$failed && $id>0 && file_exists($tmp)) {    
+						@rename($tmp,$file);	// now it's officially named
+						@chmod($file,0777);   	// make accessable via ftp for ease of management
 						
 						if ($bb_attachments['aws']['enable']) {bb_attachments_aws("$dir/","$id.$filename",$mime);}    // copy to S3
 						                        			
@@ -389,11 +399,13 @@ while(list($key,$value) = each($_FILES['bb_attachments']['name'])) {
 			}					
 		} // end $_FILES['error'][$key])
 		else {$status=2;}
+		if (!empty($tmp) && file_exists($tmp)) {@unlink($tmp);}	// never, ever, leave temporary file behind for security
 		if ($status>0) {
-			if ($id>0) {$bbdb->query("UPDATE  bb_attachments SET `status` = $status WHERE `id` = $id");}
+			if ($id>0) {$bbdb->query("UPDATE ".$bb_attachments['db']." SET `status` = $status WHERE `id` = $id");}
 			$error=""; if ($_FILES['bb_attachments']['error'][$key]>0) {$error=" (".$bb_attachments['errors'][$_FILES['bb_attachments']['error'][$key]].") ";}
 			$output.="<li><span style='color:red'><strong>$filename "." <span class='num'>(".round($size/1024,1)." KB)</span> ".__('error:')." ".$bb_attachments['status'][$status]."</strong>$error</span></li>";
-		} else {$output.="<li><span style='color:green'><strong>$filename "." <span class='num'>(".round($size/1024,1)." KB)</span> ".__('successful')."</strong></span></li>";			 
+		} else {			
+			$output.="<li><span style='color:green'><strong>$filename "." <span class='num'>(".round($size/1024,1)." KB)</span> ".__('successful')."</strong></span></li>";			 
 			if ($bb_attachments['inline']['auto'] && list($width, $height, $type) = getimagesize($file)) {
 		 	if ($display) {
 		 		$location = bb_attachments_location();	 $can_inline=true;
@@ -461,11 +473,11 @@ global $bbdb, $bb_attachments;
 $filenum=intval($filenum);
 if ($filenum==0 && isset($_GET['bbat'])) {$filenum=intval($_GET['bbat']);}
 if ($filenum>0 && ($bb_attachments['role']['download']=="read" || bb_current_user_can($bb_attachments['role']['download']))) {
-	$file=$bbdb->get_results("SELECT * FROM bb_attachments WHERE id = $filenum AND status = 0 LIMIT 1");		
+	$file=$bbdb->get_results("SELECT * FROM ".$bb_attachments['db']." WHERE id = $filenum AND status = 0 LIMIT 1");		
 	if (isset($file[0]) && $file[0]->id) {
 		$file=$file[0]; $file->filename=stripslashes($file->filename);				
 		$fullpath=$bb_attachments['path'].floor($file->id/1000)."/".$file->id.".".$file->filename;
-		@$bbdb->query("UPDATE  bb_attachments  SET downloads=downloads+1 WHERE id = $file->id LIMIT 1");
+		@$bbdb->query("UPDATE ".$bb_attachments['db']." SET downloads=downloads+1 WHERE id = $file->id LIMIT 1");
 
 		if ($bb_attachments['aws']['enable']) {
 			$aws=$bb_attachments['aws']['url'].$file->id.'.'.$file->filename;
@@ -496,7 +508,7 @@ global $bbdb, $bb_attachments;
 $filenum=intval($filenum);
 if ($filenum==0 && isset($_GET['bbat'])) {$filenum=intval($_GET['bbat']);}
 if ($filenum>0 && ($bb_attachments['role']['inline']=="read" || bb_current_user_can($bb_attachments['role']['inline']))) {
-	$file=$bbdb->get_results("SELECT * FROM bb_attachments WHERE id = $filenum AND status = 0 LIMIT 1");		
+	$file=$bbdb->get_results("SELECT * FROM ".$bb_attachments['db']." WHERE id = $filenum AND status = 0 LIMIT 1");		
 	if (isset($file[0]) && $file[0]->id) {
 		$file=$file[0]; $file->filename=stripslashes($file->filename);				
 		$path=$bb_attachments['path'].floor($file->id/1000)."/";
@@ -570,7 +582,7 @@ global $bb_attachments;
 	exit();
 }
 
-function bb_attachments_resize($filename, $type, $width, $height) {		
+function bb_attachments_resize($filename, $type, $width, $height, $suffix=".resize") {		
 global $bb_attachments;
 	switch($type) {
 	case IMAGETYPE_JPEG:
@@ -589,7 +601,7 @@ global $bb_attachments;
 	$new_width = round(1/$scale * $width);
 	$new_height = round(1/$scale * $height);
 		
-	$output=$filename.".resize";		
+	$output=$filename.$suffix;		
 	if (!file_exists($output)) {
 		$new= imagecreatetruecolor($new_width, $new_height);
 		imagecopyresampled($new, $img, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
@@ -605,13 +617,13 @@ global $bbdb, $bb_attachments;
 $filenum=intval($filenum);
 if ($filenum==0 && isset($_GET['bbat_delete'])) {$filenum=intval($_GET['bbat_delete']);}
 if ($filenum>0 && bb_current_user_can($bb_attachments['role']['delete'])) {
-	$file=$bbdb->get_results("SELECT * FROM bb_attachments WHERE id = $filenum AND status = 0 LIMIT 1");		
+	$file=$bbdb->get_results("SELECT * FROM ".$bb_attachments['db']." WHERE id = $filenum AND status = 0 LIMIT 1");		
 	if (isset($file[0]) && $file[0]->id && bb_current_user_can( 'edit_post', $file[0]->post_id)) {
 		$file=$file[0]; $file->filename=stripslashes($file->filename);				
 		$fullpath=$bb_attachments['path'].floor($file->id/1000)."/".$file->id.".".$file->filename;
 		if (file_exists($fullpath)) {
 			@unlink($fullpath);
-			@$bbdb->query("UPDATE  bb_attachments  SET status = 1 WHERE id = $file->id LIMIT 1");			
+			@$bbdb->query("UPDATE ".$bb_attachments['db']." SET status = 1 WHERE id = $file->id LIMIT 1");			
             		}
             		bb_attachments_recount($file->post_id);
             		if (!isset($_GET['bb_attachments'])) {wp_redirect(get_post_link($file->post_id));}			
@@ -623,17 +635,17 @@ function bb_attachments_recount($post_id=0) {    	// update topic icon flag and 
 global $bbdb; $count=0; 
 if (empty($topic_id)) {$topic_id=intval($bbdb->get_var("SELECT topic_id FROM $bbdb->posts WHERE post_id=$post_id LIMIT 1"));}
 if ($topic_id) {
-$count=intval($bbdb->get_var("SELECT count(*) as count FROM bb_attachments WHERE status=0 AND user_id>0 AND size>0 AND post_id IN (SELECT post_id FROM $bbdb->posts WHERE post_status=0 AND topic_id=$topic_id)"));
+$count=intval($bbdb->get_var("SELECT count(*) as count FROM ".$bb_attachments['db']." WHERE status=0 AND user_id>0 AND size>0 AND post_id IN (SELECT post_id FROM $bbdb->posts WHERE post_status=0 AND topic_id=$topic_id)"));
 bb_update_topicmeta( $topic_id, 'bb_attachments', $count);
 }
 return  $count;
 }
 
 function bb_attachments_cache() {
-	global $bbdb, $posts, $bb_attachments_cache;
+	global $bbdb, $posts, $bb_attachments, $bb_attachments_cache;
 	if ($posts) {
 		$list=""; foreach ($posts as $post)  {$bb_attachments_cache[$post->post_id]=array(); $list.=$post->post_id.",";} $list=trim($list," ,");
-		$results=$bbdb->get_results("SELECT * FROM bb_attachments WHERE post_id IN ($list) ORDER BY id DESC");	// needs to be optimized
+		$results=$bbdb->get_results("SELECT * FROM ".$bb_attachments['db']." WHERE post_id IN ($list) ORDER BY id DESC");	// needs to be optimized
 		if ($results) {foreach ($results as $result) {$bb_attachments_cache[$result->post_id][$result->id]=$result;} unset($results);}				
 	}
 }
@@ -707,7 +719,7 @@ return substr($mime,0,strpos($mime.";",";"));
 
 function bb_attachments_install() {
 global $bbdb,$bb_attachments; 
-$bbdb->query("CREATE TABLE IF NOT EXISTS `bb_attachments` (
+$bbdb->query("CREATE TABLE IF NOT EXISTS `".$bb_attachments['db']."` (
 		`id`		int(10)        UNSIGNED NOT NULL auto_increment,
 		`time`       	int(10)        UNSIGNED NOT NULL default '0',
 		`post_id` 	int(10)        UNSIGNED NOT NULL default '0',
@@ -723,7 +735,7 @@ $bbdb->query("CREATE TABLE IF NOT EXISTS `bb_attachments` (
 		INDEX (`post_id`)
 		) CHARSET utf8  COLLATE utf8_general_ci");	
 		
-$bbdb->query("ALTER TABLE `bb_attachments` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci,
+$bbdb->query("ALTER TABLE `".$bb_attachments['db']."` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci,
 CHANGE `ext` `ext` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
 CHANGE `mime` `mime` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
 CHANGE `filename` `filename` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL");

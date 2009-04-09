@@ -115,9 +115,21 @@ function check_for_updates_masterlist() {
 // fetch master list - todo: mirrors, error checking, timeout
 $url="http://plugins-svn.bbpress.org/check-for-updates/trunk/plugin-list.txt.gz"; 
 // $url="http://bbshowcase.org/forums/my-plugins/check-for-updates/plugin-list.txt.gz"; 
-$url=parse_url($url); 
-$data=check_for_updates_fsockfetch($url['host'],80,$url['path']);
-$data=gzinflate(substr($data['data'],10));
+if (function_exists('curl_exec')) {
+	$ch = curl_init(); 
+	curl_setopt($ch, CURLOPT_URL, $url);	
+	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT,10);
+	curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+	curl_setopt($ch, CURLOPT_HEADER, 0);	
+	curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER , 1); 	
+	$data = curl_exec($ch); curl_close($ch);
+} else {
+	$url=parse_url($url); 
+	$data=check_for_updates_fsockfetch($url['host'],80,$url['path']);
+	$data=$data['data'];	
+}
+$data=gzinflate(substr($data,10));
 $lines=explode("\n",$data);
 unset($data);
 global $plugins;

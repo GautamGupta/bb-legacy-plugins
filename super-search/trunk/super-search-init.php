@@ -468,7 +468,7 @@ if ($SSrequest['located']==3) {$search="";}
 	}
 
 	// combine topics if show posts turned off		
-	if (empty($SSrequest['posts'])) {$query.="GROUP BY t3.topic_id ";}
+	if (empty($SSrequest['posts'])) {$query.=" GROUP BY t3.topic_id ";}
 
 	// 'Sort By 'date','date|Date','views|Views','posts|Posts','title|Title','user|User'
 	$sort=""; $restrict="";	
@@ -592,7 +592,7 @@ echo '<style type="text/css">
 .SuperSearch {font-size:1em; line-height:150%;margin:0 1em;}
 .SuperSearch option {padding:1px 2px; margin:1px; font-size:1em; vertical-align:middle;}
 .SuperSearch input {vertical-align:middle; 1em;}
-.SSbreak 	{clear:left; line-height:11px; height:11px; font-size:11px;}
+.SSbreak 	{line-height:11px; height:11px; font-size:11px;}
 .SShighlight0	{color:#000; background:#FFFFCF;}
 .SShighlight1	{color:#000; background:#00FFFF;}
 .SShighlight2	{color:#000; background:#7FFF00;}

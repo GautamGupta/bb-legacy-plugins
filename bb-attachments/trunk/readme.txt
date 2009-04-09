@@ -84,6 +84,8 @@ http://docs.amazonwebservices.com/AmazonS3/2006-03-01/VirtualHosting.html#Virtua
 * 0.2.4	security fix for when delete level set to participate - user can only delete attachment if they can edit post
 * 0.2.5 multipart fix for bbPress 1.0a6 switch to bb_get_uri
 * 0.2.6 bug fix for handling encoding during feeds (encode self, not entire post text)
+* 0.2.7 allow custom table name for multiple installs in same db, 
+	don't use temp area for testing - move to main area and destroy if bad, fixes open_basedir and some safe mode problems
 	
 == To Do ==
 

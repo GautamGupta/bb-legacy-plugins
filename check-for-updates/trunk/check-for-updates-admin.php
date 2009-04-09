@@ -19,7 +19,7 @@ check_for_updates_masterlist();
 		<th>Version (newest)</th>
 	</tr>
 </thead>
-<?php $count=0; 	
+<?php $count=0; $authors=array();
 foreach ($plugins as $status=>$data) {	
 	if ($status=='all' || empty($data) || !is_array($data)) {continue;}
 	uksort($data, 'strnatcasecmp');
@@ -37,7 +37,7 @@ foreach ($plugins as $status=>$data) {
 	?>
 	<tr<?php alt_class( 'plugin', $thisclass ); ?>>
 		<td><?php echo $plugin['plugin_link']; ?></td>
-		<td align=center><?php echo $plugin['author_link']; $authors[]=trim(strip_tags($plugin['author'])); ?></td>				
+		<td align=center><?php echo $plugin['author_link']; @$authors[trim(strip_tags($plugin['author']))]++; ?></td>				
 		<td class="action" align=center nowrap><?php echo $status; ?></td>
 		<td class="vers" align=center><?php echo $plugin['version']; ?></td>
 		<td class="vers" align=center id="cfu<?php echo $count.'">'.$version; ?></td>
@@ -49,7 +49,7 @@ foreach ($plugins as $status=>$data) {
 
 ?>
 <tr class=sortbottom>
-	<th nowrap>Total Plugins: <?php echo $count; ?></th><th nowrap>Authors: <?php echo count(array_unique($authors)); ?></th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th>
+	<th nowrap>Total Plugins: <?php echo $count; ?></th><th nowrap>Authors: <?php echo count($authors); ?></th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th>
 </tr>
 </table>
 

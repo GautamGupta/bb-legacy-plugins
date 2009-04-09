@@ -7,8 +7,9 @@ global $plugins;
 check_for_updates_pluginslist();
 check_for_updates_masterlist();
 ?>
-<div style="float:right;"><?php $age=reset($plugins['all']); $version=key($plugins['all']); echo __('using revision')." $version (".bb_since($age)." ".__('old').") "; ?></div>
 <h2><?php _e('Check for Updates'); ?></h2>  
+<div style="margin-top:-3em;float:right;"><?php $age=reset($plugins['all']); $version=key($plugins['all']); echo __('using revision')." $version (".bb_since($age)." ".__('old').") "; ?></div>
+
 <table class="widefat">
 <thead>
 	<tr>
@@ -95,9 +96,12 @@ global $plugins;
 $plugins['current'] = (array) str_replace("user#","",bb_get_option( 'active_plugins' ));
 $plugins['current'] = array_flip($plugins['current']); // speed up by key
 
+if ( defined( 'BB_PLUGIN_DIR' ) ) {$bbplugindir=BB_PLUGIN_DIR;} elseif (defined('BBPLUGINDIR' ) ) {$bbplugindir=BBPLUGINDIR;}
+if (empty($bbplugindir) || !file_exists($bbplugindir)) {$bbplugindir=BB_PATH . 'bb-plugins/';} 	 // they are using bb-plugins instead of my-plugins
+
 if (defined('BACKPRESS_PATH')) {require_once( BB_PATH . BB_INC . 'class.bb-dir-map.php' );}
 
-$dir = new BB_Dir_Map( BBPLUGINDIR, array('recurse' => 1,
+$dir = new BB_Dir_Map( $bbplugindir, array('recurse' => 1,
 	'callback' => create_function('$f,$_f', '	
 	if (".php" == substr($_f,-4) && $result=check_for_updates_plugin_details($f)) {
 		global $plugins;

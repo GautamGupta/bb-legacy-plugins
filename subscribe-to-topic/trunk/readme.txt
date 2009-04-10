@@ -57,6 +57,11 @@ but if it's a very large site you'll probably have to pay a whitelisting service
 
 * bug fix for missing subscriptions tab for regular members
 
+= Version 0.0.4 (2009-04-10) =
+
+* use proper capabilities prefix
+* use bb_mail instead of direct mail function
+
 == To Do ==
 
 * bcc research to send only one email notify to many members

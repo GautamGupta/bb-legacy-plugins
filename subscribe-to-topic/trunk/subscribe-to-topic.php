@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/subscribe-to-topic
 Description: Allows members to track and/or receive email notifications (instant, daily, weekly) for new posts on topics.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.3
+Version: 0.0.4
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -157,7 +157,7 @@ $query="SELECT DISTINCT user_id,user_email FROM $bbdb->users as t1
 	     LEFT JOIN subscribe_to_topic as t3 on t1.ID=t3.user
 	     WHERE user!=$bb_current_user->ID AND user_status=0 
 	     AND topic=$topic_id AND type=2 AND time<$time and post>last
-	     AND (meta_key='bb_capabilities' AND NOT (meta_value LIKE '%inactive%' OR meta_value LIKE '%blocked%'))";
+	     AND (meta_key='$bbdb->prefix"."capabilities' AND NOT (meta_value LIKE '%inactive%' OR meta_value LIKE '%blocked%'))";
 $emails=$bbdb->get_results($query); if (empty($emails)) {return;}
 
 $topic_link=get_post_link($post_id);
@@ -169,7 +169,9 @@ $subject="[".bb_get_option('name') . ']' ." ". __('new post notification');
 $message = __("There is a new post on [%1\$s] \n\nReply by: %2\$s \n%3\$s \n\n\nUnsubscribe: \n%4\$s \n");
 
 foreach ($emails as $email){
-	mail($email->user_email,$subject,sprintf($message,$topic->topic_title,$user_name,$topic_link,$unsubscribe),$from_email,"-odb");	  // odq = queue only
+	// mail($email->user_email,$subject,sprintf($message,$topic->topic_title,$user_name,$topic_link,$unsubscribe),$from_email,"-odb");	  // odq = queue only
+	bb_mail($email->user_email, $subject, sprintf($message,$topic->topic_title,$user_name,$topic_link,$unsubscribe));
+
 	$ids[$email->user_id]=$email->user_id;
 	// print "$email->user_email <br>\n";	
 }

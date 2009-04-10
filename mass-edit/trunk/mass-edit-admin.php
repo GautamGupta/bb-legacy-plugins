@@ -1,17 +1,4 @@
 <?php
-/*
-Mass Edit - Moderate Posts
-http://bbpress.org/plugins/topic/89
-Adds a "mass edit" feature to bbPress admin panel, similar to WordPress, for easily moderating posts in bulk.
-http://bbShowcase.org
-1.1.2
-
-License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
-
-Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
-
-Instructions:   install, activate, look under Content in admin menu for Mass Edit
-*/
 
 function mass_edit() {
 	if ( !bb_current_user_can('browse_deleted') ) {die(__("Now how'd you get here?  And what did you think you'd be doing?"));}
@@ -201,10 +188,9 @@ if ($bb_posts) {
 
 // lazy cache loading to radically reduce query count
 foreach ($bb_posts as $bb_post) {$users[$bb_post->poster_id]=$bb_post->poster_id; $topics[$bb_post->topic_id]=$bb_post->topic_id;}  
-$users=join(',', $users); $topics=join(',', $topics);
-$users=$bbdb->get_results("SELECT ID,user_login,user_registered FROM $bbdb->users WHERE ID IN ($users)");
-$users = bb_append_meta( $users, 'user' );
+bb_cache_users($users);
 unset($users); 
+$topics=join(',', $topics);
 $topics=$bbdb->get_results("SELECT topic_id,topic_title,topic_slug FROM $bbdb->topics WHERE topic_id IN ($topics)");
 $topics = bb_append_meta( $topics, 'topic' );
 unset($topics);
@@ -221,7 +207,7 @@ case "checkbox" :
     echo '<th scope="col"><input type="checkbox" onclick="checkAll(this,document.getElementById(\'deleteposts\'));" /></th>';
 break;
 case "excerpt" :   
-    echo '<th scope="col" width="999">' . __('Post Excerpt') . '</th>';
+    echo '<th scope="col" width="90%">' . __('Post Excerpt') . '</th>';
 break;   
 case "name" :   
    echo '<th scope="col">' .  __('Name') . '</th>';
@@ -255,13 +241,13 @@ switch ($position) :
     <td><?php if ( bb_current_user_can('edit_post', $bb_post->post_id) ) { ?><input type="checkbox" name="mass_edit_delete_posts[]" value="<?php echo $bb_post->post_id; ?>" /><?php } ?></td>
   <?php break;    
   case "excerpt" : ?>
-    <td><?php echo "<a class=metext href='".get_post_link()."'>[<strong>".get_topic_title($bb_post->topic_id) ."</strong>] ".mass_edit_scrub_text($bb_post->post_text,$post_text,45,$exact_match).'</a>'; ?></td>
+    <td><?php echo "<a class=metext href='".mass_edit_get_post_link()."'>[<strong>".get_topic_title($bb_post->topic_id) ."</strong>] ".mass_edit_scrub_text($bb_post->post_text,$post_text,45,$exact_match).'</a>'; ?></td>
 <?php break;    
   case "name" : ?>
-    <td><a href="<?php echo get_user_profile_link( $bb_post->poster_id); ?>"><?php echo get_user_name( $bb_post->poster_id ); ?></a></td>    
+    <td><a href="<?php echo attribute_escape(get_user_profile_link( $bb_post->poster_id) ); ?>"><?php echo get_user_name( $bb_post->poster_id ); ?></a></td>    
 <?php break;    
   case "meta" : ?>
-    <td><span class=timetitle title="<? echo date("r",strtotime(bb_get_post_time())); ?>"><?php printf( __('%s ago'), bb_get_post_time() ); ?></span> 
+    <td><span class=timetitle title="<?php echo date("r",strtotime(bb_get_post_time())); ?>"><?php printf( __('%s ago'), bb_get_post_time() ); ?></span> 
     	<?php post_ip_link(); ?></td>    
 <?php break;    
   case "actions" : ?>	
@@ -307,6 +293,14 @@ else {echo "<strong>".__('No results found.')."</strong>";} ?>
 function mass_edit_topic_limit($per_page) {
 if (isset($_GET['per_page'])) {$per_page = intval(substr($_GET['per_page'],0,3));} else {$per_page="20";} 
 return $per_page;
+}
+
+function mass_edit_get_post_link( $post_id = 0 ) {	// to do, get proper page link for delete posts based on complete post count, not position
+	$bb_post = bb_get_post( get_post_id( $post_id ) );
+	$page = get_page_number( $bb_post->post_position );
+	$link=get_topic_link( $bb_post->topic_id, $page ) . "#post-$bb_post->post_id"; 
+	if ($bb_post->post_status) {$link=add_query_arg('view','all',$link);}
+	return $link; 	// apply_filters( 'get_post_link', $link, $bb_post->post_id );
 }
 
 function mass_edit_list_posts() {

@@ -56,6 +56,10 @@ How to use different database?
 
 == Version History ==
 
+Version 1.1.1 (2009-04-11):
+
+* Fix permalink not working. Report by guyom.
+
 Version 1.1 (2009-04-08):
 
 * Fix permalink structure to match BBPress 1.0 Alpha-6. Report by irina57.

@@ -4,14 +4,14 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/
 Description: This plugin will generates Latest Discussion list from your bbpress forum into your wordpress. It has the ability to generate latest discussion on sidebar also. The administrator can also set the behavior for this plugin. Even if your bbpress is not intergrated with your wordpress. U still can use this plugin with a little change on the option page. Bbpress Latest Discussion has been around since almost 2 years ago at Bbpress.org.
 Author: Atsutane Shirane
-Version: 1.1
+Version: 1.1.1
 Author URI: http://www.atsutane.net/
 */
 
 $plugin_dir = basename(dirname(__FILE__));
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '1.1';
+$BbLD_version = '1.1.1';
 
 ### BBpress Latest Discussions Advertisment
 add_action('wp_head', 'bbld');
@@ -193,18 +193,18 @@ function bbld_getdata($type,$forum_slimit = 0) {
 	}
 	elseif ($type == 'permalink_topic') {
 		if (get_option('wpbb_exdb')) {
-			$bbtopic = $exbbdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."topics` WHERE `topic_id` LIKE '$topicid' LIMIT 1");
+			$bbtopic = $exbbdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."topics` WHERE `topic_id` LIKE '$forum_slimit' LIMIT 1");
 		}
 		else {
-			$bbtopic = $wpdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."topics` WHERE `topic_id` LIKE '$topicid' LIMIT 1");
+			$bbtopic = $wpdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."topics` WHERE `topic_id` LIKE '$forum_slimit' LIMIT 1");
 		}
 	}
 	elseif ($type == 'permalink_forum') {
 		if (get_option('wpbb_exdb')) {
-			$bbtopic = $exbbdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."forums` WHERE `forum_id` LIKE '$topicid' LIMIT 1");
+			$bbtopic = $exbbdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."forums` WHERE `forum_id` LIKE '$forum_slimit' LIMIT 1");
 		}
 		else {
-			$bbtopic = $wpdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."forums` WHERE `forum_id` LIKE '$topicid' LIMIT 1");
+			$bbtopic = $wpdb->get_row("SELECT * FROM `".get_option('wpbb_bbprefix')."forums` WHERE `forum_id` LIKE '$forum_slimit' LIMIT 1");
 		}
 	}
 	else {
@@ -375,6 +375,22 @@ echo '<script type="text/javascript">
 		}
 		document.getElementById("bbld_" + template).value = default_template;
 	}
+	function index() {
+		// Tab
+		document.getElementById("PostPageTab").className = "SelectedTab";
+		document.getElementById("SidebarTab").className = "Tab";
+		// Page
+		document.getElementById("PostPage").style.display= "block";
+		document.getElementById("Sidebar").style.display = "none";
+	}
+	function sidebar() {
+		// Tab
+		document.getElementById("PostPageTab").className = "Tab";
+		document.getElementById("SidebarTab").className = "SelectedTab";
+		// Page
+		document.getElementById("PostPage").style.display= "none";
+		document.getElementById("Sidebar").style.display = "block";
+	}
 /* ]]> */
 </script>';
 }
@@ -491,7 +507,15 @@ function wp_bb_option() {
 
 <div id="icon-bbld" class="icon32"><br /></div>
 <h2><?php _e('BbLD Templates System', 'bbpress-latest-discussion'); ?></h2>
+
+<ul id="Tabs">
+	<li id="PostPageTab" class="SelectedTab"><a href="#PostPage" onclick="index(); return false;">Post/Page</a></li>
+	<li id="SidebarTab" class="Tab"><a href="#Sidebar" onclick="sidebar(); return false;">Sidebar/Widget</a></li>
+</ul>
+
 <form method="post" action="<?php echo $ori_url; ?>">
+<div id="Content">
+<div id="PostPage">
 <table class="form-table">
 <tr valign="top">
 <th scope="row">
@@ -527,7 +551,11 @@ function wp_bb_option() {
 </th>
 <td><textarea name="bbld_postpage_footer" rows="10" cols="50" id="bbld_postpage_footer" class="large-text code"><?php echo htmlspecialchars(stripslashes(get_option('wpbb_pagepost_footer'))); ?></textarea></td>
 </tr>
+</table>
+</div>
 
+<div id="Sidebar" style="display: none;">
+<table class="form-table">
 <tr valign="top">
 <th scope="row">
 	<p><strong>BbLD Sidebar Title:</strong></p>
@@ -552,6 +580,8 @@ function wp_bb_option() {
 <td><textarea name="bbld_sidebar_display" rows="10" cols="50" id="bbld_sidebar_display" class="large-text code"><?php echo htmlspecialchars(stripslashes(get_option('wpbb_sidebar_display'))); ?></textarea></td>
 </tr>
 </table>
+</div>
+</div>
 <p class="submit">
 <input type="submit" name="wpbb_save_template" id="wpbb_save_template" class="button-primary" value="<?php _e('Save Templates Change &raquo;', 'bbpress-latest-discussion'); ?>" />
 </p>

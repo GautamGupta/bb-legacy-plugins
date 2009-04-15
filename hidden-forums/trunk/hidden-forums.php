@@ -5,16 +5,8 @@ Description:  Make selected forums completely hidden except to certain members o
 Plugin URI:  http://bbpress.org/plugins/topic/105
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.7
-
-License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
-
-Donate: http://bbshowcase.org/donate/
-
-Instructions:  add hidden forum list and exceptions below, install, activate 
-*/
-
-/* 
+Version: 0.0.8
+ 
 Until there is an admin menu you have to create settings yourself manually (sorry).
 
 In the default example below:
@@ -27,7 +19,7 @@ In the default example below:
 
 $hidden_forums['hidden_forums']=array(500,501,502);	// hide these forums, list by comma seperated number
 
-$hidden_forums['allow_roles']['all_forums']=array('keymaster');		// these roles can always see ALL forums regardless
+$hidden_forums['allow_roles']['all_forums']=array('keymaster','administrator'); 	// these roles can always see ALL forums regardless
 $hidden_forums['allow_roles'][500]=array('administrator','moderator');	// exact formal role name, *not* ability
 $hidden_forums['allow_roles'][501]=array('administrator','moderator');	// exact formal role name, *not* ability
 
@@ -85,10 +77,12 @@ if (!empty($hidden_forums_list)) {
 	
 	if (defined('BACKPRESS_PATH')) { 	// bbPress 1.0 workaround, needs work
 		if (!is_topic()) {unset($filters[0]);} else {add_action('get_topic_where','hidden_forums_filter_once',20);}
-	}       			
+	} else {
+		add_filter('get_forum_where','hidden_forums_filter_and',20);	  // bbPress 1.0 is broken so AND must be forced manually, skip entirely after 1.0a5+
+	}	
 	foreach ($filters as $filter) {add_filter($filter.'_where','hidden_forums_filter',20);}
 	foreach ($bb_views as $key=>$value) {add_action('bb_view_'.$key.'_where','hidden_forums_filter');}
-	add_filter('get_forum_where','hidden_forums_filter_and',20);	  // bbPress 1.0 is broken so AND must be forced manually
+	
 }
 
 if (!empty($hidden_forums['label']) && $hidden_forums_list!=array_flip($hidden_forums['hidden_forums'])) {

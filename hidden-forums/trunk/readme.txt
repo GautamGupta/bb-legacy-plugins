@@ -78,6 +78,10 @@ Make selected forums completely hidden except to certain members or roles. Uses 
 
 * yet more workarounds for bbPress 1.0  (broken get_forum)
 
+= Version 0.0.8 (2009-04-15) =
+
+* yet more problems with bbPress 1.0, get_forum filter causes endless loop under 1.0a5 + 1.0a6
+
 == To Do ==
 
 * admin menu

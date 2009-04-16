@@ -18,6 +18,8 @@ Bbpress Latest Discussion has been around since almost 2 years ago at Bbpress.or
 
 Currently support bbPress `0.9.0.4` and `1.0-Alpha-6`
 
+If you like my work, Please give a link back.
+
 == Installation ==
 
 Simply download the Zip-Archive and extract all folder into your wp-content/plugins/ directory. Then go into your WordPress administration page, click on Plugins and activate it. Go to BbLD Option page, to setup this plugin.
@@ -39,10 +41,6 @@ Examples of use:
 
 == Frequently Asked Questions ==
 
-How to fix/use permalink?
-
-1. Please make sure u check the button "Bbpress Permalink" inside BbLD Option page.
-
 How to use different database?
 
 1. Make sure you check "External DB" option and input the data for your external database.
@@ -55,6 +53,16 @@ How to use different database?
 4. Sample shot how BbLD do the job
 
 == Version History ==
+
+Version 1.2 (2009-04-16):
+
+* Major Clean Up Code
+* Add Donate link option
+
+Version 1.1.2 (2009-04-12):
+
+* Add Bbpress.js file.
+* Fix external db connection.
 
 Version 1.1.1 (2009-04-11):
 

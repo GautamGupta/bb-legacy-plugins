@@ -6,6 +6,23 @@ Description: Sync your WordPress comments to bbPress forum and back.
 Author: Ivan Babrou <ibobrik@gmail.com>
 Version: 0.4.1
 Author URI: http://bobrik.name
+
+Copyright 2008 Ivan Babroŭ (email : ibobrik@gmail.com)
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the license, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; see the file COPYING.  If not, write to
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.
 */
 
 // FIXME: change path!
@@ -68,7 +85,7 @@ function comare_keys_local()
 function bbwp_listener()
 {
 	// setting authorized user
-	if ($_POST['user'] != -1)
+	if ($_POST['user'] != 0)
 	{
 		bb_set_current_user($_POST['user']);
 	} else
@@ -155,8 +172,17 @@ function continue_bb_topic()
 	$row = get_table_item('wp_post_id', $_POST["post_id"]);
 	remove_all_filters('pre_post');
 	$post_id = bb_insert_post(array("topic_id" => $row['bb_topic_id'], "post_text" => stripslashes($_POST["post_content"])));
+	error_log('___ '.$row['bb_topic_id'].' __ '.stripslashes($_POST["post_content"]).' ====== '.$post_id);
 	bb_delete_post($post_id, status_wp2bb($_POST['comment_approved']));
-	$result = add_table_item($_POST['post_id'], $_POST['comment_id'], $row['bb_topic_id'], $post_id);
+	// empty user info if not anonymous user
+	$user = bb_get_current_user();
+	if (bb_get_option('bbwp_anonymous_user_id') != $user->ID)
+	{
+		$_POST['comment_author'] = '';
+		$_POST['comment_author_email'] = '';
+		$_POST['comment_author_url'] = '';
+	}
+	$result = add_table_item($_POST['post_id'], $_POST['comment_id'], $row['bb_topic_id'], $post_id, $_POST['comment_author'], $_POST['comment_author_email'], $_POST['comment_author_url']);
 	$data = serialize(array("topic_id" => $row['bb_topic_id'], "post_id" => $post_id, "result" => $result));
 	echo $data;
 }
@@ -190,43 +216,31 @@ function bbwp_install()
 {
 	// create table at first install
 	global $bbdb;
-	$bbwp_sync_db_version = 0.2;
+	$bbwp_sync_db_version = 0.6;
 	$table = $bbdb->prefix."bbwp_ids";
-	if ($bbdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) 
+	$sql = "CREATE TABLE $table (
+		`wp_comment_id` INT UNSIGNED NOT NULL,
+		`wp_post_id` INT UNSIGNED NOT NULL,
+		`wp_comment_author` tinytext character set utf8 NOT NULL default '',
+		`wp_comment_author_email` varchar(100) NOT NULL default '',
+		`wp_comment_author_url` varchar(200) NOT NULL default '',
+		`bb_topic_id` INT UNSIGNED NOT NULL,
+		`bb_post_id` INT UNSIGNED NOT NULL,
+	);";
+	if ($bbdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name || backpress_get_option('bbwp_sync_db_version') != $bbwp_sync_db_version) 
 	{
-		$sql = "CREATE TABLE $table (
-			`wp_comment_id` INT UNSIGNED NOT NULL,
-			`wp_post_id` INT UNSIGNED NOT NULL,
-			`bb_topic_id` INT UNSIGNED NOT NULL,
-			`bb_post_id` INT UNSIGNED NOT NULL
-		);";
 		require_once(BB_PATH.'bb-admin/includes/functions.bb-upgrade.php');
 		bb_sql_delta($sql);
-		
 		backpress_add_option('bbwp_sync_db_version', $bbwp_sync_db_version);
-	}
-	
-	$installed_version = backpress_get_option('bbwp_sync_db_version');
-	// upgrade table if necessary
-	if ($installed_version != $bbwp_sync_db_version)
-	{
-		$sql = "CREATE TABLE $table (
-			`wp_comment_id` INT UNSIGNED NOT NULL,
-			`wp_post_id` INT UNSIGNED NOT NULL,
-			`bb_topic_id` INT UNSIGNED NOT NULL,
-			`bb_post_id` INT UNSIGNED NOT NULL
-		);";
-		require_once(BB_PATH.'bb-admin/includes/functions.bb-upgrade.php');
-		bb_sql_delta($sql);
-		backpress_update_option('bbwp_sync_db_version', $bbwp_sync_db_version);
 	}
 }
 
-function add_table_item($wp_post, $wp_comment, $bb_topic, $bb_post)
+function add_table_item($wp_post, $wp_comment, $bb_topic, $bb_post, $wp_anon_user, $wp_anon_email, $wp_anon_url)
 {
 	global $bbdb;
-	return $bbdb->query("INSERT INTO ".$bbdb->prefix."bbwp_ids (wp_post_id, wp_comment_id, bb_topic_id, bb_post_id)
-		VALUES ($wp_post, $wp_comment, $bb_topic, $bb_post)");
+	$bbdb->show_errors();
+	return $bbdb->query($bbdb->prepare("INSERT INTO ".$bbdb->prefix."bbwp_ids (wp_post_id, wp_comment_id, bb_topic_id, bb_post_id, wp_comment_author, wp_comment_author_email, wp_comment_author_url)
+		VALUES (%d, %d, %d, %d, %s, %s, %s)", $wp_post, $wp_comment, $bb_topic, $bb_post, $wp_anon_user, $wp_anon_email, $wp_anon_url));
 }
 
 function get_table_item($field, $value)
@@ -286,6 +300,7 @@ function edit_wp_comment($post, $comment_id)
 {
 	// FIXME: get post status and post text original way
 	global $bbdb;
+	remove_filter('post_text', 'bbwp_anonymous_userinfo');
 	$request = array(
 		'action' => 'edit_comment',
 		'post_text' => apply_filters('post_text', $bbdb->get_var("SELECT post_text FROM ".$bbdb->prefix."posts WHERE post_id = ".$post->post_id)),
@@ -561,13 +576,7 @@ function check_wp_settings()
 
 function aftertagedit($id)
 {
-	global $bbwp_plugin;
-	if (!$bbwp_plugin)
-	{
-		// we don't need endless loop ;)
-		return;
-	}
-	if (bb_get_option('bbwp_plugin_status') != 'enabled')
+	if (!bbwp_do_sync())
 		return;
 	global $topic;
 	$row = get_table_item('bb_topic_id', $topic->topic_id);
@@ -625,6 +634,23 @@ function deactivate_bbwp()
 	set_global_plugin_status('disabled');
 }
 
+function bbwp_anonymous_userinfo($text)
+{
+	if (bb_get_option('bbwp_anonymous_user_id') == get_post_author_id())
+	{
+		// write extra information about anonymous user
+		$row = get_table_item('bb_post_id', get_post_id());
+		$text .= '<div class="wpbb_anonymous_userinfo">'.__('User provided information').'<ul>'
+			.'<li><span class="wpbb_anonymous_userinfo_key">Author</span>: <span>'.$row['wp_comment_author'].'</span></li>';
+		if (bb_get_option('bbwp_show_anonymous_email') == 'enable')
+			$text .= '<li><span class="wpbb_anonymous_userinfo_key">E-mail</span>: <span>'.$row['wp_comment_author_email'].'</span></li>';
+		if (bb_get_option('bbwp_show_anonymous_url') == 'enable')
+			$text .= '<li><span class="wpbb_anonymous_userinfo_key">URL</span>: <span>'.$row['wp_comment_author_url'].'</span></li>';
+		$text .= '</ul></div>';
+	}
+	return $text;
+}
+
 // TODO: catch topic deletion
 // FIXME: change " to ' where no escaping
 // TODO: plugin translation
@@ -641,5 +667,6 @@ bb_register_plugin_activation_hook('user#wordpress-bbpress-syncronization/bbwp-s
 add_action('bb_deactivate_plugin_user#wordpress-bbpress-syncronization/bbwp-sync.php', 'deactivate_bbwp');
 add_action('bb_admin_menu_generator', 'options_page');
 add_action('bb_admin-header.php', 'process_options');
+add_filter('post_text', 'bbwp_anonymous_userinfo');
 
 ?>

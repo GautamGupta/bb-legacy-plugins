@@ -54,6 +54,10 @@ How to use different database?
 
 == Version History ==
 
+Version 1.2.2 (2009-04-18):
+
+* Clean up mess on 1.2.1
+
 Version 1.2.1 (2009-04-17):
 
 * Fix up query code. Now only use 1 query for 1 function. Report by dragunoof

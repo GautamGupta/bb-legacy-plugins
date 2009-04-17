@@ -7,7 +7,7 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/
 Description: This plugin will generates Latest Discussion list from your bbpress forum into your wordpress. It has the ability to generate latest discussion on sidebar also. The administrator can also set the behavior for this plugin. Even if your bbpress is not intergrated with your wordpress. U still can use this plugin with a little change on the option page. Bbpress Latest Discussion has been around since almost 2 years ago at Bbpress.org.
 Author: Atsutane Shirane
-Version: 1.2.1
+Version: 1.2.2
 Author URI: http://www.atsutane.net/
 */
 
@@ -16,7 +16,7 @@ Author URI: http://www.atsutane.net/
 $plugin_dir = basename(dirname(__FILE__));
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '1.2.1';
+$BbLD_version = '1.2.2';
 
 ### BBpress Latest Discussions Advertisment
 add_action('wp_head', 'bbld');
@@ -174,7 +174,6 @@ function bbld_filter_forums() {
 	$bbld_option = get_option('bbld_option');
 	$exclude_chk = $bbld_option['exclude'];
 	if ($exclude_chk) {
-		echo 'ada exclude data';
 		foreach($exclude_chk as $request) {
 				$forum_ids .= $request.'\',\'';
 		}

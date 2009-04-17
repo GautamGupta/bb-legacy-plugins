@@ -4,7 +4,7 @@ Tags: bbpress, wordpress, latest, discussion, bbld, widget, plugin, sidebar, pos
 Contributors: Atsutane
 Requires at least: 2.0.5
 Tested up to: 2.7.1
-Stable Tag: 1.0
+Stable Tag: 1.2
 
 This plugin will generates Latest Discussion list from your bbpress forum into your wordpress page.
 
@@ -54,12 +54,18 @@ How to use different database?
 
 == Version History ==
 
+Version 1.2.1 (2009-04-17):
+
+* Fix up query code. Now only use 1 query for 1 function. Report by dragunoof
+* Add back `permalink type` option.
+* Add back `share userdata` option
+
 Version 1.2 (2009-04-16):
 
 * Major Clean Up Code
 * Add Donate link option
 
-Version 1.1.2 (2009-04-12):
+Version 1.1.1 (2009-04-12):
 
 * Add Bbpress.js file.
 * Fix external db connection.

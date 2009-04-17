@@ -7,14 +7,16 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/
 Description: This plugin will generates Latest Discussion list from your bbpress forum into your wordpress. It has the ability to generate latest discussion on sidebar also. The administrator can also set the behavior for this plugin. Even if your bbpress is not intergrated with your wordpress. U still can use this plugin with a little change on the option page. Bbpress Latest Discussion has been around since almost 2 years ago at Bbpress.org.
 Author: Atsutane Shirane
-Version: 1.2
+Version: 1.2.1
 Author URI: http://www.atsutane.net/
 */
+
+// Update for reduce queries
 
 $plugin_dir = basename(dirname(__FILE__));
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '1.2';
+$BbLD_version = '1.2.1';
 
 ### BBpress Latest Discussions Advertisment
 add_action('wp_head', 'bbld');
@@ -93,7 +95,6 @@ function bbld_preinstall() {
 		}
 	}
 	else {
-		// Empty
 	}
 }
 
@@ -108,12 +109,15 @@ function bbld_install() {
 		$bbld_option['prefix'] = 'bb_';
 		$bbld_option['trim'] = 100;
 		$bbld_option['exdb'] = false;
+		$bbld_option['share'] = false;
 		$bbld_option['dbuser'] = DB_USER;
 		$bbld_option['dbpass'] = DB_PASSWORD;
 		$bbld_option['dbname'] = DB_NAME;
 		$bbld_option['dbhost'] = DB_HOST;
 		$bbld_option['status'] = 'install';
 		$bbld_option['donate'] = false;
+		$bbld_option['slug'] = 'no';
+		$bbld_option['exclude'] = '';	
 		$bbld_template['header'] = '<div id=\"discussions\"><h2>%BBLD_TITLE%</h2><table id=\"latest\"><tr><th>%BBLD_TOPIC%</th><th>%BBLD_POST%</th><th>%BBLD_LPOSTER%</th></tr>';
 		$bbld_template['body'] = '<tr class="%BBLD_CLASS%"><td><a href="%BBLD_URL%">%BBLD_TOPIC%</a></td><td class="num">%BBLD_POST%</td><td class="num">%BBLD_LPOSTER%</td></tr>';
 		$bbld_template['footer'] = '</table></div>';
@@ -144,33 +148,19 @@ function wpbb_trim($paragraph, $limit) {
 }
 
 ### Function: Permalink Data
-function wpbb_permalink($type,$topicid) {
+function wpbb_permalink($type,$topicid, $slug = '') {
 	global $wpdb,$BbLD_version;
 	$bbld_option = get_option('bbld_option');
-	$perma_type = bbld_getdata('permalink');
-	if ($perma_type) {
-		$metakey = $perma_type->meta_value;
+	if ($bbld_option['slug'] == 1) {
+		$permalink = $bbld_option['url'] . '/'. $type . '/' . $topicid;
 	}
-	else {
-		$perma_type = bbld_getdata('permalink2');
-		if ($perma_type) {
-			$metakey = $perma_type->meta_value;
-		}
-	}
-	if ($perma_type && $metakey) {
-		if ($metakey == 1) {
-			$permalink = $bbld_option['url'] . '/'. $type . '/' . $topicid;
+	elseif ($bbld_option['slug'] == 'slug') {
+		if ($type == 'topic') {
+			$permalink = $bbld_option['url'] . '/topic/' . $slug;
 		}
 		else {
-			if ($type == 'topic') {
-				$get_title = bbld_getdata('permalink_topic',$topicid);
-				$permalink = $bbld_option['url'] . '/topic/' . $get_title->topic_slug;
-			}
-			else {
-				$get_title = bbld_getdata('permalink_forum',$topicid);
-				$permalink = $bbld_option['url'] . '/forum/' . $get_title->forum_slug;
-			}			
-		}
+			$permalink = $bbld_option['url'] . '/forum/' . $slug;
+		}			
 	}
 	else {
 		$permalink = $bbld_option['url'] . '/'. $type . '.php?id=' . $topicid;
@@ -181,19 +171,15 @@ function wpbb_permalink($type,$topicid) {
 ### Function: Filter forum to exclude some forum
 function bbld_filter_forums() {
 	global $wpdb;
-	$request = bbld_getdata('exclude');
 	$bbld_option = get_option('bbld_option');
 	$exclude_chk = $bbld_option['exclude'];
-	if ($request) {
-		foreach($request as $request) {
-			if (isset($exclude_chk[$request->forum_id])) {
-			}
-			else {
-				$forum_ids .= $request->forum_id.'\',\'';
-			}
+	if ($exclude_chk) {
+		echo 'ada exclude data';
+		foreach($exclude_chk as $request) {
+				$forum_ids .= $request.'\',\'';
 		}
 		$forum_ids = rtrim($forum_ids, ',\'\' ');
-		$where = "WHERE topic_status = '0' AND forum_id IN ('$forum_ids')";
+		$where = "AND ".$bbld_option['prefix']."topics.forum_id NOT IN ('$forum_ids')";
 		return $where;
 	}
 }
@@ -208,13 +194,13 @@ function bbld_getdata($type,$forum_slimit = 0) {
 	if ($type == 'topic') {
 		$filter = bbld_filter_forums();
 		if ($bbld_option['exdb']) {
-			$bbtopic = $exbbdb->get_results("SELECT * FROM ".$bbld_option['prefix']."topics ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
+			$bbtopic = $exbbdb->get_results("SELECT * FROM ".$bbld_option['prefix']."topics JOIN ".$bbld_option['prefix']."forums ON ".$bbld_option['prefix']."topics.topic_status = '0' AND ".$bbld_option['prefix']."topics.forum_id = ".$bbld_option['prefix']."forums.forum_id ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
 		}
 		else {
-			$bbtopic = $wpdb->get_results("SELECT * FROM ".$bbld_option['prefix']."topics ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
+			$bbtopic = $wpdb->get_results("SELECT * FROM ".$bbld_option['prefix']."topics JOIN ".$bbld_option['prefix']."forums ON ".$bbld_option['prefix']."topics.topic_status = '0' AND ".$bbld_option['prefix']."topics.forum_id = ".$bbld_option['prefix']."forums.forum_id ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
 		}
 	}
-	elseif ($type == 'exclude') {
+	else {
 		if ($bbld_option['exdb']) {
 			$bbtopic = $exbbdb->get_results("SELECT * FROM ".$bbld_option['prefix']."forums ORDER BY forum_order ASC");
 		}
@@ -222,55 +208,15 @@ function bbld_getdata($type,$forum_slimit = 0) {
 			$bbtopic = $wpdb->get_results("SELECT * FROM ".$bbld_option['prefix']."forums ORDER BY forum_order ASC");
 		}
 	}
-	elseif ($type == 'permalink') {
-		if ($bbld_option['exdb']) {
-			$bbtopic = $exbbdb->get_row("SELECT * FROM `".$bbld_option['prefix']."topicmeta` WHERE `meta_key` LIKE 'mod_rewrite' LIMIT 1");
-		}
-		else {
-			$bbtopic = $wpdb->get_row("SELECT * FROM `".$bbld_option['prefix']."topicmeta` WHERE `meta_key` LIKE 'mod_rewrite' LIMIT 1");
-		}
-	}
-	elseif ($type == 'permalink2') {
-		if ($bbld_option['exdb']) {
-			$bbtopic = $exbbdb->get_row("SELECT * FROM `".$bbld_option['prefix']."meta` WHERE `meta_key` LIKE 'mod_rewrite' LIMIT 1");
-		}
-		else {
-			$bbtopic = $wpdb->get_row("SELECT * FROM `".$bbld_option['prefix']."meta` WHERE `meta_key` LIKE 'mod_rewrite' LIMIT 1");
-		}
-	}
-	elseif ($type == 'permalink_topic') {
-		if ($bbld_option['exdb']) {
-			$bbtopic = $exbbdb->get_row("SELECT * FROM `".$bbld_option['prefix']."topics` WHERE `topic_id` LIKE '$forum_slimit' LIMIT 1");
-		}
-		else {
-			$bbtopic = $wpdb->get_row("SELECT * FROM `".$bbld_option['prefix']."topics` WHERE `topic_id` LIKE '$forum_slimit' LIMIT 1");
-		}
-	}
-	elseif ($type == 'permalink_forum') {
-		if ($bbld_option['exdb']) {
-			$bbtopic = $exbbdb->get_row("SELECT * FROM `".$bbld_option['prefix']."forums` WHERE `forum_id` LIKE '$forum_slimit' LIMIT 1");
-		}
-		else {
-			$bbtopic = $wpdb->get_row("SELECT * FROM `".$bbld_option['prefix']."forums` WHERE `forum_id` LIKE '$forum_slimit' LIMIT 1");
-		}
-	}
-	else {
-		if ($bbld_option['exdb']) {
-			$bbtopic = $exbbdb->get_row("SELECT * FROM ".$bbld_option['prefix']."forums WHERE forum_id = '$forum_slimit'");
-		}
-		else {
-			$bbtopic = $wpdb->get_row("SELECT * FROM ".$bbld_option['prefix']."forums WHERE forum_id = '$forum_slimit'");
-		}
-	}
 	return $bbtopic;
 }
 
 ### Function: BBpress display name
-function bbld_intergrated($name) {
+function bbld_intergrated($id,$name) {
 	global $wpdb,$table_prefix;
-	$wpuid = $wpdb->get_row("SELECT * FROM ".$table_prefix."users WHERE user_login = '$name'");
-	if ($wpuid) {
-		$user_forum_data = get_userdata($wpuid->ID);
+	$bbld_option = get_option('bbld_option');
+	if ($bbld_option['share']) {
+		$user_forum_data = get_userdata($id);
 		if ($user_forum_data->display_name) {
 			$euser = $user_forum_data->display_name;
 		}
@@ -286,10 +232,7 @@ function bbld_intergrated($name) {
 
 ### Function: Donate a link back.
 function bbld_donate() {
-	$bbld_option = get_option('bbld_option');
-	if ($bbld_option['donate']) {
 		echo '<p style="font-size: 75%; float: right">Powered By <a href="http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/">BbLD</a></p>';
-	}
 }
 
 ### Function: BBpress Latest Discussions Page Display
@@ -316,17 +259,19 @@ function wp_bb_get_discuss() {
 				$tr_class = 'alt1';
 			}
 			$title_text = wpbb_trim($bbtopic->topic_title, $bbld_option['trim']);
-			$last_poster = bbld_intergrated($bbtopic->topic_last_poster_name);
+			$last_poster = bbld_intergrated($bbtopic->topic_last_poster,$bbtopic->topic_last_poster_name);
 			$template_data_body = stripslashes($bbld_template['body']);
 			$template_data_body = str_replace("%BBLD_CLASS%", $tr_class, $template_data_body);
-			$template_data_body = str_replace("%BBLD_URL%", __(wpbb_permalink('topic',$bbtopic->topic_id), 'bbpress-latest-discussion'), $template_data_body);
+			$template_data_body = str_replace("%BBLD_URL%", wpbb_permalink('topic',$bbtopic->topic_id,$bbtopic->topic_slug), $template_data_body);
 			$template_data_body = str_replace("%BBLD_TOPIC%", $title_text, $template_data_body);
 			$template_data_body = str_replace("%BBLD_POST%", $bbtopic->topic_posts, $template_data_body);
 			$template_data_body = str_replace("%BBLD_LPOSTER%", $last_poster, $template_data_body);
 			echo $template_data_body;
 		}
 		echo stripslashes($bbld_template['footer']);
-		bbld_donate();
+		if ($bbld_option['donate']) {
+			bbld_donate();
+		}
 	}
 }
 
@@ -339,14 +284,13 @@ function bbld_getside() {
 	if ($bbtopic) {
 		foreach ( $bbtopic as $bbtopic ) {
 			$title_text = wpbb_trim($bbtopic->topic_title, $bbld_option['trim']);
-			$bbforum = bbld_getdata('forum',$bbtopic->forum_id);
-			$forum_url = wpbb_permalink('forum',$bbtopic->forum_id);
-			$last_poster = bbld_intergrated($bbtopic->topic_last_poster_name);
+			$forum_url = wpbb_permalink('forum',$bbtopic->forum_id,$bbtopic->forum_slug);
+			$last_poster = bbld_intergrated($bbtopic->topic_last_poster,$bbtopic->topic_last_poster_name);
 			$template_data_sidebar = stripslashes($bbld_template['sidedisplay']);
-			$template_data_sidebar = str_replace("%BBLD_URL%", wpbb_permalink('topic',$bbtopic->topic_id), $template_data_sidebar);
+			$template_data_sidebar = str_replace("%BBLD_URL%", wpbb_permalink('topic',$bbtopic->topic_id,$bbtopic->topic_slug), $template_data_sidebar);
 			$template_data_sidebar = str_replace("%BBLD_TOPIC%", $title_text, $template_data_sidebar);
 			$template_data_sidebar = str_replace("%BBLD_FURL%", $forum_url, $template_data_sidebar);
-			$template_data_sidebar = str_replace("%BBLD_FORUM%", $bbforum->forum_name, $template_data_sidebar);
+			$template_data_sidebar = str_replace("%BBLD_FORUM%", $bbtopic->forum_name, $template_data_sidebar);
 			$template_data_sidebar = str_replace("%BBLD_LPOSTER%", $last_poster, $template_data_sidebar);
 			echo $template_data_sidebar;
 		}
@@ -364,7 +308,9 @@ function wp_bb_get_discuss_sidebar() {
 	echo '<ul>';
 	bbld_getside();
 	echo "</ul>";
-	bbld_donate();
+	if ($bbld_option['donate']) {
+		bbld_donate();
+	}
 }
 
 ### Function: BBpress Latest Discussions Sidebar Widget
@@ -380,7 +326,9 @@ function bbld_widget($args) {
 	bbld_getside();
 	echo "</ul>";
 	echo $after_widget;
-	bbld_donate();
+	if ($bbld_option['donate']) {
+		bbld_donate();
+	}
 }
 
 ### Function: BBpress Latest Discussions Sidebar Widget Control
@@ -436,7 +384,9 @@ function wp_bb_option() {
 		$bbld_option['dbname'] = $_POST['bbname'];
 		$bbld_option['dbhost'] = $_POST['bbhost'];
 		$bbld_option['exclude'] = $_POST['wpbb_exclude'];
-		$bbld_option['donate'] = $_POST['bbld_donate'];;
+		$bbld_option['donate'] = $_POST['bbld_donate'];
+		$bbld_option['share'] = $_POST['bbld_share'];
+		$bbld_option['slug'] = $_POST['bbld_permalink'];
 		update_option('bbld_option', $bbld_option);
 		$update_msg = "<div id='message' class='updated fade'><p>BBpress Latest Discussions options saved successfully.</p></div>";
 	}
@@ -453,7 +403,7 @@ function wp_bb_option() {
 <div class="wrap">
 	<p class="bbldright"><a href="http://www.atsutane.net" title="Atsutane Dot Net" alt="Atsutane Dot Net" ><img src="<?php echo get_option('siteurl'); ?>/wp-content/plugins/<?php echo $plugin_dir; ?>/images/atsutane.gif" alt="Atsutane Dot Net" /></a></p>
 	<div id="icon-bbld" class="icon32"><br /></div>
-<h2><?php _e('BBpress Latest Discussions', 'bbpress-latest-discussion'); echo ' ('.$bbld_option['version'].')'; ?></h2>
+<h2><?php _e('BBpress Latest Discussions', 'bbpress-latest-discussion'); echo ' ('.$BbLD_version.')'; ?></h2>
 <?php if (!$bbld_option['donate']) { echo "<div id='message' class='updated fade'><p>If you like my work. Please donate a link back.</p></div>"; } ?>
 <?php if ($update_msg) { _e("$update_msg", 'bbpress-latest-discussion'); } ?>
 <form method="post" action="<?php echo $ori_url; ?>">
@@ -477,6 +427,25 @@ function wp_bb_option() {
 <td><input name="bbprefix" type="text" id="bbprefix"  value="<?php echo $bbld_option['prefix']; ?>" class="small-text" />
 <span class="setting-description"><?php _e("Enter the table prefix for your bbPress installation. The table prefix is found in your bbPress installation's config.php file.", 'bbpress-latest-discussion'); ?></span></td>
 </tr>
+<tr valign="top">
+<th scope="row"><?php _e('Share UserData:', 'bbpress-latest-discussion'); ?></th>
+<td> <fieldset><legend class="hidden">bbld_share</legend><label for="bbld_share">
+<input name="bbld_share" type="checkbox" id="bbld_share" value="bbld_share" <?php if ($bbld_option['share']) { echo('checked="checked"'); } ?> />
+<?php _e('Check this option if you are share Wordpress/Bbpress userdata.', 'bbpress-latest-discussion'); ?></label>
+</fieldset></td>
+</tr>
+<tr>
+<th scope="row"><?php _e('Permalink Format:', 'bbpress-latest-discussion'); ?></th>
+<td>
+	<fieldset><legend class="hidden">Date Format</legend>
+	<label><input type='radio' name='bbld_permalink' value='no' <?php if ($bbld_option['slug'] == 'no') { echo 'checked="checked"'; } ?> /> None ... /forum.php?id=1</label><br />
+	<label><input type='radio' name='bbld_permalink' value='1' <?php if ($bbld_option['slug'] == 1) { echo 'checked="checked"'; } ?> /> Numeric .../forum/1</label><br />
+	<label><input type='radio' name='bbld_permalink' value='slug' <?php if ($bbld_option['slug'] == 'slug') { echo 'checked="checked"'; } ?> /> Name based .../forum/first-forum</label><br />
+	<p>Choose Bbpress permalink type.</p>
+	</fieldset>
+</td>
+</tr>
+
 <tr>
 <th scope="row"><?php _e('Exclude Forums:', 'bbpress-latest-discussion'); ?></th>
 <td>
@@ -491,7 +460,7 @@ function wp_bb_option() {
 						$exclude_option = "checked=\"checked\"";
 					}
 					echo "
-							<label for=\"wpbb_exclude[$request->forum_id]\"><input name=\"wpbb_exclude[$request->forum_id]\" type=\"checkbox\" id=\"wpbb_exclude[$request->forum_id]\" value=\"wpbb_exclude[$request->forum_id]\"
+							<label for=\"wpbb_exclude[$request->forum_id]\"><input name=\"wpbb_exclude[$request->forum_id]\" type=\"checkbox\" id=\"wpbb_exclude[$request->forum_id]\" value=\"$request->forum_id\"
 					";
 					if ($allowed_forum == $request->forum_id) { echo "$exclude_option"; }
 					echo "

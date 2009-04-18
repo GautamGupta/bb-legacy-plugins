@@ -4,7 +4,7 @@ Plugin Name: bbPress-WordPress syncronization
 Plugin URI: http://bobrik.name
 Description: Sync your WordPress comments to bbPress forum and back.
 Author: Ivan Babrou <ibobrik@gmail.com>
-Version: 0.4.1
+Version: 0.4.2
 Author URI: http://bobrik.name
 
 Copyright 2008 Ivan Babroŭ (email : ibobrik@gmail.com)
@@ -143,6 +143,9 @@ function bbwp_listener()
 	} elseif ($_POST['action'] == 'edit_bb_tags')
 	{
 		edit_bb_tags();
+	} elseif ($_POST['action'] == 'delete_post')
+	{
+		delete_bb_post();
 	}
 }
 
@@ -156,13 +159,27 @@ function bbwp_do_sync()
 	return true;
 }
 
+function sync_that_status($id)
+{
+	if (get_real_post_status($id) == 0 || bb_get_option('bbwp_sync_all_posts') == 'enabled')
+		return true;
+	else
+		return false;
+}
+
+function get_real_post_status($id)
+{
+	global $bbdb;
+	return $bbdb->get_var('SELECT post_status FROM '.$bbdb->prefix.'posts WHERE post_id = '.$id);
+}
+
 function create_bb_topic()
 {
 	$topic_id = bb_insert_topic(array('topic_title' => stripslashes($_POST['topic']), 'forum_id' => bb_get_option('bbwp_forum_id'), 'tags' => stripslashes($_POST['tags'])));
 	remove_all_filters('pre_post');
 	$post_id = bb_insert_post(array('topic_id' => $topic_id, 'post_text' => stripslashes($_POST['post_content'])));
 	bb_delete_post($post_id, status_wp2bb($_POST['comment_approved']));
-	$result = add_table_item($_POST["post_id"], 0, $topic_id, $post_id);
+	$result = add_table_item($_POST["post_id"], 0, $topic_id, $post_id, '', '', '');
 	$data = serialize(array("topic_id" => $topic_id, "post_id" => $post_id, "result" => $result));
 	echo $data;
 }
@@ -172,7 +189,6 @@ function continue_bb_topic()
 	$row = get_table_item('wp_post_id', $_POST["post_id"]);
 	remove_all_filters('pre_post');
 	$post_id = bb_insert_post(array("topic_id" => $row['bb_topic_id'], "post_text" => stripslashes($_POST["post_content"])));
-	error_log('___ '.$row['bb_topic_id'].' __ '.stripslashes($_POST["post_content"]).' ====== '.$post_id);
 	bb_delete_post($post_id, status_wp2bb($_POST['comment_approved']));
 	// empty user info if not anonymous user
 	$user = bb_get_current_user();
@@ -198,8 +214,28 @@ function edit_bb_post()
 		bb_insert_topic(array('topic_title' => $_POST['topic_title'], 'topic_id' => $row['bb_topic_id']));
 	// remove filters to save formatting
 	remove_all_filters('pre_post');
+	$user = bb_get_current_user();
+	if (bb_get_option('bbwp_anonymous_user_id') != $user->ID)
+	{
+		$_POST['comment_author'] = '';
+		$_POST['comment_author_email'] = '';
+		$_POST['comment_author_url'] = '';
+	}
+	update_table_item('wp_comment_id', $_POST['comment_id'], $_POST['comment_author'], $_POST['comment_author_email'], $_POST['comment_author_url']);
 	bb_insert_post(array('post_text' => stripslashes($_POST['post_content']), 'post_id' => $row['bb_post_id'], 'topic_id' => $row['bb_topic_id']));
 	bb_delete_post($row['bb_post_id'], status_wp2bb($_POST['comment_approved']));
+}
+
+function delete_bb_post()
+{
+	bb_remove_filter('bb_delete_post', 'afteredit');
+	$row = get_table_item('wp_comment_id', $_POST['comment_id']);
+	bb_delete_post('bb_post_id', $row['bb_post_id']);
+	global $bbdb;
+	// REAL post deletion from database
+	// FIXME: may do something a little bit inconsistent
+	$bbdb->query('DELETE FROM '.$bbdb->prefix.'posts WHERE post_id = '.$row['bb_post_id']);
+	delete_table_item('wp_comment_id', $_POST['comment_id']);
 }
 
 function open_bb_topic()
@@ -238,21 +274,28 @@ function bbwp_install()
 function add_table_item($wp_post, $wp_comment, $bb_topic, $bb_post, $wp_anon_user, $wp_anon_email, $wp_anon_url)
 {
 	global $bbdb;
-	$bbdb->show_errors();
 	return $bbdb->query($bbdb->prepare("INSERT INTO ".$bbdb->prefix."bbwp_ids (wp_post_id, wp_comment_id, bb_topic_id, bb_post_id, wp_comment_author, wp_comment_author_email, wp_comment_author_url)
 		VALUES (%d, %d, %d, %d, %s, %s, %s)", $wp_post, $wp_comment, $bb_topic, $bb_post, $wp_anon_user, $wp_anon_email, $wp_anon_url));
+}
+
+function update_table_item($field, $value, $wp_anon_user, $wp_anon_email, $wp_anon_url)
+{
+	// for anonymous userinfo updating
+	global $bbdb;
+	$bbdb->query($bbdb->prepare('UPDATE '.$bbdb->prefix."bbwp_ids SET wp_comment_author = %s, wp_comment_author_email = %s, wp_comment_author_url = %s
+		WHERE $field = $value", $wp_anon_user, $wp_anon_email, $wp_anon_url));
 }
 
 function get_table_item($field, $value)
 {
 	global $bbdb;
-	return $bbdb->get_row("SELECT * FROM ".$bbdb->prefix."bbwp_ids WHERE $field = $value LIMIT 1", ARRAY_A);
+	return $bbdb->get_row('SELECT * FROM '.$bbdb->prefix."bbwp_ids WHERE $field = $value LIMIT 1", ARRAY_A);
 }
 
-function detele_talbe_item($field, $value)
+function delete_table_item($field, $value)
 {
 	global $bbdb;
-	return $bddb->query("DELETE FROM ".$bbdb->prefix."bbwp_ids WHERE $field = $value");
+	$bbdb->query("DELETE FROM ".$bbdb->prefix."bbwp_ids WHERE $field = $value");
 }
 
 function afteredit($id)
@@ -265,6 +308,14 @@ function afteredit($id)
 	{
 		// have it in database, must sync
 		edit_wp_comment($post, $row['wp_comment_id']);
+	} else
+	{
+		if (sync_that_status($id))
+		{
+			$row = get_table_item('bb_topic_id', $post->topic_id);
+			if ($row)
+				add_wp_comment($post, $row['wp_post_id']);
+		}
 	}
 }
 
@@ -277,7 +328,8 @@ function afterpost($id)
 	if ($row)
 	{
 		// need to duplicate in WordPress
-		add_wp_comment($post, $row['wp_post_id']);
+		if (sync_that_status($id))
+			add_wp_comment($post, $row['wp_post_id']);
 	}
 }
 
@@ -293,18 +345,18 @@ function add_wp_comment($post, $wp_post_id)
 	);
 	$answer = send_command($request);
 	$data = unserialize($answer);
-	add_table_item($wp_post_id, $data['comment_id'], $post->topic_id, $post->post_id);
+	add_table_item($wp_post_id, $data['comment_id'], $post->topic_id, $post->post_id, '', '', '');
 }
 
 function edit_wp_comment($post, $comment_id)
 {
-	// FIXME: get post status and post text original way
+	// FIXME: get post text original way
 	global $bbdb;
 	remove_filter('post_text', 'bbwp_anonymous_userinfo');
 	$request = array(
 		'action' => 'edit_comment',
 		'post_text' => apply_filters('post_text', $bbdb->get_var("SELECT post_text FROM ".$bbdb->prefix."posts WHERE post_id = ".$post->post_id)),
-		'post_status' => $bbdb->get_var("SELECT post_status FROM ".$bbdb->prefix."posts WHERE post_id = ".$post->post_id),
+		'post_status' => get_real_post_status($post->post_id),
 		'comment_id' => $comment_id,
 	);
 	send_command($request);
@@ -433,6 +485,23 @@ function bbwp_options()
 		</div>
 		</div>
 		<div>
+		<label for="sync_all_posts">
+			<?php _e('Sync all posts:') ?>
+		</label>
+		<div>
+			<input type="checkbox" name="sync_all_posts"<?php echo (bb_get_option('bbwp_sync_all_posts') == 'enabled') ? ' checked="checked"' : '';?> />
+			<?php _e('Sync post even if not approved. Post will have the same status in WordPress', $textdomain); ?>
+		</div>
+		</div>
+		<div>
+		<label for="show_anonymous_info">
+			<?php _e('Show anonymous userinfo:') ?>
+		</label>
+		<div>
+			<input type="checkbox" name="show_anonymous_info"<?php echo (bb_get_option('bbwp_show_anonymous_info') == 'enabled') ? ' checked="checked"' : '';?> />&nbsp;Show name <input type="checkbox" name="show_anonymous_email"<?php echo (bb_get_option('bbwp_show_anonymous_email') == 'enabled') ? ' checked="checked"' : '';?> />&nbsp;Show email <input type="checkbox" name="show_anonymous_url"<?php echo (bb_get_option('bbwp_show_anonymous_url') == 'enabled') ? ' checked="checked"' : '';?> />&nbsp;Show url
+		</div>
+		</div>
+		<div>
 		<label for="enable_plugin">
 			<?php _e('Enable plugin'); ?>
 		</label>
@@ -458,6 +527,10 @@ function process_options()
 		bb_update_option('bbwp_secret_key', $_POST['secret_key']);
 		bb_update_option('bbwp_anonymous_user_id', $_POST['anonymous_user']);
 		$_POST['plugin_status'] == 'on' ? set_global_plugin_status('enabled') : set_global_plugin_status('disabled');
+		$_POST['sync_all_posts'] == 'on' ? bb_update_option('bbwp_sync_all_posts', 'enabled') : bb_update_option('bbwp_sync_all_posts', 'disabled');
+		$_POST['show_anonymous_info'] == 'on' ? bb_update_option('bbwp_show_anonymous_info', 'enabled') : bb_update_option('bbwp_show_anonymous_info', 'disabled');
+		$_POST['show_anonymous_email'] == 'on' ? bb_update_option('bbwp_show_anonymous_email', 'enabled') : bb_update_option('bbwp_show_anonymous_email', 'disabled');
+		$_POST['show_anonymous_url'] == 'on' ? bb_update_option('bbwp_show_anonymous_url', 'enabled') : bb_update_option('bbwp_show_anonymous_url', 'disabled');
 		bb_admin_notice( __('Configuration saved.') );
 	}
 }
@@ -553,6 +626,8 @@ function bb_status_error($code)
 		return __('Invalid anonymous user id');
 	elseif ($code == 5)
 		return __('bbPress part not activated');
+	elseif ($code == 6)
+		return __('bbPress have old plugin version');
 }
 
 function set_wp_plugin_status($status)
@@ -638,23 +713,21 @@ function bbwp_anonymous_userinfo($text)
 {
 	if (bb_get_option('bbwp_anonymous_user_id') == get_post_author_id())
 	{
+		if (bb_get_option('bbwp_show_anonymous_info') != 'enabled')
+			return $text;
 		// write extra information about anonymous user
 		$row = get_table_item('bb_post_id', get_post_id());
-		$text .= '<div class="wpbb_anonymous_userinfo">'.__('User provided information').'<ul>'
+		$text .= '<div class="wpbb_anonymous_userinfo">'.__('User information').'<ul>'
 			.'<li><span class="wpbb_anonymous_userinfo_key">Author</span>: <span>'.$row['wp_comment_author'].'</span></li>';
-		if (bb_get_option('bbwp_show_anonymous_email') == 'enable')
+		if (bb_get_option('bbwp_show_anonymous_email') == 'enabled')
 			$text .= '<li><span class="wpbb_anonymous_userinfo_key">E-mail</span>: <span>'.$row['wp_comment_author_email'].'</span></li>';
-		if (bb_get_option('bbwp_show_anonymous_url') == 'enable')
+		if (bb_get_option('bbwp_show_anonymous_url') == 'enabled' && $row['wp_comment_author_url'] != '')
 			$text .= '<li><span class="wpbb_anonymous_userinfo_key">URL</span>: <span>'.$row['wp_comment_author_url'].'</span></li>';
 		$text .= '</ul></div>';
 	}
 	return $text;
 }
 
-// TODO: catch topic deletion
-// FIXME: change " to ' where no escaping
-// TODO: plugin translation
-// FIXME: less requests on settings page
 
 add_action('bb_tag_added', 'aftertagedit');
 add_action('bb_pre_tag_removed', 'pretagremove');

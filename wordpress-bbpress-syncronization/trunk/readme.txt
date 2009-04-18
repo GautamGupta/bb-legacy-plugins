@@ -3,7 +3,7 @@ Contributors: bobrik
 Tags: bbPress, post, comment, integration, forum
 Requires at least: 1.0alpha6
 Tested up to: 1.0alpha6
-Stable tag: 0.4.1
+Stable tag: 0.4.2
 
 Sync your WordPress comments to bbPress forum and back.
 
@@ -11,7 +11,7 @@ Sync your WordPress comments to bbPress forum and back.
 
 **THIS IS TWO PARTS PLUGIN! YOU NEED TO SET UP SAME PLUGIN FOR BBPRESS TOO!**
 
-Please install latest versions of both parts!
+**Please install latest versions of both parts!**
 
 When you post comment to WordPress it automatically mirroring in bbPress and back.
 Please note, only beta now. See below how you can help.
@@ -33,6 +33,7 @@ DONE:
 *   Mirroring comment/forum post status (spam, unapproved, approved)
 *   Per-post enable/disable for comment syncronization
 *   Anonymous comment mirroring
+*   Showing anonymous userinfo in forum
 *   Syncronizing conversation status (open or closed)
 *   Using secret key authorization between parts
 *   Settings page
@@ -46,7 +47,6 @@ TODO:
 
 *   Catch post deletion in WordPress
 *   Catch topic deletion in bbPress
-*   WordPress anonymous user info sycronization
 
 YOU MAY HELP:
 
@@ -56,22 +56,26 @@ YOU MAY HELP:
 
 Made for news.vitebsk.cc
 
-== Changelog ==
+Changelog
 
-Version 0.4.2
+Version 0.4.2 (18.04.2009)
 
 *   Fixed bug with WordPress post page markup
 *   Added Copyright to bbPress part
 *   Code cleanups
 *   Showing anonymous user info in bbPress (optionally)
+*   Option for syncronization of all/only approved comments/posts
+*   Fixed bug with incorrect comment author after editing
+*   Performance improvements
+*   Handling WordPress comment deletion
 
-Version 0.4.1 (31.04.2008):
+Version 0.4.1 (31.03.2009):
 
 *   Added option for default comments syncronization status setting
 *   Fixed bug with incorrect sycronization
 *   Fixed bug with escaping html codes in syncronization
 
-Version 0.4 (31.04.2008):
+Version 0.4 (31.04.2009):
 
 *   Updating topic title with post title updating
 *   Checking for plugin activity state
@@ -79,11 +83,11 @@ Version 0.4 (31.04.2008):
 *   New post option, now you may switch comment syncronization on/off for post
 *   Variuos bugfixes
 
-Version 0.3 (28.03.2008):
+Version 0.3 (28.03.2009):
 
 *   Fixed broken links inserting in first topic post
 
-Version 0.2 (27.03.2008):
+Version 0.2 (27.03.2009):
 
 *   Showing post excerpt in bbPress topic beginning
 *   Optional quoting first post in topic

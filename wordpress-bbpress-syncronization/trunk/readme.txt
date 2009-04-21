@@ -97,3 +97,8 @@ Version 0.2 (27.03.2009):
 
 *   Showing post excerpt in bbPress topic beginning
 *   Optional quoting first post in topic
+
+== Screenshots ==
+
+1. WordPress part settings
+2. bbPress part settings

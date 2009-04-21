@@ -4,7 +4,7 @@ Plugin Name: bbPress-WordPress syncronization
 Plugin URI: http://bobrik.name
 Description: Sync your WordPress comments to bbPress forum and back.
 Author: Ivan Babrou <ibobrik@gmail.com>
-Version: 0.4.2
+Version: 0.4.3
 Author URI: http://bobrik.name
 
 Copyright 2008 Ivan Babroŭ (email : ibobrik@gmail.com)
@@ -48,10 +48,19 @@ if (substr($_SERVER['PHP_SELF'], -13) != 'bbwp-sync.php')
 function send_command($pairs = array())
 {
 	$url = bb_get_option('bbwp_wordpress_url')."?wpbb-listener";
-	$user = bb_get_current_user();
-	// FIXME: anonymous user workaroud (anonymous for bbPress?)
-	$pairs['user'] = $user->ID;
-	$pairs['username'] = $user->user_login;
+	if (!isset($pairs['user']))
+	{
+		$user = bb_get_current_user();
+		if ($user->ID)
+		{
+			$pairs['user'] = $user->ID;
+			$pairs['username'] = $user->user_login;
+		} else
+		{
+			// anonymous user
+			$pairs['user'] = 0;
+		}
+	}
 	$ch = curl_init($url);
 	curl_setopt ($ch, CURLOPT_POST, 1);
 	curl_setopt ($ch, CURLOPT_POSTFIELDS, $pairs);
@@ -341,6 +350,7 @@ function add_wp_comment($post, $wp_post_id)
 		'post_id' => $post->post_id,
 		'post_status' => $post->post_status,
 		'topic_id' => $post->topic_id,
+		'user' => $post->poster_id,
 		'wp_post_id' => $wp_post_id
 	);
 	$answer = send_command($request);
@@ -357,6 +367,7 @@ function edit_wp_comment($post, $comment_id)
 		'action' => 'edit_comment',
 		'post_text' => apply_filters('post_text', $bbdb->get_var("SELECT post_text FROM ".$bbdb->prefix."posts WHERE post_id = ".$post->post_id)),
 		'post_status' => get_real_post_status($post->post_id),
+		'user' => $post->poster_id,
 		'comment_id' => $comment_id,
 	);
 	send_command($request);

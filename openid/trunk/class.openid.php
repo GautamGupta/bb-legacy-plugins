@@ -321,7 +321,7 @@ class OpenIDService{
 			// $servers = $service_list[0]->getURIs();
 			// $delegates = $service_list[0]->getElements('openid:Delegate');	// todo: delegates
 		*/		
-		// print_r($http_response); exit;		
+		// print_r($http_response); exit; // diagnostic
 		if (isset($http_response->body) && preg_match_all("/<service.*>.*<uri>(.*)<\/uri>.*<\/service>/simU",$http_response->body,$servers)) {
 			$servers=$servers[1];
 			if (preg_match_all("/<service.*>.*<type>(.*)<\/type>.*<\/service>/simU",$http_response->body,$types)) {$types=$types[1];}
@@ -331,7 +331,7 @@ class OpenIDService{
 			$response = $this->CURL_Request($this->openid_url_identity);
 			list($servers, $delegates) = $this->HTML2OpenIDServer($response);
 		}
-		if (count($servers) == 0){
+		if (count($servers) == 0){ 	// var_dump($this); print_r($http_response); var_dump($response); exit; // diagnostic
 			$this->ErrorStore('OPENID_NOSERVERSFOUND');
 			return false;
 		}
@@ -357,9 +357,9 @@ class OpenIDService{
         }else{
             $params['openid.trust_root'] = urlencode($this->URLs['trust_root']);
         }
-        $params['openid.mode'] = 'checkid_setup';
-        $params['openid.identity'] = urlencode("http://specs.openid.net/auth/2.0/identifier_select"); // urlencode($this->openid_url_identity); // fixup
-		
+        $params['openid.mode'] = 'checkid_setup';        
+        $params['openid.identity'] = urlencode(strpos($this->openid_url_identity,'http://google.com/')===0 ? "http://specs.openid.net/auth/2.0/identifier_select" : $this->openid_url_identity);   // fixup
+                
 		if (isset($this->fields['required'])
 		  && (count($this->fields['required']) > 0)) {
 			$params['openid.sreg.required'] = implode(',',$this->fields['required']);

@@ -7,16 +7,25 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/
 Description: This plugin will generates Latest Discussion list from your bbpress forum into your wordpress. It has the ability to generate latest discussion on sidebar also. The administrator can also set the behavior for this plugin. Even if your bbpress is not intergrated with your wordpress. U still can use this plugin with a little change on the option page. Bbpress Latest Discussion has been around since almost 2 years ago at Bbpress.org.
 Author: Atsutane Shirane
-Version: 1.2.2
+Version: 1.3
 Author URI: http://www.atsutane.net/
-*/
 
-// Update for reduce queries
+	This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+*/
 
 $plugin_dir = basename(dirname(__FILE__));
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '1.2.2';
+$BbLD_version = '1.3';
 
 ### BBpress Latest Discussions Advertisment
 add_action('wp_head', 'bbld');
@@ -118,6 +127,7 @@ function bbld_install() {
 		$bbld_option['donate'] = false;
 		$bbld_option['slug'] = 'no';
 		$bbld_option['exclude'] = '';	
+		$bbld_option['utf8'] = 'UTF-8';
 		$bbld_template['header'] = '<div id=\"discussions\"><h2>%BBLD_TITLE%</h2><table id=\"latest\"><tr><th>%BBLD_TOPIC%</th><th>%BBLD_POST%</th><th>%BBLD_LPOSTER%</th></tr>';
 		$bbld_template['body'] = '<tr class="%BBLD_CLASS%"><td><a href="%BBLD_URL%">%BBLD_TOPIC%</a></td><td class="num">%BBLD_POST%</td><td class="num">%BBLD_LPOSTER%</td></tr>';
 		$bbld_template['footer'] = '</table></div>';
@@ -199,6 +209,18 @@ function bbld_getdata($type,$forum_slimit = 0) {
 			$bbtopic = $wpdb->get_results("SELECT * FROM ".$bbld_option['prefix']."topics JOIN ".$bbld_option['prefix']."forums ON ".$bbld_option['prefix']."topics.topic_status = '0' AND ".$bbld_option['prefix']."topics.forum_id = ".$bbld_option['prefix']."forums.forum_id ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
 		}
 	}
+	elseif ($type == 'utf8') {
+		if ($bbld_option['exdb']) {
+			$bbld_var = $exbbdb->get_var("SELECT count(*) FROM ".$bbld_option['prefix']."topics");
+			$bbld_random = rand(1,$bbld_var);
+			$bbtopic = $exbbdb->get_row("SELECT * FROM ".$bbld_option['prefix']."topics WHERE topic_id = ".$bbld_random." LIMIT 1");
+		}
+		else {
+			$bbld_var = $wpdb->get_var("SELECT count(*) FROM ".$bbld_option['prefix']."topics");
+			$bbld_random = rand(1,$bbld_var);
+			$bbtopic = $wpdb->get_row("SELECT * FROM ".$bbld_option['prefix']."topics WHERE topic_id = ".$bbld_random." LIMIT 1");
+		}
+	}
 	else {
 		if ($bbld_option['exdb']) {
 			$bbtopic = $exbbdb->get_results("SELECT * FROM ".$bbld_option['prefix']."forums ORDER BY forum_order ASC");
@@ -257,7 +279,8 @@ function wp_bb_get_discuss() {
 				$misc_no = $misc_no - 1;
 				$tr_class = 'alt1';
 			}
-			$title_text = wpbb_trim($bbtopic->topic_title, $bbld_option['trim']);
+			$title_text = bbld_utf8($bbtopic->topic_title, $bbld_option['utf8']);
+			$title_text = wpbb_trim($title_text, $bbld_option['trim']);
 			$last_poster = bbld_intergrated($bbtopic->topic_last_poster,$bbtopic->topic_last_poster_name);
 			$template_data_body = stripslashes($bbld_template['body']);
 			$template_data_body = str_replace("%BBLD_CLASS%", $tr_class, $template_data_body);
@@ -274,6 +297,19 @@ function wp_bb_get_discuss() {
 	}
 }
 
+### Function: Convert Data Into UTF-8
+function bbld_utf8($data, $charset = 'UTF-8') {
+	if (mb_check_encoding($data,"UTF-8") == FALSE) {
+		$data = utf8_encode($data);
+		$string = iconv("UTF-8", $charset."//TRANSLIT", $data);
+	}
+	else {
+		$string = iconv("UTF-8", $charset."//TRANSLIT", $data);
+	}
+	if (!$string) { $string = $data; }
+	return $string;
+}
+
 ### Function: BBpress Latest Discussions Sidebar code
 function bbld_getside() {
 	global $table_prefix,$wpdb;
@@ -282,14 +318,16 @@ function bbld_getside() {
 	$bbld_template = get_option('bbld_template');
 	if ($bbtopic) {
 		foreach ( $bbtopic as $bbtopic ) {
-			$title_text = wpbb_trim($bbtopic->topic_title, $bbld_option['trim']);
+			$title_text = bbld_utf8($bbtopic->topic_title, $bbld_option['utf8']);
+			$title_text = wpbb_trim($title_text, $bbld_option['trim']);
 			$forum_url = wpbb_permalink('forum',$bbtopic->forum_id,$bbtopic->forum_slug);
 			$last_poster = bbld_intergrated($bbtopic->topic_last_poster,$bbtopic->topic_last_poster_name);
 			$template_data_sidebar = stripslashes($bbld_template['sidedisplay']);
 			$template_data_sidebar = str_replace("%BBLD_URL%", wpbb_permalink('topic',$bbtopic->topic_id,$bbtopic->topic_slug), $template_data_sidebar);
 			$template_data_sidebar = str_replace("%BBLD_TOPIC%", $title_text, $template_data_sidebar);
 			$template_data_sidebar = str_replace("%BBLD_FURL%", $forum_url, $template_data_sidebar);
-			$template_data_sidebar = str_replace("%BBLD_FORUM%", $bbtopic->forum_name, $template_data_sidebar);
+			$forum_name = bbld_utf8($bbtopic->forum_name, $bbld_option['utf8']);
+			$template_data_sidebar = str_replace("%BBLD_FORUM%", $forum_name, $template_data_sidebar);
 			$template_data_sidebar = str_replace("%BBLD_LPOSTER%", $last_poster, $template_data_sidebar);
 			echo $template_data_sidebar;
 		}
@@ -386,6 +424,7 @@ function wp_bb_option() {
 		$bbld_option['donate'] = $_POST['bbld_donate'];
 		$bbld_option['share'] = $_POST['bbld_share'];
 		$bbld_option['slug'] = $_POST['bbld_permalink'];
+		$bbld_option['utf8'] = $_POST['bbld_utf8'];
 		update_option('bbld_option', $bbld_option);
 		$update_msg = "<div id='message' class='updated fade'><p>BBpress Latest Discussions options saved successfully.</p></div>";
 	}
@@ -480,6 +519,21 @@ function wp_bb_option() {
 <?php _e('If you like my work. Please donate a link back using this option.', 'bbpress-latest-discussion'); ?></label>
 </fieldset></td>
 </tr>
+
+<?php
+	$utf8_sample = bbld_getdata('utf8');
+?>
+<th scope="row"><?php _e('Encoding Format:', 'bbpress-latest-discussion'); ?></th>
+<td>
+	<fieldset><legend class="hidden">Encoding Format</legend>
+	<label><input type='radio' name='bbld_utf8' value='UTF-8' <?php if ($bbld_option['utf8'] == 'UTF-8') { echo 'checked="checked"'; } ?> /> <strong>UTF-8</strong>, Example: <?php echo bbld_utf8($utf8_sample->topic_title); ?></label><br />
+	<label><input type='radio' name='bbld_utf8' value='ISO-8859-1' <?php if ($bbld_option['utf8'] == 'ISO-8859-1') { echo 'checked="checked"'; } ?> /> <strong>ISO-8859-1</strong>, Example: <?php echo bbld_utf8($utf8_sample->topic_title, 'ISO-8859-1'); ?></label><br />
+	<label><input type='radio' name='bbld_utf8' value='ASCII' <?php if ($bbld_option['utf8'] == 'ASCII') { echo 'checked="checked"'; } ?> /> <strong>ASCII</strong>, Example: <?php echo bbld_utf8($utf8_sample->topic_title, 'ASCII'); ?></label><br />
+	<p><?php _e('It will show how the plugin display the title depend on each encoding. By default it is UTF-8. Each refresh will show different title.', 'bbpress-latest-discussion'); ?></p>
+	</fieldset>
+</td>
+</tr>
+
 <tr valign="top">
 <th scope="row"><?php _e('External DB:', 'bbpress-latest-discussion'); ?></th>
 <td> <fieldset><legend class="hidden">use_outdb</legend><label for="use_outdb">

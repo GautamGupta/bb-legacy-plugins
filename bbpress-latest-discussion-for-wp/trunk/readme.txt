@@ -3,8 +3,8 @@ Donate link: http://www.atsutane.net/
 Tags: bbpress, wordpress, latest, discussion, bbld, widget, plugin, sidebar, post, page
 Contributors: Atsutane
 Requires at least: 2.0.5
-Tested up to: 2.7.1
-Stable Tag: 1.2
+Tested up to: 2.8
+Stable Tag: 1.3
 
 This plugin will generates Latest Discussion list from your bbpress forum into your wordpress page.
 
@@ -54,9 +54,9 @@ How to use different database?
 
 == Version History ==
 
-Version 1.2.2 (2009-04-18):
+Version 1.3 (2009-04-24):
 
-* Clean up mess on 1.2.1
+* Fix how BbLD show topic title and forum name. Fix encoding issue. Report by Justin01
 
 Version 1.2.1 (2009-04-17):
 

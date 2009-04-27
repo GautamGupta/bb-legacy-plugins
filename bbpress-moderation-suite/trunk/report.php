@@ -301,7 +301,7 @@ $options = $bbmodsuite_cache['report'];
 		</label>
 		<div>
 			<input type="checkbox" class="checkbox" name="obtrusive" id="obtrusive" value="on"<?php if ( $options['obtrusive'] ) echo ' checked="checked"'; ?> />
-			<p><?php _e('Obtrusive mode makes new reports more noticible but may look bad with some themes.', 'bbpress-moderation-suite'); ?></p>
+			<p><?php _e('Obtrusive mode makes new reports more noticeable but may look bad with some themes.', 'bbpress-moderation-suite'); ?></p>
 		</div>
 	</div>
 </fieldset>

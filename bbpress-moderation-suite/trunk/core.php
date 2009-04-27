@@ -29,6 +29,12 @@ function bbmodsuite_init() {
 			'description' => '<p>' . __('Allows moderators and higher to warn users that break rules. Can be set to automatically block or (if Ban Plus is active) temporarily ban problematic users from the forums.', 'bbpress-moderation-suite') . '</p>',
 			'filename' => 'warning.php',
 			'panel' => 'bbpress_moderation_suite_warning'
+		),
+		'modlog' => array(
+			'name' => __('Moderation Log', 'bbpress-moderation-suite'),
+			'description' => '<p>' . __('Keeps track of important moderator actions.', 'bbpress-moderation-suite') . '</p>',
+			'filename' => 'modlog.php',
+			'panel' => 'bbpress_moderation_suite_modlog'
 		)
 	);
 	$bbmodsuite_active_plugins = (array) bb_get_option('bbpress_moderation_suite_helpers');
@@ -63,6 +69,7 @@ function bbmodsuite_admin_parse() {
 				require_once $bbmodsuite_plugins[$plugin]['filename'];
 				call_user_func('bbmodsuite_' . $plugin . '_install');
 				bb_admin_notice(sprintf(__('Plugin "%s" <strong>activated</strong>', 'bbpress-moderation-suite'), $bbmodsuite_plugins[$plugin]['name']));
+				do_action( 'bbmodsuite-install', $bbmodsuite_plugins[$plugin]['name'] );
 				break;
 			case 'deactivate':
 				if (!in_array($plugin, $bbmodsuite_active_plugins) ||
@@ -72,6 +79,8 @@ function bbmodsuite_admin_parse() {
 				$bbmodsuite_active_plugins = array_flip($bbmodsuite_active_plugins);
 				bb_update_option('bbpress_moderation_suite_helpers', $bbmodsuite_active_plugins);
 				bb_admin_notice(sprintf(__('Plugin "%s" <strong>deactivated</strong>', 'bbpress-moderation-suite'), $bbmodsuite_plugins[$plugin]['name']));
+				do_action( 'bbmodsuite-deactivate', $bbmodsuite_plugins[$plugin]['name'] );
+				break;
 			case 'uninstall':
 				if (!in_array($plugin, $bbmodsuite_active_plugins) ||
 					!isset($bbmodsuite_plugins[$plugin])) break;
@@ -81,6 +90,7 @@ function bbmodsuite_admin_parse() {
 				bb_update_option('bbpress_moderation_suite_helpers', $bbmodsuite_active_plugins);
 				call_user_func('bbmodsuite_' . $plugin . '_uninstall');
 				bb_admin_notice(sprintf(__('Plugin "%s" <strong>deactivated</strong> and <strong>uninstalled</strong>', 'bbpress-moderation-suite'), $bbmodsuite_plugins[$plugin]['name']));
+				do_action( 'bbmodsuite-uninstall', $bbmodsuite_plugins[$plugin]['name'] );
 		}
 	}
 }

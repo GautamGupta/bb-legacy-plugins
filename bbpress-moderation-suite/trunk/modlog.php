@@ -98,9 +98,9 @@ function bbmodsuite_modlog_set_action_handler( $action, $content ) {
 
 // Everything from here on is a trigger for the logging function
 
-bbmodsuite_modlog_set_action_handler( 'bbmodsuite-install', 'activated the bbPress Moderation Suite %s plugin' );
-bbmodsuite_modlog_set_action_handler( 'bbmodsuite-deactivate', 'deactivated the bbPress Moderation Suite %s plugin' );
-bbmodsuite_modlog_set_action_handler( 'bbmodsuite-uninstall', 'uninstalled the bbPress Moderation Suite %s plugin' );
+bbmodsuite_modlog_set_action_handler( 'bbmodsuite-install', __( 'activated the bbPress Moderation Suite %s plugin', 'bbpress-moderation-suite' ) );
+bbmodsuite_modlog_set_action_handler( 'bbmodsuite-deactivate', __( 'activated the bbPress Moderation Suite %s plugin', 'bbpress-moderation-suite' ) );
+bbmodsuite_modlog_set_action_handler( 'bbmodsuite-uninstall', __( 'activated the bbPress Moderation Suite %s plugin', 'bbpress-moderation-suite' ) );
 
 function bbmodsuite_modlog_check_meta_change( $tuple ) {
 	if ( $tuple['type'] != 'option' )
@@ -115,7 +115,7 @@ function bbmodsuite_modlog_check_meta_change( $tuple ) {
 			$deactivated = array_diff( $old_plugins, $tuple['meta_value'] );
 
 			if ( $activated ) {
-				$action['activated'] = 'activated plugins: ';
+				$action['activated'] = __( 'activated plugins: ', 'bbpress-moderation-suite' );
 				$first = true;
 				foreach ( $activated as $_p ) {
 					if ( !$first )
@@ -127,7 +127,7 @@ function bbmodsuite_modlog_check_meta_change( $tuple ) {
 			}
 
 			if ( $deactivated ) {
-				$action['deactivated'] = 'deactivated plugins: ';
+				$action['deactivated'] = __( 'deactivated plugins: ', 'bbpress-moderation-suite' );
 				$first = true;
 				foreach ( $deactivated as $_p ) {
 					if ( !$first )
@@ -152,7 +152,7 @@ function bbmodsuite_modlog_check_query( $query ) {
 	if ( strpos( $query, "DELETE FROM {$bbdb->forums} WHERE forum_id = " ) !== false ) {
 		$forum = get_forum( (int)substr( $query, strlen( "DELETE FROM $bbdb->forums WHERE forum_id = " ) ) );
 
-		bbmodsuite_modlog_log( 'deleted forum: ' . $forum->forum_name );
+		bbmodsuite_modlog_log( __( 'deleted forum: ', 'bbpress-moderation-suite' ) . $forum->forum_name );
 	}
 
 	return $query;

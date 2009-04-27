@@ -1,7 +1,7 @@
 <?php
 /*
-Plugin Name: bbPress smiley choice
-Plugin URI:  -
+Plugin Name: smiley choice
+Plugin URI:  http://bbpress.org/plugins/topic/smiley-choice/
 Description:  allows users to to change their shown smiley pack
 Version: 0.1
 Author: possessed

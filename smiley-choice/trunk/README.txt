@@ -1,7 +1,7 @@
 === Smiley Choice  ===
 Tags: smilies, smileys, emoticons, _ck_; possessed; choose
 Contributors: possessed
-Requires at least: 0.1
+Requires at least: 0.8.2
 Tested up to: 1.0 alpha 6
 Stable tag: trunk
 Donate link: -no donation-

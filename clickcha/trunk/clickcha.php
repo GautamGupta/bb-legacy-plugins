@@ -4,7 +4,7 @@ Plugin Name: Clickcha
 Plugin URI: http://clickcha.com/
 Description: The one-click CAPTCHA.
 Author: iDope
-Version: 0.1
+Version: 0.2
 Author URI: http://clickcha.com/
 */
 
@@ -147,7 +147,7 @@ function clickcha_form_post() {
 	// Ignore trackbacks
 	if(clickcha_verification_required()) {
 		if(!isset($_POST['clickcha_x']) || !isset($_POST['clickcha_y'])) {
-			wp_die("You did not click on the Clickcha image. Please <a href='javascript:history.back(1)'>go back</a> and try again.");
+			bb_die("You did not click on the Clickcha image. Please <a href='javascript:history.back(1)'>go back</a> and try again.");
 		}
 		$public_key = bb_get_option('clickcha-public-key');
 		$private_key = bb_get_option('clickcha-private-key');

@@ -27,7 +27,15 @@ Allows moderators to warn users about rule breaking.
 
 = Mod Log =
 
-Being programmed.
+Keeps track of important moderator actions.
+
+So far, it logs the following actions:
+
+* Plugins
+  * Activation
+  * Deactivation
+* Forums
+  * Deletion
 
 = Probation =
 
@@ -45,6 +53,10 @@ Being programmed.
 = The Report plugin isn't putting a report link anywhere =
 
 Your theme is using old functions.  Find `<?php post_ip_link(); ?> <?php post_edit_link(); ?> <?php post_delete_link(); ?>` or the like in your current theme's `post.php` file and change it to `<?php bb_post_admin(); ?>`.  If there's an if statement before it, delete that too.
+
+= How do I solve issue X? =
+
+If you can't figure out an issue with the bbPress Moderation Suite by yourself, post a comment on this page or my blog.
 
 == Screenshots ==
 
@@ -66,3 +78,6 @@ Your theme is using old functions.  Find `<?php post_ip_link(); ?> <?php post_ed
 * 0.1-alpha4
 	* Warning **actually works** now.
 	* Options are now cached, so each individual mod helper will not ask the database for its options multiple times per pageload.
+* 0.1-alpha5
+	* Report "obtrusive mode" made optional. (See [this post](http://bbpress.org/plugins/topic/bbpress-moderation-suite/#post-2845))
+	* Moderation Log added.

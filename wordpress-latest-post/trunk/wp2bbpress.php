@@ -29,39 +29,17 @@ $wp_table_prefix = 'wp_';
 ### Function Get Wordpress Data
 function get_wp_postdata($title = '', $limit = 10, $before_title = '<h2>', $after_title = '</h2>', $before = '<ul>', $after = '</ul>') {
 	global $bbdb, $blog_address, $wp_table_prefix;
-	$wp_url = get_wp_permalink();
 	$wppost = $bbdb->get_results("SELECT * FROM ".$wp_table_prefix."posts WHERE post_type = 'post' AND post_status = 'publish' ORDER BY ID DESC LIMIT ".$limit);
 	echo $before_title.$title.$after_title.$before;
 	if ($wppost) {
 		foreach ($wppost as $wp) {
 			$wp_title = $wp->post_title;
-			$wp_date = strtotime($wp->post_date);
-			$wp_slug = $wp->post_name;
 			$wp_id = $wp->ID;
-			$wp_showurl = $wp_url;
-			$wp_showurl = str_replace("%year%", date('Y', $wp_date), $wp_showurl);
-			$wp_showurl = str_replace("%monthnum%", date('m', $wp_date), $wp_showurl);
-			$wp_showurl = str_replace("%day%", date('d', $wp_date), $wp_showurl);
-			$wp_showurl = str_replace("%hour%", date('H', $wp_date), $wp_showurl);
-			$wp_showurl = str_replace("%minute%", date('i', $wp_date), $wp_showurl);
-			$wp_showurl = str_replace("%second%", date('s', $wp_date), $wp_showurl);
-			$wp_showurl = str_replace("%postname%", $wp_slug, $wp_showurl);
-			$wp_showurl = str_replace("%post_id%", $wp_id, $wp_showurl);
-			$wp_posturl = $blog_address . $wp_showurl;
+			$wp_posturl = $blog_address . '/?p=' . $wp_id;
 			echo '<li><a href="'.$wp_posturl.'" title="'.$wp_title.'">'.$wp_title.'</a></li>';			
 		}
 	}
 	echo $after;
-}
-
-### Function Get Permalink Data
-function get_wp_permalink() {
-	global $bbdb, $wp_table_prefix;
-	$wpurl = $bbdb->get_row("SELECT * FROM ".$wp_table_prefix."options WHERE option_name = 'permalink_structure' LIMIT 1");
-	if ($wpurl) {
-			$wp_perma = $wpurl->option_value;
-	}
-	return $wp_perma;
 }
 
 ?>

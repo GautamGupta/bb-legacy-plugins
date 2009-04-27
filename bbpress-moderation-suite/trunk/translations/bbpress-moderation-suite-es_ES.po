@@ -4,14 +4,14 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.1-alpha4\n"
+"Project-Id-Version: bbPress Moderation Suite 0.1-alpha5\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/bbpress-moderation-suite\n"
-"POT-Creation-Date: 2009-01-13 19:33+0000\n"
-"PO-Revision-Date: 2009-01-13 15:47-0600\n"
+"POT-Creation-Date: 2009-04-27 22:03+0000\n"
+"PO-Revision-Date: 2009-04-27 17:08-0600\n"
 "Last-Translator: Nightgunner5 <nightgunner5@llamaslayers.net>\n"
 "Language-Team: Nightgunner5 <nightgunner5@llamaslayers.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Language: Spanish\n"
 "X-Poedit-Country: SPAIN\n"
@@ -35,11 +35,11 @@ msgstr "Prohibición de un usuario"
 
 #: ban-plus.php:150
 #: ban-plus.php:252
-#: core.php:168
-#: report.php:124
-#: report.php:229
-#: warning.php:153
-#: warning.php:220
+#: core.php:178
+#: report.php:129
+#: report.php:234
+#: warning.php:160
+#: warning.php:227
 msgid "Administration"
 msgstr "Administración"
 
@@ -61,37 +61,37 @@ msgid "Time"
 msgstr "Tiempo de duración"
 
 #: ban-plus.php:178
-#: warning.php:308
-#: warning.php:327
-#: warning.php:342
+#: warning.php:317
+#: warning.php:336
+#: warning.php:351
 msgid "minutes"
 msgstr "minutos"
 
 #: ban-plus.php:179
-#: warning.php:309
-#: warning.php:328
-#: warning.php:342
+#: warning.php:318
+#: warning.php:337
+#: warning.php:351
 msgid "hours"
 msgstr "horas"
 
 #: ban-plus.php:180
-#: warning.php:310
-#: warning.php:329
-#: warning.php:342
+#: warning.php:319
+#: warning.php:338
+#: warning.php:351
 msgid "days"
 msgstr "días"
 
 #: ban-plus.php:181
-#: warning.php:311
-#: warning.php:330
-#: warning.php:342
+#: warning.php:320
+#: warning.php:339
+#: warning.php:351
 msgid "weeks"
 msgstr "semanas"
 
 #: ban-plus.php:182
-#: warning.php:312
-#: warning.php:331
-#: warning.php:342
+#: warning.php:321
+#: warning.php:340
+#: warning.php:351
 msgid "months"
 msgstr "meses"
 
@@ -101,10 +101,10 @@ msgstr "¿Cuánto tiempo la prohibición de la última?"
 
 #: ban-plus.php:189
 #: ban-plus.php:287
-#: report.php:161
-#: report.php:186
-#: warning.php:204
-#: warning.php:393
+#: report.php:166
+#: report.php:191
+#: warning.php:211
+#: warning.php:402
 msgid "Notes"
 msgstr "Notas"
 
@@ -150,23 +150,23 @@ msgid "Minimum user level to ban"
 msgstr "Mínimo nivel de usuario para poder prohibir otros usuarios"
 
 #: ban-plus.php:261
-#: report.php:271
-#: report.php:284
-#: warning.php:268
+#: report.php:277
+#: report.php:290
+#: warning.php:277
 msgid "Moderator"
 msgstr "Moderador"
 
 #: ban-plus.php:262
-#: report.php:272
-#: report.php:285
-#: warning.php:269
+#: report.php:278
+#: report.php:291
+#: warning.php:278
 msgid "Administrator"
 msgstr "Administrador"
 
 #: ban-plus.php:263
-#: report.php:273
-#: report.php:286
-#: warning.php:270
+#: report.php:279
+#: report.php:292
+#: warning.php:279
 msgid "Keymaster"
 msgstr "Dueño de la Pelota"
 
@@ -179,7 +179,8 @@ msgid "Save settings"
 msgstr "Guardar los ajustes"
 
 #: ban-plus.php:284
-#: warning.php:362
+#: modlog.php:38
+#: warning.php:371
 msgid "User"
 msgstr "El usuario"
 
@@ -192,11 +193,11 @@ msgid "Until"
 msgstr "Prohibido hasta"
 
 #: ban-plus.php:288
-#: core.php:104
-#: report.php:187
-#: report.php:311
-#: warning.php:364
-#: warning.php:394
+#: core.php:114
+#: report.php:192
+#: report.php:326
+#: warning.php:373
+#: warning.php:403
 msgid "Actions"
 msgstr "Acciones"
 
@@ -205,82 +206,124 @@ msgid "Unban"
 msgstr "Eliminar la prohibición"
 
 #: ban-plus.php:332
-#: core.php:21
+#: core.php:22
 msgid "Ban Plus"
 msgstr "Prohibición Plus"
 
-#: core.php:15
-#: report.php:460
+#: core.php:16
+#: report.php:486
 msgid "Report"
 msgstr "Informe"
 
-#: core.php:16
+#: core.php:17
 msgid "Allows users to report posts for consideration by the moderation team."
 msgstr "Esto permite a los usuarios informar sobre los puestos para su examen por el equipo de moderación."
 
-#: core.php:22
+#: core.php:23
 msgid "Implements advanced banning features like temporary banning and automated banning (if used with the Warnings assistant)  Ban Plus does not use the core rank system, so removing the plugin will unban everyone banned using this method."
 msgstr "Implementa avanzadas características como la prohibición temporal y la prohibición automática (si se utiliza con el asistente Advertencias) Prohibición Plus no utilizar la categoría central el sistema. A fin de eliminar el plugin de eliminar la prohibición a todos prohibido usar este método."
 
-#: core.php:27
-#: warning.php:420
+#: core.php:28
+#: warning.php:429
 msgid "Warning"
 msgstr "Advertencia"
 
-#: core.php:28
+#: core.php:29
 msgid "Allows moderators and higher to warn users that break rules. Can be set to automatically block or (if Ban Plus is active) temporarily ban problematic users from the forums."
 msgstr "Permite a los moderadores y superior para advertir a los usuarios que rompen las reglas. Se puede configurar para bloquear o automáticamente (si está activa Prohibición de Plus) la prohibición temporal de los usuarios problemáticos de los foros."
 
-#: core.php:47
-#: core.php:97
+#: core.php:34
+#: modlog.php:32
+#: modlog.php:74
+msgid "Moderation Log"
+msgstr "Moderación historia"
+
+#: core.php:35
+msgid "Keeps track of important moderator actions."
+msgstr "Se realiza un seguimiento de las acciones de los moderadores."
+
+#: core.php:53
+#: core.php:107
 msgid "bbPress Moderation Suite"
 msgstr "bbPress Moderación Suite"
 
-#: core.php:65
+#: core.php:71
 #, php-format
 msgid "Plugin \"%s\" <strong>activated</strong>"
 msgstr "El \"%s\" plugin ha sido <strong>activado</strong>"
 
-#: core.php:74
+#: core.php:81
 #, php-format
 msgid "Plugin \"%s\" <strong>deactivated</strong>"
 msgstr "El \"%s\" plugin ha sido <strong>desactivado</strong>"
 
-#: core.php:83
+#: core.php:92
 #, php-format
 msgid "Plugin \"%s\" <strong>deactivated</strong> and <strong>uninstalled</strong>"
 msgstr "El \"%s\" plugin ha sido <strong>desactivado</strong> y <strong>desinstalado</strong>"
 
-#: core.php:93
+#: core.php:103
 #, php-format
 msgid "Your <code>%1$s</code> folder needs to be moved to the <code>my-plugins</code> folder.  It is currently in the <code>%2$s</code> folder."
 msgstr "Su <code>%1$s</ code> carpeta debe ser trasladado a la <code>my-plugins</ code> carpeta. Actualmente se encuentra en el <code>%2$s</ code> carpeta."
 
-#: core.php:98
+#: core.php:108
 msgid "bbPress Moderation Suite is a set of tools to help moderate your forums.  There are multiple parts, each able to function separately from the others.  You can activate or deactivate each part separately.  It even includes an uninstaller so if you don't want to use a part anymore, you can remove all of its database usage!"
 msgstr "bbPress Moderación Suite es un conjunto de herramientas para ayudar a sus foros moderados. Existen múltiples partes, cada una capaz de funcionar por separado o con los demás. Usted puede activar o desactivar cada una de las partes por separado. Incluso incluye un desinstalador por lo que si no desea utilizar una parte más, puede eliminar la totalidad de su base de datos de uso!"
 
-#: core.php:102
+#: core.php:112
 msgid "Moderation Assistants"
 msgstr "Asistentes de Moderación"
 
-#: core.php:103
-#: report.php:184
-#: report.php:310
+#: core.php:113
+#: report.php:189
+#: report.php:325
 msgid "Description"
 msgstr "Descripción"
 
-#: core.php:114
+#: core.php:124
 msgid "Activate"
 msgstr "Activarla"
 
-#: core.php:119
+#: core.php:129
 msgid "Deactivate"
 msgstr "Desactivarlo"
 
-#: core.php:158
+#: core.php:168
 msgid "Uninstall"
 msgstr "Desinstalar"
+
+#: modlog.php:32
+#, php-format
+msgid " - Page %d"
+msgstr "- Página %d"
+
+#: modlog.php:37
+msgid "Date"
+msgstr "fecha"
+
+#: modlog.php:39
+msgid "Content"
+msgstr "contenidos"
+
+#: modlog.php:101
+#: modlog.php:102
+#: modlog.php:103
+#, php-format
+msgid "activated the bbPress Moderation Suite %s plugin"
+msgstr "activada la bbPress Moderación Suite de \"%s\" plugin"
+
+#: modlog.php:118
+msgid "activated plugins: "
+msgstr "activados los plugins: foo"
+
+#: modlog.php:130
+msgid "deactivated plugins: "
+msgstr "desactiva los plugins: "
+
+#: modlog.php:155
+msgid "deleted forum: "
+msgstr "suprime el foro: "
 
 #: report-form.php:6
 msgid "Report this post"
@@ -291,12 +334,12 @@ msgid "What is your reason for reporting this post?"
 msgstr "¿Cuál es su motivo para informar de este puesto?"
 
 #: report-form.php:13
-#: report.php:155
-#: report.php:177
-#: report.php:178
-#: report.php:304
-#: warning.php:198
-#: warning.php:399
+#: report.php:160
+#: report.php:182
+#: report.php:183
+#: report.php:319
+#: warning.php:205
+#: warning.php:408
 msgid "Other"
 msgstr "Otro"
 
@@ -308,242 +351,250 @@ msgstr "Por favor, dar más información: (Sólo texto plano, no se permite HTML
 msgid "Send Report &raquo;"
 msgstr "Enviar Informe &raquo;"
 
-#: report.php:46
-#: report.php:50
-#: report.php:69
+#: report.php:44
+#: report.php:48
+#: report.php:67
 msgid "Invalid report"
 msgstr "El informe no es válido"
 
-#: report.php:77
+#: report.php:75
 msgid "<p>Your report was submitted. The moderation staff will review the post in question.</p>"
 msgstr "<p>Tu informe fue presentado. La moderación del personal revisará el correo en cuestión.</p>"
 
-#: report.php:121
+#: report.php:126
 msgid "New"
 msgstr "Nuevos"
 
-#: report.php:122
+#: report.php:127
 msgid "Resolved"
 msgstr "Resuelta"
 
-#: report.php:123
-#: report.php:170
-#: report.php:336
+#: report.php:128
+#: report.php:175
+#: report.php:351
 msgid "Resolve"
 msgstr "Fijar"
 
-#: report.php:134
+#: report.php:139
 msgid "Invalid resolve attempt."
 msgstr "No válido intento de fijar."
 
-#: report.php:137
+#: report.php:142
 msgid "Successfully resolved report."
 msgstr "Resolvió satisfactoriamente informe."
 
-#: report.php:143
+#: report.php:148
 #, php-format
 msgid "Resolve Report #%d"
 msgstr "Fijar Informe Número %d"
 
-#: report.php:148
+#: report.php:153
 msgid "Method of Resolving"
 msgstr "Método de fijación"
 
-#: report.php:179
+#: report.php:184
 msgid "Resolved Reports"
 msgstr "Informes de fijos"
 
-#: report.php:183
-#: report.php:309
+#: report.php:188
+#: report.php:324
 msgid "Reported By"
 msgstr "Reportado por"
 
-#: report.php:185
+#: report.php:190
 msgid "Resolved By"
 msgstr "Fijado por"
 
-#: report.php:215
-#: report.php:335
+#: report.php:220
+#: report.php:350
 msgid "View reported post"
 msgstr "Ver informó puesto"
 
-#: report.php:237
-#: warning.php:247
+#: report.php:243
+#: warning.php:256
 msgid "Settings successfully saved."
 msgstr "Configuración guardada con éxito."
 
-#: report.php:239
+#: report.php:245
 msgid "Saving the settings failed."
 msgstr "No se ha podido guardar las opciones."
 
-#: report.php:249
+#: report.php:255
 msgid "Report types"
 msgstr "Tipos de informes"
 
-#: report.php:253
+#: report.php:259
 msgid "Fill this box with generic reasons to report posts. (One per line)"
 msgstr "Llenar este cuadro con motivos genéricos que informe puestos. (Uno por línea)"
 
-#: report.php:258
+#: report.php:264
 msgid "Resolve types"
 msgstr "Formas de fijación de los informes"
 
-#: report.php:262
+#: report.php:268
 msgid "Fill this box with generic ways of resolving reports. (One per line)"
 msgstr "Rellene este cuadro de texto con las formas normales de fijación de un informe. (Uno por línea)"
 
-#: report.php:267
-#: warning.php:264
+#: report.php:273
+#: warning.php:273
 msgid "Minimum level"
 msgstr "Mínimo nivel de usuario"
 
-#: report.php:275
+#: report.php:281
 msgid "What should the minimum user level to view and resolve reports be?"
 msgstr "¿Cuál debería ser el mínimo nivel de usuario para ver y arreglar informes?"
 
-#: report.php:280
+#: report.php:286
 msgid "Maximum level"
 msgstr "Máximo nivel de usuario"
 
-#: report.php:287
+#: report.php:293
 msgid "None"
 msgstr "Ningún usuario está \"por encima de la ley\""
 
-#: report.php:289
+#: report.php:295
 msgid "What should the maximum user level able to be reported be?"
 msgstr "¿Cuál debería ser el más alto nivel de usuario que se puede informar?"
 
-#: report.php:295
-#: warning.php:351
+#: report.php:300
+msgid "Obtrusive Mode"
+msgstr "Intrusivo modo"
+
+#: report.php:304
+msgid "Obtrusive mode makes new reports more noticeable but may look bad with some themes."
+msgstr "\"Intrusivo modo\" muestra los nuevos informes en un formato más notable, pero de lo que parece feo con algunas plantillas."
+
+#: report.php:310
+#: warning.php:360
 msgid "Save Changes"
 msgstr "Guardar cambios"
 
-#: report.php:305
+#: report.php:320
 msgid "New Reports"
 msgstr "Nuevos informes"
 
-#: report.php:353
+#: report.php:368
 msgid "Reports"
 msgstr "Informes"
 
-#: report.php:438
+#: report.php:464
 msgid "There is a new report waiting for you!"
 msgstr "Hay un nuevo informe que esperan por ti!"
 
-#: report.php:439
+#: report.php:466
 #, php-format
 msgid "There are <span>%s</span> new reports waiting for you!"
 msgstr "Hay <span>%s</span> nuevos informes que esperan por ti!"
 
-#: report.php:458
+#: report.php:484
 msgid "Report this post to a moderator."
 msgstr "Informar de este post a un moderador."
 
-#: warning.php:65
+#: warning.php:71
 msgid "Automated ban from Warning moderation helper"
 msgstr "Esta prohibición es automática debido a las advertencias"
 
-#: warning.php:76
+#: warning.php:83
 msgid "Give this user a warning."
 msgstr "Dar una advertencia de este usuario."
 
-#: warning.php:90
+#: warning.php:97
 msgid "Warn"
 msgstr "Advierten"
 
-#: warning.php:151
-#: warning.php:358
+#: warning.php:158
+#: warning.php:367
 msgid "Users with warnings"
 msgstr "Ver los usuarios con las advertencias"
 
-#: warning.php:152
-#: warning.php:182
+#: warning.php:159
+#: warning.php:189
 msgid "Warn a user"
 msgstr "Avisar a un usuario"
 
-#: warning.php:175
+#: warning.php:182
 msgid "User successfully warned."
 msgstr "El usuario ha sido advertido."
 
-#: warning.php:178
+#: warning.php:185
 msgid "Invalid warning attempt"
 msgstr "Intento no válido de advertencia"
 
-#: warning.php:191
+#: warning.php:198
 #, php-format
 msgid "Reason for warning %s"
 msgstr "Motivo de la advertencia de %s"
 
-#: warning.php:208
+#: warning.php:215
 msgid "This <strong>will</strong> be shown to the user."
 msgstr "<strong> Esta va a ser</strong> muestra al usuario."
 
-#: warning.php:214
+#: warning.php:221
 msgid "Warn user"
 msgstr "Advertir a este usuario"
 
-#: warning.php:256
+#: warning.php:265
 msgid "Possible reasons for warning users"
 msgstr "Las posibles razones para advertir a los usuarios"
 
-#: warning.php:272
+#: warning.php:281
 msgid "What should the minimum user level to warn users be?"
 msgstr "¿Cuál debería ser el mínimo nivel de usuario para advertir a los demás usuarios de ser?"
 
-#: warning.php:277
+#: warning.php:286
 msgid "Check interval"
 msgstr "Comprobación de intervalo"
 
-#: warning.php:281
+#: warning.php:290
 msgid "How long should bbPress Moderation Suite wait between checks for expired warnings?"
 msgstr "¿Cuánto tiempo debe esperar bbPress Moderación Suite entre las pruebas de detección de los avisos de vencimiento?"
 
-#: warning.php:286
+#: warning.php:295
 msgid "Expiration time"
 msgstr "Tiempo hasta que la eliminación de"
 
-#: warning.php:290
+#: warning.php:299
 msgid "How old should warnings be for bbPress Moderation Suite to delete them?"
 msgstr "¿Cuánto tiempo debería bbPress Moderación Suite esperar hasta considerar una advertencia de edad?"
 
-#: warning.php:295
+#: warning.php:304
 msgid "Ban Plus is not active. The banning settings will be saved, but not used."
 msgstr "Prohibición Plus no está activo. La prohibición se guardará la configuración, pero no se utiliza."
 
-#: warning.php:301
-#: warning.php:320
-#: warning.php:342
+#: warning.php:310
+#: warning.php:329
+#: warning.php:351
 msgid "Ban automatically after:"
 msgstr "Prohibición que tienen los usuarios automáticamente esta cantidad de advertencias:"
 
-#: warning.php:305
-#: warning.php:324
-#: warning.php:342
+#: warning.php:314
+#: warning.php:333
+#: warning.php:351
 msgid " warnings, for "
 msgstr " advertencias, durante "
 
-#: warning.php:344
+#: warning.php:353
 msgid "Add more"
 msgstr "Añadir más"
 
-#: warning.php:363
+#: warning.php:372
 msgid "Warnings"
 msgstr "Número de advertencias"
 
-#: warning.php:381
+#: warning.php:390
 msgid "View warnings"
 msgstr "Ver las advertencias"
 
-#: warning.php:388
+#: warning.php:397
 #, php-format
 msgid "Warnings given to user \"%s\""
 msgstr "A las advertencias de \"%s\""
 
-#: warning.php:392
+#: warning.php:401
 msgid "Given by"
 msgstr "Advertencia dada por"
 
-#: warning.php:408
+#: warning.php:417
 msgid "View post"
 msgstr "Ver el puesto"
 

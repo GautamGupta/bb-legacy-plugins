@@ -60,24 +60,24 @@ If you can't figure out an issue with the bbPress Moderation Suite by yourself, 
 
 == Screenshots ==
 
-1. Can you spot what happened because there was a report?
+1. Can you spot what happened because there was a report? Don't worry, there's a setting to make this a bit less obtrusive.
 2. The Warning administration screen
 
 == Changelog ==
 
-* 0.1-alpha1
-	* First public release
-* 0.1-alpha2
-	* Ban Plus added.
-	* Errors and messages look less weird.
-	* Links to administration panels for each sub-plugin added.
+* 0.1-alpha5
+	* Report "obtrusive mode" made optional. (See [this post](http://bbpress.org/plugins/topic/bbpress-moderation-suite/#post-2845))
+	* Moderation Log added.
+* 0.1-alpha4
+	* Warning **actually works** now.
+	* Options are now cached, so each individual mod helper will not ask the database for its options multiple times per pageload.
 * 0.1-alpha3
 	* Warning added. ***Early version, lots of bugs***
 	* Report only uses one bb_options entry. The downside: You need to de- and re-activate this Moderation Helper, and it **will** forget your settings.
 	* A few "idiot checks" have been added. Don't worry if you trigger one. It doesn't *necessarily* mean you're an idiot.
-* 0.1-alpha4
-	* Warning **actually works** now.
-	* Options are now cached, so each individual mod helper will not ask the database for its options multiple times per pageload.
-* 0.1-alpha5
-	* Report "obtrusive mode" made optional. (See [this post](http://bbpress.org/plugins/topic/bbpress-moderation-suite/#post-2845))
-	* Moderation Log added.
+* 0.1-alpha2
+	* Ban Plus added.
+	* Errors and messages look less weird.
+	* Links to administration panels for each sub-plugin added.
+* 0.1-alpha1
+	* First public release

@@ -152,7 +152,7 @@ function bbmodsuite_modlog_check_query( $query ) {
 	if ( strpos( $query, "DELETE FROM {$bbdb->forums} WHERE forum_id = " ) !== false ) {
 		$forum = get_forum( (int)substr( $query, strlen( "DELETE FROM $bbdb->forums WHERE forum_id = " ) ) );
 
-		bbmodsuite_modlog_log( 'deleted forum: ' . $forum->name );
+		bbmodsuite_modlog_log( 'deleted forum: ' . $forum->forum_name );
 	}
 
 	return $query;

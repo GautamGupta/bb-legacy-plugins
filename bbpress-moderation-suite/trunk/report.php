@@ -4,7 +4,7 @@
 
 function bbmodsuite_report_install() {
 	global $bbdb, $bbmodsuite_cache;
-	$bbdb->query('CREATE TABLE IF NOT EXISTS `' . $bbdb->prefix . 'bbmodsuite_reports` (
+	$bbdb->query( 'CREATE TABLE IF NOT EXISTS `' . $bbdb->prefix . 'bbmodsuite_reports` (
 	`ID` int(10) NOT NULL auto_increment,
 	`report_reason` int(10) NOT NULL default \'0\',
 	`report_from` int(10) NOT NULL,
@@ -17,26 +17,31 @@ function bbmodsuite_report_install() {
 	`reported_at` datetime NOT NULL,
 	`resolved_at` datetime,
 	PRIMARY KEY (`ID`)
-)');
-	if (!$bbmodsuite_cache['report'] = bb_get_option('bbmodsuite_report_options')) {
-		bb_update_option('bbmodsuite_report_options', array('min_level' => 'moderate', 'max_level' => 'moderate', 'types' => '', 'resolve_types' => ''));
-		$bbmodsuite_cache['report'] = array('min_level' => 'moderate', 'max_level' => 'moderate', 'types' => '', 'resolve_types' => '');
+)' );
+	if ( !$bbmodsuite_cache['report'] = bb_get_option( 'bbmodsuite_report_options' ) ) {
+		bb_update_option( 'bbmodsuite_report_options', array( 'min_level' => 'moderate', 'max_level' => 'moderate', 'types' => '', 'resolve_types' => '', 'obtrusive' => true ) );
+		$bbmodsuite_cache['report'] = array( 'min_level' => 'moderate', 'max_level' => 'moderate', 'types' => '', 'resolve_types' => '', 'obtrusive' => true );
+	}
+	if ( !isset( $bbmodsuite_cache['report']['obtrusive'] ) ) {
+		$bbmodsuite_cache['report']['obtrusive'] = true;
+		bb_update_option( 'bbmodsuite_report_options', $bbmodsuite_cache['report'] );
 	}
 }
 
 function bbmodsuite_report_uninstall() {
 	global $bbdb;
-	$bbdb->query('DROP TABLE `' . $bbdb->prefix . 'bbmodsuite_reports`');
-	bb_delete_option('bbmodsuite_report_options');
+	$bbdb->query( 'DROP TABLE `' . $bbdb->prefix . 'bbmodsuite_reports`' );
+	bb_delete_option( 'bbmodsuite_report_options' );
 }
 
 if (!defined('BB_PATH') && isset($_GET['report'])) {
-	if (file_exists('../bb-load.php'))
+	if ( file_exists( '../bb-load.php' ) )
 		require_once '../bb-load.php';
-	elseif (file_exists('../../bb-load.php'))
+	elseif ( file_exists( '../../bb-load.php' ) )
 		require_once '../../bb-load.php';
-	if (strtoupper($_SERVER['REQUEST_METHOD']) === 'GET') {
-		if (!bb_verify_nonce($_GET['_nonce'], 'bbmodsuite-report-' . $_GET['report'])) bb_die(__('Invalid report', 'bbpress-moderation-suite'));
+	if ( strtoupper( $_SERVER['REQUEST_METHOD'] ) === 'GET' ) {
+		if ( !bb_verify_nonce( $_GET['_nonce'], 'bbmodsuite-report-' . $_GET['report'] ) )
+			bb_die( __('Invalid report', 'bbpress-moderation-suite') );
 
 		global $forums, $bb_post;
 		$bb_post = bb_get_post($_GET['report']);
@@ -56,7 +61,7 @@ if (!defined('BB_PATH') && isset($_GET['report'])) {
 			return $a;
 		}
 		add_filter('bb_template', 'bbmodsuite_report_form', 10, 2);
-		
+
 		bb_load_template('front-page.php');
 	} else {
 		if (!($_POST['report_reason'] === '0' || array_key_exists($_POST['report_reason'], bbmodsuite_report_reasons()))) bb_die(__('Invalid report', 'bbpress-moderation-suite'));
@@ -233,7 +238,8 @@ function bbpress_moderation_suite_report() { ?>
 		$resolve_types = trim($_POST['resolve_types']);
 		$min_level = in_array($_POST['min_level'], array('moderate', 'administrate', 'use_keys')) ? $_POST['min_level'] : 'moderate';
 		$max_level = in_array($_POST['max_level'], array('moderate', 'administrate', 'use_keys', 'none')) ? $_POST['max_level'] : 'moderate';
-		bb_update_option('bbmodsuite_report_options', compact('types', 'resolve_types', 'min_level', 'max_level')); ?>
+		$obtrusive = !!$_POST['obtrusive'];
+		bb_update_option('bbmodsuite_report_options', compact('types', 'resolve_types', 'min_level', 'max_level', 'obtrusive')); ?>
 <div class="updated"><p><?php _e('Settings successfully saved.', 'bbpress-moderation-suite') ?></p></div>
 <?php } else { ?>
 <div class="error"><p><?php _e('Saving the settings failed.', 'bbpress-moderation-suite') ?></p></div>
@@ -281,12 +287,21 @@ $options = $bbmodsuite_cache['report'];
 		</label>
 		<div>
 			<select id="max_level" name="max_level">
-				<option value="moderate"<?php if ($the_options['min_level'] === 'moderate') { ?> selected="selected"<?php } ?>><?php _e('Moderator') ?></option>
-				<option value="administrate"<?php if ($the_options['min_level'] === 'administrate') { ?> selected="selected"<?php } ?>><?php _e('Administrator') ?></option>
-				<option value="use_keys"<?php if ($the_options['min_level'] === 'use_keys') { ?> selected="selected"<?php } ?>><?php _e('Keymaster') ?></option>
-				<option value="none"<?php if ($the_options['min_level'] === 'none') { ?> selected="selected"<?php } ?>><?php _e('None', 'bbpress-moderation-suite') ?></option>
+				<option value="moderate"<?php if ($options['min_level'] === 'moderate') echo ' selected="selected"'; ?>><?php _e('Moderator') ?></option>
+				<option value="administrate"<?php if ($options['min_level'] === 'administrate') echo ' selected="selected"'; ?>><?php _e('Administrator') ?></option>
+				<option value="use_keys"<?php if ($options['min_level'] === 'use_keys') echo ' selected="selected"'; ?>><?php _e('Keymaster') ?></option>
+				<option value="none"<?php if ($options['min_level'] === 'none') echo ' selected="selected"'; ?>><?php _e('None', 'bbpress-moderation-suite') ?></option>
 			</select>
 			<p><?php _e('What should the maximum user level able to be reported be?', 'bbpress-moderation-suite'); ?></p>
+		</div>
+	</div>
+	<div>
+		<label for="obtrusive">
+			<?php _e('Obtrusive Mode', 'bbpress-moderation-suite'); ?>
+		</label>
+		<div>
+			<input type="checkbox" class="checkbox" name="obtrusive" id="obtrusive" value="on"<?php if ( $options['obtrusive'] ) echo ' checked="checked"'; ?> />
+			<p><?php _e('Obtrusive mode makes new reports more noticible but may look bad with some themes.', 'bbpress-moderation-suite'); ?></p>
 		</div>
 	</div>
 </fieldset>
@@ -372,8 +387,11 @@ function bbmodsuite_report_get_reports_css() {
 }
 
 function bbmodsuite_report_css() {
+	global $bbmodsuite_cache;
 	echo '<style type="text/css">
-/* <![CDATA[ */
+/* <![CDATA[ */';
+	if ($bbmodsuite_cache['report']['obtrusive'])
+		echo '
 	.reports_waiting {
 		position: fixed;
 		bottom: 1em;
@@ -388,16 +406,22 @@ function bbmodsuite_report_css() {
 		z-index: 9999;
 		opacity: .8;
 	}
-	.reports_waiting p {
+	.reports_waiting a, .reports_waiting a:hover {
+		color: #000 !important;
+	}';
+	else
+		echo '
+	.reports_waiting {
+		line-height: 4;
+	}';
+	echo '
+	.reports_waiting span {
 		margin: 0;
 	}
 	.reports_waiting:hover {
 		opacity: 1;
 	}
-	.reports_waiting a, .reports_waiting a:hover {
-		color: #000 !important;
-	}
-	.reports_waiting span {
+	.reports_waiting span span {
 		text-decoration: blink;
 	}' . bbmodsuite_report_get_reports_css() . '
 /* ]]> */
@@ -434,12 +458,14 @@ function bbmodsuite_report_header() {
 				BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
 			);
 	$number = number_format(bbmodsuite_report_count('new'));
-	if ($number == 0) return;
-	if ($number == 1) echo '<div class="reports_waiting"><p><a href="' . $link . '">' . __('There is a new report waiting for you!', 'bbpress-moderation-suite') . '</a></p></div>';
-	else echo '<div class="reports_waiting"><p><a href="' . $link . '">' . sprintf(__('There are <span>%s</span> new reports waiting for you!', 'bbpress-moderation-suite'), $number) . '</a></p></div>';
+	if ($number == '0')
+		return;
+	if ($number == '1')
+		echo '<p class="reports_waiting login"><span><a href="' . $link . '">' . __('There is a new report waiting for you!', 'bbpress-moderation-suite') . '</a></p></p>';
+	else
+		echo '<p class="reports_waiting login"><span><a href="' . $link . '">' . sprintf(__('There are <span>%s</span> new reports waiting for you!', 'bbpress-moderation-suite'), $number) . '</a></p></p>';
 }
 add_action('bb_logged-in.php', 'bbmodsuite_report_header');
-add_action('bb_login-form.php', 'bbmodsuite_report_header');
 
 function bbmodsuite_report_count($type = 'all') {
 	global $bbdb;

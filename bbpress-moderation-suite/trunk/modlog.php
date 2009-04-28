@@ -5,14 +5,16 @@
 function bbmodsuite_modlog_install() {
 	global $bbdb;
 
-	$bbdb->query( 'CREATE TABLE IF NOT EXISTS `' . $bbdb->prefix . 'bbmodsuite_modlog` (
-	`ID` int(10) NOT NULL auto_increment,
-	`log_user` int(10) NOT NULL,
-	`log_level` varchar(3) NOT NULL default \'mod\',
-	`log_time` int(10) NOT NULL,
-	`log_content` text NOT NULL default \'\',
-	PRIMARY KEY (`ID`)
-)' );
+	$bbdb->query(
+					'CREATE TABLE IF NOT EXISTS `' . $bbdb->prefix . 'bbmodsuite_modlog` (
+						`ID` int(10) NOT NULL auto_increment,
+						`log_user` int(10) NOT NULL,
+						`log_level` varchar(3) NOT NULL default \'mod\',
+						`log_time` int(10) NOT NULL,
+						`log_content` text NOT NULL default \'\',
+						PRIMARY KEY (`ID`)
+					)'
+	);
 }
 
 function bbmodsuite_modlog_uninstall() {
@@ -23,10 +25,10 @@ function bbmodsuite_modlog_uninstall() {
 
 function bbpress_moderation_suite_modlog() {
 	global $bbdb;
-	
-	$page = isset( $_GET['page'] ) ? (int)$_GET['page'] - 1 : 0;
+
+	$page        = isset( $_GET['page'] ) ? (int)$_GET['page'] - 1 : 0;
 	$log_entries = $bbdb->get_results( 'SELECT * FROM `' . $bbdb->prefix . 'bbmodsuite_modlog` ORDER BY `log_time` DESC LIMIT ' . ($page * 60) . ',' . ($page * 60 + 60) );
-	$log_pages = ceil( $bbdb->get_var( 'SELECT COUNT(*) FROM `' . $bbdb->prefix . 'bbmodsuite_modlog`' ) / 60 );
+	$log_pages   = ceil( $bbdb->get_var( 'SELECT COUNT(*) FROM `' . $bbdb->prefix . 'bbmodsuite_modlog`' ) / 60 );
 
 ?>
 <h2><?php _e( 'Moderation Log', 'bbpress-moderation-suite' ); if ( $page > 0 ) printf( __( ' - Page %d', 'bbpress-moderation-suite' ) , $page + 1 ); ?></h2>
@@ -61,12 +63,14 @@ if ( !$log_entries ) {
 	</tbody>
 </table>
 <?php
-	paginate_links( array(
-		'base'    => bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_modlog' ), BB_URI_CONTEXT_BB_ADMIN ) . '%_%',
-		'format'  => '&page=%#%',
-		'total'   => $log_pages,
-		'current' => $page
-	) );
+	paginate_links(
+					array(
+						'base'    => bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_modlog' ), BB_URI_CONTEXT_BB_ADMIN ) . '%_%',
+						'format'  => '&page=%#%',
+						'total'   => $log_pages,
+						'current' => $page,
+					)
+	);
 }
 
 function bbmodsuite_modlog_admin_add() {
@@ -81,19 +85,18 @@ function bbmodsuite_modlog_log( $content ) {
 
 	global $bbdb;
 
-	$bbdb->insert( $bbdb->prefix . 'bbmodsuite_modlog', array(
-		'log_user' => bb_get_current_user_info( 'ID' ),
-		'log_level' => strtolower( substr( get_user_type( bb_get_current_user_info( 'ID' ) ), 0, 3 ) ),
-		'log_time' => time(),
-		'log_content' => $content
-	), array( '%d', '%s', '%d', '%s' ) );
+	$bbdb->insert(
+					$bbdb->prefix . 'bbmodsuite_modlog', array(
+						'log_user'    => bb_get_current_user_info( 'ID' ),
+						'log_level'   => strtolower( substr( get_user_type( bb_get_current_user_info( 'ID' ) ), 0, 3 ) ),
+						'log_time'    => time(),
+						'log_content' => $content,
+					), array( '%d', '%s', '%d', '%s' )
+	);
 }
 
 function bbmodsuite_modlog_set_action_handler( $action, $content ) {
-	add_action( $action, create_function( '', '
-		$args = func_get_args();
-		bbmodsuite_modlog_log( vsprintf( \'' . addslashes($content) . '\', $args ) );
-	' ), 10, substr_count( $content, '%' ) );
+	add_action( $action, create_function( '', '$args = func_get_args(); bbmodsuite_modlog_log( vsprintf( \'' . addslashes( $content ) . '\', $args ) );' ), 10, substr_count( $content, '%' ) );
 }
 
 // Everything from here on is a trigger for the logging function
@@ -108,10 +111,9 @@ function bbmodsuite_modlog_check_meta_change( $tuple ) {
 
 	switch ( $tuple['meta_key'] ) {
 		case 'active_plugins':
-			$action = array();
+			$action      = array();
 			$old_plugins = bb_get_option_from_db( 'active_plugins' );
-
-			$activated = array_diff( $tuple['meta_value'], $old_plugins );
+			$activated   = array_diff( $tuple['meta_value'], $old_plugins );
 			$deactivated = array_diff( $old_plugins, $tuple['meta_value'] );
 
 			if ( $activated ) {
@@ -120,9 +122,9 @@ function bbmodsuite_modlog_check_meta_change( $tuple ) {
 				foreach ( $activated as $_p ) {
 					if ( !$first )
 						$action['activated'] .= ', ';
-					$p = bb_get_plugin_data( $_p );
-					$action['activated'] .= $p['name'];
-					$first = false;
+					$p                     = bb_get_plugin_data( $_p );
+					$action['activated']  .= $p['name'];
+					$first                 = false;
 				}
 			}
 
@@ -132,9 +134,9 @@ function bbmodsuite_modlog_check_meta_change( $tuple ) {
 				foreach ( $deactivated as $_p ) {
 					if ( !$first )
 						$action['deactivated'] .= ', ';
-					$p = bb_get_plugin_data( $_p );
-					$action['deactivated'] .= $p['name'];
-					$first = false;
+					$p                       = bb_get_plugin_data( $_p );
+					$action['deactivated']  .= $p['name'];
+					$first                   = false;
 				}
 			}
 
@@ -207,7 +209,7 @@ function bbmodsuite_modlog_check_bozo( $ret, $key, $new ) {
 
 	global $user_id;
 	$link = '<a href="' . get_user_profile_link( $user_id ) . '">' . get_user_display_name( $user_id ) . '</a>';
-	$old = bb_get_usermeta( $user_id, $key );
+	$old  = bb_get_usermeta( $user_id, $key );
 
 	switch ( $key ) {
 		case 'is_bozo':

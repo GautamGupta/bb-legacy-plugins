@@ -183,20 +183,20 @@ function bbmodsuite_modlog_check_post_delete( $post_id, $new_status, $old_status
 
 	if ( $old_status == 0 ) {
 		if ( $new_status == 1 ) {
-			bbmodsuite_modlog_log( sprintf( __( 'deleted %s\'s post on the topic "%s".' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', get_topic_link( $post->topic_id ) ) );
+			bbmodsuite_modlog_log( sprintf( __( 'deleted %s\'s post on the topic "%s".' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', '<a href="' . get_post_link( $post_id ) . '">' . get_topic_title( $post->topic_id ) . '</a>' ) );
 		} elseif ( $new_status == 2 ) {
-			bbmodsuite_modlog_log( sprintf( __( 'marked %s\'s post on the topic "%s" as spam.' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', get_topic_link( $post->topic_id ) ) );
+			bbmodsuite_modlog_log( sprintf( __( 'marked %s\'s post on the topic "%s" as spam.' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', '<a href="' . get_post_link( $post_id ) . '">' . get_topic_title( $post->topic_id ) . '</a>' ) );
 		}
 	} elseif ( $new_status == 0 ) {
 		if ( $old_status == 1 ) {
-			bbmodsuite_modlog_log( sprintf( __( 'undeleted %s\'s post on the topic "%s".' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', get_topic_link( $post->topic_id ) ) );
+			bbmodsuite_modlog_log( sprintf( __( 'undeleted %s\'s post on the topic "%s".' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', '<a href="' . get_post_link( $post_id ) . '">' . get_topic_title( $post->topic_id ) . '</a>' ) );
 		} elseif ( $old_status == 2 ) {
-			bbmodsuite_modlog_log( sprintf( __( 'marked %s\'s post on the topic "%s" as not spam.' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', get_topic_link( $post->topic_id ) ) );
+			bbmodsuite_modlog_log( sprintf( __( 'marked %s\'s post on the topic "%s" as not spam.' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', '<a href="' . get_post_link( $post_id ) . '">' . get_topic_title( $post->topic_id ) . '</a>' ) );
 		}
 	} elseif ( $new_status == 2 && $old_status == 1 ) {
-		bbmodsuite_modlog_log( sprintf( __( 'changed %s\'s post on the topic "%s" from deleted to spam.' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', get_topic_link( $post->topic_id ) ) );
+		bbmodsuite_modlog_log( sprintf( __( 'changed %s\'s post on the topic "%s" from deleted to spam.' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', '<a href="' . get_post_link( $post_id ) . '">' . get_topic_title( $post->topic_id ) . '</a>' ) );
 	} elseif ( $new_status == 1 && $old_status == 2 ) {
-		bbmodsuite_modlog_log( sprintf( __( 'changed %s\'s post on the topic "%s" from spam to deleted.' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', get_topic_link( $post->topic_id ) ) );
+		bbmodsuite_modlog_log( sprintf( __( 'changed %s\'s post on the topic "%s" from spam to deleted.' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', '<a href="' . get_post_link( $post_id ) . '">' . get_topic_title( $post->topic_id ) . '</a>' ) );
 	}
 }
 add_action( 'bb_delete_post', 'bbmodsuite_modlog_check_post_delete', 10, 3 );

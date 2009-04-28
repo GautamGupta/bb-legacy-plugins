@@ -36,6 +36,12 @@ So far, it logs the following actions:
   * Deactivation
 * Forums
   * Deletion
+* Users
+  * Bozo (on, off)
+  * Deletion
+* Posts
+  * Status change (delete, spam, undelete, unspam)
+  * Editing (by other users)
 
 = Probation =
 

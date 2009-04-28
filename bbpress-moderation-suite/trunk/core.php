@@ -6,56 +6,67 @@ Plugin URI: http://llamaslayers.net/daily-llama/tag/bbpress-moderation-suite
 Author: Nightgunner5
 Author URI: http://llamaslayers.net/
 Version: 0.1-alpha5
+Requires at least: 1.0
+Tested up to: trunk
 Text Domain: bbpress-moderation-suite
-Domain Path: translations
+Domain Path: /translations/
 */
 
 function bbmodsuite_init() {
 	global $bbmodsuite_plugins, $bbmodsuite_active_plugins, $bbmodsuite_cache;
-	load_plugin_textdomain('bbpress-moderation-suite', dirname(__FILE__) . '/translations');
+
+	if ( false ) // Hack to make the description translatable
+		__( 'A set of tools to help moderate your forums.', 'bbpress-moderation-suite' );
+
+	load_plugin_textdomain( 'bbpress-moderation-suite', dirname( __FILE__ ) . '/translations' );
+
 	$bbmodsuite_plugins = array(
 		'report' => array(
-			'name' => __('Report', 'bbpress-moderation-suite'),
-			'description' => '<p>' . __('Allows users to report posts for consideration by the moderation team.', 'bbpress-moderation-suite') . '</p>',
+			'name' => __( 'Report', 'bbpress-moderation-suite' ),
+			'description' => __( 'Allows users to report posts for consideration by the moderation team.', 'bbpress-moderation-suite' ),
 			'filename' => 'report.php',
 			'panel' => 'bbpress_moderation_suite_report'
 		),
 		'banplus' => array(
-			'name' => __('Ban Plus', 'bbpress-moderation-suite'),
-			'description' => '<p>' . __('Implements advanced banning features like temporary banning and automated banning (if used with the Warnings assistant)  Ban Plus does not use the core rank system, so removing the plugin will unban everyone banned using this method.', 'bbpress-moderation-suite') . '</p>',
+			'name' => __( 'Ban Plus', 'bbpress-moderation-suite' ),
+			'description' => __( 'Implements advanced banning features like temporary banning and automated banning (if used with the Warnings assistant)  Ban Plus does not use the core rank system, so removing the plugin will unban everyone banned using this method.', 'bbpress-moderation-suite' ),
 			'filename' => 'ban-plus.php',
 			'panel' => 'bbpress_moderation_suite_ban_plus'
 		),
 		'warning' => array(
-			'name' => __('Warning', 'bbpress-moderation-suite'),
-			'description' => '<p>' . __('Allows moderators and higher to warn users that break rules. Can be set to automatically block or (if Ban Plus is active) temporarily ban problematic users from the forums.', 'bbpress-moderation-suite') . '</p>',
+			'name' => __( 'Warning', 'bbpress-moderation-suite' ),
+			'description' => __( 'Allows moderators and higher to warn users that break rules. Can be set to automatically block or (if Ban Plus is active) temporarily ban problematic users from the forums.', 'bbpress-moderation-suite' ),
 			'filename' => 'warning.php',
 			'panel' => 'bbpress_moderation_suite_warning'
 		),
 		'modlog' => array(
-			'name' => __('Moderation Log', 'bbpress-moderation-suite'),
-			'description' => '<p>' . __('Keeps track of important moderator actions.', 'bbpress-moderation-suite') . '</p>',
+			'name' => __( 'Moderation Log', 'bbpress-moderation-suite' ),
+			'description' => __( 'Keeps track of important moderator actions.', 'bbpress-moderation-suite' ),
 			'filename' => 'modlog.php',
 			'panel' => 'bbpress_moderation_suite_modlog'
 		)
 	);
-	$bbmodsuite_active_plugins = (array) bb_get_option('bbpress_moderation_suite_helpers');
+
+	$bbmodsuite_active_plugins = (array)bb_get_option( 'bbpress_moderation_suite_helpers' );
 	$bbmodsuite_cache = array();
-	foreach ($bbmodsuite_active_plugins as $plugin) {
+
+	foreach ( $bbmodsuite_active_plugins as $plugin ) {
 		$bbmodsuite_cache[$plugin] = array();
-		require_once $bbmodsuite_plugins[$plugin]['filename'];
+		require_once dirname( __FILE__ ) . '/' . $bbmodsuite_plugins[$plugin]['filename'];
 	}
-	do_action('bbmodsuite_init');
+
+	do_action( 'bbmodsuite_init' );
 }
-add_action('bb_init', 'bbmodsuite_init');
+add_action( 'bb_init', 'bbmodsuite_init' );
 
 function bbmodsuite_admin_add() {
 	global $bb_submenu;
-	$plugins = array($bb_submenu['plugins.php'][5]);
-	$plugins[] = array(__('bbPress Moderation Suite', 'bbpress-moderation-suite'), 'use_keys', 'bbpress_moderation_suite');
-	$bb_submenu['plugins.php'] = array_merge($plugins, array_slice($bb_submenu['plugins.php'], 1));
+
+	$plugins = array( $bb_submenu['plugins.php'][5] );
+	$plugins[] = array( __( 'bbPress Moderation Suite', 'bbpress-moderation-suite' ), 'use_keys', 'bbpress_moderation_suite' );
+	$bb_submenu['plugins.php'] = array_merge( $plugins, array_slice( $bb_submenu['plugins.php'], 1 ) );
 }
-add_action('bb_admin_menu_generator', 'bbmodsuite_admin_add');
+add_action( 'bb_admin_menu_generator', 'bbmodsuite_admin_add' );
 
 function bbmodsuite_admin_parse() {
 	global $bbmodsuite_plugins, $bbmodsuite_active_plugins;
@@ -149,7 +160,7 @@ if (strncmp(dirname(__FILE__), realpath(BB_PLUGIN_DIR), strlen(realpath(BB_PLUGI
 		<tr<?php alt_class( 'normal_plugin', $class ); ?>>
 			<td><?php echo $plugin_data['name']; ?></td>
 			<td>
-				<?php echo $plugin_data['description']; ?>
+				<p><?php echo $plugin_data['description']; ?></p>
 			</td>
 			<td class="action">
 				<a class="<?php echo $action_class; ?>" href="<?php echo $href; ?>"><?php echo $action_text; ?></a>

@@ -51,7 +51,7 @@ if ( !$log_entries ) {
 		<tr>
 			<td><?php echo date( 'Y-m-d H:i:s', $log_entry->log_time ); ?></td>
 			<td><a href="<?php user_profile_link( $log_entry->log_user ); ?>"><?php echo get_user_display_name( $log_entry->log_user ); ?></a> <small>(<?php echo $log_entry->log_level; ?>)</small></td>
-			<td><?php echo attribute_escape( $log_entry->log_content ); ?></td>
+			<td><?php echo $log_entry->log_content; ?></td>
 		</tr>
 
 <?php
@@ -138,7 +138,7 @@ function bbmodsuite_modlog_check_meta_change( $tuple ) {
 				}
 			}
 
-			bbmodsuite_modlog_log( implode( ' and ', $action ) );
+			bbmodsuite_modlog_log( implode( __( ' and ', 'bbpress-moderation-suite' ), $action ) );
 
 			break;
 	}
@@ -150,7 +150,7 @@ add_filter( 'bb_update_meta', 'bbmodsuite_modlog_check_meta_change' );
 function bbmodsuite_modlog_check_query( $query ) {
 	global $bbdb;
 	if ( strpos( $query, "DELETE FROM {$bbdb->forums} WHERE forum_id = " ) !== false ) {
-		$forum = get_forum( (int)substr( $query, strlen( "DELETE FROM $bbdb->forums WHERE forum_id = " ) ) );
+		$forum = get_forum( (int)substr( $query, strlen( "DELETE FROM {$bbdb->forums} WHERE forum_id = " ) ) );
 
 		bbmodsuite_modlog_log( __( 'deleted forum: ', 'bbpress-moderation-suite' ) . $forum->forum_name );
 	}
@@ -158,5 +158,73 @@ function bbmodsuite_modlog_check_query( $query ) {
 	return $query;
 }
 add_filter( 'query', 'bbmodsuite_modlog_check_query' );
+
+function bbmodsuite_modlog_check_post_edit( $post_text, $post_id, $topic_id ) {
+	if (!$post_id) // New posts are not important.
+		return $post_text;
+
+	$post = bb_get_post( $post_id );
+	$current_id = bb_get_current_user_info( 'ID' );
+
+	if ( $current_id == $post->poster_id ) // Editing your own post? *yawn*
+		return $post_text;
+
+	if ( $post_text == $post->post_text ) // This is not the hook we are looking for.
+		return $post_text;
+
+	bbmodsuite_modlog_log( sprintf( __( 'edited %s\'s post on the topic "%s".', 'bbpress-moderation-suite' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', '<a href="' . get_post_link( $post_id ) . '">' . get_topic_title( $topic_id ) . '</a>' ) );
+
+	return $post_text;
+}
+add_filter( 'pre_post', 'bbmodsuite_modlog_check_post_edit', 10, 3 );
+
+function bbmodsuite_modlog_check_post_delete( $post_id, $new_status, $old_status ) {
+	$post = bb_get_post( $post_id );
+
+	if ( $old_status == 0 ) {
+		if ( $new_status == 1 ) {
+			bbmodsuite_modlog_log( sprintf( __( 'deleted %s\'s post on the topic "%s".' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', get_topic_link( $post->topic_id ) ) );
+		} elseif ( $new_status == 2 ) {
+			bbmodsuite_modlog_log( sprintf( __( 'marked %s\'s post on the topic "%s" as spam.' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', get_topic_link( $post->topic_id ) ) );
+		}
+	} elseif ( $new_status == 0 ) {
+		if ( $old_status == 1 ) {
+			bbmodsuite_modlog_log( sprintf( __( 'undeleted %s\'s post on the topic "%s".' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', get_topic_link( $post->topic_id ) ) );
+		} elseif ( $old_status == 2 ) {
+			bbmodsuite_modlog_log( sprintf( __( 'marked %s\'s post on the topic "%s" as not spam.' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', get_topic_link( $post->topic_id ) ) );
+		}
+	} elseif ( $new_status == 2 && $old_status == 1 ) {
+		bbmodsuite_modlog_log( sprintf( __( 'changed %s\'s post on the topic "%s" from deleted to spam.' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', get_topic_link( $post->topic_id ) ) );
+	} elseif ( $new_status == 1 && $old_status == 2 ) {
+		bbmodsuite_modlog_log( sprintf( __( 'changed %s\'s post on the topic "%s" from spam to deleted.' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', get_topic_link( $post->topic_id ) ) );
+	}
+}
+add_action( 'bb_delete_post', 'bbmodsuite_modlog_check_post_delete', 10, 3 );
+
+function bbmodsuite_modlog_check_bozo( $ret, $key, $new ) {
+	if ( !in_array( $key, array( 'is_bozo' ) ) )
+		return $ret;
+
+	global $user_id;
+	$link = '<a href="' . get_user_profile_link( $user_id ) . '">' . get_user_display_name( $user_id ) . '</a>';
+	$old = bb_get_usermeta( $user_id, $key );
+
+	switch ( $key ) {
+		case 'is_bozo':
+			if ( $new && !$old )
+				bbmodsuite_modlog_log( sprintf( __( 'marked %s as a bozo.', 'bbpress-moderation-suite' ), $link ) );
+			elseif ( !$new && $old )
+				bbmodsuite_modlog_log( sprintf( __( 'unmarked %s as a bozo.', 'bbpress-moderation-suite' ), $link ) );
+			break;
+	}
+
+	return $ret;
+}
+add_filter( 'sanitize_profile_admin', 'bbmodsuite_modlog_check_bozo', 10, 3 );
+
+function bbmodsuite_modlog_check_user_delete( $user_id ) {
+	bbmodsuite_modlog_log( sprintf( __( 'deleted %s.', 'bbpress-moderation-suite' ), get_user_display_name( $user_id ) ) );
+}
+add_action( 'bb_delete_user', 'bbmodsuite_modlog_check_user_delete' );
 
 ?>

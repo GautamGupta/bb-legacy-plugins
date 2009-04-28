@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: bbPress Moderation Suite 0.1-alpha5\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/tag/bbpress-moderation-suite\n"
-"POT-Creation-Date: 2009-04-27 22:03+0000\n"
-"PO-Revision-Date: 2009-04-27 17:08-0600\n"
+"Report-Msgid-Bugs-To: http://bbpress.org/plugins/topic/bbpress-moderation-suite\n"
+"POT-Creation-Date: 2009-04-28 16:05+0000\n"
+"PO-Revision-Date: 2009-04-28 11:16-0600\n"
 "Last-Translator: Nightgunner5 <nightgunner5@llamaslayers.net>\n"
 "Language-Team: Nightgunner5 <nightgunner5@llamaslayers.net>\n"
 "MIME-Version: 1.0\n"
@@ -35,7 +35,7 @@ msgstr "Prohibición de un usuario"
 
 #: ban-plus.php:150
 #: ban-plus.php:252
-#: core.php:178
+#: core.php:191
 #: report.php:129
 #: report.php:234
 #: warning.php:160
@@ -193,7 +193,7 @@ msgid "Until"
 msgstr "Prohibido hasta"
 
 #: ban-plus.php:288
-#: core.php:114
+#: core.php:127
 #: report.php:192
 #: report.php:326
 #: warning.php:373
@@ -206,90 +206,94 @@ msgid "Unban"
 msgstr "Eliminar la prohibición"
 
 #: ban-plus.php:332
-#: core.php:22
+#: core.php:31
 msgid "Ban Plus"
 msgstr "Prohibición Plus"
 
-#: core.php:16
+#: core.php:19
+msgid "A set of tools to help moderate your forums."
+msgstr "Un conjunto de herramientas para ayudar a tus foros moderados."
+
+#: core.php:25
 #: report.php:486
 msgid "Report"
 msgstr "Informe"
 
-#: core.php:17
+#: core.php:26
 msgid "Allows users to report posts for consideration by the moderation team."
 msgstr "Esto permite a los usuarios informar sobre los puestos para su examen por el equipo de moderación."
 
-#: core.php:23
+#: core.php:32
 msgid "Implements advanced banning features like temporary banning and automated banning (if used with the Warnings assistant)  Ban Plus does not use the core rank system, so removing the plugin will unban everyone banned using this method."
 msgstr "Implementa avanzadas características como la prohibición temporal y la prohibición automática (si se utiliza con el asistente Advertencias) Prohibición Plus no utilizar la categoría central el sistema. A fin de eliminar el plugin de eliminar la prohibición a todos prohibido usar este método."
 
-#: core.php:28
+#: core.php:37
 #: warning.php:429
 msgid "Warning"
 msgstr "Advertencia"
 
-#: core.php:29
+#: core.php:38
 msgid "Allows moderators and higher to warn users that break rules. Can be set to automatically block or (if Ban Plus is active) temporarily ban problematic users from the forums."
 msgstr "Permite a los moderadores y superior para advertir a los usuarios que rompen las reglas. Se puede configurar para bloquear o automáticamente (si está activa Prohibición de Plus) la prohibición temporal de los usuarios problemáticos de los foros."
 
-#: core.php:34
+#: core.php:43
 #: modlog.php:32
 #: modlog.php:74
 msgid "Moderation Log"
 msgstr "Moderación historia"
 
-#: core.php:35
+#: core.php:44
 msgid "Keeps track of important moderator actions."
 msgstr "Se realiza un seguimiento de las acciones de los moderadores."
 
-#: core.php:53
-#: core.php:107
+#: core.php:66
+#: core.php:120
 msgid "bbPress Moderation Suite"
 msgstr "bbPress Moderación Suite"
 
-#: core.php:71
+#: core.php:84
 #, php-format
 msgid "Plugin \"%s\" <strong>activated</strong>"
 msgstr "El \"%s\" plugin ha sido <strong>activado</strong>"
 
-#: core.php:81
+#: core.php:94
 #, php-format
 msgid "Plugin \"%s\" <strong>deactivated</strong>"
 msgstr "El \"%s\" plugin ha sido <strong>desactivado</strong>"
 
-#: core.php:92
+#: core.php:105
 #, php-format
 msgid "Plugin \"%s\" <strong>deactivated</strong> and <strong>uninstalled</strong>"
 msgstr "El \"%s\" plugin ha sido <strong>desactivado</strong> y <strong>desinstalado</strong>"
 
-#: core.php:103
+#: core.php:116
 #, php-format
 msgid "Your <code>%1$s</code> folder needs to be moved to the <code>my-plugins</code> folder.  It is currently in the <code>%2$s</code> folder."
 msgstr "Su <code>%1$s</ code> carpeta debe ser trasladado a la <code>my-plugins</ code> carpeta. Actualmente se encuentra en el <code>%2$s</ code> carpeta."
 
-#: core.php:108
+#: core.php:121
 msgid "bbPress Moderation Suite is a set of tools to help moderate your forums.  There are multiple parts, each able to function separately from the others.  You can activate or deactivate each part separately.  It even includes an uninstaller so if you don't want to use a part anymore, you can remove all of its database usage!"
 msgstr "bbPress Moderación Suite es un conjunto de herramientas para ayudar a sus foros moderados. Existen múltiples partes, cada una capaz de funcionar por separado o con los demás. Usted puede activar o desactivar cada una de las partes por separado. Incluso incluye un desinstalador por lo que si no desea utilizar una parte más, puede eliminar la totalidad de su base de datos de uso!"
 
-#: core.php:112
+#: core.php:125
 msgid "Moderation Assistants"
 msgstr "Asistentes de Moderación"
 
-#: core.php:113
+#: core.php:126
 #: report.php:189
 #: report.php:325
 msgid "Description"
 msgstr "Descripción"
 
-#: core.php:124
+#: core.php:137
 msgid "Activate"
 msgstr "Activarla"
 
-#: core.php:129
+#: core.php:142
 msgid "Deactivate"
 msgstr "Desactivarlo"
 
-#: core.php:168
+#: core.php:181
 msgid "Uninstall"
 msgstr "Desinstalar"
 
@@ -321,9 +325,63 @@ msgstr "activados los plugins: foo"
 msgid "deactivated plugins: "
 msgstr "desactiva los plugins: "
 
+#: modlog.php:141
+msgid " and "
+msgstr " y "
+
 #: modlog.php:155
 msgid "deleted forum: "
 msgstr "suprime el foro: "
+
+#: modlog.php:175
+#, php-format
+msgid "edited %s's post on the topic \"%s\"."
+msgstr "editado %s escrito sobre el tema \"%s\"."
+
+#: modlog.php:186
+#, php-format
+msgid "deleted %s's post on the topic \"%s\"."
+msgstr "suprimido %s escrito sobre el tema \"%s\"."
+
+#: modlog.php:188
+#, php-format
+msgid "marked %s's post on the topic \"%s\" as spam."
+msgstr "marcado %s escrito sobre el tema \"%s\" como spam."
+
+#: modlog.php:192
+#, php-format
+msgid "undeleted %s's post on the topic \"%s\"."
+msgstr "recupera %s escrito sobre el tema \"%s\"."
+
+#: modlog.php:194
+#, php-format
+msgid "marked %s's post on the topic \"%s\" as not spam."
+msgstr "marcado %s post sobre el tema \"%s\" como no spam."
+
+#: modlog.php:197
+#, php-format
+msgid "changed %s's post on the topic \"%s\" from deleted to spam."
+msgstr "cambiado %s escrito sobre el tema \"%s\" de suprimirse al spam."
+
+#: modlog.php:199
+#, php-format
+msgid "changed %s's post on the topic \"%s\" from spam to deleted."
+msgstr "cambiado %s escrito sobre el tema \"%s\" de spam al suprimirse."
+
+#: modlog.php:215
+#, php-format
+msgid "marked %s as a bozo."
+msgstr "%s marcados como Bozo."
+
+#: modlog.php:217
+#, php-format
+msgid "unmarked %s as a bozo."
+msgstr "%s marcados como no Bozo."
+
+#: modlog.php:226
+#, php-format
+msgid "deleted %s."
+msgstr "suprimido %s."
 
 #: report-form.php:6
 msgid "Report this post"

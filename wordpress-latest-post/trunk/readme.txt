@@ -34,6 +34,10 @@ More Documentation <a href="http://www.atsutane.net/2009/04/wordpress-inside-bbp
 
 == Version History ==
 
+Version 0.2 (2009-04-28):
+
+* Add permalink support.
+
 Version 0.1 (2009-04-28):
 
 * Initial Release.

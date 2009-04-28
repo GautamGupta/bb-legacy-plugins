@@ -71,6 +71,8 @@ If you can't figure out an issue with the bbPress Moderation Suite by yourself, 
 
 == Changelog ==
 
+* 0.1-alpha6
+	* Major code cleanup
 * 0.1-alpha5
 	* Report "obtrusive mode" made optional. (See [this post](http://bbpress.org/plugins/topic/bbpress-moderation-suite/#post-2845))
 	* Moderation Log added.

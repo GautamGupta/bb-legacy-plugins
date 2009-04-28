@@ -25,7 +25,7 @@ function bbpress_moderation_suite_modlog() {
 	global $bbdb;
 	
 	$page = isset( $_GET['page'] ) ? (int)$_GET['page'] - 1 : 0;
-	$log_entries = $bbdb->get_results( 'SELECT * FROM `' . $bbdb->prefix . 'bbmodsuite_modlog` LIMIT ' . ($page * 60) . ',' . ($page * 60 + 60) );
+	$log_entries = $bbdb->get_results( 'SELECT * FROM `' . $bbdb->prefix . 'bbmodsuite_modlog` ORDER BY `log_time` DESC LIMIT ' . ($page * 60) . ',' . ($page * 60 + 60) );
 	$log_pages = ceil( $bbdb->get_var( 'SELECT COUNT(*) FROM `' . $bbdb->prefix . 'bbmodsuite_modlog`' ) / 60 );
 
 ?>

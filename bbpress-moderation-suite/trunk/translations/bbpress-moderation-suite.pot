@@ -1,13 +1,13 @@
-# SOME DESCRIPTIVE TITLE.
+# bbPress Moderation Suite
 # This file is put in the public domain.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Nightgunner5 <nightgunner5@llamaslayers.net>, 2009.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/tag/bbpress-moderation-suite\n"
-"POT-Creation-Date: 2009-04-27 22:03+0000\n"
+"Project-Id-Version: 0.1-alpha5\n"
+"Report-Msgid-Bugs-To: http://bbpress.org/plugins/topic/bbpress-moderation-suite\n"
+"POT-Creation-Date: 2009-04-28 16:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,7 +30,7 @@ msgstr ""
 msgid "Ban a user"
 msgstr ""
 
-#: ban-plus.php:150 ban-plus.php:252 core.php:178 report.php:129
+#: ban-plus.php:150 ban-plus.php:252 core.php:191 report.php:129
 #: report.php:234 warning.php:160 warning.php:227
 msgid "Administration"
 msgstr ""
@@ -155,7 +155,7 @@ msgstr ""
 msgid "Until"
 msgstr ""
 
-#: ban-plus.php:288 core.php:114 report.php:192 report.php:326 warning.php:373
+#: ban-plus.php:288 core.php:127 report.php:192 report.php:326 warning.php:373
 #: warning.php:403
 msgid "Actions"
 msgstr ""
@@ -164,19 +164,23 @@ msgstr ""
 msgid "Unban"
 msgstr ""
 
-#: ban-plus.php:332 core.php:22
+#: ban-plus.php:332 core.php:31
 msgid "Ban Plus"
 msgstr ""
 
-#: core.php:16 report.php:486
+#: core.php:19
+msgid "A set of tools to help moderate your forums."
+msgstr ""
+
+#: core.php:25 report.php:486
 msgid "Report"
 msgstr ""
 
-#: core.php:17
+#: core.php:26
 msgid "Allows users to report posts for consideration by the moderation team."
 msgstr ""
 
-#: core.php:23
+#: core.php:32
 msgid ""
 "Implements advanced banning features like temporary banning and automated "
 "banning (if used with the Warnings assistant)  Ban Plus does not use the "
@@ -184,53 +188,53 @@ msgid ""
 "this method."
 msgstr ""
 
-#: core.php:28 warning.php:429
+#: core.php:37 warning.php:429
 msgid "Warning"
 msgstr ""
 
-#: core.php:29
+#: core.php:38
 msgid ""
 "Allows moderators and higher to warn users that break rules. Can be set to "
 "automatically block or (if Ban Plus is active) temporarily ban problematic "
 "users from the forums."
 msgstr ""
 
-#: core.php:34 modlog.php:32 modlog.php:74
+#: core.php:43 modlog.php:32 modlog.php:74
 msgid "Moderation Log"
 msgstr ""
 
-#: core.php:35
+#: core.php:44
 msgid "Keeps track of important moderator actions."
 msgstr ""
 
-#: core.php:53 core.php:107
+#: core.php:66 core.php:120
 msgid "bbPress Moderation Suite"
 msgstr ""
 
-#: core.php:71
+#: core.php:84
 #, php-format
 msgid "Plugin \"%s\" <strong>activated</strong>"
 msgstr ""
 
-#: core.php:81
+#: core.php:94
 #, php-format
 msgid "Plugin \"%s\" <strong>deactivated</strong>"
 msgstr ""
 
-#: core.php:92
+#: core.php:105
 #, php-format
 msgid ""
 "Plugin \"%s\" <strong>deactivated</strong> and <strong>uninstalled</strong>"
 msgstr ""
 
-#: core.php:103
+#: core.php:116
 #, php-format
 msgid ""
 "Your <code>%1$s</code> folder needs to be moved to the <code>my-plugins</"
 "code> folder.  It is currently in the <code>%2$s</code> folder."
 msgstr ""
 
-#: core.php:108
+#: core.php:121
 msgid ""
 "bbPress Moderation Suite is a set of tools to help moderate your forums.  "
 "There are multiple parts, each able to function separately from the others.  "
@@ -239,23 +243,23 @@ msgid ""
 "of its database usage!"
 msgstr ""
 
-#: core.php:112
+#: core.php:125
 msgid "Moderation Assistants"
 msgstr ""
 
-#: core.php:113 report.php:189 report.php:325
+#: core.php:126 report.php:189 report.php:325
 msgid "Description"
 msgstr ""
 
-#: core.php:124
+#: core.php:137
 msgid "Activate"
 msgstr ""
 
-#: core.php:129
+#: core.php:142
 msgid "Deactivate"
 msgstr ""
 
-#: core.php:168
+#: core.php:181
 msgid "Uninstall"
 msgstr ""
 
@@ -285,8 +289,62 @@ msgstr ""
 msgid "deactivated plugins: "
 msgstr ""
 
+#: modlog.php:141
+msgid " and "
+msgstr ""
+
 #: modlog.php:155
 msgid "deleted forum: "
+msgstr ""
+
+#: modlog.php:175
+#, php-format
+msgid "edited %s's post on the topic \"%s\"."
+msgstr ""
+
+#: modlog.php:186
+#, php-format
+msgid "deleted %s's post on the topic \"%s\"."
+msgstr ""
+
+#: modlog.php:188
+#, php-format
+msgid "marked %s's post on the topic \"%s\" as spam."
+msgstr ""
+
+#: modlog.php:192
+#, php-format
+msgid "undeleted %s's post on the topic \"%s\"."
+msgstr ""
+
+#: modlog.php:194
+#, php-format
+msgid "marked %s's post on the topic \"%s\" as not spam."
+msgstr ""
+
+#: modlog.php:197
+#, php-format
+msgid "changed %s's post on the topic \"%s\" from deleted to spam."
+msgstr ""
+
+#: modlog.php:199
+#, php-format
+msgid "changed %s's post on the topic \"%s\" from spam to deleted."
+msgstr ""
+
+#: modlog.php:215
+#, php-format
+msgid "marked %s as a bozo."
+msgstr ""
+
+#: modlog.php:217
+#, php-format
+msgid "unmarked %s as a bozo."
+msgstr ""
+
+#: modlog.php:226
+#, php-format
+msgid "deleted %s."
 msgstr ""
 
 #: report-form.php:6

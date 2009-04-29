@@ -1,13 +1,13 @@
-# SOME DESCRIPTIVE TITLE.
+# bbPress Moderation Suite
 # This file is put in the public domain.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Nightgunner5 <nightgunner5@llamaslayers.net>, 2009.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: bbPress Moderation Suite 0.1-alpha5\n"
 "Report-Msgid-Bugs-To: http://bbpress.org/plugins/topic/bbpress-moderation-suite\n"
 "POT-Creation-Date: 2009-04-28 16:05+0000\n"
-"PO-Revision-Date: 2009-04-28 11:16-0600\n"
+"PO-Revision-Date: 2009-04-29 15:28-0600\n"
 "Last-Translator: Nightgunner5 <nightgunner5@llamaslayers.net>\n"
 "Language-Team: Nightgunner5 <nightgunner5@llamaslayers.net>\n"
 "MIME-Version: 1.0\n"

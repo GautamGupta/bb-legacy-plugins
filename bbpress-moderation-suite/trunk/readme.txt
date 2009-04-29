@@ -1,7 +1,7 @@
 === bbPress Moderation Suite ===
 Contributors: Nightgunner5
 Tags: moderation, banning, ban, report post, report
-Requires at least: 1.0-alpha
+Requires at least: 0.9
 Tested up to: trunk
 Stable tag: 0.1-alpha5
 
@@ -32,16 +32,16 @@ Keeps track of important moderator actions.
 So far, it logs the following actions:
 
 * Plugins
-  * Activation
-  * Deactivation
+	* Activation
+	* Deactivation
 * Forums
-  * Deletion
+	* Deletion
 * Users
-  * Bozo (on, off)
-  * Deletion
+	* Bozo (on, off)
+	* Deletion
 * Posts
-  * Status change (delete, spam, undelete, unspam)
-  * Editing (by other users)
+	* Status change (delete, spam, undelete, unspam)
+	* Editing (by other users)
 
 = Probation =
 
@@ -73,6 +73,7 @@ If you can't figure out an issue with the bbPress Moderation Suite by yourself, 
 
 * 0.1-alpha6
 	* Major code cleanup
+	* This plugin now works with bbPress 0.9. If anything gives you an error, give me the error message and I'll be sure to fix it.
 * 0.1-alpha5
 	* Report "obtrusive mode" made optional. (See [this post](http://bbpress.org/plugins/topic/bbpress-moderation-suite/#post-2845))
 	* Moderation Log added.

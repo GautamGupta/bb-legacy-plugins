@@ -391,7 +391,7 @@ function bbpress_moderation_suite_warning() { ?>
 		</tr>
 	</thead>
 	<tbody>
-<?php		$warned_users = $bbdb->get_results( "SELECT `meta_value`,`user_id` FROM `{$bbdb->usermeta}` WHERE `meta_key` = 'bbmodsuite_warnings_count' ORDER BY `meta_value` DESC" );
+<?php		$warned_users = (array)$bbdb->get_results( "SELECT `meta_value`,`user_id` FROM `{$bbdb->usermeta}` WHERE `meta_key` = 'bbmodsuite_warnings_count' ORDER BY `meta_value` DESC" );
 			foreach ( $warned_users as $warned_user ) {
 				$url = bb_get_uri(
 								'bb-admin/admin-base.php',

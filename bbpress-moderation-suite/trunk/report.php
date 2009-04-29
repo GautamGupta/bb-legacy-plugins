@@ -195,7 +195,7 @@ function bbpress_moderation_suite_report() { ?>
 <?php		break;
 		case 'resolved_reports':
 			global $bbdb;
-			$reports       = $bbdb->get_results( 'SELECT ID, report_reason, report_from, reported_post, report_content, resolved_by, resolve_type, resolve_content FROM `' . $bbdb->prefix . 'bbmodsuite_reports` WHERE `report_type`=\'resolved\'' );
+			$reports       = (array)$bbdb->get_results( 'SELECT ID, report_reason, report_from, reported_post, report_content, resolved_by, resolve_type, resolve_content FROM `' . $bbdb->prefix . 'bbmodsuite_reports` WHERE `report_type`=\'resolved\'' );
 			$reasons       = bbmodsuite_report_reasons() + array( __( 'Other', 'bbpress-moderation-suite' ) );
 			$resolve_types = bbmodsuite_report_resolve_types() + array( __( 'Other', 'bbpress-moderation-suite' ) );
 ?><h2><?php _e( 'Resolved Reports', 'bbpress-moderation-suite' ); ?></h2>
@@ -334,7 +334,7 @@ $options = $bbmodsuite_cache['report'];
 	case 'new_reports':
 	default:
 		global $bbdb;
-		$reports = $bbdb->get_results( 'SELECT ID, report_reason, report_from, reported_post, report_content FROM `' . $bbdb->prefix . 'bbmodsuite_reports` WHERE `report_type`=\'new\'' );
+		$reports = (array)$bbdb->get_results( 'SELECT ID, report_reason, report_from, reported_post, report_content FROM `' . $bbdb->prefix . 'bbmodsuite_reports` WHERE `report_type`=\'new\'' );
 		$reasons = bbmodsuite_report_reasons() + array( __( 'Other', 'bbpress-moderation-suite' ) );
 ?><h2><?php _e( 'New Reports', 'bbpress-moderation-suite' ); ?></h2>
 <table class="widefat">

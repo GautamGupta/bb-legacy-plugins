@@ -12,6 +12,9 @@ Text Domain: bbpress-moderation-suite
 Domain Path: /translations/
 */
 
+if ( !function_exists( 'bb_get_uri' ) )
+	include_once dirname( __FILE__ ) . '/compat.php';
+
 function bbmodsuite_init() {
 	global $bbmodsuite_plugins, $bbmodsuite_active_plugins, $bbmodsuite_cache;
 

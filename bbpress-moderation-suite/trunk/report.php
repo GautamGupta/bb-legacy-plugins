@@ -60,6 +60,11 @@ if ( !defined( 'BB_PATH' ) && isset( $_GET['report'] ) ) {
 		add_filter( 'bb_get_uri', 'bbmodsuite_report_form_uri', 10, 2 );
 		$forums = false;
 
+		function bbmodsuite_report_form_uri_buffer( $content ) {
+			return str_replace( 'action="' . bb_get_option('uri') . 'bb-post.php">', 'action="' . bbmodsuite_report_form_uri( '', 'bb-post.php' ) . '">', $content );
+		}
+		ob_start( 'bbmodsuite_report_form_uri_buffer' );
+
 		function bbmodsuite_report_form( $a, $b ) {
 			if ( $b === 'post-form.php' ) {
 				return dirname( __FILE__ ) . '/report-form.php';
@@ -401,7 +406,7 @@ function bbmodsuite_report_get_reports_css() {
 				$reported_post_ids[] = $new_report->reported_post;
 		}
 	}
-	return '#post-' . implode( ', #post-', $reported_post_ids ) . ' {
+	return '#post-' . implode( ' .threadpost, #post-', $reported_post_ids ) . ' .threadpost {
 		background: #900;
 		color: #fff;
 	}';
@@ -487,6 +492,14 @@ function bbmodsuite_report_header() {
 		echo '<p class="reports_waiting login"><span><a href="' . $link . '">' . sprintf( __( 'There are <span>%s</span> new reports waiting for you!', 'bbpress-moderation-suite' ), $number ) . '</a></p></p>';
 }
 add_action( 'bb_logged-in.php', 'bbmodsuite_report_header' );
+
+function bbmodsuite_report_loggedin_header( $file ) {
+	if ( substr( $file, -14 ) == '/logged-in.php' )
+		bbmodsuite_report_header();
+	return $file;
+}
+if ( version_compare( bb_get_option( 'version' ), '1.0dev', '<' ) )
+	add_filter( 'bb_template', 'bbmodsuite_report_loggedin_header' );
 
 function bbmodsuite_report_count( $type = 'all' ) {
 	global $bbdb;

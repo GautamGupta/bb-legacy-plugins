@@ -1,5 +1,7 @@
 <?php
 
+/* This is not an individual plugin, but a part of the bbPress Moderation Suite. */
+
 /**
  * BB_URI_CONTEXT_* - Bitwise definitions for bb_uri() and bb_get_uri() contexts
  *
@@ -130,6 +132,48 @@ function get_user_display_name( $id = 0 ) {
 	$user = bb_get_user( bb_get_user_id( $id ) );
 	return apply_filters( 'get_user_display_name', $user->display_name ? $user->display_name : $user->user_login, $user->ID );
 }
+endif;
+
+if ( !function_exists( 'bb_post_admin' ) ) :
+function bb_post_admin() {
+	$parts = array(
+		'ip' => bb_get_post_ip_link(),
+		'edit' => bb_get_post_edit_link(),
+		'delete' => bb_get_post_delete_link(),
+	);
+	echo join( "\n", apply_filters( 'bb_post_admin', $parts ) );
+}
+endif;
+
+if ( !function_exists( 'bb_get_post_ip_link' ) ) :
+function bb_get_post_ip_link( $post_id = 0 ) {
+	ob_start();
+	post_ip_link( $post_id );
+	$ret = trim( ob_get_clean() );
+	return $ret ? $ret : null;
+}
+endif;
+
+if ( !function_exists( 'bb_get_post_edit_link' ) ) :
+function bb_get_post_edit_link( $post_id = 0 ) {
+	ob_start();
+	post_edit_link( $post_id );
+	$ret = trim( ob_get_clean() );
+	return $ret ? $ret : null;
+}
+endif;
+
+if ( !function_exists( 'bb_get_post_delete_link' ) ) :
+function bb_get_post_delete_link( $post_id = 0 ) {
+	ob_start();
+	post_delete_link( $post_id );
+	$ret = trim( ob_get_clean() );
+	return $ret ? $ret : null;
+}
+endif;
+
+if ( !class_exists( 'WP_User' ) && !class_exists( 'BP_User' ) ) :
+class WP_User extends BB_User {}
 endif;
 
 ?>

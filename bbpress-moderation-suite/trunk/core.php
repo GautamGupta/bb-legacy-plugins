@@ -6,14 +6,13 @@ Plugin URI: http://llamaslayers.net/daily-llama/tag/bbpress-moderation-suite
 Author: Nightgunner5
 Author URI: http://llamaslayers.net/
 Version: 0.1-alpha6
-Requires at least: 1.0
+Requires at least: 0.9
 Tested up to: trunk
 Text Domain: bbpress-moderation-suite
 Domain Path: /translations/
 */
 
-if ( !function_exists( 'bb_get_uri' ) )
-	include_once dirname( __FILE__ ) . '/compat.php';
+require_once dirname( __FILE__ ) . '/compat.php';
 
 function bbmodsuite_init() {
 	global $bbmodsuite_plugins, $bbmodsuite_active_plugins, $bbmodsuite_cache;

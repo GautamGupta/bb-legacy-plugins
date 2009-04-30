@@ -203,6 +203,15 @@ function bbmodsuite_modlog_check_post_delete( $post_id, $new_status, $old_status
 }
 add_action( 'bb_delete_post', 'bbmodsuite_modlog_check_post_delete', 10, 3 );
 
+function bbmodsuite_modlog_check_topic_delete( $topic_id, $new_status, $old_status ) {
+	if ( $old_status == 0 && $new_status == 1 ) {
+		bbmodsuite_modlog_log( sprintf( __( 'deleted topic "%s".' ), '<a href="' . get_topic_link( $topic_id ) . '">' . get_topic_title( $topic_id ) . '</a>' ) );
+	} elseif ( $old_status == 1 && $new_status == 0 ) {
+		bbmodsuite_modlog_log( sprintf( __( 'undeleted topic "%s".' ), '<a href="' . get_topic_link( $topic_id ) . '">' . get_topic_title( $topic_id ) . '</a>' ) );
+	}
+}
+add_action( 'bb_delete_topic', 'bbmodsuite_modlog_check_topic_delete', 10, 3 );
+
 function bbmodsuite_modlog_check_bozo( $ret, $key, $new ) {
 	if ( !in_array( $key, array( 'is_bozo' ) ) )
 		return $ret;

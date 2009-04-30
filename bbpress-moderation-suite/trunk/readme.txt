@@ -1,6 +1,6 @@
 === bbPress Moderation Suite ===
 Contributors: Nightgunner5
-Tags: moderation, banning, ban, report post, report
+Tags: moderation, banning, ban, report post, report, warn user, warning, moderation log, log, logging
 Requires at least: 0.8
 Tested up to: trunk
 Stable tag: 0.1-alpha6
@@ -43,10 +43,6 @@ So far, it logs the following actions:
 	* Status change (delete, spam, undelete, unspam)
 	* Editing (by other users)
 
-= Probation =
-
-Being programmed.
-
 == Installation ==
 
 1. If you do not have a `my-plugins` folder, make one now in the same place as the folder `bb-admin`.
@@ -71,6 +67,9 @@ If you can't figure out an issue with the bbPress Moderation Suite by yourself, 
 
 == Changelog ==
 
+* 0.1-beta1
+	* Ban Plus now has hooks.
+	* Probation discontinued - use the Bozo plugin that came with your forum instead.
 * 0.1-alpha6
 	* Major code cleanup
 	* This plugin now works with bbPress 0.9 and 0.8. If anything gives you an error, give me the error message and I'll be sure to fix it.

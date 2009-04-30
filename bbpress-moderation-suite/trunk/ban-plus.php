@@ -11,6 +11,10 @@ function bbmodsuite_banplus_install() {
 }
 
 function bbmodsuite_banplus_uninstall() {
+	global $bbmodsuite_cache;
+	foreach ( $bbmodsuite_cache['banplus']['bans'] as $user_id => $ban ) {
+		do_action( 'bbmodsuite_banplus_unban', $user_id, $ban );
+	}
 	bb_delete_option( 'bbmodsuite_banplus_current_bans' );
 	bb_delete_option( 'bbmodsuite_banplus_options' );
 }
@@ -48,7 +52,9 @@ function bbmodsuite_banplus_set_ban( $user_id, $type = 'temp', $length = 86400, 
 	if ( $type === 'unban' ) {
 		if ( !isset( $current_bans[$user_id] ) )
 			return true;
+		do_action( 'bbmodsuite_banplus_unban', $user_id, $current_bans[$user_id] );
 		unset( $current_bans[$user_id] );
+		$bbmodsuite_cache['bans'] = $current_bans;
 		bb_update_option( 'bbmodsuite_banplus_current_bans', $current_bans );
 		return true;
 	}
@@ -77,6 +83,8 @@ function bbmodsuite_banplus_set_ban( $user_id, $type = 'temp', $length = 86400, 
 		'notes'     => $notes,
 	);
 
+	do_action( 'bbmodsuite_banplus_ban', $user_id, $current_bans[$user_id] );
+
 	$bbmodsuite_cache['bans'] = $current_bans;
 	bb_update_option( 'bbmodsuite_banplus_current_bans', $current_bans );
 
@@ -88,6 +96,7 @@ function bbmodsuite_banplus_init() {
 	$changed = false;
 	foreach ( $current_bans as $user_id => $ban ) {
 		if ( $ban['until'] < time() ) {
+			do_action( 'bbmodsuite_banplus_unban', $user_id, $current_bans[$user_id] );
 			unset( $current_bans[$user_id] );
 			$changed = true;
 		}
@@ -116,9 +125,7 @@ bbmodsuite_banplus_maybe_block_user();
 function bbmodsuite_banplus_get_ban_types() {
 	global $bbmodsuite_active_plugins;
 	$types = array( 'temp' );
-	if ( isset( $bbmodsuite_active_plugins['probation'] ) )
-		$types[] = 'probation';
-	return $types;
+	return apply_filters( 'bbmodsuite_banplus_ban_types', $types );
 }
 
 function bbmodsuite_ban_plus_admin_css() { ?>

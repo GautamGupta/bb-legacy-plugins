@@ -73,7 +73,9 @@ If you can't figure out an issue with the bbPress Moderation Suite by yourself, 
 
 * 0.1-alpha6
 	* Major code cleanup
-	* This plugin now works with bbPress 0.9. If anything gives you an error, give me the error message and I'll be sure to fix it.
+	* This plugin now works with bbPress 0.9 and 0.8. If anything gives you an error, give me the error message and I'll be sure to fix it.
+	* Fixed an error in the Report admin panel
+	* Mod Log now logs topic deletion
 * 0.1-alpha5
 	* Report "obtrusive mode" made optional. (See [this post](http://bbpress.org/plugins/topic/bbpress-moderation-suite/#post-2845))
 	* Moderation Log added.

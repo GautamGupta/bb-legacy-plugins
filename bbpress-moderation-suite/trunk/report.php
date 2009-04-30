@@ -311,10 +311,10 @@ $options = $bbmodsuite_cache['report'];
 		</label>
 		<div>
 			<select id="max_level" name="max_level">
-				<option value="moderate"<?php if ( $options['min_level'] === 'moderate' ) echo ' selected="selected"'; ?>><?php _e( 'Moderator' ); ?></option>
-				<option value="administrate"<?php if ( $options['min_level'] === 'administrate' ) echo ' selected="selected"'; ?>><?php _e( 'Administrator' ); ?></option>
-				<option value="use_keys"<?php if ( $options['min_level'] === 'use_keys' ) echo ' selected="selected"'; ?>><?php _e( 'Keymaster' ); ?></option>
-				<option value="none"<?php if ( $options['min_level'] === 'none' ) echo ' selected="selected"'; ?>><?php _e( 'None', 'bbpress-moderation-suite' ); ?></option>
+				<option value="moderate"<?php if ( $options['max_level'] === 'moderate' ) echo ' selected="selected"'; ?>><?php _e( 'Moderator' ); ?></option>
+				<option value="administrate"<?php if ( $options['max_level'] === 'administrate' ) echo ' selected="selected"'; ?>><?php _e( 'Administrator' ); ?></option>
+				<option value="use_keys"<?php if ( $options['max_level'] === 'use_keys' ) echo ' selected="selected"'; ?>><?php _e( 'Keymaster' ); ?></option>
+				<option value="none"<?php if ( $options['max_level'] === 'none' ) echo ' selected="selected"'; ?>><?php _e( 'None', 'bbpress-moderation-suite' ); ?></option>
 			</select>
 			<p><?php _e( 'What should the maximum user level able to be reported be?', 'bbpress-moderation-suite' ); ?></p>
 		</div>

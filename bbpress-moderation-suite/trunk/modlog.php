@@ -75,7 +75,7 @@ if ( !$log_entries ) {
 
 function bbmodsuite_modlog_admin_add() {
 	global $bb_submenu;
-	$bb_submenu['users.php'][] = array( __( 'Moderation Log', 'bbpress-moderation-suite' ), 'administrate', 'bbpress_moderation_suite_modlog' );
+	$bb_submenu['plugins.php'][] = array( __( 'Moderation Log', 'bbpress-moderation-suite' ), 'administrate', 'bbpress_moderation_suite_modlog' );
 }
 add_action( 'bb_admin_menu_generator', 'bbmodsuite_modlog_admin_add' );
 
@@ -205,7 +205,7 @@ add_action( 'bb_delete_post', 'bbmodsuite_modlog_check_post_delete', 10, 3 );
 
 function bbmodsuite_modlog_check_topic_delete( $topic_id, $new_status, $old_status ) {
 	if ( $old_status == 0 && $new_status == 1 ) {
-		bbmodsuite_modlog_log( sprintf( __( 'deleted topic "%s".' ), '<a href="' . get_topic_link( $topic_id ) . '">' . get_topic_title( $topic_id ) . '</a>' ) );
+		bbmodsuite_modlog_log( sprintf( __( 'deleted topic "%s".' ), '<a href="' . get_topic_link( $topic_id ) . '?view=all">' . get_topic_title( $topic_id ) . '</a>' ) );
 	} elseif ( $old_status == 1 && $new_status == 0 ) {
 		bbmodsuite_modlog_log( sprintf( __( 'undeleted topic "%s".' ), '<a href="' . get_topic_link( $topic_id ) . '">' . get_topic_title( $topic_id ) . '</a>' ) );
 	}
@@ -237,5 +237,15 @@ function bbmodsuite_modlog_check_user_delete( $user_id ) {
 	bbmodsuite_modlog_log( sprintf( __( 'deleted %s.', 'bbpress-moderation-suite' ), get_user_display_name( $user_id ) ) );
 }
 add_action( 'bb_delete_user', 'bbmodsuite_modlog_check_user_delete' );
+
+
+function bbmodsuite_modlog_set_topic_action_handler( $action, $content, $viewall = false ) {
+	add_action( $action, create_function( '$a', '$a = \'<a href="\' . get_topic_link( $a ) . \'' . ( $viewall ? '?view=all' : '' ) . '">\' . get_topic_title( $a ) . \'</a>\'; bbmodsuite_modlog_log( sprintf( \'' . addslashes( $content ) . '\', $a ) );' ) );
+}
+
+bbmodsuite_set_topic_action_handler( 'close_topic', __( 'closed topic "%s"', 'bbpress-moderation-suite', true ) );
+bbmodsuite_set_topic_action_handler( 'open_topic', __( 'opened topic "%s"', 'bbpress-moderation-suite' ) );
+bbmodsuite_set_topic_action_handler( 'sticky_topic', __( 'stickied topic "%s"', 'bbpress-moderation-suite' ) );
+bbmodsuite_set_topic_action_handler( 'unsticky_topic', __( 'unstickied topic "%s"', 'bbpress-moderation-suite' ) );
 
 ?>

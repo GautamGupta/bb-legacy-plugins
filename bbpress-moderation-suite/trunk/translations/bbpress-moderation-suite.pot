@@ -5,9 +5,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.1-alpha6\n"
+"Project-Id-Version: 0.1-beta1\n"
 "Report-Msgid-Bugs-To: http://bbpress.org/plugins/topic/bbpress-moderation-suite\n"
-"POT-Creation-Date: 2009-04-28 16:05+0000\n"
+"POT-Creation-Date: 2009-05-01 13:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,156 +15,156 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ban-plus.php:109
+#: ban-plus.php:118
 #, php-format
 msgid ""
 "You are banned from this forum until %s from now.  The person who banned you "
 "said the reason was: %s"
 msgstr ""
 
-#: ban-plus.php:169 ban-plus.php:308
+#: ban-plus.php:176 ban-plus.php:315
 msgid "Current bans"
 msgstr ""
 
-#: ban-plus.php:172 ban-plus.php:185
+#: ban-plus.php:179 ban-plus.php:192
 msgid "Ban a user"
 msgstr ""
 
-#: ban-plus.php:175 ban-plus.php:280 core.php:193 report.php:150
+#: ban-plus.php:182 ban-plus.php:287 core.php:193 report.php:150
 #: report.php:258 warning.php:176 warning.php:244
 msgid "Administration"
 msgstr ""
 
-#: ban-plus.php:182 ban-plus.php:247
+#: ban-plus.php:189 ban-plus.php:254
 msgid "Invalid banning attempt."
 msgstr ""
 
-#: ban-plus.php:190
+#: ban-plus.php:197
 msgid "Username"
 msgstr ""
 
-#: ban-plus.php:194
+#: ban-plus.php:201
 msgid "Who are you banning? (Username)"
 msgstr ""
 
-#: ban-plus.php:199
+#: ban-plus.php:206
 msgid "Time"
 msgstr ""
 
-#: ban-plus.php:204 warning.php:334 warning.php:353 warning.php:368
+#: ban-plus.php:211 warning.php:334 warning.php:353 warning.php:368
 msgid "minutes"
 msgstr ""
 
-#: ban-plus.php:205 warning.php:335 warning.php:354 warning.php:368
+#: ban-plus.php:212 warning.php:335 warning.php:354 warning.php:368
 msgid "hours"
 msgstr ""
 
-#: ban-plus.php:206 warning.php:336 warning.php:355 warning.php:368
+#: ban-plus.php:213 warning.php:336 warning.php:355 warning.php:368
 msgid "days"
 msgstr ""
 
-#: ban-plus.php:207 warning.php:337 warning.php:356 warning.php:368
+#: ban-plus.php:214 warning.php:337 warning.php:356 warning.php:368
 msgid "weeks"
 msgstr ""
 
-#: ban-plus.php:208 warning.php:338 warning.php:357 warning.php:368
+#: ban-plus.php:215 warning.php:338 warning.php:357 warning.php:368
 msgid "months"
 msgstr ""
 
-#: ban-plus.php:210
+#: ban-plus.php:217
 msgid "How long will the ban last?"
 msgstr ""
 
-#: ban-plus.php:215 ban-plus.php:315 report.php:188 report.php:213
+#: ban-plus.php:222 ban-plus.php:322 report.php:188 report.php:213
 #: warning.php:228 warning.php:420
 msgid "Notes"
 msgstr ""
 
-#: ban-plus.php:219
+#: ban-plus.php:226
 msgid "Why are you banning this user?  This will be shown to the user."
 msgstr ""
 
-#: ban-plus.php:225
+#: ban-plus.php:232
 msgid "Ban user"
 msgstr ""
 
-#: ban-plus.php:231
+#: ban-plus.php:238
 msgid "User not found"
 msgstr ""
 
-#: ban-plus.php:242
+#: ban-plus.php:249
 #, php-format
 msgid "The user \"%s\" has been successfully banned."
 msgstr ""
 
-#: ban-plus.php:244
+#: ban-plus.php:251
 msgid "The banning attempt failed."
 msgstr ""
 
-#: ban-plus.php:253
+#: ban-plus.php:260
 msgid "User successfully unbanned."
 msgstr ""
 
-#: ban-plus.php:255
+#: ban-plus.php:262
 msgid "User could not be unbanned."
 msgstr ""
 
-#: ban-plus.php:275
+#: ban-plus.php:282
 msgid "Options successfully saved."
 msgstr ""
 
-#: ban-plus.php:277
+#: ban-plus.php:284
 msgid "Failed to save options."
 msgstr ""
 
-#: ban-plus.php:285
+#: ban-plus.php:292
 msgid "Minimum user level to ban"
 msgstr ""
 
-#: ban-plus.php:289 report.php:301 report.php:314 warning.php:294
+#: ban-plus.php:296 report.php:301 report.php:314 warning.php:294
 msgid "Moderator"
 msgstr ""
 
-#: ban-plus.php:290 report.php:302 report.php:315 warning.php:295
+#: ban-plus.php:297 report.php:302 report.php:315 warning.php:295
 msgid "Administrator"
 msgstr ""
 
-#: ban-plus.php:291 report.php:303 report.php:316 warning.php:296
+#: ban-plus.php:298 report.php:303 report.php:316 warning.php:296
 msgid "Keymaster"
 msgstr ""
 
-#: ban-plus.php:293
+#: ban-plus.php:300
 msgid ""
 "Users can only ban other users of a lower rank.  Keymasters can ban anyone.  "
 "What user level should be the lowest allowed to ban users?"
 msgstr ""
 
-#: ban-plus.php:299
+#: ban-plus.php:306
 msgid "Save settings"
 msgstr ""
 
-#: ban-plus.php:312 modlog.php:40 warning.php:388
+#: ban-plus.php:319 modlog.php:40 warning.php:388
 msgid "User"
 msgstr ""
 
-#: ban-plus.php:313
+#: ban-plus.php:320
 msgid "Banned by"
 msgstr ""
 
-#: ban-plus.php:314
+#: ban-plus.php:321
 msgid "Until"
 msgstr ""
 
-#: ban-plus.php:316 core.php:128 report.php:214 report.php:350 warning.php:390
+#: ban-plus.php:323 core.php:128 report.php:214 report.php:350 warning.php:390
 #: warning.php:421
 msgid "Actions"
 msgstr ""
 
-#: ban-plus.php:345
+#: ban-plus.php:352
 msgid "Unban"
 msgstr ""
 
-#: ban-plus.php:362 core.php:33
+#: ban-plus.php:369 core.php:33
 msgid "Ban Plus"
 msgstr ""
 
@@ -355,6 +355,26 @@ msgstr ""
 #: modlog.php:237
 #, php-format
 msgid "deleted %s."
+msgstr ""
+
+#: modlog.php:246
+#, php-format
+msgid "closed topic \"%s\""
+msgstr ""
+
+#: modlog.php:247
+#, php-format
+msgid "opened topic \"%s\""
+msgstr ""
+
+#: modlog.php:248
+#, php-format
+msgid "stickied topic \"%s\""
+msgstr ""
+
+#: modlog.php:249
+#, php-format
+msgid "unstickied topic \"%s\""
 msgstr ""
 
 #: report-form.php:6

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bbPress Moderation Suite 0.1-alpha5\n"
 "Report-Msgid-Bugs-To: http://bbpress.org/plugins/topic/bbpress-moderation-suite\n"
-"POT-Creation-Date: 2009-04-28 16:05+0000\n"
-"PO-Revision-Date: 2009-04-29 21:18-0600\n"
+"POT-Creation-Date: 2009-05-01 13:48+0000\n"
+"PO-Revision-Date: 2009-05-01 08:52-0600\n"
 "Last-Translator: Nightgunner5 <nightgunner5@llamaslayers.net>\n"
 "Language-Team: Nightgunner5 <nightgunner5@llamaslayers.net>\n"
 "MIME-Version: 1.0\n"
@@ -18,23 +18,23 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-Basepath: ..\n"
 
-#: ban-plus.php:109
+#: ban-plus.php:118
 #, php-format
 msgid "You are banned from this forum until %s from now.  The person who banned you said the reason was: %s"
 msgstr "Usted está prohibido de este foro hasta que %s a partir de ahora. Esta es la razón: %s"
 
-#: ban-plus.php:169
-#: ban-plus.php:308
+#: ban-plus.php:176
+#: ban-plus.php:315
 msgid "Current bans"
 msgstr "Actual prohibiciónes"
 
-#: ban-plus.php:172
-#: ban-plus.php:185
+#: ban-plus.php:179
+#: ban-plus.php:192
 msgid "Ban a user"
 msgstr "Prohibición de un usuario"
 
-#: ban-plus.php:175
-#: ban-plus.php:280
+#: ban-plus.php:182
+#: ban-plus.php:287
 #: core.php:193
 #: report.php:150
 #: report.php:258
@@ -43,64 +43,64 @@ msgstr "Prohibición de un usuario"
 msgid "Administration"
 msgstr "Administración"
 
-#: ban-plus.php:182
-#: ban-plus.php:247
+#: ban-plus.php:189
+#: ban-plus.php:254
 msgid "Invalid banning attempt."
 msgstr "No válida la prohibición de tentativa."
 
-#: ban-plus.php:190
+#: ban-plus.php:197
 msgid "Username"
 msgstr "Nombre de usuario"
 
-#: ban-plus.php:194
+#: ban-plus.php:201
 msgid "Who are you banning? (Username)"
 msgstr "¿Quién va a prohibir? (Nombre de usuario)"
 
-#: ban-plus.php:199
+#: ban-plus.php:206
 msgid "Time"
 msgstr "Tiempo de duración"
 
-#: ban-plus.php:204
+#: ban-plus.php:211
 #: warning.php:334
 #: warning.php:353
 #: warning.php:368
 msgid "minutes"
 msgstr "minutos"
 
-#: ban-plus.php:205
+#: ban-plus.php:212
 #: warning.php:335
 #: warning.php:354
 #: warning.php:368
 msgid "hours"
 msgstr "horas"
 
-#: ban-plus.php:206
+#: ban-plus.php:213
 #: warning.php:336
 #: warning.php:355
 #: warning.php:368
 msgid "days"
 msgstr "días"
 
-#: ban-plus.php:207
+#: ban-plus.php:214
 #: warning.php:337
 #: warning.php:356
 #: warning.php:368
 msgid "weeks"
 msgstr "semanas"
 
-#: ban-plus.php:208
+#: ban-plus.php:215
 #: warning.php:338
 #: warning.php:357
 #: warning.php:368
 msgid "months"
 msgstr "meses"
 
-#: ban-plus.php:210
+#: ban-plus.php:217
 msgid "How long will the ban last?"
 msgstr "¿Cuánto tiempo la prohibición de la última?"
 
-#: ban-plus.php:215
-#: ban-plus.php:315
+#: ban-plus.php:222
+#: ban-plus.php:322
 #: report.php:188
 #: report.php:213
 #: warning.php:228
@@ -108,91 +108,91 @@ msgstr "¿Cuánto tiempo la prohibición de la última?"
 msgid "Notes"
 msgstr "Notas"
 
-#: ban-plus.php:219
+#: ban-plus.php:226
 msgid "Why are you banning this user?  This will be shown to the user."
 msgstr "¿Por qué la prohibición de este usuario? Vamos a mostrar este texto para el usuario."
 
-#: ban-plus.php:225
+#: ban-plus.php:232
 msgid "Ban user"
 msgstr "Prohibición de que este usuario"
 
-#: ban-plus.php:231
+#: ban-plus.php:238
 msgid "User not found"
 msgstr "Usuario no encontrado"
 
-#: ban-plus.php:242
+#: ban-plus.php:249
 #, php-format
 msgid "The user \"%s\" has been successfully banned."
 msgstr "El usuario \"%s\" ha sido prohibida."
 
-#: ban-plus.php:244
+#: ban-plus.php:251
 msgid "The banning attempt failed."
 msgstr "La prohibición intento fracasado."
 
-#: ban-plus.php:253
+#: ban-plus.php:260
 msgid "User successfully unbanned."
 msgstr "La prohibición ha sido eliminada del usuario."
 
-#: ban-plus.php:255
+#: ban-plus.php:262
 msgid "User could not be unbanned."
 msgstr "No hemos podido eliminar la prohibición del usuario."
 
-#: ban-plus.php:275
+#: ban-plus.php:282
 msgid "Options successfully saved."
 msgstr "Opciones de guardado con éxito."
 
-#: ban-plus.php:277
+#: ban-plus.php:284
 msgid "Failed to save options."
 msgstr "No se ha podido guardar las opciones."
 
-#: ban-plus.php:285
+#: ban-plus.php:292
 msgid "Minimum user level to ban"
 msgstr "Mínimo nivel de usuario para poder prohibir otros usuarios"
 
-#: ban-plus.php:289
+#: ban-plus.php:296
 #: report.php:301
 #: report.php:314
 #: warning.php:294
 msgid "Moderator"
 msgstr "Moderador"
 
-#: ban-plus.php:290
+#: ban-plus.php:297
 #: report.php:302
 #: report.php:315
 #: warning.php:295
 msgid "Administrator"
 msgstr "Administrador"
 
-#: ban-plus.php:291
+#: ban-plus.php:298
 #: report.php:303
 #: report.php:316
 #: warning.php:296
 msgid "Keymaster"
 msgstr "Dueño de la Pelota"
 
-#: ban-plus.php:293
+#: ban-plus.php:300
 msgid "Users can only ban other users of a lower rank.  Keymasters can ban anyone.  What user level should be the lowest allowed to ban users?"
 msgstr "Los usuarios sólo pueden prohibir otros usuarios de un rango inferior. Propietario de la Pelota puede prohibir a nadie. ¿Qué nivel de usuario debe ser el mínimo permitido para prohibir los usuarios?"
 
-#: ban-plus.php:299
+#: ban-plus.php:306
 msgid "Save settings"
 msgstr "Guardar los ajustes"
 
-#: ban-plus.php:312
+#: ban-plus.php:319
 #: modlog.php:40
 #: warning.php:388
 msgid "User"
 msgstr "El usuario"
 
-#: ban-plus.php:313
+#: ban-plus.php:320
 msgid "Banned by"
 msgstr "Prohibida por"
 
-#: ban-plus.php:314
+#: ban-plus.php:321
 msgid "Until"
 msgstr "Prohibido hasta"
 
-#: ban-plus.php:316
+#: ban-plus.php:323
 #: core.php:128
 #: report.php:214
 #: report.php:350
@@ -201,11 +201,11 @@ msgstr "Prohibido hasta"
 msgid "Actions"
 msgstr "Acciones"
 
-#: ban-plus.php:345
+#: ban-plus.php:352
 msgid "Unban"
 msgstr "Eliminar la prohibición"
 
-#: ban-plus.php:362
+#: ban-plus.php:369
 #: core.php:33
 msgid "Ban Plus"
 msgstr "Prohibición Plus"
@@ -392,6 +392,26 @@ msgstr "%s marcados como no Bozo."
 #, php-format
 msgid "deleted %s."
 msgstr "suprimido %s."
+
+#: modlog.php:246
+#, php-format
+msgid "closed topic \"%s\""
+msgstr "bloqueado tema \"%s\""
+
+#: modlog.php:247
+#, php-format
+msgid "opened topic \"%s\""
+msgstr "desbloqueado tema \"%s\""
+
+#: modlog.php:248
+#, php-format
+msgid "stickied topic \"%s\""
+msgstr "hizo pegajoso tema \"%s\""
+
+#: modlog.php:249
+#, php-format
+msgid "unstickied topic \"%s\""
+msgstr "hecho no pegajoso tema \"%s\""
 
 #: report-form.php:6
 msgid "Report this post"

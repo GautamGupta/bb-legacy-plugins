@@ -243,9 +243,9 @@ function bbmodsuite_modlog_set_topic_action_handler( $action, $content, $viewall
 	add_action( $action, create_function( '$a', '$a = \'<a href="\' . get_topic_link( $a ) . \'' . ( $viewall ? '?view=all' : '' ) . '">\' . get_topic_title( $a ) . \'</a>\'; bbmodsuite_modlog_log( sprintf( \'' . addslashes( $content ) . '\', $a ) );' ) );
 }
 
-bbmodsuite_set_topic_action_handler( 'close_topic', __( 'closed topic "%s"', 'bbpress-moderation-suite', true ) );
-bbmodsuite_set_topic_action_handler( 'open_topic', __( 'opened topic "%s"', 'bbpress-moderation-suite' ) );
-bbmodsuite_set_topic_action_handler( 'sticky_topic', __( 'stickied topic "%s"', 'bbpress-moderation-suite' ) );
-bbmodsuite_set_topic_action_handler( 'unsticky_topic', __( 'unstickied topic "%s"', 'bbpress-moderation-suite' ) );
+bbmodsuite_modlog_set_topic_action_handler( 'close_topic', __( 'closed topic "%s"', 'bbpress-moderation-suite', true ) );
+bbmodsuite_modlog_set_topic_action_handler( 'open_topic', __( 'opened topic "%s"', 'bbpress-moderation-suite' ) );
+bbmodsuite_modlog_set_topic_action_handler( 'sticky_topic', __( 'stickied topic "%s"', 'bbpress-moderation-suite' ) );
+bbmodsuite_modlog_set_topic_action_handler( 'unsticky_topic', __( 'unstickied topic "%s"', 'bbpress-moderation-suite' ) );
 
 ?>

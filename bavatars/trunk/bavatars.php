@@ -63,7 +63,7 @@ function bavatars_filter( $avatar, $id_or_email, $size, $default ) {
 	}
 
 	if ( !file_exists( BB_PATH . '/' . $location ) ) {
-		$src = imagecreatefrompng( $_location );
+		$src = imagecreatefrompng( BB_PATH . $_location );
 		imagesavealpha( $src, true );
 		imagealphablending( $src, false );
 

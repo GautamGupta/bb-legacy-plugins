@@ -41,7 +41,7 @@ function bavatars_add_profile_tab() {
 add_action( 'bb_profile_menu', 'bavatars_add_profile_tab' );
 
 function bavatars_filter( $avatar, $id_or_email, $size, $default ) {
-	if ( is_email( $id_or_email ) ) {
+	if ( ( function_exists( 'is_email' ) && is_email( $id_or_email ) ) || ( !function_exists( 'is_email' ) && !is_numeric( $id_or_email ) ) ) {
 		$id = bb_get_user( $id_or_email, array( 'by' => 'email' ) )->ID;
 	} else {
 		$id = (int)$id_or_email;

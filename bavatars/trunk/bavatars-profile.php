@@ -44,6 +44,20 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 		imagedestroy( $temp );
 
 		$message = __( 'Avatar uploaded successfully!', 'bavatars' );
+	} elseif ( $_POST['delete'] ) {
+		bb_check_admin_referer( 'bavatar_delete-' . $user_id );
+
+		$id = md5( $user_id );
+
+		$folder = BB_PATH . '/avatars/' . substr( $id, 0, 1 ) . '/' . substr( $id, 0, 2 ) . '/' . substr( $id, 0, 3 ) . '/';
+
+		@unlink( $folder . $id . '.png' );
+
+		foreach ( bb_glob( $folder . $id . '_*.png' ) as $avatarsize ) {
+			@unlink( $avatarsize );
+		}
+
+		$message = __( 'Avatar deleted successfully!', 'bavatars' );
 	}
 }
 
@@ -58,4 +72,9 @@ echo bb_get_avatar( $user_id, 256 );
 	<input type="file" name="bavatar" id="bavatar" />
 	<input type="submit" value="Upload new avatar &raquo;" />
 </form>
+<form method="post" action="<?php profile_tab_link( $user_id, 'avatar' ); ?>">
+	<?php bb_nonce_field( 'bavatar_delete-' . $user_id ); ?>
+	<input type="submit" id="delete" class="delete" name="delete" value="Delete" />
+</form>
+
 <?php bb_get_footer(); ?>

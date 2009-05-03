@@ -2,7 +2,7 @@
 /*
 Plugin Name: Bavatars
 Plugin Description: Gravatar - Globally recognized + bbPress = Bavatar
-Version: 0.4
+Version: 0.3
 Plugin URI: http://llamaslayers.net/daily-llama/tag/bavatars
 Author: Nightgunner5
 Author URI: http://llamaslayers.net/daily-llama/

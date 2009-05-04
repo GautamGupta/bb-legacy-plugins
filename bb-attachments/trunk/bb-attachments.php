@@ -719,20 +719,20 @@ return substr($mime,0,strpos($mime.";",";"));
 
 function bb_attachments_install() {
 global $bbdb,$bb_attachments; 
-$bbdb->query("CREATE TABLE IF NOT EXISTS `".$bb_attachments['db']."` (
-		`id`		int(10)        UNSIGNED NOT NULL auto_increment,
-		`time`       	int(10)        UNSIGNED NOT NULL default '0',
-		`post_id` 	int(10)        UNSIGNED NOT NULL default '0',
-		`user_id` 	int(10)        UNSIGNED NOT NULL default '0',
-		`user_ip` 	int(10) 	       UNSIGNED NOT NULL default '0',
-		`status`       	tinyint(10) UNSIGNED NOT NULL default '0',	
-		`downloads` 	int(10)         UNSIGNED NOT NULL default '0',
-		`size`        	int(10)         UNSIGNED NOT NULL default '0',
-		`ext` 	     	varchar(255)           NOT NULL default '',
-		`mime`     	varchar(255) 	         NOT NULL default '',
-		`filename`     	varchar(255) 	         NOT NULL default '',
+$bbdb->query("CREATE TABLE IF NOT EXISTS ".$bb_attachments['db']." (
+		id		int(10)        UNSIGNED NOT NULL auto_increment,
+		time       	int(10)        UNSIGNED NOT NULL default 0,
+		post_id 	int(10)        UNSIGNED NOT NULL default 0,
+		user_id 	int(10)        UNSIGNED NOT NULL default 0,
+		user_ip 	int(10) 	       UNSIGNED NOT NULL default 0,
+		status       	tinyint(10) UNSIGNED NOT NULL default 0,
+		downloads 	int(10)         UNSIGNED NOT NULL default 0,
+		size        	int(10)         UNSIGNED NOT NULL default 0,
+		ext 	     	varchar(255)           NOT NULL default '',
+		mime     	varchar(255) 	         NOT NULL default '',
+		filename     	varchar(255) 	         NOT NULL default '',
 		PRIMARY KEY (id),
-		INDEX (`post_id`)
+		INDEX (post_id)
 		) CHARSET utf8  COLLATE utf8_general_ci");	
 		
 $bbdb->query("ALTER TABLE `".$bb_attachments['db']."` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci,

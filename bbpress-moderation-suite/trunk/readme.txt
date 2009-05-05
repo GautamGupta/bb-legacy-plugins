@@ -70,6 +70,9 @@ If you can't figure out an issue with the bbPress Moderation Suite by yourself, 
 * 0.1-beta1
 	* Ban Plus now has hooks.
 	* Probation discontinued - use the Bozo plugin that came with your forum instead.
+	* Mod Log can now filter different types of messages. Unfortunately, you will need to uninstall and reinstall the Mod Log Moderation Helper before you can use this feature.
+	* Mod Log now hides duplicate messages by default.
+	* Mod Log now has pagination.
 * 0.1-alpha6
 	* Major code cleanup
 	* This plugin now works with bbPress 0.9 and 0.8. If anything gives you an error, give me the error message and I'll be sure to fix it.

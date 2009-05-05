@@ -2,7 +2,7 @@
 /*
 Plugin Name: Bavatars
 Plugin Description: Gravatar - Globally recognized + bbPress = Bavatar
-Version: 0.3.1
+Version: 0.4
 Plugin URI: http://llamaslayers.net/daily-llama/tag/bavatars
 Author: Nightgunner5
 Author URI: http://llamaslayers.net/daily-llama/
@@ -41,7 +41,9 @@ function bavatars_add_profile_tab() {
 add_action( 'bb_profile_menu', 'bavatars_add_profile_tab' );
 
 function bavatars_filter( $avatar, $id_or_email, $size, $default ) {
-	if ( ( function_exists( 'is_email' ) && is_email( $id_or_email ) ) || ( !function_exists( 'is_email' ) && !is_numeric( $id_or_email ) ) ) {
+	if ( is_object( $id_or_email ) ) {
+		$id = $id_or_email->user_id;
+	} elseif ( ( function_exists( 'is_email' ) && is_email( $id_or_email ) ) || ( !function_exists( 'is_email' ) && !is_numeric( $id_or_email ) ) ) {
 		$id = bb_get_user( $id_or_email, array( 'by' => 'email' ) )->ID;
 	} else {
 		$id = (int)$id_or_email;
@@ -79,8 +81,9 @@ function bavatars_filter( $avatar, $id_or_email, $size, $default ) {
 		imagedestroy( $src );
 	}
 
-	return '<img alt="" src="' . bb_get_uri( null, null, BB_URI_CONTEXT_IMG_SRC ) . $location . '" class="avatar avatar-' . $size . ' avatar-bavatar" style="height:' . $size . 'px; width:' . $size . 'px;" />';
+	return '<img alt="" src="' . bb_get_option( 'uri' ) . $location . '" class="avatar avatar-' . $size . ' avatar-bavatar" style="height:' . $size . 'px; width:' . $size . 'px;" />';
 }
 add_filter( 'bb_get_avatar', 'bavatars_filter', 10, 4 );
+add_filter( 'get_avatar', 'bavatars_filter', 10, 4 );
 
 ?>

@@ -12,6 +12,7 @@ function bbmodsuite_modlog_install() {
 						`log_level` varchar(3) NOT NULL default \'mod\',
 						`log_time` int(10) NOT NULL,
 						`log_content` text NOT NULL default \'\',
+						`log_type` varchar(50) NOT NULL,
 						PRIMARY KEY (`ID`)
 					)'
 	);
@@ -27,11 +28,18 @@ function bbpress_moderation_suite_modlog() {
 	global $bbdb;
 
 	$page        = isset( $_GET['page'] ) ? (int)$_GET['page'] - 1 : 0;
-	$log_entries = $bbdb->get_results( 'SELECT * FROM `' . $bbdb->prefix . 'bbmodsuite_modlog` ORDER BY `log_time` DESC LIMIT ' . ($page * 60) . ',' . ($page * 60 + 60) );
-	$log_pages   = ceil( $bbdb->get_var( 'SELECT COUNT(*) FROM `' . $bbdb->prefix . 'bbmodsuite_modlog`' ) / 60 );
+	$log_entries = $bbdb->get_results( 'SELECT * FROM `' . $bbdb->prefix . 'bbmodsuite_modlog` ORDER BY `log_time` DESC LIMIT ' . ($page * 30) . ',' . ($page * 30 + 30) );
+	$log_pages   = ceil( $bbdb->get_var( 'SELECT COUNT(*) FROM `' . $bbdb->prefix . 'bbmodsuite_modlog`' ) / 30 );
+	$log_types   = $bbdb->get_col( 'SELECT DISTINCT `log_type` FROM `' . $bbdb->prefix . 'bbmodsuite_modlog`' );
 
-?>
-<h2><?php _e( 'Moderation Log', 'bbpress-moderation-suite' ); if ( $page > 0 ) printf( __( ' - Page %d', 'bbpress-moderation-suite' ) , $page + 1 ); ?></h2>
+?><select class="alignright" id="modlog-filter" style="margin-top: 15px;">
+	<option value="all"><?php _e( 'Show all', 'bbpress-moderation-suite' ); ?></option>
+<?php foreach ( $log_types as $log_type ) { ?>
+	<option value="<?php echo $log_type; ?>"><?php echo bbmodsuite_modlog_get_type_description( $log_type ); ?></option>
+<?php } ?>
+</select>
+
+<h2 style="clear: none;"><?php _e( 'Moderation Log', 'bbpress-moderation-suite' ); if ( $page > 0 ) printf( __( ' - Page %d', 'bbpress-moderation-suite' ) , $page + 1 ); ?></h2>
 
 <table class="widefat">
 	<thead>
@@ -50,7 +58,7 @@ if ( !$log_entries ) {
 } else {
 	foreach ( $log_entries as $log_entry ) {
 ?>
-		<tr>
+		<tr class="log-<?php echo md5( strip_tags( $log_entry->log_content ) ); ?> log-type-<?php echo $log_entry->log_type; ?> log-type-all">
 			<td><?php echo date( 'Y-m-d H:i:s', $log_entry->log_time ); ?></td>
 			<td><a href="<?php user_profile_link( $log_entry->log_user ); ?>"><?php echo get_user_display_name( $log_entry->log_user ); ?></a> <small>(<?php echo $log_entry->log_level; ?>)</small></td>
 			<td><?php echo $log_entry->log_content; ?></td>
@@ -62,16 +70,45 @@ if ( !$log_entries ) {
 ?>
 	</tbody>
 </table>
+<script type="text/javascript">
+//<![CDATA[
+jQuery(function($){
+	$('#modlog-filter').change(function(){
+		$('tbody tr').fadeOut('normal').filter('.log-type-' + $(this).val()).stop().fadeIn('normal');
+	});
+	$('tr').each(function(){
+		if ($(this).prevAll('.' + this.className.substr(0, 36)).length)
+			return;
+		var more = $(this).nextAll('.' + this.className.substr(0, 36));
+		if (more.length == 0)
+			return;
+		more.hide();
+		$('<a href="#">Show ' + more.length + ' more<\/a>').addClass('alignright').appendTo($(this).children('td:last').append(' ')).toggle(function(){
+			$(this).text('Hide repeats');
+			more.fadeIn('normal');
+		}, function(){
+			$(this).text('Show ' + more.length + ' more');
+			more.fadeOut('normal');
+		});
+	});
+});
+//]]>
+</script>
 <?php
-	paginate_links(
+	echo paginate_links(
 					array(
 						'base'    => bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_modlog' ), BB_URI_CONTEXT_BB_ADMIN ) . '%_%',
 						'format'  => '&page=%#%',
 						'total'   => $log_pages,
-						'current' => $page,
+						'current' => $page + 1,
 					)
 	);
 }
+
+function bbmodsuite_modlog_admin_add_jquery() {
+	wp_enqueue_script( 'jquery' );
+}
+add_action( 'bbpress_moderation_suite_modlog_pre_head', 'bbmodsuite_modlog_admin_add_jquery' );
 
 function bbmodsuite_modlog_admin_add() {
 	global $bb_submenu;
@@ -79,7 +116,7 @@ function bbmodsuite_modlog_admin_add() {
 }
 add_action( 'bb_admin_menu_generator', 'bbmodsuite_modlog_admin_add' );
 
-function bbmodsuite_modlog_log( $content ) {
+function bbmodsuite_modlog_log( $content, $type ) {
 	if ( empty( $content ) )
 		return;
 
@@ -90,20 +127,55 @@ function bbmodsuite_modlog_log( $content ) {
 						'log_user'    => bb_get_current_user_info( 'ID' ),
 						'log_level'   => strtolower( substr( get_user_type( bb_get_current_user_info( 'ID' ) ), 0, 3 ) ),
 						'log_time'    => time(),
-						'log_content' => $content,
+						'log_content' => stripslashes( $content ),
+						'log_type'    => $type
 					), array( '%d', '%s', '%d', '%s' )
 	);
 }
 
-function bbmodsuite_modlog_set_action_handler( $action, $content ) {
-	add_action( $action, create_function( '', '$args = func_get_args(); bbmodsuite_modlog_log( vsprintf( \'' . addslashes( $content ) . '\', $args ) );' ), 10, substr_count( $content, '%' ) );
+function bbmodsuite_modlog_get_type_description( $type ) {
+	$types = array(
+		'bbmodsuite_activate'   => __( 'Moderation Helper activation', 'bbpress-moderation-suite' ),
+		'bbmodsuite_deactivate' => __( 'Moderation Helper deactivation', 'bbpress-moderation-suite' ),
+		'bbmodsuite_uninstall'  => __( 'Moderation Helper uninstallation', 'bbpress-moderation-suite' ),
+
+		'plugins' => __( 'Plugin (de)activation', 'bbpress-moderation-suite' ),
+
+		'forum_delete' => __( 'Forum deletion', 'bbpress-moderation-suite' ),
+
+		'post_edit'     => __( 'Post editing', 'bbpress-moderation-suite' ),
+		'post_delete'   => __( 'Post deletion', 'bbpress-moderation-suite' ),
+		'post_undelete' => __( 'Post undeletion', 'bbpress-moderation-suite' ),
+		'post_spam'     => __( 'Post spamming', 'bbpress-moderation-suite' ),
+		'post_unspam'   => __( 'Post unspamming', 'bbpress-moderation-suite' ),
+
+		'topic_delete'   => __( 'Topic deletion', 'bbpress-moderation-suite' ),
+		'topic_undelete' => __( 'Topic undeletion', 'bbpress-moderation-suite' ),
+		'topic_close'    => __( 'Topic closing', 'bbpress-moderation-suite' ),
+		'topic_open'     => __( 'Topic opening', 'bbpress-moderation-suite' ),
+		'topic_sticky'   => __( 'Topic stickying', 'bbpress-moderation-suite' ),
+		'topic_unsticky' => __( 'Topic unstickying', 'bbpress-moderation-suite' ),
+
+		'user_bozo'   => __( 'User bozoing', 'bbpress-moderation-suite' ),
+		'user_unbozo' => __( 'User unbozoing', 'bbpress-moderation-suite' ),
+		'user_delete' => __( 'User deletion', 'bbpress-moderation-suite' ),
+	);
+
+	if ( isset( $types[$type] ) )
+		return $types[$type];
+
+	return apply_filters( 'bbmodsuite_modlog_get_type_description', $type, $type );
+}
+
+function bbmodsuite_modlog_set_action_handler( $action, $content, $type ) {
+	add_action( $action, create_function( '', '$args = func_get_args(); bbmodsuite_modlog_log( vsprintf( \'' . addslashes( $content ) . '\', $args ), ' . addslashes( $type ) . ' );' ), 10, substr_count( $content, '%' ) );
 }
 
 // Everything from here on is a trigger for the logging function
 
-bbmodsuite_modlog_set_action_handler( 'bbmodsuite-install', __( 'activated the bbPress Moderation Suite %s plugin', 'bbpress-moderation-suite' ) );
-bbmodsuite_modlog_set_action_handler( 'bbmodsuite-deactivate', __( 'activated the bbPress Moderation Suite %s plugin', 'bbpress-moderation-suite' ) );
-bbmodsuite_modlog_set_action_handler( 'bbmodsuite-uninstall', __( 'activated the bbPress Moderation Suite %s plugin', 'bbpress-moderation-suite' ) );
+bbmodsuite_modlog_set_action_handler( 'bbmodsuite-install', __( 'activated the bbPress Moderation Suite %s plugin', 'bbpress-moderation-suite' ), 'bbmodsuite_activate' );
+bbmodsuite_modlog_set_action_handler( 'bbmodsuite-deactivate', __( 'deactivated the bbPress Moderation Suite %s plugin', 'bbpress-moderation-suite' ), 'bbmodsuite_deactivate' );
+bbmodsuite_modlog_set_action_handler( 'bbmodsuite-uninstall', __( 'uninstalled the bbPress Moderation Suite %s plugin', 'bbpress-moderation-suite' ), 'bbmodsuite_uninstall' );
 
 function bbmodsuite_modlog_check_meta_change( $tuple ) {
 	if ( $tuple['type'] != 'option' )
@@ -140,7 +212,10 @@ function bbmodsuite_modlog_check_meta_change( $tuple ) {
 				}
 			}
 
-			bbmodsuite_modlog_log( implode( __( ' and ', 'bbpress-moderation-suite' ), $action ) );
+			if ( $action['deactivated'] == __( 'deactivated plugins: ', 'bbpress-moderation-suite' ) && empty( $action['activated'] ) )
+				return $tuple;
+
+			bbmodsuite_modlog_log( implode( __( ' and ', 'bbpress-moderation-suite' ), $action ), 'plugins' );
 
 			break;
 	}
@@ -154,7 +229,7 @@ function bbmodsuite_modlog_check_query( $query ) {
 	if ( strpos( $query, "DELETE FROM {$bbdb->forums} WHERE forum_id = " ) !== false ) {
 		$forum = get_forum( (int)substr( $query, strlen( "DELETE FROM {$bbdb->forums} WHERE forum_id = " ) ) );
 
-		bbmodsuite_modlog_log( __( 'deleted forum: ', 'bbpress-moderation-suite' ) . $forum->forum_name );
+		bbmodsuite_modlog_log( __( 'deleted forum: ', 'bbpress-moderation-suite' ) . $forum->forum_name, 'forum_delete' );
 	}
 
 	return $query;
@@ -174,7 +249,7 @@ function bbmodsuite_modlog_check_post_edit( $post_text, $post_id, $topic_id ) {
 	if ( $post_text == $post->post_text ) // This is not the hook we are looking for.
 		return $post_text;
 
-	bbmodsuite_modlog_log( sprintf( __( 'edited %s\'s post on the topic "%s".', 'bbpress-moderation-suite' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', '<a href="' . get_post_link( $post_id ) . '">' . get_topic_title( $topic_id ) . '</a>' ) );
+	bbmodsuite_modlog_log( sprintf( __( 'edited %s\'s post on the topic "%s".', 'bbpress-moderation-suite' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', '<a href="' . get_post_link( $post_id ) . '">' . get_topic_title( $topic_id ) . '</a>' ), 'post_edit' );
 
 	return $post_text;
 }
@@ -185,29 +260,29 @@ function bbmodsuite_modlog_check_post_delete( $post_id, $new_status, $old_status
 
 	if ( $old_status == 0 ) {
 		if ( $new_status == 1 ) {
-			bbmodsuite_modlog_log( sprintf( __( 'deleted %s\'s post on the topic "%s".' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', '<a href="' . get_post_link( $post_id ) . '">' . get_topic_title( $post->topic_id ) . '</a>' ) );
+			bbmodsuite_modlog_log( sprintf( __( 'deleted %s\'s post on the topic "%s".' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', '<a href="' . get_post_link( $post_id ) . '">' . get_topic_title( $post->topic_id ) . '</a>' ), 'post_delete' );
 		} elseif ( $new_status == 2 ) {
-			bbmodsuite_modlog_log( sprintf( __( 'marked %s\'s post on the topic "%s" as spam.' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', '<a href="' . get_post_link( $post_id ) . '">' . get_topic_title( $post->topic_id ) . '</a>' ) );
+			bbmodsuite_modlog_log( sprintf( __( 'marked %s\'s post on the topic "%s" as spam.' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', '<a href="' . get_post_link( $post_id ) . '">' . get_topic_title( $post->topic_id ) . '</a>' ), 'post_spam' );
 		}
 	} elseif ( $new_status == 0 ) {
 		if ( $old_status == 1 ) {
-			bbmodsuite_modlog_log( sprintf( __( 'undeleted %s\'s post on the topic "%s".' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', '<a href="' . get_post_link( $post_id ) . '">' . get_topic_title( $post->topic_id ) . '</a>' ) );
+			bbmodsuite_modlog_log( sprintf( __( 'undeleted %s\'s post on the topic "%s".' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', '<a href="' . get_post_link( $post_id ) . '">' . get_topic_title( $post->topic_id ) . '</a>' ), 'post_undelete' );
 		} elseif ( $old_status == 2 ) {
-			bbmodsuite_modlog_log( sprintf( __( 'marked %s\'s post on the topic "%s" as not spam.' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', '<a href="' . get_post_link( $post_id ) . '">' . get_topic_title( $post->topic_id ) . '</a>' ) );
+			bbmodsuite_modlog_log( sprintf( __( 'marked %s\'s post on the topic "%s" as not spam.' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', '<a href="' . get_post_link( $post_id ) . '">' . get_topic_title( $post->topic_id ) . '</a>' ), 'post_unspam' );
 		}
 	} elseif ( $new_status == 2 && $old_status == 1 ) {
-		bbmodsuite_modlog_log( sprintf( __( 'changed %s\'s post on the topic "%s" from deleted to spam.' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', '<a href="' . get_post_link( $post_id ) . '">' . get_topic_title( $post->topic_id ) . '</a>' ) );
+		bbmodsuite_modlog_log( sprintf( __( 'changed %s\'s post on the topic "%s" from deleted to spam.' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', '<a href="' . get_post_link( $post_id ) . '">' . get_topic_title( $post->topic_id ) . '</a>' ), 'post_spam' );
 	} elseif ( $new_status == 1 && $old_status == 2 ) {
-		bbmodsuite_modlog_log( sprintf( __( 'changed %s\'s post on the topic "%s" from spam to deleted.' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', '<a href="' . get_post_link( $post_id ) . '">' . get_topic_title( $post->topic_id ) . '</a>' ) );
+		bbmodsuite_modlog_log( sprintf( __( 'changed %s\'s post on the topic "%s" from spam to deleted.' ), '<a href="' . get_user_profile_link( $post->poster_id ) . '">' . get_user_display_name( $post->poster_id ) . '</a>', '<a href="' . get_post_link( $post_id ) . '">' . get_topic_title( $post->topic_id ) . '</a>' ), 'post_delete' );
 	}
 }
 add_action( 'bb_delete_post', 'bbmodsuite_modlog_check_post_delete', 10, 3 );
 
 function bbmodsuite_modlog_check_topic_delete( $topic_id, $new_status, $old_status ) {
 	if ( $old_status == 0 && $new_status == 1 ) {
-		bbmodsuite_modlog_log( sprintf( __( 'deleted topic "%s".' ), '<a href="' . get_topic_link( $topic_id ) . '?view=all">' . get_topic_title( $topic_id ) . '</a>' ) );
+		bbmodsuite_modlog_log( sprintf( __( 'deleted topic "%s".' ), '<a href="' . get_topic_link( $topic_id ) . '?view=all">' . get_topic_title( $topic_id ) . '</a>' ), 'topic_delete' );
 	} elseif ( $old_status == 1 && $new_status == 0 ) {
-		bbmodsuite_modlog_log( sprintf( __( 'undeleted topic "%s".' ), '<a href="' . get_topic_link( $topic_id ) . '">' . get_topic_title( $topic_id ) . '</a>' ) );
+		bbmodsuite_modlog_log( sprintf( __( 'undeleted topic "%s".' ), '<a href="' . get_topic_link( $topic_id ) . '">' . get_topic_title( $topic_id ) . '</a>' ), 'topic_undelete' );
 	}
 }
 add_action( 'bb_delete_topic', 'bbmodsuite_modlog_check_topic_delete', 10, 3 );
@@ -223,9 +298,9 @@ function bbmodsuite_modlog_check_bozo( $ret, $key, $new ) {
 	switch ( $key ) {
 		case 'is_bozo':
 			if ( $new && !$old )
-				bbmodsuite_modlog_log( sprintf( __( 'marked %s as a bozo.', 'bbpress-moderation-suite' ), $link ) );
+				bbmodsuite_modlog_log( sprintf( __( 'marked %s as a bozo.', 'bbpress-moderation-suite' ), $link ), 'user_bozo' );
 			elseif ( !$new && $old )
-				bbmodsuite_modlog_log( sprintf( __( 'unmarked %s as a bozo.', 'bbpress-moderation-suite' ), $link ) );
+				bbmodsuite_modlog_log( sprintf( __( 'unmarked %s as a bozo.', 'bbpress-moderation-suite' ), $link ), 'user_unbozo' );
 			break;
 	}
 
@@ -234,18 +309,18 @@ function bbmodsuite_modlog_check_bozo( $ret, $key, $new ) {
 add_filter( 'sanitize_profile_admin', 'bbmodsuite_modlog_check_bozo', 10, 3 );
 
 function bbmodsuite_modlog_check_user_delete( $user_id ) {
-	bbmodsuite_modlog_log( sprintf( __( 'deleted %s.', 'bbpress-moderation-suite' ), get_user_display_name( $user_id ) ) );
+	bbmodsuite_modlog_log( sprintf( __( 'deleted %s.', 'bbpress-moderation-suite' ), get_user_display_name( $user_id ) ), 'user_delete' );
 }
 add_action( 'bb_delete_user', 'bbmodsuite_modlog_check_user_delete' );
 
 
-function bbmodsuite_modlog_set_topic_action_handler( $action, $content, $viewall = false ) {
-	add_action( $action, create_function( '$a', '$a = \'<a href="\' . get_topic_link( $a ) . \'' . ( $viewall ? '?view=all' : '' ) . '">\' . get_topic_title( $a ) . \'</a>\'; bbmodsuite_modlog_log( sprintf( \'' . addslashes( $content ) . '\', $a ) );' ) );
+function bbmodsuite_modlog_set_topic_action_handler( $action, $content, $type, $viewall = false ) {
+	add_action( $action, create_function( '$a', '$a = \'<a href="\' . get_topic_link( $a ) . \'' . ( $viewall ? '?view=all' : '' ) . '">\' . get_topic_title( $a ) . \'</a>\'; bbmodsuite_modlog_log( sprintf( \'' . addslashes( $content ) . '\', $a ), ' . addslashes( $type ) . ' );' ) );
 }
 
-bbmodsuite_modlog_set_topic_action_handler( 'close_topic', __( 'closed topic "%s"', 'bbpress-moderation-suite', true ) );
-bbmodsuite_modlog_set_topic_action_handler( 'open_topic', __( 'opened topic "%s"', 'bbpress-moderation-suite' ) );
-bbmodsuite_modlog_set_topic_action_handler( 'sticky_topic', __( 'stickied topic "%s"', 'bbpress-moderation-suite' ) );
-bbmodsuite_modlog_set_topic_action_handler( 'unsticky_topic', __( 'unstickied topic "%s"', 'bbpress-moderation-suite' ) );
+bbmodsuite_modlog_set_topic_action_handler( 'close_topic', __( 'closed topic "%s"', 'bbpress-moderation-suite'), 'topic_close', true );
+bbmodsuite_modlog_set_topic_action_handler( 'open_topic', __( 'opened topic "%s"', 'bbpress-moderation-suite'), 'topic_open' );
+bbmodsuite_modlog_set_topic_action_handler( 'sticky_topic', __( 'stickied topic "%s"', 'bbpress-moderation-suite' ), 'topic_sticky' );
+bbmodsuite_modlog_set_topic_action_handler( 'unsticky_topic', __( 'unstickied topic "%s"', 'bbpress-moderation-suite' ), 'topic_unsticky' );
 
 ?>

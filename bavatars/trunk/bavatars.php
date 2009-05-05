@@ -79,7 +79,7 @@ function bavatars_filter( $avatar, $id_or_email, $size, $default ) {
 		imagedestroy( $src );
 	}
 
-	return '<img alt="" src="' . bb_get_uri( null, null, BB_URI_CONTEXT_IMG_SRC ) . $location . '" class="avatar avatar-' . $size . ' avatar-bavatar" style="height:' . $size . 'px; width:' . $size . 'px;" />';
+	return '<img alt="" src="' . bb_get_option( 'uri' ) . $location . '" class="avatar avatar-' . $size . ' avatar-bavatar" style="height:' . $size . 'px; width:' . $size . 'px;" />';
 }
 add_filter( 'bb_get_avatar', 'bavatars_filter', 10, 4 );
 

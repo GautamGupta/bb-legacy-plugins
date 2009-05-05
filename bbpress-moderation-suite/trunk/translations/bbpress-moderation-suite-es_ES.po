@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bbPress Moderation Suite 0.1-alpha5\n"
 "Report-Msgid-Bugs-To: http://bbpress.org/plugins/topic/bbpress-moderation-suite\n"
-"POT-Creation-Date: 2009-05-01 13:48+0000\n"
-"PO-Revision-Date: 2009-05-01 08:52-0600\n"
+"POT-Creation-Date: 2009-05-05 15:31+0000\n"
+"PO-Revision-Date: 2009-05-05 10:40-0600\n"
 "Last-Translator: Nightgunner5 <nightgunner5@llamaslayers.net>\n"
 "Language-Team: Nightgunner5 <nightgunner5@llamaslayers.net>\n"
 "MIME-Version: 1.0\n"
@@ -179,7 +179,7 @@ msgid "Save settings"
 msgstr "Guardar los ajustes"
 
 #: ban-plus.php:319
-#: modlog.php:40
+#: modlog.php:48
 #: warning.php:388
 msgid "User"
 msgstr "El usuario"
@@ -237,8 +237,8 @@ msgid "Allows moderators and higher to warn users that break rules. Can be set t
 msgstr "Permite a los moderadores y superior para advertir a los usuarios que rompen las reglas. Se puede configurar para bloquear o automáticamente (si está activa Prohibición de Plus) la prohibición temporal de los usuarios problemáticos de los foros."
 
 #: core.php:45
-#: modlog.php:34
-#: modlog.php:78
+#: modlog.php:42
+#: modlog.php:115
 msgid "Moderation Log"
 msgstr "Moderación historia"
 
@@ -297,118 +297,207 @@ msgstr "Desactivarlo"
 msgid "Uninstall"
 msgstr "Desinstalar"
 
-#: modlog.php:34
+#: modlog.php:36
+msgid "Show all"
+msgstr "Mostrar todos"
+
+#: modlog.php:42
 #, php-format
 msgid " - Page %d"
 msgstr "- Página %d"
 
-#: modlog.php:39
+#: modlog.php:47
 msgid "Date"
 msgstr "fecha"
 
-#: modlog.php:41
+#: modlog.php:49
 msgid "Content"
 msgstr "contenidos"
 
-#: modlog.php:104
-#: modlog.php:105
-#: modlog.php:106
+#: modlog.php:138
+msgid "Moderation Helper activation"
+msgstr "Moderación ayudante desinstalación"
+
+#: modlog.php:139
+msgid "Moderation Helper deactivation"
+msgstr "Moderación ayudante desactivación"
+
+#: modlog.php:140
+msgid "Moderation Helper uninstallation"
+msgstr "Desinstalación de una moderación de ayuda"
+
+#: modlog.php:142
+msgid "Plugin (de)activation"
+msgstr "Plugin de (des)activación"
+
+#: modlog.php:144
+msgid "Forum deletion"
+msgstr "Eliminación de los foros"
+
+#: modlog.php:146
+msgid "Post editing"
+msgstr "Edición de mensajes"
+
+#: modlog.php:147
+msgid "Post deletion"
+msgstr "Eliminación de mensajes"
+
+#: modlog.php:148
+msgid "Post undeletion"
+msgstr "Restauración de los mensajes"
+
+#: modlog.php:149
+msgid "Post spamming"
+msgstr "Marcar mensajes como spam"
+
+#: modlog.php:150
+msgid "Post unspamming"
+msgstr "Marcar mensajes como no spam"
+
+#: modlog.php:152
+msgid "Topic deletion"
+msgstr "Eliminación de temas"
+
+#: modlog.php:153
+msgid "Topic undeletion"
+msgstr "Restauración de temas"
+
+#: modlog.php:154
+msgid "Topic closing"
+msgstr "Clausura temas"
+
+#: modlog.php:155
+msgid "Topic opening"
+msgstr "Apertura temas"
+
+#: modlog.php:156
+msgid "Topic stickying"
+msgstr "Hacer temas pegajosos"
+
+#: modlog.php:157
+msgid "Topic unstickying"
+msgstr "Hacer temas no pegajoso"
+
+#: modlog.php:159
+msgid "User bozoing"
+msgstr "Marcar como un usuario Bozo"
+
+#: modlog.php:160
+msgid "User unbozoing"
+msgstr "Marcar como un usuario no Bozo"
+
+#: modlog.php:161
+msgid "User deletion"
+msgstr "Supresión de usuario"
+
+#: modlog.php:176
 #, php-format
 msgid "activated the bbPress Moderation Suite %s plugin"
 msgstr "activada la bbPress Moderación Suite de \"%s\" plugin"
 
-#: modlog.php:120
+#: modlog.php:177
+#, php-format
+msgid "deactivated the bbPress Moderation Suite %s plugin"
+msgstr "deactivada la bbPress Moderación Suite de \"%s\" plugin"
+
+#: modlog.php:178
+#, php-format
+msgid "uninstalled the bbPress Moderation Suite %s plugin"
+msgstr "desinstalado la bbPress Moderación Suite de \"%s\" plugin"
+
+#: modlog.php:192
 msgid "activated plugins: "
 msgstr "activados los plugins: foo"
 
-#: modlog.php:132
+#: modlog.php:204
+#: modlog.php:215
 msgid "deactivated plugins: "
 msgstr "desactiva los plugins: "
 
-#: modlog.php:143
+#: modlog.php:218
 msgid " and "
 msgstr " y "
 
-#: modlog.php:157
+#: modlog.php:232
 msgid "deleted forum: "
 msgstr "suprime el foro: "
 
-#: modlog.php:177
+#: modlog.php:252
 #, php-format
 msgid "edited %s's post on the topic \"%s\"."
 msgstr "editado %s escrito sobre el tema \"%s\"."
 
-#: modlog.php:188
+#: modlog.php:263
 #, php-format
 msgid "deleted %s's post on the topic \"%s\"."
 msgstr "suprimido %s escrito sobre el tema \"%s\"."
 
-#: modlog.php:190
+#: modlog.php:265
 #, php-format
 msgid "marked %s's post on the topic \"%s\" as spam."
 msgstr "marcado %s escrito sobre el tema \"%s\" como spam."
 
-#: modlog.php:194
+#: modlog.php:269
 #, php-format
 msgid "undeleted %s's post on the topic \"%s\"."
 msgstr "recupera %s escrito sobre el tema \"%s\"."
 
-#: modlog.php:196
+#: modlog.php:271
 #, php-format
 msgid "marked %s's post on the topic \"%s\" as not spam."
 msgstr "marcado %s post sobre el tema \"%s\" como no spam."
 
-#: modlog.php:199
+#: modlog.php:274
 #, php-format
 msgid "changed %s's post on the topic \"%s\" from deleted to spam."
 msgstr "cambiado %s escrito sobre el tema \"%s\" de suprimirse al spam."
 
-#: modlog.php:201
+#: modlog.php:276
 #, php-format
 msgid "changed %s's post on the topic \"%s\" from spam to deleted."
 msgstr "cambiado %s escrito sobre el tema \"%s\" de spam al suprimirse."
 
-#: modlog.php:208
+#: modlog.php:283
 #, php-format
 msgid "deleted topic \"%s\"."
 msgstr "suprimirse el tema \"%s\""
 
-#: modlog.php:210
+#: modlog.php:285
 #, php-format
 msgid "undeleted topic \"%s\"."
 msgstr "restaurado el tema \"%s\""
 
-#: modlog.php:226
+#: modlog.php:301
 #, php-format
 msgid "marked %s as a bozo."
 msgstr "%s marcados como Bozo."
 
-#: modlog.php:228
+#: modlog.php:303
 #, php-format
 msgid "unmarked %s as a bozo."
 msgstr "%s marcados como no Bozo."
 
-#: modlog.php:237
+#: modlog.php:312
 #, php-format
 msgid "deleted %s."
 msgstr "suprimido %s."
 
-#: modlog.php:246
+#: modlog.php:321
 #, php-format
 msgid "closed topic \"%s\""
 msgstr "bloqueado tema \"%s\""
 
-#: modlog.php:247
+#: modlog.php:322
 #, php-format
 msgid "opened topic \"%s\""
 msgstr "desbloqueado tema \"%s\""
 
-#: modlog.php:248
+#: modlog.php:323
 #, php-format
 msgid "stickied topic \"%s\""
 msgstr "hizo pegajoso tema \"%s\""
 
-#: modlog.php:249
+#: modlog.php:324
 #, php-format
 msgid "unstickied topic \"%s\""
 msgstr "hecho no pegajoso tema \"%s\""

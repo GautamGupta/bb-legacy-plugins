@@ -74,7 +74,7 @@ if ( !$log_entries ) {
 //<![CDATA[
 jQuery(function($){
 	$('#modlog-filter').change(function(){
-		$('tbody tr').fadeOut('normal').filter('.log-type-' + $(this).val()).stop().fadeIn('normal');
+		$('tbody tr').animate({opacity: 'hide', fontSize: 0}).filter('.log-type-' + $(this).val()).stop().animate({opacity: 'show', fontSize: '1em'});
 	});
 	$('tr').each(function(){
 		if ($(this).prevAll('.' + this.className.substr(0, 36)).length)
@@ -82,13 +82,13 @@ jQuery(function($){
 		var more = $(this).nextAll('.' + this.className.substr(0, 36));
 		if (more.length == 0)
 			return;
-		more.hide();
+		more.animate({opacity: 'hide', fontSize: 0}, 1);
 		$('<a href="#">Show ' + more.length + ' more<\/a>').addClass('alignright').appendTo($(this).children('td:last').append(' ')).toggle(function(){
 			$(this).text('Hide repeats');
-			more.fadeIn('normal');
+			more.animate({opacity: 'show', fontSize: '1em'});
 		}, function(){
 			$(this).text('Show ' + more.length + ' more');
-			more.fadeOut('normal');
+			more.animate({opacity: 'hide', fontSize: 0});
 		});
 	});
 });

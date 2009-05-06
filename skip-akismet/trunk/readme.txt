@@ -40,6 +40,10 @@ Plugin works in both bbPress and WordPress.
 
 * first public release
 
+= Version 0.0.2 (2009-05-06) =
+
+* complete rewrite for clearer functionality and deep integration compatibility
+
 == To Do ==
 
 * admin menu ?

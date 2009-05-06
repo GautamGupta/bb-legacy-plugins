@@ -81,7 +81,9 @@ jQuery(function($){
 			var more = $(this).nextAll('.' + this.className.substr(0, 36));
 			if (more.length == 0)
 				return;
-			more.stop().animate({opacity: 'hide', fontSize: 0}, 1);
+			more.stop().animate({opacity: 'hide', fontSize: 0}, 1, 'swing', function(){
+				$(this).css({opacity: ''});
+			});
 			$('<a href="#">Show ' + more.length + ' more<\/a>').addClass('alignright modlog-showmore').appendTo($(this).children('td:last').append(' ')).toggle(function(){
 				$(this).text('Hide repeats');
 				more.animate({opacity: 'show', fontSize: '1em'});

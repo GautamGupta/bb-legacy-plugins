@@ -73,24 +73,29 @@ if ( !$log_entries ) {
 <script type="text/javascript">
 //<![CDATA[
 jQuery(function($){
+	function filterDuplicates() {
+		$('.modlog-showmore').remove();
+		$('tr').each(function(){
+			if ($(this).prevAll('.' + this.className.substr(0, 36)).length)
+				return;
+			var more = $(this).nextAll('.' + this.className.substr(0, 36));
+			if (more.length == 0)
+				return;
+			more.stop().animate({opacity: 'hide', fontSize: 0}, 1);
+			$('<a href="#">Show ' + more.length + ' more<\/a>').addClass('alignright modlog-showmore').appendTo($(this).children('td:last').append(' ')).toggle(function(){
+				$(this).text('Hide repeats');
+				more.animate({opacity: 'show', fontSize: '1em'});
+			}, function(){
+				$(this).text('Show ' + more.length + ' more');
+				more.animate({opacity: 'hide', fontSize: 0});
+			});
+		});
+	}
 	$('#modlog-filter').change(function(){
 		$('tbody tr').animate({opacity: 'hide', fontSize: 0}).filter('.log-type-' + $(this).val()).stop().animate({opacity: 'show', fontSize: '1em'});
+		filterDuplicates();
 	});
-	$('tr').each(function(){
-		if ($(this).prevAll('.' + this.className.substr(0, 36)).length)
-			return;
-		var more = $(this).nextAll('.' + this.className.substr(0, 36));
-		if (more.length == 0)
-			return;
-		more.animate({opacity: 'hide', fontSize: 0}, 1);
-		$('<a href="#">Show ' + more.length + ' more<\/a>').addClass('alignright').appendTo($(this).children('td:last').append(' ')).toggle(function(){
-			$(this).text('Hide repeats');
-			more.animate({opacity: 'show', fontSize: '1em'});
-		}, function(){
-			$(this).text('Show ' + more.length + ' more');
-			more.animate({opacity: 'hide', fontSize: 0});
-		});
-	});
+	filterDuplicates();
 });
 //]]>
 </script>

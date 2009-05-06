@@ -1,4 +1,4 @@
-=== Bavatars ===
+=== bbPM ===
 Contributors: Nightgunner5
 Tags: private messaging, messages, pm
 Requires at least: 0.9

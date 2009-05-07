@@ -33,17 +33,19 @@ class bbPM_Message {
 	function bbPM_Message( $ID ) {
 		global $bbpm, $bbdb;
 
-		if ( false === $row = wp_cache_get( (int)$ID, 'bbpm' ) ) {
+		if ( !function_exists( 'wp_cache_get' ) || false === $row = wp_cache_get( (int)$ID, 'bbpm' ) ) {
 			$row = $bbdb->get_row( $bbdb->prepare( 'SELECT * FROM `' . $bbdb->bbpm . '` WHERE `ID`=%d', $ID ) );
 		}
 
 		if ( !$row ) {
 			$this->exists = false;
-			wp_cache_add( (int)$ID, 0, 'bbpm' );
+			if ( function_exists( 'wp_cache_add' ) )
+				wp_cache_add( (int)$ID, 0, 'bbpm' );
 			return;
 		}
 
-		wp_cache_add( (int)$ID, $row, 'bbpm' );
+		if ( function_exists( 'wp_cache_add' ) )
+			wp_cache_add( (int)$ID, $row, 'bbpm' );
 
 		if ( bb_get_option( 'mod_rewrite' ) ) {
 			$this->read_link    = bb_get_uri( 'pm/' . $row->ID ) . '#pm-' . $row->ID;
@@ -77,7 +79,8 @@ class bbPM_Message {
 
 		$bbdb->query( $bbdb->prepare( 'DELETE FROM `' . $bbdb->bbpm . '` WHERE `ID`=%d LIMIT 1', $this->ID ) );
 
-		wp_cache_delete( $this->ID, 'bbpm' );
+		if ( function_exists( 'wp_cache_delete' ) )
+			wp_cache_delete( $this->ID, 'bbpm' );
 	}
 }
 
@@ -272,14 +275,16 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 				$msg->delete();
 			} else {
 				$bbdb->update( $bbdb->bbpm, array( 'del_sender' => 1 ), compact( 'ID' ) );
-				wp_cache_delete( $ID, 'bbpm' );
+				if ( function_exists( 'wp_cache_delete' ) )
+					wp_cache_delete( $ID, 'bbpm' );
 			}
 		} else {
 			if ( $msg->del_s ) {
 				$msg->delete();
 			} else {
 				$bbdb->update( $bbdb->bbpm, array( 'del_reciever' => 1 ), compact( 'ID' ) );
-				wp_cache_delete( $ID, 'bbpm' );
+				if ( function_exists( 'wp_cache_delete' ) )
+					wp_cache_delete( $ID, 'bbpm' );
 			}
 		}
 	}

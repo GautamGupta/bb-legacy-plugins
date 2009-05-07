@@ -137,16 +137,6 @@ if ( !class_exists( 'BP_User' ) ) :
 class BP_User extends BB_User {}
 endif;
 
-if ( !function_exists( 'wp_cache_get' ) ) :
-function wp_cache_get( $id, $flag = '' ) {
-	return false;
-}
-endif;
-
-if ( !function_exists( 'wp_cache_add' ) ) :
-function wp_cache_add( $key, $data, $flag = '', $expire = 0 ) {}
-endif;
-
 if ( !function_exists( '_n' ) ) :
 function _n( $single, $plural, $number, $domain = 'default' ) {
 	return __ngettext( $single, $plural, $number, $domain );

@@ -109,7 +109,7 @@ jQuery(function($){
 		$('#respond').hide('normal', function(){$(this).remove()});
 		var pm = $(this).parents('li');
 		$('<div id="respond"/>').appendTo(pm).hide().load($(this).attr('href') + ' #respond', function(){
-			$(this).find('textarea').css({width: '99%'}).end().find('#reply').append(' ').append($('<a href="#"><small style="font-size:small">[Cancel]</a></small>').click(function(){
+			$(this).find('textarea').css({width: '99%'}).end().find('#reply').append(' ').append($('<a href="#"><small style="font-size:small"><?php echo addslashes( __( '[Cancel]', 'bbpm' ) ); ?></a></small>').click(function(){
 				$('#respond').hide('normal', function(){$(this).remove()});
 			})).end().show('fast');
 		});

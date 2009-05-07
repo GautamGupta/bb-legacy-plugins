@@ -38,7 +38,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' && empty( $_POST['reply_to'] ) ) {
 	if ( !$_reply_to->exists )
 		bb_die( __( 'There was an error sending your message.', 'bbpm' ) );
 
-	$redirect_to = $bbpm->send_message( $_reply_to->from->ID == bb_get_current_user_info( 'ID' ) ? $_reply_to->to->ID : $_reply_to->from->ID, ( $_reply_to->reply ? '' : 'Re: ' ) . $_reply_to->title, $_POST['message'], $reply_to );
+	$redirect_to = $bbpm->send_message( $_reply_to->from->ID == bb_get_current_user_info( 'ID' ) ? $_reply_to->to->ID : $_reply_to->from->ID, ( $_reply_to->reply ? '' : __( 'Re: ', 'bbpm' ) ) . $_reply_to->title, $_POST['message'], $reply_to );
 	if ( !$redirect_to )
 		bb_die( __( 'Either your outbox or the recipient\'s inbox is full.', 'bbpm' ) );
 	else
@@ -48,7 +48,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' && empty( $_POST['reply_to'] ) ) {
 
 if ( isset( $_GET['delete'] ) && bb_verify_nonce( $_GET['_wpnonce'], 'bbpm-delete-' . $_GET['delete'] ) ) {
 	$bbpm->delete_message( $_GET['delete'] );
-	wp_redirect( bb_get_uri( 'pm' ) );
+	wp_redirect( $bbpm->get_link() );
 }
 
 ?>

@@ -1,0 +1,180 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: bbPM 0.1-alpha3\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/bbpm\n"
+"POT-Creation-Date: 2009-05-07 19:12+0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Nightgunner5 <nightgunner5@llamaslayers.net>\n"
+"Language-Team: Nightgunner5 <nightgunner5@llamaslayers.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: bbpm.php:269
+msgid "You can't delete that message!"
+msgstr "Sie können nicht gelöscht werden, dass die Nachricht!"
+
+#: bbpm.php:318
+#, php-format
+msgid "1 new Private Message!"
+msgid_plural "%s new Private Messages!"
+msgstr[0] "1 neue Private Nachricht!"
+msgstr[1] "%s neue Private Nachrichten!"
+
+#: bbpm.php:319
+#: privatemessages.php:19
+#: privatemessages.php:49
+#: privatemessages.php:99
+#: privatemessages.php:164
+msgid "Private Messages"
+msgstr "Private Nachrichten"
+
+#: pm.php:12
+#: pm.php:32
+msgid "You are not allowed to write private messages.  Are you logged in?"
+msgstr "Sie sind nicht berechtigt, private Nachrichten schreiben. Sind Sie angemeldet?"
+
+#: pm.php:14
+#: pm.php:34
+msgid "You need to actually submit some content!"
+msgstr "Sie müssen sich tatsächlich einige Inhalte einreichen!"
+
+#: pm.php:16
+msgid "Please enter a private message title."
+msgstr "Bitte geben Sie eine private Nachricht Titels."
+
+#: pm.php:19
+msgid "You need to choose a valid person to send the message to."
+msgstr "Müssen Sie eine gültige Person, um die Nachricht an."
+
+#: pm.php:22
+#: pm.php:43
+msgid "Either your outbox or the recipient's inbox is full."
+msgstr "Entweder Ihr Ausgang oder den Posteingang des Empfängers ist voll."
+
+#: pm.php:39
+msgid "There was an error sending your message."
+msgstr "Es war ein Fehler beim Senden Sie Ihre Nachricht."
+
+#: pm.php:41
+msgid "Re: "
+msgstr "Re: "
+
+#: privatemessages.php:19
+msgid "New"
+msgstr "Neu"
+
+#: privatemessages.php:23
+msgid "PM title: (be brief and descriptive)"
+msgstr "PM titel: (zu kurz und beschreibend)"
+
+#: privatemessages.php:27
+msgid "Send PM to:"
+msgstr "PM senden an:"
+
+#: privatemessages.php:32
+#: privatemessages.php:147
+msgid "Message:"
+msgstr "Nachricht:"
+
+#: privatemessages.php:36
+#: privatemessages.php:151
+msgid "Send Message &raquo;"
+msgstr "Nachricht Senden &raquo;"
+
+#: privatemessages.php:39
+#: privatemessages.php:154
+msgid "Allowed markup:"
+msgstr "Erlaubt markup:"
+
+#: privatemessages.php:39
+#: privatemessages.php:154
+msgid "You can also put code in between backtick ( <code>`</code> ) characters."
+msgstr "Sie können auch Code zwischen backtick ( <code>`</ code> ) Zeichen."
+
+#: privatemessages.php:51
+msgid "Inbox"
+msgstr "Posteingang"
+
+#: privatemessages.php:54
+#: privatemessages.php:76
+msgid "Subject"
+msgstr "Subjekt"
+
+#: privatemessages.php:54
+msgid "New &raquo;"
+msgstr "Neu &raquo;"
+
+#: privatemessages.php:55
+msgid "From"
+msgstr "Von"
+
+#: privatemessages.php:56
+#: privatemessages.php:78
+msgid "Freshness"
+msgstr "Frische"
+
+#: privatemessages.php:57
+#: privatemessages.php:79
+msgid "Actions"
+msgstr "Aktionen"
+
+#: privatemessages.php:68
+#: privatemessages.php:90
+#: privatemessages.php:137
+#: threadviewer.php:99
+msgid "Delete"
+msgstr "Löschen"
+
+#: privatemessages.php:73
+msgid "Outbox"
+msgstr "Postausgang"
+
+#: privatemessages.php:77
+msgid "To"
+msgstr "Zu"
+
+#: privatemessages.php:99
+#: privatemessages.php:164
+msgid "Read"
+msgstr "Lesen"
+
+#: privatemessages.php:137
+#: threadviewer.php:99
+#, php-format
+msgid "Sent %s ago"
+msgstr "Sent %s vor"
+
+#: privatemessages.php:137
+#: threadviewer.php:99
+msgid "Reply"
+msgstr "Antworten"
+
+#: threadviewer.php:112
+msgid "[Cancel]"
+msgstr "[Abbrechen]"
+
+#. Plugin Name of an extension
+msgid "bbPM"
+msgstr "bbPM"
+
+#. Plugin URI of an extension
+msgid "http://nightgunner5.wordpress.com/tag/bbpm/"
+msgstr "http://nightgunner5.wordpress.com/tag/bbpm/"
+
+#. Description of an extension
+msgid "Adds the ability for users of a forum to send private messages to each other."
+msgstr "Fügt die Möglichkeit für die Benutzer eines Forums, um private Nachrichten zu einander."
+
+#. Author of an extension
+msgid "Nightgunner5"
+msgstr "Nightgunner5"
+
+#. Author URI of an extension
+msgid "http://llamaslayers.net/daily-llama/"
+msgstr "http://llamaslayers.net/daily-llama/"
+

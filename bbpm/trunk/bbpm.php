@@ -6,7 +6,11 @@ Description: Adds the ability for users of a forum to send private messages to e
 Version: 0.1-alpha2
 Author: Nightgunner5
 Author URI: http://llamaslayers.net/daily-llama/
+Text Domain: bbpm
+Domain Path: translations
 */
+
+load_plugin_textdomain( 'bbpm', dirname( __FILE__ ) . '/translations' );
 
 if ( version_compare( bb_get_option( 'version' ), '1.0-dev', '<' ) )
 	include_once dirname( __FILE__ ) . '/compat.php';

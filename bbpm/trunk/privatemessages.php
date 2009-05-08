@@ -2,6 +2,10 @@
 
 status_header( 200 );
 
+// Plugin compatibility
+remove_filter('topic_title', 'utplugin_show_unread');
+remove_filter('topic_link', 'utplugin_link_latest');
+
 global $bbpm;
 
 $url    = array_values( array_filter( explode( '/', substr( rtrim( $_SERVER['REQUEST_URI'], '/' ), strlen( bb_get_option( 'path' ) . 'pm' ) ) ) ) );

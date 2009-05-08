@@ -89,7 +89,7 @@ class bbPM_Message {
 }
 
 class bbPM {
-	private $settings;
+	var $settings;
 	private $version;
 	private $max_inbox;
 	private $current_id;
@@ -101,7 +101,6 @@ class bbPM {
 		global $bbdb;
 		$bbdb->bbpm = $bbdb->prefix . 'bbpm';
 
-		add_filter( 'bb_template', array( &$this, 'template_filter' ), 10, 2 );
 		// Put two slashes before the next line if you do not want a "PM this user" link in every profile.
 		add_action( 'bb_profile.php', array( &$this, 'profile_filter_action' ) );
 		// Put two slashes before each of the next two lines if you do not want a "PM this user" link under the author name of every post.
@@ -109,6 +108,8 @@ class bbPM {
 		add_filter( 'post_author_title', array( &$this, 'post_title_filter' ), 10, 2 );
 
 		add_filter( 'bb_logout_link', array( &$this, 'header_link' ) );
+		add_action( 'bb_admin_menu_generator', array( &$this, 'admin_add' ) );
+		add_filter( 'bb_template', array( &$this, 'template_filter' ), 10, 2 );
 
 		$this->current_id      = 0;
 		$this->current_sent_id = 0;
@@ -121,11 +122,13 @@ class bbPM {
 
 		$this->max_inbox = $this->settings['max_inbox'];
 	}
+
 	function __get( $varName ) {
 		if ( !in_array( $varName, array( 'version', 'max_inbox', 'current_id', 'current_sent_id', 'the_pm' ) ) )
 			return null;
 		return $this->$varName;
 	}
+
 	function update() {
 		global $bbdb;
 		switch ( $this->version ) { // Don't use break - each update needs to be installed.
@@ -358,12 +361,46 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 			return $link . ' | <big><a href="' . $this->get_link() . '">' . sprintf( _n( '1 new Private Message!', '%s new Private Messages!', $count, 'bbpm' ), bb_number_format_i18n( $count ) ) . '</a></big>';
 		return $link . ' | <a href="' . $this->get_link() . '">' . __( 'Private Messages', 'bbpm' ) . '</a>';
 	}
+
+	function admin_add() {
+		global $bb_submenu;
+		$bb_submenu['options-general.php'][] = array( __( 'bbPM', 'bbpm' ), 'use_keys', 'bbpm_admin_page' );
+	}
 }
 global $bbpm;
 $bbpm = new bbPM;
 
 function is_pm() {
 	return substr( ltrim( str_replace( bb_get_option( 'path' ), '', $_SERVER['REQUEST_URI'] . '/' ), '/' ), 0, 3 ) == 'pm/';
+}
+
+function bbpm_admin_page() {
+	global $bbpm;
+
+	if ( bb_verify_nonce( $_POST['_wpnonce'], 'bbpm-admin' ) ) {
+		$bbpm->settings['max_inbox'] = max( (int)$_POST['max_inbox'], 1 );
+
+		bb_update_option( 'bbpm_settings', $bbpm->settings );
+	}
+?>
+<h2><?php _e( 'bbPM', 'bbpm' ); ?></h2>
+<form class="settings" action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
+<fieldset>
+	<div>
+		<label for="max_inbox">
+			<?php _e( 'Maximum inbox/outbox size', 'bbpm' ); ?>
+		</label>
+		<div>
+			<input type="text" class="text short" id="max_inbox" name="max_inbox" value="<?php echo $bbpm->settings['max_inbox']; ?>" />
+		</div>
+	</div>
+</fieldset>
+<fieldset class="submit">
+	<?php bb_nonce_field( 'bbpm-admin' ); ?>
+	<input type="submit" class="submit" value="<?php _e( 'Save settings', 'bbpm' ); ?>" />
+</fieldset>
+</form>
+<?php
 }
 
 ?>

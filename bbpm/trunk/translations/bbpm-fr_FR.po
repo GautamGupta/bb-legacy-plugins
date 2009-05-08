@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bbPM 0.1-alpha3\n"
 "Report-Msgid-Bugs-To: http://bbpress.org/plugins/topic/bbpm\n"
-"POT-Creation-Date: 2009-05-08 14:07+0000\n"
+"POT-Creation-Date: 2009-05-08 16:07+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nightgunner5 <nightgunner5@llamaslayers.net>\n"
 "Language-Team: Nightgunner5 <nightgunner5@llamaslayers.net>\n"
@@ -15,29 +15,44 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-Basepath: ..\n"
 
-#: bbpm.php:279
+#: bbpm.php:282
 msgid "You can't delete that message!"
 msgstr "Vous ne pouvez pas supprimer ce message!"
 
-#: bbpm.php:325
-#: bbpm.php:333
+#: bbpm.php:328
+#: bbpm.php:336
 msgid "PM this user"
 msgstr "PM cet utilisateur"
 
-#: bbpm.php:358
+#: bbpm.php:361
 #, php-format
 msgid "1 new Private Message!"
 msgid_plural "%s new Private Messages!"
 msgstr[0] "1 nouveau message privé!"
 msgstr[1] "%s nouveaux messages privés!"
 
-#: bbpm.php:359
-#: privatemessages.php:19
-#: privatemessages.php:49
-#: privatemessages.php:99
-#: privatemessages.php:164
+#: bbpm.php:362
+#: privatemessages.php:23
+#: privatemessages.php:53
+#: privatemessages.php:103
+#: privatemessages.php:168
 msgid "Private Messages"
 msgstr "Messages Privés"
+
+#. #-#-#-#-#  plugin.pot (PACKAGE VERSION)  #-#-#-#-#
+#. Plugin Name of an extension
+#: bbpm.php:367
+#: bbpm.php:386
+msgid "bbPM"
+msgstr "bbPM"
+
+#: bbpm.php:391
+msgid "Maximum inbox/outbox size"
+msgstr "Maximale Nachrichten pro Benutzer"
+
+#: bbpm.php:400
+msgid "Save settings"
+msgstr "Einstellungen speichern"
 
 #: pm.php:12
 #: pm.php:32
@@ -70,92 +85,92 @@ msgstr "Il ya eu une erreur d'envoyer votre message."
 msgid "Re: "
 msgstr "Re: "
 
-#: privatemessages.php:19
+#: privatemessages.php:23
 msgid "New"
 msgstr "Nouveau"
 
-#: privatemessages.php:23
+#: privatemessages.php:27
 msgid "PM title: (be brief and descriptive)"
 msgstr "PM Titre: (soyez bref et descriptif)"
 
-#: privatemessages.php:27
+#: privatemessages.php:31
 msgid "Send PM to:"
 msgstr "Envoyer un PM à:"
 
-#: privatemessages.php:32
-#: privatemessages.php:147
+#: privatemessages.php:36
+#: privatemessages.php:151
 msgid "Message:"
 msgstr "Message:"
 
-#: privatemessages.php:36
-#: privatemessages.php:151
+#: privatemessages.php:40
+#: privatemessages.php:155
 msgid "Send Message &raquo;"
 msgstr "Envoyer un message &raquo;"
 
-#: privatemessages.php:39
-#: privatemessages.php:154
+#: privatemessages.php:43
+#: privatemessages.php:158
 msgid "Allowed markup:"
 msgstr "Permis de marquage:"
 
-#: privatemessages.php:39
-#: privatemessages.php:154
+#: privatemessages.php:43
+#: privatemessages.php:158
 msgid "You can also put code in between backtick ( <code>`</code> ) characters."
 msgstr "Vous pouvez aussi mettre le code entre backtick ( <code>`</ code> ) caractères."
 
-#: privatemessages.php:51
+#: privatemessages.php:55
 msgid "Inbox"
 msgstr "Boîte de réception"
 
-#: privatemessages.php:54
-#: privatemessages.php:76
+#: privatemessages.php:58
+#: privatemessages.php:80
 msgid "Subject"
 msgstr "Sujet"
 
-#: privatemessages.php:54
+#: privatemessages.php:58
 msgid "New &raquo;"
 msgstr "Nouveau &raquo;"
 
-#: privatemessages.php:55
+#: privatemessages.php:59
 msgid "From"
 msgstr "À partir de"
 
-#: privatemessages.php:56
-#: privatemessages.php:78
+#: privatemessages.php:60
+#: privatemessages.php:82
 msgid "Freshness"
 msgstr "Fraîcheur"
 
-#: privatemessages.php:57
-#: privatemessages.php:79
+#: privatemessages.php:61
+#: privatemessages.php:83
 msgid "Actions"
 msgstr "Actions"
 
-#: privatemessages.php:68
-#: privatemessages.php:90
-#: privatemessages.php:137
+#: privatemessages.php:72
+#: privatemessages.php:94
+#: privatemessages.php:141
 #: threadviewer.php:99
 msgid "Delete"
 msgstr "Supprimer"
 
-#: privatemessages.php:73
+#: privatemessages.php:77
 msgid "Outbox"
 msgstr "Boîte d'envoi"
 
-#: privatemessages.php:77
+#: privatemessages.php:81
 msgid "To"
 msgstr "À"
 
-#: privatemessages.php:99
-#: privatemessages.php:164
+#: privatemessages.php:103
+#: privatemessages.php:168
 msgid "Read"
 msgstr "Lire"
 
-#: privatemessages.php:137
+#: privatemessages.php:141
 #: threadviewer.php:99
 #, php-format
 msgid "Sent %s ago"
 msgstr "Envoyée il ya %s"
 
-#: privatemessages.php:137
+#: privatemessages.php:141
 #: threadviewer.php:99
 msgid "Reply"
 msgstr "Répondre"
@@ -163,10 +178,6 @@ msgstr "Répondre"
 #: threadviewer.php:112
 msgid "[Cancel]"
 msgstr "[Annuler]"
-
-#. Plugin Name of an extension
-msgid "bbPM"
-msgstr "bbPM"
 
 #. Plugin URI of an extension
 msgid "http://nightgunner5.wordpress.com/tag/bbpm/"

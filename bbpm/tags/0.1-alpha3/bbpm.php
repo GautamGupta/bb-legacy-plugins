@@ -335,8 +335,6 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		if ( $user_id = get_post_author_id( $post_id ) ) {
 			$text .= "<br/>\n";
 			$text .= '<a href="' . $this->get_send_link( $user_id ) . '">' . __( 'PM this user', 'bbpm' ) . '</a>';
-		} else {
-			var_dump( $user_id );
 		}
 		return $text;
 	}

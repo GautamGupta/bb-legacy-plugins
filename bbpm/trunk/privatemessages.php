@@ -25,7 +25,7 @@ bb_get_header(); ?>
 </p>
 <p>
 	<label for="to"><?php _e( 'Send PM to:', 'bbpm' ); ?><br/></label>
-	<input name="to" type="text" id="to" size="50" maxlength="100" tabindex="2" />
+	<input name="to" type="text" id="to" size="50" maxlength="100" tabindex="2"<?php if ( $action ) echo ' value="' . urldecode( $action ) . '"'; ?> />
 </p>
 <?php do_action( 'post_form_pre_post' ); ?>
 <p>

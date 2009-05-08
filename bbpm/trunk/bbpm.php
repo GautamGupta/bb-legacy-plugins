@@ -320,10 +320,10 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 	}
 
 	function profile_filter_action() {
-		add_filter( 'get_profile_info_keys', array( &$this, 'profile_filter' ), 10, 2 );
+		add_filter( 'get_profile_info_keys', array( &$this, 'profile_filter' ) );
 	}
 
-	function profile_filter( $keys, $context ) {
+	function profile_filter( $keys ) {
 		global $user_id;
 		if ( bb_get_current_user_info( 'ID' ) != $user_id ) {
 			echo '<a href="' . $this->get_send_link( $user_id ) . '">' . __( 'PM this user', 'bbpm' ) . '</a>';

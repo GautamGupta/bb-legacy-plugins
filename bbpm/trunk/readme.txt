@@ -34,6 +34,7 @@ RewriteRule ^pm/?(.*)$ /forums/my-plugins/bbpm/index.php?$1 [L]
 
 * 0.1-alpha3
 	* PM this user links have been added to profiles and post authors
+	* Inbox sizes are configurable in the administration panel (Settings -> bbPM)
 * 0.1-alpha2
 	* Pretty permalinks on bbPress 0.9 now work as planned.
 * 0.1-alpha1

@@ -102,6 +102,12 @@ class bbPM {
 		$bbdb->bbpm = $bbdb->prefix . 'bbpm';
 
 		add_filter( 'bb_template', array( &$this, 'template_filter' ), 10, 2 );
+		// Put two slashes before the next line if you do not want a "PM this user" link in every profile.
+		add_action( 'bb_profile.php', array( &$this, 'profile_filter_action' ) );
+		// Put two slashes before each of the next two lines if you do not want a "PM this user" link under the author name of every post.
+		add_filter( 'post_author_title_link', array( &$this, 'post_title_filter' ), 10, 2 );
+		add_filter( 'post_author_title', array( &$this, 'post_title_filter' ), 10, 2 );
+
 		add_filter( 'bb_logout_link', array( &$this, 'header_link' ) );
 
 		$this->current_id      = 0;
@@ -309,10 +315,40 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		return $a;
 	}
 
+	function profile_filter_action() {
+		add_filter( 'get_profile_info_keys', array( &$this, 'profile_filter' ), 10, 2 );
+	}
+
+	function profile_filter( $keys, $context ) {
+		global $user_id;
+		if ( bb_get_current_user_info( 'ID' ) != $user_id ) {
+			echo '<a href="' . $this->get_send_link( $user_id ) . '">' . __( 'PM this user', 'bbpm' ) . '</a>';
+		}
+		return $keys;
+	}
+
+	function post_title_filter( $text, $post_id ) {
+		if ( $user_id = get_post_author_id( $post_id ) ) {
+			$text .= "<br/>\n";
+			$text .= '<a href="' . $this->get_send_link( $user_id ) . '">' . __( 'PM this user', 'bbpm' ) . '</a>';
+		} else {
+			var_dump( $user_id );
+		}
+		return $text;
+	}
+
 	function get_link() {
 		if ( bb_get_option( 'mod_rewrite' ) )
 			return bb_get_uri( 'pm' );
 		return BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/';
+	}
+
+	function get_send_link( $user_id = 0 ) {
+		$user_name = get_user_name( bb_get_user_id( $user_id ) );
+
+		if ( bb_get_option( 'mod_rewrite' ) )
+			return bb_get_uri( 'pm/new/' . urlencode( $user_name ) );
+		return BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?new/' . urlencode( $user_name );
 	}
 
 	function header_link( $link ) {

@@ -6,7 +6,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.1-alpha4\n"
+"Project-Id-Version: 0.1-alpha3\n"
 "Report-Msgid-Bugs-To: http://bbpress.org/plugins/topic/bbpm\n"
 "POT-Creation-Date: 2009-05-08 16:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"

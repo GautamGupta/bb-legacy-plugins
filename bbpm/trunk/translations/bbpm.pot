@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.1-alpha3\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/tag/bbpm\n"
-"POT-Creation-Date: 2009-05-07 19:12+0000\n"
+"Report-Msgid-Bugs-To: http://bbpress.org/plugins/topic/bbpm\n"
+"POT-Creation-Date: 2009-05-08 14:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,18 +17,22 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: bbpm.php:269
+#: bbpm.php:279
 msgid "You can't delete that message!"
 msgstr ""
 
-#: bbpm.php:318
+#: bbpm.php:325 bbpm.php:333
+msgid "PM this user"
+msgstr ""
+
+#: bbpm.php:358
 #, php-format
 msgid "1 new Private Message!"
 msgid_plural "%s new Private Messages!"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bbpm.php:319 privatemessages.php:19 privatemessages.php:49
+#: bbpm.php:359 privatemessages.php:19 privatemessages.php:49
 #: privatemessages.php:99 privatemessages.php:164
 msgid "Private Messages"
 msgstr ""

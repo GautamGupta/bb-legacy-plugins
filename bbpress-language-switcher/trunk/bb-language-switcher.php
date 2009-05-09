@@ -3,7 +3,7 @@
 Plugin Name: bbPress Language Switcher
 Plugin URI: http://bbpress.org/plugins/topic/bbpress-language-switcher
 Description: Allows any user (guest or member) to select a different bbPress language for templates.
-Version: 0.0.4
+Version: 0.0.5
 Author: _ck_
 Author URI:  http://bbshowcase.org
 Donate: http://bbshowcase.org/donate/
@@ -25,7 +25,7 @@ if (defined('BB_IS_ADMIN') && BB_IS_ADMIN && ((isset($_GET['name']) && strpos(st
 if (isset($_GET['bb_language_switcher_update'])) {require_once("bb-language-switcher-admin.php"); add_action('bb_init','bb_language_switcher_update');}
 if (isset($_GET['bb_language_switcher_debug'])) {require_once("bb-language-switcher-admin.php"); add_action('bb_init','bb_language_switcher_debug');}
 
-function bb_language_switcher_filter($locale='') {if (!empty($_COOKIE['bblang_'.BB_HASH])) {$locale=bb_language_switcher_get_cookie();} return $locale;}
+function bb_language_switcher_filter($locale='') {if (isset($_COOKIE['bblang_'.BB_HASH])) {$locale=bb_language_switcher_get_cookie();} return $locale;}
 
 function bb_language_switcher_get_cookie() {return trim(substr(strip_tags(stripslashes($_COOKIE['bblang_'.BB_HASH])),0,20));}
 
@@ -41,11 +41,11 @@ function bb_language_switcher_set_cookie() { 		// makes the url request into a c
 function bb_language_switcher($ignore='') {				// builds and displays the language dropdown UI
 	global $bb_language_switcher; $output=""; $current=bb_language_switcher_filter();
 	if (empty($bb_language_switcher)) {$bb_language_switcher=bb_get_option('bb_language_switcher');}
-	if (empty($current) && defined('BB_LANG')) {$bblang=trim(BB_LANG); if (!empty($bblang)) {$current=$bblang;}}	
+	if (empty($current) && defined('BB_LANG')) {$bblang=BB_LANG; if (!empty($bblang)) {$current=$bblang;}}	
 	$output.= '<form id="bb_language_switcher"><select  style="width:150px;" name="bb_language_switcher" onchange="location.href=\''.add_query_arg('bblang','',remove_query_arg('bblang')).'=\' + this.options[this.selectedIndex].value;">'."\n"	;		
 	foreach ($bb_language_switcher as $value=>$description) {
 		if ($value==$current) {$selected='" selected="selected"  ';} else {$selected='';}
-		if (empty($value)) {$bk="background:#ECE9D8;color:#000;font-weight:bold;";} else {$bk="";}	 // highlight english
+		if (empty($value) || $value==" ") {$bk="background:#ECE9D8;color:#000;font-weight:bold;";} else {$bk="";}	 // highlight english
 		$output.= '	<option style="padding:2px;'.$bk.'" value="'.$value.'"'.$selected.'>&nbsp;'.$description.'</option>'."\n";	// padding mess for cross-browser
 	}
 	$output.="</select></form>\n";

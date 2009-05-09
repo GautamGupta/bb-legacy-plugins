@@ -72,3 +72,7 @@ note the space between the quotes
 = Version 0.0.4 (2009-03-30) =
 
 *   update to BB_LANG from BBLANG (deprecated) and some code cleanup
+
+= Version 0.0.5 (2009-05-09) =
+
+*   attempt to fix bug for supporting English option on non-english defaults  (will need to rebuild via  ?bb_language_switcher_update )

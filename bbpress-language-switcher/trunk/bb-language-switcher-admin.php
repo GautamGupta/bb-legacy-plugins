@@ -53,7 +53,7 @@ $bb_language_switcher_iso639=array(	// _ck_ converted from public domain masterl
 		}
 	}	
 	if (!empty($list)) {
-		$list['']="English";	// add default
+		$list[' ']="English";	// add default
 		asort($list); 		// make alphabetical
 		bb_update_option('bb_language_switcher',$list);
 	}	

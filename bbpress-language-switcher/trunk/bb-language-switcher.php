@@ -41,15 +41,14 @@ function bb_language_switcher_set_cookie() { 		// makes the url request into a c
 function bb_language_switcher($ignore='') {				// builds and displays the language dropdown UI
 	global $bb_language_switcher; $output=""; $current=bb_language_switcher_filter();
 	if (empty($bb_language_switcher)) {$bb_language_switcher=bb_get_option('bb_language_switcher');}
-	if (empty($current) && defined('BB_LANG')) {$bblang=trim(BB_LANG); if (!empty($bblang)) {$current=$bblang;}}
-	$output.='<span id="bb_language_switcher">'."\n";		
-	$output.= '<select style="width:150px;" name="bb_language_switcher" onchange="location.href=\''.add_query_arg('bblang','',remove_query_arg('bblang')).'=\' + this.options[this.selectedIndex].value;">'."\n"	;		
+	if (empty($current) && defined('BB_LANG')) {$bblang=trim(BB_LANG); if (!empty($bblang)) {$current=$bblang;}}	
+	$output.= '<form id="bb_language_switcher"><select  style="width:150px;" name="bb_language_switcher" onchange="location.href=\''.add_query_arg('bblang','',remove_query_arg('bblang')).'=\' + this.options[this.selectedIndex].value;">'."\n"	;		
 	foreach ($bb_language_switcher as $value=>$description) {
-		if ($value==$current) {$selected='" selected="selected" ';} else {$selected='';}
-		if (empty($value)) {$bk="background:Menu;color:MenuText;font-weight:bold;";} else {$bk="";}	 // highlight english
+		if ($value==$current) {$selected='" selected="selected"  ';} else {$selected='';}
+		if (empty($value)) {$bk="background:#ECE9D8;color:#000;font-weight:bold;";} else {$bk="";}	 // highlight english
 		$output.= '	<option style="padding:2px;'.$bk.'" value="'.$value.'"'.$selected.'>&nbsp;'.$description.'</option>'."\n";	// padding mess for cross-browser
 	}
-	$output.="</select></span>\n";
+	$output.="</select></form>\n";
 	echo $output;
 }
 

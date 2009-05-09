@@ -3,7 +3,7 @@
 Plugin Name: bbPM
 Plugin URI: http://nightgunner5.wordpress.com/tag/bbpm/
 Description: Adds the ability for users of a forum to send private messages to each other.
-Version: 0.1-alpha3
+Version: 0.1-alpha4
 Author: Nightgunner5
 Author URI: http://llamaslayers.net/daily-llama/
 Text Domain: bbpm
@@ -52,10 +52,10 @@ class bbPM_Message {
 			wp_cache_add( (int)$ID, $row, 'bbpm' );
 
 		if ( bb_get_option( 'mod_rewrite' ) ) {
-			$this->read_link    = bb_get_uri( 'pm/' . $row->ID ) . '#pm-' . $row->ID;
+			$this->read_link    = bb_get_uri( 'pm/' . $row->pm_thread ) . '#pm-' . $row->ID;
 			$this->reply_link   = bb_get_uri( 'pm/' . $row->ID . '/reply' );
 		} else {
-			$this->read_link    = BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?' . $row->ID . '#pm-' . $row->ID;
+			$this->read_link    = BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?' . $row->pm_thread . '#pm-' . $row->ID;
 			$this->reply_link   = BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?' . $row->ID . '/reply';
 		}
 		$this->delete_link  = bb_nonce_url( BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/pm.php?delete=' . $row->ID, 'bbpm-delete-' . $row->ID );
@@ -71,6 +71,7 @@ class bbPM_Message {
 		$this->reply        = (bool)(int)$row->reply_to;
 		$this->reply_to     = (int)$row->reply_to;
 		$this->thread_depth = (int)$row->thread_depth;
+		$this->thread       = (int)$row->pm_thread;
 		$this->exists       = true;
 	}
 
@@ -117,7 +118,7 @@ class bbPM {
 		$this->settings = bb_get_option( 'bbpm_settings' );
 		$this->version = $this->settings ? $this->settings['version'] : false;
 
-		if ( !$this->version || version_compare( $this->version, '0.1-alpha3', '<' ) )
+		if ( !$this->version || version_compare( $this->version, '0.1-alpha4', '<' ) )
 			$this->update();
 
 		$this->max_inbox = $this->settings['max_inbox'];
@@ -129,7 +130,7 @@ class bbPM {
 		return $this->$varName;
 	}
 
-	function update() {
+	private function update() {
 		global $bbdb;
 		switch ( $this->version ) { // Don't use break - each update needs to be installed.
 			case false:
@@ -188,14 +189,42 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 
 			case '0.1-alpha1':
 			case '0.1-alpha2':
+			case '0.1-alpha3':
+				$bbdb->query( 'ALTER TABLE `' . $bbdb->bbpm . '` ADD `pm_thread` BIGINT UNSIGNED NOT NULL, ADD INDEX ( pm_thread )' );
+
+				$_all_pm = (array)$bbdb->get_col( 'SELECT `ID` FROM `' . $bbdb->bbpm . '` WHERE `reply_to` IS NULL' );
+				$threads = 0;
+
+				foreach ( $_all_pm as $pm ) {
+					$threads++;
+
+					$bbdb->query( 'UPDATE `' . $bbdb->bbpm . '` SET `pm_thread`=\'' . $threads . '\' WHERE `ID` in (' . implode( ',', $this->update_helper_0_1_alpha4( $pm ) ) . ')' );
+				}
+
 				// At the end of all of the updates:
-				$this->settings['version']   = '0.1-alpha3';
-				$this->version               = '0.1-alpha3';
+				$this->settings['version'] = '0.1-alpha4';
+				$this->version             = '0.1-alpha4';
 				bb_update_option( 'bbpm_settings', $this->settings );
 
-			case '0.1-alpha3':
+			case '1.0-alpha4':
 				// Do nothing, this is the newest version.
 		}
+	}
+
+	private function update_helper_0_1_alpha4( $start_id ) {
+		global $bbdb;
+
+		$thread_items = array( $start_id );
+
+		$pm_list = $bbdb->get_col( 'SELECT `ID` FROM `' . $bbdb->bbpm . '` WHERE `reply_to`=\'' . $start_id . '\'' );
+
+		$thread_items = array_merge( $thread_items, $pm_list );
+
+		foreach ( $pm_list as $pm ) {
+			$thread_items = array_merge( $thread_items, $this->update_helper_0_1_alpha4( $pm ) );
+		}
+
+		return array_unique( $thread_items );
 	}
 
 	function count_pm( $user_id = 0, $sent = false, $unread_only = false ) {
@@ -237,17 +266,19 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		global $bbdb;
 
 		$pm = array(
-			'pm_title' => attribute_escape( $title ),
-			'pm_from'  => (int)bb_get_current_user_info( 'ID' ),
-			'pm_to'    => (int)$id_reciever,
-			'pm_text'  => apply_filters( 'pre_post', $message ),
-			'sent_on'  => time(),
+			'pm_title'  => attribute_escape( $title ),
+			'pm_from'   => (int)bb_get_current_user_info( 'ID' ),
+			'pm_to'     => (int)$id_reciever,
+			'pm_text'   => apply_filters( 'pre_post', $message ),
+			'sent_on'   => time(),
+			'pm_thread' => $bbdb->get_var( 'SELECT MAX( `pm_thread` ) FROM `' . $bbdb->bbpm . '`' ) + 1,
 		);
 
 		if ( $reply_to && $this->can_read_message( $reply_to ) && $this->can_read_message( $reply_to, (int)$id_reciever ) ) {
 			$pm['reply_to']     = (int)$reply_to;
 			$reply_to           = new bbPM_Message( $reply_to );
 			$pm['thread_depth'] = $reply_to->thread_depth + 1;
+			$pm['pm_thread']    = $reply_to->thread;
 		}
 
 		if ( $this->count_pm( $pm['pm_from'], true ) > $this->max_inbox || $this->count_pm( $pm['pm_to'] ) > $this->max_inbox )
@@ -260,10 +291,48 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		return $msg->read_link;
 	}
 
+	function get_thread( $id, $firstonly = false ) {
+		global $bbdb;
+
+		if ( !function_exists( 'wp_cache_get' ) || false === $thread_ids = wp_cache_get( (int)$id, 'bbpm-thread' ) ) {
+			$thread_ids = (array)$bbdb->get_col( $bbdb->prepare( 'SELECT `ID` FROM `' . $bbdb->bbpm . '` WHERE `pm_thread`=%d ORDER BY `ID`', $id ) );
+			if ( function_exists( 'wp_cache_add' ) )
+				wp_cache_add( (int)$id, $thread_ids, 'bbpm-thread' );
+		}
+
+		if ( $firstonly )
+			return new bbPM_Message( $thread_ids[0] );
+
+		$thread = array();
+		foreach ( $thread_ids as $ID ) {
+			$thread[] = new bbPM_Message( $ID );
+		}
+
+		return $thread;
+	}
+
 	function can_read_message( $ID, $user_id = 0 ) {
 		$msg = new bbPM_Message( $ID );
 		if ( !$msg->exists )
 			return false;
+
+		if ( !$user_id )
+			$user_id = bb_get_current_user_info( 'ID' );
+
+		if ( $msg->from->ID == $user_id && !$msg->del_s )
+			return 'from';
+		if ( $msg->to->ID == $user_id && !$msg->del_r )
+			return 'to';
+
+		return false;
+	}
+
+	function can_read_thread( $ID, $user_id = 0 ) {
+		$msg = $this->get_thread( $ID, true );
+
+		if ( !$msg->exists )
+			return false;
+
 
 		if ( !$user_id )
 			$user_id = bb_get_current_user_info( 'ID' );

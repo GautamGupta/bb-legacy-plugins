@@ -1,52 +1,8 @@
 <?php
 
-$messagechain = array( new bbPM_Message( $get ) );
-$wehaveit     = array( (int)$get );
-$the_pm       = $messagechain[0];
+global $bbpm;
 
-
-if ( !$the_pm->read && $the_pm->to->ID == bb_get_current_user_info( 'ID' ) ) {
-	global $bbdb;
-
-	$bbdb->update( $bbdb->bbpm, array( 'pm_read' => true ), array( 'ID' => $the_pm->ID ) );
-}
-
-while ( $the_pm->reply ) {
-	array_unshift( $messagechain, new bbPM_Message( $the_pm->reply_to ) );
-
-	$wehaveit[] = $the_pm->reply_to;
-
-	$the_pm = $messagechain[0];
-
-	if ( !$the_pm->read && $the_pm->to->ID == bb_get_current_user_info( 'ID' ) ) {
-		global $bbdb;
-
-		$bbdb->update( $bbdb->bbpm, array( 'pm_read' => true ), array( 'ID' => $the_pm->ID ) );
-	}
-}
-
-$i = 0;
-
-while ( $i < count( $messagechain ) ) {
-	$_replies = (array)$bbdb->get_col( $bbdb->prepare( 'SELECT `ID` FROM `' . $bbdb->bbpm . '` WHERE `reply_to`=%d', $messagechain[$i]->ID ) );
-	$replies  = array();
-
-	$_replies = array_diff( $_replies, $wehaveit );
-
-	foreach ( $_replies as $reply ) {
-		$replies[]  = $the_pm = new bbPM_Message( $reply );
-		if ( !$the_pm->read && $the_pm->to->ID == bb_get_current_user_info( 'ID' ) ) {
-			global $bbdb;
-
-			$bbdb->update( $bbdb->bbpm, array( 'pm_read' => true ), array( 'ID' => $the_pm->ID ) );
-		}
-		$wehaveit[] = $reply;
-	}
-
-	array_splice( $messagechain, $i + 1, 0, $replies );
-
-	$i++;
-}
+$messagechain = $bbpm->get_thread( $get );
 
 ?>
 <ol id="thread">

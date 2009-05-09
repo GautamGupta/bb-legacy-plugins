@@ -5,6 +5,7 @@ status_header( 200 );
 // Plugin compatibility
 remove_filter('topic_title', 'utplugin_show_unread');
 remove_filter('topic_link', 'utplugin_link_latest');
+remove_filter('post_text', 'utplugin_update_log');
 
 global $bbpm;
 

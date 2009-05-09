@@ -31,7 +31,7 @@ function bb_language_switcher_get_cookie() {return trim(substr(strip_tags(strips
 
 function bb_language_switcher_set_cookie() { 		// makes the url request into a cookie
 	if (!isset($_GET['bblang'])) {return;}
-	$bblang=trim(substr(strip_tags(stripslashes($_GET['bblang'])),0,20));
+	$bblang=substr(strip_tags(stripslashes($_GET['bblang'])),0,20);
 	$cookiepath=bb_get_option('cookiepath'); if (empty($cookiepath)) {$cookiepath="/";}
 	if ($cookiedomain=bb_get_option('cookiedomain')) {setcookie("bblang_".BB_HASH, $bblang, 2147483647, $cookiepath, $cookiedomain);}
 	else {setcookie("bblang_".BB_HASH, $bblang, 2147483647, $cookiepath);}				

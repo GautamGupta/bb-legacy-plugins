@@ -32,6 +32,10 @@ RewriteRule ^pm/?(.*)$ /forums/my-plugins/bbpm/index.php?$1 [L]
 
 == Changelog ==
 
+* 0.1-alpha4
+	* PM threads are now numbered, using a lot less database queries.
+	* Unread Topics will now work in harmony with bbPM.
+	* A strange profile filter error has been resolved.
 * 0.1-alpha3
 	* PM this user links have been added to profiles and post authors
 	* Inbox sizes are configurable in the administration panel (Settings -> bbPM)

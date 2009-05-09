@@ -50,7 +50,7 @@ bb_get_header(); ?>
 
 <?php break;
 	default:
-	if ( !(int)$get || !$bbpm->can_read_message( $get ) ) {
+	if ( !(int)$get || ( ( !$bbpm->can_read_message( $get ) && $action == 'reply' ) || ( !$bbpm->can_read_thread( $get ) && $action != 'reply' ) ) ) {
 _e( 'Private Messages', 'bbpm' ); ?></h3>
 
 <h2><?php _e('Inbox', 'bbpm'); ?></h2>
@@ -98,9 +98,9 @@ while ( $bbpm->sent_pm() ) {
 </table>
 
 <?php } else {
-	$the_pm =& new bbPM_Message( $get );
 	switch ( $action ) {
 		case 'reply':
+			$the_pm =& new bbPM_Message( $get );
 ?><a href="<?php echo $bbpm->get_link(); ?>"><?php _e( 'Private Messages', 'bbpm' ); ?></a> &raquo; <a href="<?php echo $the_pm->read_link; ?>"><?php _e( 'Read', 'bbpm' ); ?></a> &raquo; Reply</h3>
 <ol id="thread">
 <li>

@@ -11,7 +11,7 @@ $messagechain = $bbpm->get_thread( $get );
 foreach ( $messagechain as $the_pm ) {
 	if ( !$the_pm->read && $the_pm->to->ID == bb_get_current_user_info( 'ID' ) ) {
 		global $bbdb;
-		$bbdb->update( $bbdb->bbpm, array( 'read' => 1 ), array( 'ID' => $the_pm->ID ) );
+		$bbdb->update( $bbdb->bbpm, array( 'pm_read' => 1 ), array( 'ID' => $the_pm->ID ) );
 	}
 
 ?>

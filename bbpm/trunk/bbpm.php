@@ -288,6 +288,14 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 
 		$msg = new bbPM_Message( $bbdb->insert_id );
 
+		bb_mail( bb_get_user_email( $id_reciever ), get_user_display_name( bb_get_current_user_info( 'ID' ) ) . ' has sent you a private message on ' . bb_get_option( 'name' ) . '!', 'Hello, ' . get_user_display_name( $id_reciever ) . '!
+
+' . get_user_display_name( bb_get_current_user_info( 'ID' ) ) . ' has sent you a private message on ' . bb_get_option( 'name' ) . '!
+
+To read it now, go to the following address:
+
+' . $msg->read_link );
+
 		return $msg->read_link;
 	}
 

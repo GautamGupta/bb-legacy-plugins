@@ -9,6 +9,10 @@ $messagechain = $bbpm->get_thread( $get );
 <?php
 
 foreach ( $messagechain as $the_pm ) {
+	if ( !$the_pm->read && $the_pm->to->ID == bb_get_current_user_info( 'ID' ) ) {
+		global $bbdb;
+		$bbdb->update( $bbdb->bbpm, array( 'read' => 1 ), array( 'ID' => $the_pm->ID ) );
+	}
 
 ?>
 <li id="pm-<?php echo $the_pm->ID; ?>"<?php alt_class( 'bbpm_thread' );

@@ -217,7 +217,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 
 		$thread_items = array( $start_id );
 
-		$pm_list = $bbdb->get_col( 'SELECT `ID` FROM `' . $bbdb->bbpm . '` WHERE `reply_to`=\'' . $start_id . '\'' );
+		$pm_list = array_map( 'bbPM_update_helper_helper_0_1_alpha4', (array)$bbdb->get_results( 'SELECT `ID` FROM `' . $bbdb->bbpm . '` WHERE `reply_to`=\'' . $start_id . '\'' ) );
 
 		$thread_items = array_merge( $thread_items, $pm_list );
 
@@ -478,6 +478,10 @@ function bbpm_admin_page() {
 </fieldset>
 </form>
 <?php
+}
+
+function bbPM_update_helper_helper_0_1_alpha4( $data ) {
+	return $data->ID;
 }
 
 ?>

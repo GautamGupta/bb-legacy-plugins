@@ -82,6 +82,10 @@ Make selected forums completely hidden except to certain members or roles. Uses 
 
 * yet more problems with bbPress 1.0, get_forum filter causes endless loop under 1.0a5 + 1.0a6
 
+= Version 0.0.9 (2009-05-13) =
+
+* bug fix for repermalink, props jasonistaken
+
 == To Do ==
 
 * admin menu

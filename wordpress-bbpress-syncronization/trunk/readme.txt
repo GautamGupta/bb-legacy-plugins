@@ -18,7 +18,7 @@ Please note, only beta now. See below how you can help.
 
 REQUIREMENTS:
 
-*   php-curl module must be installed (may be changed in next versions)
+*   optional: php-curl module must be installed for https communication
 *   WordPress user database must be integrated with bbPress
 *   Plugin must be installed and correctly configured in both systems
 
@@ -58,6 +58,10 @@ YOU MAY HELP:
 Made for news.vitebsk.cc
 
 Changelog
+
+Version 0.4.6 (xx.yy.2009)
+
+*  Made php-curl dependence optional. Now you need it only for https
 
 Version 0.4.5 (7.05.2009)
 

@@ -44,6 +44,10 @@ Plugin works in both bbPress and WordPress.
 
 * complete rewrite for clearer functionality and deep integration compatibility
 
+= Version 0.0.3 (2009-05-22) =
+
+* yet another rewrite for better performance
+
 == To Do ==
 
 * admin menu ?

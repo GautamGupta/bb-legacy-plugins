@@ -61,7 +61,7 @@ Clickcha does not filter pingbacks and trackbacks.
 
 = Does Clickcha support other languages? =
 
-Not at the moment but multi-language support will be added soon. If you wish to help with the translations please write to [contact us](http://clickcha.com/feedback/ "Contact").
+Not at the moment but multi-language support will be added soon. If you wish to help with the translations please [contact us](http://clickcha.com/feedback/ "Contact").
 
 = Can you add a feature X? =
 

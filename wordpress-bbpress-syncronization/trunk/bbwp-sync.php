@@ -25,7 +25,11 @@ the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.
 */
 
-// FIXME: change path!
+
+// for version checking
+$bbwp_version = 0.50;
+$min_version = 0.50;
+
 require_once(dirname(__FILE__).'/../../bb-load.php');
 
 // for mode checking
@@ -125,6 +129,13 @@ function comare_keys_local()
 	return $_POST['secret_key'] == bb_get_option('bbwp_secret_key') ? 1 : 0;
 }
 
+function correct_wpbb_version()
+{
+	$answer = unserialize(send_command(array('action' => 'get_wpbb_version')));
+	global $min_version;
+	return ($answer['version'] < $min_version) ? 0 : 1;
+}
+
 function bbwp_listener()
 {
 	// setting authorized user
@@ -158,6 +169,10 @@ function bbwp_listener()
 	} elseif ($_POST['action'] == 'set_bb_plugin_status')
 	{
 		set_bb_plugin_status();
+	} elseif ($_POST['action'] == 'get_bbwp_version')
+	{
+		global $bbwp_version;
+		echo serialize(array('version' => $bbwp_version));
 	}
 	// we need enabled plugins for next actions
 	if (bb_get_option('bbwp_plugin_status') != 'enabled')
@@ -189,6 +204,9 @@ function bbwp_listener()
 	} elseif ($_POST['action'] == 'delete_post')
 	{
 		delete_bb_post();
+	} elseif ($_POST['action'] == 'get_topic_link')
+	{
+		echo serialize(array('link' => get_topic_link($_POST['topic_id'])));
 	}
 }
 
@@ -551,7 +569,7 @@ function bbwp_options()
 			<?php _e('Enable plugin'); ?>
 		</label>
 		<div>
-		<?php $check = check_bbwp_settings(); ?>
+		<?php $check = check_bbwp_settings(); if ($check['code'] != 0) set_global_plugin_status('disabled'); ?>
 			<input type="checkbox" name="plugin_status"<?php echo (bb_get_option('bbwp_plugin_status') == 'enabled') ? ' checked="checked"' : ''; echo ($check['code'] == 0) ? '' : ' disabled="disabled"'; ?> /> (<?php echo ($check['code'] == 0) ? 'Allowed by both parts' : 'Not allowed: '.$check['message'] ?>)
 		</div>
 		</div>
@@ -639,7 +657,7 @@ function check_bb_settings()
 {
 	if (!test_pair())
 	{
-		return 1; // cannot establish connection to bb
+		return 1; // cannot establish connection to wp
 	}
 	if (!secret_key_equal())
 	{
@@ -654,6 +672,8 @@ function check_bb_settings()
 	$active_plugins = $bbdb->get_var('SELECT meta_value FROM '.$bbdb->prefix.'meta WHERE object_type = "bb_option" AND meta_key = "active_plugins"');
 	if (strpos($active_plugins, 'wordpress-bbpress-syncronization/bbwp-sync.php') === false)
 		return 5; // bbpress part not activated
+	if (!correct_wpbb_version())
+		return 6;
 	return 0; // everything is ok
 }
 
@@ -662,7 +682,7 @@ function bb_status_error($code)
 	if ($code == 0)
 		return __('Everything is ok!');
 	if ($code == 1)
-		return __('Cannot establish connection to bbPress part');
+		return __('Cannot establish connection to WordPress part');
 	elseif ($code == 2)
 		return __('Invalid secret key');
 	elseif ($code == 3)
@@ -672,7 +692,7 @@ function bb_status_error($code)
 	elseif ($code == 5)
 		return __('bbPress part not activated');
 	elseif ($code == 6)
-		return __('bbPress have old plugin version');
+		return __('Too old WordPress part plugin version');
 }
 
 function set_wp_plugin_status($status)

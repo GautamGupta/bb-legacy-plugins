@@ -43,6 +43,8 @@ DONE:
 *   Showing post excerpt in bbPress topic beginning
 *   Optional quoting first post in topic
 *   Correct displaying even you use markup plugins
+*   Hiding comment for in WordPress after some comments and pointing to forum
+*   Optionally showing only some recent comments in WordPress
 
 TODO:
 
@@ -59,9 +61,13 @@ Made for news.vitebsk.cc
 
 Changelog
 
-Version 0.4.6 (xx.yy.2009)
+Version 0.5.0 (xx.yy.2009)
 
 *  Made php-curl dependence optional. Now you need it only for https
+*  Option for showing link to forum discussion in last comment in WordPress
+*  Option for setting amount of latest comments to show in WordPress
+*  Option for setting maximal amount of comments to show new comment form
+*  Second part version chechking
 
 Version 0.4.5 (7.05.2009)
 

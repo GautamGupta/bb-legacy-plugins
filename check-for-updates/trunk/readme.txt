@@ -39,3 +39,7 @@ Avoid plugin security issues and bugs by checking periodically.
 = Version 0.0.1 (2009-04-02) =
 
 *   first public alpha release
+
+= Version 0.0.2 (2009-04-09) =
+
+*   first try CURL before fallback to fsockopen, also check BB_PLUGIN_DIR as well as BBPLUGINDIR before fallback to bb-plugins

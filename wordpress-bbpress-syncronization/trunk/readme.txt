@@ -61,7 +61,7 @@ Made for news.vitebsk.cc
 
 Changelog
 
-Version 0.5.0 (xx.yy.2009)
+Version 0.5.0 (24.05.2009)
 
 *  Made php-curl dependence optional. Now you need it only for https
 *  Option for showing link to forum discussion in last comment in WordPress

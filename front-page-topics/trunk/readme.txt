@@ -36,7 +36,7 @@ anywhere before `</IfModule>` where `/forums/` is the path to your bbpress insta
 
 * Since the settings in this plugin will likely be edited only once and then left forever, an admin menu would only slow bbPress down
 
-* mdawaffe has instructed me to completely replace front-page-topics with this plugin
+* mdawaffe has instructed me to completely replace front-page-topics with this plugin.
 
 == License ==
 

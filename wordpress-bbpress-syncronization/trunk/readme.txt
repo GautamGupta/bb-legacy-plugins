@@ -3,7 +3,7 @@ Contributors: bobrik
 Tags: bbPress, post, comment, integration, forum
 Requires at least: 1.0alpha6
 Tested up to: 1.0alpha6
-Stable tag: 0.4.5
+Stable tag: 0.5.0
 
 Sync your WordPress comments to bbPress forum and back.
 

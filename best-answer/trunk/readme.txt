@@ -19,6 +19,12 @@ Allows the topic starter or moderators to select which reply is a "Best Answer" 
 * There are a few options you can edit at the top of the plugin including allowing multiple best answers 
 and if the best answer(s) should be displayed first when viewing the topic.
 
+* because of lack of foresight in the bbPress output functions you have to edit the topic.php template to change post colors
+ change: 
+ `<?php foreach ($posts as $bb_post) : $del_class = post_del_class(); ?>`
+ to:  
+  `<?php foreach ($posts as $bb_post) : $del_class = apply_filters('best_answer_class',post_del_class()); ?>`
+
 == Frequently Asked Questions ==
 
  = How can other users vote?  =

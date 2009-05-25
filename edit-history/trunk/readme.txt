@@ -2,9 +2,9 @@
 Tags:  history, revisions, rollback, undo, change, changes, changeset, wiki,_ck_
 Contributors: _ck_
 Requires at least: 0.9
-Tested up to: trunk
+Tested up to: 1.0 alpha 5
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Allows you to see a detailed history of exactly what has been changed in any post and optionally rollback (undo) to a previous edit. Uses a word based difference algorithm to minimize storage requirements instead of saving the entire previous post on each edit (ie. changing one word only uses a few bytes).
 
@@ -32,7 +32,7 @@ Allows you to see a detailed history of exactly what has been changed in any pos
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 

@@ -9,7 +9,7 @@ Version: 0.0.3
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
-Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate: http://bbshowcase.org/donate/
 */
 
 $edit_history['view_level']='participate'; 	// participate/moderate/administrate   (only visible when EDIT link is available ie. 1 hour for participate)
@@ -18,7 +18,7 @@ $edit_history['view_level']='participate'; 	// participate/moderate/administrate
 
 add_filter( 'post_edit_uri', 'edit_history_link');
 add_action( 'bb_update_post', 'edit_history_update_post');
-add_action( 'bb_init', 'edit_history_init');
+add_action( 'bb_init', 'edit_history_init',999);
 bb_register_activation_hook(str_replace(array(str_replace("/","\\",BB_PLUGIN_DIR),str_replace("/","\\",BB_CORE_PLUGIN_DIR)),array("user#","core#"),__FILE__),'edit_history_create_table');
 
 function edit_history_init() {

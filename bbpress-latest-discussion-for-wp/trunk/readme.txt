@@ -16,7 +16,7 @@ The administrator can also set the behavior for this plugin. Even if your bbpres
 
 Bbpress Latest Discussion has been around since almost 2 years ago at Bbpress.org
 
-Currently support bbPress `0.9.0.4` and `1.0-Alpha-6`
+Currently support bbPress `0.9.0.4` and `1.0-RC-1`
 
 If you like my work, Please give a link back.
 
@@ -39,6 +39,10 @@ Examples of use:
 
 `<?php wp_bb_get_discuss_sidebar(); ?>`
 
+Optional Usage:
+
+`<?php wp_bb_get_discuss(1,2,3,4,5); ?>` Insert Forum ID Number That Need To Be Show, Will overide existing filter option. Seperate by comma.
+
 == Frequently Asked Questions ==
 
 How to use different database?
@@ -51,8 +55,23 @@ How to use different database?
 2. BbLD Template system
 3. Sample shot how BbLD do the job
 4. Sample shot how BbLD do the job
+5. Sample shot with Gravatar support
 
 == Version History ==
+
+Version 1.3.3 (2009-05-26):
+
+* Change url to show latest post for the topic.
+* Fix problem in 1.3.2.
+
+Version 1.3.2 (2009-05-24):
+
+* Add option to select what forum to be show on page.
+
+Version 1.3.1 (2009-05-07):
+
+* Add gravatar template tag for sidebar display.
+* Add post count tag for sidebar display
 
 Version 1.3 (2009-04-24):
 

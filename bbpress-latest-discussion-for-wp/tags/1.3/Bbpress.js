@@ -14,7 +14,7 @@ function bbld_default_templates(template) {
 			default_template = "<h2>Forum Last %BBLD_LIMIT% Discussions</h2>";
 			break;
 		case "sidebar_display":
-			default_template = "<li><a href=\"%BBLD_URL%\">%BBLD_TOPIC%</a><br /><small>Last Post By: %BBLD_LPOSTER%<br/>Inside: <a href=\"%BBLD_FURL%\">%BBLD_FORUM%</a></small></li>";
+			default_template = "<li><a href=\"%BBLD_URL%\">%BBLD_TOPIC%</a> (%BBLD_POST%)<br /><small>Last Post By: %BBLD_LPOSTER%<br/>Inside: <a href=\"%BBLD_FURL%\">%BBLD_FORUM%</a></small></li>";
 			break;
 	}
 	document.getElementById("bbld_" + template).value = default_template;

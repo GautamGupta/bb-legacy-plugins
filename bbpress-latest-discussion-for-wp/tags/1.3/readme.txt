@@ -20,6 +20,8 @@ Currently support bbPress `0.9.0.4` and `1.0-RC-1`
 
 If you like my work, Please give a link back.
 
+For more support and help, please go <a href="http://forums.atsutane.net/forum/bbpress-latest-discussion">here</a>
+
 == Installation ==
 
 Simply download the Zip-Archive and extract all folder into your wp-content/plugins/ directory. Then go into your WordPress administration page, click on Plugins and activate it. Go to BbLD Option page, to setup this plugin.
@@ -43,11 +45,15 @@ Optional Usage:
 
 `<?php wp_bb_get_discuss(1,2,3,4,5); ?>` Insert Forum ID Number That Need To Be Show, Will overide existing filter option. Seperate by comma.
 
+For more support and help, please go <a href="http://forums.atsutane.net/forum/bbpress-latest-discussion">here</a>
+
 == Frequently Asked Questions ==
 
 How to use different database?
 
 1. Make sure you check "External DB" option and input the data for your external database.
+
+For more support and help, please go <a href="http://forums.atsutane.net/forum/bbpress-latest-discussion">here</a>
 
 == Screenshots ==
 
@@ -58,6 +64,10 @@ How to use different database?
 5. Sample shot with Gravatar support
 
 == Version History ==
+
+Version 1.3.4 (2009-05-26):
+
+* Fix forum page problem.
 
 Version 1.3.3 (2009-05-26):
 

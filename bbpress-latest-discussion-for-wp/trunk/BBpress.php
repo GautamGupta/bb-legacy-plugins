@@ -7,7 +7,7 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/
 Description: This plugin will generates Latest Discussion list from your bbpress forum into your wordpress. It has the ability to generate latest discussion on sidebar also. The administrator can also set the behavior for this plugin. Even if your bbpress is not intergrated with your wordpress. U still can use this plugin with a little change on the option page. Bbpress Latest Discussion has been around since almost 2 years ago at Bbpress.org.
 Author: Atsutane Shirane
-Version: 1.3.3
+Version: 1.3.4
 Author URI: http://www.atsutane.net/
 
 	This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ Author URI: http://www.atsutane.net/
 $plugin_dir = basename(dirname(__FILE__));
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '1.3.3';
+$BbLD_version = '1.3.4';
 
 ### BBpress Latest Discussions Advertisment
 add_action('wp_head', 'bbld');
@@ -158,22 +158,34 @@ function wpbb_trim($paragraph, $limit) {
 }
 
 ### Function: Permalink Data
-function wpbb_permalink($type,$topicid, $slug = '') {
+function wpbb_permalink($type,$topicid, $slug = '',$total = 0,$limit = 0) {
 	global $wpdb,$BbLD_version;
+	if ($total > $limit) {
+		$pageno = round($total / $limit);
+	}
 	$bbld_option = get_option('bbld_option');
 	if ($bbld_option['slug'] == 1) {
-		$permalink = $bbld_option['url'] . '/'. $type . '/' . $topicid;
+		if ($pageno) {
+			$pagee = '/page/'.$pageno;
+		}
+		$permalink = $bbld_option['url'] . '/'. $type . '/' . $topicid . $pagee;
 	}
 	elseif ($bbld_option['slug'] == 'slug') {
 		if ($type == 'topic') {
-			$permalink = $bbld_option['url'] . '/topic/' . $slug;
+			if ($pageno) {
+				$pagee = '/page/'.$pageno;
+			}
+			$permalink = $bbld_option['url'] . '/topic/' . $slug . $pagee;
 		}
 		else {
 			$permalink = $bbld_option['url'] . '/forum/' . $slug;
 		}			
 	}
 	else {
-		$permalink = $bbld_option['url'] . '/'. $type . '.php?id=' . $topicid;
+		if ($pageno) {
+			$pagee = '&page='.$pageno;
+		}
+		$permalink = $bbld_option['url'] . '/'. $type . '.php?id=' . $topicid . $pagee;
 	}
 	return $permalink;
 }
@@ -208,10 +220,10 @@ function bbld_getdata($type,$forum_slimit = 0, $exclude = 0) {
 			$filter = bbld_filter_forums();
 		}
 		if ($bbld_option['exdb']) {
-			$bbtopic = $exbbdb->get_results("SELECT * FROM ".$bbld_option['prefix']."topics JOIN ".$bbld_option['prefix']."forums ON ".$bbld_option['prefix']."topics.topic_status = '0' AND ".$bbld_option['prefix']."topics.forum_id = ".$bbld_option['prefix']."forums.forum_id ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
+			$bbtopic = $exbbdb->get_results("SELECT * FROM ".$bbld_option['prefix']."topics JOIN ".$bbld_option['prefix']."forums ON ".$bbld_option['prefix']."topics.topic_status = '0' AND ".$bbld_option['prefix']."topics.forum_id = ".$bbld_option['prefix']."forums.forum_id JOIN ".$bbld_option['prefix']."meta ON ".$bbld_option['prefix']."meta.meta_key = 'page_topics' ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
 		}
 		else {
-			$bbtopic = $wpdb->get_results("SELECT * FROM ".$bbld_option['prefix']."topics JOIN ".$bbld_option['prefix']."forums ON ".$bbld_option['prefix']."topics.topic_status = '0' AND ".$bbld_option['prefix']."topics.forum_id = ".$bbld_option['prefix']."forums.forum_id ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
+			$bbtopic = $wpdb->get_results("SELECT * FROM ".$bbld_option['prefix']."topics JOIN ".$bbld_option['prefix']."forums ON ".$bbld_option['prefix']."topics.topic_status = '0' AND ".$bbld_option['prefix']."topics.forum_id = ".$bbld_option['prefix']."forums.forum_id JOIN ".$bbld_option['prefix']."meta ON ".$bbld_option['prefix']."meta.meta_key = 'page_topics' ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
 		}
 	}
 	elseif ($type == 'utf8') {
@@ -329,7 +341,7 @@ function bbld_getside() {
 			$forum_url = wpbb_permalink('forum',$bbtopic->forum_id,$bbtopic->forum_slug);
 			$last_poster = bbld_intergrated($bbtopic->topic_last_poster,$bbtopic->topic_last_poster_name);
 			$template_data_sidebar = stripslashes($bbld_template['sidedisplay']);
-			$template_data_sidebar = str_replace("%BBLD_URL%", wpbb_permalink('topic',$bbtopic->topic_id,$bbtopic->topic_slug).'#post-'.$bbtopic->topic_last_post_id, $template_data_sidebar);
+			$template_data_sidebar = str_replace("%BBLD_URL%", wpbb_permalink('topic',$bbtopic->topic_id,$bbtopic->topic_slug,$bbtopic->topic_posts,$bbtopic->meta_value).'#post-'.$bbtopic->topic_last_post_id, $template_data_sidebar);
 			$template_data_sidebar = str_replace("%BBLD_TOPIC%", $title_text, $template_data_sidebar);
 			$template_data_sidebar = str_replace("%BBLD_POST%", $bbtopic->topic_posts, $template_data_sidebar);
 			$template_data_sidebar = str_replace("%BBLD_FURL%", $forum_url, $template_data_sidebar);

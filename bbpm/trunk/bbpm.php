@@ -403,14 +403,14 @@ To read it now, go to the following address:
 
 	function profile_filter( $keys ) {
 		global $user_id;
-		if ( bb_get_current_user_info( 'ID' ) != $user_id ) {
+		if ( bb_get_current_user_info( 'ID' ) != $user_id && bb_current_user_can( 'write_posts' ) ) {
 			echo '<a href="' . $this->get_send_link( $user_id ) . '">' . __( 'PM this user', 'bbpm' ) . '</a>';
 		}
 		return $keys;
 	}
 
 	function post_title_filter( $text, $post_id ) {
-		if ( $user_id = get_post_author_id( $post_id ) ) {
+		if ( $user_id = get_post_author_id( $post_id ) && bb_current_user_can( 'write_posts' ) ) {
 			$text .= "<br/>\n";
 			$text .= '<a href="' . $this->get_send_link( $user_id ) . '">' . __( 'PM this user', 'bbpm' ) . '</a>';
 		}

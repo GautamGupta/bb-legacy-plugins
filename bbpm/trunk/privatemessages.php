@@ -2,6 +2,8 @@
 
 status_header( 200 );
 
+bb_auth( 'logged_in' ); // Is the user logged in?
+
 // Plugin compatibility
 remove_filter('topic_title', 'utplugin_show_unread');
 remove_filter('topic_link', 'utplugin_link_latest');

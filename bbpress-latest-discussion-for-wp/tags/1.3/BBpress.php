@@ -7,7 +7,7 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/
 Description: This plugin will generates Latest Discussion list from your bbpress forum into your wordpress. It has the ability to generate latest discussion on sidebar also. The administrator can also set the behavior for this plugin. Even if your bbpress is not intergrated with your wordpress. U still can use this plugin with a little change on the option page. Bbpress Latest Discussion has been around since almost 2 years ago at Bbpress.org.
 Author: Atsutane Shirane
-Version: 1.3.4
+Version: 1.3.5
 Author URI: http://www.atsutane.net/
 
 	This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ Author URI: http://www.atsutane.net/
 $plugin_dir = basename(dirname(__FILE__));
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '1.3.4';
+$BbLD_version = '1.3.5';
 
 ### BBpress Latest Discussions Advertisment
 add_action('wp_head', 'bbld');
@@ -220,10 +220,20 @@ function bbld_getdata($type,$forum_slimit = 0, $exclude = 0) {
 			$filter = bbld_filter_forums();
 		}
 		if ($bbld_option['exdb']) {
-			$bbtopic = $exbbdb->get_results("SELECT * FROM ".$bbld_option['prefix']."topics JOIN ".$bbld_option['prefix']."forums ON ".$bbld_option['prefix']."topics.topic_status = '0' AND ".$bbld_option['prefix']."topics.forum_id = ".$bbld_option['prefix']."forums.forum_id JOIN ".$bbld_option['prefix']."meta ON ".$bbld_option['prefix']."meta.meta_key = 'page_topics' ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
+			if ($bbld_option['9.0.4']) {
+				$bbtopic = $exbbdb->get_results("SELECT * FROM ".$bbld_option['prefix']."topics JOIN ".$bbld_option['prefix']."forums ON ".$bbld_option['prefix']."topics.topic_status = '0' AND ".$bbld_option['prefix']."topics.forum_id = ".$bbld_option['prefix']."forums.forum_id JOIN ".$bbld_option['prefix']."meta ON ".$bbld_option['prefix']."topicmeta.meta_key = 'page_topics' ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
+			}
+			else {
+				$bbtopic = $exbbdb->get_results("SELECT * FROM ".$bbld_option['prefix']."topics JOIN ".$bbld_option['prefix']."forums ON ".$bbld_option['prefix']."topics.topic_status = '0' AND ".$bbld_option['prefix']."topics.forum_id = ".$bbld_option['prefix']."forums.forum_id JOIN ".$bbld_option['prefix']."meta ON ".$bbld_option['prefix']."meta.meta_key = 'page_topics' ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
+			}
 		}
 		else {
-			$bbtopic = $wpdb->get_results("SELECT * FROM ".$bbld_option['prefix']."topics JOIN ".$bbld_option['prefix']."forums ON ".$bbld_option['prefix']."topics.topic_status = '0' AND ".$bbld_option['prefix']."topics.forum_id = ".$bbld_option['prefix']."forums.forum_id JOIN ".$bbld_option['prefix']."meta ON ".$bbld_option['prefix']."meta.meta_key = 'page_topics' ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
+			if ($bbld_option['9.0.4']) {
+				$bbtopic = $wpdb->get_results("SELECT * FROM ".$bbld_option['prefix']."topics JOIN ".$bbld_option['prefix']."forums ON ".$bbld_option['prefix']."topics.topic_status = '0' AND ".$bbld_option['prefix']."topics.forum_id = ".$bbld_option['prefix']."forums.forum_id JOIN ".$bbld_option['prefix']."meta ON ".$bbld_option['prefix']."topicmeta.meta_key = 'page_topics' ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
+			}
+			else {
+				$bbtopic = $wpdb->get_results("SELECT * FROM ".$bbld_option['prefix']."topics JOIN ".$bbld_option['prefix']."forums ON ".$bbld_option['prefix']."topics.topic_status = '0' AND ".$bbld_option['prefix']."topics.forum_id = ".$bbld_option['prefix']."forums.forum_id JOIN ".$bbld_option['prefix']."meta ON ".$bbld_option['prefix']."meta.meta_key = 'page_topics' ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
+			}
 		}
 	}
 	elseif ($type == 'utf8') {
@@ -447,6 +457,7 @@ function wp_bb_option() {
 		$bbld_option['share'] = $_POST['bbld_share'];
 		$bbld_option['slug'] = $_POST['bbld_permalink'];
 		$bbld_option['utf8'] = $_POST['bbld_utf8'];
+		$bbld_option['9.0.4'] = $_POST['bbld_backward'];
 		update_option('bbld_option', $bbld_option);
 		$update_msg = "<div id='message' class='updated fade'><p>BBpress Latest Discussions options saved successfully.</p></div>";
 	}
@@ -554,6 +565,14 @@ function wp_bb_option() {
 	<p><?php _e('It will show how the plugin display the title depend on each encoding. By default it is UTF-8. Each refresh will show different title.', 'bbpress-latest-discussion'); ?></p>
 	</fieldset>
 </td>
+</tr>
+
+<tr valign="top">
+<th scope="row"><?php _e('Backward Compatibility:', 'bbpress-latest-discussion'); ?></th>
+<td> <fieldset><legend class="hidden">bbld_backward</legend><label for="bbld_backward">
+<input name="bbld_backward" type="checkbox" id="bbld_backward" value="bbld_backward" <?php if ($bbld_option['9.0.4']) { echo('checked="checked"'); } ?> />
+<?php _e('Check this option if you are using Bbpress 9.0.4.', 'bbpress-latest-discussion'); ?></label>
+</fieldset></td>
 </tr>
 
 <tr valign="top">

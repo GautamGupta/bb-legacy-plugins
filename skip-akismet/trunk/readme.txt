@@ -48,6 +48,10 @@ Plugin works in both bbPress and WordPress.
 
 * yet another rewrite for better performance
 
+= Version 0.0.4 (2009-05-27) =
+
+* also skip WordPress moderation checks (for bad keywords, etc.) if role is on override list
+
 == To Do ==
 
 * admin menu ?

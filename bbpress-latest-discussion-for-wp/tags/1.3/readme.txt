@@ -65,6 +65,10 @@ For more support and help, please go <a href="http://forums.atsutane.net/forum/b
 
 == Version History ==
 
+Version 1.3.5 (2009-05-27):
+
+* Fix compatibility issue with 1.3.4, Add new option for backward compatibility
+
 Version 1.3.4 (2009-05-26):
 
 * Fix forum page problem.

@@ -65,6 +65,11 @@ For more support and help, please go <a href="http://forums.atsutane.net/forum/b
 
 == Version History ==
 
+Version 1.3.9 (2009-05-27):
+
+* Fix paging problem. Credit to thekmen, Pr1me, dragunoff
+* Fix wrong table name for 9.0.4. Credit to douglsmith
+
 Version 1.3.6 (2009-05-27):
 
 * Fix something that suppose to be fix on 1.3.4

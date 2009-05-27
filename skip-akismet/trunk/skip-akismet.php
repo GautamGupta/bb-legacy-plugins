@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/skip-akismet
 Description: Defines a list of roles (ie. moderator) that should never be checked against the Akismet spam filter to prevent false positives. Works in both bbPress and WordPress. 
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.3
+Version: 0.0.4
 */
 
 $skip_akismet=array('administrator','keymaster','moderator','editor','author');		// add any other custom roles to this list
@@ -21,6 +21,7 @@ if (!empty($user->ID) && skip_akismet_check($user->data->{$wpdb->prefix."capabil
 	remove_action('wp_set_comment_status', 'akismet_submit_spam_comment');
 	remove_action('edit_comment', 'akismet_submit_spam_comment');
 	remove_action('preprocess_comment', 'akismet_auto_check_comment', 1);
+	add_filter('pre_comment_approved', 'skip_akismet_approved',999);	
 }
 }
 
@@ -37,5 +38,7 @@ function skip_akismet_check($roles) {
 global $skip_akismet;	
 if (!empty($roles) && is_array($roles) && in_array(reset(array_keys($roles)),$skip_akismet)) {return true;} else {return false;}
 }
+
+function skip_akismet_approved($approved=1) {return 1;}
 
 ?>

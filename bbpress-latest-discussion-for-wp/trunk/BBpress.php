@@ -7,7 +7,7 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/
 Description: This plugin will generates Latest Discussion list from your bbpress forum into your wordpress. It has the ability to generate latest discussion on sidebar also. The administrator can also set the behavior for this plugin. Even if your bbpress is not intergrated with your wordpress. U still can use this plugin with a little change on the option page. Bbpress Latest Discussion has been around since almost 2 years ago at Bbpress.org.
 Author: Atsutane Shirane
-Version: 1.3.6
+Version: 1.3.9
 Author URI: http://www.atsutane.net/
 
 	This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ Author URI: http://www.atsutane.net/
 $plugin_dir = basename(dirname(__FILE__));
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '1.3.6';
+$BbLD_version = '1.3.9';
 
 ### BBpress Latest Discussions Advertisment
 add_action('wp_head', 'bbld');
@@ -241,18 +241,18 @@ function bbld_getdata($type,$forum_slimit = 0, $exclude = 0) {
 	elseif ($type == 'meta') {
 		if ($bbld_option['exdb']) {
 			if ($bbld_option['9.0.4']) {
-				$bbtopic = $exbbdb->get_results("SELECT * FROM ".$bbld_option['prefix']."meta WHERE ".$bbld_option['prefix']."topicmeta.meta_key = 'page_topics' LIMIT 1");
+				$bbtopic = $exbbdb->get_row("SELECT * FROM ".$bbld_option['prefix']."topicmeta WHERE ".$bbld_option['prefix']."topicmeta.meta_key = 'page_topics' LIMIT 1");
 			}
 			else {
-				$bbtopic = $exbbdb->get_results("SELECT * FROM ".$bbld_option['prefix']."meta WHERE ".$bbld_option['prefix']."meta.meta_key = 'page_topics' LIMIT 1");
+				$bbtopic = $exbbdb->get_row("SELECT * FROM ".$bbld_option['prefix']."meta WHERE ".$bbld_option['prefix']."meta.meta_key = 'page_topics' LIMIT 1");
 			}
 		}
 		else {
 			if ($bbld_option['9.0.4']) {
-				$bbtopic = $wpdb->get_results("SELECT * FROM ".$bbld_option['prefix']."meta WHERE ".$bbld_option['prefix']."topicmeta.meta_key = 'page_topics' LIMIT 1");
+				$bbtopic = $wpdb->get_row("SELECT * FROM ".$bbld_option['prefix']."topicmeta WHERE ".$bbld_option['prefix']."topicmeta.meta_key = 'page_topics' LIMIT 1");
 			}
 			else {
-				$bbtopic = $wpdb->get_results("SELECT * FROM ".$bbld_option['prefix']."meta WHERE ".$bbld_option['prefix']."meta.meta_key = 'page_topics' LIMIT 1");
+				$bbtopic = $wpdb->get_row("SELECT * FROM ".$bbld_option['prefix']."meta WHERE ".$bbld_option['prefix']."meta.meta_key = 'page_topics' LIMIT 1");
 			}
 		}
 	}

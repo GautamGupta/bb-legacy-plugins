@@ -4,7 +4,7 @@ Plugin Name: bbPress-WordPress syncronization
 Plugin URI: http://bobrik.name
 Description: Sync your WordPress comments to bbPress forum and back.
 Author: Ivan Babrou <ibobrik@gmail.com>
-Version: 0.5.0
+Version: 0.5.1
 Author URI: http://bobrik.name
 
 Copyright 2008 Ivan Babroŭ (email : ibobrik@gmail.com)
@@ -330,6 +330,14 @@ function bbwp_install()
 		bb_sql_delta($sql);
 		backpress_add_option('bbwp_sync_db_version', $bbwp_sync_db_version);
 	}
+	if (bb_get_option('bbwp_sync_all_posts'))
+	{
+		bb_update_option('bbwp_sync_all_posts', 'disabled');
+		bb_update_option('bbwp_show_anonymous_info', 'enabled');
+		bb_update_option('bbwp_show_anonymous_email', 'disabled');
+		bb_update_option('bbwp_show_anonymous_url', 'disabled');
+	}
+	// next options must be cheched by another conditions!
 }
 
 function add_table_item($wp_post, $wp_comment, $bb_topic, $bb_post, $wp_anon_user, $wp_anon_email, $wp_anon_url)
@@ -584,16 +592,17 @@ function bbwp_options()
 
 function process_options()
 {
-	if ($_POST['action'] == 'update-bbwp-configuration') {
-		bb_update_option('bbwp_forum_id', $_POST['forum_id']);
+	if ($_POST['action'] == 'update-bbwp-configuration')
+	{
+		bb_update_option('bbwp_forum_id', (int) $_POST['forum_id']);
 		bb_update_option('bbwp_wordpress_url', $_POST['wordpress_url']);
 		bb_update_option('bbwp_secret_key', $_POST['secret_key']);
-		bb_update_option('bbwp_anonymous_user_id', $_POST['anonymous_user']);
-		$_POST['plugin_status'] == 'on' ? set_global_plugin_status('enabled') : set_global_plugin_status('disabled');
-		$_POST['sync_all_posts'] == 'on' ? bb_update_option('bbwp_sync_all_posts', 'enabled') : bb_update_option('bbwp_sync_all_posts', 'disabled');
-		$_POST['show_anonymous_info'] == 'on' ? bb_update_option('bbwp_show_anonymous_info', 'enabled') : bb_update_option('bbwp_show_anonymous_info', 'disabled');
-		$_POST['show_anonymous_email'] == 'on' ? bb_update_option('bbwp_show_anonymous_email', 'enabled') : bb_update_option('bbwp_show_anonymous_email', 'disabled');
-		$_POST['show_anonymous_url'] == 'on' ? bb_update_option('bbwp_show_anonymous_url', 'enabled') : bb_update_option('bbwp_show_anonymous_url', 'disabled');
+		bb_update_option('bbwp_anonymous_user_id', (int) $_POST['anonymous_user']);
+		set_global_plugin_status($_POST['plugin_status'] == 'on' ? 'enabled' : 'disabled');
+		bb_update_option('bbwp_sync_all_posts', $_POST['sync_all_posts'] == 'on' ? 'enabled' : 'disabled');
+		bb_update_option('bbwp_show_anonymous_info', $_POST['show_anonymous_info'] == 'on' ? 'enabled' : 'disabled');
+		bb_update_option('bbwp_show_anonymous_email', $_POST['show_anonymous_email'] == 'on' ? 'enabled' : 'disabled');
+		bb_update_option('bbwp_show_anonymous_url', $_POST['show_anonymous_url'] == 'on' ? 'enabled' : 'disabled');
 		bb_admin_notice( __('Configuration saved.') );
 	}
 }

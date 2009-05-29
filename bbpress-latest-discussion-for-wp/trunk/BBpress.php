@@ -7,7 +7,7 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/
 Description: This plugin will generates Latest Discussion list from your bbpress forum into your wordpress. It has the ability to generate latest discussion on sidebar also. The administrator can also set the behavior for this plugin. Even if your bbpress is not intergrated with your wordpress. U still can use this plugin with a little change on the option page. Bbpress Latest Discussion has been around since almost 2 years ago at Bbpress.org.
 Author: Atsutane Shirane
-Version: 1.3.9
+Version: 1.3.9.2
 Author URI: http://www.atsutane.net/
 
 	This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ Author URI: http://www.atsutane.net/
 $plugin_dir = basename(dirname(__FILE__));
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '1.3.9';
+$BbLD_version = '1.3.9.2';
 
 ### BBpress Latest Discussions Advertisment
 add_action('wp_head', 'bbld');
@@ -160,8 +160,10 @@ function wpbb_trim($paragraph, $limit) {
 ### Function: Permalink Data
 function wpbb_permalink($type,$topicid, $slug = '',$total = 0,$limit = 30) {
 	global $wpdb,$BbLD_version;
+	echo '<!-- BBLD PERMALINK DEBUG: TOTAL ('.$total.') LIMIT ('.$limit.') -->';
 	if ($total > $limit) {
-		$pageno = round($total / $limit);
+		$math_bbld = $total / $limit;
+		$pageno = round($math_bbld + 0.5);
 	}
 	$bbld_option = get_option('bbld_option');
 	if ($bbld_option['slug'] == 1) {
@@ -298,6 +300,10 @@ function wp_bb_get_discuss($exclude = 0) {
 	$bbld_option = get_option('bbld_option');
 	$bbtopic = bbld_getdata('topic',$bbld_option['limit'],$exclude);
 	$bb_meta = bbld_getdata('meta');
+	$meta_value = $bb_meta->meta_value;
+	if (!$meta_value) {
+		$meta_value = 30;
+	}
 	$bbld_template = get_option('bbld_template');
 	if ($bbtopic) {
 		$template_data_head = stripslashes($bbld_template['header']);
@@ -321,7 +327,7 @@ function wp_bb_get_discuss($exclude = 0) {
 			$last_poster = bbld_intergrated($bbtopic->topic_last_poster,$bbtopic->topic_last_poster_name);
 			$template_data_body = stripslashes($bbld_template['body']);
 			$template_data_body = str_replace("%BBLD_CLASS%", $tr_class, $template_data_body);
-			$template_data_body = str_replace("%BBLD_URL%", wpbb_permalink('topic',$bbtopic->topic_id,$bbtopic->topic_slug,$bbtopic->topic_posts,$bb_meta->meta_value).'#post-'.$bbtopic->topic_last_post_id, $template_data_body);
+			$template_data_body = str_replace("%BBLD_URL%", wpbb_permalink('topic',$bbtopic->topic_id,$bbtopic->topic_slug,$bbtopic->topic_posts,$meta_value).'#post-'.$bbtopic->topic_last_post_id, $template_data_body);
 			$template_data_body = str_replace("%BBLD_TOPIC%", $title_text, $template_data_body);
 			$template_data_body = str_replace("%BBLD_POST%", $bbtopic->topic_posts, $template_data_body);
 			$template_data_body = str_replace("%BBLD_LPOSTER%", $last_poster['name'], $template_data_body);
@@ -353,6 +359,10 @@ function bbld_getside() {
 	$bbld_option = get_option('bbld_option');
 	$bbtopic = bbld_getdata('topic',$bbld_option['limit']);
 	$bb_meta = bbld_getdata('meta');
+	$meta_value = $bb_meta->meta_value;
+	if (!$meta_value) {
+		$meta_value = 30;
+	}
 	$bbld_template = get_option('bbld_template');
 	if ($bbtopic) {
 		foreach ( $bbtopic as $bbtopic ) {
@@ -361,7 +371,7 @@ function bbld_getside() {
 			$forum_url = wpbb_permalink('forum',$bbtopic->forum_id,$bbtopic->forum_slug);
 			$last_poster = bbld_intergrated($bbtopic->topic_last_poster,$bbtopic->topic_last_poster_name);
 			$template_data_sidebar = stripslashes($bbld_template['sidedisplay']);
-			$template_data_sidebar = str_replace("%BBLD_URL%", wpbb_permalink('topic',$bbtopic->topic_id,$bbtopic->topic_slug,$bbtopic->topic_posts,$bb_meta->meta_value).'#post-'.$bbtopic->topic_last_post_id, $template_data_sidebar);
+			$template_data_sidebar = str_replace("%BBLD_URL%", wpbb_permalink('topic',$bbtopic->topic_id,$bbtopic->topic_slug,$bbtopic->topic_posts,$meta_value).'#post-'.$bbtopic->topic_last_post_id, $template_data_sidebar);
 			$template_data_sidebar = str_replace("%BBLD_TOPIC%", $title_text, $template_data_sidebar);
 			$template_data_sidebar = str_replace("%BBLD_POST%", $bbtopic->topic_posts, $template_data_sidebar);
 			$template_data_sidebar = str_replace("%BBLD_FURL%", $forum_url, $template_data_sidebar);

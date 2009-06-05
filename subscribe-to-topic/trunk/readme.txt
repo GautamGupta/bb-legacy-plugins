@@ -62,6 +62,12 @@ but if it's a very large site you'll probably have to pay a whitelisting service
 * use proper capabilities prefix
 * use bb_mail instead of direct mail function
 
+= Version 0.0.5 (2009-06-05) =
+
+* optional checkbox in new post area for subscriptions (on by default)
+* optional "simple mode" which uses a link instead of a dropdown (off by default)
+* ability to change database name
+
 == To Do ==
 
 * bcc research to send only one email notify to many members

@@ -5,14 +5,20 @@ Plugin URI: http://bbpress.org/plugins/topic/subscribe-to-topic
 Description: Allows members to track and/or receive email notifications (instant, daily, weekly) for new posts on topics.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.4
+Version: 0.0.5
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
 Donate: http://bbshowcase.org/donate/
 */
 
-if (strpos($self,"subscribe-to-topic.php")===false) :	
+if (strpos($self,"subscribe-to-topic.php")===false) :	//  _ck_'s patent-pending single file profile tab plugin technique  ;-)
+
+$subscribe_to_topic['db']="subscribe_to_topic"; //   database table name, change for multiple installs
+$subscribe_to_topic['dropdown']=true;		 //   use dropdown vs. simple links in topic
+$subscribe_to_topic['automatic']=true;		 //   automatically insert into topic meta, otherwise place manually via  do_action('subscribe-to-topic');
+$subscribe_to_topic['checkbox']=true;		 //   add checkbox to new/edit post form
+$subscribe_to_topic['subscriptions']=true;	 //   show how many other members are subscribed
 
 $subscribe_to_topic['labels']['subscribe']  =__("Subscribe To Topic");
 $subscribe_to_topic['labels']['subscribed']=__("Members Subscribed To Topic");
@@ -20,6 +26,8 @@ $subscribe_to_topic['labels']['tab']  =__("Subscribed Topics");
 $subscribe_to_topic['labels']['no more']=__('No more Subscribed Topics');
 $subscribe_to_topic['labels']['none']=__('No new Subscribed Topics yet');
 $subscribe_to_topic['labels']['all']=__('Show All Subscribed Topics');
+$subscribe_to_topic['labels']['simple']  =__("Subscribe To Topic via Email");
+$subscribe_to_topic['labels']['unsimple']  =__("Unsubscribe from Topic via Email");
 
 $subscribe_to_topic['tab']="Subscribed";	 // editable but don't translate here
 $subscribe_to_topic['public']=false;	 // false = only user can see their own subscribed topics, true = everyone can
@@ -34,14 +42,22 @@ $subscribe_to_topic['levels']=array(
 // 4=>__("Weekly Updates By Email")
 // );
 
-/*  stop editing here  */
+/*  	 stop editing here  	  */
 
 add_action('bb_init','stt_init',150);
 add_action('bb_new_post', 'stt_notify');
-add_action('topicmeta','stt_topic_meta',140);
 add_action( 'bb_profile_menu', 'stt_add_profile_tab');
-bb_register_activation_hook(str_replace(array(str_replace("/","\\",BB_PLUGIN_DIR),str_replace("/","\\",BB_CORE_PLUGIN_DIR)),array("user#","core#"),__FILE__), 'stt_install');
 add_action( 'bb_custom_view', 'stt_view');
+add_action('stt_topic_meta','stt_topic_meta');
+add_action('subscribe_to_topic','stt_topic_meta');
+add_action('subscribe-to-topic','stt_topic_meta');
+if ($subscribe_to_topic['automatic']) {add_action('topicmeta','stt_topic_meta_automatic',140);}
+if ($subscribe_to_topic['checkbox']) {
+	add_action('edit_form','stt_checkbox',9);
+	add_action('post_form','stt_checkbox',9);
+	add_action( 'bb_insert_post', 'stt_checkbox_update');
+}
+bb_register_activation_hook(str_replace(array(str_replace("/","\\",BB_PLUGIN_DIR),str_replace("/","\\",BB_CORE_PLUGIN_DIR)),array("user#","core#"),__FILE__), 'stt_install');
 
 $tab = isset($_GET['tab']) ? $_GET['tab'] : get_path(2); 
 if ($subscribe_to_topic['view'] || (bb_get_location()=="profile-page" && $tab=="subscribed")) {
@@ -124,7 +140,7 @@ if ($view!="subscribed-topics") {return;}
 
 	$where = apply_filters('get_latest_topics_where',"WHERE topic_status=0 AND user=$user_id ");
 	if (!isset($_GET['all'])) {$where.=" AND topic_last_post_id>post ";}
-	$query =" FROM $bbdb->topics LEFT JOIN subscribe_to_topic ON topic_id=topic $where ";
+	$query =" FROM $bbdb->topics LEFT JOIN ".$subscribe_to_topic['db']." ON topic_id=topic $where ";
 	$restrict="ORDER BY topic_last_post_id  DESC LIMIT $limit OFFSET $offset";
 	
 	$view_count  = $bbdb->get_var("SELECT count(*) ".$query);	
@@ -134,9 +150,9 @@ if ($view!="subscribed-topics") {return;}
 
 function stt_init() {
 global $bbdb,$topic, $bb_current_user,$user,$subscribe_to_topic;
-if (isset($_GET['subscribe_to_topic'])) {
-	$level=intval($_GET['subscribe_to_topic']);
-	$topic_id=0;  if (isset($_GET['topic_id'])) {$topic_id=intval($_GET['topic_id']);}
+if (isset($_REQUEST['subscribe_to_topic'])) {
+	$level=intval($_REQUEST['subscribe_to_topic']);
+	$topic_id=0;  if (isset($_REQUEST['topic_id'])) {$topic_id=intval($_REQUEST['topic_id']);}
  	if (!empty($bb_current_user->ID) &&! empty($topic_id) && bb_current_user_can('edit_user', $bb_current_user->ID)) {stt_change_level($bb_current_user->ID,$topic_id,$level);}
  	bb_safe_redirect(remove_query_arg(array('subscribe_to_topic','topic_id'))); exit;
 }
@@ -148,13 +164,36 @@ elseif (!empty($_GET['unsubscribe'])) {
 }
 }
 
+function stt_checkbox_update($post_id=0) {
+global $bbdb;
+$bb_post=bb_get_post($post_id); 
+$query ="SELECT type FROM ".$subscribe_to_topic['db']."  WHERE topic=$bb_post->topic_id AND user=$bb_post->poster_id LIMIT 1";
+$old=intval($bbdb->get_var($query));
+if (empty($_REQUEST['stt_checkbox'])) {$new=0;} else {$new=intval($_REQUEST['stt_checkbox']);}
+if ($new!=$old && !($old==1 && $new==0)) {stt_change_level($bb_post->poster_id,$bb_post->topic_id,$new);}
+}
+
+function stt_checkbox($post_id=0) {
+global $bbdb, $bb_current_user, $bb_post, $topic_id, $subscribe_to_topic; $checked=""; $user_id=0;
+if (!empty($post_id) && $bb_post->post_id==$post_id && !empty($bb_post->poster_id)) {$user_id=$bb_post->poster_id;} 
+elseif (!empty($bb_current_user->ID)) {$user_id=$bb_current_user->ID;}
+if (empty($user_id)) {return;} 
+if (!empty($topic_id) && !empty($user_id)) {
+	$query ="SELECT type FROM ".$subscribe_to_topic['db']."  WHERE topic=$topic_id AND user=$user_id LIMIT 1";
+	$value=intval($bbdb->get_var($query));
+	if ($value==2) {$checked="checked='checked'";}
+}
+$style="margin:0.4em 0;height:1.4em; width:1.4em;".(strpos($_SERVER['HTTP_USER_AGENT'],'MSIE') ? 'font-size:1.4em;' : '')."clear:left; vertical-align:middle;";
+echo "<label><input style='$style' name='stt_checkbox' type='checkbox' value='2' $checked><strong> ".$subscribe_to_topic['labels']['simple']." </strong></label>";
+}
+
 function stt_notify($post_id=0) {
 remove_action('bb_new_post', 'stt_notify');	// bbpress bug, fires multiple times?
 global $bbdb, $topic_id, $bb_current_user, $subscribe_to_topic; $time=time()-60;
 $topic=get_topic($topic_id); if (empty($post_id) || empty($bb_current_user->ID) || ($topic->topic_posts<2)) {return;}
 $query="SELECT DISTINCT user_id,user_email FROM $bbdb->users as t1 	     
 	     LEFT JOIN $bbdb->usermeta as t2 on t1.ID=t2.user_id 
-	     LEFT JOIN subscribe_to_topic as t3 on t1.ID=t3.user
+	     LEFT JOIN ".$subscribe_to_topic['db']." as t3 on t1.ID=t3.user
 	     WHERE user!=$bb_current_user->ID AND user_status=0 
 	     AND topic=$topic_id AND type=2 AND time<$time and post>last
 	     AND (meta_key='$bbdb->prefix"."capabilities' AND NOT (meta_value LIKE '%inactive%' OR meta_value LIKE '%blocked%'))";
@@ -177,61 +216,71 @@ foreach ($emails as $email){
 }
 if (!empty($ids)) {
 	$ids=implode(',',$ids); $time=time();
-	$bbdb->query("UPDATE subscribe_to_topic SET last=$post_id,time=$time WHERE topic=$topic_id AND user IN ($ids)");
+	$bbdb->query("UPDATE ".$subscribe_to_topic['db']." SET last=$post_id,time=$time WHERE topic=$topic_id AND user IN ($ids)");
 }
 }
 
 function stt_change_level($user_id=0,$topic_id=0,$level=0) {
-global $bbdb,$bb_current_user,$subscribe_to_topic;
+global $bbdb, $subscribe_to_topic;
 if (empty($user_id) || empty($topic_id)) {return;}
-if ($level===0) {return $bbdb->query("DELETE FROM subscribe_to_topic WHERE user=$user_id AND topic=$topic_id LIMIT 1");}
+if ($level===0) {return $bbdb->query("DELETE FROM ".$subscribe_to_topic['db']." WHERE user=$user_id AND topic=$topic_id LIMIT 1");}
 $topic=get_topic($topic_id); 
-$query="INSERT INTO subscribe_to_topic (`user`,`topic`,`post`,`type`) 
+$query="INSERT INTO ".$subscribe_to_topic['db']." (`user`,`topic`,`post`,`type`) 
 	    VALUES ('$user_id','$topic_id','$topic->topic_last_post_id','$level') 
 	    ON DUPLICATE KEY UPDATE `post` = VALUES( `post`), `type` = VALUES( `type`)";
 return $bbdb->query($query);	    
 }
 
+
+function stt_topic_meta_automatic() {echo "<li>"; stt_topic_meta(); echo "</li>";}
+
 function stt_topic_meta() {
 global $bbdb,$topic, $posts, $bb_current_user,$subscribe_to_topic;
 if (empty($topic->topic_id)) {return;}
-$query="(SELECT COUNT(user) as type FROM subscribe_to_topic WHERE topic=$topic->topic_id)";
+$query="(SELECT COUNT(user) as type FROM ".$subscribe_to_topic['db']."  WHERE topic=$topic->topic_id)";
 if (!empty($bb_current_user->ID)) {
-	$query.=" UNION ALL (SELECT type FROM subscribe_to_topic WHERE topic=$topic->topic_id AND user=$bb_current_user->ID LIMIT 1) 
-		      UNION ALL (SELECT post FROM subscribe_to_topic WHERE topic=$topic->topic_id AND user=$bb_current_user->ID LIMIT 1) ";
+	$query.=" UNION ALL (SELECT type FROM ".$subscribe_to_topic['db']." WHERE topic=$topic->topic_id AND user=$bb_current_user->ID LIMIT 1) 
+		      UNION ALL (SELECT post FROM ".$subscribe_to_topic['db']." WHERE topic=$topic->topic_id AND user=$bb_current_user->ID LIMIT 1) ";
 }
-$results=$bbdb->get_col($query); $count=$results[0]; $current=0; $post_id=0; 
+$results=$bbdb->get_col($query); $current=0; $post_id=0; 
+if ($subscribe_to_topic['subscriptions']) {$count=$results[0];} else {$count=0;}
 if (isset($results[1])) {$current=intval($results[1]); $post_id=intval($results[2]);} 
-$output="<li id='subscribe_to_topic'>";
-if ($count) {$output.= bb_number_format_i18n($count)." ".$subscribe_to_topic['labels']['subscribed'];} 
-elseif (!empty($bb_current_user->ID)) {$output.=$subscribe_to_topic['labels']['subscribe'];} else {return;}
-if (!empty($bb_current_user->ID)) {
-$output.=" <form method='get' style='display:inline;' action='". $_SERVER['REQUEST_URI']."'><input type='hidden' name='topic_id' value='$topic->topic_id' />
-(<select style='color:Highlight;background:transparent;border:0;' name='subscribe_to_topic' onchange='this.form.submit();'>\n"; 
-foreach ($subscribe_to_topic['levels'] as $key=>$level) {$output.="<option value='$key' ".($current==$key ? "selected='selected'" : "").">&nbsp;$level&nbsp; </option>\n";}
-$output.="</select>)";
-if (!empty($_GET)) {foreach ($_GET as $key=>$value) {$output.="<input type='hidden' name='$key' value='$value' />";}}
-$output.="</form>";
-}
-echo $output,"</li>\n";
 if ($current) {
 $high_id=0; foreach ($posts as $post) {if ($post->post_id>$post_id) {$high_id=$post->post_id;}}
-if ($high_id) {$bbdb->query("UPDATE subscribe_to_topic SET post=$high_id WHERE topic=$topic->topic_id AND user=$bb_current_user->ID LIMIT 1");}
+if ($high_id) {$bbdb->query("UPDATE ".$subscribe_to_topic['db']." SET post=$high_id WHERE topic=$topic->topic_id AND user=$bb_current_user->ID LIMIT 1");}
 }
+$output="<span id='subscribe_to_topic'>";
+if ($count) {$output.= bb_number_format_i18n($count)." ".$subscribe_to_topic['labels']['subscribed'];} 
+elseif (!empty($bb_current_user->ID)) {if ($subscribe_to_topic['dropdown']) {$output.=$subscribe_to_topic['labels']['subscribe'];}} else {return;}
+if (!empty($bb_current_user->ID)) {
+	if ($subscribe_to_topic['dropdown']) {
+		$output.=" <form method='get' style='display:inline;' action='". $_SERVER['REQUEST_URI']."'><input type='hidden' name='topic_id' value='$topic->topic_id' />
+		(<select style='color:Highlight;background:transparent;border:0;' name='subscribe_to_topic' onchange='this.form.submit();'>\n"; 
+		foreach ($subscribe_to_topic['levels'] as $key=>$level) {$output.="<option value='$key' ".($current==$key ? "selected='selected'" : "").">&nbsp;$level&nbsp; </option>\n";}
+		$output.="</select>)";
+		if (!empty($_GET)) {foreach ($_GET as $key=>$value) {$output.="<input type='hidden' name='$key' value='$value' />";}}
+		$output.="</form>";
+	} else {		// simple mode
+		if ($count) {$output.=" - ";}
+		if ($current==0) {$output.="<a href='".add_query_arg(array('topic_id'=>$topic->topic_id,'subscribe_to_topic'=>2))."'>".$subscribe_to_topic['labels']['simple']." ?</a>";}
+		else {$output.="<a href='".add_query_arg(array('topic_id'=>$topic->topic_id,'subscribe_to_topic'=>0))."'>".$subscribe_to_topic['labels']['unsimple']." ?</a>";}	
+	}
+}
+echo $output,"</span>\n";
 }
 
 function stt_install() {
-global $bbdb; 
-$bbdb->query("CREATE TABLE IF NOT EXISTS `subscribe_to_topic` (
-		`user` 	int(10)	 UNSIGNED NOT NULL default '0',
-		`topic` 	int(10)	 UNSIGNED NOT NULL default '0',		
-		`post`	int(10)	 UNSIGNED NOT NULL default '0',
-		`last`	int(10)	 UNSIGNED NOT NULL default '0',
-		`time`	int(10)	 UNSIGNED NOT NULL default '0',
-		`type`	tinyint	 UNSIGNED NOT NULL default '0',		
-		PRIMARY KEY (`user`,`topic`),
-		INDEX (`user`),
-		INDEX (`topic`)		
+global $bbdb, $subscribe_to_topic; 
+$bbdb->query("CREATE TABLE IF NOT EXISTS ".$subscribe_to_topic['db']." (
+		user 	int(10)	 UNSIGNED NOT NULL default '0',
+		topic 	int(10)	 UNSIGNED NOT NULL default '0',		
+		post     int(10)	 UNSIGNED NOT NULL default '0',
+		last	int(10)	 UNSIGNED NOT NULL default '0',
+		time	int(10)	 UNSIGNED NOT NULL default '0',
+		type	tinyint	 UNSIGNED NOT NULL default '0',		
+		PRIMARY KEY (user,topic),
+		INDEX (user),
+		INDEX (topic)		
 		) CHARSET utf8  COLLATE utf8_general_ci");	
 }
 
@@ -243,7 +292,7 @@ if (!$self) {	// I have no idea exactly why this is but apparently bb_profile_me
 }		
 }
 
-else :	// we're in the profile tab, is it enabled?
+else :		//  we're in the profile tab, is it enabled?  if so, trick the view.php template to display the info we want
 
 bb_send_headers();
 global $bbdb,$topics,$page, $view, $user, $subscribe_to_topic;

@@ -68,8 +68,14 @@ _e( 'Private Messages', 'bbpm' ); ?></h3>
 while ($bbpm->have_pm()) {
 	$the_pm =& $bbpm->the_pm;
 ?>
-<tr<?php alt_class( 'pm_inbox' ); ?>>
-	<td><a href="<?php echo $the_pm->read_link; ?>"><?php echo $the_pm->title; ?></a></td>
+<tr<?php alt_class( 'pm_inbox', $the_pm->read ? '' : 'unread_posts_row' ); ?>>
+	<td><a href="<?php echo $the_pm->read_link; ?>"><?php
+	if ( !$the_pm->read )
+		echo '<span class="unread_posts">';
+	echo $the_pm->title;
+	if ( !$the_pm->read )
+		echo '</span>';
+?></a></td>
 	<td><a href="<?php echo get_user_profile_link( $the_pm->from->ID ); ?>"><?php echo apply_filters( 'post_author', apply_filters( 'get_post_author', empty( $the_pm->from->display_name ) ? $the_pm->from->data->user_login : $the_pm->from->display_name, $the_pm->from->ID ) ); ?></a></td>
 	<td><?php echo bb_since( $the_pm->date ); ?></td>
 	<td><a href="<?php echo $the_pm->delete_link; ?>"><?php _e( 'Delete', 'bbpm' ); ?></a></td>

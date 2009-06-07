@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/subscribe-to-topic
 Description: Allows members to track and/or receive email notifications (instant, daily, weekly) for new posts on topics.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.5
+Version: 0.0.6
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -165,7 +165,7 @@ elseif (!empty($_GET['unsubscribe'])) {
 }
 
 function stt_checkbox_update($post_id=0) {
-global $bbdb;
+global $bbdb, $subscribe_to_topic;
 $bb_post=bb_get_post($post_id); 
 $query ="SELECT type FROM ".$subscribe_to_topic['db']."  WHERE topic=$bb_post->topic_id AND user=$bb_post->poster_id LIMIT 1";
 $old=intval($bbdb->get_var($query));

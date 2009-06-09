@@ -132,7 +132,7 @@ if ($view!="subscribed-topics") {return;}
 	add_filter('bb_template','stt_footer',50,2);
 	add_filter( 'bb_topic_labels', 'stt_unsubscribe_link', 5);
 
-	global $bbdb,$topics,$page,$user, $view_count, $bb_current_user;
+	global $bbdb,$topics,$page,$user, $view_count, $bb_current_user, $subscribe_to_topic;
 	if (!empty($user->ID)) {$user_id=$user->ID;} elseif (!empty($bb_current_user->ID)) {$user_id=$bb_current_user->ID;} else {return;}
 
 	$limit = bb_get_option('page_topics');

@@ -4,7 +4,7 @@ Tags: bbpress, wordpress, latest, discussion, bbld, widget, plugin, sidebar, pos
 Contributors: Atsutane
 Requires at least: 2.0.5
 Tested up to: 2.8
-Stable Tag: 1.3
+Stable Tag: 1.4
 
 This plugin will generates Latest Discussion list from your bbpress forum into your wordpress page.
 
@@ -34,12 +34,18 @@ I’ve created two template tags you can use in your pages:
 
 1. `wp_bb_get_discuss()` : Show Bbpress latest discussion on wp static page.
 2. `wp_bb_get_discuss_sidebar()` : Show Bbpress latest discussion on wp sidebar.
+3. `bbld_getforum()` : Show Bbpress forum list on wp static page.
+4. `wp_bb_get_forum_sidebar()` : Show Bbpress forum list on wp sidebar.page.
 
 Examples of use:
 
 `<?php wp_bb_get_discuss(); ?>`
 
 `<?php wp_bb_get_discuss_sidebar(); ?>`
+
+`<?php bbld_getforum(); ?>`
+
+`<?php wp_bb_get_forum_sidebar(); ?>`
 
 Optional Usage:
 
@@ -64,6 +70,17 @@ For more support and help, please go <a href="http://forums.atsutane.net/forum/b
 5. Sample shot with Gravatar support
 
 == Version History ==
+
+Version 1.4.0.2 (2009-06-13):
+
+* Add new function: Forum list.
+* Proper error notice.
+* Fix how BBLD fetch data for topic and user.
+* Support gravatar for non share user database.
+
+Version 1.3.9.2 (2009-06-1):
+
+* Fix Divide By Zero Problem.
 
 Version 1.3.9 (2009-05-27):
 

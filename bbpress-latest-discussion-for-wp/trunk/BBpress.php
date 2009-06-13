@@ -4,10 +4,10 @@ if (!defined('ABSPATH')) die("Aren't you supposed to come here via WP-Admin?");
 
 /*
 Plugin Name: BBpress Latest Discussions
-Plugin URI: http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/
+Plugin URI: http://forums.atsutane.net/forum/bbpress-latest-discussion
 Description: This plugin will generates Latest Discussion list from your bbpress forum into your wordpress. It has the ability to generate latest discussion on sidebar also. The administrator can also set the behavior for this plugin. Even if your bbpress is not intergrated with your wordpress. U still can use this plugin with a little change on the option page. Bbpress Latest Discussion has been around since almost 2 years ago at Bbpress.org.
 Author: Atsutane Shirane
-Version: 1.3.9.2
+Version: 1.4.0.2
 Author URI: http://www.atsutane.net/
 
 	This program is free software: you can redistribute it and/or modify
@@ -25,13 +25,13 @@ Author URI: http://www.atsutane.net/
 $plugin_dir = basename(dirname(__FILE__));
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '1.3.9.2';
+$BbLD_version = '1.4.0.2';
 
 ### BBpress Latest Discussions Advertisment
 add_action('wp_head', 'bbld');
 function bbld() {
 	global $BbLD_version;
-	echo '<!-- BBpress Latest Discussions v'.$BbLD_version.': http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/ -->';
+	echo '<!-- BBpress Latest Discussions v'.$BbLD_version.': http://forums.atsutane.net/forum/bbpress-latest-discussion -->';
 }
 
 ### Create Text Domain For Translations
@@ -46,70 +46,8 @@ if ($install) {
 	bbld_install();
 }
 
-function bbld_preinstall() {
-	global $BbLD_version;
-	if ($BbLD_version <= '1.1.3') {
-		$BbLD_ver = get_option('wpbb_version');
-		$BbLD_status = get_option('wpbb_status');
-		if (($BbLD_ver <= '1.0.3') && ($BbLD_status == 'install')) {
-			// Use for remove some old data
-			delete_option('wpbb_permalink');
-			delete_option('wpbb_intergrated');
-			delete_option('wpbb_lastposter');
-			delete_option('wpbb_inside');
-			update_option('wpbb_version', $BbLD_version);
-		}
-		if (($BbLD_ver <= '1.1.3') && ($BbLD_ver > '1.0.3') && ($BbLD_status == 'install')) {
-			// Export New Data Format
-			$bbld_option['version'] = $BbLD_version;
-			$bbld_option['url'] = get_option('wpbb_path');
-			$bbld_option['limit'] = get_option('wpbb_limit');
-			$bbld_option['prefix'] = get_option('wpbb_bbprefix');
-			$bbld_option['trim'] = get_option('wpbb_slimit');
-			$bbld_option['exdb'] = get_option('wpbb_exdb');
-			$bbld_option['dbuser'] = get_option('wpbb_dbuser');
-			$bbld_option['dbpass'] = get_option('wpbb_dbpass');
-			$bbld_option['dbname'] = get_option('wpbb_dbname');
-			$bbld_option['dbhost'] = get_option('wpbb_dbhost');
-			$bbld_option['status'] = get_option('wpbb_status');
-			$bbld_option['exclude'] = get_option('wpbb_exclude');
-			$bbld_option['donate'] = get_option('wpbb_donate');
-			$bbld_template['header'] = get_option('wpbb_pagepost_header');
-			$bbld_template['body'] = get_option('wpbb_pagepost_body');
-			$bbld_template['footer'] = get_option('wpbb_pagepost_footer');
-			$bbld_template['widget'] = get_option('wpbb_sidebar_title');
-			$bbld_template['sidebar'] = get_option('wpbb_widget_title');
-			$bbld_template['sidedisplay'] = get_option('wpbb_sidebar_display');
-			update_option('bbld_option', $bbld_option);
-			update_option('bbld_template', $bbld_template);
-			// Delete Old Data
-			delete_option('wpbb_version');
-			delete_option('wpbb_path');
-			delete_option('wpbb_limit');
-			delete_option('wpbb_slimit');
-			delete_option('wpbb_exdb');
-			delete_option('wpbb_dbuser');
-			delete_option('wpbb_dbpass');
-			delete_option('wpbb_dbname');
-			delete_option('wpbb_dbhost');
-			delete_option('wpbb_status');
-			delete_option('wpbb_pagepost_header');
-			delete_option('wpbb_pagepost_body');
-			delete_option('wpbb_pagepost_footer');
-			delete_option('wpbb_sidebar_title');
-			delete_option('wpbb_widget_title');
-			delete_option('wpbb_sidebar_display');
-			delete_option('wpbb_bbprefix');
-			delete_option('wpbb_exclude');
-		}
-	}
-	else {
-	}
-}
-
 function bbld_install() {
 	global $BbLD_version;
-	bbld_preinstall(); // For remove and add new data
 	$bbld_option = get_option('bbld_option');
 	if ($bbld_option['status'] == FALSE) {
 		$bbld_option['version'] = $BbLD_version;
@@ -134,6 +72,12 @@ function bbld_install() {
 		$bbld_template['widget'] = 'Forum Last %BBLD_LIMIT% Discussions';
 		$bbld_template['sidebar'] = '<h2>Forum Last %BBLD_LIMIT% Discussions</h2>';
 		$bbld_template['sidedisplay'] = '<li><a href="%BBLD_URL%">%BBLD_TOPIC%</a><br /><small>Last Post By: %BBLD_LPOSTER%<br/>Inside: <a href="%BBLD_FURL%">%BBLD_FORUM%</a></small></li>';
+		$bbld_template['forum_norm_head'] = '<h2>Forum List</h2>';
+		$bbld_template['forumwidget'] = '<li><a href="%BBLD_FURL%">%BBLD_FORUM%</a> (%BBLD_POST%)<br /><small>%BBLD_FDESC%</small></li>';
+		$bbld_template['forum_head'] = 'Forum List';
+		$bbld_template['forum_header'] = '<div id="discussions"><h2>Forums</h2><table id="latest"><tr><th>Main Theme</th><th>Topics</th><th>Posts</th></tr>';
+		$bbld_template['forum_body'] = '<tr class="%BBLD_CLASS%"><td><a href="%BBLD_FURL%">%BBLD_FORUM%</a></td><td class="num">%BBLD_TOPIC%</td><td class="num">%BBLD_POST%</td></tr>';
+		$bbld_template['forum_footer'] = '</table></div>';
 		update_option('bbld_option', $bbld_option);
 		update_option('bbld_template', $bbld_template);
 	}
@@ -209,7 +153,7 @@ function bbld_filter_forums() {
 
 ### Function: Get forum data
 function bbld_getdata($type,$forum_slimit = 0, $exclude = 0) {
-	global $wpdb,$exbbdb;
+	global $wpdb,$exbbdb,$table_prefix;
 	$bbld_option = get_option('bbld_option');
 	if ($bbld_option['exdb']) {
 		$exbbdb = new wpdb($bbld_option['dbuser'], $bbld_option['dbpass'], $bbld_option['dbname'], $bbld_option['dbhost']);
@@ -221,11 +165,17 @@ function bbld_getdata($type,$forum_slimit = 0, $exclude = 0) {
 		else {
 			$filter = bbld_filter_forums();
 		}
-		if ($bbld_option['exdb']) {
-			$bbtopic = $exbbdb->get_results("SELECT * FROM ".$bbld_option['prefix']."topics JOIN ".$bbld_option['prefix']."forums ON ".$bbld_option['prefix']."topics.topic_status = '0' AND ".$bbld_option['prefix']."topics.forum_id = ".$bbld_option['prefix']."forums.forum_id ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
+		if ($bbld_option['share']) {
+			$bbld_userdata = "JOIN ".$table_prefix."users ON ".$bbld_option['prefix']."topics.topic_last_poster = ".$table_prefix."users.ID";
 		}
 		else {
-			$bbtopic = $wpdb->get_results("SELECT * FROM ".$bbld_option['prefix']."topics JOIN ".$bbld_option['prefix']."forums ON ".$bbld_option['prefix']."topics.topic_status = '0' AND ".$bbld_option['prefix']."topics.forum_id = ".$bbld_option['prefix']."forums.forum_id ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
+			$bbld_userdata = "JOIN ".$bbld_option['prefix']."users ON ".$bbld_option['prefix']."topics.topic_last_poster = ".$bbld_option['prefix']."users.ID";
+		}
+		if ($bbld_option['exdb']) {
+			$bbtopic = $exbbdb->get_results("SELECT * FROM ".$bbld_option['prefix']."topics JOIN ".$bbld_option['prefix']."forums ON ".$bbld_option['prefix']."topics.topic_status = '0' AND ".$bbld_option['prefix']."topics.forum_id = ".$bbld_option['prefix']."forums.forum_id ".$bbld_userdata." ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
+		}
+		else {
+			$bbtopic = $wpdb->get_results("SELECT * FROM ".$bbld_option['prefix']."topics JOIN ".$bbld_option['prefix']."forums ON ".$bbld_option['prefix']."topics.topic_status = '0' AND ".$bbld_option['prefix']."topics.forum_id = ".$bbld_option['prefix']."forums.forum_id ".$bbld_userdata." ".$filter." ORDER BY topic_time DESC LIMIT $forum_slimit");
 		}
 	}
 	elseif ($type == 'utf8') {
@@ -269,29 +219,28 @@ function bbld_getdata($type,$forum_slimit = 0, $exclude = 0) {
 	return $bbtopic;
 }
 
-### Function: BBpress display name
-function bbld_intergrated($id,$name) {
-	global $wpdb,$table_prefix;
-	$bbld_option = get_option('bbld_option');
-	if ($bbld_option['share']) {
-		$user_forum_data = get_userdata($id);
-		if ($user_forum_data->display_name) {
-			$euser['name'] = $user_forum_data->display_name;
-		}
-		else {
-			$euser['name'] = $name;
-		}
-		$euser['email'] = $user_forum_data->user_email;
-	}
-	else {
-		$euser['name'] = $name;
-	}
-	return $euser;
-}
-
 ### Function: Donate a link back.
 function bbld_donate() {
 		echo '<p style="font-size: 75%; float: right">Powered By <a href="http://www.atsutane.net/2006/11/bbpress-latest-discussion-for-wordpress/">BbLD</a></p>';
+}
+
+### Function: Convert Data Into UTF-8
+function bbld_utf8($data, $charset = 'UTF-8') {
+	if (function_exists('mb_check_encoding')) {
+		if (mb_check_encoding($data,"UTF-8") == FALSE) {
+			$data = utf8_encode($data);
+			if (function_exists('iconv')) {
+				$string = iconv("UTF-8", $charset."//TRANSLIT", $data);
+			}
+		}
+		else {
+			if (function_exists('iconv')) {
+				$string = iconv("UTF-8", $charset."//TRANSLIT", $data);
+			}
+		}
+	}
+	if (!$string) { $string = $data; }
+	return $string;
 }
 
 ### Function: BBpress Latest Discussions Page Display
@@ -301,9 +250,7 @@ function wp_bb_get_discuss($exclude = 0) {
 	$bbtopic = bbld_getdata('topic',$bbld_option['limit'],$exclude);
 	$bb_meta = bbld_getdata('meta');
 	$meta_value = $bb_meta->meta_value;
-	if (!$meta_value) {
-		$meta_value = 30;
-	}
+	if (!$meta_value) { $meta_value = 30; }
 	$bbld_template = get_option('bbld_template');
 	if ($bbtopic) {
 		$template_data_head = stripslashes($bbld_template['header']);
@@ -324,13 +271,12 @@ function wp_bb_get_discuss($exclude = 0) {
 			}
 			$title_text = bbld_utf8($bbtopic->topic_title, $bbld_option['utf8']);
 			$title_text = wpbb_trim($title_text, $bbld_option['trim']);
-			$last_poster = bbld_intergrated($bbtopic->topic_last_poster,$bbtopic->topic_last_poster_name);
 			$template_data_body = stripslashes($bbld_template['body']);
 			$template_data_body = str_replace("%BBLD_CLASS%", $tr_class, $template_data_body);
 			$template_data_body = str_replace("%BBLD_URL%", wpbb_permalink('topic',$bbtopic->topic_id,$bbtopic->topic_slug,$bbtopic->topic_posts,$meta_value).'#post-'.$bbtopic->topic_last_post_id, $template_data_body);
 			$template_data_body = str_replace("%BBLD_TOPIC%", $title_text, $template_data_body);
 			$template_data_body = str_replace("%BBLD_POST%", $bbtopic->topic_posts, $template_data_body);
-			$template_data_body = str_replace("%BBLD_LPOSTER%", $last_poster['name'], $template_data_body);
+			$template_data_body = str_replace("%BBLD_LPOSTER%", $bbtopic->display_name, $template_data_body);
 			echo $template_data_body;
 		}
 		echo stripslashes($bbld_template['footer']);
@@ -338,19 +284,49 @@ function wp_bb_get_discuss($exclude = 0) {
 			bbld_donate();
 		}
 	}
+	else {
+		echo '<p style="background: #ffebe8; border: 1px solid #c00; padding: 5px;">It Seem There Is Something Wrong With BBLD Configuration, Please Check It.</p>';
+	}
 }
 
-### Function: Convert Data Into UTF-8
-function bbld_utf8($data, $charset = 'UTF-8') {
-	if (mb_check_encoding($data,"UTF-8") == FALSE) {
-		$data = utf8_encode($data);
-		$string = iconv("UTF-8", $charset."//TRANSLIT", $data);
+### Function: BBpress Forum List code
+function bbld_getforum($widget = 0) {
+	global $table_prefix, $wpdb;
+	$bbforum = bbld_getdata('exclude');
+	$bbld_option = get_option('bbld_option');
+	$bbld_template = get_option('bbld_template');
+	if ($widget == 0) {
+		$template_data_head = stripslashes($bbld_template['forum_header']);
+		echo $template_data_head;
+	}
+	if ($bbforum) {
+		foreach ($bbforum as $forum) {
+			$forum_name = bbld_utf8($forum->forum_name, $bbld_option['utf8']);
+			$forum_desc = bbld_utf8($forum->forum_desc, $bbld_option['utf8']);
+			$forum_topics = $forum->topics;
+			$forum_posts = $forum->posts;
+			$forum_url = wpbb_permalink('forum',$forum->forum_id,$forum->forum_slug);
+			if ($widget == 1) {
+				$template_data = stripslashes($bbld_template['forumwidget']);
+			}
+			else {
+				$template_data = stripslashes($bbld_template['forum_body']);
+			}
+			$template_data = str_replace("%BBLD_FORUM%", $forum_name, $template_data);
+			$template_data = str_replace("%BBLD_FURL%", $forum_url, $template_data);
+			$template_data = str_replace("%BBLD_TOPIC%", $forum_topics, $template_data);
+			$template_data = str_replace("%BBLD_POST%", $forum_posts, $template_data);
+			$template_data = str_replace("%BBLD_FDESC%", $forum_desc, $template_data);
+			echo $template_data;
+		}
 	}
 	else {
-		$string = iconv("UTF-8", $charset."//TRANSLIT", $data);
+		echo '<p style="background: #ffebe8; border: 1px solid #c00; padding: 5px;">It Seem There Is Something Wrong With BBLD Configuration, Please Check It.</p>';
 	}
-	if (!$string) { $string = $data; }
-	return $string;
+	if ($widget == 0) {
+		$template_data_foot = stripslashes($bbld_template['forum_footer']);
+		echo $template_data_foot;
+	}
 }
 
 ### Function: BBpress Latest Discussions Sidebar code
@@ -360,30 +336,76 @@ function bbld_getside() {
 	$bbtopic = bbld_getdata('topic',$bbld_option['limit']);
 	$bb_meta = bbld_getdata('meta');
 	$meta_value = $bb_meta->meta_value;
-	if (!$meta_value) {
-		$meta_value = 30;
-	}
+	if (!$meta_value) { $meta_value = 30;	}
 	$bbld_template = get_option('bbld_template');
 	if ($bbtopic) {
 		foreach ( $bbtopic as $bbtopic ) {
 			$title_text = bbld_utf8($bbtopic->topic_title, $bbld_option['utf8']);
 			$title_text = wpbb_trim($title_text, $bbld_option['trim']);
 			$forum_url = wpbb_permalink('forum',$bbtopic->forum_id,$bbtopic->forum_slug);
-			$last_poster = bbld_intergrated($bbtopic->topic_last_poster,$bbtopic->topic_last_poster_name);
 			$template_data_sidebar = stripslashes($bbld_template['sidedisplay']);
 			$template_data_sidebar = str_replace("%BBLD_URL%", wpbb_permalink('topic',$bbtopic->topic_id,$bbtopic->topic_slug,$bbtopic->topic_posts,$meta_value).'#post-'.$bbtopic->topic_last_post_id, $template_data_sidebar);
 			$template_data_sidebar = str_replace("%BBLD_TOPIC%", $title_text, $template_data_sidebar);
 			$template_data_sidebar = str_replace("%BBLD_POST%", $bbtopic->topic_posts, $template_data_sidebar);
 			$template_data_sidebar = str_replace("%BBLD_FURL%", $forum_url, $template_data_sidebar);
-			if ($last_poster['email']) {
-				$template_data_sidebar = str_replace("%GRAVATAR%", get_avatar($last_poster['email'],32), $template_data_sidebar);
+			if ($bbtopic->user_email) {
+				$template_data_sidebar = str_replace("%GRAVATAR%", get_avatar($bbtopic->user_email,32), $template_data_sidebar);
 			}
 			$forum_name = bbld_utf8($bbtopic->forum_name, $bbld_option['utf8']);
 			$template_data_sidebar = str_replace("%BBLD_FORUM%", $forum_name, $template_data_sidebar);
-			$template_data_sidebar = str_replace("%BBLD_LPOSTER%", $last_poster['name'], $template_data_sidebar);
+			$template_data_sidebar = str_replace("%BBLD_LPOSTER%", $bbtopic->display_name, $template_data_sidebar);
 			echo $template_data_sidebar;
 		}
 	}
+	else {
+		echo '<p style="background: #ffebe8; border: 1px solid #c00; padding: 5px;">It Seem There Is Something Wrong With BBLD Configuration, Please Check It.</p>';
+	}
+}
+
+### Function: BBpress Forum List Display
+function wp_bb_get_forum_sidebar() {
+	global $table_prefix,$wpdb;
+	$bbld_template = get_option('bbld_template');
+	$bbld_option = get_option('bbld_option');
+	$template_sidebar = stripslashes($bbld_template['forum_norm_head']);
+	echo $template_sidebar;
+	echo '<ul>';
+	bbld_getforum(1);
+	echo "</ul>";
+	if ($bbld_option['donate']) {
+		bbld_donate();
+	}
+}
+
+### Function: BBpress Forum List Sidebar Widget
+function bbld_forum_widget($args) {
+	global $table_prefix,$wpdb;
+	$bbld_template = get_option('bbld_template');
+	$bbld_option = get_option('bbld_option');
+	extract($args);
+	echo $before_widget;
+	echo $before_title . $bbld_template['forum_head'] . $after_title;
+	echo '<ul>';
+	bbld_getforum(1);
+	echo "</ul>";
+	echo $after_widget;
+	if ($bbld_option['donate']) {
+		bbld_donate();
+	}
+}
+
+### Function: BBpress Forum List Sidebar Widget Control
+function bbld_forum_control() {
+	$bbld_template = get_option('bbld_template');
+	if ($_POST['bbld_widget_submit']) {
+		$bbld_template['forum_head'] = $_POST['bbld_widget_title'];
+		update_option('bbld_template', $bbld_template);
+	}
+	echo '
+		<label for="bbld_widget_title">'. __('BbLD Widget Title:', 'bbpress-latest-discussion') . '</label>
+		<input name="bbld_widget_title" type="text" id="bbld_widget_title" value="'.$bbld_template['forum_head'].'" class="regular-text code" /><br />
+		<input type="hidden" id="bbld_widget_submit" name="bbld_widget_submit" value="1" />
+	';
 }
 
 ### Function: BBpress Latest Discussions Sidebar Display
@@ -393,7 +415,7 @@ function wp_bb_get_discuss_sidebar() {
 	$bbld_option = get_option('bbld_option');
 	$template_sidebar = stripslashes($bbld_template['sidebar']);
 	$template_sidebar = str_replace("%BBLD_LIMIT%", $bbld_option['limit'], $template_sidebar);
-	echo '<h2>'.$template_sidebar.'</h2>';
+	echo $template_sidebar;
 	echo '<ul>';
 	bbld_getside();
 	echo "</ul>";
@@ -440,6 +462,8 @@ function bbld_add_widget() {
 	if (function_exists('register_sidebar_widget')) {
 		register_sidebar_widget('BbLD Widget','bbld_widget');
 		register_widget_control('BbLD Widget', 'bbld_widget_control', 400, 300);
+		register_sidebar_widget('BbLD Forum Widget','bbld_forum_widget');
+		register_widget_control('BbLD Forum Widget', 'bbld_forum_control', 400, 300);
 	}
 }
 
@@ -487,6 +511,11 @@ function wp_bb_option() {
 		$bbld_template['footer'] = $_POST['bbld_postpage_footer'];
 		$bbld_template['sidebar'] = $_POST['bbld_sidebar_title'];
 		$bbld_template['sidedisplay'] = $_POST['bbld_sidebar_display'];
+		$bbld_template['forum_norm_head'] = $_POST['bbld_sidebar_forum_title'];
+		$bbld_template['forumwidget'] = $_POST['bbld_forum_sidebar_display'];
+		$bbld_template['forum_header'] = $_POST['bbld_forum_postpage_header'];
+		$bbld_template['forum_body'] = $_POST['bbld_forum_postpage_body'];
+		$bbld_template['forum_footer'] = $_POST['bbld_forum_postpage_footer'];
 		update_option('bbld_template', $bbld_template);
 		$update_msg = "<div id='message' class='updated fade'><p>BBpress Latest Discussions templates saved successfully.</p></div>";
 	}
@@ -494,9 +523,9 @@ function wp_bb_option() {
 <div class="wrap">
 	<p class="bbldright"><a href="http://www.atsutane.net" title="Atsutane Dot Net" alt="Atsutane Dot Net" ><img src="<?php echo get_option('siteurl'); ?>/wp-content/plugins/<?php echo $plugin_dir; ?>/images/atsutane.gif" alt="Atsutane Dot Net" /></a></p>
 	<div id="icon-bbld" class="icon32"><br /></div>
-<h2><?php _e('BBpress Latest Discussions', 'bbpress-latest-discussion'); echo ' ('.$BbLD_version.')'; ?></h2>
-<?php if (!$bbld_option['donate']) { echo "<div id='message' class='updated fade'><p>If you like my work. Please donate a link back.</p></div>"; } ?>
+<h2><?php _e('BBpress Latest Discussions', 'bbpress-latest-discussion'); echo ' ('.$BbLD_version.')'; ?> <a href="http://forums.atsutane.net/forum/bbpress-latest-discussion"><small>[Support Forum]</small></a></h2>
 <?php if ($update_msg) { _e("$update_msg", 'bbpress-latest-discussion'); } ?>
+<?php if (!$bbld_option['donate']) { echo "<div id='message' class='updated fade'><p>If you like my work. Please donate a link back.</p></div>"; } ?>
 <form method="post" action="<?php echo $ori_url; ?>">
 <table class="form-table">
 <tr valign="top">
@@ -591,7 +620,7 @@ function wp_bb_option() {
 <th scope="row"><?php _e('Backward Compatibility:', 'bbpress-latest-discussion'); ?></th>
 <td> <fieldset><legend class="hidden">bbld_backward</legend><label for="bbld_backward">
 <input name="bbld_backward" type="checkbox" id="bbld_backward" value="bbld_backward" <?php if ($bbld_option['9.0.4']) { echo('checked="checked"'); } ?> />
-<?php _e('Check this option if you are using Bbpress 9.0.4.', 'bbpress-latest-discussion'); ?></label>
+<?php _e('Check this option if you are using Bbpress 9.0.*.', 'bbpress-latest-discussion'); ?></label>
 </fieldset></td>
 </tr>
 
@@ -608,7 +637,7 @@ function wp_bb_option() {
 </tr>
 <tr valign="top">
 <th scope="row"><label for="bbpass"><?php _e('Bbpress DB Pass:', 'bbpress-latest-discussion'); ?></label></th>
-<td><input name="bbpass" type="text" id="bbpass" value="<?php echo $bbld_option['dbpass']; ?>" class="regular-text" /></td>
+<td><input name="bbpass" type="password" id="bbpass" value="<?php echo $bbld_option['dbpass']; ?>" class="regular-text" /></td>
 </tr>
 <tr valign="top">
 <th scope="row"><label for="bbname"><?php _e('Bbpress DB Name:', 'bbpress-latest-discussion'); ?></label></th>
@@ -630,6 +659,8 @@ function wp_bb_option() {
 <ul id="Tabs">
 	<li id="PostPageTab" class="SelectedTab"><a href="#PostPage" onclick="index(); return false;">Post/Page</a></li>
 	<li id="SidebarTab" class="Tab"><a href="#Sidebar" onclick="sidebar(); return false;">Sidebar/Widget</a></li>
+	<li id="ForumPostPageTab" class="Tab"><a href="#ForumPostPage" onclick="forum_page(); return false;">Forum List Post/Page</a></li>
+	<li id="ForumTab" class="Tab"><a href="#Forum" onclick="forum(); return false;">Forum List Sidebar/Widget</a></li>
 </ul>
 
 <form method="post" action="<?php echo $ori_url; ?>">
@@ -702,6 +733,72 @@ function wp_bb_option() {
 </tr>
 </table>
 </div>
+
+<div id="Forum" style="display: none;">
+<table class="form-table">
+<tr valign="top">
+<th scope="row">
+	<p><strong>Forum List Sidebar Title:</strong></p>
+	<p>Allowed Variables:</p>
+	<p><input class="button-primary" type="button" name="RestoreDefault" value="Restore Default Template" onclick="bbld_default_templates('sidebar_forum_title');" class="button" /></p>
+</th>
+<td><textarea name="bbld_sidebar_forum_title" rows="10" cols="50" id="bbld_sidebar_forum_title" class="large-text code"><?php echo htmlspecialchars(stripslashes($bbld_template['forum_norm_head'])); ?></textarea></td>
+</tr>
+
+<tr valign="top">
+<th scope="row">
+	<p><strong>Forum List Sidebar Display:</strong></p>
+	<p>Allowed Variables:</p>
+	<p style="margin: 2px 0">- %BBLD_FURL%</p>
+	<p style="margin: 2px 0">- %BBLD_FORUM%</p>
+	<p style="margin: 2px 0">- %BBLD_TOPIC%</p>
+	<p style="margin: 2px 0">- %BBLD_FDESC%</p>
+	<p><input class="button-primary" type="button" name="RestoreDefault" value="Restore Default Template" onclick="bbld_default_templates('forum_sidebar_display');" class="button" /></p>
+</th>
+<td><textarea name="bbld_forum_sidebar_display" rows="10" cols="50" id="bbld_forum_sidebar_display" class="large-text code"><?php echo htmlspecialchars(stripslashes($bbld_template['forumwidget'])); ?></textarea></td>
+</tr>
+</table>
+</div>
+
+<div id="ForumPostPage">
+<table class="form-table">
+<tr valign="top">
+<th scope="row">
+	<p><strong>Forum List Post/Page Header:</strong></p>
+	<p>Allowed Variables:</p>
+	<p style="margin: 2px 0">- %BBLD_TITLE%</p>
+	<p style="margin: 2px 0">- %BBLD_TOPIC%</p>
+	<p style="margin: 2px 0">- %BBLD_POST%</p>
+	<p style="margin: 2px 0">- %BBLD_LPOSTER%</p>
+	<p><input class="button-primary" type="button" name="RestoreDefault" value="Restore Default Template" onclick="bbld_default_templates('forum_postpage_header');" class="button" /></p>
+</th>
+<td><textarea name="bbld_forum_postpage_header" rows="10" cols="50" id="bbld_forum_postpage_header" class="large-text code"><?php echo htmlspecialchars(stripslashes($bbld_template['forum_header'])); ?></textarea></td>
+</tr>
+
+<tr valign="top">
+<th scope="row">
+	<p><strong>Forum List Post/Page Body:</strong></p>
+	<p>Allowed Variables:</p>
+	<p style="margin: 2px 0">- %BBLD_CLASS%</p>
+	<p style="margin: 2px 0">- %BBLD_URL%</p>
+	<p style="margin: 2px 0">- %BBLD_TOPIC%</p>
+	<p style="margin: 2px 0">- %BBLD_POST%</p>
+	<p style="margin: 2px 0">- %BBLD_LPOSTER%</p>
+	<p><input class="button-primary" type="button" name="RestoreDefault" value="Restore Default Template" onclick="bbld_default_templates('forum_postpage_body');" class="button" /></p>
+</th>
+<td><textarea name="bbld_forum_postpage_body" rows="10" cols="50" id="bbld_forum_postpage_body" class="large-text code"><?php echo htmlspecialchars(stripslashes($bbld_template['forum_body'])); ?></textarea></td>
+</tr>
+
+<tr valign="top">
+<th scope="row">
+	<p><strong>Forum List Post/Page Footer:</strong></p>
+	<p><input class="button-primary" type="button" name="RestoreDefault" value="Restore Default Template" onclick="bbld_default_templates('forum_postpage_footer');" class="button" /></p>
+</th>
+<td><textarea name="bbld_forum_postpage_footer" rows="10" cols="50" id="bbld_forum_postpage_footer" class="large-text code"><?php echo htmlspecialchars(stripslashes($bbld_template['forum_footer'])); ?></textarea></td>
+</tr>
+</table>
+</div>
+
 </div>
 <p class="submit">
 <input type="submit" name="wpbb_save_template" id="wpbb_save_template" class="button-primary" value="<?php _e('Save Templates Change &raquo;', 'bbpress-latest-discussion'); ?>" />

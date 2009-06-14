@@ -7,7 +7,7 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://forums.atsutane.net/forum/bbpress-latest-discussion
 Description: This plugin will generates Latest Discussion list from your bbpress forum into your wordpress. It has the ability to generate latest discussion on sidebar also. The administrator can also set the behavior for this plugin. Even if your bbpress is not intergrated with your wordpress. U still can use this plugin with a little change on the option page. Bbpress Latest Discussion has been around since almost 2 years ago at Bbpress.org.
 Author: Atsutane Shirane
-Version: 1.4.0.2
+Version: 1.4.0.4
 Author URI: http://www.atsutane.net/
 
 	This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ Author URI: http://www.atsutane.net/
 $plugin_dir = basename(dirname(__FILE__));
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '1.4.0.2';
+$BbLD_version = '1.4.0.4';
 
 ### BBpress Latest Discussions Advertisment
 add_action('wp_head', 'bbld');
@@ -104,7 +104,7 @@ function wpbb_trim($paragraph, $limit) {
 ### Function: Permalink Data
 function wpbb_permalink($type,$topicid, $slug = '',$total = 0,$limit = 30) {
 	global $wpdb,$BbLD_version;
-	echo '<!-- BBLD PERMALINK DEBUG: TOTAL ('.$total.') LIMIT ('.$limit.') -->';
+	//echo '<!-- BBLD PERMALINK DEBUG: TOTAL ('.$total.') LIMIT ('.$limit.') -->';
 	if ($total > $limit) {
 		$math_bbld = $total / $limit;
 		$pageno = round($math_bbld + 0.5);
@@ -165,10 +165,7 @@ function bbld_getdata($type,$forum_slimit = 0, $exclude = 0) {
 		else {
 			$filter = bbld_filter_forums();
 		}
-		if ($bbld_option['share']) {
-			$bbld_userdata = "JOIN ".$table_prefix."users ON ".$bbld_option['prefix']."topics.topic_last_poster = ".$table_prefix."users.ID";
-		}
-		else {
+		if (!$bbld_option['share']) {
 			$bbld_userdata = "JOIN ".$bbld_option['prefix']."users ON ".$bbld_option['prefix']."topics.topic_last_poster = ".$bbld_option['prefix']."users.ID";
 		}
 		if ($bbld_option['exdb']) {
@@ -243,6 +240,32 @@ function bbld_utf8($data, $charset = 'UTF-8') {
 	return $string;
 }
 
+### Function: BBpress display name For Version 0.9.0.*
+function bbld_intergrated($id,$name,$email,$display = '') {
+	global $wpdb,$table_prefix;
+	$bbld_option = get_option('bbld_option');
+	if ($bbld_option['share']) {
+		$user_forum_data = get_userdata($id);
+		if ($user_forum_data->display_name) {
+			$user['name'] = $user_forum_data->display_name;
+		}
+		else {
+			$user['name'] = $name;
+		}
+		$user['email'] = $user_forum_data->user_email;
+	}
+	else {
+		if (!$display) {
+			$user['name'] = $name;
+		}
+		else {
+			$user['name'] = $display;
+		}
+		$user['email'] = $email;
+	}
+	return $user;
+}
+
 ### Function: BBpress Latest Discussions Page Display
 function wp_bb_get_discuss($exclude = 0) {
 	global $table_prefix,$wpdb;
@@ -271,12 +294,13 @@ function wp_bb_get_discuss($exclude = 0) {
 			}
 			$title_text = bbld_utf8($bbtopic->topic_title, $bbld_option['utf8']);
 			$title_text = wpbb_trim($title_text, $bbld_option['trim']);
+			$user_data = bbld_intergrated($bbtopic->topic_last_poster,$bbtopic->topic_last_poster_name,$bbtopic->user_email,$bbtopic->display_name);
 			$template_data_body = stripslashes($bbld_template['body']);
 			$template_data_body = str_replace("%BBLD_CLASS%", $tr_class, $template_data_body);
 			$template_data_body = str_replace("%BBLD_URL%", wpbb_permalink('topic',$bbtopic->topic_id,$bbtopic->topic_slug,$bbtopic->topic_posts,$meta_value).'#post-'.$bbtopic->topic_last_post_id, $template_data_body);
 			$template_data_body = str_replace("%BBLD_TOPIC%", $title_text, $template_data_body);
 			$template_data_body = str_replace("%BBLD_POST%", $bbtopic->topic_posts, $template_data_body);
-			$template_data_body = str_replace("%BBLD_LPOSTER%", $bbtopic->display_name, $template_data_body);
+			$template_data_body = str_replace("%BBLD_LPOSTER%", $user_data['name'], $template_data_body);
 			echo $template_data_body;
 		}
 		echo stripslashes($bbld_template['footer']);
@@ -301,6 +325,14 @@ function bbld_getforum($widget = 0) {
 	}
 	if ($bbforum) {
 		foreach ($bbforum as $forum) {
+			if ($misc_no == 0) {
+				$misc_no = $misc_no + 1;
+				$tr_class = 'alt';
+			}
+			else {
+				$misc_no = $misc_no - 1;
+				$tr_class = 'alt1';
+			}
 			$forum_name = bbld_utf8($forum->forum_name, $bbld_option['utf8']);
 			$forum_desc = bbld_utf8($forum->forum_desc, $bbld_option['utf8']);
 			$forum_topics = $forum->topics;
@@ -312,6 +344,7 @@ function bbld_getforum($widget = 0) {
 			else {
 				$template_data = stripslashes($bbld_template['forum_body']);
 			}
+			$template_data = str_replace("%BBLD_CLASS%", $tr_class, $template_data);
 			$template_data = str_replace("%BBLD_FORUM%", $forum_name, $template_data);
 			$template_data = str_replace("%BBLD_FURL%", $forum_url, $template_data);
 			$template_data = str_replace("%BBLD_TOPIC%", $forum_topics, $template_data);
@@ -343,17 +376,18 @@ function bbld_getside() {
 			$title_text = bbld_utf8($bbtopic->topic_title, $bbld_option['utf8']);
 			$title_text = wpbb_trim($title_text, $bbld_option['trim']);
 			$forum_url = wpbb_permalink('forum',$bbtopic->forum_id,$bbtopic->forum_slug);
+			$user_data = bbld_intergrated($bbtopic->topic_last_poster,$bbtopic->topic_last_poster_name,$bbtopic->user_email,$bbtopic->display_name);
 			$template_data_sidebar = stripslashes($bbld_template['sidedisplay']);
 			$template_data_sidebar = str_replace("%BBLD_URL%", wpbb_permalink('topic',$bbtopic->topic_id,$bbtopic->topic_slug,$bbtopic->topic_posts,$meta_value).'#post-'.$bbtopic->topic_last_post_id, $template_data_sidebar);
 			$template_data_sidebar = str_replace("%BBLD_TOPIC%", $title_text, $template_data_sidebar);
 			$template_data_sidebar = str_replace("%BBLD_POST%", $bbtopic->topic_posts, $template_data_sidebar);
 			$template_data_sidebar = str_replace("%BBLD_FURL%", $forum_url, $template_data_sidebar);
-			if ($bbtopic->user_email) {
-				$template_data_sidebar = str_replace("%GRAVATAR%", get_avatar($bbtopic->user_email,32), $template_data_sidebar);
+			if ($user_data['email']) {
+				$template_data_sidebar = str_replace("%GRAVATAR%", get_avatar($user_data['email'],32), $template_data_sidebar);
 			}
 			$forum_name = bbld_utf8($bbtopic->forum_name, $bbld_option['utf8']);
 			$template_data_sidebar = str_replace("%BBLD_FORUM%", $forum_name, $template_data_sidebar);
-			$template_data_sidebar = str_replace("%BBLD_LPOSTER%", $bbtopic->display_name, $template_data_sidebar);
+			$template_data_sidebar = str_replace("%BBLD_LPOSTER%", $user_data['name'], $template_data_sidebar);
 			echo $template_data_sidebar;
 		}
 	}
@@ -766,10 +800,6 @@ function wp_bb_option() {
 <th scope="row">
 	<p><strong>Forum List Post/Page Header:</strong></p>
 	<p>Allowed Variables:</p>
-	<p style="margin: 2px 0">- %BBLD_TITLE%</p>
-	<p style="margin: 2px 0">- %BBLD_TOPIC%</p>
-	<p style="margin: 2px 0">- %BBLD_POST%</p>
-	<p style="margin: 2px 0">- %BBLD_LPOSTER%</p>
 	<p><input class="button-primary" type="button" name="RestoreDefault" value="Restore Default Template" onclick="bbld_default_templates('forum_postpage_header');" class="button" /></p>
 </th>
 <td><textarea name="bbld_forum_postpage_header" rows="10" cols="50" id="bbld_forum_postpage_header" class="large-text code"><?php echo htmlspecialchars(stripslashes($bbld_template['forum_header'])); ?></textarea></td>
@@ -780,10 +810,10 @@ function wp_bb_option() {
 	<p><strong>Forum List Post/Page Body:</strong></p>
 	<p>Allowed Variables:</p>
 	<p style="margin: 2px 0">- %BBLD_CLASS%</p>
-	<p style="margin: 2px 0">- %BBLD_URL%</p>
+	<p style="margin: 2px 0">- %BBLD_FURL%</p>
+	<p style="margin: 2px 0">- %BBLD_FORUM%</p>
 	<p style="margin: 2px 0">- %BBLD_TOPIC%</p>
-	<p style="margin: 2px 0">- %BBLD_POST%</p>
-	<p style="margin: 2px 0">- %BBLD_LPOSTER%</p>
+	<p style="margin: 2px 0">- %BBLD_FDESC%</p>
 	<p><input class="button-primary" type="button" name="RestoreDefault" value="Restore Default Template" onclick="bbld_default_templates('forum_postpage_body');" class="button" /></p>
 </th>
 <td><textarea name="bbld_forum_postpage_body" rows="10" cols="50" id="bbld_forum_postpage_body" class="large-text code"><?php echo htmlspecialchars(stripslashes($bbld_template['forum_body'])); ?></textarea></td>

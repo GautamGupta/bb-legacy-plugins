@@ -71,6 +71,13 @@ For more support and help, please go <a href="http://forums.atsutane.net/forum/b
 
 == Version History ==
 
+Version 1.4.0.4 (2009-06-14):
+
+* Fix display name problem.
+* Fix external bbpress cant show data while share with external wordpress.
+* Fix option template page for forum list
+* Add back user data function to support 0.9.0.*
+
 Version 1.4.0.2 (2009-06-13):
 
 * Add new function: Forum list.

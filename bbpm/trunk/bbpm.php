@@ -504,9 +504,9 @@ function bbpm_messages_link() {
 	$count = $bbpm->count_pm( bb_get_current_user_info( 'ID' ), false, true );
 
 	if ( $count )
-		echo '<a class="pm-new-messages-link" href="' . $this->get_link() . '">' . sprintf( _n( '1 new Private Message!', '%s new Private Messages!', $count, 'bbpm' ), bb_number_format_i18n( $count ) ) . '</a>';
+		echo '<a class="pm-new-messages-link" href="' . $bbpm->get_link() . '">' . sprintf( _n( '1 new Private Message!', '%s new Private Messages!', $count, 'bbpm' ), bb_number_format_i18n( $count ) ) . '</a>';
 	else
-		echo '<a class="pm-no-new-messages-link" href="' . $this->get_link() . '">' . __( 'Private Messages', 'bbpm' ) . '</a>';
+		echo '<a class="pm-no-new-messages-link" href="' . $bbpm->get_link() . '">' . __( 'Private Messages', 'bbpm' ) . '</a>';
 }
 
 ?>

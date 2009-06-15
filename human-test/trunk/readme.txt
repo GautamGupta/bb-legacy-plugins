@@ -88,6 +88,10 @@ $human_test['on_for_members']=true;
 
 * missed a change that caused anon posts to always fail, sorry
 
+= Version 0.9.2 (2009-06-15) =
+
+* support annonymous posting on tags.php page
+
 == To Do ==
 
 * optionally write questions in captcha-like graphics (tricks spammers to enter graphic as code instead of answer)

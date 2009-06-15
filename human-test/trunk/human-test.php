@@ -3,7 +3,7 @@
 Plugin Name: Human Test for bbPress
 Plugin URI:  http://bbpress.org/plugins/topic/77
 Description:  uses various methods to exclude bots from registering (and eventually posting) on bbPress
-Version: 0.9.1
+Version: 0.9.2
 Author: _ck_
 Author URI: http://bbshowcase.org
 
@@ -15,6 +15,9 @@ Donate: http://bbshowcase.org/donate/
 $human_test['on_for_members']=false;	 // change this to true if you want even logged in members to be challenged when posting
 
 /*  stop editing here  */
+
+// not used yet
+$human_test['stop_forum_spam']=false;	 //  check IP + Email at stopforumspam.com - adds slight delay, may not work if you don't have CURL or fopen url enabled
 
 add_action('bb_init', 'human_test_check',99);	// block check and init sessions if needed
 add_action('post_form_pre_post', 'human_test_post',99);	// new post
@@ -68,6 +71,26 @@ if (human_test_location()!="register.php") {return;}  //  only display on regist
 	echo '</td></tr></table></fieldset>';
 } 
 
+
+function human_test_stopforumspam() {
+	$check['ip']=$_SERVER['REMOTE_ADDR']; 
+	if (!empty($_POST["user_login"])) {$check['username']=$_POST["user_login"];}
+	if (!empty($_POST["user_email"])) {$check['email']=$_POST["user_email"];}
+	foreach ($check as $type=>$data) {
+		$data=urlencode(substr(strip_tags(stripslashes($data)),0,50));
+		$url = "http://www.stopforumspam.com/api?".$type."=".$data;
+		if (!function_exists('curl_exec')) {
+		$timeout=stream_context_create(array('http' => array('timeout' => 5))); 
+		$content=file_get_contents($url,0,$timeout);	// if you don't have curl, try this instead
+		} else {
+		$ch = curl_init(); curl_setopt($ch, CURLOPT_URL, $url);	curl_setopt($ch, CURLOPT_HEADER, 1);	curl_setopt($ch, CURLOPT_RETURNTRANSFER , TRUE); 
+		$content = curl_exec($ch); curl_close($ch);
+		}
+		if (preg_match("/<appears>yes<\/appears>/si", $content, $tmp)) {return true;}
+	}
+return false;	
+}
+
 /*
 global $page, $topic, $forum;
 if ( isset($forum->forum_is_category) && $forum->forum_is_category ) {return;}
@@ -82,10 +105,10 @@ if (!empty($bb_roles->roles['anonymous']['capabilities'])) {$role=$bb_roles->rol
 elseif (!empty($bb_roles->role_objects['anonymous']->capabilities)) {$role=$bb_roles->role_objects['anonymous']->capabilities;} 
 $location=human_test_location();  if ($location=='index.php' && !empty($_GET['new'])) {$location='forum.php';}
 if ( !($location=='register.php' || 
-       (!empty($human_test['on_for_members']) && !empty($bb_current_user->ID) && !bb_current_user_can('moderate') && in_array($location,array('bb-post.php','forum.php','topic.php'))) ||
+       (!empty($human_test['on_for_members']) && !empty($bb_current_user->ID) && !bb_current_user_can('moderate') && in_array($location,array('bb-post.php','forum.php','topic.php','tags.php'))) ||
        (!empty($role) && 
        ($location=='bb-post.php' && is_object($bb_current_user) && $bb_current_user->has_cap('anonymous')) ||
-       ($location=='forum.php' && empty($bb_current_user) && !empty($role['write_topics'])) ||       
+       (($location=='forum.php' || $location=='tags.php') && empty($bb_current_user) && !empty($role['write_topics'])) ||       
        ($location=='topic.php'  && empty($bb_current_user) && !empty($role['write_posts'])) ))) {return;}
     
 	// nocache_headers();	   // causes back button to regenerate page - unfortunate any post data is going to be lost	

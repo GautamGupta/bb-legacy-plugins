@@ -2,8 +2,13 @@
 Tags: images, resizer, rhyswynne, resize, post
 Tested upto: 1.0 RC-1
 Contributors: Rhys Wynne
-Author URL: http://www.gospelrhys.co.uk/
-Plugin URL: http://www.gospelrhys.co.uk/2009/05/image-resizer-bbpress-plugin.html
+Plugin Name: Image Resizer
+Description: Sets a maximum width for an image
+Author: Rhys Wynne
+Author URI: http://www.gospelrhys.co.uk/
+Plugin URI: http://www.gospelrhys.co.uk/plugins/bbpress-plugins/bbpress-image-resizer-plugin
+Version: 0.2
+Donate: http://www.gospelrhys.co.uk/donations/
 Requires: 0.73 or higher
 
 == Description ==

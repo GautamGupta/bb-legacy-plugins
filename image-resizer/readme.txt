@@ -8,7 +8,7 @@ Author: Rhys Wynne
 Author URI: http://www.gospelrhys.co.uk/
 Plugin URI: http://www.gospelrhys.co.uk/plugins/bbpress-plugins/bbpress-image-resizer-plugin
 Version: 0.2
-Donate: http://www.gospelrhys.co.uk/donations/
+Donate link: http://www.gospelrhys.co.uk/donations/
 Requires: 0.73 or higher
 
 == Description ==

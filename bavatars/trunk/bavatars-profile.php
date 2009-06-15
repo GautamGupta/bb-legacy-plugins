@@ -39,6 +39,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 			@unlink( $avatarsize );
 		}
 
+		touch( $folder . $id . '.png' );
 		imagepng( $temp, $folder . $id . '.png', 9 );
 		
 		imagedestroy( $temp );

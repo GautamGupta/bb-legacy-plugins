@@ -56,6 +56,7 @@ function bavatars_filter( $avatar, $id_or_email, $size, $default, $alt ) {
 
 		imagecopyresampled( $temp, $src, 0, 0, 0, 0, $size, $size, 512, 512 );
 
+		touch( trailingslashit( BAVATARS_BBPRESS_PATH ) . $location );
 		imagepng( $temp, trailingslashit( BAVATARS_BBPRESS_PATH ) . $location, 9 );
 
 		imagedestroy( $temp );

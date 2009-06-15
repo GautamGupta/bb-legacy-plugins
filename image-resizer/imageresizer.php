@@ -4,8 +4,9 @@ Plugin Name: Image Resizer
 Description: Sets a maximum width for an image
 Author: Rhys Wynne
 Author URI: http://www.gospelrhys.co.uk/
-Plugin URI: 
-Version: 0.1
+Plugin URI: http://www.gospelrhys.co.uk/plugins/bbpress-plugins/bbpress-image-resizer-plugin
+Version: 0.2
+Donate: http://www.gospelrhys.co.uk/donations/
 */
 
 add_action('bb_admin_menu_generator', 'image_resizer_add_admin_page');

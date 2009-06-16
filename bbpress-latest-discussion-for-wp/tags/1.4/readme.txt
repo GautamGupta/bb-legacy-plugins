@@ -71,6 +71,10 @@ For more support and help, please go <a href="http://forums.atsutane.net/forum/b
 
 == Version History ==
 
+Version 1.4.0.8 (2009-06-16):
+
+* Fix wrong query code for exclude forum list.
+
 Version 1.4.0.6 (2009-06-16):
 
 * Add exclude option for forum list, Share same exclude option for latest list.

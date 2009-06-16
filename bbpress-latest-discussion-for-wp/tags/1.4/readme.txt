@@ -16,7 +16,7 @@ The administrator can also set the behavior for this plugin. Even if your bbpres
 
 Bbpress Latest Discussion has been around since almost 2 years ago at Bbpress.org
 
-Currently support bbPress `0.9.0.4` and `1.0-RC-1`
+Currently support bbPress `0.9.0.5` and `1.0-RC-2`
 
 If you like my work, Please give a link back.
 
@@ -70,6 +70,10 @@ For more support and help, please go <a href="http://forums.atsutane.net/forum/b
 5. Sample shot with Gravatar support
 
 == Version History ==
+
+Version 1.4.0.6 (2009-06-16):
+
+* Add exclude option for forum list, Share same exclude option for latest list.
 
 Version 1.4.0.4 (2009-06-14):
 

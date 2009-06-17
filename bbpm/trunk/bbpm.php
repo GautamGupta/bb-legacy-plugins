@@ -108,8 +108,6 @@ class bbPM {
 		add_filter( 'post_author_title_link', array( &$this, 'post_title_filter' ), 10, 2 );
 		add_filter( 'post_author_title', array( &$this, 'post_title_filter' ), 10, 2 );
 
-		if ( $this->settings['auto_add_link'] )
-			add_filter( 'bb_logout_link', array( &$this, 'header_link' ) );
 		add_action( 'bb_admin_menu_generator', array( &$this, 'admin_add' ) );
 		add_filter( 'bb_template', array( &$this, 'template_filter' ), 10, 2 );
 
@@ -118,6 +116,9 @@ class bbPM {
 
 		$this->settings = bb_get_option( 'bbpm_settings' );
 		$this->version = $this->settings ? $this->settings['version'] : false;
+
+		if ( $this->settings['auto_add_link'] )
+			add_filter( 'bb_logout_link', array( &$this, 'header_link' ) );
 
 		if ( !$this->version || version_compare( $this->version, '0.1-alpha5', '<' ) )
 			$this->update();

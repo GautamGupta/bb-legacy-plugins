@@ -1,10 +1,10 @@
 <?php
 /*
-Plugin Name: Clickcha
+Plugin Name: BB Clickcha
 Plugin URI: http://clickcha.com/
 Description: The one-click CAPTCHA.
 Author: iDope
-Version: 0.2
+Version: 0.3
 Author URI: http://clickcha.com/
 */
 
@@ -116,7 +116,7 @@ function clickcha_form() {
 ?>
 	<style type="text/css">
 	p.submit input {display: none;}
-	input#clickcha {height: auto; width: auto; border: 0; display: inline;}
+	input#clickcha {height: 100px; width: 200px; border: 0; margin: 0; padding: 0; display: inline;}
 	</style>
 	<input type="hidden" name="clickcha_token" id="clickchatoken" value="">
 	<input type="image" name="clickcha" id="clickcha" alt="Clickcha - The One-click Captcha" src="">

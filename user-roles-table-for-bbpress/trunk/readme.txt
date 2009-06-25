@@ -2,8 +2,8 @@
 Contributors: sambauers
 Tags: optimisation, speed, administration
 Requires at least: 1.0-alpha-5
-Tested up to: 1.0-alpha-7
-Stable tag: 1.2
+Tested up to: 1.0-rc-3
+Stable tag: 1.3
 
 Stores user roles in a separate roles table for faster reading purposes,
 helps speed up some queries based on roles for sites with lots of users.
@@ -62,3 +62,5 @@ See accompanying license.txt file for details.
   <br />Now kills the recently registered list on the dashboard
 * 1.2 :
   <br />Various bug fixes
+* 1.3 :
+  <br />Make compatible with 1.0-rc-3

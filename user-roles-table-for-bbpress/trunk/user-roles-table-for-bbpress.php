@@ -4,7 +4,7 @@ Plugin Name: User Roles Table for bbPress
 Plugin URI: http://bbpress.org/plugins/topic/user-roles-table-for-bbpress/
 Description: Stores user roles in a separate roles table for faster reading purposes, helps speed up queries based on roles for sites with lots of users.
 Author: Sam Bauers
-Version: 1.2
+Version: 1.3
 Author URI: http://unlettered.org/
 */
 
@@ -256,11 +256,18 @@ load_plugin_textdomain( 'user-roles-table-for-bbpress', dirname( __FILE__ ) . '/
 if ( !function_exists( 'get_total_users' ) ) {
 	function get_total_users()
 	{
-		global $bbdb;
-		$total = $bbdb->get_var('SELECT COUNT(DISTINCT(`user_id`)) FROM `' . $bbdb->userroles . '`;');
-		return $total;
+		return bb_urt_get_total_users();
 	}
 }
+
+function bb_urt_get_total_users()
+{
+	global $bbdb;
+	$total = $bbdb->get_var('SELECT COUNT(DISTINCT(`user_id`)) FROM `' . $bbdb->userroles . '`;');
+	return $total;
+}
+
+add_filter( 'bb_get_total_users', 'bb_urt_get_total_users' );
 
 if ( !function_exists( 'get_recent_registrants' ) ) {
 	function get_recent_registrants( $num = 0 )

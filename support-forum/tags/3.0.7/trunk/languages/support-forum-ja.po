@@ -1,0 +1,144 @@
+#
+# Copyright (c) 2007-2008
+# このファイルは WordPress 本体と同じライセンスのもと配布されています。
+# This file is distributed under the same license as the WordPress package.
+#
+# WordPress 日本語版作成チーム / WP ja translation team
+# <http://groups.google.com/group/wp-ja-pkg/web/members>
+#
+#  誤字脱字誤訳、あるいはよりよい訳などありましたら以下までぜひお知らせください。
+#  連絡先 / Contact: wpja.team@gmail.com (件名か内容に「日本語リソース」と入れてください)
+msgid ""
+msgstr ""
+"Project-Id-Version: Support forum 3.0.3\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/support-forum\n"
+"POT-Creation-Date: 2008-05-08 23:54+1000\n"
+"PO-Revision-Date: 2008-05-15 01:26+0900\n"
+"Last-Translator: tai <tekapo@gmail.com>\n"
+"Language-Team: wp-ja <wpja.team@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Japanese\n"
+"X-Poedit-Country: JAPAN\n"
+
+#: support-forum.php:194
+msgid "This version of the <em>Support forum</em> plugin requires bbPress version 0.9"
+msgstr "<em>Support forum</em> プラグインのこのバージョンは bbPress version 0.9 用です"
+
+#: support-forum.php:206
+#: support-forum.php:960
+#: support-forum.php:977
+msgid "resolved"
+msgstr "解決済み"
+
+#: support-forum.php:207
+#: support-forum.php:961
+#: support-forum.php:979
+msgid "not resolved"
+msgstr "未解決"
+
+#: support-forum.php:208
+#: support-forum.php:962
+#: support-forum.php:981
+msgid "not a support question"
+msgstr "サポート質問以外の話題"
+
+#: support-forum.php:383
+#, php-format
+msgid "Support topics that are %s"
+msgstr "%sのトピック"
+
+#: support-forum.php:387
+#, php-format
+msgid "Support topics that are %s and are more than 2 hours old"
+msgstr "%sと 2 時間以上前のトピック"
+
+#: support-forum.php:466
+msgid "Change"
+msgstr "変更"
+
+#: support-forum.php:504
+#: support-forum.php:510
+#: support-forum.php:515
+#: support-forum.php:730
+msgid "This topic is"
+msgstr "このトピックは"
+
+#: support-forum.php:504
+#: support-forum.php:672
+#: support-forum.php:1009
+msgid "sticky"
+msgstr "固定トピックです"
+
+#: support-forum.php:510
+#: support-forum.php:649
+#: support-forum.php:1002
+msgid "closed"
+msgstr "閉じられました"
+
+#: support-forum.php:821
+#: support-forum.php:918
+msgid "Support forum"
+msgstr "サポートフォーラム"
+
+#: support-forum.php:870
+msgid "Update performed"
+msgstr "アップデートを実行しました"
+
+#: support-forum.php:872
+msgid "No update required"
+msgstr "アップデートの必要はありません"
+
+#: support-forum.php:924
+msgid "Name"
+msgstr "名前"
+
+#: support-forum.php:924
+msgid "Description"
+msgstr "説明"
+
+#: support-forum.php:939
+msgid "Enable support forum"
+msgstr "Support Forum を使用する"
+
+#: support-forum.php:958
+msgid "Set the default status for topics:"
+msgstr "デフォルトステータスの設定:"
+
+#: support-forum.php:967
+msgid "Allow the poster of the topic to set the status on topic creation"
+msgstr "トピック作成者がトピック作成時にステータスを設定できるようにする"
+
+#: support-forum.php:969
+msgid "Allow the poster of the topic to set the status at any time"
+msgstr "トピック作成者がいつでもステータスを設定できるようにする"
+
+#: support-forum.php:974
+msgid "Choose which statuses will have a view:"
+msgstr "表示するステータスを選択:"
+
+#: support-forum.php:986
+msgid "Use resolution status icons on topics"
+msgstr "トピックに解決ステータスアイコンを使用する"
+
+#: support-forum.php:999
+msgid "Use lock icon on closed topics (applies to all forums)"
+msgstr "閉じたトピックに鍵アイコンを使用する (すべてのフォーラムに適用)"
+
+#: support-forum.php:1006
+msgid "Use sticky icon on sticky topics (applies to all forums)"
+msgstr "固定トピックに固定アイコンを使用する (すべてのフォーラムに適用)"
+
+#: support-forum.php:1021
+msgid "If you used support forum plugin version 1.0, you will need to update existing topics to work with version 2.x"
+msgstr "Support Forum プラグインのバージョン 1.0 を使用していたなら、バージョン 2.x で動作するように既存のトピックを更新してください"
+
+#: support-forum.php:1024
+msgid "Update topics to version 2.x"
+msgstr "トピックをバージョン 2.x にアップデート"
+
+#: support-forum.php:1084
+msgid "Settings saved"
+msgstr "設定を保存しました。"
+

@@ -27,6 +27,9 @@ The options are available within the "Show Top Posters". Admin menu
 === Shameless Begging ===
 If you like this plugin, I would appreciate a linkback to http://www.gospelrhys.co.uk, and I'm sure Nate would like a link to either http://www.savingadvice.com or http://www.pfadvice.com on your blog.
 
+=== Questions === 
+Please put questions on this thread - http://www.gospelrhys.co.uk/plugins/bbpress-plugins/show-top-posters-bbpress-plugin
+
 == Change Log ==
-2009-06-29 Ver. 1.3 Tested in RC-1, Added Admin Menus
+2009-06-29 Ver. 1.3 Tested in RC-1, Added Admin Menus<br/>
 2007-06-29 Ver. 1.2 released.

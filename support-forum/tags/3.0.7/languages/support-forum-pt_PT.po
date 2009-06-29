@@ -1,0 +1,145 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR <a href="http://www.adityanaik.com/">Aditya Naik</a>, <a href="http://unlettered.org/">Sam Bauers</a>
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Support forum 3.0.3\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/support-forum\n"
+"POT-Creation-Date: 2008-05-08 23:54+1000\n"
+"PO-Revision-Date: 2008-11-19 12:15-0000\n"
+"Last-Translator: José Fontainhas <jfontainhas@gmail.com>\n"
+"Language-Team: WordPress PT <www.wordpress-pt.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Language: Portuguese\n"
+"X-Poedit-Country: PORTUGAL\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: support-forum.php:194
+msgid "This version of the <em>Support forum</em> plugin requires bbPress version 0.9"
+msgstr "Esta versão do plugin <em>Support forum</em> requer a versão 0.9 do bbPress"
+
+#: support-forum.php:206
+#: support-forum.php:960
+#: support-forum.php:977
+msgid "resolved"
+msgstr "resolvido"
+
+#: support-forum.php:207
+#: support-forum.php:961
+#: support-forum.php:979
+msgid "not resolved"
+msgstr "não resolvido"
+
+#: support-forum.php:208
+#: support-forum.php:962
+#: support-forum.php:981
+msgid "not a support question"
+msgstr "não é um pedido de suporte"
+
+#: support-forum.php:383
+#, php-format
+msgid "Support topics that are %s"
+msgstr "Tópicos de suporte com estado: %s"
+
+#: support-forum.php:387
+#, php-format
+msgid "Support topics that are %s and are more than 2 hours old"
+msgstr "Tópicos de suporte com o estado %s e com mais de 2 horas"
+
+#: support-forum.php:466
+msgid "Change"
+msgstr "Mudar"
+
+#: support-forum.php:504
+#: support-forum.php:510
+#: support-forum.php:515
+#: support-forum.php:730
+msgid "This topic is"
+msgstr "Estado do tópico"
+
+#: support-forum.php:504
+#: support-forum.php:672
+#: support-forum.php:1009
+msgid "sticky"
+msgstr "fixo"
+
+#: support-forum.php:510
+#: support-forum.php:649
+#: support-forum.php:1002
+msgid "closed"
+msgstr "encerrado"
+
+#: support-forum.php:821
+#: support-forum.php:918
+msgid "Support forum"
+msgstr "Support forum"
+
+#: support-forum.php:870
+msgid "Update performed"
+msgstr "Actualização efectuada"
+
+#: support-forum.php:872
+msgid "No update required"
+msgstr "Nenhuma actualização necessária"
+
+#: support-forum.php:924
+msgid "Name"
+msgstr "Nome"
+
+#: support-forum.php:924
+msgid "Description"
+msgstr "Descrição"
+
+#: support-forum.php:939
+msgid "Enable support forum"
+msgstr "Activar fórum de suporte"
+
+#: support-forum.php:958
+msgid "Set the default status for topics:"
+msgstr "Estado dos tópicos por omissão:"
+
+#: support-forum.php:967
+msgid "Allow the poster of the topic to set the status on topic creation"
+msgstr "Permitir que o autor do tópico defina o estado ao criá-lo"
+
+#: support-forum.php:969
+msgid "Allow the poster of the topic to set the status at any time"
+msgstr "Permitir que o autor do tópico deina o estado em qualquer altura"
+
+#: support-forum.php:974
+msgid "Choose which statuses will have a view:"
+msgstr "Escolha quais os estados que têm uma visualização:"
+
+#: support-forum.php:986
+msgid "Use resolution status icons on topics"
+msgstr "Usar ícones de estado nos tópicos"
+
+#: support-forum.php:999
+msgid "Use lock icon on closed topics (applies to all forums)"
+msgstr "Usar ícone de cadeado em tópicos encerrados (aplica a todos os fóruns)"
+
+#: support-forum.php:1006
+msgid "Use sticky icon on sticky topics (applies to all forums)"
+msgstr "Usar ícone de fixo em tópicos fixos (aplica a todos os fóruns)"
+
+#: support-forum.php:1021
+msgid "If you used support forum plugin version 1.0, you will need to update existing topics to work with version 2.x"
+msgstr "Se usou a versão 1.0 deste plugin, necessitará actualizar os tópicos existentes para funcionarem com a versão 2.x"
+
+#: support-forum.php:1024
+msgid "Update topics to version 2.x"
+msgstr "Actualizar tópicos para a versão 2.x"
+
+#: support-forum.php:1028
+msgid "Save support forum settings"
+msgstr "Guardar opções"
+
+#: support-forum.php:1084
+msgid "Settings saved"
+msgstr "Opções guardadas"
+

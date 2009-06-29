@@ -2,8 +2,8 @@
 Contributors: so1o, mdawaffe, SamBauers
 Tags: support, forums
 Requires at least: 0.9
-Tested up to: 0.9.0.2
-Stable tag: 3.0.6
+Tested up to: 1.0
+Stable tag: 3.0.7
 
 Adds the ability to set a support status on topics in selected forums.
 
@@ -54,7 +54,7 @@ will need to be logged in as a keymaster.
 
 == License ==
 
-Support forum version 3.0.6<br />
+Support forum version 3.0.7<br />
 Copyright (C) 2007 Aditya Naik (http://www.adityanaik.com/)<br />
 Copyright (C) 2007 Sam Bauers (http://unlettered.org/)
 
@@ -152,3 +152,5 @@ See accompanying license.txt file for details.
   <br />Move images to a subdirectory
 * 3.0.6 :
   <br />Translation fixes and Portuguese (PT) language files. Fixes #16 and #17. Mad props vanillalounge.
+* 3.0.7 :
+  <br />Fix sprintf() stuff-ups

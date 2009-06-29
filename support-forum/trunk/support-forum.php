@@ -59,6 +59,7 @@ Version History:
 3.0.5	: Register views on 'bb_init' instead of on plugin load (Nikolay Bachiyski)
 		  Move images to a subdirectory (Sam Bauers)
 3.0.6	: Translation fixes and Portuguese (PT) language files. Fixes #16 and #17. Mad props vanillalounge (Sam Bauers)
+3.0.7	: Fix sprintf() stuff-ups (Sam Bauers)
 */
 
 
@@ -649,7 +650,7 @@ class Support_Forum
 		global $topic;
 		if ('0' === $topic->topic_open) {
 			return sprintf(
-				'<img src="$1%ssupport-forum-$2%s.png" alt="[$3%s]" title="[$3%s]" style="vertical-align:top; margin-right:0.3em; width:14px; height:14px; border-width:0;" />$4%s',
+				'<img src="%1$ssupport-forum-%2$s.png" alt="[%3$s]" title="[%3$s]" style="vertical-align:top; margin-right:0.3em; width:14px; height:14px; border-width:0;" />%4$s',
 				$this->iconURI,
 				'closed',
 				__('closed', 'support-forum'),
@@ -672,7 +673,7 @@ class Support_Forum
 		global $topic;
 		if ($topic->topic_sticky > 0) {
 			return sprintf(
-				'<img src="$1%ssupport-forum-$2%s.png" alt="[$3%s]" title="[$3%s]" style="vertical-align:top; margin-right:0.3em; width:14px; height:14px; border-width:0;" />$4%s',
+				'<img src="%1$ssupport-forum-%2$s.png" alt="[%3$s]" title="[%3$s]" style="vertical-align:top; margin-right:0.3em; width:14px; height:14px; border-width:0;" />%4$s',
 				$this->iconURI,
 				'sticky',
 				__('sticky', 'support-forum'),

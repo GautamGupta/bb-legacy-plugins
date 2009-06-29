@@ -22,7 +22,7 @@ Compatible with RC-1!
 Unzip the imagerezier.php into the bb-plugins, and activate it on the dashboard.
 
 == Questions == 
-Please put questions on this thread - http://www.gospelrhys.co.uk/plugins/bbpress-plugins/bbpress-image-resizer-plugin
+Please put questions on this thread - http://www.gospelrhys.co.uk/2009/05/image-resizer-bbpress-plugin.html
 
 == Change Log ==
 2009-05-25 Ver. 0.2 Tested in RC-1

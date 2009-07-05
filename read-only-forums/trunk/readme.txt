@@ -2,9 +2,9 @@
 Tags: restrict,read,private,forum,forums,reply, _ck_
 Contributors: _ck_
 Requires at least: 0.9
-Tested up to: trunk
+Tested up to: 0.9
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Prevent all or certain members from starting topics or just replying in certain forums while allowing posting in others. Moderators and administrators can always post. Note that this does not hide forums, just prevents posting.
 
@@ -69,13 +69,17 @@ Prevent all or certain members from starting topics or just replying in certain 
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 
 = Version 0.0.1 (2008-04-17) =
 
 * first public release
+
+= Version 0.0.5 (2008-04-18) =
+
+* custom message when posting is restricted (requires template edits)
 
 == To Do ==
 

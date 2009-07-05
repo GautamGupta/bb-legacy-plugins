@@ -2,7 +2,7 @@
 Tags: _ck_, administration, moderation, users, members, mass delete, bulk, bulk delete, delete
 Contributors: _ck_
 Requires at least: 0.8.2
-Tested up to: 0.9.x
+Tested up to: 0.9
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 

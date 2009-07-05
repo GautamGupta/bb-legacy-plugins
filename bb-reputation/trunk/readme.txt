@@ -2,7 +2,7 @@
 Tags: reputation, karma, points, cash, currency, bank, _ck_
 Contributors: _ck_
 Requires at least: 0.8.3
-Tested up to: 0.9.x
+Tested up to: 0.9
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 

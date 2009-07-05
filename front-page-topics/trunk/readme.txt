@@ -2,7 +2,7 @@
 Tags: _ck_, topics, posts, custom, limit, front-page, discussions
 Contributors: _ck_, mdawaffe
 Requires at least: 0.9
-Tested up to: trunk
+Tested up to: 0.9
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 

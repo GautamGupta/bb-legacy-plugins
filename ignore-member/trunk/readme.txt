@@ -2,9 +2,9 @@
 Tags:  block, ignore, hide, moderate, _ck_
 Contributors: _ck_
 Requires at least: 0.8.2
-Tested up to: trunk
+Tested up to: 0.9
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Allows members to not see posts by other members that they don't get along with. They cannot block moderators or administrators.
 
@@ -17,7 +17,7 @@ Any ignored members will show up in their edit profile so they can remove them i
 == Installation ==
 
 1. install, activate 
-2. put  `<? ignore_member_link(); ?>` in your post.php template where you want the "Ignore" link to be seen
+2. put  `<?php ignore_member_link(); ?>` in your post.php template where you want the "Ignore" link to be seen
 3. optionally put in your theme stylesheet:    a.ignore_member {color:blue;}  
 4. add any mods you wish to make unignorable to the array at the top of the plugin  ie. `array("1","27","55");`
 
@@ -37,7 +37,7 @@ Again, the multiviews and non-slugs setups should (in theory) not be affected.
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 

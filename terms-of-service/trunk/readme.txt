@@ -2,9 +2,9 @@
 Tags: register, registration, TOS, terms of service, disclaimer, age verification, privacy policy, _ck_
 Contributors: _ck_
 Requires at least: 0.9
-Tested up to: trunk
+Tested up to: 0.9
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Adds a "Terms of Service" (aka TOS) agreement to your registration page (and can optionally be linked to directly).
 
@@ -41,7 +41,7 @@ http://www.ownterms.org/documents/terms-of-service/
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 

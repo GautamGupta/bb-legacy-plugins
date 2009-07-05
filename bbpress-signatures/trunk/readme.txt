@@ -2,7 +2,7 @@
 Tags: signature, signatures, _ck_
 Contributors: _ck_
 Requires at least: 0.8.2
-Tested up to: trunk
+Tested up to: 0.9
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 
@@ -19,7 +19,9 @@ Activate and check under "Site Management" admin submenu for "Signatures".
 
 If you would like the optional toggle on new/edit posts to allow the member to disable signatures  on a per-post basis, 
 you must edit  the  edit-form.php  & post-form.php   templates and place at or near the bottom:  
-`<?php  bb_signatures_checkbox(); ?>`
+`
+<?php  bb_signatures_checkbox(); ?>
+`
 (you can optionally wrap that in a DIV and float it to the left, right style anyway you'd like)
 
 == License ==

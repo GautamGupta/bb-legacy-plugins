@@ -2,7 +2,7 @@
 Tags:  history, revisions, rollback, undo, change, changes, changeset, wiki,_ck_
 Contributors: _ck_
 Requires at least: 0.9
-Tested up to: 1.0 alpha 5
+Tested up to: 0.9
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 

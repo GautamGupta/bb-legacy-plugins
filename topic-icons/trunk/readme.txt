@@ -2,9 +2,9 @@
 Tags: topics, icons, graphics, support, forums, _ck_
 Contributors: _ck_
 Requires at least: 0.8.3
-Tested up to: trunk
+Tested up to: 0.9
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Adds icons next to your topic (and forum) titles automatically based on keywords or special topic status such as sticky, support question, has poll, etc.
 
@@ -17,6 +17,23 @@ Demo: http://bbshowcase.org/forums/
 == Installation ==
 
 * Add the `topic-icons.php` file to bbPress' `my-plugins/` directory and activate.
+
+= Custom Icons =
+
+* First go down to the $topic_icons['graphics']=array(`
+section and add the icons you want to the list, selecting a keyword to point to the graphic.
+ie.
+`'keyword'=>'newgraphic.png'`
+
+* Then go to $topic_icons['rules']=array(	`
+and for each keyword, add the words that will trigger the icon.
+ie.
+`'keyword'=>'word1|word2|word3'`
+
+* Optionally for each forum that you want a "fallback" icon edit `$topic_icons['forums']=array(`
+and add the forum number mapped to the keyword
+ie.
+`'6'=>'keyword'`
 
 == Frequently Asked Questions ==
 
@@ -48,7 +65,7 @@ Demo: http://bbshowcase.org/forums/
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 

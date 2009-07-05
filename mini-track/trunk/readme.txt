@@ -2,9 +2,9 @@
 Tags: statistics, track, tracking, online, onlinelist, _ck_
 Contributors: _ck_
 Requires at least: 0.9
-Tested up to: trunk
+Tested up to: 0.9
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 A simple way to count and track both members and non-members as they move around your forum.
 
@@ -25,15 +25,19 @@ If you upgrade from an old version you need to use the RESET link in the trackin
 * Edit options (true / false) at the top of the plugin until an admin menu is made
 
 *  This plugin now inserts itself into the footer automatically, no template edits required unless you want custom placement.
-If you want CUSTOM placement, edit your `footer.php` template (or other template) to add  the info like so:
+
+* ONLY if you want CUSTOM placement, edit your `footer.php` template (or other template) to add  the info like so:
 `
 	<div id="footer">
-		<?php mini_track(1); ?>
-		<?php mini_track_statistics(); ?>
+		<?php mini_track(1);  // who's online now ?>
+		<?php mini_track_today(1);  // who's been online today ?>
+		<?php mini_track_statistics(2);  // general statistics ?>
 		<p><?php printf(__('%1$s is proudly powered by <a href="%2$s">bbPress</a>.'), bb_option('name'), "http://bbpress.org") ?></p>
 	</div>
 
 `
+In the above example the (1) indicates don't show extended info, ie. usernames.  (2) would also show usernames.
+
 * With non-automatic placement, if you also want a list of the member names, use `<?php mini_track(2); ?>`
 or if you only want it on the front page you can do it like this: `<?php if (is_front() ) {mini_track(1);} ?>` or you can put it anywhere in `front-page.php` that you'd like.
 
@@ -102,7 +106,7 @@ The md5 technique is now used by default. You can disable it if you want and use
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 

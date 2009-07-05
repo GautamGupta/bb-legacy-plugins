@@ -1,10 +1,10 @@
-=== bb Gzip  ===
+=== bbPress Web Compression (bb-gzip) ===
 Tags: compress, bandwidth, performance, speed, gzip, mod_gzip, mod_deflate, _ck_
 Contributors: _ck_
 Requires at least: 0.8
-Tested up to: trunk
+Tested up to: 0.9
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Makes bbPress output smaller and faster pages for all modern web browsers. Only use if you do not have compression already available on your host.
 
@@ -35,7 +35,7 @@ Makes bbPress output smaller and faster pages for all modern web browsers. Only 
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 

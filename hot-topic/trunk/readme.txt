@@ -2,7 +2,7 @@
 Tags: topics, icons, popular, popularity, hot, hotness, _ck_
 Contributors: _ck_
 Requires at least: 0.8.3
-Tested up to: trunk
+Tested up to: 0.9
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 

@@ -7,7 +7,7 @@ Author URI: http://blog.wittmania.com
 Contributors:  _ck_, wittmania
 Stable Tag: 1.6
 Requires at least: 0.8
-Tested up to: 1.0
+Tested up to: 0.9
 
 bb-Topic-Views counts and displays the number of times each topic has been viewed.
 

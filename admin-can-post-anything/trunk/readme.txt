@@ -4,7 +4,7 @@ Contributors: _ck_
 Requires at least: 0.8
 Tested up to: 0.8.2.1
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Allows administrators to post any content regardless of tag restrictions, including javascript and flash video embedding.
 
@@ -24,7 +24,7 @@ Add the `admin-can-post-anything.php` file to the bbPress `my-plugins/` director
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 

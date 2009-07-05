@@ -2,7 +2,7 @@
 Tags: topics, posts, threads, unread, new, new posts, track, notify, _ck_
 Contributors: _ck_
 Requires at least: 0.8
-Tested up to: trunk
+Tested up to: 0.9
 Stable tag: trunk
 
 Indicates previously read topics with new unread posts across most types of pages within bbPress. Features "mark all topics read". 
@@ -31,7 +31,7 @@ To see a demonstration, create an account at http://bbShowcase.org read some pos
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 

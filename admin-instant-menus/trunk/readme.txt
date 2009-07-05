@@ -2,9 +2,9 @@
 Tags: admin, administrate, drop-down, menu, menus, _ck_
 Contributors: _ck_
 Requires at least: 0.8.2
-Tested up to: 0.8 branch
+Tested up to: 0.9 
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Makes the third row of options in the admin menu instantly available without extra clicks. 
 
@@ -30,8 +30,6 @@ Makes the third row of options in the admin menu instantly available without ext
 
 == To Do ==
 
-* conditional loading to save memory via BB_IS_ADMIN once 0.8.4 has been released for awhile
-
 * option for larger fonts
 
 * option for dropdown instead of slider-style
@@ -42,11 +40,10 @@ Makes the third row of options in the admin menu instantly available without ext
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 
-= Version 1.00 (2008-Mar-04) =
+= Version 1.0.0 (2008-Mar-04) =
 
 *   first public release
-

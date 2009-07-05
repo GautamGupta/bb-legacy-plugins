@@ -2,9 +2,9 @@
 Tags: bbcode, _ck_
 Contributors: _ck_
 Requires at least: 0.8.2
-Tested up to: trunk
+Tested up to: 0.9
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 A lightweight alternative to allow BBcode on your forums without slowdowns.
 
@@ -68,7 +68,7 @@ be sure to let me know if you find some and I will address them as time permits.
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 

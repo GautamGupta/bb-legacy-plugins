@@ -2,7 +2,7 @@
 Tags: integration, admin, keymaster, _ck_
 Contributors: _ck_
 Requires at least: 0.8.2
-Tested up to: 1.0 alpha 5 alpha 1075
+Tested up to: 0.9
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 

@@ -2,9 +2,9 @@
 Tags: alert moderator, moderation, alert, report, report post, _ck_
 Contributors: _ck_
 Requires at least: 0.8.2
-Tested up to: trunk
+Tested up to: 0.9
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Allows members to easily report a post that needs to be reviewed by a moderator.
 
@@ -17,7 +17,8 @@ Email is currently used to notify the administrator but more options will come e
 == Installation ==
 
 1. install, activate 
-2. put  `<? report_post_link(); ?>` in your post.php template where you want the link to be seen - recommended next to `<?php post_edit_link(); ?>` 
+2. put  `<?php report_post_link(); ?>` in your `post.php` template where you want the link to be seen - 
+recommended to the right of `<?php post_edit_link(); ?>`  in 0.9 or `<?php bb_post_admin(); ?>` in 1.0
 3. optionally edit your style.css stylesheet to make it stand out, add: `a.report_post {color:red;}`  
 4. note that you will NOT see a report link on YOUR OWN posts - to test, make a post as another member.
 
@@ -45,7 +46,7 @@ Email is currently used to notify the administrator but more options will come e
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 

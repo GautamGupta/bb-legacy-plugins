@@ -2,9 +2,9 @@
 Tags: _ck_, administration, admin, settings, options, configure, bb-admin, phpmyadmin, integration, keymaster
 Contributors: _ck_
 Requires at least: 0.9
-Tested up to: trunk
+Tested up to: 0.9
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Allows all settings, including hidden options, to be edited in the admin control panel. Works just like the (little-known) WordPress feature. 
 
@@ -50,7 +50,7 @@ Please be aware that misuse of this plugin can break your bbPress install entire
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 

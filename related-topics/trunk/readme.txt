@@ -2,9 +2,9 @@
 Tags: related, topics, tags, keywords, search, _ck_
 Contributors: _ck_
 Requires at least: 0.9
-Tested up to: trunk
+Tested up to: 0.9
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Displays a list of related topics based on tags and keywords. No template edits required.
 
@@ -51,7 +51,7 @@ $bb->load_options = true;
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
 == History ==
 

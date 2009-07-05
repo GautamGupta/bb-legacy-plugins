@@ -2,7 +2,7 @@
 Tags: _ck_, integration, login, cookie, cookies
 Contributors: _ck_
 Requires at least: 0.8
-Tested up to: trunk
+Tested up to: 0.9
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 

@@ -2,7 +2,7 @@
 Tags: view, views, most viewed, least viewed, my topics, _ck_
 Contributors: _ck_
 Requires at least: 0.8.2
-Tested up to:  trunk
+Tested up to: 0.9
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 

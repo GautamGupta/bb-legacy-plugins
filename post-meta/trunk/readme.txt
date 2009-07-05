@@ -2,7 +2,7 @@
 Tags: posts, anonymous, custom fields, _ck_
 Contributors: _ck_
 Requires at least: 0.9
-Tested up to: trunk
+Tested up to: 0.9
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 

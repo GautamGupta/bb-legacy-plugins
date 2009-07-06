@@ -27,21 +27,24 @@ Boston, MA 02111-1307, USA.
 
 
 // for version checking
-$bbwp_version = 0.50;
-$min_version = 0.50;
+$bbwp_version = 0.60;
+$min_version = 0.60;
 
 require_once(dirname(__FILE__).'/../../bb-load.php');
 
 // for mode checking
 $bbwp_plugin = 0;
 
+function add_textdomain()
+{
+	// setting textdomain for translation
+	load_plugin_textdomain('bbwp-sync', dirname(__FILE__).'/');
+}
+
 if (substr($_SERVER['PHP_SELF'], -13) != 'bbwp-sync.php')
 {
 	global $bbwp_plugin;
 	$bbwp_plugin = 1;
-	//print_r(bb_get_post(12));
-	// working as plugin
-	//echo "Plugin ".substr($_SERVER['PHP_SELF'], -14);
 } else
 {
 	// listening commands from WordPress part
@@ -119,14 +122,14 @@ function test_pair()
 
 function secret_key_equal()
 {
-	$answer = send_command(array('action' => 'keytest', 'secret_key' => bb_get_option('bbwp_secret_key')));
+	$answer = send_command(array('action' => 'keytest', 'secret_key' => md5(bb_get_option('bbwp_secret_key'))));
 	$data = unserialize($answer);
 	return $data['keytest'];
 }
 
 function comare_keys_local()
 {
-	return $_POST['secret_key'] == bb_get_option('bbwp_secret_key') ? 1 : 0;
+	return $_POST['secret_key'] == md5(bb_get_option('bbwp_secret_key')) ? 1 : 0;
 }
 
 function correct_wpbb_version()
@@ -471,120 +474,123 @@ function status_wp2bb($status)
 }
 
 function options_page() {
-	bb_admin_add_submenu(__('WordPress syncronization'), 'moderate', 'bbwp_options', 'options-general.php');
+	bb_admin_add_submenu(__('WordPress syncronization', 'bbwp-sync'), 'moderate', 'bbwp_options', 'options-general.php');
 }
 
 function bbwp_options()
 {
 ?>
-<h2><?php _e('WordPress syncronization options'); ?></h2>
+<h2><?php _e('WordPress syncronization options', 'bbwp-sync'); ?></h2>
 
 <form class="settings" method="post" action="">
 	<fieldset>
 		<div>
-		<label for="forum_id">
-			<?php _e('Forum:') ?>
-		</label>
-		<div>
-			<select name="forum_id" id="forum_id">
-				<?php
-					$forums = get_forums();
-					$forum_id = bb_get_option('bbwp_forum_id');
-					echo '<option value="-1">Select forum</option>';
-					foreach ($forums as $forum)
+			<label for="wordpress_url">
+				<?php _e('WordPress url:', 'bbwp-sync') ?>
+			</label>
+			<div class="inputs">
+				<input class="text" name="wordpress_url" value="<?php echo bb_get_option('bbwp_wordpress_url'); ?>" />
+				<p><?php
+				if (!bb_get_option('bbwp_wordpress_url'))
+				{
+					_e('Please submit with last "/"! We will test that after submussion', 'bbwp-sync');
+				} else
+				{
+					if (test_pair())
 					{
-						echo '<option value="'.$forum->forum_id.'"'.($forum_id == $forum->forum_id ? " selected='selected'" : '').'>'.$forum->forum_name.'</option>';
+						_e('Everything is ok!', 'bbwp-sync');
+					} else
+					{
+						echo __('URL is incorrect or connection error, please verify it (full variant): ', $textdomain).bb_get_option('bbwp_wordpress_url')."?wpbb-listener";
 					}
-					?>
-			</select>
-			<?php _e('You need to set the forum for syncronization.'); ?>
-		</div>
+				}
+				?></p>
+			</div>
 		</div>
 		<div>
-		<label for="wordpress_url">
-			<?php _e('WordPress url:') ?>
-		</label>
-		<div>
-			<input class="text" name="wordpress_url" value="<?php echo bb_get_option('bbwp_wordpress_url'); ?>" />
-			<?php
-			if (!bb_get_option('bbwp_wordpress_url'))
-			{
-				_e('Please submit with last "/"! We will test that after submussion');
-			} else
-			{
-				if (test_pair())
+			<label for="secret_key">
+				<?php _e('Secret key:', 'bbwp-sync') ?>
+			</label>
+			<div class="inputs">
+				<input class="text" name="secret_key" value="<?php echo bb_get_option('bbwp_secret_key'); ?>" />
+				<p><?php
+				if (!bb_get_option('bbwp_secret_key') && secret_key_equal())
 				{
-					_e('Everything is ok!');
+					_e('We need it for secure communication between your systems', 'bbwp-sync');
 				} else
 				{
-					_e('URL is incorrect or connection error, please verify it (full variant): '.bb_get_option('bbwp_wordpress_url')."?wpbb-listener");
+					if (secret_key_equal())
+					{
+						_e('Everything is ok!', 'bbwp-sync');
+					} else
+					{
+						_e("Error! Not equal secret keys in WordPress and bbPress", 'bbwp-sync');
+					}
 				}
-			}
-			?>
-		</div>
-		</div>
-		<div>
-		<label for="secret_key">
-			<?php _e('Secret key:') ?>
-		</label>
-		<div>
-			<input class="text" name="secret_key" value="<?php echo bb_get_option('bbwp_secret_key'); ?>" />
-			<?php
-			if (!bb_get_option('bbwp_secret_key'))
-			{
-				_e('We need it for secure communication between your systems');
-			} else
-			{
-				if (secret_key_equal())
-				{
-					_e('Everything is ok!');
-				} else
-				{
-					_e("Error! Not equal secret keys in WordPress and bbPress", $textdomain);
-				}
-			}
-			?>
-		</div>
+				?></p>
+			</div>
 		</div>
 		<div>
-		<label for="anonymous_user">
-			<?php _e('Anonymous user:') ?>
-		</label>
-		<div>
-			<input class="text" name="anonymous_user" value="<?php echo bb_get_option('bbwp_anonymous_user_id'); ?>" />
-			<?php _e('User id for posts on forum from unregistered users in WordPress', $textdomain); ?>
-		</div>
-		</div>
-		<div>
-		<label for="sync_all_posts">
-			<?php _e('Sync all posts:') ?>
-		</label>
-		<div>
-			<input type="checkbox" name="sync_all_posts"<?php echo (bb_get_option('bbwp_sync_all_posts') == 'enabled') ? ' checked="checked"' : '';?> />
-			<?php _e('Sync post even if not approved. Post will have the same status in WordPress', $textdomain); ?>
-		</div>
-		</div>
-		<div>
-		<label for="show_anonymous_info">
-			<?php _e('Show anonymous userinfo:') ?>
-		</label>
-		<div>
-			<input type="checkbox" name="show_anonymous_info"<?php echo (bb_get_option('bbwp_show_anonymous_info') == 'enabled') ? ' checked="checked"' : '';?> />&nbsp;Show name <input type="checkbox" name="show_anonymous_email"<?php echo (bb_get_option('bbwp_show_anonymous_email') == 'enabled') ? ' checked="checked"' : '';?> />&nbsp;Show email <input type="checkbox" name="show_anonymous_url"<?php echo (bb_get_option('bbwp_show_anonymous_url') == 'enabled') ? ' checked="checked"' : '';?> />&nbsp;Show url
-		</div>
+			<label for="forum_id">
+				<?php _e('Forum:', 'bbwp-sync') ?>
+			</label>
+			<div class="inputs">
+				<select name="forum_id" id="forum_id">
+					<?php
+						$forums = get_forums();
+						$forum_id = bb_get_option('bbwp_forum_id');
+						echo '<option value="-1">'.__('Select forum', 'bbwp-sync').'</option>';
+						foreach ($forums as $forum)
+						{
+							echo '<option value="'.$forum->forum_id.'"'.($forum_id == $forum->forum_id ? " selected='selected'" : '').'>'.$forum->forum_name.'</option>';
+						}
+						?>
+				</select>
+				<p><?php _e('You need to set the forum for syncronization.', 'bbwp-sync'); ?></p>
+			</div>
 		</div>
 		<div>
-		<label for="enable_plugin">
-			<?php _e('Enable plugin'); ?>
-		</label>
+			<label for="anonymous_user">
+				<?php _e('Anonymous user:', 'bbwp-sync') ?>
+			</label>
+			<div class="inputs">
+				<input class="text" name="anonymous_user" value="<?php echo bb_get_option('bbwp_anonymous_user_id'); ?>" />
+				<p><?php _e('User id for posts on forum from unregistered users in WordPress', 'bbwp-sync'); ?></p>
+			</div>
+		</div>
 		<div>
-		<?php $check = check_bbwp_settings(); if ($check['code'] != 0) set_global_plugin_status('disabled'); ?>
-			<input type="checkbox" name="plugin_status"<?php echo (bb_get_option('bbwp_plugin_status') == 'enabled') ? ' checked="checked"' : ''; echo ($check['code'] == 0) ? '' : ' disabled="disabled"'; ?> /> (<?php echo ($check['code'] == 0) ? 'Allowed by both parts' : 'Not allowed: '.$check['message'] ?>)
+			<label for="sync_all_posts">
+				<?php _e('Sync all posts:', 'bbwp-sync') ?>
+			</label>
+			<div class="inputs">
+				<input type="checkbox" name="sync_all_posts"<?php echo (bb_get_option('bbwp_sync_all_posts') == 'enabled') ? ' checked="checked"' : '';?> />
+				<p><?php _e('Sync post even if not approved. Post will have the same status in WordPress', 'bbwp-sync'); ?></p>
+			</div>
 		</div>
+		<div>
+			<label for="show_anonymous_info">
+				<?php _e('Show anonymous userinfo:', 'bbwp-sync') ?>
+			</label>
+			<div class="inputs">
+				<label class="checkboxs"><input type="checkbox" name="show_anonymous_info"<?php echo (bb_get_option('bbwp_show_anonymous_info') == 'enabled') ? ' checked="checked"' : '';?> /> <?php _e('Show name', 'bbwp-sync'); ?></label>
+				<label class="checkboxs"><input type="checkbox" name="show_anonymous_email"<?php echo (bb_get_option('bbwp_show_anonymous_email') == 'enabled') ? ' checked="checked"' : '';?> /> <?php _e('Show email', 'bbwp-sync'); ?></label>
+				<label class="checkboxs"><input type="checkbox" name="show_anonymous_url"<?php echo (bb_get_option('bbwp_show_anonymous_url') == 'enabled') ? ' checked="checked"' : '';?> /> <?php _e('Show url', 'bbwp-sync'); ?></label>
+			</div>
 		</div>
+		<div>
+			<label for="enable_plugin">
+				<?php _e('Enable plugin', 'bbwp-sync'); ?>
+			</label>
+			<div class="inputs">
+			<?php $check = check_bbwp_settings(); if ($check['code'] != 0) set_global_plugin_status('disabled'); ?>
+				<input type="checkbox" name="plugin_status"<?php echo (bb_get_option('bbwp_plugin_status') == 'enabled') ? ' checked="checked"' : ''; echo ($check['code'] == 0) ? '' : ' disabled="disabled"'; ?> />
+				<p><?php echo ($check['code'] == 0) ? __('Allowed by both parts', 'bbwp-sync') : __('Not allowed: ', 'bbwp-sync').$check['message'] ?></p>
+			</div>
+		</div>
+	</fieldset>
+	<fieldset class="submit">
 		<input type="hidden" name="action" value="update-bbwp-configuration" />
-		<div class="spacer">
-			<input type="submit" name="submit" id="submit" value="<?php _e('Update Configuration &raquo;') ?>" />
-		</div>
+		<input class="submit" type="submit" name="submit" id="submit" value="<?php _e('Update Configuration &raquo;', 'bbwp-sync') ?>" />
 	</fieldset>
 </form>
 <?php
@@ -603,7 +609,7 @@ function process_options()
 		bb_update_option('bbwp_show_anonymous_info', $_POST['show_anonymous_info'] == 'on' ? 'enabled' : 'disabled');
 		bb_update_option('bbwp_show_anonymous_email', $_POST['show_anonymous_email'] == 'on' ? 'enabled' : 'disabled');
 		bb_update_option('bbwp_show_anonymous_url', $_POST['show_anonymous_url'] == 'on' ? 'enabled' : 'disabled');
-		bb_admin_notice( __('Configuration saved.') );
+		bb_admin_notice( __('Configuration saved.', 'bbwp-sync') );
 	}
 }
 
@@ -612,7 +618,12 @@ function check_bbwp_settings()
 	$wp_settings = check_wp_settings();
 	$bb_code = check_bb_settings();
 	$bb_message = bb_status_error($bb_code);
-	if ($bb_code != 0)
+	# it's better to check bbPress ability to connect first
+	if ($wp_settings['code'] == 1)
+	{
+		$data['code'] = 1;
+		$data['message'] = '[WordPress part] '.$wp_settings['message'];
+	} elseif ($bb_code != 0)
 	{
 		$data['code'] = $bb_code;
 		$data['message'] = '[bbPress part] '.$bb_message;
@@ -623,7 +634,7 @@ function check_bbwp_settings()
 	} else
 	{
 		$data['code'] = 0;
-		$data['message'] = __('Everything is ok!');
+		$data['message'] = __('Everything is ok!', 'bbwp-sync');
 	}
 	return $data;
 }
@@ -689,19 +700,19 @@ function check_bb_settings()
 function bb_status_error($code)
 {
 	if ($code == 0)
-		return __('Everything is ok!');
+		return __('Everything is ok!', 'bbwp-sync');
 	if ($code == 1)
-		return __('Cannot establish connection to WordPress part');
+		return __('Cannot establish connection to WordPress part', 'bbwp-sync');
 	elseif ($code == 2)
-		return __('Invalid secret key');
+		return __('Invalid secret key', 'bbwp-sync');
 	elseif ($code == 3)
-		return __('Invalid forum id');
+		return __('Invalid forum id', 'bbwp-sync');
 	elseif ($code == 4)
-		return __('Invalid anonymous user id');
+		return __('Invalid anonymous user id', 'bbwp-sync');
 	elseif ($code == 5)
-		return __('bbPress part not activated');
+		return __('bbPress part is not activated', 'bbwp-sync');
 	elseif ($code == 6)
-		return __('Too old WordPress part plugin version');
+		return __('Too old WordPress part plugin version', 'bbwp-sync');
 }
 
 function set_wp_plugin_status($status)
@@ -791,18 +802,35 @@ function bbwp_anonymous_userinfo($text)
 			return $text;
 		// write extra information about anonymous user
 		$row = get_table_item('bb_post_id', get_post_id());
-		$text .= '<div class="wpbb_anonymous_userinfo">'.__('User information').'<ul>'
-			.'<li><span class="wpbb_anonymous_userinfo_key">Author</span>: <span>'.$row['wp_comment_author'].'</span></li>';
+		$text .= '<div class="wpbb_anonymous_userinfo">'.__('User information', 'bbwp-sync').'<ul>'
+			.'<li><span class="wpbb_anonymous_userinfo_key">'.__('Author', 'bbwp-sync').'</span>: <span>'.$row['wp_comment_author'].'</span></li>';
 		if (bb_get_option('bbwp_show_anonymous_email') == 'enabled')
-			$text .= '<li><span class="wpbb_anonymous_userinfo_key">E-mail</span>: <span>'.$row['wp_comment_author_email'].'</span></li>';
+			$text .= '<li><span class="wpbb_anonymous_userinfo_key">'.__('E-mail', 'bbwp-sync').'</span>: <span>'.$row['wp_comment_author_email'].'</span></li>';
 		if (bb_get_option('bbwp_show_anonymous_url') == 'enabled' && $row['wp_comment_author_url'] != '')
-			$text .= '<li><span class="wpbb_anonymous_userinfo_key">URL</span>: <span>'.$row['wp_comment_author_url'].'</span></li>';
+			$text .= '<li><span class="wpbb_anonymous_userinfo_key">'.__('URL', 'bbwp-sync').'</span>: <span>'.$row['wp_comment_author_url'].'</span></li>';
 		$text .= '</ul></div>';
 	}
 	return $text;
 }
 
+function bbwp_topic_last_poster($poster)
+{
+	global $topic;
+	if (bb_get_option('bbwp_anonymous_user_id') == $topic->topic_last_poster && bb_get_option('bbwp_show_anonymous_info') == 'enabled')
+	{
+		$row = get_table_item('bb_post_id', $topic->topic_last_post_id);
+		if ($row['wp_comment_author'])
+			return $row['wp_comment_author'];
+		else
+			return $poster;
+	} else
+	{
+		return $poster;
+	}
+}
 
+
+add_action('bb_init', 'add_textdomain');
 add_action('bb_tag_added', 'aftertagedit');
 add_action('bb_pre_tag_removed', 'pretagremove');
 add_action('bb_update_post', 'afteredit');
@@ -815,5 +843,6 @@ add_action('bb_deactivate_plugin_user#wordpress-bbpress-syncronization/bbwp-sync
 add_action('bb_admin_menu_generator', 'options_page');
 add_action('bb_admin-header.php', 'process_options');
 add_filter('post_text', 'bbwp_anonymous_userinfo');
+add_filter('get_topic_last_poster', 'bbwp_topic_last_poster');
 
 ?>

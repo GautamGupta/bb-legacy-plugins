@@ -1,5 +1,5 @@
 === Edit Post Attributes ===
-Tags: best answer, vote, _ck_
+Tags: edit, posts, attributes, meta, manage, administrate, author, _ck_
 Contributors: _ck_
 Requires at least: 0.9
 Tested up to: 0.9

@@ -7,7 +7,7 @@ Description: Readers with the most postes are displayed on your bbpress forum, w
 Author: Rhys Wynne
 Author URI: http://www.gospelrhys.co.uk/
 Plugin URI: http://www.gospelrhys.co.uk/plugins/bbpress-plugins/show-top-posters-bbpress-plugin
-Version: 1.3
+Version: 1.4
 Donate link: http://www.gospelrhys.co.uk/donations/
 Requires: 0.73 or higher
 
@@ -31,5 +31,6 @@ If you like this plugin, I would appreciate a linkback to http://www.gospelrhys.
 Please put questions on this thread - http://www.gospelrhys.co.uk/plugins/bbpress-plugins/show-top-posters-bbpress-plugin
 
 == Change Log ==
+2009-07-13 Ver. 1.4 Tested in bbpress 1.0, improved Admin Menus, fixed IE8 Bug<br/>
 2009-06-29 Ver. 1.3 Tested in RC-1, Added Admin Menus<br/>
 2007-06-29 Ver. 1.2 released.

@@ -51,8 +51,18 @@ function show_top_posters_admin_page() {
 
 	show_top_posters_admin_page_defaults();
 
+	
+
 ?>
 	<h2>Show Top Posters </h2>
+
+<?php if (isset ($_POST['submit'])) {
+?>
+		<div style="background-color:#EDF2EC;border: 1px solid #BAC0C8;padding: 10px;font-weight: bold;">Options Saved</div>
+
+<?php	
+	}
+?>
 	<form method="post">
 	<table width="50%"  border="0">
       <tr>
@@ -264,6 +274,7 @@ function show_top_posters() {
 
    if(is_array($commenters)) {
 	   foreach ($commenters as $k) {
+	   	 echo $ns_options["start_html"];
 	      if($ns_options["make_links"] == 1) {
             $url = ns_get_user_url($k->poster_id);
 			if(trim($url) != '')
@@ -275,7 +286,7 @@ function show_top_posters() {
 			$url = ns_get_user_profile($k->poster_id);
 			echo "<a href='" . $url . "'>";
 		  }
-	      echo $ns_options["start_html"];
+	     
 	      
 		  $name = $bbdb->get_var("
 	   SELECT user_login 

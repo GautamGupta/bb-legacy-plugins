@@ -3,7 +3,7 @@ Tags: posters, rhyswynne, sidebar, post
 Tested upto: 1.0 RC-1
 Contributors: Rhys Wynne
 Plugin Name: Show Top Posters
-Description: Readers with the most postes are displayed on your bbpress forum, with their names (linked to their website if they provided one).
+Description: Readers with the most postes are displayed on your bbpress forum, with their names (linked to their website if there is one).
 Author: Rhys Wynne
 Author URI: http://www.gospelrhys.co.uk/
 Plugin URI: http://www.gospelrhys.co.uk/plugins/bbpress-plugins/show-top-posters-bbpress-plugin

@@ -3,7 +3,7 @@
 Plugin Name: Show Top Posters
 Plugin URI: http://www.gospelrhys.co.uk/plugins/bbpress-plugins/show-top-posters-plugin
 Description:  Readers with the most postes are displayed on your bbpress forum, with their names (linked to their website if there is one). Based on the <a href="http://www.pfadvice.com/wordpress-plugins/show-top-commentators/" target="_blank">Show Top Commenters</a> plugin for Wordpress by <a href="http://www.savingadvice.com" target="_blank">Nate Sanden</a>
-Version: 1.3
+Version: 1.4
 Author: Rhys Wynne
 Author URI: http://www.gospelrhys.co.uk
 */

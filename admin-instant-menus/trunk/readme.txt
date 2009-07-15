@@ -42,7 +42,7 @@ Makes the third row of options in the admin menu instantly available without ext
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 1.0.0 (2008-Mar-04) =
 

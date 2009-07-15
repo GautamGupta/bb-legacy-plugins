@@ -25,7 +25,7 @@ You do not need to edit any template (theme) page for the feature.
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2008-11-08) =
 

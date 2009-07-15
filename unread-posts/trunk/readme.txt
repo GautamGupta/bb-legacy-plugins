@@ -33,7 +33,7 @@ To see a demonstration, create an account at http://bbShowcase.org read some pos
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.80 (2008-01-31) =
 

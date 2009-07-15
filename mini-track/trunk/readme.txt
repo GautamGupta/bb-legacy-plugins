@@ -108,7 +108,7 @@ The md5 technique is now used by default. You can disable it if you want and use
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2008-08-05) =
 

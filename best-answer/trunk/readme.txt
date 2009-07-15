@@ -39,7 +39,7 @@ and if the best answer(s) should be displayed first when viewing the topic.
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.2 (2009-05-23) =
 

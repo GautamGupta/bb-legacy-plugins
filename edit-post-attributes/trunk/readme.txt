@@ -50,7 +50,7 @@ Some plugins track the author of a post independently, which might cause problem
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2009-07-09) =
 

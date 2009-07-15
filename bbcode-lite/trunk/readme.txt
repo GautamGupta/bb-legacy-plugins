@@ -70,7 +70,7 @@ be sure to let me know if you find some and I will address them as time permits.
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 1.00 (2008-02-26) =
 

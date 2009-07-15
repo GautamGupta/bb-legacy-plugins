@@ -30,7 +30,7 @@ Put into your plugin directory, access bbPress and/or WordPress once and then de
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.01 (2008-02-15) =
 

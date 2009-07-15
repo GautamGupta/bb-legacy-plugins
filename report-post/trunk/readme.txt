@@ -48,7 +48,7 @@ recommended to the right of `<?php post_edit_link(); ?>`  in 0.9 or `<?php bb_po
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.10 (2007-07-31) =
 

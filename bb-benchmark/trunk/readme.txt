@@ -2,9 +2,9 @@
 Tags: _ck_, performance, speed, benchmark, mysql, queries, cache, caching, faster
 Contributors: _ck_
 Requires at least: 0.8
-Tested up to: trunk
+Tested up to: 0.9
 Stable tag: trunk
-Donate link: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate link: http://bbshowcase.org/donate/
 
 Prints simple benchmarks and mysql diagnostics, hidden in page footers for administrators. Based on Jerome Lavigne's Query Diagnostics for WordPress.
 
@@ -17,9 +17,9 @@ Output includes current server load, page render vs mysql query time, slowest qu
 
 == Installation ==
 
-1.  put  `define('SAVEQUERIES', true);`   into your `bb-config.php` (or `config.php`)
-2.  install plugin  (leading underscore in filename means it auto-activates, auto-loads in bbPress)
-3. "view source" in browser on any bbPress page to see hidden results at bottom (visible to administrators only)
+1. put  `define('SAVEQUERIES', true);`  into your `bb-config.php`
+2. install & activate plugin   (no template editing required)
+3. do a "view source" on any bbpress page to see hidden results at bottom (visible to logged-in administrators only)
 
 == License ==
 
@@ -27,9 +27,9 @@ Output includes current server load, page render vs mysql query time, slowest qu
 
 == Donate ==
 
-* http://amazon.com/paypage/P2FBORKDEFQIVM
+* http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.10 (2007-07-15) =
 

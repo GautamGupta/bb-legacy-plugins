@@ -44,7 +44,7 @@ That can be incompatible with some PHP configurations. BBcode Buttons instead us
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2008-06-19) =
 

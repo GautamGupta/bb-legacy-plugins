@@ -52,7 +52,7 @@ PLEASE DO NOT USE VERSIONS BEFORE 0.0.6, UPDATE IMMEDIATELY
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2008-05-05) =
 

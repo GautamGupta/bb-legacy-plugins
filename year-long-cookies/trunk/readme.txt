@@ -28,7 +28,7 @@ Force login cookies to last a year instead of the default two days (or two weeks
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.2 (2009-01-23) =
 

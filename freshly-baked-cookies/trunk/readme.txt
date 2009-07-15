@@ -6,13 +6,13 @@ Tested up to: 0.9
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 
-Allows bbPress 0.9 to use WordPress 2.7 cookies during stand-alone (simple) integration.
+Allows bbPress 0.9 to use WordPress 2.6, 2.7 or 2.8 cookies during stand-alone (simple) integration.
 
 == Description ==
 
-Allows bbPress 0.9 to use WordPress 2.7 cookies during stand-alone (simple) integration.
+Allows bbPress 0.9 to use WordPress 2.6, 2.7 or 2.8 cookies during stand-alone (simple) integration.
 
-This plugin is very alpha and has only been tested on a very basic setup, however it should be safe to try as it doesn't change any data.
+This plugin  only been tested on a very basic setup, however it should be safe to try as it doesn't change any data and others report success when using it.
 
 It can only be used on stand-alone (simple) integration, not "deep" or "full" integration.
 
@@ -26,7 +26,7 @@ NOTE: you cannot downgrade from bbPress to 1.0 to 0.9 without converting databas
 
 * Add the `_freshly-baked-cookies.php` file to bbPress' `my-plugins/` directory. 
 
-* Activation is automatic on plugins with leading underscores.
+* There *must* be a leading underscore on the plugin filename so it's automatically activated.
 
 * Log out if necessary and log in. Check to make sure that both bbPress and WordPress sees you as logged in (or out) at the same time.
 
@@ -56,7 +56,7 @@ http://bbpress.org/forums/topic/wordpress-and-bbpress-integration-101
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2009-02-26) =
 
@@ -65,6 +65,10 @@ http://bbpress.org/forums/topic/wordpress-and-bbpress-integration-101
 = Version 0.0.3 (2009-03-12) =
 
 * more complete WP cookie emulation with auth + logged_in cookies - props Txanny
+
+= Version 0.0.5 (2009-07-14) =
+
+* updated to support additional cookie changes in WordPress 2.8
 
 == To Do ==
 

@@ -2,7 +2,7 @@
 Tags: user_login, display_name, username, display name, displayname, _ck_
 Contributors: _ck_
 Requires at least: 0.9
-Tested up to: trunk
+Tested up to: 1.0
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 
@@ -28,7 +28,7 @@ Now that bbPress has it, here's a way to disable it if you wish. Forces the user
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2008-11-09) =
 

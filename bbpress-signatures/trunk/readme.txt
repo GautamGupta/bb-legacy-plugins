@@ -32,7 +32,7 @@ you must edit  the  edit-form.php  & post-form.php   templates and place at or n
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 * 0.05 	: slashes & autop fixed, replaced input with textarea, max_lines now supported in post-processing,  max_length checked in realtime (as well as post processing)
 * 0.06 	: internal testing/bugfix

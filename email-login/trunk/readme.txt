@@ -45,7 +45,7 @@ Two users can have the same email address, and a user can change their email add
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2009-03-26) =
 

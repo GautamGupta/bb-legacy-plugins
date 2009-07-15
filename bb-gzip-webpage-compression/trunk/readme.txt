@@ -37,7 +37,7 @@ Makes bbPress output smaller and faster pages for all modern web browsers. Only 
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.01 (2007-08-06) =
 

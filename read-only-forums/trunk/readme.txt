@@ -71,7 +71,7 @@ Prevent all or certain members from starting topics or just replying in certain 
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2008-04-17) =
 

@@ -48,7 +48,7 @@ Make selected forums completely hidden except to certain members or roles. Uses 
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2008-04-21) =
 

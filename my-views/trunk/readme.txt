@@ -68,7 +68,7 @@ My Views consists of a main plugin and several optional "module" plugins that ca
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 Version 0.03 (2007-08-01)
 

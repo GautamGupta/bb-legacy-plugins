@@ -28,7 +28,7 @@ Shows icon next to topic title to indicate hotness or popularity based on number
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2009-01-13) =
 

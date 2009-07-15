@@ -38,7 +38,7 @@ Set user to INACTIVE instead to prevent re-use of the username.
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2009-02-25) =
 

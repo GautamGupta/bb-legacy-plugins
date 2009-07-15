@@ -43,7 +43,7 @@ http://www.ownterms.org/documents/terms-of-service/
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.01 (2008-07-13) =
 

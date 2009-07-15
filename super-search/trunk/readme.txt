@@ -41,7 +41,7 @@ Adds Google-like search ability to your bbPress forum, with many advanced option
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2008-02-04) =
 

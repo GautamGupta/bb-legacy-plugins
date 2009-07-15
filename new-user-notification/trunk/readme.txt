@@ -30,7 +30,7 @@ Notifies the keymaster by email that a new user has registered.
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.01 (2008-03-01) =
 

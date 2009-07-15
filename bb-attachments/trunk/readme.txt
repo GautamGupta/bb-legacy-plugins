@@ -58,7 +58,7 @@ http://docs.amazonwebservices.com/AmazonS3/2006-03-01/VirtualHosting.html#Virtua
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 * 0.0.5	first public beta release for review
 * 0.0.6	advanced restrictions by file type & user role, upload form displays allowed file types

@@ -33,7 +33,7 @@ Activate and check under "content" admin submenu for "Mass Edit".
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 1.00 (2008-02-17) =
 

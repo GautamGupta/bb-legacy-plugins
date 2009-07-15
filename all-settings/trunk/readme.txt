@@ -52,7 +52,7 @@ Please be aware that misuse of this plugin can break your bbPress install entire
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2008-08-09) =
 

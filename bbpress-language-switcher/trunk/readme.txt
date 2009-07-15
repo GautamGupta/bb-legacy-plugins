@@ -51,7 +51,7 @@ note the space between the quotes
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2009-03-27) =
 

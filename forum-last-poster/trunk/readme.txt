@@ -66,7 +66,7 @@ High performance: uses only a single extra query regardless of the number of for
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2008-07-24) =
 

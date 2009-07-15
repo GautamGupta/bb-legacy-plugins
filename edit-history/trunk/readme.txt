@@ -34,7 +34,7 @@ Allows you to see a detailed history of exactly what has been changed in any pos
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2008-04-21) =
 

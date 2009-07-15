@@ -25,7 +25,7 @@ There are many powerful options via the admin menu.
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 * 0.5.9 2009-02-22 added checks for user levels when editing and deleting polls
 * 0.5.8 2009-02-02 bug fix to handle single and double quotes in poll questions and voting options
 * 0.5.7 2009-01-04 do not modify topic titles when in RSS feeds

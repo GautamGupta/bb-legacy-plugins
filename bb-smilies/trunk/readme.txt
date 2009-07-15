@@ -35,7 +35,7 @@ Or build your own. Just make sure you follow the style in `package-config.php`
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2008-07-24) =
 

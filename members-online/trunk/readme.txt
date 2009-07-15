@@ -49,7 +49,7 @@ This is actually to keep performance reasonable and removes an extra mysql query
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2009-04-03) =
 

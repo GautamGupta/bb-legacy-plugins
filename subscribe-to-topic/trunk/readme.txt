@@ -43,7 +43,7 @@ but if it's a very large site you'll probably have to pay a whitelisting service
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2008-12-26) =
 

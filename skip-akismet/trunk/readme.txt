@@ -34,7 +34,7 @@ Plugin works in both bbPress and WordPress.
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2009-05-04) =
 

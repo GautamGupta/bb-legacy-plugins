@@ -44,7 +44,7 @@ This will create a list of themes for your readers to select.
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 1.05 (2007-08-06) =
 

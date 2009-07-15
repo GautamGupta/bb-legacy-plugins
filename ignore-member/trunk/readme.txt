@@ -39,7 +39,7 @@ Again, the multiviews and non-slugs setups should (in theory) not be affected.
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.05 (2007-08-13) =
 

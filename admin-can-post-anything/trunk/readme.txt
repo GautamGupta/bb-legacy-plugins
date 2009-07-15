@@ -26,7 +26,7 @@ Add the `admin-can-post-anything.php` file to the bbPress `my-plugins/` director
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 Version 0.04 (2007-07-15)
 

@@ -72,7 +72,7 @@ $mini_stats['level']="administrate";
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2008-11-13) =
 

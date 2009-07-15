@@ -34,7 +34,7 @@ Avoid plugin security issues and bugs by checking periodically.
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2009-04-02) =
 

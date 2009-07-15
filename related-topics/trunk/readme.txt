@@ -53,7 +53,7 @@ $bb->load_options = true;
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2008-11-15) =
 

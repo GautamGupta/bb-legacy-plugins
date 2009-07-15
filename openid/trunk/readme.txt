@@ -67,7 +67,7 @@ do_action('openid_login');
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2008-11-01) =
 

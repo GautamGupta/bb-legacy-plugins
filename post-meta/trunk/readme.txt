@@ -47,7 +47,7 @@ Human Test plugin or some kind of Captcha plugin is highly recommended when allo
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2008-12-22) =
 

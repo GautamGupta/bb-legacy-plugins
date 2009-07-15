@@ -46,7 +46,7 @@ anywhere before `</IfModule>` where `/forums/` is the path to your bbpress insta
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2008-08-26) =
 

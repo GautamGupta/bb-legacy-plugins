@@ -42,7 +42,7 @@ $human_test['on_for_members']=true;
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.01 (2008-01-27) =
 

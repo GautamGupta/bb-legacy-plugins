@@ -36,7 +36,7 @@ For now you must edit the wiki-post.php directly to change default options.
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 * 0.0.1 	wiki-post is born 
 * 0.1.0	first public beta release

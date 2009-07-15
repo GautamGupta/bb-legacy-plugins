@@ -50,7 +50,7 @@ When using this, it is highly recommended to also use the Human Test plugin to p
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 0.0.1 (2008-11-09) =
 

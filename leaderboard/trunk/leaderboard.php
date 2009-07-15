@@ -50,7 +50,7 @@ function leaderboard_view($view="") {
 	add_action('bb_head','leaderboard_head');
 	bb_send_headers();
 	bb_get_header(); 
-	leaderboard($days);	
+	leaderboard($days,"view");	
 	bb_get_footer(); 
 	exit;
 }
@@ -58,7 +58,7 @@ function leaderboard_view($view="") {
 function leaderboard_head() {global $leaderboard; echo '<style type="text/css">'.$leaderboard['css'].'</style>';
 }
 
-function leaderboard($days=0,$template="view") {
+function leaderboard($days=0,$template="sidebar") {
 	global $leaderboard,$leaders,$bb,$bbdb,$page,$total,$view_count;
 	
 	if ($template!="view" && $leaderboard['cache']) {	

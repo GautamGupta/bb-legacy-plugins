@@ -57,7 +57,7 @@ any template by using direct calls, ie. `<?php post_count_plus($user->ID); ?>`
 
 * http://bbshowcase.org/donate/
 
-== History ==
+== Changelog ==
 
 = Version 1.00 (2008-02-10) =
 

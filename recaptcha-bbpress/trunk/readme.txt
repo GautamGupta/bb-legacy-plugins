@@ -1,4 +1,4 @@
-=== Show Top Posters ===
+=== reCAPTCHA bbpress ===
 Tags: recaptcha, rhyswynne, spam, registrations
 Tested upto: 1.0
 Contributors: Rhys Wynne
@@ -7,7 +7,7 @@ Description: Protect your forum from spam registrations by using <a href="http:/
 Author: Rhys Wynne
 Author URI: http://www.gospelrhys.co.uk/
 Plugin URI: http://www.gospelrhys.co.uk/plugins/bbpress-plugins/show-top-posters-bbpress-plugin
-Version: 0.1
+Version: 0.2
 Donate link: http://www.gospelrhys.co.uk/donations/
 Requires: 0.73 or higher
 

@@ -3,7 +3,7 @@
 Plugin Name: reCAPTCHA bbPress
 Plugin URI: 
 Description:  Recapture bbPress from bots by adding reCAPTCHA to your forum.
-Version: 0.1
+Version: 0.2
 Author: Rhys Wynne
 Author URI: http://www.gospelrhys.co.uk
 

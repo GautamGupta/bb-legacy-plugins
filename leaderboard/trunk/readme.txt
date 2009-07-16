@@ -67,6 +67,10 @@ the posts and comments will be included, there is no limit. It is recommended to
 
 * first public release
 
+= Version 0.0.2 (2009-07-16) =
+
+* support for forum specific filter with optional dropdown in view (note leaderboard arguments have changed order)
+
 == To Do ==
 
 * admin menu ?

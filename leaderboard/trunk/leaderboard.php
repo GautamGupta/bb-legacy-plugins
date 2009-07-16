@@ -47,7 +47,7 @@ function leaderboard_view($view="") {
 	global $leaderboard;	
 	if ($leaderboard['role'] && $leaderboard['role']!="read" && !bb_current_user_can($leaderboard['role'])) {return;}
 	$days=isset($_REQUEST['days']) ? intval($_REQUEST['days']) : 0; if ($days<0) {$days=0;} elseif ($days>9999) {$days=9999;}
-	$forums=isset($_REQUEST['forums']) ? intval($_REQUEST['forums']) : 0;
+	$forums=isset($_REQUEST['forums']) ? $_REQUEST['forums'] : 0; if (is_array($forums)) {foreach ($forums as $key=>$value) {$forums[$key]=intval($value);}} else {$forums=intval($forums);}
 	add_action('bb_head','leaderboard_head');
 	bb_send_headers();
 	bb_get_header(); 
@@ -96,7 +96,7 @@ function leaderboard($template="sidebar",$days=0,$forums=0) {
 	}
 		
 	if (!empty($forums)) {
-		if (is_array($forums)) {foreach ($forums as $key=>$value) {$forums[$key]=intval($value);}} else {$forums=intval($forums);}
+		if (is_array($forums)) {foreach ($forums as $key=>$value) {$forums[$key]=intval($value); if ($value==0) {unset($forums[$key]);}}} else {$forums=intval($forums);}
 		if (!empty($forums)) {$bbRestrict.=" AND forum_id IN (".implode(",",(array) $forums).") ";}
 	}
 			
@@ -204,5 +204,6 @@ global $leaderboard;
 	$x=posix_getuid (); if (0 == $x && $current) {$org_uid = posix_get_uid(); $pw_info = posix_getpwnam ($current); $uid = $pw_info["uid"];  posix_setuid ($uid);}
 	$fh=@fopen($filename,"wb"); if ($fh) {@fwrite($fh,$output); fclose($fh);}
 	if ($org_uid) {posix_setuid($org_uid);}
-}	
+}
+
 ?>

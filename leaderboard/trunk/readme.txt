@@ -32,7 +32,7 @@ http://boards.weddingbee.com/view/leaderboard
 
 * Optionally edit your bbpress theme and add 
 `
-<?php leaderboard("1","sidebar"); ?>
+<?php leaderboard("sidebar",1); ?>
 `
 Where "1" is the number of days to include in the results and "sidebar" is the name of the leaderboard template to use.
 

@@ -35,5 +35,5 @@
 	// $output.=" <small>updated ".bb_since($filemtime)." ago</small>";
 	
 	echo $output;
-	leaderboard_cache($days,$template,$output);	
+	leaderboard_cache($template,$days,$forums,$output);	
 ?>

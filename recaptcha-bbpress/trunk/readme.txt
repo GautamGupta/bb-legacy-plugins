@@ -6,7 +6,7 @@ Plugin Name: Recaptca bbPress
 Description: Protect your forum from spam registrations by using <a href="http://www.recaptcha.net">Recaptcha</a>.
 Author: Rhys Wynne
 Author URI: http://www.gospelrhys.co.uk/
-Plugin URI: http://www.gospelrhys.co.uk/plugins/bbpress-plugins/show-top-posters-bbpress-plugin
+Plugin URI: http://www.gospelrhys.co.uk/plugins/bbpress-plugins/recaptcha-bbpress-plugin
 Version: 0.2
 Donate link: http://www.gospelrhys.co.uk/donations/
 Requires: 0.73 or higher

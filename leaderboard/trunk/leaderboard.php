@@ -100,7 +100,7 @@ function leaderboard($template="sidebar",$days=0,$forums=0) {
 		if (!empty($forums)) {$bbRestrict.=" AND forum_id IN (".implode(",",(array) $forums).") ";}
 	}
 			
-	if (empty($bb->wp_table_prefix) && empty($leaderboard['additional_wordpress']) && empty($leaderboard['additional_bbpress']) ) {	
+	if (!empty($forums) || (empty($bb->wp_table_prefix) && empty($leaderboard['additional_wordpress']) && empty($leaderboard['additional_bbpress'])) ) {	
 		$select="SELECT poster_id as ID,count(post_status) as post_count,0 as comment_count,count(post_status) as total_count ";
 		$query="FROM $bbdb->posts WHERE post_status = 0 $bbRestrict GROUP BY poster_id";
 	} else {	

@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/leaderboard
 Description: Shows the most active users across bbPress and WordPress within different time periods. Customizable templates. 
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.2
+Version: 0.0.3
 */
 
 $leaderboard['role']="read";				 // level needed to see list, ie. read, participate, moderate, administrate
@@ -44,14 +44,14 @@ elseif ($leaderboard['add_view']) {
 
 function leaderboard_view($view="") {	
 	if (!empty($view) && $view!='leaderboard')  {return;}
-	global $leaderboard;	
+	global $leaderboard,$page;	
 	if ($leaderboard['role'] && $leaderboard['role']!="read" && !bb_current_user_can($leaderboard['role'])) {return;}
 	$days=isset($_REQUEST['days']) ? intval($_REQUEST['days']) : 0; if ($days<0) {$days=0;} elseif ($days>9999) {$days=9999;}
 	$forums=isset($_REQUEST['forums']) ? $_REQUEST['forums'] : 0; if (is_array($forums)) {foreach ($forums as $key=>$value) {$forums[$key]=intval($value);}} else {$forums=intval($forums);}
 	add_action('bb_head','leaderboard_head');
 	bb_send_headers();
 	bb_get_header(); 
-	leaderboard("view",$days,$forums);	
+	leaderboard("view",$days,$forums,$page);	
 	bb_get_footer(); 
 	exit;
 }
@@ -59,11 +59,16 @@ function leaderboard_view($view="") {
 function leaderboard_head() {global $leaderboard; echo '<style type="text/css">'.$leaderboard['css'].'</style>';
 }
 
-function leaderboard($template="sidebar",$days=0,$forums=0) {
+function leaderboard($template="sidebar",$days=0,$forums=0,$tpage=0) {
 	global $leaderboard,$leaders,$bb,$bbdb,$page,$total,$view_count;
 	
-	if ($template!="view" && $leaderboard['cache']) {	
-		$filename=$leaderboard['cache_dir']."$template-$days.html";
+	if (!empty($forums)) {
+		if (is_array($forums)) {foreach ($forums as $key=>$value) {$forums[$key]=intval($value); if ($value==0) {unset($forums[$key]);}}} 
+		else {$forums=intval($forums);}
+	}		
+	
+	if ($leaderboard['cache']) {	
+		$filename=$leaderboard['cache_dir']."$template-$days-$forums-$tpage.html"; echo $filename;
 		@$filemtime=filemtime($filename);
 		if ($filemtime && intval(time()/$leaderboard['cache_time'])==intval($filemtime/$leaderboard['cache_time'])) {readfile($filename); return;}   		
 	}
@@ -73,7 +78,7 @@ function leaderboard($template="sidebar",$days=0,$forums=0) {
 	$maxpage=intval($maximum/$limit); if ($maxpage<1) {$maxpage=1;}	
 	$page = intval($page); if ($page<1) {$page=1;} elseif ($page>$maxpage) {$page=$maxpage;} 
 	$offset = ($page -1) * $limit;	 	
-	$post_count_plus=($days==0 && function_exists('post_count_plus')); 
+	$post_count_plus=($days==0 && empty($forums) && function_exists('post_count_plus')); 
 	$bbRestrict=$wpRestrict="";
 	
 	if ($days) {
@@ -84,21 +89,18 @@ function leaderboard($template="sidebar",$days=0,$forums=0) {
 
 	$mysql_starttime=gmdate("Y-m-d H:i:s",$starttime); 	
 	$mysql_endtime=gmdate("Y-m-d H:i:s",$endtime);
-	$bbRestrict=" AND post_time>='$mysql_starttime' ";		 	// AND post_time<='$mysql_endtime' ";
-	$wpRestrict=" AND comment_date_gmt>='$mysql_starttime' ";	 // AND comment_date_gmt<='$mysql_endtime' ";		
+	$bbRestrict.=" AND post_time>='$mysql_starttime' ";		 	// AND post_time<='$mysql_endtime' ";
+	$wpRestrict.=" AND comment_date_gmt>='$mysql_starttime' ";	 // AND comment_date_gmt<='$mysql_endtime' ";		
 	} elseif ($post_count_plus) {
 		$query="SELECT user_id FROM $bbdb->usermeta WHERE meta_key='post_count' ORDER BY (meta_value+0) DESC,user_id ASC LIMIT $offset,$limit";
 		$ids=$bbdb->get_col($query);
 		if (empty($ids)) {$ids="0";} 	// short-circuit on purpose
 		$ids=implode($ids,",");
-		$bbRestrict=" AND poster_id IN ($ids) ";
-		$wpRestrict=" AND user_id IN ($ids) ";
+		$bbRestrict.=" AND poster_id IN ($ids) ";
+		$wpRestrict.=" AND user_id IN ($ids) ";
 	}
 		
-	if (!empty($forums)) {
-		if (is_array($forums)) {foreach ($forums as $key=>$value) {$forums[$key]=intval($value); if ($value==0) {unset($forums[$key]);}}} else {$forums=intval($forums);}
-		if (!empty($forums)) {$bbRestrict.=" AND forum_id IN (".implode(",",(array) $forums).") ";}
-	}
+	if (!empty($forums)) {$bbRestrict.=" AND forum_id IN (".implode(",",(array) $forums).") ";}	
 			
 	if (!empty($forums) || (empty($bb->wp_table_prefix) && empty($leaderboard['additional_wordpress']) && empty($leaderboard['additional_bbpress'])) ) {	
 		$select="SELECT poster_id as ID,count(post_status) as post_count,0 as comment_count,count(post_status) as total_count ";
@@ -194,12 +196,12 @@ function leaderboard($template="sidebar",$days=0,$forums=0) {
 @require(rtrim(dirname(__FILE__),' /\\')."/$template.php");
 }
 
-function leaderboard_cache($template="sidebar",$days=0,$forums=0,& $output) {
+function leaderboard_cache($template="sidebar",$days=0,$forums=0,& $output,$page=0) {
 global $leaderboard;
 	if (!$leaderboard['cache']) {return;}
 	if (is_array($forums)) {foreach ($forums as $key=>$value) {$forums[$key]=intval($value);}} else {$forums=intval($forums);}
 	$forums=implode("-",(array) $forums);
-	$filename=$leaderboard['cache_dir']."$template-$days-$forums.html";
+	$filename=$leaderboard['cache_dir']."$template-$days-$forums-$page.html"; echo $filename;
 	$current=get_current_user();  if (!($current && !in_array($current,array("nobody","httpd","apache","root")) && strpos(__FILE__,$current))) {$current="";}
 	$x=posix_getuid (); if (0 == $x && $current) {$org_uid = posix_get_uid(); $pw_info = posix_getpwnam ($current); $uid = $pw_info["uid"];  posix_setuid ($uid);}
 	$fh=@fopen($filename,"wb"); if ($fh) {@fwrite($fh,$output); fclose($fh);}

@@ -19,25 +19,26 @@
 <?php	
 	global $leaders,$page,$total; 
 	if (empty($leaders)) {
-?>	
-	<br />
-	<p>Sorry, there are no users for this selection, please try another.</p>
-	<br />
+		$output="	
+			<br />
+			<p>Sorry, there are no users for this selection, please try another.</p>
+			<br />
+		";
 	
-<?php	} else {  ?>
+	} else { 
+		$output="
+			<table id='latest' class='leaderboard'>
+			<tr>		
+			<th width='1'>".__('Rank')."</th>
+			<th>". __('User')."</th>		
+			<th>". __('Total')."</th>
+			<th>". __('Posts')."</th>
+			<th>". __('Topics')."</th>
+			<th>". __('Comments')."</th>
+			<th>". __('Member Since')."</th>
+			</tr>
+		";
 
-<table id="latest" class="leaderboard">
-	<tr>		
-		<th width="1"><?php _e('Rank'); ?></th>
-		<th><?php _e('User'); ?></th>		
-		<th><?php _e('Total'); ?></th>
-		<th><?php _e('Posts'); ?></th>
-		<th><?php _e('Topics'); ?></th>
-		<th><?php _e('Comments'); ?></th>
-		<th><?php _e('Member Since'); ?></th>
-
-	</tr>
-<?php 
 	foreach ($leaders as $rank=>$leader) {
 		$user = bb_get_user( $leader->ID ); $r="";
 		$r .= "<tr id='user-$user->ID'" . get_alt_class("leaderboard") . ">";	
@@ -49,13 +50,19 @@
 		$r .= "<td class='num'>$leader->comment_count</td>";
 		$r .= "<td>" . bb_since( $user->user_registered ) . "</td>";
 		$r .= "</tr>";
-		echo $r;
+		$output.=$r;
 	 } 
-?>
-</table>
-<?php } // end empty $leaders ?>
 
-<div class="nav"><?php echo get_page_number_links( $page, $total ); ?></div>
+	$output.="</table>";
+} // end empty $leaders
+
+$output.='<div class="nav">'.get_page_number_links( $page, $total ).'</div>';
+
+// $output.=" <small>updated ".bb_since($filemtime)." ago</small>";
+	
+echo $output;
+leaderboard_cache($template,$days,$forums,$output,$page);	
+?>
 
 </div>
 
@@ -84,7 +91,7 @@ global $forum_id, $forum;
 	if (is_array($forums)) {foreach ($forums as $key=>$value) {$forums[$key]=intval($value);}} else {$forums=intval($forums);}
 	$selected=array_flip((array) $forums);  
 	$option_selected = isset($selected[0]) ? ' selected="selected"' : '';
-	$r = '<select name="' . $name . (intval($size)>1 ? '[]' : '').'" id="' . $id . '" tabindex="' . intval($tab). '" size="'.$size.'" '.(intval($size)>1 ? 'multiple="multiple" ' : ' ').'" onchange="'.$onchange.'">' . "\n";	
+	$r = '<select name="' . $name . (intval($size)>1 ? '[]' : '').'" id="' . $id . '" tabindex="' . intval($tab). '" size="'.$size.'" '.(intval($size)>1 ? 'multiple="multiple" ' : ' ').' onchange="'.$onchange.'">' . "\n";	
 	$r .= "\n" . '<option value="0" '.$option_selected.'>&nbsp;' . __('-  All  -').'&nbsp;</option>' . "\n"; 
 	$options = array();
 	while ( $depth = bb_forum() ) :

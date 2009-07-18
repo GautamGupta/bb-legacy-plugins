@@ -36,21 +36,21 @@ below the rest of the title.
 
 Function calls:
 
-most_viewed_list (parameters) - 
+`most_viewed_list` (parameters)  
 	Parameters accepted:
 	$list_length (default is 10), $before_list (default is "<ul>"), $after_list (default is "</ul>"), $before_item (default
 	is "<li>"), $after_item = "</li>")
 
 	Use this function anywhere you want to show a list of your most viewed topics.
 
-most_viewed_table (parameters) - 
+`most_viewed_table (parameters)` 
 	Parameters accepted:
 	$list_length (default is 10)
 
 	Use this function on the front/forum/tags pages to insert a table of your most-viewed posts.  Again, if you are not
 	using the default theme you may have to make some changes to the styling of the table.
 
-show_view_count () - 
+`show_view_count ()`
 	If used in a "topic loop," this function will display the number of times a topic has been viewed.
 
 To add a view count column to front page, forum, and/or tags page tables, make the following modifications.
@@ -61,7 +61,7 @@ of the default, your modifications may be slightly different.
 being appended to the end of the topic title.
 2.  Open front-page.php.  Find <table id="latest"> (around line 21).  Replace everything between this opening
 tag and </table> (around line 46) with the following:
-
+`
 <table id="latest">
 <tr>
 	<th><?php _e('Topic'); ?> &#8212; <?php new_topic(); ?></th>
@@ -115,10 +115,31 @@ everything between them with the following:
 </tr>
 <?php endforeach; ?>
 </table>
-
+`
 5.  You can rearrange the order of the columns if you'd like, just make sure you get them in the right order for 
 each section.
 	
 == Example ==
 
 You can see this plugin in action at http://blog.wittmania.com/bbpress or http://bbshowcase.org/forums/
+
+== Changelog ==
+
+* 1.6.4 
+reverting to api db calls on new topic count init
+cleanup meta entries in the db with a value of zero 
+also append view count to views
+let's not step on any existing $topic
+and faster/more reliable 1.0 detection
+* 1.6.3 
+extremely aggressive cache checking before direct db query
+short-tag fix
+* 1.6.2 
+use cached data when possible to remove/reduce mysql queries
+* 1.6.1 
+attempted fix at unreproducible error in 1.0
+plugin browser doesn't like to show multiple authors?
+* 1.6.0 
+_ck_ taking over for wittmania, fixes for bbPress 1.0 compatibility (08/28/08)
+* 1.5.0 
+first release by wittmania (05/31/07)

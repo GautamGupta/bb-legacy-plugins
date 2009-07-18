@@ -71,6 +71,10 @@ the posts and comments will be included, there is no limit. It is recommended to
 
 * support for forum specific filter with optional dropdown in view (note leaderboard arguments have changed order)
 
+= Version 0.0.3 (2009-07-18) =
+
+* caching now works across the view and pages too - however this will have to be rewritten due to a fundamental design flaw where pages can get out of sync
+
 == To Do ==
 
 * admin menu ?

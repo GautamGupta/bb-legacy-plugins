@@ -107,8 +107,7 @@ everything between them with the following:
 	<th><?php _e('Last Poster'); ?></th>
 	<th><?php _e('Freshness'); ?></th>
 </tr>
-`
-`
+
 <?php foreach ( $topics as $topic ) : ?>
 <tr<?php topic_class(); ?>>
 	<td><a href="<?php topic_link(); ?>"><?php topic_title(); ?></a></td>

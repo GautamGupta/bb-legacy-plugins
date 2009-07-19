@@ -68,7 +68,7 @@ function leaderboard($template="sidebar",$days=0,$forums=0,$tpage=0) {
 	}		
 	
 	if ($leaderboard['cache']) {	
-		$filename=$leaderboard['cache_dir']."$template-$days-$forums-$tpage.html"; echo $filename;
+		$filename=$leaderboard['cache_dir']."$template-$days-$forums-$tpage.html"; 
 		@$filemtime=filemtime($filename);
 		if ($filemtime && intval(time()/$leaderboard['cache_time'])==intval($filemtime/$leaderboard['cache_time'])) {readfile($filename); return;}   		
 	}
@@ -201,7 +201,7 @@ global $leaderboard;
 	if (!$leaderboard['cache']) {return;}
 	if (is_array($forums)) {foreach ($forums as $key=>$value) {$forums[$key]=intval($value);}} else {$forums=intval($forums);}
 	$forums=implode("-",(array) $forums);
-	$filename=$leaderboard['cache_dir']."$template-$days-$forums-$page.html"; echo $filename;
+	$filename=$leaderboard['cache_dir']."$template-$days-$forums-$page.html"; 
 	$current=get_current_user();  if (!($current && !in_array($current,array("nobody","httpd","apache","root")) && strpos(__FILE__,$current))) {$current="";}
 	$x=posix_getuid (); if (0 == $x && $current) {$org_uid = posix_get_uid(); $pw_info = posix_getpwnam ($current); $uid = $pw_info["uid"];  posix_setuid ($uid);}
 	$fh=@fopen($filename,"wb"); if ($fh) {@fwrite($fh,$output); fclose($fh);}

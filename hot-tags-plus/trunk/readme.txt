@@ -49,30 +49,22 @@ http://bbshowcase.org/forums/tags/
 * tags for only the first forum, excluding tags that are only used once:
 http://bbshowcase.org/forums/tags/?forums=1&minimum=2
 internal command on a forum page   
-`
-global $forum_id; hot_tags_plus(array('forums'=>$forum_id,'minimum'=>2));
-` 
+`global $forum_id; hot_tags_plus(array('forums'=>$forum_id,'minimum'=>2));` 
 
 * the above tag cloud but sorted by tag count instead of alphabetical
 http://bbshowcase.org/forums/tags/?forums=1&minimum=2&sort=numeric
 internal command on a forum page   
-`
-global $forum_id; hot_tags_plus(array('forums'=>$forum_id,'minimum'=>2,'sort'=>'numeric'));
-` 
+`global $forum_id; hot_tags_plus(array('forums'=>$forum_id,'minimum'=>2,'sort'=>'numeric'));` 
 
 * tags used only on topics that have been replied to within the past month:
 http://bbshowcase.org/forums/tags/?since=1+month+ago
 internal command would be   
-`
-hot_tags_plus(array('since'=>'1 month ago'));
-` 
+`hot_tags_plus(array('since'=>'1 month ago'));` 
 
 * tags in green (without waypoint colors)
 http://bbshowcase.org/forums/tags/?colors[]=003300&colors[]=00ee00
 internal command would be   
-`
-hot_tags_plus(array('colors'=>array('003300','00ee00')));
-` 
+`hot_tags_plus(array('colors'=>array('003300','00ee00')));` 
 
 = Here are all the options: =
 `

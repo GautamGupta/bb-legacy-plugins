@@ -96,8 +96,12 @@ hot_tags_plus($options);
 
 * first public release
 
+= Version 0.0.2 (2009-07-22) =
+
+* highlights related tags on mouseover (optional)
+* stylesheet control
+
 == To Do ==
 
 * admin menu
-* related tags during mouse-over
-
+* cache control for time vs tag changes

@@ -39,7 +39,7 @@ add_action('bb_remove_topic_tags', 'hot_tags_plus_delete', 10,2);
 function hot_tags_plus($args = '') { echo get_hot_tags_plus($args); }
 
 function get_hot_tags_plus($args = '' ) {
-	global $hot_tags_plus, $bbdb; $a = array();	
+	global $hot_tags_plus, $bbdb; $a = array(); $output="";	
 		
 	$defaults = array( 'smallest' => 8, 'largest' => 22, 'unit' => 'pt', 'limit' => 45, 'format' => 'flat', 
 				'minimum' => 0, 'maximum' => 0, 'forums' => 0, 'since' => 0, 'sort' => 0, 'colors' => 0 );
@@ -134,22 +134,6 @@ function get_hot_tags_plus($args = '' ) {
 		}
 	}
 
-	foreach ( $counts as $tag => $count ) {
-		$id=($hot_tags_plus['related'] ? " id='tag_".$ids[$tag]."'" : "");
-		$taglink = attribute_escape($taglinks{$tag});		
-		$tag = str_replace(' ', '&nbsp;', wp_specialchars( $tag ));
-		$a[] = "<a rel='tag'$id href='$taglink' title='" . attribute_escape( sprintf( __('%d topics'), $count ) ) . "'><font style='font-size: " .
-			round( $smallest + ( ( $count - $min_count ) * $fontstep ) ,4). "$unit;'"
-			. ($colors ? " color='#".$gradient[$count-$min_count]."'" : "")
-			.">$tag</font></a>";
-	}
-
-	switch ( $format ) :
-		case 'array' : 	$r =& $a; break;
-		case 'list' : $r = "<ul class='bb-tag-heat-map'>\n\t<li>". join("</li>\n\t<li>", $a)."</li>\n</ul>\n"; 	break;
-		default : $r = join("\n", $a); break;
-	endswitch;
-	
 	if ($hot_tags_plus['related']) {
 
 	if (defined('BACKPRESS_PATH')) {
@@ -174,24 +158,28 @@ function get_hot_tags_plus($args = '' ) {
 	$results=$bbdb->get_results($query);
 
 	if (!empty($results) && is_array($results) && count($results)) {
-		$HTP_related="\n";		
-		foreach ($results as $result) {$HTP_related.="\t\tHTP_related[$result->id]=[$result->related];\n";}
-		$r .= <<< HTPJSEOF
+		foreach ($results as $result) {$HTP_related[$result->id]=$result->related;}
+
+		$output .= <<< HTPJSEOF
 		
 		<script type="text/javascript" defer="defer">
-		var HTP_related=new Array();
+		var HTP_related=new Array();		
 		if (window.attachEvent) {window.attachEvent('onload', HTP_init);} 
 		else if (window.addEventListener) {window.addEventListener('load', HTP_init, false);} 
 		else {document.addEventListener('load', HTP_init, false);}		
 		
 		function HTP_init() {			
-			$HTP_related
 			var tlinks=document.links.length;
 			for (var i=0;i<tlinks;i++) {		
 				if (document.links[i].id.substring(0,4)=="tag_") {
-					// document.links[i].className="related";
 					document.links[i].onmouseover=HTP_mouse;
-					document.links[i].onmouseout=HTP_mouse;					
+					document.links[i].onmouseout=HTP_mouse;
+					if (document.links[i].coords) {
+						var id=document.links[i].id.substring(4);
+						HTP_related[id]=new Array();  // some browsers need this
+						HTP_related[id]=document.links[i].coords.split(',');
+						document.links[i].coords="";  // neuturalize just in case
+					}
 				}
 			}
 		}
@@ -216,14 +204,31 @@ HTPJSEOF;
 
 	}  // previous line MUST be blank because of heredoc
 	}
+
+	foreach ( $counts as $tag => $count ) {
+		$id=($hot_tags_plus['related'] ? " id='tag_".$ids[$tag]."'" : "");
+		$taglink = attribute_escape($taglinks{$tag});		
+		$tag = str_replace(' ', '&nbsp;', wp_specialchars( $tag ));
+		$a[] = "<a rel='tag'$id href='$taglink' title='" . attribute_escape( sprintf( __('%d topics'), $count ) ) . "'"
+			. ($id && !empty($HTP_related[$ids[$tag]]) ? " coords='".$HTP_related[$ids[$tag]]."'" : "").">
+			<font style='font-size: " .round( $smallest + ( ( $count - $min_count ) * $fontstep ) ,4). "$unit;'"
+			. ($colors ? " color='#".$gradient[$count-$min_count]."'" : "")
+			.">$tag</font></a>";
+	}
+
+	switch ( $format ) :
+		case 'array' : 	$output .= $a; break;
+		case 'list' : $output .= "<ul class='bb-tag-heat-map'>\n\t<li>". join("</li>\n\t<li>", $a)."</li>\n</ul>\n"; 	break;
+		default : $output .= join("\n", $a); break;
+	endswitch;
 	
 	if ($hot_tags_plus['cache']) {
 		$current=get_current_user();  if (!($current && !in_array($current,array("nobody","httpd","apache","root")) && strpos(__FILE__,$current))) {$current="";}
 		$x=posix_getuid (); if (0 == $x && $current) {$org_uid = posix_get_uid(); $pw_info = posix_getpwnam ($current); $uid = $pw_info["uid"];  posix_setuid ($uid);}
-		$fh=@fopen($filename,"wb"); if ($fh) {@fwrite($fh,$r); fclose($fh);}
+		$fh=@fopen($filename,"wb"); if ($fh) {@fwrite($fh,$output); fclose($fh);}
 		if ($org_uid) {posix_setuid($org_uid);}
 	}	
-return $r;
+return $output;
 }
 
 function hot_tags_plus_delete($x='',$y='',$z='') {global $hot_tags_plus; $files=glob($hot_tags_plus['cache_dir'].$hot_tags_plus['prefix']."*"); foreach($files as $fn) {@unlink($fn);}} 

@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: wordpress-bbpress-syncronization-ru_RU\n"
 "Report-Msgid-Bugs-To: ibobrik@gmail.com\n"
 "POT-Creation-Date: 2009-07-22 17:24+0300\n"
-"PO-Revision-Date: 2009-07-22 17:32+0300\n"
-"Last-Translator: Ivan Babrou <ibobrik@gmail.com>\n"
-"Language-Team: Ivan Babrou <ibobrik@gmail.com>\n"
+"PO-Revision-Date: 2009-07-22 17:41+0300\n"
+"Last-Translator: Fat Cow <zhr@tut.by>\n"
+"Language-Team: Fat Cow <zhr@tut.by>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18,43 +18,42 @@ msgstr ""
 
 #: bbwp-sync.php:483
 msgid "WordPress syncronization"
-msgstr "Синхронизация с WordPress"
+msgstr "Сінхранізацыя з WordPress"
 
 #: bbwp-sync.php:489
 msgid "WordPress syncronization options"
-msgstr "Опции синхронизации с WordPress"
+msgstr "Опцыі сінхранізацыі з WordPress"
 
 #: bbwp-sync.php:495
 msgid "WordPress url:"
-msgstr "Адрес WordPress:"
+msgstr "Адрас WordPress:"
 
 #: bbwp-sync.php:502
 msgid "Please submit with last \"/\"! We will test that after submussion"
 msgstr ""
-"Используйте полный адрес с \"/\" на конце! Адрес будет проверен после "
-"отправки"
+"Выкарыстайце поўны адрас з \"/\" на канцы! Адрас будзе правераны пасля "
+"адпраўкі"
 
 #: bbwp-sync.php:507 bbwp-sync.php:530 bbwp-sync.php:653 bbwp-sync.php:719
 msgid "Everything is ok!"
-msgstr "Всё в порядке!"
+msgstr "Усё ў парадку!"
 
 #: bbwp-sync.php:510
 msgid "URL is incorrect or connection error, please verify it (full variant): "
 msgstr ""
-"Неверный адрес или ошибка подключения, пожалуйста проверьте (полный "
-"вариант): "
+"Няслушны адрас або памылка злучэння, калі ласка праверце (поўны варыянт): "
 
 #: bbwp-sync.php:518
 msgid "Secret key:"
-msgstr "Секретный ключ:"
+msgstr "Сакрэтны ключ:"
 
 #: bbwp-sync.php:525
 msgid "We need it for secure communication between your systems"
-msgstr "Ключ необходим для безопасного взаимодействия систем"
+msgstr "Ключ неабходны для бяспечнага ўзаемадзеяння сістэм"
 
 #: bbwp-sync.php:533
 msgid "Error! Not equal secret keys in WordPress and bbPress"
-msgstr "Ошибка! Различные ключи в WordPress и bbPress"
+msgstr "Памылка! Розныя ключы ў WordPress і bbPress"
 
 #: bbwp-sync.php:541
 msgid "Forum:"
@@ -62,112 +61,112 @@ msgstr "Форум:"
 
 #: bbwp-sync.php:548
 msgid "Select forum"
-msgstr "Выберите форум"
+msgstr "Вылучыце форум"
 
 #: bbwp-sync.php:555
 msgid "You need to set the forum for syncronization."
-msgstr "Вам необходимо выбрать форум для синхронизации"
+msgstr "Вам неабходна вылучыць форум для сінхранізацыі."
 
 #: bbwp-sync.php:560
 msgid "Anonymous user:"
-msgstr "Анонимный пользователь:"
+msgstr "Ананімны карыстач:"
 
 #: bbwp-sync.php:564
 msgid "User id for posts on forum from unregistered users in WordPress"
 msgstr ""
-"ID анонимного пользователя для сообщений от незарегистрированных "
-"пользователей WordPress"
+"ID ананімнага карыстача для паведамленняў ад незарэгістраваных карыстачоў "
+"WordPress"
 
 #: bbwp-sync.php:569
 msgid "Sync all posts:"
-msgstr "Синхронизировать все сообщения:"
+msgstr "Сінхранізаваць усе паведамленні:"
 
 #: bbwp-sync.php:573
 msgid ""
 "Sync post even if not approved. Post will have the same status in WordPress"
 msgstr ""
-"Синхронизировать, даже если сообщение не одобрено. Комментарий будет иметь "
-"тот же статус в WordPress"
+"Сінхранізаваць, нават калі паведамленне не ўхвалена. Каментар будзе мець той "
+"жа статус, што і ў WordPress"
 
 #: bbwp-sync.php:578
 msgid "Show anonymous userinfo:"
-msgstr "Информация об анонимном пользователе:"
+msgstr "Інфармацыя аб ананімным карыстачу:"
 
 #: bbwp-sync.php:581
 msgid "Show name"
-msgstr "Показывать имя"
+msgstr "Паказваць імя"
 
 #: bbwp-sync.php:582
 msgid "Show email"
-msgstr "Показывать email"
+msgstr "Паказваць email"
 
 #: bbwp-sync.php:583
 msgid "Show url"
-msgstr "Показывать URL"
+msgstr "Паказваць URL"
 
 #: bbwp-sync.php:588
 msgid "Sync posts back:"
-msgstr "Синхронизировать назад в WP:"
+msgstr "Сінхранізаваць паведамленні назад у WP:"
 
 #: bbwp-sync.php:592
 msgid ""
 "You may disable syncing posts from forum back to WordPress. You need to have "
 "a good reason to do that"
 msgstr ""
-"Вы можете отключить синхронизацию сообщений с форума в WordPress. Вам "
-"нужна хорошая причина для этого"
+"Вы можаце адключыць сінхранізацыі ппастоў назад у WordPress. Неабходна "
+"мець добрую прычыну для гэтага"
 
 #: bbwp-sync.php:597
 msgid "Enable plugin"
-msgstr "Включить плагин"
+msgstr "Уключыць убудову"
 
 #: bbwp-sync.php:602
 msgid "Allowed by both parts"
-msgstr "Позволено обеими составляющими"
+msgstr "Дазволена абедзвюма складнікамі"
 
 #: bbwp-sync.php:602
 msgid "Not allowed: "
-msgstr "Не разрешено: "
+msgstr "Не дазволена: "
 
 #: bbwp-sync.php:608
 msgid "Update Configuration &raquo;"
-msgstr "Обновить настройки &raquo;"
+msgstr "Захаваць налады &raquo;"
 
 #: bbwp-sync.php:628
 msgid "Configuration saved."
-msgstr "Настройки сохранены."
+msgstr "Налады захаваныя."
 
 #: bbwp-sync.php:721
 msgid "Cannot establish connection to WordPress part"
-msgstr "Невозможно установить соединение с WordPress составляющей"
+msgstr "Немагчыма ўсталяваць злучэнне з WordPress складнікам"
 
 #: bbwp-sync.php:723
 msgid "Invalid secret key"
-msgstr "Неверный секретный ключ"
+msgstr "Няслушны сакрэтны ключ"
 
 #: bbwp-sync.php:725
 msgid "Invalid forum id"
-msgstr "Неверный id форума"
+msgstr "Няслушны id форума"
 
 #: bbwp-sync.php:727
 msgid "Invalid anonymous user id"
-msgstr "Неверный id анонимного пользователя"
+msgstr "Няслушны id ананімнага карыстача"
 
 #: bbwp-sync.php:729
 msgid "bbPress part is not activated"
-msgstr "bbPress составляющая не активирована"
+msgstr "bbPress складнік не актываваны"
 
 #: bbwp-sync.php:731
 msgid "Too old WordPress part plugin version"
-msgstr "Слишком старая WordPress составляющая"
+msgstr "Занадта старая версія WordPress складніка"
 
 #: bbwp-sync.php:821
 msgid "User information"
-msgstr "Информация о пользователе"
+msgstr "Інфармацыя аб карыстачу"
 
 #: bbwp-sync.php:822
 msgid "Author"
-msgstr "Автор"
+msgstr "Аўтар"
 
 #: bbwp-sync.php:824
 msgid "E-mail"
@@ -175,5 +174,5 @@ msgstr ""
 
 #: bbwp-sync.php:826
 msgid "URL"
-msgstr "Адрес"
+msgstr "Адрас"
 

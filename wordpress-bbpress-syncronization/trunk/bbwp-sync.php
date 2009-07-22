@@ -4,7 +4,7 @@ Plugin Name: bbPress-WordPress syncronization
 Plugin URI: http://bobrik.name
 Description: Sync your WordPress comments to bbPress forum and back.
 Author: Ivan Babrou <ibobrik@gmail.com>
-Version: 0.6.0
+Version: 0.7.0
 Author URI: http://bobrik.name
 
 Copyright 2008 Ivan Babroŭ (email : ibobrik@gmail.com)
@@ -35,7 +35,7 @@ require_once(dirname(__FILE__).'/../../bb-load.php');
 // for mode checking
 $bbwp_plugin = 0;
 
-function add_textdomain()
+function bbwp_add_textdomain()
 {
 	// setting textdomain for translation
 	load_plugin_textdomain('bbwp-sync', dirname(__FILE__).'/');
@@ -340,6 +340,8 @@ function bbwp_install()
 		bb_update_option('bbwp_show_anonymous_email', 'disabled');
 		bb_update_option('bbwp_show_anonymous_url', 'disabled');
 	}
+	if (!bb_get_option('bbwp_sync_posts_back'))
+		bb_update_option('bbwp_sync_posts_back', 'enabled');
 	// next options must be cheched by another conditions!
 }
 
@@ -384,6 +386,8 @@ function afteredit($id)
 	{
 		if (sync_that_status($id))
 		{
+			if (bb_get_option('bbwp_sync_posts_back') == 'disabled')
+				return; // syncing back disabled
 			$row = get_table_item('bb_topic_id', $post->topic_id);
 			if ($row)
 				add_wp_comment($post, $row['wp_post_id']);
@@ -399,6 +403,8 @@ function afterpost($id)
 	$row = get_table_item('bb_topic_id', $post->topic_id);
 	if ($row)
 	{
+		if (bb_get_option('bbwp_sync_posts_back') == 'disabled')
+			return; // syncing back disabled
 		// need to duplicate in WordPress
 		if (sync_that_status($id))
 			add_wp_comment($post, $row['wp_post_id']);
@@ -409,7 +415,7 @@ function add_wp_comment($post, $wp_post_id)
 {
 	$request = array(
 		'action' => 'add_comment',
-		'post_text' => apply_filters('post_text', $post->post_text),
+		'post_text' => bbwp_correct_links(apply_filters('post_text', $post->post_text)),
 		'post_id' => $post->post_id,
 		'post_status' => $post->post_status,
 		'topic_id' => $post->topic_id,
@@ -428,7 +434,7 @@ function edit_wp_comment($post, $comment_id)
 	remove_filter('post_text', 'bbwp_anonymous_userinfo');
 	$request = array(
 		'action' => 'edit_comment',
-		'post_text' => apply_filters('post_text', $bbdb->get_var("SELECT post_text FROM ".$bbdb->prefix."posts WHERE post_id = ".$post->post_id)),
+		'post_text' => bbwp_correct_links(apply_filters('post_text', $bbdb->get_var("SELECT post_text FROM ".$bbdb->prefix."posts WHERE post_id = ".$post->post_id))),
 		'post_status' => get_real_post_status($post->post_id),
 		'user' => $post->poster_id,
 		'comment_id' => $comment_id,
@@ -578,6 +584,15 @@ function bbwp_options()
 			</div>
 		</div>
 		<div>
+			<label for="sync_posts_back">
+				<?php _e('Sync posts back:', 'bbwp-sync') ?>
+			</label>
+			<div class="inputs">
+				<input type="checkbox" name="sync_posts_back"<?php echo (bb_get_option('bbwp_sync_posts_back') == 'enabled') ? ' checked="checked"' : '';?> />
+				<p><?php _e('You may disable syncing posts from forum back to WordPress. You need to have a good reason to do that', 'bbwp-sync'); ?></p>
+			</div>
+		</div>
+		<div>
 			<label for="enable_plugin">
 				<?php _e('Enable plugin', 'bbwp-sync'); ?>
 			</label>
@@ -609,6 +624,7 @@ function process_options()
 		bb_update_option('bbwp_show_anonymous_info', $_POST['show_anonymous_info'] == 'on' ? 'enabled' : 'disabled');
 		bb_update_option('bbwp_show_anonymous_email', $_POST['show_anonymous_email'] == 'on' ? 'enabled' : 'disabled');
 		bb_update_option('bbwp_show_anonymous_url', $_POST['show_anonymous_url'] == 'on' ? 'enabled' : 'disabled');
+		bb_update_option('bbwp_sync_posts_back', $_POST['sync_posts_back'] == 'on' ? 'enabled' : 'disabled');
 		bb_admin_notice( __('Configuration saved.', 'bbwp-sync') );
 	}
 }
@@ -821,16 +837,23 @@ function bbwp_topic_last_poster($poster)
 		$row = get_table_item('bb_post_id', $topic->topic_last_post_id);
 		if ($row['wp_comment_author'])
 			return $row['wp_comment_author'];
-		else
-			return $poster;
-	} else
-	{
-		return $poster;
 	}
+	return $poster;
+}
+
+function bbwp_correct_links($text)
+{
+	$siteurl = preg_replace('|(://[^/]+/)(.*)|', '${1}', bb_get_option('uri'));
+	$current_url = substr($siteurl, 0, -1).preg_replace('|(.*/)[^/]*|', '${1}', $_SERVER['REQUEST_URI']);
+	// ':' is for protocol handling, must be replaced by '(://)', but doesn't work :-(
+	// for absolute links with starting '/'
+	$text = preg_replace('|([(href)(src)])=(["\'])/([^"\':]+)\2|', '${1}=${2}'.$siteurl.'${3}${2}', $text);
+	// for links not starting with '/'
+	return preg_replace('|([(href)(src)])=(["\'])([^"\':]+)\2|', '${1}=${2}'.$current_url.'${3}${2}', $text);
 }
 
 
-add_action('bb_init', 'add_textdomain');
+add_action('bb_init', 'bbwp_add_textdomain');
 add_action('bb_tag_added', 'aftertagedit');
 add_action('bb_pre_tag_removed', 'pretagremove');
 add_action('bb_update_post', 'afteredit');

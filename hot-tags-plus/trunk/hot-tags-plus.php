@@ -158,7 +158,7 @@ function get_hot_tags_plus($args = '' ) {
 			FROM $bbdb->term_relationships AS t1
 			LEFT JOIN $bbdb->term_relationships AS t2 ON ( t1.object_id = t2.object_id )			
 			LEFT JOIN $bbdb->term_taxonomy AS t3 ON ( t1.term_taxonomy_id = t3.term_taxonomy_id )			
-			WHERE t2.term_taxonomy_id  IN (".implode(',',$ids).") 
+			WHERE t2.term_taxonomy_id  IN (".implode(',',$ids).") AND t1.term_taxonomy_id IN (".implode(',',$ids).") 
 			ORDER BY id,related_id ASC
 			) AS tags WHERE id!=related_id GROUP BY id";		 //  maybe WHERE t3.	term_id IN ?  taxonomy_id is not really = term_id
 	} else {	
@@ -167,7 +167,7 @@ function get_hot_tags_plus($args = '' ) {
 			FROM $bbdb->tagged AS t1
 			LEFT JOIN $bbdb->tagged AS t2 ON ( t1.topic_id = t2.topic_id )
 			LEFT JOIN $bbdb->tags AS t3 ON ( t1.tag_id = t3.tag_id )
-			WHERE t2.tag_id IN (".implode(',',$ids).") 
+			WHERE t2.tag_id IN (".implode(',',$ids).") AND t1.tag_id IN (".implode(',',$ids).") 
 			ORDER BY id,related_id ASC
 			) AS tags WHERE id!=related_id GROUP BY id";						
 	}
@@ -175,7 +175,7 @@ function get_hot_tags_plus($args = '' ) {
 
 	if (!empty($results) && is_array($results) && count($results)) {
 		$HTP_related="\n";		
-		foreach ($results as $result) {$HTP_related.="HTP_related[$result->id]=[$result->related];\n";}
+		foreach ($results as $result) {$HTP_related.="\t\tHTP_related[$result->id]=[$result->related];\n";}
 		$r .= <<< HTPJSEOF
 		
 		<script type="text/javascript" defer="defer">

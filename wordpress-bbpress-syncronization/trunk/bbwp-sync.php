@@ -4,7 +4,7 @@ Plugin Name: bbPress-WordPress syncronization
 Plugin URI: http://bobrik.name
 Description: Sync your WordPress comments to bbPress forum and back.
 Author: Ivan Babrou <ibobrik@gmail.com>
-Version: 0.7.0
+Version: 0.7.1
 Author URI: http://bobrik.name
 
 Copyright 2008 Ivan Babroŭ (email : ibobrik@gmail.com)
@@ -141,6 +141,8 @@ function correct_wpbb_version()
 
 function bbwp_listener()
 {
+	if (empty($_POST['action']))
+		echo "If you see that, plugin must connect well.";
 	// setting authorized user
 	if ($_POST['user'] != 0)
 	{
@@ -497,6 +499,7 @@ function bbwp_options()
 			<div class="inputs">
 				<input class="text" name="wordpress_url" value="<?php echo bb_get_option('bbwp_wordpress_url'); ?>" />
 				<p><?php
+				$err = check_bb_settings(); // only one error at once, let's show other if only previvous was fixed
 				if (!bb_get_option('bbwp_wordpress_url'))
 				{
 					_e('Please submit with last "/"! We will test that after submussion', 'bbwp-sync');
@@ -507,7 +510,9 @@ function bbwp_options()
 						_e('Everything is ok!', 'bbwp-sync');
 					} else
 					{
-						echo __('URL is incorrect or connection error, please verify it (full variant): ', $textdomain).bb_get_option('bbwp_wordpress_url')."?wpbb-listener";
+						echo '<b>'.__('URL is incorrect or connection error, please verify it (full variant): ', $textdomain).
+							'<a href="'.bb_get_option('bbwp_wordpress_url').'?wpbb-listener">'.
+							bb_get_option('bbwp_wordpress_url')."?wpbb-listener</a></b>";
 					}
 				}
 				?></p>
@@ -520,7 +525,7 @@ function bbwp_options()
 			<div class="inputs">
 				<input class="text" name="secret_key" value="<?php echo bb_get_option('bbwp_secret_key'); ?>" />
 				<p><?php
-				if (!bb_get_option('bbwp_secret_key') && secret_key_equal())
+				if ((!bb_get_option('bbwp_secret_key') && secret_key_equal()) || ($err != 0 && $err != 2))
 				{
 					_e('We need it for secure communication between your systems', 'bbwp-sync');
 				} else
@@ -530,7 +535,7 @@ function bbwp_options()
 						_e('Everything is ok!', 'bbwp-sync');
 					} else
 					{
-						_e("Error! Not equal secret keys in WordPress and bbPress", 'bbwp-sync');
+						echo '<b>'.__("Error! Not equal secret keys in WordPress and bbPress", 'bbwp-sync').'</b>';
 					}
 				}
 				?></p>
@@ -547,12 +552,16 @@ function bbwp_options()
 						$forum_id = bb_get_option('bbwp_forum_id');
 						echo '<option value="-1">'.__('Select forum', 'bbwp-sync').'</option>';
 						foreach ($forums as $forum)
-						{
-							echo '<option value="'.$forum->forum_id.'"'.($forum_id == $forum->forum_id ? " selected='selected'" : '').'>'.$forum->forum_name.'</option>';
-						}
+							echo '<option value="'.$forum->forum_id.'"'.
+								($forum_id == $forum->forum_id ? ' selected="selected"':'').
+								'>'.$forum->forum_name.'</option>';
 						?>
 				</select>
-				<p><?php _e('You need to set the forum for syncronization.', 'bbwp-sync'); ?></p>
+				<p><?php
+					echo ($err == 3 ? '<b>' : '').
+						__('You need to set the forum for syncronization.', 'bbwp-sync').
+						($err == 3 ? '</b>' : '');
+				?></p>
 			</div>
 		</div>
 		<div>
@@ -561,7 +570,11 @@ function bbwp_options()
 			</label>
 			<div class="inputs">
 				<input class="text" name="anonymous_user" value="<?php echo bb_get_option('bbwp_anonymous_user_id'); ?>" />
-				<p><?php _e('User id for posts on forum from unregistered users in WordPress', 'bbwp-sync'); ?></p>
+				<p><?php
+					echo ($err == 4 ? '<b>' : '').
+						__('User id for posts on forum from unregistered users in WordPress', 'bbwp-sync').
+						($err == 4 ? '</b>' : '');
+				?></p>
 			</div>
 		</div>
 		<div>
@@ -593,7 +606,7 @@ function bbwp_options()
 			</div>
 		</div>
 		<div>
-			<label for="enable_plugin">
+			<label for="enable_plugin" style="font-weight:bold">
 				<?php _e('Enable plugin', 'bbwp-sync'); ?>
 			</label>
 			<div class="inputs">

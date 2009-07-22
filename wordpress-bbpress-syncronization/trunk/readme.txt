@@ -2,8 +2,8 @@
 Contributors: bobrik
 Tags: bbPress, post, comment, integration, forum, syncronization
 Requires at least: 1.0alpha6
-Tested up to: 1.0
-Stable tag: 0.6.0
+Tested up to: 1.0.1
+Stable tag: 0.7.0
 
 Sync your WordPress comments to bbPress forum and back.
 
@@ -13,11 +13,11 @@ Sync your WordPress comments to bbPress forum and back.
 
 **WordPress part may be downloaded [here](http://wordpress.org/extend/plugins/wordpress-bbpress-syncronization/)**
 
-When you post comment to WordPress it automatically mirroring in bbPress and back.
+When you post comment to WordPress it automatically mirroring in bbPress and back. See ChangeLog section to know about new hot features
 
 REQUIREMENTS:
 
-*   optional: php-curl module must be installed for https communication
+*   Optional: php-curl module must be installed for https communication
 *   WordPress user database must be integrated with bbPress
 *   Plugin must be installed and correctly configured in both systems
 
@@ -44,7 +44,10 @@ FEATURES:
 *   Correct displaying even you use markup plugins
 *   Hiding comment for in WordPress after some comments and pointing to forum
 *   Optionally showing only some recent comments in WordPress
-*   Translations
+*   Optionally disabling syncing posts back to WordPress from bbPress
+*   Automatic redirection of relative links in posts/comments
+*   Translations, currently: English, Russian, Belarusian, you may do your own
+*   WP template functions: wpbb_forum_thread_exists, wpbb_forum_thread_url (returns string)
 
 YOU MAY HELP:
 
@@ -54,7 +57,16 @@ YOU MAY HELP:
 
 Made for news.vitebsk.cc
 
-Changelog
+== Changelog ==
+
+Version 0.7.0 (22.07.2009)
+
+*  Additional checks befor some options setting
+*  Belarusian translation (thanks to Ilya aka FatCow)
+*  Trackback sync options (disable or show URL as username on forum)
+*  Optional disabling syncing comments from bbPress back to Wordpress
+*  Template function to get forum link. Now you can place link anywhere
+*  Ability to use post excerpt and full post text from WP as first topic post
 
 Version 0.6.0 (06.07.2009)
 

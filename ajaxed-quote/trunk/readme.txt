@@ -3,7 +3,7 @@ Tags: quote, reply, post, ajax, detective
 Contributors: Detective
 Requires at least: 1.0
 Tested up to: 1.0.1
-Stable Tag: 1.1
+Stable Tag: trunk
 
 Allows quoting of posts using the built-in jQuery. No template edits required. 
 

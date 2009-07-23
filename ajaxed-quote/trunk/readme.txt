@@ -1,32 +1,30 @@
 === Ajaxed Quote ===
-Tags: quote, reply, post, ajax
+Tags: quote, reply, post, ajax, detective
 Contributors: Detective
-Requires at least: 0.9.0.2
-Tested up to: 0.9.0.2
-Stable Tag: 1.0
+Requires at least: 1.0
+Tested up to: 1.0.1
+Stable Tag: 1.1
 
-Allows quoting of existing messages when replying. Based on the plugin by Michael Nolan (http://bbpress.org/plugins/topic/quote/).
+Allows quoting of posts using the built-in jQuery. No template edits required. 
 
 == Description ==
 
-Allows quoting of messages when replying. Based on the plugin by Michael Nolan (http://bbpress.org/plugins/topic/quote/).
-
-* Using JS if the user is viewing the last page of a topic. In this way, a user can quote more than one message in a reply, because the quoted post is retrieved using AJAX. 
-* Using the mechanism of the original plugin.
-
-Among added features: the suggested ones in the comments of the original plugin, plus nonces, removal of nested blockquotes and localization.
+Allows quoting of posts when replying. Initially based on ideas of the following plugin http://bbpress.org/plugins/topic/quote/ .
 
 == Installation ==
 
+1. If you had a previous installation of Quote or Ajaxed Quote, remove your theme customizations for this plugin. They're not needed anymore.
 1. Upload the folder `ajaxed-quote` to your `/my-plugins/` directory.
-1. Modify your `post.php` template to include the quote link, outputs "Quote" by default: `<?php bb_quote_link(); ?>`
-1. Modify your `post-form.php` template to include the function `bb_quote_post`. Example: `<textarea name="post_content" cols="50" rows="8" id="post_content" tabindex="3">
-<?php if (function_exists('bb_quote_post')) bb_quote_post(); ?>
-</textarea>`
+1. Activate the plugin.
 1. You're done :)
 
 == Configuration ==
 
 None necessary.
 
+== Changelog ==
+
+1.1 
+* Removed SACK, uses jQuery now.
+* Uses 1.0 template tags and functions.
  

@@ -24,6 +24,9 @@ None necessary.
 
 == Changelog ==
 
+1.2
+* Small typo :P
+
 1.1 
 * Removed SACK, uses jQuery now.
 * Uses 1.0 template tags and functions.

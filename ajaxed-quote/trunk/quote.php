@@ -5,7 +5,7 @@ Plugin URI: http://mirlo.cl/plugins/
 Description: Quote posts using Ajax.
 Author: Eduardo Graells
 Author URI: http://mirlo.cl
-Version: 1.1
+Version: 1.2
 License: GPLv3.
 */
 
@@ -117,6 +117,7 @@ function bb_quote_header_js() {
 "jQuery(document).ready(function(){
    jQuery(\"textarea#post_content\").val( bb_quoted_post );
 });";
+			printf( '<script type="text/javascript">%s</script>', $quote_script );
 		}
 			
 		?> 

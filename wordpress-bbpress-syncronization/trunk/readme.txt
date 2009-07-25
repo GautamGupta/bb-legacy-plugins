@@ -1,9 +1,9 @@
 === WordPress-bbPress syncronization ===
 Contributors: bobrik
-Tags: bbPress, post, comment, integration, forum, syncronization
+Tags: bbPress, post, comment, integration, forum, syncronization, sync, synchronization
 Requires at least: 1.0alpha6
 Tested up to: 1.0.1
-Stable tag: 0.7.2
+Stable tag: 0.7.3
 
 Sync your WordPress comments to bbPress forum and back.
 
@@ -58,6 +58,14 @@ YOU MAY HELP:
 Made for news.vitebsk.cc
 
 == Changelog ==
+
+Version 0.7.3 (25.07.2009)
+
+*  Now anonymous comments at the forum have original author name (thanks to Ronen Halevy)
+*  Reworked anonymous userinfo displaying
+*  Now additional post options applying only if sync enabled
+*  'bbPress url' instead 'bbPress plugin url' in WP options, now it's named right
+*  Fixed stupid typo: sync_h_ronization
 
 Version 0.7.2 (23.07.2009)
 

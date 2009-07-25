@@ -4,7 +4,7 @@ Plugin Name: bbPress-WordPress syncronization
 Plugin URI: http://bobrik.name/code/wordpress/wordpress-bbpress-syncronization/
 Description: Sync your WordPress comments to bbPress forum and back.
 Author: Ivan Babrou <ibobrik@gmail.com>
-Version: 0.7.2
+Version: 0.7.3
 Author URI: http://bobrik.name
 
 Copyright 2008 Ivan Babroŭ (email : ibobrik@gmail.com)
@@ -823,23 +823,33 @@ function deactivate_bbwp()
 	set_global_plugin_status('disabled');
 }
 
-function bbwp_anonymous_userinfo($text)
+function bbwp_anonymous_userinfo($post)
 {
+	$text = '';
 	if (bb_get_option('bbwp_anonymous_user_id') == get_post_author_id())
 	{
 		if (bb_get_option('bbwp_show_anonymous_info') != 'enabled')
 			return $text;
 		// write extra information about anonymous user
 		$row = get_table_item('bb_post_id', get_post_id());
-		$text .= '<div class="wpbb_anonymous_userinfo">'.__('User information', 'bbwp-sync').'<ul>'
-			.'<li><span class="wpbb_anonymous_userinfo_key">'.__('Author', 'bbwp-sync').'</span>: <span>'.$row['wp_comment_author'].'</span></li>';
+		$text .= '<div class="wpbb_anonymous_userinfo">'.__('Posted by unregistered user: ', 'bbwp-sync').'<span class="wpbb_anonymous_userinfo_name">'.$row['wp_comment_author'].'</span>';
 		if (bb_get_option('bbwp_show_anonymous_email') == 'enabled')
-			$text .= '<li><span class="wpbb_anonymous_userinfo_key">'.__('E-mail', 'bbwp-sync').'</span>: <span>'.$row['wp_comment_author_email'].'</span></li>';
+		{
+			$text .= ' (<span class="wpbb_anonymous_userinfo_mail"><a href="mailto:'.$row['wp_comment_author_email'].'">'.__('E-mail', 'bbwp-sync').'</a><span>';
+			if (bb_get_option('bbwp_show_anonymous_url') != 'enabled' || $row['wp_comment_author_url'] == '')
+				$text .= ')';
+		}
 		if (bb_get_option('bbwp_show_anonymous_url') == 'enabled' && $row['wp_comment_author_url'] != '')
-			$text .= '<li><span class="wpbb_anonymous_userinfo_key">'.__('URL', 'bbwp-sync').'</span>: <span>'.$row['wp_comment_author_url'].'</span></li>';
-		$text .= '</ul></div>';
+		{
+			if (bb_get_option('bbwp_show_anonymous_email') != 'enabled')
+				$text .= ' (';
+			else
+				$text .= ', ';
+			$text .= '<span class="wpbb_anonymous_userinfo_url"><a href="'.$row['wp_comment_author_url'].'" rel="nofollow">'.__('URL', 'bbwp-sync').'</a><span>)';
+		}
+		$text .= '</div>';
 	}
-	return $text;
+	return $text.$post;
 }
 
 function bbwp_topic_last_poster($poster)
@@ -848,6 +858,17 @@ function bbwp_topic_last_poster($poster)
 	if (bb_get_option('bbwp_anonymous_user_id') == $topic->topic_last_poster && bb_get_option('bbwp_show_anonymous_info') == 'enabled')
 	{
 		$row = get_table_item('bb_post_id', $topic->topic_last_post_id);
+		if ($row['wp_comment_author'])
+			return $row['wp_comment_author'];
+	}
+	return $poster;
+}
+
+function bbwp_topic_anonymous_user($poster)
+{
+	if (bb_get_option('bbwp_anonymous_user_id') == get_post_author_id())
+	{
+		$row = get_table_item('bb_post_id', get_post_id());
 		if ($row['wp_comment_author'])
 			return $row['wp_comment_author'];
 	}
@@ -880,5 +901,6 @@ add_action('bb_admin_menu_generator', 'options_page');
 add_action('bb_admin-header.php', 'process_options');
 add_filter('post_text', 'bbwp_anonymous_userinfo');
 add_filter('get_topic_last_poster', 'bbwp_topic_last_poster');
+add_filter('get_post_author','bbwp_topic_anonymous_user');
 
 ?>

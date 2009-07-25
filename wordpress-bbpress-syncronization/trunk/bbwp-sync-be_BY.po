@@ -16,163 +16,164 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Lokalize 1.0\n"
 
-#: bbwp-sync.php:483
+#: bbwp-sync.php:485
 msgid "WordPress syncronization"
 msgstr "Сінхранізацыя з WordPress"
 
-#: bbwp-sync.php:489
+#: bbwp-sync.php:491
 msgid "WordPress syncronization options"
 msgstr "Опцыі сінхранізацыі з WordPress"
 
-#: bbwp-sync.php:495
+#: bbwp-sync.php:497
 msgid "WordPress url:"
 msgstr "Адрас WordPress:"
 
-#: bbwp-sync.php:502
+#: bbwp-sync.php:505
 msgid "Please submit with last \"/\"! We will test that after submussion"
 msgstr ""
 "Выкарыстайце поўны адрас з \"/\" на канцы! Адрас будзе правераны пасля "
 "адпраўкі"
 
-#: bbwp-sync.php:507 bbwp-sync.php:530 bbwp-sync.php:653 bbwp-sync.php:719
+#: bbwp-sync.php:510 bbwp-sync.php:535 bbwp-sync.php:666 bbwp-sync.php:732
 msgid "Everything is ok!"
 msgstr "Усё ў парадку!"
 
-#: bbwp-sync.php:510
+#: bbwp-sync.php:513
 msgid "URL is incorrect or connection error, please verify it (full variant): "
 msgstr ""
 "Няслушны адрас або памылка злучэння, калі ласка праверце (поўны варыянт): "
 
-#: bbwp-sync.php:518
+#: bbwp-sync.php:523
 msgid "Secret key:"
 msgstr "Сакрэтны ключ:"
 
-#: bbwp-sync.php:525
+#: bbwp-sync.php:530
 msgid "We need it for secure communication between your systems"
 msgstr "Ключ неабходны для бяспечнага ўзаемадзеяння сістэм"
 
-#: bbwp-sync.php:533
+#: bbwp-sync.php:538
 msgid "Error! Not equal secret keys in WordPress and bbPress"
 msgstr "Памылка! Розныя ключы ў WordPress і bbPress"
 
-#: bbwp-sync.php:541
+#: bbwp-sync.php:546
 msgid "Forum:"
 msgstr "Форум:"
 
-#: bbwp-sync.php:548
+#: bbwp-sync.php:553
 msgid "Select forum"
 msgstr "Вылучыце форум"
 
-#: bbwp-sync.php:555
+#: bbwp-sync.php:562
 msgid "You need to set the forum for syncronization."
 msgstr "Вам неабходна вылучыць форум для сінхранізацыі."
 
-#: bbwp-sync.php:560
+#: bbwp-sync.php:569
 msgid "Anonymous user:"
 msgstr "Ананімны карыстач:"
 
-#: bbwp-sync.php:564
+#: bbwp-sync.php:575
 msgid "User id for posts on forum from unregistered users in WordPress"
 msgstr ""
 "ID ананімнага карыстача для паведамленняў ад незарэгістраваных карыстачоў "
 "WordPress"
 
-#: bbwp-sync.php:569
+#: bbwp-sync.php:582
 msgid "Sync all posts:"
 msgstr "Сінхранізаваць усе паведамленні:"
 
-#: bbwp-sync.php:573
+#: bbwp-sync.php:586
 msgid ""
 "Sync post even if not approved. Post will have the same status in WordPress"
 msgstr ""
 "Сінхранізаваць, нават калі паведамленне не ўхвалена. Каментар будзе мець той "
 "жа статус, што і ў WordPress"
 
-#: bbwp-sync.php:578
+#: bbwp-sync.php:591
 msgid "Show anonymous userinfo:"
 msgstr "Інфармацыя аб ананімным карыстачу:"
 
-#: bbwp-sync.php:581
+#: bbwp-sync.php:594
 msgid "Show name"
 msgstr "Паказваць імя"
 
-#: bbwp-sync.php:582
+#: bbwp-sync.php:595
 msgid "Show email"
 msgstr "Паказваць email"
 
-#: bbwp-sync.php:583
+#: bbwp-sync.php:596
 msgid "Show url"
 msgstr "Паказваць URL"
 
-#: bbwp-sync.php:588
+#: bbwp-sync.php:601
 msgid "Sync posts back:"
 msgstr "Сінхранізаваць паведамленні назад у WP:"
 
-#: bbwp-sync.php:592
+#: bbwp-sync.php:605
 msgid ""
 "You may disable syncing posts from forum back to WordPress. You need to have "
 "a good reason to do that"
 msgstr ""
-"Вы можаце адключыць сінхранізацыі ппастоў назад у WordPress. Неабходна "
-"мець добрую прычыну для гэтага"
+"Вы можаце адключыць сінхранізацыі ппастоў назад у WordPress. Неабходна мець "
+"добрую прычыну для гэтага"
 
-#: bbwp-sync.php:597
+#: bbwp-sync.php:610
 msgid "Enable plugin"
 msgstr "Уключыць убудову"
 
-#: bbwp-sync.php:602
+#: bbwp-sync.php:615
 msgid "Allowed by both parts"
 msgstr "Дазволена абедзвюма складнікамі"
 
-#: bbwp-sync.php:602
+#: bbwp-sync.php:615
 msgid "Not allowed: "
 msgstr "Не дазволена: "
 
-#: bbwp-sync.php:608
+#: bbwp-sync.php:621
 msgid "Update Configuration &raquo;"
 msgstr "Захаваць налады &raquo;"
 
-#: bbwp-sync.php:628
+#: bbwp-sync.php:641
 msgid "Configuration saved."
 msgstr "Налады захаваныя."
 
-#: bbwp-sync.php:721
+#: bbwp-sync.php:734
 msgid "Cannot establish connection to WordPress part"
 msgstr "Немагчыма ўсталяваць злучэнне з WordPress складнікам"
 
-#: bbwp-sync.php:723
+#: bbwp-sync.php:736
 msgid "Invalid secret key"
 msgstr "Няслушны сакрэтны ключ"
 
-#: bbwp-sync.php:725
+#: bbwp-sync.php:738
 msgid "Invalid forum id"
 msgstr "Няслушны id форума"
 
-#: bbwp-sync.php:727
+#: bbwp-sync.php:740
 msgid "Invalid anonymous user id"
 msgstr "Няслушны id ананімнага карыстача"
 
-#: bbwp-sync.php:729
+#: bbwp-sync.php:742
 msgid "bbPress part is not activated"
 msgstr "bbPress складнік не актываваны"
 
-#: bbwp-sync.php:731
+#: bbwp-sync.php:744
 msgid "Too old WordPress part plugin version"
 msgstr "Занадта старая версія WordPress складніка"
 
-#: bbwp-sync.php:821
-msgid "User information"
-msgstr "Інфармацыя аб карыстачу"
+#: bbwp-sync.php:835
+msgid "Posted by unregistered user: "
+msgstr "Апублікавана ад імя незарэгістраванага карыстача: "
 
-#: bbwp-sync.php:822
-msgid "Author"
-msgstr "Аўтар"
-
-#: bbwp-sync.php:824
+#: bbwp-sync.php:838
 msgid "E-mail"
 msgstr ""
 
-#: bbwp-sync.php:826
+#: bbwp-sync.php:848
 msgid "URL"
 msgstr "Адрас"
 
+#~ msgid "User information"
+#~ msgstr "Інфармацыя аб карыстачу"
+
+#~ msgid "Author"
+#~ msgstr "Аўтар"

@@ -1,0 +1,179 @@
+# WordPress - bbPress syncronization plugin.
+# Copyright (C) Ivan Babrou
+# This file is distributed under the same license as the wordpress-bbpress syncronization package.
+#
+# Ivan Babrou <ibobrik@gmail.com>, 2009.
+msgid ""
+msgstr ""
+"Project-Id-Version: wordpress-bbpress-syncronization-ru_RU\n"
+"Report-Msgid-Bugs-To: ibobrik@gmail.com\n"
+"POT-Creation-Date: 2009-07-22 17:24+0300\n"
+"PO-Revision-Date: 2009-07-22 17:32+0300\n"
+"Last-Translator: Ivan Babrou <ibobrik@gmail.com>\n"
+"Language-Team: Ivan Babrou <ibobrik@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.0\n"
+
+#: bbwp-sync.php:483
+msgid "WordPress syncronization"
+msgstr "Синхронизация с WordPress"
+
+#: bbwp-sync.php:489
+msgid "WordPress syncronization options"
+msgstr "Опции синхронизации с WordPress"
+
+#: bbwp-sync.php:495
+msgid "WordPress url:"
+msgstr "Адрес WordPress:"
+
+#: bbwp-sync.php:502
+msgid "Please submit with last \"/\"! We will test that after submussion"
+msgstr ""
+"Используйте полный адрес с \"/\" на конце! Адрес будет проверен после "
+"отправки"
+
+#: bbwp-sync.php:507 bbwp-sync.php:530 bbwp-sync.php:653 bbwp-sync.php:719
+msgid "Everything is ok!"
+msgstr "Всё в порядке!"
+
+#: bbwp-sync.php:510
+msgid "URL is incorrect or connection error, please verify it (full variant): "
+msgstr ""
+"Неверный адрес или ошибка подключения, пожалуйста проверьте (полный "
+"вариант): "
+
+#: bbwp-sync.php:518
+msgid "Secret key:"
+msgstr "Секретный ключ:"
+
+#: bbwp-sync.php:525
+msgid "We need it for secure communication between your systems"
+msgstr "Ключ необходим для безопасного взаимодействия систем"
+
+#: bbwp-sync.php:533
+msgid "Error! Not equal secret keys in WordPress and bbPress"
+msgstr "Ошибка! Различные ключи в WordPress и bbPress"
+
+#: bbwp-sync.php:541
+msgid "Forum:"
+msgstr "Форум:"
+
+#: bbwp-sync.php:548
+msgid "Select forum"
+msgstr "Выберите форум"
+
+#: bbwp-sync.php:555
+msgid "You need to set the forum for syncronization."
+msgstr "Вам необходимо выбрать форум для синхронизации"
+
+#: bbwp-sync.php:560
+msgid "Anonymous user:"
+msgstr "Анонимный пользователь:"
+
+#: bbwp-sync.php:564
+msgid "User id for posts on forum from unregistered users in WordPress"
+msgstr ""
+"ID анонимного пользователя для сообщений от незарегистрированных "
+"пользователей WordPress"
+
+#: bbwp-sync.php:569
+msgid "Sync all posts:"
+msgstr "Синхронизировать все сообщения:"
+
+#: bbwp-sync.php:573
+msgid ""
+"Sync post even if not approved. Post will have the same status in WordPress"
+msgstr ""
+"Синхронизировать, даже если сообщение не одобрено. Комментарий будет иметь "
+"тот же статус в WordPress"
+
+#: bbwp-sync.php:578
+msgid "Show anonymous userinfo:"
+msgstr "Информация об анонимном пользователе:"
+
+#: bbwp-sync.php:581
+msgid "Show name"
+msgstr "Показывать имя"
+
+#: bbwp-sync.php:582
+msgid "Show email"
+msgstr "Показывать email"
+
+#: bbwp-sync.php:583
+msgid "Show url"
+msgstr "Показывать URL"
+
+#: bbwp-sync.php:588
+msgid "Sync posts back:"
+msgstr "Синхронизировать назад в WP:"
+
+#: bbwp-sync.php:592
+msgid ""
+"You may disable syncing posts from forum back to WordPress. You need to have "
+"a good reason to do that"
+msgstr ""
+"Вы можете отключить синхронизацию сообщений с форума в WordPress. Вам "
+"нужна хорошая причина для этого"
+
+#: bbwp-sync.php:597
+msgid "Enable plugin"
+msgstr "Включить плагин"
+
+#: bbwp-sync.php:602
+msgid "Allowed by both parts"
+msgstr "Позволено обеими составляющими"
+
+#: bbwp-sync.php:602
+msgid "Not allowed: "
+msgstr "Не разрешено: "
+
+#: bbwp-sync.php:608
+msgid "Update Configuration &raquo;"
+msgstr "Обновить настройки &raquo;"
+
+#: bbwp-sync.php:628
+msgid "Configuration saved."
+msgstr "Настройки сохранены."
+
+#: bbwp-sync.php:721
+msgid "Cannot establish connection to WordPress part"
+msgstr "Невозможно установить соединение с WordPress составляющей"
+
+#: bbwp-sync.php:723
+msgid "Invalid secret key"
+msgstr "Неверный секретный ключ"
+
+#: bbwp-sync.php:725
+msgid "Invalid forum id"
+msgstr "Неверный id форума"
+
+#: bbwp-sync.php:727
+msgid "Invalid anonymous user id"
+msgstr "Неверный id анонимного пользователя"
+
+#: bbwp-sync.php:729
+msgid "bbPress part is not activated"
+msgstr "bbPress составляющая не активирована"
+
+#: bbwp-sync.php:731
+msgid "Too old WordPress part plugin version"
+msgstr "Слишком старая WordPress составляющая"
+
+#: bbwp-sync.php:821
+msgid "User information"
+msgstr "Информация о пользователе"
+
+#: bbwp-sync.php:822
+msgid "Author"
+msgstr "Автор"
+
+#: bbwp-sync.php:824
+msgid "E-mail"
+msgstr ""
+
+#: bbwp-sync.php:826
+msgid "URL"
+msgstr "Адрес"
+

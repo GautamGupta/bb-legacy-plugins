@@ -81,6 +81,10 @@ High performance: uses only a single extra query regardless of the number of for
 * cache non-indexed query
 * compatibility with bbPress 1.0a5+
 
+= Version 0.0.5 (2009-06-20) =
+
+* slightly faster query by only updating for forum affected by new/deleted post
+
 == To Do ==
 
-* instead of "expensive" mysql lookup for every page load, data could be stored upon every new post or deletion - since bbPress 1.0 will have meta for forums (0.9 does not) I will look at this again later
+* nothing yet!

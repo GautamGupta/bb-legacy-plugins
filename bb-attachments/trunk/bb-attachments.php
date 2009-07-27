@@ -632,7 +632,7 @@ if ($filenum>0 && bb_current_user_can($bb_attachments['role']['delete'])) {
 }
 
 function bb_attachments_recount($post_id=0) {    	// update topic icon flag and sync attachment count for topic  given a post_id
-global $bb_attchments,$bbdb; $count=0; 
+global $bb_attachments,$bbdb; $count=0; 
 if (empty($topic_id)) {$topic_id=intval($bbdb->get_var("SELECT topic_id FROM $bbdb->posts WHERE post_id=$post_id LIMIT 1"));}
 if ($topic_id) {
 $count=intval($bbdb->get_var("SELECT count(*) as count FROM ".$bb_attachments['db']." WHERE status=0 AND user_id>0 AND size>0 AND post_id IN (SELECT post_id FROM $bbdb->posts WHERE post_status=0 AND topic_id=$topic_id)"));

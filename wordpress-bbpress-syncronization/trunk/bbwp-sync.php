@@ -4,7 +4,7 @@ Plugin Name: bbPress-WordPress syncronization
 Plugin URI: http://bobrik.name/code/wordpress/wordpress-bbpress-syncronization/
 Description: Sync your WordPress comments to bbPress forum and back.
 Author: Ivan Babrou <ibobrik@gmail.com>
-Version: 0.7.5
+Version: 0.7.6
 Author URI: http://bobrik.name
 
 Copyright 2008 Ivan Babroŭ (email : ibobrik@gmail.com)
@@ -27,8 +27,8 @@ Boston, MA 02111-1307, USA.
 
 
 // for version checking
-$bbwp_version = 0.60;
-$min_version = 0.60;
+$bbwp_version = 76;
+$min_version = 60;
 
 require_once(dirname(__FILE__).'/../../bb-load.php');
 
@@ -127,7 +127,7 @@ function secret_key_equal()
 	return $data['keytest'];
 }
 
-function comare_keys_local()
+function compare_keys_local()
 {
 	return $_POST['secret_key'] == md5(bb_get_option('bbwp_secret_key')) ? 1 : 0;
 }
@@ -142,7 +142,7 @@ function correct_wpbb_version()
 function bbwp_listener()
 {
 	if (empty($_POST['action']))
-		echo "If you see that, plugin must connect well.";
+		echo 'If you see that, plugin must connect well. WordPress test response (must be a:1:{s:4:"test";i:1;}): '.send_command(array('action' => 'test'));;
 	// setting authorized user
 	if ($_POST['user'] != 0)
 	{
@@ -158,7 +158,7 @@ function bbwp_listener()
 		return;
 	} elseif ($_POST['action'] == 'keytest')
 	{
-		echo serialize(array('keytest' => comare_keys_local()));
+		echo serialize(array('keytest' => compare_keys_local()));
 		return;
 	}
 	// here we need secret key, only if not checking settings

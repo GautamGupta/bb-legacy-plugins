@@ -45,6 +45,15 @@ and if the best answer(s) should be displayed first when viewing the topic.
 
 * first public release
 
+= Version 0.0.3 (2009-08-03) =
+
+* support for best answers across multiple page topics, moved to first post, jump to proper post
+* css has changed slightly to allow optional use of graphic icons instead of font symbols
+
+= Version 0.0.4 (2009-08-04) =
+
+* forum specific support to only activate on specific forum id #'s
+
 == To Do ==
 
 * admin menu ?

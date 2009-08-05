@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: bbPM 0.1-alpha3\n"
+"Project-Id-Version: bbPM 0.1-alpha6\n"
 "Report-Msgid-Bugs-To: http://bbpress.org/plugins/topic/bbpm\n"
-"POT-Creation-Date: 2009-05-08 16:07+0000\n"
+"POT-Creation-Date: 2009-08-05 15:26+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nightgunner5 <nightgunner5@llamaslayers.net>\n"
 "Language-Team: Nightgunner5 <nightgunner5@llamaslayers.net>\n"
@@ -15,44 +15,64 @@ msgstr ""
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=n != 1\n"
 
-#: bbpm.php:282
+#: bbpm.php:365
 msgid "You can't delete that message!"
 msgstr "No se puede borrar este mensaje!"
 
-#: bbpm.php:328
-#: bbpm.php:336
+#: bbpm.php:411
+#: bbpm.php:419
 msgid "PM this user"
 msgstr "PM este usuario"
 
-#: bbpm.php:361
+#: bbpm.php:442
+#: bbpm.php:518
 #, php-format
 msgid "1 new Private Message!"
 msgid_plural "%s new Private Messages!"
 msgstr[0] "1 nuevo Mensaje Privado!"
 msgstr[1] "%s nuevos Mensajes Privados!"
 
-#: bbpm.php:362
-#: privatemessages.php:23
-#: privatemessages.php:53
-#: privatemessages.php:103
-#: privatemessages.php:168
+#: bbpm.php:443
+#: bbpm.php:520
+#: privatemessages.php:26
+#: privatemessages.php:56
+#: privatemessages.php:112
+#: privatemessages.php:177
 msgid "Private Messages"
 msgstr "Mensajes Privados"
 
 #. #-#-#-#-#  plugin.pot (PACKAGE VERSION)  #-#-#-#-#
 #. Plugin Name of an extension
-#: bbpm.php:367
-#: bbpm.php:386
+#: bbpm.php:448
+#: bbpm.php:468
 msgid "bbPM"
 msgstr "bbPM"
 
-#: bbpm.php:391
+#: bbpm.php:474
 msgid "Maximum inbox/outbox size"
 msgstr "Maximum de messages par utilisateur"
 
-#: bbpm.php:400
+#: bbpm.php:482
+msgid "Automatically add header link"
+msgstr "Añada el vínculo automáticamente"
+
+#: bbpm.php:486
+msgid "You will need to add <code>&lt;?php if ( function_exists( 'bbpm_messages_link' ) ) bbpm_messages_link(); ?&gt;</code> to your template if you disable this."
+msgstr "Tendrá que añadir <code>&lt;?php if ( function_exists( 'bbpm_messages_link' ) ) bbpm_messages_link(); ?&gt;</code>a la plantilla en el caso de deshabilitar este."
+
+#: bbpm.php:492
 msgid "Save settings"
 msgstr "Enregistrer les paramètres"
+
+#: bbpm.php:500
+#, php-format
+msgid "bbPM is installed in the \"<code>%s</code>\" directory. It should be installed in \"<code>my-plugins</code>\""
+msgstr "bbPM está instalado en la \"<code>%s</code>\" directorio. Debe ser instalado en \"<code>my-plugins</code>\""
+
+#: bbpm.php:503
+#, php-format
+msgid "The <code>my-plugins</code> directory has its permissions set to %s. This is not recommended. Please use 755 instead."
+msgstr "El <code>MYPLUGINS</code> directorio ha establecido sus permisos a %s. Esto no es recomendable. Por favor, use en lugar 755."
 
 #: pm.php:12
 #: pm.php:32
@@ -85,97 +105,97 @@ msgstr "Se ha producido un error al enviar su mensaje."
 msgid "Re: "
 msgstr "Re: "
 
-#: privatemessages.php:23
+#: privatemessages.php:26
 msgid "New"
 msgstr "Nuevo"
 
-#: privatemessages.php:27
+#: privatemessages.php:30
 msgid "PM title: (be brief and descriptive)"
 msgstr "PM Título de: (ser breve y descriptivo)"
 
-#: privatemessages.php:31
+#: privatemessages.php:34
 msgid "Send PM to:"
 msgstr "PM Enviar a:"
 
-#: privatemessages.php:36
-#: privatemessages.php:151
+#: privatemessages.php:39
+#: privatemessages.php:160
 msgid "Message:"
 msgstr "Mensaje:"
 
-#: privatemessages.php:40
-#: privatemessages.php:155
+#: privatemessages.php:43
+#: privatemessages.php:164
 msgid "Send Message &raquo;"
 msgstr "Enviar mensaje &raquo;"
 
-#: privatemessages.php:43
-#: privatemessages.php:158
+#: privatemessages.php:46
+#: privatemessages.php:167
 msgid "Allowed markup:"
 msgstr "Permitido de marcas:"
 
-#: privatemessages.php:43
-#: privatemessages.php:158
+#: privatemessages.php:46
+#: privatemessages.php:167
 msgid "You can also put code in between backtick ( <code>`</code> ) characters."
 msgstr "También puede poner en el código entre backtick ( <code>`</ code> ) caracteres."
 
-#: privatemessages.php:55
+#: privatemessages.php:58
 msgid "Inbox"
 msgstr "Bandeja de entrada"
 
-#: privatemessages.php:58
-#: privatemessages.php:80
+#: privatemessages.php:61
+#: privatemessages.php:89
 msgid "Subject"
 msgstr "Tema"
 
-#: privatemessages.php:58
+#: privatemessages.php:61
 msgid "New &raquo;"
 msgstr "Nuevo &raquo;"
 
-#: privatemessages.php:59
+#: privatemessages.php:62
 msgid "From"
 msgstr "Desde"
 
-#: privatemessages.php:60
-#: privatemessages.php:82
+#: privatemessages.php:63
+#: privatemessages.php:91
 msgid "Freshness"
 msgstr "Frescura"
 
-#: privatemessages.php:61
-#: privatemessages.php:83
+#: privatemessages.php:64
+#: privatemessages.php:92
 msgid "Actions"
 msgstr "Actions"
 
-#: privatemessages.php:72
-#: privatemessages.php:94
-#: privatemessages.php:141
-#: threadviewer.php:99
+#: privatemessages.php:81
+#: privatemessages.php:103
+#: privatemessages.php:150
+#: threadviewer.php:59
 msgid "Delete"
 msgstr "Borrar"
 
-#: privatemessages.php:77
+#: privatemessages.php:86
 msgid "Outbox"
 msgstr "Bandeja de salida"
 
-#: privatemessages.php:81
+#: privatemessages.php:90
 msgid "To"
 msgstr "a"
 
-#: privatemessages.php:103
-#: privatemessages.php:168
+#: privatemessages.php:112
+#: privatemessages.php:177
 msgid "Read"
 msgstr "Leer"
 
-#: privatemessages.php:141
-#: threadviewer.php:99
+#: privatemessages.php:150
+#: threadviewer.php:59
 #, php-format
 msgid "Sent %s ago"
 msgstr "Enviado hace %s."
 
-#: privatemessages.php:141
-#: threadviewer.php:99
+#: privatemessages.php:150
+#: threadviewer.php:59
 msgid "Reply"
 msgstr "Responder"
 
-#: threadviewer.php:112
+#: threadviewer.php:72
 msgid "[Cancel]"
 msgstr "[Cancelar]"
 

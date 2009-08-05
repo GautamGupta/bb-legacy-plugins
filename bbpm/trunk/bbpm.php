@@ -395,8 +395,12 @@ To read it now, go to the following address:
 	}
 
 	function template_filter( $a, $b ) {
-		if ( is_pm() && $b == '404.php' )
-			return dirname( __FILE__ ) . '/privatemessages.php';
+		if ( is_pm() && $b == '404.php' ) {
+			if ( !$template = bb_get_template( 'privatemessages.php', false ) ) {
+				$template = dirname( __FILE__ ) . '/privatemessages.php';
+			}
+			return $template;
+		}
 
 		return $a;
 	}

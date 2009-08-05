@@ -2,10 +2,10 @@
 /*
 Plugin Name: Hot Tags Plus
 Description:  Creates advanced hot tag heat maps with time & forum filters, colors and caching for performance.
-Plugin URI:  
+Plugin URI:  http://bbpress.org/plugins/topic/hot-tags-plus
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.2
+Version: 0.0.3
 */
 
 $hot_tags_plus['cache']=false;						  // caching switch, set true to turn on, false for off - caching is strongly recommened on live sites
@@ -16,6 +16,7 @@ $hot_tags_plus['related']=true;	 					 // show related tags in cloud during mous
 
 $hot_tags_plus['style']="
 #hottags, .frontpageheatmap {line-height:220%; *line-height:250%;}
+#hottags a {white-space:nowrap; word-spacing:-2px;}
 #hottags a font, .frontpageheatmap a font {padding:0 3px; margin: -3px -2px; }
 #hottags a:hover font, .frontpageheatmap a:hover font {position:relative; z-index:255; color:red;}
 .HTP_RELATED font {background:#eee;}
@@ -30,10 +31,12 @@ if ($hot_tags_plus['style']) {
 add_action('bb_head','hot_tags_plus_head');
 }
 if (empty($hot_tags_plus['cache_time'])) {
-add_action('bb_tag_added', 'hot_tags_plus_delete', 10,3);
-add_action('bb_tag_created', 'hot_tags_plus_delete', 10,2);
-add_action('bb_pre_tag_removed', 'hot_tags_plus_delete', 10,3);
-add_action('bb_remove_topic_tags', 'hot_tags_plus_delete', 10,2);
+add_action('bb_tag_added', 'hot_tags_plus_delete');
+add_action('bb_tag_created', 'hot_tags_plus_delete');
+add_action('bb_tag_renamed', 'hot_tags_plus_delete');
+add_action('bb_pre_destroy_tag', 'hot_tags_plus_delete');
+add_action('bb_pre_tag_removed', 'hot_tags_plus_delete');
+add_action('bb_remove_topic_tags', 'hot_tags_plus_delete');
 }
 
 function hot_tags_plus($args = '') { echo get_hot_tags_plus($args); }
@@ -119,11 +122,12 @@ function get_hot_tags_plus($args = '' ) {
 	if ( $fontspread <= 0 ) { $fontspread = 1; }
 	$fontstep = $fontspread / $spread;
 
-	if ($sort=="alphabetical") {	
+	$sort=strtolower($sort);
+	if ($sort==="alphabetical") {	
 		uksort($counts, 'strnatcasecmp');
-	} elseif ( $sort=="highest" || $sort=="count" || $sort=="counts" || $sort=="numeric" ) {
+	} elseif ( $sort==="highest" || $sort==="count" || $sort==="counts" || $sort==="numeric" ) {
 		arsort($counts, SORT_NUMERIC);
-	} elseif ( $sort=="raw" ) { 	// do nothing - use db sort
+	} elseif ( $sort==="raw" ) { 	// do nothing - use db sort
 	} else { do_action_ref_array( 'sort_tag_heat_map', array(&$counts) ); }
 	
 	if ($colors!==0) {
@@ -163,43 +167,34 @@ function get_hot_tags_plus($args = '' ) {
 		$output .= <<< HTPJSEOF
 		
 		<script type="text/javascript" defer="defer">
-		var HTP_related=new Array();		
+		var HTP_related=new Array(), HTP_links=new Array();		
 		if (window.attachEvent) {window.attachEvent('onload', HTP_init);} 
 		else if (window.addEventListener) {window.addEventListener('load', HTP_init, false);} 
-		else {document.addEventListener('load', HTP_init, false);}		
+		else if (document.addEventListener) {document.addEventListener('load', HTP_init, false);}		
 		
-		function HTP_init() {			
-			var tlinks=document.links.length;
-			for (var i=0;i<tlinks;i++) {		
-				if (document.links[i].id.substring(0,4)=="tag_") {
-					document.links[i].onmouseover=HTP_mouse;
-					document.links[i].onmouseout=HTP_mouse;
-					if (document.links[i].coords) {
-						var id=document.links[i].id.substring(4);
-						HTP_related[id]=new Array();  // some browsers need this
+		function HTP_init() {						
+			for (var i=document.links.length-1;i>=0;i--) {		
+				if (document.links[i].id.substring(0,4)=="tag_") { 
+					var id=document.links[i].id.substring(4);
+					HTP_links[id]=i;  // cross reference to direct link	
+					if (document.links[i].coords) {						
 						HTP_related[id]=document.links[i].coords.split(',');
 						document.links[i].coords="";  // neuturalize just in case
+						document.links[i].onmouseover=HTP_mouse;
+						document.links[i].onmouseout=HTP_mouse;
 					}
 				}
 			}
-		}
-		
+		}		
 		function HTP_mouse(e) {
 			if (e) {if (e.target) {obj=e.target;} else {obj=e;}} else if (window.event) {e=window.event; if (e.target) {obj=e.target;} else {obj=e.srcElement;}} 			
-			if (obj.nodeName=="FONT") {obj=obj.parentNode;}
-			if (e.type=="mouseover") {var tclass="HTP_RELATED";}
-			else if (e.type=="mouseout") {var tclass="";}
-			else {return;}			
-			var id=obj.id.substring(4);			
-			if (HTP_related[id]) {		
-				for (var i=0;i<=HTP_related[id].length;i++) {
-					var tag=document.getElementById("tag_"+HTP_related[id][i]);
-					if (tag) {tag.className=tclass;}
-				}
-			}
-		}
-		
+			if (e.type=="mouseover") {var tclass="HTP_RELATED";} else if (e.type=="mouseout") {var tclass="";} else {return;}	
+			if (obj.nodeName=="FONT") {obj=obj.parentNode;} // trigger was inside the tag content, find parent
+			var id=obj.id.substring(4); 
+			for (var i=HTP_related[id].length-1;i>=0;i--) {document.links[HTP_links[HTP_related[id][i]]].className=tclass;}
+		}		
 		</script>
+
 HTPJSEOF;
 
 	}  // previous line MUST be blank because of heredoc
@@ -208,10 +203,10 @@ HTPJSEOF;
 	foreach ( $counts as $tag => $count ) {
 		$id=($hot_tags_plus['related'] ? " id='tag_".$ids[$tag]."'" : "");
 		$taglink = attribute_escape($taglinks{$tag});		
-		$tag = str_replace(' ', '&nbsp;', wp_specialchars( $tag ));
+		$tag =  wp_specialchars( $tag );  	 // str_replace(' ', '&nbsp;', wp_specialchars( $tag ));
 		$a[] = "<a rel='tag'$id href='$taglink' title='" . attribute_escape( sprintf( __('%d topics'), $count ) ) . "'"
-			. ($id && !empty($HTP_related[$ids[$tag]]) ? " coords='".$HTP_related[$ids[$tag]]."'" : "").">
-			<font style='font-size: " .round( $smallest + ( ( $count - $min_count ) * $fontstep ) ,4). "$unit;'"
+			. ($id && !empty($HTP_related[$ids[$tag]]) ? " coords='".$HTP_related[$ids[$tag]]."'" : "").">"
+			."<font style='font-size: " .round( $smallest + ( ( $count - $min_count ) * $fontstep ) ,2). "$unit;'"
 			. ($colors ? " color='#".$gradient[$count-$min_count]."'" : "")
 			.">$tag</font></a>";
 	}
@@ -219,9 +214,9 @@ HTPJSEOF;
 	switch ( $format ) :
 		case 'array' : 	$output .= $a; break;
 		case 'list' : $output .= "<ul class='bb-tag-heat-map'>\n\t<li>". join("</li>\n\t<li>", $a)."</li>\n</ul>\n"; 	break;
-		default : $output .= join("\n", $a); break;
+		default : $output .= join("\n", $a) ."\n"; break;
 	endswitch;
-	
+		
 	if ($hot_tags_plus['cache']) {
 		$current=get_current_user();  if (!($current && !in_array($current,array("nobody","httpd","apache","root")) && strpos(__FILE__,$current))) {$current="";}
 		$x=posix_getuid (); if (0 == $x && $current) {$org_uid = posix_get_uid(); $pw_info = posix_getpwnam ($current); $uid = $pw_info["uid"];  posix_setuid ($uid);}

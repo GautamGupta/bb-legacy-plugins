@@ -5,21 +5,27 @@ Plugin URI: http://bbpress.org/plugins/topic/best-answer
 Description: Allows the topic starter or moderators to select which reply is a "Best Answer" to the original post.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.4
+Version: 0.0.5
 */
 
 $best_answer['automatic']=true;	 	 //  set to false if you want to place manually in post.php template via   do_action('best-answer');
 $best_answer['forums']="1,2,3,4,5,6,7,8";	 //  comma seperated list of forum id numbers to have best answer  (set blank for all)
 $best_answer['max']=1;		 	 //  how many posts per topic can be designated as a "best answer"
 $best_answer['display_first']=true;	 //  should Best Answer(s) be moved to the start of the topic? set false to disable
-$best_answer['text']="<span>&#8902;</span>".__('Best Answer');
+$best_answer['text']=__('Best Answer');	//  text for link  (if any)
+$best_answer['add_views']=true;		//  add the two views 
+$best_answer['use_label']=true;		// true or "left" for title on left,  "right" for label on right
+$best_answer['label']="<span class='best_answer'></span>";   // this allows the image sprite to work with topic labels too
+$best_answer['icon']=bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),"\\"),array("","/"),dirname(__FILE__)),' /\\').'/best-answer.png';  // image auto-discovery
 $best_answer['css']="
-	.best_answer {text-decoration:none; border:0; white-space:nowrap;}		
-	.best_answer span {font-weight:900; font-size:4em; padding:0 1px 0 0; margin:0 0 0 -10px; vertical-align:-20%;
-	       font-family:'Lucida Grande','Arial Unicode','Arial Unicode MS','Georgia Ref','Verdana Ref','DejaVu Sans Mono','DejaVu Serif','GNU Unifont','Lucida Sans Unicode';}
-	a.best_answer {color:#999;}
-	a.best_answer:hover {color:red;}		
-	a.best_answer_selected, .best_answer_selected span {color: green;}
+	.best_answer {text-decoration:none; border:0; white-space:nowrap; display:block; margin:1em 0;		
+		border:0; text-decoration:none; padding-left:19px; width:19px; height:16px;
+		background: transparent url(".$best_answer['icon'].") no-repeat scroll 0px 0px;} 
+	span.best_answer {margin:-1px; display:inline;}
+	a.best_answer, a.best_answer:link {color:#999; background-position:0px -64px;}
+	a.best_answer:hover {color:green; background-position:0px 0px;}	
+	a.best_answer_selected {color: green; background-position:0px 0px;}
+	a.best_answer_selected:hover {color:red; background-position:0px -32px;}		
 	#thread li.best_answer_background { background-color: transparent; }
 	#thread li.best_answer_background .threadpost { background-color: #80DD80; }
 	#thread li.alt.best_answer_background .threadpost { background-color: #84DB8B; }
@@ -36,11 +42,18 @@ $best_answer['css']="
 if (!empty($best_answer['forums']) && !is_array($best_answer['forums'])) {(array) $best_answer['forums']=explode(',',$best_answer['forums']); $best_answer['forums']=array_flip($best_answer['forums']);}
 if ($best_answer['display_first']) {add_filter( 'get_post_link', 'best_answer_post_link', 255, 2 );}
 if (is_topic()) {	add_action( 'bb_topic.php', 'best_answer_init' ); }
+elseif (!is_bb_feed()) {add_filter('topic_title', 'best_answer_title',255);}		
+add_action('bb_head','best_answer_head'); 
+if ($best_answer['add_views']) {	// doing it this way hides them from the default view list
+	$query=array('started' => '>0','append_meta'=>false,'sticky'=>false,'topic_status'=>'all','order_by'=>1,'per_page'=>1);
+	bb_register_view("best-answer","Topics with Best Answer",$query);
+	bb_register_view("no-best-answer","Topics without Best Answer",$query);
+	add_action( 'bb_custom_view', 'best_answer_views' );
+}
 
 function best_answer_init() {		
 	global $best_answer, $topic, $bb_current_user, $posts, $page; 
-	if (!empty($best_answer['forums']) && !isset($best_answer['forums'][$topic->forum_id])) {return;}
-	add_action('bb_head','best_answer_head'); 
+	if (!empty($best_answer['forums']) && !isset($best_answer['forums'][$topic->forum_id])) {return;}	
 	add_action('best_answer','best_answer'); 
 	add_action('best-answer','best_answer'); 
 	add_filter('best_answer_class','best_answer_class');	
@@ -56,7 +69,8 @@ function best_answer_init() {
 		$value=intval($_GET['best_answer']);
 		if (isset($topic->best_answer[$value])) {unset($topic->best_answer[$value]);} 
 		else {if ($best_answer['max']==1) {$topic->best_answer=array();} $topic->best_answer[$value]=$value;}
-		bb_update_topicmeta($topic->topic_id,'best_answer',implode(',',array_flip($topic->best_answer)));
+		if (empty($topic->best_answer)) {bb_delete_topicmeta($topic->topic_id,'best_answer');}
+		else {bb_update_topicmeta($topic->topic_id,'best_answer',implode(',',array_flip($topic->best_answer)));}
 		wp_redirect(get_post_link($value)); exit;	
 	}
 	$best_answer[$topic->topic_id]=$topic->best_answer;
@@ -92,9 +106,9 @@ function best_answer() {
 		} else {
 			$url=add_query_arg(array('best_answer'=>$bb_post->post_id)); 	//  ,'r'=>rand(0,9999)))."#post-$bb_post->post_id";
 			if (isset($best_answer[$topic->topic_id][$bb_post->post_id])) {
-				echo "<a title='click to undo' href='$url' class='best_answer best_answer_selected'>".$best_answer['text']."</span></a>";
+				echo "<a title='click to undo' href='$url' class='best_answer best_answer_selected'>".$best_answer['text']."</a>";
 			} elseif ($best_answer['max']==1 || $best_answer['count']<$best_answer['max']) {
-				echo "<a title='click to select as best answer' class='best_answer' href='$url'>".$best_answer['text']."?</a>";
+				echo "<a title='click to select as best answer' href='$url' class='best_answer'>".$best_answer['text']."?</a>";
 			} 
 		}
 	}
@@ -112,6 +126,50 @@ global $best_answer; static $posts_per_page;
 		}
 	}
 return $link;
+}
+
+function best_answer_title( $title ) {
+	global $best_answer, $topic;
+	if (isset($topic->best_answer) && !empty($best_answer['use_label'])) {
+		if ($best_answer['use_label']==="right") {$title=$title." ".$best_answer['label'];}
+		else {$title=$best_answer['label'].$title;}				
+	}
+	return $title;
+} 
+
+function best_answer_views( $view ) {
+global $bbdb, $topics, $view_count, $page;
+if ($view=='best-answer' || $view=='no-best-answer') {
+	$limit = bb_get_option('page_topics');
+	$offset = ($page-1)*$limit;
+	$where = apply_filters('get_latest_topics_where',"WHERE topic_status=0 ");
+	if ($view=='best-answer') {
+	if (defined('BACKPRESS_PATH')) {		
+		$query = " FROM $bbdb->topics AS t1 
+			LEFT JOIN $bbdb->meta as t2 ON t1.topic_id=t2.object_id 
+			$where AND object_type='bb_topic'  AND meta_key='best_answer' ";	
+	} else {		
+		$query = " FROM $bbdb->topics AS t1 
+			LEFT JOIN $bbdb->topicmeta as t2 ON t1.topic_id=t2.topic_id 
+			$where AND meta_key='best_answer' ";
+	}
+	} else {
+	if (defined('BACKPRESS_PATH')) {		
+		$query = " FROM bb_topics $where AND topic_id NOT IN 
+			(SELECT object_id as topic_id FROM $bbdb->meta WHERE object_type='bb_topic' AND meta_key='best_answer')  ";	
+	} else {		
+		$query = " FROM bb_topics $where AND topic_id NOT IN 	
+			(SELECT topic_id FROM $bbdb->topicmeta WHERE meta_key='best_answer')  ";	
+	}	
+	}
+	
+	$restrict = " ORDER BY topic_time DESC LIMIT $limit OFFSET $offset";
+
+	$view_count  = $bbdb->get_var("SELECT count(*) ".$query);	
+	$topics = $bbdb->get_results("SELECT * ".$query.$restrict);
+	$topics = bb_append_meta( $topics, 'topic' );
+	bb_cache_last_posts();
+}
 }
 
 ?>

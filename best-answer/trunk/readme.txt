@@ -14,7 +14,7 @@ Allows the topic starter or moderators to select which reply is a "Best Answer" 
 
 == Installation ==
 
-* Add the `best-answer.php` file to bbPress' `my-plugins/` directory and activate.
+* Add the `best-answer/` directory to bbPress' `my-plugins/` directory and activate.
 
 * There are a few options you can edit at the top of the plugin including allowing multiple best answers 
 and if the best answer(s) should be displayed first when viewing the topic.
@@ -53,6 +53,11 @@ and if the best answer(s) should be displayed first when viewing the topic.
 = Version 0.0.4 (2009-08-04) =
 
 * forum specific support to only activate on specific forum id #'s
+
+= Version 0.0.5 (2009-08-05) =
+
+* replaced text star with sprite image for better cross browser support
+* optional views to show topics with best-answer or not
 
 == To Do ==
 

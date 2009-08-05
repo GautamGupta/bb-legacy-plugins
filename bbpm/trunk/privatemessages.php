@@ -175,7 +175,11 @@ echo apply_filters( 'post_author_title_link', apply_filters( 'get_post_author_ti
 <?php	break;
 		default:
 ?><a href="<?php echo $bbpm->get_link(); ?>"><?php _e( 'Private Messages', 'bbpm' ); ?></a> &raquo; <?php _e( 'Read', 'bbpm' ); ?></h3>
-<?php require_once dirname( __FILE__ ) . '/threadviewer.php';
+<?php
+			if ( $template = bb_get_template( 'threadviewer.php', false ) )
+				require_once $template;
+			else
+				require_once dirname( __FILE__ ) . '/threadviewer.php';
 		}
 	}
 } ?>

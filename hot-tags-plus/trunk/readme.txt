@@ -101,6 +101,10 @@ hot_tags_plus($options);
 * highlights related tags on mouseover (optional)
 * stylesheet control
 
+= Version 0.0.3 (2009-08-05) =
+
+* various performance and visual tweaks
+
 == To Do ==
 
 * admin menu

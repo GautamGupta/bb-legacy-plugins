@@ -1,9 +1,10 @@
 === WordPress-bbPress syncronization ===
 Contributors: bobrik
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ibobrik@gmail.com&lc=US&item_name=WordPress%20-%20bbPress%20sync%20plugin&currency_code=USD&bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHostedGuest
 Tags: wordpress, post, comment, integration, forum, syncronization, sync, synchronization
 Requires at least: 1.0alpha6
 Tested up to: 1.0.1
-Stable tag: 0.7.6
+Stable tag: 0.7.7
 
 Sync your WordPress comments to bbPress forum and back.
 
@@ -59,6 +60,13 @@ YOU MAY HELP:
 Made for news.vitebsk.cc
 
 == Changelog ==
+
+Version 0.7.7 (05.08.2009)
+
+*  More accurate path checking, must fix windows path problems
+*  Avoiding funtion name collision with other plugins
+*  Admin notice if plugin not enabled correctly
+*  Donation link. I want to eat too :)
 
 Version 0.7.6 (01.08.2009)
 

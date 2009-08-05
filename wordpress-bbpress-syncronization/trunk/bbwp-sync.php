@@ -4,7 +4,7 @@ Plugin Name: bbPress-WordPress syncronization
 Plugin URI: http://bobrik.name/code/wordpress/wordpress-bbpress-syncronization/
 Description: Sync your WordPress comments to bbPress forum and back.
 Author: Ivan Babrou <ibobrik@gmail.com>
-Version: 0.7.6
+Version: 0.7.7
 Author URI: http://bobrik.name
 
 Copyright 2008 Ivan Babroŭ (email : ibobrik@gmail.com)
@@ -27,7 +27,7 @@ Boston, MA 02111-1307, USA.
 
 
 // for version checking
-$bbwp_version = 76;
+$bbwp_version = 77;
 $min_version = 60;
 
 require_once(dirname(__FILE__).'/../../bb-load.php');
@@ -52,7 +52,7 @@ if (substr($_SERVER['PHP_SELF'], -13) != 'bbwp-sync.php')
 }
 
 
-function send_command($pairs = array())
+function bbwp_send_command($pairs = array())
 {
 	$url = bb_get_option('bbwp_wordpress_url')."?wpbb-listener";
 	preg_match('@https?://([\-_\w\.]+)+(:(\d+))?/(.*)@', $url, $matches);
@@ -111,30 +111,30 @@ function send_command($pairs = array())
 	}
 }
 
-function test_pair()
+function bbwp_test_pair()
 {
-	$answer = send_command(array('action' => 'test'));
+	$answer = bbwp_send_command(array('action' => 'test'));
 	// return 1 if test passed, 0 otherwise
 	// TODO: check configuration!
 	$data = unserialize($answer);
 	return $data['test'] == 1 ? 1 : 0;
 }
 
-function secret_key_equal()
+function bbwp_secret_key_equal()
 {
-	$answer = send_command(array('action' => 'keytest', 'secret_key' => md5(bb_get_option('bbwp_secret_key'))));
+	$answer = bbwp_send_command(array('action' => 'keytest', 'secret_key' => md5(bb_get_option('bbwp_secret_key'))));
 	$data = unserialize($answer);
 	return $data['keytest'];
 }
 
-function compare_keys_local()
+function bbwp_compare_keys_local()
 {
 	return $_POST['secret_key'] == md5(bb_get_option('bbwp_secret_key')) ? 1 : 0;
 }
 
 function correct_wpbb_version()
 {
-	$answer = unserialize(send_command(array('action' => 'get_wpbb_version')));
+	$answer = unserialize(bbwp_send_command(array('action' => 'get_wpbb_version')));
 	global $min_version;
 	return ($answer['version'] < $min_version) ? 0 : 1;
 }
@@ -142,7 +142,7 @@ function correct_wpbb_version()
 function bbwp_listener()
 {
 	if (empty($_POST['action']))
-		echo 'If you see that, plugin must connect well. WordPress test response (must be a:1:{s:4:"test";i:1;}): '.send_command(array('action' => 'test'));;
+		echo 'If you see that, plugin must connect well. WordPress test response (must be a:1:{s:4:"test";i:1;}): '.bbwp_send_command(array('action' => 'test'));;
 	// setting authorized user
 	if ($_POST['user'] != 0)
 	{
@@ -158,11 +158,11 @@ function bbwp_listener()
 		return;
 	} elseif ($_POST['action'] == 'keytest')
 	{
-		echo serialize(array('keytest' => compare_keys_local()));
+		echo serialize(array('keytest' => bbwp_compare_keys_local()));
 		return;
 	}
 	// here we need secret key, only if not checking settings
-	if (!secret_key_equal() && $_POST['action'] != 'check_bb_settings')
+	if (!bbwp_secret_key_equal() && $_POST['action'] != 'check_bb_settings')
 	{
 		// go away, damn cheater!
 		return;
@@ -225,15 +225,15 @@ function bbwp_do_sync()
 	return true;
 }
 
-function sync_that_status($id)
+function bbwp_sync_that_status($id)
 {
-	if (get_real_post_status($id) == 0 || bb_get_option('bbwp_sync_all_posts') == 'enabled')
+	if (bbwp_get_real_post_status($id) == 0 || bb_get_option('bbwp_sync_all_posts') == 'enabled')
 		return true;
 	else
 		return false;
 }
 
-function get_real_post_status($id)
+function bbwp_get_real_post_status($id)
 {
 	global $bbdb;
 	return $bbdb->get_var('SELECT post_status FROM '.$bbdb->prefix.'posts WHERE post_id = '.$id);
@@ -245,14 +245,14 @@ function create_bb_topic()
 	remove_all_filters('pre_post');
 	$post_id = bb_insert_post(array('topic_id' => $topic_id, 'post_text' => stripslashes($_POST['post_content'])));
 	bb_delete_post($post_id, status_wp2bb($_POST['comment_approved']));
-	$result = add_table_item($_POST["post_id"], 0, $topic_id, $post_id, '', '', '');
+	$result = bbwp_add_table_item($_POST["post_id"], 0, $topic_id, $post_id, '', '', '');
 	$data = serialize(array("topic_id" => $topic_id, "post_id" => $post_id, "result" => $result));
 	echo $data;
 }
 
 function continue_bb_topic()
 {
-	$row = get_table_item('wp_post_id', $_POST["post_id"]);
+	$row = bbwp_get_table_item('wp_post_id', $_POST["post_id"]);
 	remove_all_filters('pre_post');
 	$post_id = bb_insert_post(array("topic_id" => $row['bb_topic_id'], "post_text" => stripslashes($_POST["post_content"])));
 	bb_delete_post($post_id, status_wp2bb($_POST['comment_approved']));
@@ -264,7 +264,7 @@ function continue_bb_topic()
 		$_POST['comment_author_email'] = '';
 		$_POST['comment_author_url'] = '';
 	}
-	$result = add_table_item($_POST['post_id'], $_POST['comment_id'], $row['bb_topic_id'], $post_id, $_POST['comment_author'], $_POST['comment_author_email'], $_POST['comment_author_url']);
+	$result = bbwp_add_table_item($_POST['post_id'], $_POST['comment_id'], $row['bb_topic_id'], $post_id, $_POST['comment_author'], $_POST['comment_author_email'], $_POST['comment_author_url']);
 	$data = serialize(array("topic_id" => $row['bb_topic_id'], "post_id" => $post_id, "result" => $result));
 	echo $data;
 }
@@ -272,9 +272,9 @@ function continue_bb_topic()
 function edit_bb_post()
 {
 	if (isset($_POST['get_row_by']) && $_POST['get_row_by'] == 'wp_post')
-		$row = get_table_item('wp_post_id', $_POST["post_id"]);
+		$row = bbwp_get_table_item('wp_post_id', $_POST["post_id"]);
 	else
-		$row = get_table_item('wp_comment_id', $_POST["comment_id"]);
+		$row = bbwp_get_table_item('wp_comment_id', $_POST["comment_id"]);
 	// updating topic title
 	if (isset($_POST['topic_title']))
 		bb_insert_topic(array('topic_title' => $_POST['topic_title'], 'topic_id' => $row['bb_topic_id']));
@@ -287,21 +287,21 @@ function edit_bb_post()
 		$_POST['comment_author_email'] = '';
 		$_POST['comment_author_url'] = '';
 	}
-	update_table_item('wp_comment_id', $_POST['comment_id'], $_POST['comment_author'], $_POST['comment_author_email'], $_POST['comment_author_url']);
+	bbwp_update_table_item('wp_comment_id', $_POST['comment_id'], $_POST['comment_author'], $_POST['comment_author_email'], $_POST['comment_author_url']);
 	bb_insert_post(array('post_text' => stripslashes($_POST['post_content']), 'post_id' => $row['bb_post_id'], 'topic_id' => $row['bb_topic_id']));
 	bb_delete_post($row['bb_post_id'], status_wp2bb($_POST['comment_approved']));
 }
 
 function delete_bb_post()
 {
-	bb_remove_filter('bb_delete_post', 'afteredit');
-	$row = get_table_item('wp_comment_id', $_POST['comment_id']);
+	bb_remove_filter('bb_delete_post', 'bbwp_afteredit');
+	$row = bbwp_get_table_item('wp_comment_id', $_POST['comment_id']);
 	bb_delete_post('bb_post_id', $row['bb_post_id']);
 	global $bbdb;
 	// REAL post deletion from database
 	// FIXME: may do something a little bit inconsistent
 	$bbdb->query('DELETE FROM '.$bbdb->prefix.'posts WHERE post_id = '.$row['bb_post_id']);
-	delete_table_item('wp_comment_id', $_POST['comment_id']);
+	bbwp_delete_table_item('wp_comment_id', $_POST['comment_id']);
 }
 
 function open_bb_topic()
@@ -314,47 +314,14 @@ function close_bb_topic()
 	bb_close_topic($_POST['topic_id']);
 }
 
-function bbwp_install()
-{
-	// create table at first install
-	global $bbdb;
-	$bbwp_sync_db_version = 0.6;
-	$table = $bbdb->prefix."bbwp_ids";
-	$sql = "CREATE TABLE $table (
-		`wp_comment_id` INT UNSIGNED NOT NULL,
-		`wp_post_id` INT UNSIGNED NOT NULL,
-		`wp_comment_author` tinytext character set utf8 NOT NULL default '',
-		`wp_comment_author_email` varchar(100) NOT NULL default '',
-		`wp_comment_author_url` varchar(200) NOT NULL default '',
-		`bb_topic_id` INT UNSIGNED NOT NULL,
-		`bb_post_id` INT UNSIGNED NOT NULL,
-	);";
-	if ($bbdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name || backpress_get_option('bbwp_sync_db_version') != $bbwp_sync_db_version) 
-	{
-		require_once(BB_PATH.'bb-admin/includes/functions.bb-upgrade.php');
-		bb_sql_delta($sql);
-		backpress_add_option('bbwp_sync_db_version', $bbwp_sync_db_version);
-	}
-	if (bb_get_option('bbwp_sync_all_posts'))
-	{
-		bb_update_option('bbwp_sync_all_posts', 'disabled');
-		bb_update_option('bbwp_show_anonymous_info', 'enabled');
-		bb_update_option('bbwp_show_anonymous_email', 'disabled');
-		bb_update_option('bbwp_show_anonymous_url', 'disabled');
-	}
-	if (!bb_get_option('bbwp_sync_posts_back'))
-		bb_update_option('bbwp_sync_posts_back', 'enabled');
-	// next options must be cheched by another conditions!
-}
-
-function add_table_item($wp_post, $wp_comment, $bb_topic, $bb_post, $wp_anon_user, $wp_anon_email, $wp_anon_url)
+function bbwp_add_table_item($wp_post, $wp_comment, $bb_topic, $bb_post, $wp_anon_user, $wp_anon_email, $wp_anon_url)
 {
 	global $bbdb;
 	return $bbdb->query($bbdb->prepare("INSERT INTO ".$bbdb->prefix."bbwp_ids (wp_post_id, wp_comment_id, bb_topic_id, bb_post_id, wp_comment_author, wp_comment_author_email, wp_comment_author_url)
 		VALUES (%d, %d, %d, %d, %s, %s, %s)", $wp_post, $wp_comment, $bb_topic, $bb_post, $wp_anon_user, $wp_anon_email, $wp_anon_url));
 }
 
-function update_table_item($field, $value, $wp_anon_user, $wp_anon_email, $wp_anon_url)
+function bbwp_update_table_item($field, $value, $wp_anon_user, $wp_anon_email, $wp_anon_url)
 {
 	// for anonymous userinfo updating
 	global $bbdb;
@@ -362,53 +329,53 @@ function update_table_item($field, $value, $wp_anon_user, $wp_anon_email, $wp_an
 		WHERE $field = $value", $wp_anon_user, $wp_anon_email, $wp_anon_url));
 }
 
-function get_table_item($field, $value)
+function bbwp_get_table_item($field, $value)
 {
 	global $bbdb;
 	return $bbdb->get_row('SELECT * FROM '.$bbdb->prefix."bbwp_ids WHERE $field = $value LIMIT 1", ARRAY_A);
 }
 
-function delete_table_item($field, $value)
+function bbwp_delete_table_item($field, $value)
 {
 	global $bbdb;
 	$bbdb->query("DELETE FROM ".$bbdb->prefix."bbwp_ids WHERE $field = $value");
 }
 
-function afteredit($id)
+function bbwp_afteredit($id)
 {
 	if (!bbwp_do_sync())
 		return;
 	$post = bb_get_post($id);
-	$row = get_table_item('bb_post_id', $post->post_id);
+	$row = bbwp_get_table_item('bb_post_id', $post->post_id);
 	if ($row)
 	{
 		// have it in database, must sync
 		edit_wp_comment($post, $row['wp_comment_id']);
 	} else
 	{
-		if (sync_that_status($id))
+		if (bbwp_sync_that_status($id))
 		{
 			if (bb_get_option('bbwp_sync_posts_back') == 'disabled')
 				return; // syncing back disabled
-			$row = get_table_item('bb_topic_id', $post->topic_id);
+			$row = bbwp_get_table_item('bb_topic_id', $post->topic_id);
 			if ($row)
 				add_wp_comment($post, $row['wp_post_id']);
 		}
 	}
 }
 
-function afterpost($id)
+function bbwp_afterpost($id)
 {
 	if (!bbwp_do_sync())
 		return;
 	$post = bb_get_post($id);
-	$row = get_table_item('bb_topic_id', $post->topic_id);
+	$row = bbwp_get_table_item('bb_topic_id', $post->topic_id);
 	if ($row)
 	{
 		if (bb_get_option('bbwp_sync_posts_back') == 'disabled')
 			return; // syncing back disabled
 		// need to duplicate in WordPress
-		if (sync_that_status($id))
+		if (bbwp_sync_that_status($id))
 			add_wp_comment($post, $row['wp_post_id']);
 	}
 }
@@ -424,9 +391,9 @@ function add_wp_comment($post, $wp_post_id)
 		'user' => $post->poster_id,
 		'wp_post_id' => $wp_post_id
 	);
-	$answer = send_command($request);
+	$answer = bbwp_send_command($request);
 	$data = unserialize($answer);
-	add_table_item($wp_post_id, $data['comment_id'], $post->topic_id, $post->post_id, '', '', '');
+	bbwp_add_table_item($wp_post_id, $data['comment_id'], $post->topic_id, $post->post_id, '', '', '');
 }
 
 function edit_wp_comment($post, $comment_id)
@@ -437,14 +404,14 @@ function edit_wp_comment($post, $comment_id)
 	$request = array(
 		'action' => 'edit_comment',
 		'post_text' => bbwp_correct_links(apply_filters('post_text', $bbdb->get_var("SELECT post_text FROM ".$bbdb->prefix."posts WHERE post_id = ".$post->post_id))),
-		'post_status' => get_real_post_status($post->post_id),
+		'post_status' => bbwp_get_real_post_status($post->post_id),
 		'user' => $post->poster_id,
 		'comment_id' => $comment_id,
 	);
-	send_command($request);
+	bbwp_send_command($request);
 }
 
-function afterclosing($id)
+function bbwp_afterclosing($id)
 {
 	if (!bbwp_do_sync())
 		return;
@@ -454,10 +421,10 @@ function afterclosing($id)
 		'action' => 'close_wp_comments',
 		'post_id' => $wp_post_id,
 	);
-	send_command($request);
+	bbwp_send_command($request);
 }
 
-function afteropening($id)
+function bbwp_afteropening($id)
 {
 	if (!bbwp_do_sync())
 		return;
@@ -467,7 +434,7 @@ function afteropening($id)
 		'action' => 'open_wp_comments',
 		'post_id' => $wp_post_id,
 	);
-	send_command($request);
+	bbwp_send_command($request);
 }
 
 function status_wp2bb($status)
@@ -481,7 +448,7 @@ function status_wp2bb($status)
 		return 2; // spam
 }
 
-function options_page() {
+function bbwp_options_page() {
 	bb_admin_add_submenu(__('WordPress syncronization', 'bbwp-sync'), 'moderate', 'bbwp_options', 'options-general.php');
 }
 
@@ -489,6 +456,8 @@ function bbwp_options()
 {
 ?>
 <h2><?php _e('WordPress syncronization options', 'bbwp-sync'); ?></h2>
+
+<div style="vert-align:center;margin:4px">Please donate if you like this plugin: <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ibobrik%40gmail%2ecom&lc=US&item_name=WordPress%2dbbPress%20syncronization%20plugin&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHostedGuest"><img src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" alt="Donate!" /></a></div>
 
 <form class="settings" method="post" action="">
 	<fieldset>
@@ -505,7 +474,7 @@ function bbwp_options()
 					_e('Please submit with last "/"! We will test that after submussion', 'bbwp-sync');
 				} else
 				{
-					if (test_pair())
+					if (bbwp_test_pair())
 					{
 						_e('Everything is ok!', 'bbwp-sync');
 					} else
@@ -525,12 +494,12 @@ function bbwp_options()
 			<div class="inputs">
 				<input class="text" name="secret_key" value="<?php echo bb_get_option('bbwp_secret_key'); ?>" />
 				<p><?php
-				if ((!bb_get_option('bbwp_secret_key') && secret_key_equal()) || ($err != 0 && $err != 2))
+				if ((!bb_get_option('bbwp_secret_key') && bbwp_secret_key_equal()) || ($err != 0 && $err != 2))
 				{
 					_e('We need it for secure communication between your systems', 'bbwp-sync');
 				} else
 				{
-					if (secret_key_equal())
+					if (bbwp_secret_key_equal())
 					{
 						_e('Everything is ok!', 'bbwp-sync');
 					} else
@@ -610,7 +579,7 @@ function bbwp_options()
 				<?php _e('Enable plugin', 'bbwp-sync'); ?>
 			</label>
 			<div class="inputs">
-			<?php $check = check_bbwp_settings(); if ($check['code'] != 0) set_global_plugin_status('disabled'); ?>
+			<?php $check = check_bbwp_settings(); if ($check['code'] != 0) bbwp_set_global_plugin_status('disabled'); ?>
 				<input type="checkbox" name="plugin_status"<?php echo (bb_get_option('bbwp_plugin_status') == 'enabled') ? ' checked="checked"' : ''; echo ($check['code'] == 0) ? '' : ' disabled="disabled"'; ?> />
 				<p><?php echo ($check['code'] == 0) ? __('Allowed by both parts', 'bbwp-sync') : __('Not allowed: ', 'bbwp-sync').$check['message'] ?></p>
 			</div>
@@ -624,7 +593,7 @@ function bbwp_options()
 <?php
 }
 
-function process_options()
+function bbwp_process_options()
 {
 	if ($_POST['action'] == 'update-bbwp-configuration')
 	{
@@ -632,7 +601,7 @@ function process_options()
 		bb_update_option('bbwp_wordpress_url', $_POST['wordpress_url']);
 		bb_update_option('bbwp_secret_key', $_POST['secret_key']);
 		bb_update_option('bbwp_anonymous_user_id', (int) $_POST['anonymous_user']);
-		set_global_plugin_status($_POST['plugin_status'] == 'on' ? 'enabled' : 'disabled');
+		bbwp_set_global_plugin_status($_POST['plugin_status'] == 'on' ? 'enabled' : 'disabled');
 		bb_update_option('bbwp_sync_all_posts', $_POST['sync_all_posts'] == 'on' ? 'enabled' : 'disabled');
 		bb_update_option('bbwp_show_anonymous_info', $_POST['show_anonymous_info'] == 'on' ? 'enabled' : 'disabled');
 		bb_update_option('bbwp_show_anonymous_email', $_POST['show_anonymous_email'] == 'on' ? 'enabled' : 'disabled');
@@ -640,6 +609,46 @@ function process_options()
 		bb_update_option('bbwp_sync_posts_back', $_POST['sync_posts_back'] == 'on' ? 'enabled' : 'disabled');
 		bb_admin_notice( __('Configuration saved.', 'bbwp-sync') );
 	}
+}
+
+
+function bbwp_install()
+{
+	// create table at first install
+	global $bbdb;
+	$bbwp_sync_db_version = 0.6;
+	$table = $bbdb->prefix."bbwp_ids";
+	$sql = "CREATE TABLE $table (
+		`wp_comment_id` INT UNSIGNED NOT NULL,
+		`wp_post_id` INT UNSIGNED NOT NULL,
+		`wp_comment_author` tinytext character set utf8 NOT NULL default '',
+		`wp_comment_author_email` varchar(100) NOT NULL default '',
+		`wp_comment_author_url` varchar(200) NOT NULL default '',
+		`bb_topic_id` INT UNSIGNED NOT NULL,
+		`bb_post_id` INT UNSIGNED NOT NULL,
+	);";
+	if ($bbdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name || backpress_get_option('bbwp_sync_db_version') != $bbwp_sync_db_version)
+	{
+		require_once(BB_PATH.'bb-admin/includes/functions.bb-upgrade.php');
+		bb_sql_delta($sql);
+		backpress_add_option('bbwp_sync_db_version', $bbwp_sync_db_version);
+	}
+	if (bb_get_option('bbwp_sync_all_posts'))
+	{
+		bb_update_option('bbwp_sync_all_posts', 'disabled');
+		bb_update_option('bbwp_show_anonymous_info', 'enabled');
+		bb_update_option('bbwp_show_anonymous_email', 'disabled');
+		bb_update_option('bbwp_show_anonymous_url', 'disabled');
+	}
+	if (!bb_get_option('bbwp_sync_posts_back'))
+		bb_update_option('bbwp_sync_posts_back', 'enabled');
+	// next options must be cheched by another conditions!
+}
+
+function deactivate_bbwp()
+{
+	// deactivate on disabling
+	bbwp_set_global_plugin_status('disabled');
 }
 
 function check_bbwp_settings()
@@ -668,7 +677,7 @@ function check_bbwp_settings()
 	return $data;
 }
 
-function set_global_plugin_status($status)
+function bbwp_set_global_plugin_status($status)
 {
 	// FIXME: fix something here.
 	$wp_settings = check_wp_settings();
@@ -704,11 +713,11 @@ function set_bb_plugin_status()
 
 function check_bb_settings()
 {
-	if (!test_pair())
+	if (!bbwp_test_pair())
 	{
 		return 1; // cannot establish connection to wp
 	}
-	if (!secret_key_equal())
+	if (!bbwp_secret_key_equal())
 	{
 		return 2; // secret keys are not equal
 	}
@@ -719,7 +728,7 @@ function check_bb_settings()
 	if (!bb_get_user(bb_get_option('bbwp_anonymous_user_id')))
 		return 4; // anonymous user id not found
 	$active_plugins = $bbdb->get_var('SELECT meta_value FROM '.$bbdb->prefix.'meta WHERE object_type = "bb_option" AND meta_key = "active_plugins"');
-	if (strpos($active_plugins, 'wordpress-bbpress-syncronization/bbwp-sync.php') === false)
+	if (strpos($active_plugins, bb_plugin_basename(__FILE__)) === false)
 		return 5; // bbpress part not activated
 	if (!correct_wpbb_version())
 		return 6;
@@ -751,24 +760,24 @@ function set_wp_plugin_status($status)
 		'action' => 'set_wp_plugin_status',
 		'status' => $status,
 	);
-	$answer = send_command($request);
+	$answer = bbwp_send_command($request);
 	$data = unserialize($answer);
 	return $data;
 }
 
 function check_wp_settings()
 {
-	$answer = send_command(array('action' => 'check_wp_settings'));
+	$answer = bbwp_send_command(array('action' => 'check_wp_settings'));
 	$data = unserialize($answer);
 	return $data;
 }
 
-function aftertagedit($id)
+function bbwp_aftertagedit($id)
 {
 	if (!bbwp_do_sync())
 		return;
 	global $topic;
-	$row = get_table_item('bb_topic_id', $topic->topic_id);
+	$row = bbwp_get_table_item('bb_topic_id', $topic->topic_id);
 	if ($row)
 	{
 		$tags = array();
@@ -787,7 +796,7 @@ function edit_wp_tags($post, $tags)
 		'post' => $post,
 		'tags' => serialize($tags)
 	);
-	send_command($request);
+	bbwp_send_command($request);
 }
 
 function edit_bb_tags()
@@ -796,12 +805,12 @@ function edit_bb_tags()
 	bb_add_topic_tags($_POST['topic'], $_POST['tags']);
 }
 
-function pretagremove($id)
+function bbwp_pretagremove($id)
 {
 	if (!bbwp_do_sync())
 		return;
 	global $topic;
-	$row = get_table_item('bb_topic_id', $topic->topic_id);
+	$row = bbwp_get_table_item('bb_topic_id', $topic->topic_id);
 	if ($row)
 	{
 		$tags = array();
@@ -817,12 +826,6 @@ function pretagremove($id)
 	}
 }
 
-function deactivate_bbwp()
-{
-	// deactivate on disabling
-	set_global_plugin_status('disabled');
-}
-
 function bbwp_anonymous_userinfo($post)
 {
 	$text = '';
@@ -831,7 +834,7 @@ function bbwp_anonymous_userinfo($post)
 		if (bb_get_option('bbwp_show_anonymous_info') != 'enabled')
 			return $text;
 		// write extra information about anonymous user
-		$row = get_table_item('bb_post_id', get_post_id());
+		$row = bbwp_get_table_item('bb_post_id', get_post_id());
 		$text .= '<div class="wpbb_anonymous_userinfo">'.__('Posted by unregistered user: ', 'bbwp-sync').'<span class="wpbb_anonymous_userinfo_name">'.$row['wp_comment_author'].'</span>';
 		if (bb_get_option('bbwp_show_anonymous_email') == 'enabled')
 		{
@@ -857,7 +860,7 @@ function bbwp_topic_last_poster($poster)
 	global $topic;
 	if (bb_get_option('bbwp_anonymous_user_id') == $topic->topic_last_poster && bb_get_option('bbwp_show_anonymous_info') == 'enabled')
 	{
-		$row = get_table_item('bb_post_id', $topic->topic_last_post_id);
+		$row = bbwp_get_table_item('bb_post_id', $topic->topic_last_post_id);
 		if ($row['wp_comment_author'])
 			return $row['wp_comment_author'];
 	}
@@ -868,7 +871,7 @@ function bbwp_topic_anonymous_user($poster)
 {
 	if (bb_get_option('bbwp_anonymous_user_id') == get_post_author_id())
 	{
-		$row = get_table_item('bb_post_id', get_post_id());
+		$row = bbwp_get_table_item('bb_post_id', get_post_id());
 		if ($row['wp_comment_author'])
 			return $row['wp_comment_author'];
 	}
@@ -886,21 +889,28 @@ function bbwp_correct_links($text)
 	return preg_replace('|([(href)(src)])=(["\'])([^"\':]+)\2|', '${1}=${2}'.$current_url.'${3}${2}', $text);
 }
 
+function bbwp_warning()
+{
+	if (bb_get_option('bbwp_plugin_status') != 'enabled')
+		echo '<div class="updated" id="message"><p><strong>'.__('Syncrinization with WordPress is not enabled.').'</strong> '.sprintf(__('You must <a href="%1$s">check options and enable plugin</a> to make it working.'), 'admin-base.php?plugin=bbwp_options').'</p></div>';
+}
+
 
 add_action('bb_init', 'bbwp_add_textdomain');
-add_action('bb_tag_added', 'aftertagedit');
-add_action('bb_pre_tag_removed', 'pretagremove');
-add_action('bb_update_post', 'afteredit');
-add_action('bb_new_post', 'afterpost');
-add_action('bb_delete_post', 'afteredit');
-add_action('open_topic', 'afteropening');
-add_action('close_topic', 'afterclosing');
-bb_register_plugin_activation_hook('user#wordpress-bbpress-syncronization/bbwp-sync.php', 'bbwp_install');
-add_action('bb_deactivate_plugin_user#wordpress-bbpress-syncronization/bbwp-sync.php', 'deactivate_bbwp');
-add_action('bb_admin_menu_generator', 'options_page');
-add_action('bb_admin-header.php', 'process_options');
+bb_register_plugin_activation_hook(__FILE__, 'bbwp_install');
+bb_register_plugin_deactivation_hook(__FILE__, 'deactivate_bbwp');
+add_action('bb_tag_added', 'bbwp_aftertagedit');
+add_action('bb_pre_tag_removed', 'bbwp_pretagremove');
+add_action('bb_update_post', 'bbwp_afteredit');
+add_action('bb_new_post', 'bbwp_afterpost');
+add_action('bb_delete_post', 'bbwp_afteredit');
+add_action('open_topic', 'bbwp_afteropening');
+add_action('close_topic', 'bbwp_afterclosing');
+add_action('bb_admin_menu_generator', 'bbwp_options_page');
+add_action('bb_admin-header.php', 'bbwp_process_options');
 add_filter('post_text', 'bbwp_anonymous_userinfo');
 add_filter('get_topic_last_poster', 'bbwp_topic_last_poster');
 add_filter('get_post_author','bbwp_topic_anonymous_user');
+add_action('bb_admin_notices', 'bbwp_warning');
 
 ?>

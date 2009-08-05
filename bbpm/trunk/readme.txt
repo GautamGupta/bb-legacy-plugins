@@ -1,7 +1,7 @@
 === bbPM ===
 Contributors: Nightgunner5
 Tags: private messaging, messages, pm
-Requires at least: 0.9
+Requires at least: 1.0
 Tested up to: trunk
 Stable tag: 0.1-alpha5
 
@@ -32,6 +32,9 @@ RewriteRule ^pm/?(.*)$ /forums/my-plugins/bbpm/index.php?$1 [L]
 
 == Changelog ==
 
+* 0.1-alpha6
+	* Notices for incorrect my-plugins permissions and location.
+	* Admin styling fixed.
 * 0.1-alpha5
 	* Various tweaks and fixes
 	* Non-logged in users can no longer see the link to private message users

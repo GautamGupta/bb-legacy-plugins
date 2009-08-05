@@ -3,7 +3,7 @@
 Plugin Name: bbPM
 Plugin URI: http://nightgunner5.wordpress.com/tag/bbpm/
 Description: Adds the ability for users of a forum to send private messages to each other.
-Version: 0.1-alpha5
+Version: 0.1-alpha6
 Author: Nightgunner5
 Author URI: http://llamaslayers.net/daily-llama/
 Text Domain: bbpm
@@ -108,6 +108,8 @@ class bbPM {
 		add_filter( 'post_author_title_link', array( &$this, 'post_title_filter' ), 10, 2 );
 		add_filter( 'post_author_title', array( &$this, 'post_title_filter' ), 10, 2 );
 
+		if ( $this->settings['auto_add_link'] )
+			add_filter( 'bb_logout_link', array( &$this, 'header_link' ) );
 		add_action( 'bb_admin_menu_generator', array( &$this, 'admin_add' ) );
 		add_filter( 'bb_template', array( &$this, 'template_filter' ), 10, 2 );
 
@@ -116,9 +118,6 @@ class bbPM {
 
 		$this->settings = bb_get_option( 'bbpm_settings' );
 		$this->version = $this->settings ? $this->settings['version'] : false;
-
-		if ( $this->settings['auto_add_link'] )
-			add_filter( 'bb_logout_link', array( &$this, 'header_link' ) );
 
 		if ( !$this->version || version_compare( $this->version, '0.1-alpha5', '<' ) )
 			$this->update();
@@ -467,21 +466,22 @@ function bbpm_admin_page() {
 	}
 ?>
 <h2><?php _e( 'bbPM', 'bbpm' ); ?></h2>
+<?php do_action( 'bb_admin_notices' ); ?>
 <form class="settings" action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
 <fieldset>
-	<div>
+	<div id="option-max_inbox">
 		<label for="max_inbox">
 			<?php _e( 'Maximum inbox/outbox size', 'bbpm' ); ?>
 		</label>
-		<div>
+		<div class="inputs">
 			<input type="text" class="text short" id="max_inbox" name="max_inbox" value="<?php echo $bbpm->settings['max_inbox']; ?>" />
 		</div>
 	</div>
-	<div>
+	<div id="option-auto_add_link">
 		<label for="auto_add_link">
 			<?php _e( 'Automatically add header link', 'bbpm' ); ?>
 		</label>
-		<div>
+		<div class="inputs">
 			<input type="checkbox" id="auto_add_link" name="auto_add_link"<?php if ( $bbpm->settings['auto_add_link'] ) echo ' checked="checked"'; ?> />
 			<p><?php _e( 'You will need to add <code>&lt;?php if ( function_exists( \'bbpm_messages_link\' ) ) bbpm_messages_link(); ?&gt;</code> to your template if you disable this.', 'bbpm' ); ?></p>
 		</div>
@@ -494,6 +494,16 @@ function bbpm_admin_page() {
 </form>
 <?php
 }
+
+function bbpm_admin_header() {
+	if ( basename( dirname( dirname( __FILE__ ) ) ) != 'my-plugins' ) {
+		bb_admin_notice( sprintf( __( 'bbPM is installed in the "<code>%s</code>" directory. It should be installed in "<code>my-plugins</code>"', 'bbpm' ), basename( dirname( dirname( __FILE__ ) ) ) ), 'error' );
+	}
+	if ( strpos( __FILE__, '/' ) !== false && fileperms( dirname( dirname( __FILE__ ) ) ) & 0x1FF != 0755 ) {
+		bb_admin_notice( sprintf( __( 'The <code>my-plugins</code> directory has its permissions set to %s. This is not recommended. Please use 755 instead.', 'bbpm' ), decoct( fileperms( dirname( dirname( __FILE__ ) ) ) & 0x1FF ) ), 'error' );
+	}
+}
+add_action( 'bb_admin-header.php', 'bbpm_admin_header' );
 
 function bbPM_update_helper_helper_0_1_alpha4( $data ) {
 	return $data->ID;

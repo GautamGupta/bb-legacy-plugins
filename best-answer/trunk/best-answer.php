@@ -121,8 +121,9 @@ global $best_answer; static $posts_per_page;
 	if ($post->post_position>$posts_per_page) {	 // is it beyond page 1 typically?
 		$topic=get_topic($post->topic_id);
 		if (!empty($topic->best_answer)) {
+			if (!empty($best_answer['forums']) && !isset($best_answer['forums'][$topic->forum_id])) {return $link;}
 			if (!is_array($topic->best_answer)) {(array) $topic->best_answer=explode(',',$topic->best_answer); $topic->best_answer=array_flip($topic->best_answer);}
-			if (isset($topic->best_answer[$post_id])) {$link=get_topic_link( $bb_post->topic_id, 1) . "#post-$post_id";}    // change link to page 1 for best answers
+			if (isset($topic->best_answer[$post_id])) {$link=get_topic_link( $post->topic_id, 1) . "#post-$post_id";}    // change link to page 1 for best answers
 		}
 	}
 return $link;

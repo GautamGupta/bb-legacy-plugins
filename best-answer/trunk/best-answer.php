@@ -156,10 +156,10 @@ if ($view=='best-answer' || $view=='no-best-answer') {
 	}
 	} else {
 	if (defined('BACKPRESS_PATH')) {		
-		$query = " FROM bb_topics $where AND topic_id NOT IN 
+		$query = " FROM $bbdb->topics $where AND topic_id NOT IN 
 			(SELECT object_id as topic_id FROM $bbdb->meta WHERE object_type='bb_topic' AND meta_key='best_answer')  ";	
 	} else {		
-		$query = " FROM bb_topics $where AND topic_id NOT IN 	
+		$query = " FROM $bbdb->topics $where AND topic_id NOT IN 	
 			(SELECT topic_id FROM $bbdb->topicmeta WHERE meta_key='best_answer')  ";	
 	}	
 	}

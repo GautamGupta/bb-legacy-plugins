@@ -9,10 +9,10 @@ Version: 0.1.4
 
 license: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
-donate: http://amazon.com/paypage/P2FBORKDEFQIVM
+donate: http://bbshowcase.org/donate/
 
 instructions:  
-install, activate and put  <? report_post_link(); ?> in your post.php template where you want the link to be seen
+install, activate and put  <?php report_post_link(); ?> in your post.php template where you want the link to be seen
 optionally in stylesheet:  a.report_post {color:red;}  
 
 todo: 
@@ -66,8 +66,8 @@ if (isset($_POST['report_post_id']) && isset($_POST['report_post_reason'])) {
 	$message.="Host:  ".gethostbyaddr($_SERVER['REMOTE_ADDR'])."\r\n";   // useful but can add a few seconds or fail
  	$message.="Agent: ".$_SERVER['HTTP_USER_AGENT']."\r\n";
  	$message.="Refer: ". $_REQUEST['refer']."\r\n";
- 	$message.="URL:   http://".$_SERVER['HTTP_HOST'].$GLOBALS["HTTP_SERVER_VARS"]["REQUEST_URI"]."\r\n";  			
-	mail( $to, $subject, $message,$headers,"-odb");	  // odq = queue only
+ 	$message.="URL:   http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."\r\n";  			
+	mail( $to, $subject, $message,$headers);	  // ,"-odb" odq = queue only
 	// qmail_queue($to, $from, $subject, $message, "");
 }
 if (is_topic()) {

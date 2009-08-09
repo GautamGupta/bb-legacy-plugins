@@ -9,7 +9,8 @@ Author URI: http://www.gospelrhys.co.uk/
 Plugin URI: http://www.gospelrhys.co.uk/plugins/bbpress-plugins/recaptcha-bbpress-plugin
 Version: 0.2
 Donate link: http://www.gospelrhys.co.uk/donations/
-Requires: 0.73 or higher
+Requires at least: 0.9
+Tested up to: 1.0
 
 == Description ==
 Protect your forum from spam registrations by using <a href="http://www.recaptcha.net">Recaptcha</a>.

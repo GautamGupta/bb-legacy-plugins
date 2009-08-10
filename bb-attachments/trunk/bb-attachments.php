@@ -315,6 +315,7 @@ $count = intval($bbdb->get_var("SELECT COUNT(*) FROM ".$bb_attachments['db']." W
 $offset=0;	// counter for this pass
 $strip = array(' ','`','"','\'','\\','/','..','__');  // filter for filenames
 $maxlength=bb_attachments_lookup($bb_attachments['max']['filename']);
+reset($_FILES);
 
 $output="<h3>".__("Uploads")."</h3><ol>";	// start output
 while(list($key,$value) = each($_FILES['bb_attachments']['name'])) {
@@ -635,8 +636,10 @@ function bb_attachments_recount($post_id=0) {    	// update topic icon flag and 
 global $bb_attachments,$bbdb; $count=0; 
 if (empty($topic_id)) {$topic_id=intval($bbdb->get_var("SELECT topic_id FROM $bbdb->posts WHERE post_id=$post_id LIMIT 1"));}
 if ($topic_id) {
-$count=intval($bbdb->get_var("SELECT count(*) as count FROM ".$bb_attachments['db']." WHERE status=0 AND user_id>0 AND size>0 AND post_id IN (SELECT post_id FROM $bbdb->posts WHERE post_status=0 AND topic_id=$topic_id)"));
-bb_update_topicmeta( $topic_id, 'bb_attachments', $count);
+	$query="SELECT count(status) as count FROM ".$bb_attachments['db']." AS t1 LEFT JOIN $bbdb->posts AS t2 ON t1.post_id=t2.post_id 
+ 			WHERE t1.status=0 AND t1.user_id>0 AND t1.size>0 AND t2.post_status=0 AND t2.topic_id=$topic_id";
+	$count=intval($bbdb->get_var($query));
+	bb_update_topicmeta( $topic_id, 'bb_attachments', $count);
 }
 return  $count;
 }

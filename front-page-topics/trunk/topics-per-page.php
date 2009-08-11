@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/topics-per-page
 Description:  Set custom topic or post count limits for nearly every kind of bbPress page while still calculating direct post links correctly.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.5
+Version: 0.0.6
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 Donate: http://bbshowcase.org/donate/
@@ -36,7 +36,7 @@ function front_page_topics_fetch($limit) {global $topics_per_page;  return $topi
 
 function topics_per_page($limit) {	 	// set custom topics per page limits
 global $topics_per_page, $topics_per_page_fix_link, $topics, $topic, $topic_id; 
-if ($topics_per_page_fix_link) {$location="topic-page";} else {$location=bb_get_location();} 
+if ($topics_per_page_fix_link) {$location="topic-page";} else {$location=topics_per_page_location();} 
 if (isset($topics_per_page[$location])) {return $topics_per_page[$location];}
 return $limit;
 }
@@ -76,11 +76,25 @@ return $limit;
 
 function front_page_pages() {
 global $page, $bbdb, $forums; $total=0;
-// $total=$bbdb->get_var("SELECT SUM(topics) FROM $bbdb->forums");
 if (empty($forums)) {$forums=get_forums();}
 foreach ($forums as  $forum) {$total+=$forum->topics;}
 $last=substr($_SERVER['REQUEST_URI'],-1,1); if ($last=="?" || $last=="&") {$_SERVER['REQUEST_URI']=substr($_SERVER['REQUEST_URI'],0,-1);}
-echo apply_filters( 'topic_pages', get_page_number_links( $page, $total),0); 
+// echo apply_filters( 'topic_pages', get_page_number_links( $page, $total),0); 
+$base=rtrim(bb_get_option('uri'),'/ ').'%_%';
+$format='/page/%#%';
+$total=ceil($total/bb_get_option('page_topics'));
+echo apply_filters( 'topic_pages', paginate_links( array( 'base' => $base, 'format' =>$format, 'total' =>$total, 'current' =>$page, 'add_args' => false )), 0);;
+}
+
+function topics_per_page_location() {
+$file=bb_get_location();
+if (empty($file)) {	
+	$file = '';
+	foreach ( array($_SERVER['PHP_SELF'], $_SERVER['SCRIPT_FILENAME'], $_SERVER['SCRIPT_NAME']) as $name ) {if ( false !== strpos($name, '.php') ) {$file = $name;}}
+	$file=bb_find_filename( $file );
+}	
+if ($file=="delete-post.php") {$file="topic-page";}
+return $file;
 }
 
 ?>

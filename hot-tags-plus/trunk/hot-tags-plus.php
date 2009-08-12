@@ -10,7 +10,7 @@ Version: 0.0.3
 
 $hot_tags_plus['cache']=false;						  // caching switch, set true to turn on, false for off - caching is strongly recommened on live sites
 $hot_tags_plus['cache_dir']="/home/example/hot-tags-plus/"; 	  // make this above the web-root and chmod 777
-$hot_tags_plus['cache_time']=0;					 	 // not implimented yet, cache for time instead of immediate when tags added/deleted
+$hot_tags_plus['cache_time']=0;					 	 // not implemented yet, cache for time instead of immediate when tags added/deleted
 
 $hot_tags_plus['related']=true;	 					 // show related tags in cloud during mouse-over
 
@@ -30,7 +30,7 @@ add_action('hot_tags_plus', 'hot_tags_plus');
 if ($hot_tags_plus['style']) {
 add_action('bb_head','hot_tags_plus_head');
 }
-if (empty($hot_tags_plus['cache_time'])) {
+if ($hot_tags_plus['cache'] && empty($hot_tags_plus['cache_time'])) {
 add_action('bb_tag_added', 'hot_tags_plus_delete');
 add_action('bb_tag_created', 'hot_tags_plus_delete');
 add_action('bb_tag_renamed', 'hot_tags_plus_delete');

@@ -1,0 +1,54 @@
+/*
+ CSS File for
+ Upgrade Else Die Plugin (for bbPress) by www.gaut.am
+*/
+
+*{
+   margin:0;
+   padding:0;
+}
+
+body {
+margin:0;
+padding:0;
+text-align:center;
+width:100%;
+height:100%;
+background:#CCCCCC;
+}
+
+h1 {
+position:relative;
+color:#cb0000;
+font-size:60px;
+margin-top:-74px;
+font-family:verdana, sans-serif;
+}
+
+div.warn {
+width:auto;  
+margin:0 auto;
+height:400px;
+position:relative;
+top:150px;
+left:0;
+background:#CCCCC6;
+border:5px solid #cb0000;
+padding:10px;
+}
+
+p {
+color:#656565;
+font-family:verdana, arial, sans-serif;
+font-size:14px;
+text-align:left;
+background:url('images/hz-border.gif') repeat-x left bottom;
+margin:20px;
+padding:0 0 20px 0;
+}
+
+div.botright {
+position:absolute;
+bottom:20px;
+right:20px;
+}

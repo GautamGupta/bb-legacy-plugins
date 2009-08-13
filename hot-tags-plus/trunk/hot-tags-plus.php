@@ -5,11 +5,11 @@ Description:  Creates advanced hot tag heat maps with time & forum filters, colo
 Plugin URI:  http://bbpress.org/plugins/topic/hot-tags-plus
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.3
+Version: 0.0.4
 */
 
 $hot_tags_plus['cache']=false;						  // caching switch, set true to turn on, false for off - caching is strongly recommened on live sites
-$hot_tags_plus['cache_dir']="/home/example/hot-tags-plus/"; 	  // make this above the web-root and chmod 777
+$hot_tags_plus['cache_dir']="/home/example/hot-tags-plus/"; 		  // make this above the web-root and chmod 777
 $hot_tags_plus['cache_time']=0;					 	 // not implemented yet, cache for time instead of immediate when tags added/deleted
 
 $hot_tags_plus['related']=true;	 					 // show related tags in cloud during mouse-over
@@ -226,7 +226,13 @@ HTPJSEOF;
 return $output;
 }
 
-function hot_tags_plus_delete($x='',$y='',$z='') {global $hot_tags_plus; $files=glob($hot_tags_plus['cache_dir'].$hot_tags_plus['prefix']."*"); foreach($files as $fn) {@unlink($fn);}} 
+function hot_tags_plus_delete($x='',$y='',$z='') {
+	global $hot_tags_plus; 
+	// $files=glob($hot_tags_plus['cache_dir'].$hot_tags_plus['prefix']."*");  if ($files) {foreach($files as $fn) {@unlink($fn);}}
+	if (empty($hot_tags_plus['cache']) || ($dir=opendir($hot_tags_plus['cache_dir']))===false) {return;}
+        	while(($file=readdir($dir))!==false) { if (strpos($file,$hot_tags_plus['prefix'])===0) { unlink($hot_tags_plus['cache_dir'].$file); } }
+        	if (!empty($dir)) {closedir($dir);}
+} 
 
 function hot_tags_plus_head() {
 global $hot_tags_plus;

@@ -105,6 +105,10 @@ hot_tags_plus($options);
 
 * various performance and visual tweaks
 
+= Version 0.0.4 (2009-08-13) =
+
+* eliminate the use of glob which is restricted on some php hosts
+
 == To Do ==
 
 * admin menu

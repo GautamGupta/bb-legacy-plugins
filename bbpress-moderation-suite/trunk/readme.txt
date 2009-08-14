@@ -1,7 +1,7 @@
 === bbPress Moderation Suite ===
 Contributors: Nightgunner5
 Tags: moderation, banning, ban, report post, report, warn user, warning, moderation log, log, logging
-Requires at least: 0.8
+Requires at least: 1.0
 Tested up to: trunk
 Stable tag: 0.1-alpha6
 
@@ -88,6 +88,7 @@ If a `ban-plus.php` file is found in the template directory, it will be loaded w
 * [The Ban Plus "you've been banned" page can now be edited ](http://bbpress.org/plugins/topic/bbpress-moderation-suite/other_notes/)
 * Admin interface now matches bbPress 1.0
 * Mod Log categorization fixed.
+* New top level navigation menu for easy access.
 
 = 0.1-beta1 =
 * Ban Plus now has hooks.

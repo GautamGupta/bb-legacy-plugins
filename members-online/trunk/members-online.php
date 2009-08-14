@@ -8,18 +8,23 @@ Author URI: http://bbShowcase.org
 Version: 0.0.2
 */
 
-$members_online['footer']	= true;   //  automatically show in footer on front page
+$members_online['footer']	= true;  	   //  automatically show in footer at bottom of page
 
-$members_online['posts']	= true;   //  automatically show member online status in their posts
+$members_online['front_only'] = true; 	   //    true =  show only front page,  	false =  show in EVERY page footer
 
-$members_online['profile']	= true;   //  automatically show member online status in their profile
+$members_online['show_anyone'] = true;    //   true = anyone can see list,    false = only logged in members can see
 
-$members_online['timeout'] = 10;	 //  (minutes) how long should members be considered still online since last activity, default 10
+$members_online['posts']	= true;   	 //  automatically show member online status in their posts
 
+$members_online['profile']	= true;    	 //  automatically show member online status in their profile
+
+$members_online['timeout'] = 10;	  	 //  (minutes) how long should members be considered still online since last activity, default 10
+
+$members_online['today'] = 'midnight';	//   'midnight' = today will show members online since midnight, or  '24' =  past 24 hours,  48 = 48 hours, etc.
 
 /*    stop editing here    */
 
-$members_online['timeout']*=60;	// convert to seconds
+$members_online['timeout']*=60;		 //  convert to seconds
 
 add_action('bb_init','members_online',99);
 add_action('bb_user_logout', 'members_online_update');
@@ -32,13 +37,16 @@ add_filter( 'post_author_title', 'members_online_post',100);
 add_filter( 'post_author_title_link', 'members_online_post',100);
 }
 
-function members_online_footer() {
-	if (!is_front()) {return;}
+function members_online_footer() {	
 	global $members_online;
-	echo "<div class='members_online' style='text-align:center; width:760px; margin:0 auto;'>
+	if (!empty($members_online['front_only']) && !is_front()) {return;}
+	if (empty($members_online['show_anyone']) && !bb_is_user_logged_in()) {return;}
+	
+	echo "<div class='members_online' style='text-align:center; width:760px; margin:0 auto;'>	
 	<div style='text-align:left;'><h2>".__('Members Online')."</h2>
-	<p><strong>".__('now').' :</strong> '; members_online_now();
-	echo "<br /><strong>".__('today').' :</strong> '; members_online_today(); echo "</p></div>";
+		<p><strong>".__('now').' :</strong> '; members_online_now();
+	echo "<br /><strong>".__('today').' :</strong> '; members_online_today(); 
+	echo "</p></div>";
 }
 
 function members_online($action='') {
@@ -72,6 +80,8 @@ function members_online_update() {members_online('logout');}
 
 function members_online_now($time=0) {
 global $bbdb, $members_online;  $members_online['footer']=false;
+if (empty($members_online['show_anyone']) && !bb_is_user_logged_in()) {return;}
+
 if (empty($time)) {$time=time()-$members_online['timeout'];}
 	$results=$bbdb->get_results("SELECT ID,user_login FROM $bbdb->users LEFT JOIN $bbdb->usermeta ON ID=user_id WHERE meta_key='last_online' AND cast(meta_value AS unsigned)>'$time' ORDER BY meta_value DESC");
 	if (!empty($results)) {				
@@ -86,8 +96,11 @@ if (empty($time)) {$time=time()-$members_online['timeout'];}
 }
 
 function members_online_today() {
-	$midnight=mktime(0, 0, 0,date('n',$time), date('j',$time), date('Y',$time) )+bb_get_option("gmt_offset")*3600; 
-	members_online_now($midnight);
+	global $members_online; $time=time();
+	$today=intval($members_online['today']);
+	if (empty($today)) {$today=mktime(0, 0, 0,date('n',$time), date('j',$time), date('Y',$time) )+bb_get_option("gmt_offset")*3600;}
+	else {$today=$time-3600*$today;}
+	members_online_now($today);
 }
 
 function members_online_post($titlelink='') {

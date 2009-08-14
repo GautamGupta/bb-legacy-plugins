@@ -5,20 +5,20 @@
 function bbmodsuite_report_install() {
 	global $bbdb, $bbmodsuite_cache;
 	$bbdb->query(
-					'CREATE TABLE IF NOT EXISTS `' . $bbdb->prefix . 'bbmodsuite_reports` (
-						`ID` int(10) NOT NULL auto_increment,
-						`report_reason` int(10) NOT NULL default \'0\',
-						`report_from` int(10) NOT NULL,
-						`reported_post` int(10) NOT NULL,
-						`report_content` text NOT NULL,
-						`report_type` varchar(250) NOT NULL default \'new\',
-						`resolved_by` int(10) NOT NULL default \'0\',
-						`resolve_type` int(10) NOT NULL default \'0\',
-						`resolve_content` text NOT NULL default \'\',
-						`reported_at` datetime NOT NULL,
-						`resolved_at` datetime,
-						PRIMARY KEY (`ID`)
-					)'
+		'CREATE TABLE IF NOT EXISTS `' . $bbdb->prefix . 'bbmodsuite_reports` (
+			`ID` int(10) NOT NULL auto_increment,
+			`report_reason` int(10) NOT NULL default \'0\',
+			`report_from` int(10) NOT NULL,
+			`reported_post` int(10) NOT NULL,
+			`report_content` text NOT NULL,
+			`report_type` varchar(250) NOT NULL default \'new\',
+			`resolved_by` int(10) NOT NULL default \'0\',
+			`resolve_type` int(10) NOT NULL default \'0\',
+			`resolve_content` text NOT NULL default \'\',
+			`reported_at` datetime NOT NULL,
+			`resolved_at` datetime,
+			PRIMARY KEY (`ID`)
+		)'
 	);
 
 	if ( !$bbmodsuite_cache['report'] = bb_get_option( 'bbmodsuite_report_options' ) ) {
@@ -43,6 +43,8 @@ if ( !defined( 'BB_PATH' ) && isset( $_GET['report'] ) ) {
 		include_once '../bb-load.php';
 	elseif ( file_exists( '../../bb-load.php' ) )
 		include_once '../../bb-load.php';
+	else
+		exit( 'Fatal error.' );
 	if ( strtoupper( $_SERVER['REQUEST_METHOD'] ) === 'GET' ) {
 		if ( !bb_verify_nonce( $_GET['_nonce'], 'bbmodsuite-report-' . $_GET['report'] ) )
 			bb_die( __( 'Invalid report', 'bbpress-moderation-suite' ) );
@@ -75,7 +77,7 @@ if ( !defined( 'BB_PATH' ) && isset( $_GET['report'] ) ) {
 
 		bb_load_template( 'front-page.php' );
 	} else {
-		if ( !( $_POST['report_reason'] === '0' || array_key_exists( $_POST['report_reason'], bbmodsuite_report_reasons() ) ) )
+		if ( $_POST['report_reason'] !== '0' && !array_key_exists( $_POST['report_reason'], bbmodsuite_report_reasons() ) )
 			bb_die( __( 'Invalid report', 'bbpress-moderation-suite' ) );
 		$report_reason  = $_POST['report_reason'];
 		$report_content = htmlspecialchars( $_POST['report_content'] );
@@ -95,61 +97,14 @@ function bbmodsuite_report_init() {
 }
 add_action( 'bbmodsuite_init', 'bbmodsuite_report_init' );
 
-function bbmodsuite_report_admin_css() { ?>
-<style type="text/css">
-/* <![CDATA[ */
-#bbAdminSubSubMenu {
-	margin: .2em .2em 1em;
-}
-
-#bbAdminSubSubMenu li {
-	display: inline;
-	margin-right: 1em;
-}
-
-#bbAdminSubSubMenu li a {
-	text-decoration: none;
-	color: rgb(40, 140, 60);
-	line-height: 1.6em;
-}
-
-#bbAdminSubSubMenu li a span {
-	font-size: 1.5em;
-}
-
-#bbAdminSubSubMenu li a:hover {
-	color: rgb(230, 145, 0);
-}
-
-#bbAdminSubSubMenu li.current a {
-	color: rgb(230, 145, 0);
-}
-
-#bbBody div.updated p, #bbBody div.error p {
-	margin: 0;
-}
-/* ]]> */
-</style>
-<?php }
-
-function bbmodsuite_report_admin_add_css() {
-	add_action( 'bb_admin_head', 'bbmodsuite_report_admin_css' );
-}
-add_action( 'bbpress_moderation_suite_report_pre_head', 'bbmodsuite_report_admin_add_css' );
-
 function bbpress_moderation_suite_report() { ?>
-<ul id="bbAdminSubSubMenu">
-	<li<?php if ( !in_array( $_GET['page'], array( 'resolve_reports', 'resolved_reports', 'resolve_report', 'admin' ) ) ) echo ' class="current"'; ?>><a href="<?php echo bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_report', 'page' => 'new_reports' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>">
-		<span><?php _e( 'New', 'bbpress-moderation-suite' ); ?></span>
-	</a></li>
-	<li<?php if ($_GET['page'] === 'resolved_reports') echo ' class="current"'; ?>><a href="<?php echo bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_report', 'page' => 'resolved_reports' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>">
-		<span><?php _e( 'Resolved', 'bbpress-moderation-suite' ); ?></span>
-	</a></li>
-	<?php if ( $_GET['page'] === 'resolve_reports' ) { ?><li class="current"><a href="#"><span><?php _e( 'Resolve', 'bbpress-moderation-suite' ); ?></span></a></li><?php } ?>
-	<?php if ( bb_current_user_can( 'use_keys' ) ) { ?><li<?php if ($_GET['page'] === 'admin') echo ' class="current"'; ?>><a href="<?php echo bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_report', 'page' => 'admin' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>">
-		<span><?php _e( 'Administration', 'bbpress-moderation-suite' ); ?></span>
-	</a></li><?php } ?>
-</ul>
+<h2><?php _e( 'Reports', 'bbpress-moderation-suite' ); ?></h2>
+<div class="table-filter">
+	<a<?php if ( !in_array( $_GET['page'], array( 'resolve_reports', 'resolved_reports', 'resolve_report', 'admin' ) ) ) echo ' class="current"'; ?> href="<?php echo bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_report', 'page' => 'new_reports' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>"><?php _e( 'New', 'bbpress-moderation-suite' ); ?> <span class="count">(<?php echo bb_number_format_i18n( bbmodsuite_report_count( 'new' ) ); ?>)</span></a> |
+	<a<?php if ($_GET['page'] === 'resolved_reports') echo ' class="current"'; ?> href="<?php echo bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_report', 'page' => 'resolved_reports' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>"><?php _e( 'Resolved', 'bbpress-moderation-suite' ); ?> <span class="count">(<?php echo bb_number_format_i18n( bbmodsuite_report_count( 'resolved' ) ); ?>)</span></a>
+	<?php if ( $_GET['page'] === 'resolve_reports' ) { ?>| <a class="current" href="#"><?php _e( 'Resolve', 'bbpress-moderation-suite' ); ?> <span class="count">(#<?php echo bb_number_format_i18n( $_GET['report'] ); ?>)</span></a><?php } ?>
+	<?php if ( bb_current_user_can( 'use_keys' ) ) { ?>| <a<?php if ($_GET['page'] === 'admin') echo ' class="current"'; ?> href="<?php echo bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_report', 'page' => 'admin' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>"><?php _e( 'Administration', 'bbpress-moderation-suite' ); ?>	</a><?php } ?>
+</div>
 <?php
 	switch ( $_GET['page'] ) {
 		case 'resolve_report':
@@ -219,15 +174,15 @@ function bbpress_moderation_suite_report() { ?>
 <?php
 		foreach ( $reports as $report ) {
 			$resolve_url = bb_nonce_url(
-							bb_get_uri(
-											'bb-admin/admin-base.php',
-											array(
-												'page' => 'resolve_reports',
-												'report' => $report->ID,
-												'plugin' => 'bbpress_moderation_suite_report',
-											),
-											BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
-							), 'bbmodsuite-report-resolve_' . $report->ID
+				bb_get_uri(
+					'bb-admin/admin-base.php',
+					array(
+						'page' => 'resolve_reports',
+						'report' => $report->ID,
+						'plugin' => 'bbpress_moderation_suite_report',
+					),
+					BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
+				), 'bbmodsuite-report-resolve_' . $report->ID
 			);
 ?>
 
@@ -389,9 +344,9 @@ $options = $bbmodsuite_cache['report'];
 }
 
 function bbmodsuite_report_admin_add() {
-	global $bb_submenu, $bbmodsuite_cache;
+	global $bbmodsuite_cache;
 	$options = $bbmodsuite_cache['report'];
-	$bb_submenu['content.php'][] = array( __( 'Reports', 'bbpress-moderation-suite' ), $options['min_level'], 'bbpress_moderation_suite_report' );
+	bb_admin_add_submenu( __( 'Reports', 'bbpress-moderation-suite' ), $options['min_level'], 'bbpress_moderation_suite_report', 'bbpress_moderation_suite' );
 }
 add_action( 'bb_admin_menu_generator', 'bbmodsuite_report_admin_add' );
 

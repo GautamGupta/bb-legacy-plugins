@@ -17,9 +17,6 @@ require_once dirname( __FILE__ ) . '/compat.php';
 function bbmodsuite_init() {
 	global $bbmodsuite_plugins, $bbmodsuite_active_plugins, $bbmodsuite_cache;
 
-	if ( false ) // Hack to make the description translatable
-		__( 'A set of tools to help moderate your forums.', 'bbpress-moderation-suite' );
-
 	load_plugin_textdomain( 'bbpress-moderation-suite', dirname( __FILE__ ) . '/translations' );
 
 	$bbmodsuite_plugins = array(
@@ -62,9 +59,15 @@ function bbmodsuite_init() {
 add_action( 'bb_init', 'bbmodsuite_init' );
 
 function bbmodsuite_admin_add() {
-	bb_admin_add_submenu( __( 'bbPress Moderation Suite', 'bbpress-moderation-suite' ), 'use_keys', 'bbpress_moderation_suite' );
+	bb_admin_add_menu( __( 'Moderation', 'bbpress-moderation-suite' ), 'moderate', 'bbpress_moderation_suite', false, '', 'bbmodsuite-menu' );
+	bb_admin_add_submenu( __( 'bbPress Moderation Suite', 'bbpress-moderation-suite' ), 'use_keys', 'bbpress_moderation_suite', 'bbpress_moderation_suite' );
 }
 add_action( 'bb_admin_menu_generator', 'bbmodsuite_admin_add' );
+
+function bbmodsuite_admin_global_css() {
+	echo '<style type="text/css">#bbmodsuite-menu .bb-menu-icon{background:url(../' . basename( dirname( dirname( __FILE__ ) ) ) . '/' . basename( dirname( __FILE__ ) ) . '/icon.png)!important}</style>';
+}
+add_action( 'bb_admin_head', 'bbmodsuite_admin_global_css' );
 
 function bbmodsuite_admin_parse() {
 	global $bbmodsuite_plugins, $bbmodsuite_active_plugins;

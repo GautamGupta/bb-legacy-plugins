@@ -21,6 +21,8 @@ Report allows users on your forum to report posts to the moderators on your foru
 
 Ban Plus allows temporary bans with notes on why the ban occurred. There are safety features to prevent Moderators from banning Keymasters.
 
+[The "you've been banned" page can be customized.](http://bbpress.org/plugins/topic/bbpress-moderation-suite/other_notes/)
+
 = Warning =
 
 Allows moderators to warn users about rule breaking.
@@ -29,7 +31,7 @@ Allows moderators to warn users about rule breaking.
 
 Keeps track of important moderator actions.
 
-So far, it logs the following actions:
+It logs the following actions:
 
 * Plugins
 	* Activation
@@ -42,6 +44,8 @@ So far, it logs the following actions:
 * Posts
 	* Status change (delete, spam, undelete, unspam)
 	* Editing (by other users)
+
+[There is a plugin API to allow more logged actions to be added.](http://bbpress.org/plugins/topic/bbpress-moderation-suite/other_notes/)
 
 == Installation ==
 
@@ -65,32 +69,56 @@ If you can't figure out an issue with the bbPress Moderation Suite by yourself, 
 1. Can you spot what happened because there was a report? Don't worry, there's a setting to make this a bit less obtrusive.
 2. The Warning administration screen
 
+== Ban Plus API ==
+If a `ban-plus.php` file is found in the template directory, it will be loaded with a global variable `$ban` that includes:
+
+* `type` - So far this is always 'temp'
+* `length` - The duration of the ban in seconds
+* `on` - The unix timestamp of the ban starting
+* `until` - The unix timestamp of the ban ending
+* `banned_by` - The user ID of the person who started the ban
+* `notes` - Any notes left by the person who started the ban
+
+== Mod Log API ==
+
+
 == Changelog ==
 
-* 0.1-beta1
-	* Ban Plus now has hooks.
-	* Probation discontinued - use the Bozo plugin that came with your forum instead.
-	* Mod Log can now filter different types of messages. Unfortunately, you will need to uninstall and reinstall the Mod Log Moderation Helper before you can use this feature.
-	* Mod Log now hides duplicate messages by default.
-	* Mod Log now has pagination.
-* 0.1-alpha6
-	* Major code cleanup
-	* This plugin now works with bbPress 0.9 and 0.8. If anything gives you an error, give me the error message and I'll be sure to fix it.
-	* Fixed an error in the Report admin panel
-	* Mod Log now logs topic deletion
-* 0.1-alpha5
-	* Report "obtrusive mode" made optional. (See [this post](http://bbpress.org/plugins/topic/bbpress-moderation-suite/#post-2845))
-	* Moderation Log added.
-* 0.1-alpha4
-	* Warning **actually works** now.
-	* Options are now cached, so each individual mod helper will not ask the database for its options multiple times per pageload.
-* 0.1-alpha3
-	* Warning added. ***Early version, lots of bugs***
-	* Report only uses one bb_options entry. The downside: You need to de- and re-activate this Moderation Helper, and it **will** forget your settings.
-	* A few "idiot checks" have been added. Don't worry if you trigger one. It doesn't *necessarily* mean you're an idiot.
-* 0.1-alpha2
-	* Ban Plus added.
-	* Errors and messages look less weird.
-	* Links to administration panels for each sub-plugin added.
-* 0.1-alpha1
-	* First public release
+= 0.1-beta2 =
+* [The Ban Plus "you've been banned" page can now be edited ](http://bbpress.org/plugins/topic/bbpress-moderation-suite/other_notes/)
+* Admin interface now matches bbPress 1.0
+* Mod Log categorization fixed.
+
+= 0.1-beta1 =
+* Ban Plus now has hooks.
+* Probation discontinued - use the Bozo plugin that came with your forum instead.
+* Mod Log can now filter different types of messages. Unfortunately, you will need to uninstall and reinstall the Mod Log Moderation Helper before you can use this feature.
+* Mod Log now hides duplicate messages by default.
+* Mod Log now has pagination.
+
+= 0.1-alpha6 =
+* Major code cleanup
+* This plugin now works with bbPress 0.9 and 0.8. If anything gives you an error, give me the error message and I'll be sure to fix it.
+* Fixed an error in the Report admin panel
+* Mod Log now logs topic deletion
+
+= 0.1-alpha5 =
+* Report "obtrusive mode" made optional. (See [this post](http://bbpress.org/plugins/topic/bbpress-moderation-suite/#post-2845))
+* Moderation Log added.
+
+= 0.1-alpha4 =
+* Warning **actually works** now.
+* Options are now cached, so each individual mod helper will not ask the database for its options multiple times per pageload.
+
+= 0.1-alpha3 =
+* Warning added. ***Early version, lots of bugs***
+* Report only uses one bb_options entry. The downside: You need to de- and re-activate this Moderation Helper, and it **will** forget your settings.
+* A few "idiot checks" have been added. Don't worry if you trigger one. It doesn't *necessarily* mean you're an idiot.
+
+= 0.1-alpha2 =
+* Ban Plus added.
+* Errors and messages look less weird.
+* Links to administration panels for each sub-plugin added.
+
+= 0.1-alpha1 =
+* First public release

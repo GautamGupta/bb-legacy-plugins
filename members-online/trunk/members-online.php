@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/members-online
 Description: Shows which members are currently online or visited today. Tracks the total time online and last visit for each member in their profile.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.1
+Version: 0.0.2
 */
 
 $members_online['footer']	= true;   //  automatically show in footer on front page
@@ -73,10 +73,14 @@ function members_online_update() {members_online('logout');}
 function members_online_now($time=0) {
 global $bbdb, $members_online;  $members_online['footer']=false;
 if (empty($time)) {$time=time()-$members_online['timeout'];}
-	$members=$bbdb->get_results("SELECT ID,user_login FROM $bbdb->users LEFT JOIN $bbdb->usermeta ON ID=user_id WHERE meta_key='last_online' AND cast(meta_value AS unsigned)>'$time' ORDER BY meta_value DESC");
-	if (!empty($members)) {
-		$profile=bb_get_option('uri')."profile.php?id="; $output="";
-		foreach ($members as $member) {$output.="<a rel='nofollow' href='$profile$member->ID'>$member->user_login</a>, ";} 
+	$results=$bbdb->get_results("SELECT ID,user_login FROM $bbdb->users LEFT JOIN $bbdb->usermeta ON ID=user_id WHERE meta_key='last_online' AND cast(meta_value AS unsigned)>'$time' ORDER BY meta_value DESC");
+	if (!empty($results)) {				
+		$output="";  $rewrite = bb_get_option( 'mod_rewrite' ); $bb_uri=bb_get_option('uri');
+		if (empty($rewrite)) {$uri=$bb_uri.bb_get_option('uri') . "profile.php?id=";} else {$uri=$bb_uri."profile/"; }
+		foreach ($results as $result) { $key=$result->ID; $value=$result->user_login;
+			if (empty($rewrite) || $rewrite !== 'slugs' ) {$stub=$key;} else {$stub= bb_user_nicename_sanitize($value);}
+			$output.=" <a rel='nofollow' href='".attribute_escape($uri.$stub)."'>$value</a>, ";
+		}	
 		echo rtrim($output,", ");
 	} 
 }

@@ -55,3 +55,6 @@ This is actually to keep performance reasonable and removes an extra mysql query
 
 * first public alpha release
 
+= Version 0.0.2 (2009-08-14) =
+
+* generate profile links based on current permalink style (required due to 1.0 lack of backward compatibility)

@@ -100,14 +100,14 @@ $output.=" <a class='mini_stats_stats' href='".bb_get_option('uri')."?".$mini_st
 $output.=" <span class='mini_stats_num'>".bb_number_format_i18n($results->posts)."</span></a> ".__('posts in'); 
 $output.=" <span class='mini_stats_num'>".bb_number_format_i18n($results->topics)."</span> ".__('topics over'); 
 $output.=" <span class='mini_stats_num'>$months</span> ".__('months by'); 
-$output.=" <span class='mini_stats_users mini_stats_num'>".bb_number_format_i18n($results->active)."</span> ".__('of')." <span class='mini_stats_num'>".bb_number_format_i18n($results->members)."</span> ".__('members.'); 
+$output.=" <span class='mini_stats_users mini_stats_num'>".bb_number_format_i18n($results->active)."</span> ".__('of')." <span class='mini_stats_num'>".bb_number_format_i18n($results->members)."</span> ".__('members.');
 if ($display>1) {
-$output.="<span class='mini_stats_wrap mini_stats_member'>";
+$output.=" <span class='mini_stats_wrap mini_stats_member'>";
 if (!empty($results->latest)) {
 	$output.=__('Latest:');  $rewrite = bb_get_option( 'mod_rewrite' ); $bb_uri=bb_get_option('uri');
-	if ($rewrite) {$uri=$bb_uri."profile/"; } else {$uri=$bb_uri.bb_get_option('uri') . "profile.php?id=";}
+	if (empty($rewrite)) {$uri=$bb_uri.bb_get_option('uri') . "profile.php?id=";} else {$uri=$bb_uri."profile/"; }
 	foreach ($results->latest as $key=>$value) {
-		if (!empty($rewrite) && $rewrite === 'slugs' ) {$stub= bb_user_nicename_sanitize($value);} else {$stub=$key;}
+		if (empty($rewrite) || $rewrite !== 'slugs' ) {$stub=$key;} else {$stub= bb_user_nicename_sanitize($value);}
 		$output.=" <a href='".attribute_escape($uri.$stub)."'>$value</a>, ";
 	}
 }

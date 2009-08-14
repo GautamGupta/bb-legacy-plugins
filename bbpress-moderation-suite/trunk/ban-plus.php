@@ -115,6 +115,10 @@ function bbmodsuite_banplus_maybe_block_user() {
 	if ( !empty( $current_bans[bb_get_current_user_info( 'ID' )] ) ) {
 		switch ( $current_bans[bb_get_current_user_info( 'ID' )]['type'] ) {
 			case 'temp':
+				if ( bb_get_template( 'ban-plus.php', false ) ) {
+					bb_load_template( 'ban-plus.php', array( 'ban' => $current_bans[bb_get_current_user_info( 'ID' )]['until'] ), $current_bans[bb_get_current_user_info( 'ID' )]['until'] );
+					break;
+				}
 				bb_die( sprintf( __( 'You are banned from this forum until %s from now.  The person who banned you said the reason was: %s', 'bbpress-moderation-suite' ), bb_since( time() - ( $current_bans[bb_get_current_user_info( 'ID' )]['until'] - time() ), true ), $current_bans[bb_get_current_user_info( 'ID' )]['notes'] ) );
 				break;
 		}
@@ -128,60 +132,13 @@ function bbmodsuite_banplus_get_ban_types() {
 	return apply_filters( 'bbmodsuite_banplus_ban_types', $types );
 }
 
-function bbmodsuite_ban_plus_admin_css() { ?>
-<style type="text/css">
-/* <![CDATA[ */
-#bbAdminSubSubMenu {
-	margin: .2em .2em 1em;
-}
-
-#bbAdminSubSubMenu li {
-	display: inline;
-	margin-right: 1em;
-}
-
-#bbAdminSubSubMenu li a {
-	text-decoration: none;
-	color: rgb(40, 140, 60);
-	line-height: 1.6em;
-}
-
-#bbAdminSubSubMenu li a span {
-	font-size: 1.5em;
-}
-
-#bbAdminSubSubMenu li a:hover {
-	color: rgb(230, 145, 0);
-}
-
-#bbAdminSubSubMenu li.current a {
-	color: rgb(230, 145, 0);
-}
-
-#bbBody div.updated p, #bbBody div.error p {
-	margin: 0;
-}
-/* ]]> */
-</style>
-<?php }
-
-function bbmodsuite_ban_plus_add_admin_css() {
-	add_action( 'bb_admin_head', 'bbmodsuite_ban_plus_admin_css' );
-}
-add_action( 'bbpress_moderation_suite_ban_plus_pre_head', 'bbmodsuite_ban_plus_add_admin_css' );
-
 function bbpress_moderation_suite_ban_plus() { ?>
-<ul id="bbAdminSubSubMenu">
-	<li<?php if ( !in_array( $_GET['page'], array( 'new_ban', 'admin' ) ) ) echo ' class="current"'; ?>><a href="<?php echo bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_ban_plus', 'page' => 'current_bans' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>">
-		<span><?php _e( 'Current bans', 'bbpress-moderation-suite' ); ?></span>
-	</a></li>
-	<li<?php if ( $_GET['page'] === 'new_ban' ) echo ' class="current"'; ?>><a href="<?php echo bb_nonce_url( bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_ban_plus', 'page' => 'new_ban' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ), 'bbmodsuite-banplus-new' ); ?>">
-		<span><?php _e( 'Ban a user', 'bbpress-moderation-suite' ); ?></span>
-	</a></li>
-	<?php if ( bb_current_user_can( 'use_keys' ) ) { ?><li<?php if ( $_GET['page'] === 'admin' ) echo ' class="current"'; ?>><a href="<?php echo bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_ban_plus', 'page' => 'admin' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>">
-		<span><?php _e( 'Administration', 'bbpress-moderation-suite' ); ?></span>
-	</a></li><?php } ?>
-</ul>
+<h2><?php _e( 'Ban Plus', 'bbpress-moderation-suite' ); ?></h2>
+<div class="table-filter">
+	<a<?php if ( !in_array( $_GET['page'], array( 'new_ban', 'admin' ) ) ) echo ' class="current"'; ?> href="<?php echo bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_ban_plus', 'page' => 'current_bans' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>"><?php _e( 'Current bans', 'bbpress-moderation-suite' ); ?> <span class="count">(<?php echo bb_number_format_i18n( $GLOBALS['bbmodsuite_cache']['banplus']['bans'] ); ?>)</span></a> |
+	<a<?php if ( $_GET['page'] === 'new_ban' ) echo ' class="current"'; ?> href="<?php echo bb_nonce_url( bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_ban_plus', 'page' => 'new_ban' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ), 'bbmodsuite-banplus-new' ); ?>"><?php _e( 'Ban a user', 'bbpress-moderation-suite' ); ?></a>
+	<?php if ( bb_current_user_can( 'use_keys' ) ) { ?>| <a<?php if ( $_GET['page'] === 'admin' ) echo ' class="current"'; ?> href="<?php echo bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_ban_plus', 'page' => 'admin' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>"><?php _e( 'Administration', 'bbpress-moderation-suite' ); ?></a><?php } ?>
+</div>
 <?php switch ( $_GET['page'] ) {
 	case 'new_ban':
 		if ( $_SERVER['REQUEST_METHOD'] === 'GET' ) {
@@ -189,7 +146,6 @@ function bbpress_moderation_suite_ban_plus() { ?>
 <div class="error"><p><?php _e( 'Invalid banning attempt.', 'bbpress-moderation-suite' ); ?></p></div>
 <?php			return;
 			} ?>
-<h2><?php _e( 'Ban a user', 'bbpress-moderation-suite' ); ?></h2>
 <form class="settings" method="post" action="<?php bb_uri( 'bb-admin/admin-base.php', array( 'page' => 'new_ban', 'plugin' => 'bbpress_moderation_suite_ban_plus' ), BB_URI_CONTEXT_FORM_ACTION + BB_URI_CONTEXT_BB_ADMIN ); ?>">
 <fieldset>
 	<div>
@@ -284,7 +240,6 @@ function bbpress_moderation_suite_ban_plus() { ?>
 <div class="error"><p><?php _e( 'Failed to save options.', 'bbpress-moderation-suite' ); ?></p></div>
 <?php			}
 			} else { ?>
-<h2><?php _e( 'Administration', 'bbpress-moderation-suite' ); ?></h2>
 <form class="settings" method="post" action="<?php bb_uri( 'bb-admin/admin-base.php', array( 'page' => 'admin', 'plugin' => 'bbpress_moderation_suite_ban_plus' ), BB_URI_CONTEXT_FORM_ACTION + BB_URI_CONTEXT_BB_ADMIN ); ?>">
 <fieldset>
 	<div>
@@ -297,7 +252,7 @@ function bbpress_moderation_suite_ban_plus() { ?>
 				<option value="administrate"<?php if ( $the_options['min_level'] == 'administrate' ) echo ' selected="selected"'; ?>><?php _e( 'Administrator' ); ?></option>
 				<option value="use_keys"<?php if ( $the_options['min_level'] == 'use_keys' ) echo ' selected="selected"'; ?>><?php _e( 'Keymaster' ); ?></option>
 			</select>
-			<p><?php _e( 'Users can only ban other users of a lower rank.  Keymasters can ban anyone.  What user level should be the lowest allowed to ban users?', 'bbpress-moderation-suite' ); ?></p>
+			<p><?php _e( 'Users can only ban other users of a lower rank. Keymasters can ban anyone.  What user level should be the lowest allowed to ban users?', 'bbpress-moderation-suite' ); ?></p>
 		</div>
 	</div>
 </fieldset>
@@ -312,8 +267,7 @@ function bbpress_moderation_suite_ban_plus() { ?>
 	default:
 		global $bbmodsuite_cache;
 		$current_bans = $bbmodsuite_cache['banplus']['bans'];
-?><h2><?php _e( 'Current bans', 'bbpress-moderation-suite' ); ?></h2>
-<table class="widefat">
+?><table class="widefat">
 	<thead>
 		<tr>
 			<th><?php _e( 'User', 'bbpress-moderation-suite' ); ?></th>
@@ -328,18 +282,18 @@ function bbpress_moderation_suite_ban_plus() { ?>
 <?php
 	foreach ( $current_bans as $user_id => $ban ) {
 		$unban_link = attribute_escape(
-						bb_nonce_url(
-										bb_get_uri(
-														'bb-admin/admin-base.php',
-														array(
-															'page' => 'unban_user',
-															'user' => $user_id,
-															'plugin' => 'bbpress_moderation_suite_ban_plus',
-														),
-														BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
-										),
-										'bbmodsuite-banplus-unban_' . $user_id
-						)
+			bb_nonce_url(
+				bb_get_uri(
+					'bb-admin/admin-base.php',
+					array(
+						'page' => 'unban_user',
+						'user' => $user_id,
+						'plugin' => 'bbpress_moderation_suite_ban_plus',
+					),
+					BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
+				),
+				'bbmodsuite-banplus-unban_' . $user_id
+			)
 		);
 ?>
 
@@ -354,7 +308,7 @@ function bbpress_moderation_suite_ban_plus() { ?>
 		</tr>
 
 <?php
-	} // foreach reports as report
+	} // foreach current_bans as ban
 ?>
 
 	</tbody>
@@ -364,9 +318,8 @@ function bbpress_moderation_suite_ban_plus() { ?>
 }
 
 function bbmodsuite_banplus_admin_add() {
-	global $bb_submenu, $bbmodsuite_cache;
-	$the_options = $bbmodsuite_cache['banplus']['options'];
-	$bb_submenu['users.php'][] = array( __( 'Ban Plus', 'bbpress-moderation-suite' ), $the_options['min_level'], 'bbpress_moderation_suite_ban_plus' );
+	global $bbmodsuite_cache;
+	bb_admin_add_submenu( __( 'Ban Plus', 'bbpress-moderation-suite' ), $bbmodsuite_cache['banplus']['options']['min_level'], 'bbpress_moderation_suite_ban_plus', 'bbpress_moderation_suite' );
 }
 add_action( 'bb_admin_menu_generator', 'bbmodsuite_banplus_admin_add' );
 

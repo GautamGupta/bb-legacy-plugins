@@ -118,6 +118,10 @@ $mini_stats['level']="administrate";
 
 * now automatically shows private messages sent per day when using bb-privatemessages
 
+= Version 0.1.1 (2009-08-14) =
+
+* generate profile links based on current permalink style (required due to 1.0 lack of backward compatibility)
+
 == To Do ==
 
 * fix buggy width on graphs when dates are too wide

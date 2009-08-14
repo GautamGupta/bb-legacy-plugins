@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/mini-stats
 Description: Some simple forum statistics.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.0
+Version: 0.1.1
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -96,15 +96,21 @@ if ($display) {
 $results=bb_get_option('mini_stats'); if (empty($results)) {$results=mini_stats_update();}
 $months=ceil((time()-strtotime($results->days)) / (3600 * 24 * 30));
 $output="<div class='mini_stats'>";
-$output.=" <a href='".bb_get_option('uri')."?".$mini_stats['trigger']."'><span class='mini_stats_stats'>";
+$output.=" <a class='mini_stats_stats' href='".bb_get_option('uri')."?".$mini_stats['trigger']."'>";
 $output.=" <span class='mini_stats_num'>".bb_number_format_i18n($results->posts)."</span></a> ".__('posts in'); 
 $output.=" <span class='mini_stats_num'>".bb_number_format_i18n($results->topics)."</span> ".__('topics over'); 
 $output.=" <span class='mini_stats_num'>$months</span> ".__('months by'); 
 $output.=" <span class='mini_stats_users mini_stats_num'>".bb_number_format_i18n($results->active)."</span> ".__('of')." <span class='mini_stats_num'>".bb_number_format_i18n($results->members)."</span> ".__('members.'); 
-$output.=" </span>";
 if ($display>1) {
 $output.="<span class='mini_stats_wrap mini_stats_member'>";
-if (!empty($results->latest)) {$output.=__('Latest:'); $uri=bb_get_option('uri')."profile.php?id="; foreach ($results->latest as $key=>$value) {$output.=" <a href='$uri$key'>$value</a>, ";}}
+if (!empty($results->latest)) {
+	$output.=__('Latest:');  $rewrite = bb_get_option( 'mod_rewrite' ); $bb_uri=bb_get_option('uri');
+	if ($rewrite) {$uri=$bb_uri."profile/"; } else {$uri=$bb_uri.bb_get_option('uri') . "profile.php?id=";}
+	foreach ($results->latest as $key=>$value) {
+		if (!empty($rewrite) && $rewrite === 'slugs' ) {$stub= bb_user_nicename_sanitize($value);} else {$stub=$key;}
+		$output.=" <a href='".attribute_escape($uri.$stub)."'>$value</a>, ";
+	}
+}
 $output=trim($output,", ")."</span>";
 }
 $output.="</div> ";

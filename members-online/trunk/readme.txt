@@ -58,3 +58,7 @@ This is actually to keep performance reasonable and removes an extra mysql query
 = Version 0.0.2 (2009-08-14) =
 
 * generate profile links based on current permalink style (required due to 1.0 lack of backward compatibility)
+
+* fixed HUGE bug with calculation of midnight, never actually worked because $time was never defined (oops!)
+
+* added several options to control if guests can see list, how "today" is calculated (since midnight, past 24 hours, etc.)

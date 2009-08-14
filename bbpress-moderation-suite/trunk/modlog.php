@@ -6,15 +6,15 @@ function bbmodsuite_modlog_install() {
 	global $bbdb;
 
 	$bbdb->query(
-					'CREATE TABLE IF NOT EXISTS `' . $bbdb->prefix . 'bbmodsuite_modlog` (
-						`ID` int(10) NOT NULL auto_increment,
-						`log_user` int(10) NOT NULL,
-						`log_level` varchar(3) NOT NULL default \'mod\',
-						`log_time` int(10) NOT NULL,
-						`log_content` text NOT NULL default \'\',
-						`log_type` varchar(50) NOT NULL,
-						PRIMARY KEY (`ID`)
-					)'
+		'CREATE TABLE IF NOT EXISTS `' . $bbdb->prefix . 'bbmodsuite_modlog` (
+			`ID` int(10) NOT NULL auto_increment,
+			`log_user` int(10) NOT NULL,
+			`log_level` varchar(3) NOT NULL default \'mod\',
+			`log_time` int(10) NOT NULL,
+			`log_content` text NOT NULL default \'\',
+			`log_type` varchar(50) NOT NULL,
+			PRIMARY KEY (`ID`)
+		)'
 	);
 }
 
@@ -32,14 +32,14 @@ function bbpress_moderation_suite_modlog() {
 	$log_pages   = ceil( $bbdb->get_var( 'SELECT COUNT(*) FROM `' . $bbdb->prefix . 'bbmodsuite_modlog`' ) / 30 );
 	$log_types   = $bbdb->get_col( 'SELECT DISTINCT `log_type` FROM `' . $bbdb->prefix . 'bbmodsuite_modlog`' );
 
-?><select class="alignright" id="modlog-filter" style="margin-top: 15px;">
+?><h2 style="clear: none;"><?php _e( 'Moderation Log', 'bbpress-moderation-suite' ); if ( $page > 0 ) printf( __( ' - Page %d', 'bbpress-moderation-suite' ) , $page + 1 ); ?></h2>
+
+<select id="modlog-filter" style="display:none">
 	<option value="all"><?php _e( 'Show all', 'bbpress-moderation-suite' ); ?></option>
 <?php foreach ( $log_types as $log_type ) { ?>
 	<option value="<?php echo $log_type; ?>"><?php echo bbmodsuite_modlog_get_type_description( $log_type ); ?></option>
 <?php } ?>
 </select>
-
-<h2 style="clear: none;"><?php _e( 'Moderation Log', 'bbpress-moderation-suite' ); if ( $page > 0 ) printf( __( ' - Page %d', 'bbpress-moderation-suite' ) , $page + 1 ); ?></h2>
 
 <table class="widefat">
 	<thead>
@@ -96,19 +96,19 @@ jQuery(function($){
 	$('#modlog-filter').change(function(){
 		$('tbody tr').animate({opacity: 'hide', fontSize: 0}).filter('.log-type-' + $(this).val()).stop().animate({opacity: 'show', fontSize: '1em'});
 		filterDuplicates();
-	});
+	}).show();
 	filterDuplicates();
 });
 //]]>
 </script>
 <?php
 	echo paginate_links(
-					array(
-						'base'    => bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_modlog' ), BB_URI_CONTEXT_BB_ADMIN ) . '%_%',
-						'format'  => '&page=%#%',
-						'total'   => $log_pages,
-						'current' => $page + 1,
-					)
+		array(
+			'base'    => bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_modlog' ), BB_URI_CONTEXT_BB_ADMIN ) . '%_%',
+			'format'  => '&page=%#%',
+			'total'   => $log_pages,
+			'current' => $page + 1,
+		)
 	);
 }
 
@@ -118,8 +118,7 @@ function bbmodsuite_modlog_admin_add_jquery() {
 add_action( 'bbpress_moderation_suite_modlog_pre_head', 'bbmodsuite_modlog_admin_add_jquery' );
 
 function bbmodsuite_modlog_admin_add() {
-	global $bb_submenu;
-	$bb_submenu['plugins.php'][] = array( __( 'Moderation Log', 'bbpress-moderation-suite' ), 'administrate', 'bbpress_moderation_suite_modlog' );
+	bb_admin_add_submenu( __( 'Moderation Log', 'bbpress-moderation-suite' ), 'administrate', 'bbpress_moderation_suite_modlog', 'bbpress_moderation_suite' );
 }
 add_action( 'bb_admin_menu_generator', 'bbmodsuite_modlog_admin_add' );
 
@@ -130,13 +129,13 @@ function bbmodsuite_modlog_log( $content, $type ) {
 	global $bbdb;
 
 	$bbdb->insert(
-					$bbdb->prefix . 'bbmodsuite_modlog', array(
-						'log_user'    => bb_get_current_user_info( 'ID' ),
-						'log_level'   => strtolower( substr( get_user_type( bb_get_current_user_info( 'ID' ) ), 0, 3 ) ),
-						'log_time'    => time(),
-						'log_content' => stripslashes( $content ),
-						'log_type'    => $type
-					), array( '%d', '%s', '%d', '%s' )
+		$bbdb->prefix . 'bbmodsuite_modlog', array(
+			'log_user'    => bb_get_current_user_info( 'ID' ),
+			'log_level'   => strtolower( substr( get_user_type( bb_get_current_user_info( 'ID' ) ), 0, 3 ) ),
+			'log_time'    => time(),
+			'log_content' => stripslashes( $content ),
+			'log_type'    => $type
+		), array( '%d', '%s', '%d', '%s', '%s' )
 	);
 }
 
@@ -178,7 +177,7 @@ function bbmodsuite_modlog_set_action_handler( $action, $content, $type ) {
 	add_action( $action, create_function( '', '$args = func_get_args(); bbmodsuite_modlog_log( vsprintf( \'' . addslashes( $content ) . '\', $args ), ' . addslashes( $type ) . ' );' ), 10, substr_count( $content, '%' ) );
 }
 
-// Everything from here on is a trigger for the logging function
+// Everything from here on is a trigger for the logging function.
 
 bbmodsuite_modlog_set_action_handler( 'bbmodsuite-install', __( 'activated the bbPress Moderation Suite %s plugin', 'bbpress-moderation-suite' ), 'bbmodsuite_activate' );
 bbmodsuite_modlog_set_action_handler( 'bbmodsuite-deactivate', __( 'deactivated the bbPress Moderation Suite %s plugin', 'bbpress-moderation-suite' ), 'bbmodsuite_deactivate' );

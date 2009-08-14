@@ -5,14 +5,12 @@ Description: A set of tools to help moderate your forums.
 Plugin URI: http://llamaslayers.net/daily-llama/tag/bbpress-moderation-suite
 Author: Nightgunner5
 Author URI: http://llamaslayers.net/
-Version: 0.1-beta1
-Requires at least: 0.8
+Version: 0.1-beta2
+Requires at least: 1.0
 Tested up to: trunk
 Text Domain: bbpress-moderation-suite
 Domain Path: /translations/
 */
-
-require_once dirname( __FILE__ ) . '/compat.php';
 
 function bbmodsuite_init() {
 	global $bbmodsuite_plugins, $bbmodsuite_active_plugins, $bbmodsuite_cache;
@@ -65,7 +63,7 @@ function bbmodsuite_admin_add() {
 add_action( 'bb_admin_menu_generator', 'bbmodsuite_admin_add' );
 
 function bbmodsuite_admin_global_css() {
-	echo '<style type="text/css">#bbmodsuite-menu .bb-menu-icon{background:url(../' . basename( dirname( dirname( __FILE__ ) ) ) . '/' . basename( dirname( __FILE__ ) ) . '/icon.png)!important}</style>';
+	echo '<style type="text/css">ul#bbAdminMenu li#bbmodsuite-menu.bb-menu a .bb-menu-icon{background:url(../' . basename( dirname( dirname( __FILE__ ) ) ) . '/' . basename( dirname( __FILE__ ) ) . '/icon.png) 0 0}ul#bbAdminMenu li#bbmodsuite-menu.bb-menu a:hover .bb-menu-icon{background-position:22px 0}</style>';
 }
 add_action( 'bb_admin_head', 'bbmodsuite_admin_global_css' );
 

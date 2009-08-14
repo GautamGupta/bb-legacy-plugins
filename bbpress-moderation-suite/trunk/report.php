@@ -122,7 +122,6 @@ function bbpress_moderation_suite_report() { ?>
 			break;
 		case 'resolve_reports':
 			if ( !bb_verify_nonce( $_GET['_wpnonce'], 'bbmodsuite-report-resolve_' . $_GET['report'] ) ) return; ?>
-<h2><?php printf( __( 'Resolve Report #%d', 'bbpress-moderation-suite' ), $_GET['report'] ); ?></h2>
 <form class="settings" method="post" action="<?php bb_uri( 'bb-admin/admin-base.php', array( 'page' => 'resolve_report', 'report' => $_GET['report'], 'plugin' => 'bbpress_moderation_suite_report' ), BB_URI_CONTEXT_FORM_ACTION + BB_URI_CONTEXT_BB_ADMIN ); ?>">
 <fieldset>
 	<div>
@@ -209,16 +208,15 @@ function bbpress_moderation_suite_report() { ?>
 <?php
 		break;
 		case 'admin':
-			if ( bb_current_user_can( 'use_keys' ) ) { ?>
-<h2><?php _e( 'Administration', 'bbpress-moderation-suite' ); ?></h2>
-<?php if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
-		if ( bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite-report-admin' ) ) {
-			$types         = trim( $_POST['report_types'] );
-			$resolve_types = trim( $_POST['resolve_types'] );
-			$min_level     = in_array( $_POST['min_level'], array( 'moderate', 'administrate', 'use_keys' ) ) ? $_POST['min_level'] : 'moderate';
-			$max_level     = in_array( $_POST['max_level'], array( 'moderate', 'administrate', 'use_keys', 'none' ) ) ? $_POST['max_level'] : 'moderate';
-			$obtrusive     = !!$_POST['obtrusive'];
-			bb_update_option( 'bbmodsuite_report_options', compact( 'types', 'resolve_types', 'min_level', 'max_level', 'obtrusive' ) ); ?>
+			if ( bb_current_user_can( 'use_keys' ) ) {
+				if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
+					if ( bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite-report-admin' ) ) {
+						$types         = trim( $_POST['report_types'] );
+						$resolve_types = trim( $_POST['resolve_types'] );
+						$min_level     = in_array( $_POST['min_level'], array( 'moderate', 'administrate', 'use_keys' ) ) ? $_POST['min_level'] : 'moderate';
+						$max_level     = in_array( $_POST['max_level'], array( 'moderate', 'administrate', 'use_keys', 'none' ) ) ? $_POST['max_level'] : 'moderate';
+						$obtrusive     = !!$_POST['obtrusive'];
+						bb_update_option( 'bbmodsuite_report_options', compact( 'types', 'resolve_types', 'min_level', 'max_level', 'obtrusive' ) ); ?>
 <div class="updated"><p><?php _e( 'Settings successfully saved.', 'bbpress-moderation-suite' ); ?></p></div>
 <?php } else { ?>
 <div class="error"><p><?php _e( 'Saving the settings failed.', 'bbpress-moderation-suite' ); ?></p></div>
@@ -296,8 +294,7 @@ $options = $bbmodsuite_cache['report'];
 		global $bbdb;
 		$reports = (array)$bbdb->get_results( 'SELECT ID, report_reason, report_from, reported_post, report_content FROM `' . $bbdb->prefix . 'bbmodsuite_reports` WHERE `report_type`=\'new\'' );
 		$reasons = bbmodsuite_report_reasons() + array( __( 'Other', 'bbpress-moderation-suite' ) );
-?><h2><?php _e( 'New Reports', 'bbpress-moderation-suite' ); ?></h2>
-<table class="widefat">
+?><table class="widefat">
 	<thead>
 		<tr>
 			<th><?php _e( 'Reported By', 'bbpress-moderation-suite' ); ?></th>

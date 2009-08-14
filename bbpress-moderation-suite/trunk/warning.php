@@ -87,19 +87,19 @@ function bbmodsuite_warning_link( $parts ) {
 		if ( $user_id !== bb_get_current_user_info( 'ID' ) && ( bb_current_user_can( 'use_keys' ) || ( !$user->has_cap( 'administrate' ) && bb_current_user_can( 'administrate' ) ) || ( !$user->has_cap( 'moderate' ) && bb_current_user_can( 'moderate' ) ) ) ) {
 			$title   = __( 'Give this user a warning.', 'bbpress-moderation-suite' );
 			$link    =	attribute_escape(
-							bb_nonce_url(
-											bb_get_uri(
-															'bb-admin/admin-base.php',
-															array(
-																'page'   => 'warn_user',
-																'user'   => $user_id,
-																'post'   => $post_id,
-																'plugin' => 'bbpress_moderation_suite_warning',
-															),
-															BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
-											),
-											'bbmodsuite-warning-warn_' . $user_id . '_' . $post_id
-							)
+				bb_nonce_url(
+					bb_get_uri(
+						'bb-admin/admin-base.php',
+						array(
+							'page'   => 'warn_user',
+							'user'   => $user_id,
+							'post'   => $post_id,
+							'plugin' => 'bbpress_moderation_suite_warning',
+						),
+						BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
+					),
+					'bbmodsuite-warning-warn_' . $user_id . '_' . $post_id
+				)
 			);
 			$parts[] = '<a class="warn-user" title="' . $title . '" href="' . $link . '">' . __( 'Warn', 'bbpress-moderation-suite' ) . '</a>';
 		}
@@ -117,65 +117,19 @@ function bbmodsuite_warning_types() {
 	return $types;
 }
 
-function bbmodsuite_warning_admin_css() { ?>
-<style type="text/css">
-/* <![CDATA[ */
-#bbAdminSubSubMenu {
-	margin: .2em .2em 1em;
-}
-
-#bbAdminSubSubMenu li {
-	display: inline;
-	margin-right: 1em;
-}
-
-#bbAdminSubSubMenu li a {
-	text-decoration: none;
-	color: rgb(40, 140, 60);
-	line-height: 1.6em;
-}
-
-#bbAdminSubSubMenu li a span {
-	font-size: 1.5em;
-}
-
-#bbAdminSubSubMenu li a:hover {
-	color: rgb(230, 145, 0);
-}
-
-#bbAdminSubSubMenu li.current a {
-	color: rgb(230, 145, 0);
-}
-
-#bbBody div.updated p, #bbBody div.error p, #bbBody form.settings div.updated p, #bbBody form.settings div.error p {
-	margin: 0;
-}
-
-form.settings div.updated {
-	background-color: #ffffe0;
-	margin-top: 1em;
-}
-/* ]]> */
-</style>
-<?php }
-function bbmodsuite_warning_admin_add_css() {
-	add_action( 'bb_admin_head','bbmodsuite_warning_admin_css' );
+function bbmodsuite_warning_admin_add_jquery() {
 	wp_enqueue_script( 'jquery' );
 }
-add_action( 'bbpress_moderation_suite_warning_pre_head', 'bbmodsuite_warning_admin_add_css' );
+add_action( 'bbpress_moderation_suite_warning_pre_head', 'bbmodsuite_warning_admin_add_jquery' );
 
-function bbpress_moderation_suite_warning() { ?>
-<ul id="bbAdminSubSubMenu">
-	<li<?php if ( !in_array( $_GET['page'], array( 'warn_user', 'admin' ) ) ) echo ' class="current"'; ?>><a href="<?php echo bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_warning' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>">
-		<span><?php _e( 'Users with warnings', 'bbpress-moderation-suite' ); ?></span>
-	</a></li>
-	<?php if ( $_GET['page'] === 'warn_user' ) { ?><li class="current"><a href="#">
-		<span><?php _e( 'Warn a user', 'bbpress-moderation-suite' ); ?></span>
-	</a></li><?php } ?>
-	<?php if ( bb_current_user_can( 'use_keys' ) ) { ?><li<?php if ( $_GET['page'] === 'admin' ) echo ' class="current"'; ?>><a href="<?php echo bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_warning', 'page' => 'admin' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>">
-		<span><?php _e( 'Administration', 'bbpress-moderation-suite' ); ?></span>
-	</a></li><?php } ?>
-</ul>
+function bbpress_moderation_suite_warning() {
+	global $bbdb; ?>
+<h2><?php _e( 'Warning', 'bbpress-moderation-suite' ); ?></h2>
+<div class="table-filter">
+	<a<?php if ( !in_array( $_GET['page'], array( 'warn_user', 'admin' ) ) ) echo ' class="current"'; ?> href="<?php echo bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_warning' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>"><?php _e( 'Users with warnings', 'bbpress-moderation-suite' ); ?> <span class="count">(<?php echo bb_number_format_i18n( $bbdb->get_var( "SELECT COUNT(`user_id`) FROM `{$bbdb->usermeta}` WHERE `meta_key` = 'bbmodsuite_warnings_count'" ) ); ?>)</span></a>
+	<?php if ( $_GET['page'] === 'warn_user' ) { ?>| <a class="current" href="#"><?php _e( 'Warn a user', 'bbpress-moderation-suite' ); ?></a><?php } ?>
+	<?php if ( bb_current_user_can( 'use_keys' ) ) { ?>| <a<?php if ( $_GET['page'] === 'admin' ) echo ' class="current"'; ?> href="<?php echo bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_warning', 'page' => 'admin' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>"><?php _e( 'Administration', 'bbpress-moderation-suite' ); ?></a><?php } ?>
+</div>
 <?php switch ( $_GET['page'] ) {
 		case 'warn_user':
 			if ( $_SERVER['REQUEST_METHOD'] === 'POST' && bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite-warning-warn-submit_' . $_GET['user'] . '_' . $_GET['post'] ) ) {
@@ -202,9 +156,7 @@ function bbpress_moderation_suite_warning() { ?>
 <div class="error"><p><?php _e( 'Invalid warning attempt', 'bbpress-moderation-suite' ); ?></p></div>
 <?php
 				return;
-			} ?>
-<h2><?php _e( 'Warn a user', 'bbpress-moderation-suite' ); ?></h2>
-<?php
+			}
 	$post_query = new BB_Query( 'post', array( 'post_id' => $_GET['post'], 'post_author' => $_GET['user'] ) );
 	$GLOBALS['bb_posts'] =& $post_query->results;
 	bb_admin_list_posts(); ?>
@@ -381,7 +333,6 @@ function bbpress_moderation_suite_warning() { ?>
 			}
 		default: if ( empty( $_GET['user'] ) ) {
 			global $bbdb; ?>
-<h2><?php _e( 'Users with warnings', 'bbpress-moderation-suite' ); ?></h2>
 <table class="widefat">
 	<thead>
 		<tr>
@@ -443,8 +394,7 @@ function bbpress_moderation_suite_warning() { ?>
 }
 
 function bbmodsuite_warning_admin_add() {
-	global $bb_submenu;
-	$bb_submenu['users.php'][] = array( __( 'Warning', 'bbpress-moderation-suite' ), 'moderate', 'bbpress_moderation_suite_warning' );
+	bb_admin_add_submenu( __( 'Warning', 'bbpress-moderation-suite' ), 'moderate', 'bbpress_moderation_suite_warning', 'bbpress_moderation_suite' );
 }
 add_action( 'bb_admin_menu_generator', 'bbmodsuite_warning_admin_add' );
 

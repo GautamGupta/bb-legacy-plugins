@@ -62,11 +62,7 @@ function bbmodsuite_init() {
 add_action( 'bb_init', 'bbmodsuite_init' );
 
 function bbmodsuite_admin_add() {
-	global $bb_submenu;
-
-	$plugins = array( $bb_submenu['plugins.php'][5] );
-	$plugins[] = array( __( 'bbPress Moderation Suite', 'bbpress-moderation-suite' ), 'use_keys', 'bbpress_moderation_suite' );
-	$bb_submenu['plugins.php'] = array_merge( $plugins, array_slice( $bb_submenu['plugins.php'], 1 ) );
+	bb_admin_add_submenu( __( 'bbPress Moderation Suite', 'bbpress-moderation-suite' ), 'use_keys', 'bbpress_moderation_suite' );
 }
 add_action( 'bb_admin_menu_generator', 'bbmodsuite_admin_add' );
 
@@ -120,19 +116,24 @@ function bbpress_moderation_suite() {
 <?php } ?>
 <h2><?php _e( 'bbPress Moderation Suite', 'bbpress-moderation-suite' ); ?></h2>
 <p><?php _e( 'bbPress Moderation Suite is a set of tools to help moderate your forums.  There are multiple parts, each able to function separately from the others.  You can activate or deactivate each part separately.  It even includes an uninstaller so if you don\'t want to use a part anymore, you can remove all of its database usage!', 'bbpress-moderation-suite' ); ?></p>
-<table class="widefat">
-	<thead>
-		<tr>
-			<th><?php _e( 'Moderation Assistants', 'bbpress-moderation-suite' ); ?></th>
-			<th><?php _e( 'Description', 'bbpress-moderation-suite' ); ?></th>
-			<th class="action"><?php _e( 'Actions', 'bbpress-moderation-suite' ); ?></th>
-		</tr>
-	</thead>
-	<tbody>
+	<table id="plugins-list" class="widefat">
+		<thead>
+			<tr>
+				<th><?php _e( 'Moderation Assistants', 'bbpress-moderation-suite' ); ?></th>
+				<th><?php _e( 'Description', 'bbpress-moderation-suite' ); ?></th>
+			</tr>
 
+		</thead>
+		<tfoot>
+			<tr>
+				<th><?php _e( 'Moderation Assistants', 'bbpress-moderation-suite' ); ?></th>
+				<th><?php _e( 'Description', 'bbpress-moderation-suite' ); ?></th>
+			</tr>
+		</tfoot>
+		<tbody>
 <?php
 	foreach ( $bbmodsuite_plugins as $plugin => $plugin_data ) {
-		$class        = '';
+		$class        = 'inactive';
 		$action       = 'activate';
 		$action_class = 'edit';
 		$action_text  = __( 'Activate', 'bbpress-moderation-suite' );
@@ -143,59 +144,54 @@ function bbpress_moderation_suite() {
 			$action_text  = __( 'Deactivate', 'bbpress-moderation-suite' );
 		}
 		$href = attribute_escape(
-						bb_nonce_url(
-										bb_get_uri(
-														'bb-admin/admin-base.php',
-														array(
-															'mod_helper' => urlencode( $plugin ),
-															'action' => $action,
-															'plugin' => 'bbpress_moderation_suite',
-														),
-														BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
-										),
-										$action . '-plugin_' . $plugin
-						)
+			bb_nonce_url(
+				bb_get_uri(
+					'bb-admin/admin-base.php',
+					array(
+						'mod_helper' => urlencode( $plugin ),
+						'action' => $action,
+						'plugin' => 'bbpress_moderation_suite',
+					),
+					BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
+				),
+				$action . '-plugin_' . $plugin
+			)
 		);
-?>
-
-		<tr<?php alt_class( 'normal_plugin', $class ); ?>>
-			<td><?php echo $plugin_data['name']; ?></td>
-			<td>
-				<p><?php echo $plugin_data['description']; ?></p>
-			</td>
-			<td class="action">
-				<a class="<?php echo $action_class; ?>" href="<?php echo $href; ?>"><?php echo $action_text; ?></a>
+?>		<tr class="<?php echo $class; ?>">
+			<td class="plugin-name">
+				<span class="row-title"><?php echo $plugin_data['name']; ?></span>
+				<div><span class="row-actions"><a class="<?php echo $action_class; ?>" href="<?php echo $href; ?>"><?php echo $action_text; ?></a>
 <?php if ( in_array( $plugin, $bbmodsuite_active_plugins ) ) { ?>
 				<a class="delete" href="<?php echo attribute_escape(
-				bb_nonce_url(
-								bb_get_uri(
-												'bb-admin/admin-base.php',
-												array(
-													'mod_helper' => urlencode( $plugin ),
-													'action' => 'uninstall',
-													'plugin' => 'bbpress_moderation_suite',
-												),
-												BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
-								),
-								'uninstall-plugin_' . $plugin
-				)
+	bb_nonce_url(
+		bb_get_uri(
+			'bb-admin/admin-base.php',
+			array(
+				'mod_helper' => urlencode( $plugin ),
+				'action' => 'uninstall',
+				'plugin' => 'bbpress_moderation_suite',
+			),
+			BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
+		),
+		'uninstall-plugin_' . $plugin
+	)
 ); ?>"><?php _e( 'Uninstall', 'bbpress-moderation-suite' ); ?></a>
 <?php if ( !empty( $plugin_data['panel'] ) ) { ?>
 			<a href="<?php echo attribute_escape(
-				bb_get_uri(
-								'bb-admin/admin-base.php',
-								array(
-									'plugin' => $plugin_data['panel'],
-								),
-								BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
-				)
+	bb_get_uri(
+		'bb-admin/admin-base.php',
+		array( 'plugin' => $plugin_data['panel'] ),
+		BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
+	)
 );
 ?>"><?php _e( 'Administration', 'bbpress-moderation-suite' ); ?></a>
 <?php }
-} ?>
+} ?></span></div>
+			</td>
+			<td class="plugin-description">
+				<p><?php echo $plugin_data['description']; ?></p>
 			</td>
 		</tr>
-
 <?php
 	}
 ?>

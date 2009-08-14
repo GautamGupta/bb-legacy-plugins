@@ -254,8 +254,8 @@ $statistics["average_registrations"]=$statistics["total_members"]/$statistics["t
 $statistics["average_posts"]=$statistics["total_posts"]/$statistics["total_days_old"];
 $statistics["average_topics"]=$statistics["total_topics"]/$statistics["total_days_old"];
 
-$statistics["oldest_members"] = $bbdb->get_results("SELECT ID,user_registered FROM $bbdb->users LEFT JOIN $bbdb->usermeta ON $bbdb->users.ID=$bbdb->usermeta.user_id WHERE (meta_key='bb_capabilities' and meta_value NOT REGEXP 'inactive|blocked') ORDER BY user_registered ASC LIMIT $userlimit");
-$statistics["newest_members"] = $bbdb->get_results("SELECT ID,user_registered FROM $bbdb->users LEFT JOIN $bbdb->usermeta ON $bbdb->users.ID=$bbdb->usermeta.user_id WHERE (meta_key='bb_capabilities' and meta_value NOT REGEXP 'inactive|blocked') ORDER BY user_registered DESC LIMIT $userlimit");
+$statistics["oldest_members"] = $bbdb->get_results("SELECT ID,user_registered FROM $bbdb->users LEFT JOIN $bbdb->usermeta ON $bbdb->users.ID=$bbdb->usermeta.user_id WHERE (meta_key='$bbdb->prefix"."capabilities' and meta_value NOT REGEXP 'inactive|blocked') ORDER BY user_registered ASC LIMIT $userlimit");
+$statistics["newest_members"] = $bbdb->get_results("SELECT ID,user_registered FROM $bbdb->users LEFT JOIN $bbdb->usermeta ON $bbdb->users.ID=$bbdb->usermeta.user_id WHERE (meta_key='$bbdb->prefix"."capabilities' and meta_value NOT REGEXP 'inactive|blocked') ORDER BY user_registered DESC LIMIT $userlimit");
 
 $statistics["top_posters"] = $bbdb->get_results("SELECT DISTINCT poster_id, COUNT(poster_id) AS post_count FROM $bbdb->posts WHERE post_status != 1 GROUP BY poster_id ORDER BY post_count DESC LIMIT $userlimit");
 $statistics["top_topic_starters"]=$bbdb->get_results("SELECT DISTINCT topic_poster, topic_poster_name, COUNT(topic_id) AS post_count FROM $bbdb->topics WHERE topic_status=0 GROUP BY topic_poster_name ORDER BY post_count DESC LIMIT $userlimit");

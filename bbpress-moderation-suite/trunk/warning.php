@@ -45,11 +45,16 @@ function bbmodsuite_warning_cron() {
 			if ( $warning['date'] < $now - $options['expire_time'] )
 				unset( $warnings[$j] );
 		}
-		if ( $all_warnings[$i] !== $warnings ) {
+		if ( !$warnings || $all_warnings[$i] !== $warnings ) {
 			$warnings = array_values( $warnings );
 			bbmodsuite_warning_update_user_ban( $i, count( $warnings ), true );
-			bb_update_usermeta( $i, 'bbmodsuite_warnings', $warnings );
-			bb_update_usermeta( $i, 'bbmodsuite_warnings_count', count( $warnings ) );
+			if ( $warnings ) {
+				bb_update_usermeta( $i, 'bbmodsuite_warnings', $warnings );
+				bb_update_usermeta( $i, 'bbmodsuite_warnings_count', count( $warnings ) );
+			} else {
+				bb_delete_usermeta( $i, 'bbmodsuite_warnings' );
+				bb_delete_usermeta( $i, 'bbmodsuite_warnings_count' );
+			}
 		}
 	}
 	wp_schedule_single_event( time() + $options['cron_every'], 'bbmodsuite_warning_cron' );
@@ -126,7 +131,8 @@ function bbpress_moderation_suite_warning() {
 	global $bbdb; ?>
 <h2><?php _e( 'Warning', 'bbpress-moderation-suite' ); ?></h2>
 <div class="table-filter">
-	<a<?php if ( !in_array( $_GET['page'], array( 'warn_user', 'admin' ) ) ) echo ' class="current"'; ?> href="<?php echo bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_warning' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>"><?php _e( 'Users with warnings', 'bbpress-moderation-suite' ); ?> <span class="count">(<?php echo bb_number_format_i18n( $bbdb->get_var( "SELECT COUNT(`user_id`) FROM `{$bbdb->usermeta}` WHERE `meta_key` = 'bbmodsuite_warnings_count'" ) ); ?>)</span></a>
+	<a<?php if ( !in_array( $_GET['page'], array( 'warn_user', 'admin' ) ) && !$_GET['user'] ) echo ' class="current"'; ?> href="<?php echo bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_warning' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>"><?php _e( 'Users with warnings', 'bbpress-moderation-suite' ); ?> <span class="count">(<?php echo bb_number_format_i18n( $bbdb->get_var( "SELECT COUNT(`user_id`) FROM `{$bbdb->usermeta}` WHERE `meta_key` = 'bbmodsuite_warnings_count'" ) ); ?>)</span></a>
+	<?php if ( !in_array( $_GET['page'], array( 'warn_user', 'admin' ) ) && $_GET['user'] ) { ?><a class="current" href="#"><?php printf( __( 'Warnings given to user "%s"', 'bbpress-moderation-suite' ), get_user_display_name( $_GET['user'] ) ); ?> <span class="count">(<?php echo bb_number_format_i18n( bb_get_usermeta( $_GET['user'], 'bbmodsuite_warnings_count' ) ); ?>)</span></a><?php } ?>
 	<?php if ( $_GET['page'] === 'warn_user' ) { ?>| <a class="current" href="#"><?php _e( 'Warn a user', 'bbpress-moderation-suite' ); ?></a><?php } ?>
 	<?php if ( bb_current_user_can( 'use_keys' ) ) { ?>| <a<?php if ( $_GET['page'] === 'admin' ) echo ' class="current"'; ?> href="<?php echo bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_warning', 'page' => 'admin' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>"><?php _e( 'Administration', 'bbpress-moderation-suite' ); ?></a><?php } ?>
 </div>
@@ -332,7 +338,27 @@ function bbpress_moderation_suite_warning() {
 <?php			break;
 			}
 		default: if ( empty( $_GET['user'] ) ) {
-			global $bbdb; ?>
+			global $bbdb;
+			$page = max( 1, (int)$_GET['page'] ) - 1; ?>
+<div class="tablenav top">
+	<div class="tablenav-pages">
+		<span class="displaying-pages"><?php
+
+$warned_user_count = $bbdb->get_var( "SELECT COUNT(`user_id`) FROM `{$bbdb->usermeta}` WHERE `meta_key` = 'bbmodsuite_warnings_count'" );
+
+$_page_link_args = array(
+	'page' => $page + 1,
+	'total' => $warned_user_count,
+	'per_page' => 30,
+	'mod_rewrite' => false,
+	'prev_text' => __( '&laquo;' ),
+	'next_text' => __( '&raquo;' )
+);
+echo $page_number_links = get_page_number_links( $_page_link_args );
+?></span>
+		<div class="clear"></div>
+	</div>
+</div>
 <table class="widefat">
 	<thead>
 		<tr>
@@ -342,15 +368,15 @@ function bbpress_moderation_suite_warning() {
 		</tr>
 	</thead>
 	<tbody>
-<?php		$warned_users = (array)$bbdb->get_results( "SELECT `meta_value`,`user_id` FROM `{$bbdb->usermeta}` WHERE `meta_key` = 'bbmodsuite_warnings_count' ORDER BY `meta_value` DESC" );
+<?php		$warned_users = (array)$bbdb->get_results( "SELECT `meta_value`,`user_id` FROM `{$bbdb->usermeta}` WHERE `meta_key` = 'bbmodsuite_warnings_count' ORDER BY `meta_value` DESC LIMIT " . ($page * 30 ) . ",30" );
 			foreach ( $warned_users as $warned_user ) {
 				$url = bb_get_uri(
-								'bb-admin/admin-base.php',
-								array(
-									'user' => $warned_user->user_id,
-									'plugin' => 'bbpress_moderation_suite_warning',
-								),
-								BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
+					'bb-admin/admin-base.php',
+					array(
+						'user' => $warned_user->user_id,
+						'plugin' => 'bbpress_moderation_suite_warning',
+					),
+					BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
 				); ?>
 		<tr>
 			<td><?php echo get_user_display_name( $warned_user->user_id ); ?></td>
@@ -362,8 +388,33 @@ function bbpress_moderation_suite_warning() {
 <?php } ?>
 	</tbody>
 </table>
-<?php } else { ?>
-<h2><?php printf( __( 'Warnings given to user "%s"', 'bbpress-moderation-suite' ), get_user_display_name( $_GET['user'] ) ); ?></h2>
+<div class="tablenav bottom">
+	<div class="tablenav-pages">
+		<span class="displaying-pages"><?php echo $page_number_links; ?></span>
+		<div class="clear"></div>
+	</div>
+</div>
+<?php } else {
+		$page = max( 1, (int)$_GET['page'] ) - 1; ?>
+<div class="tablenav top">
+	<div class="tablenav-pages">
+		<span class="displaying-pages"><?php
+
+$warnings = array_reverse( (array)bb_get_usermeta( $_GET['user'], 'bbmodsuite_warnings' ) );
+
+$_page_link_args = array(
+	'page' => $page + 1,
+	'total' => count( $warnings ),
+	'per_page' => 30,
+	'mod_rewrite' => false,
+	'prev_text' => __( '&laquo;' ),
+	'next_text' => __( '&raquo;' )
+);
+echo $page_number_links = get_page_number_links( $_page_link_args );
+?></span>
+		<div class="clear"></div>
+	</div>
+</div>
 <table class="widefat">
 	<thead>
 		<tr>
@@ -373,8 +424,8 @@ function bbpress_moderation_suite_warning() {
 		</tr>
 	</thead>
 	<tbody>
-<?php		$warnings = array_reverse( (array)bb_get_usermeta( $_GET['user'], 'bbmodsuite_warnings' ) );
-			$types = bbmodsuite_warning_types() + array( __( 'Other', 'bbpress-moderation-suite' ) );
+<?php		$types = bbmodsuite_warning_types() + array( __( 'Other', 'bbpress-moderation-suite' ) );
+			$warnings = count( $warnings ) < $page * 30 ? array() : array_slice( $warnings, $page * 30, 30 );
 			foreach ( $warnings as $warning ) { ?>
 		<tr>
 			<td><?php echo get_user_display_name( $warning['from'] ); ?></td>
@@ -389,6 +440,12 @@ function bbpress_moderation_suite_warning() {
 <?php } ?>
 	</tbody>
 </table>
+<div class="tablenav bottom">
+	<div class="tablenav-pages">
+		<span class="displaying-pages"><?php echo $page_number_links; ?></span>
+		<div class="clear"></div>
+	</div>
+</div>
 <?php	}
 	}
 }

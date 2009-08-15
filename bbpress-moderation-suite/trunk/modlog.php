@@ -29,7 +29,7 @@ function bbpress_moderation_suite_modlog() {
 
 	$page        = isset( $_GET['page'] ) ? (int)$_GET['page'] - 1 : 0;
 	$log_entries = $bbdb->get_results( 'SELECT * FROM `' . $bbdb->prefix . 'bbmodsuite_modlog` ORDER BY `log_time` DESC LIMIT ' . ($page * 30) . ',' . ($page * 30 + 30) );
-	$log_pages   = ceil( $bbdb->get_var( 'SELECT COUNT(*) FROM `' . $bbdb->prefix . 'bbmodsuite_modlog`' ) / 30 );
+	$log_count   = $bbdb->get_var( 'SELECT COUNT(*) FROM `' . $bbdb->prefix . 'bbmodsuite_modlog`' );
 	$log_types   = $bbdb->get_col( 'SELECT DISTINCT `log_type` FROM `' . $bbdb->prefix . 'bbmodsuite_modlog`' );
 
 ?><h2 style="clear: none;"><?php _e( 'Moderation Log', 'bbpress-moderation-suite' ); if ( $page > 0 ) printf( __( ' - Page %d', 'bbpress-moderation-suite' ) , $page + 1 ); ?></h2>
@@ -41,6 +41,22 @@ function bbpress_moderation_suite_modlog() {
 <?php } ?>
 </select>
 
+<div class="tablenav top">
+	<div class="tablenav-pages">
+		<span class="displaying-pages"><?php
+$_page_link_args = array(
+	'page' => $page + 1,
+	'total' => $log_count,
+	'per_page' => 30,
+	'mod_rewrite' => false,
+	'prev_text' => __( '&laquo;' ),
+	'next_text' => __( '&raquo;' )
+);
+echo $page_number_links = get_page_number_links( $_page_link_args );
+?></span>
+		<div class="clear"></div>
+	</div>
+</div>
 <table class="widefat">
 	<thead>
 		<tr>
@@ -70,6 +86,12 @@ if ( !$log_entries ) {
 ?>
 	</tbody>
 </table>
+<div class="tablenav bottom">
+	<div class="tablenav-pages">
+		<span class="displaying-pages"><?php echo $page_number_links; ?></span>
+		<div class="clear"></div>
+	</div>
+</div>
 <script type="text/javascript">
 //<![CDATA[
 jQuery(function($){
@@ -102,14 +124,6 @@ jQuery(function($){
 //]]>
 </script>
 <?php
-	echo paginate_links(
-		array(
-			'base'    => bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_modlog' ), BB_URI_CONTEXT_BB_ADMIN ) . '%_%',
-			'format'  => '&page=%#%',
-			'total'   => $log_pages,
-			'current' => $page + 1,
-		)
-	);
 }
 
 function bbmodsuite_modlog_admin_add_jquery() {

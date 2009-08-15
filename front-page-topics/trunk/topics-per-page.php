@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/topics-per-page
 Description:  Set custom topic or post count limits for nearly every kind of bbPress page while still calculating direct post links correctly.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.6
+Version: 0.0.7
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 Donate: http://bbshowcase.org/donate/
@@ -79,11 +79,14 @@ global $page, $bbdb, $forums; $total=0;
 if (empty($forums)) {$forums=get_forums();}
 foreach ($forums as  $forum) {$total+=$forum->topics;}
 $last=substr($_SERVER['REQUEST_URI'],-1,1); if ($last=="?" || $last=="&") {$_SERVER['REQUEST_URI']=substr($_SERVER['REQUEST_URI'],0,-1);}
-// echo apply_filters( 'topic_pages', get_page_number_links( $page, $total),0); 
-$base=rtrim(bb_get_option('uri'),'/ ').'%_%';
-$format='/page/%#%';
-$total=ceil($total/bb_get_option('page_topics'));
-echo apply_filters( 'topic_pages', paginate_links( array( 'base' => $base, 'format' =>$format, 'total' =>$total, 'current' =>$page, 'add_args' => false )), 0);;
+if ( bb_get_option( 'mod_rewrite' ) ) {
+	$base=rtrim(bb_get_option('uri'),'/ ').'%_%';
+	$format='/page/%#%';
+	$total=ceil($total/bb_get_option('page_topics'));
+	echo apply_filters( 'topic_pages', paginate_links( array( 'base' => $base, 'format' =>$format, 'total' =>$total, 'current' =>$page, 'add_args' => false )), 0);;
+} else {
+	echo apply_filters( 'topic_pages', get_page_number_links( $page, $total),0); 
+}
 }
 
 function topics_per_page_location() {

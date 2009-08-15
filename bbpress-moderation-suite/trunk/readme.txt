@@ -41,6 +41,7 @@ It logs the following actions:
 * Users
 	* Bozo (on, off)
 	* Deletion
+	* Banning (via Ban Plus)
 * Posts
 	* Status change (delete, spam, undelete, unspam)
 	* Editing (by other users)
@@ -93,7 +94,7 @@ Here's an example of what a `ban-plus.php` template might look like:
 == Changelog ==
 
 = 0.1-beta1 =
-* [The Ban Plus "you've been banned" page can now be edited ](http://bbpress.org/plugins/topic/bbpress-moderation-suite/other_notes/)
+* [The Ban Plus "you've been banned" page can now be edited](http://bbpress.org/plugins/topic/bbpress-moderation-suite/other_notes/)
 * Admin interface now matches bbPress 1.0
 * Mod Log categorization fixed.
 * New top level navigation menu for easy access
@@ -103,6 +104,7 @@ Here's an example of what a `ban-plus.php` template might look like:
 * Mod Log now hides duplicate messages by default.
 * Mod Log now has pagination
 * The Ban Plus "unban" button now works properly
+* Ban Plus now has autocomplete for the username box
 
 = 0.1-alpha6 =
 * Major code cleanup

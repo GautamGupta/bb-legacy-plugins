@@ -121,7 +121,7 @@ function bbmodsuite_banplus_maybe_block_user() {
 					bb_load_template( 'ban-plus.php', array( 'ban' => $current_bans[bb_get_current_user_info( 'ID' )] ), $current_bans[bb_get_current_user_info( 'ID' )] );
 					exit;
 				}
-				bb_die( sprintf( __( 'You are banned from this forum until %s from now.  The person who banned you said the reason was: %s', 'bbpress-moderation-suite' ), bb_since( time() - ( $current_bans[bb_get_current_user_info( 'ID' )]['until'] - time() ), true ), $current_bans[bb_get_current_user_info( 'ID' )]['notes'] ) );
+				bb_die( sprintf( __( 'You are banned from this forum until %s from now.  The person who banned you said the reason was: %s', 'bbpress-moderation-suite' ), bb_since( time() * 2 - $current_bans[bb_get_current_user_info( 'ID' )]['until'], true ), $current_bans[bb_get_current_user_info( 'ID' )]['notes'] ) );
 				break;
 		}
 	}
@@ -140,7 +140,24 @@ function bbmodsuite_banplus_admin_add_jquery() {
 	wp_enqueue_script( 'jquery' );
 }
 if ( $_GET['page'] == 'new_ban' )
-	add_action( 'bbpress_moderation_suite_ban_plus', 'bbmodsuite_banplus_admin_add_jquery' );
+	add_action( 'bbpress_moderation_suite_ban_plus_pre_head', 'bbmodsuite_banplus_admin_add_jquery' );
+
+function bbmodsuite_banplus_admin_newbanajax() {
+	header( 'Content-Type: text/plain' );
+
+	if ( !bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite-banplus-new-ajax' ) )
+		exit;
+
+	$name = stripslashes( $_POST['text'] );
+	$name = str_replace( array( '%', '?' ), array( '\\%', '\\?' ), substr( $_POST['text'], 0, $_POST['pos'] ) ) . '%' . str_replace( array( '%', '?' ), array( '\\%', '\\?' ), substr( $_POST['text'], $_POST['pos'] ) );
+
+	global $bbdb;
+	$results = $bbdb->get_col( $bbdb->prepare( 'SELECT `user_nicename` FROM `' . $bbdb->users . '` WHERE `user_nicename` LIKE %s OR `user_login` LIKE %s OR `ID`=%d ORDER BY LENGTH(`user_nicename`) ASC LIMIT 15', $name, $name, stripslashes( $_POST['text'] ) ) );
+
+	exit( '["' . implode( '","', array_map( 'addslashes', $results ) ) . '"]' );
+}
+if ( $_GET['page'] == 'new_ban_ajax' )
+	add_action( 'bbpress_moderation_suite_ban_plus_pre_head', 'bbmodsuite_banplus_admin_newbanajax' );
 
 function bbpress_moderation_suite_ban_plus() { ?>
 <h2><?php _e( 'Ban Plus', 'bbpress-moderation-suite' ); ?></h2>
@@ -163,7 +180,7 @@ function bbpress_moderation_suite_ban_plus() { ?>
 			<?php _e( 'Username', 'bbpress-moderation-suite' ); ?>
 		</label>
 		<div>
-			<input id="user_id" name="user_id" type="text" class="text" /><?php /* TODO: Autocomplete */ ?>
+			<input id="user_id" name="user_id" type="text" class="text"/>
 			<p><?php _e( 'Who are you banning? (Username)', 'bbpress-moderation-suite' ); ?></p>
 		</div>
 	</div>
@@ -189,7 +206,7 @@ function bbpress_moderation_suite_ban_plus() { ?>
 		</label>
 		<div>
 			<textarea id="notes" name="notes" rows="15" cols="43"></textarea>
-			<p><?php _e( 'Why are you banning this user?  This will be shown to the user.', 'bbpress-moderation-suite' ); ?></p>
+			<p><?php _e( 'Why are you banning this user?  This might be shown to the user.', 'bbpress-moderation-suite' ); ?></p>
 		</div>
 	</div>
 </fieldset>
@@ -199,7 +216,62 @@ function bbpress_moderation_suite_ban_plus() { ?>
 </fieldset>
 </form>
 <script type="text/javascript">
+jQuery(function($){
+	var autocompleteTimeout, ul = $('<ul/>').css({
+		position: 'absolute',
+		zIndex: 10000,
+		backgroundColor: '#fff',
+		fontSize: '1.2em',
+		padding: 2,
+		marginTop: -1,
+		MozBorderRadius: 2,
+		WebkitBorderRadius: 2,
+		borderRadius: 2,
+		border: '1px solid #ccc',
+		borderTopWidth: '0'
+	}).insertAfter('#user_id');
+	$('#user_id').attr('autocomplete', 'off').keyup(function(){
+		// IE compat
+		if(document.selection) {
+			// The current selection
+			var range = document.selection.createRange();
+			// We'll use this as a 'dummy'
+			var stored_range = range.duplicate();
+			// Select all text
+			stored_range.moveToElementText(this);
+			// Now move 'dummy' end point to end point of original range
+			stored_range.setEndPoint('EndToEnd', range);
+			// Now we can calculate start and end points
+			this.selectionStart = stored_range.text.length - range.text.length;
+			this.selectionEnd = this.selectionStart + range.text.length;
+		}
 
+		try {
+			clearTimeout(autocompleteTimeout);
+		} catch (ex) {}
+
+		if (!this.value.length)
+			return;
+
+		autocompleteTimeout = setTimeout(function(text, pos){
+			$.post('<?php echo addslashes( str_replace( '&amp;', '&', bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_ban_plus', 'page' => 'new_ban_ajax' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ) ) ); ?>', {
+				text: text,
+				pos: pos,
+				_wpnonce: '<?php echo bb_create_nonce( 'bbmodsuite-banplus-new-ajax' ); ?>'
+			}, function(data){
+				ul.empty();
+				$.each(data, function(i, name){
+					$('<li/>').css({
+						listStyle: 'none'
+					}).text(name).click(function(){
+						$('#user_id').val($(this).text());
+						ul.empty();
+					}).appendTo(ul);
+				});
+			}, 'json');
+		}, 750, this.value, this.selectionStart);
+	});
+});
 </script>
 <?php	} elseif ( $_SERVER['REQUEST_METHOD'] === 'POST' && bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite-banplus-new-submit' ) ) {
 			if ( !$user = bb_get_user( $_POST['user_id'] ) )

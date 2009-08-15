@@ -181,6 +181,8 @@ function bbmodsuite_modlog_get_type_description( $type ) {
 		'user_bozo'   => __( 'User bozoing', 'bbpress-moderation-suite' ),
 		'user_unbozo' => __( 'User unbozoing', 'bbpress-moderation-suite' ),
 		'user_delete' => __( 'User deletion', 'bbpress-moderation-suite' ),
+
+		'banplus' => __( 'Ban Plus', 'bbpress-moderation-suite' )
 	);
 
 	if ( isset( $types[$type] ) )
@@ -335,6 +337,10 @@ function bbmodsuite_modlog_check_user_delete( $user_id ) {
 }
 add_action( 'bb_delete_user', 'bbmodsuite_modlog_check_user_delete' );
 
+function bbmodsuite_modlog_check_banplus( $user_id, $ban ) {
+	bbmodsuite_modlog_log( sprintf( __( 'banned %s for %s. Notes: %s', 'bbpress-moderation-suite' ), get_user_display_name( $user_id ), bb_since( time() - $ban['length'] ), $ban['notes'] ), 'banplus' );
+}
+add_action( 'bbmodsuite_banplus_ban', 'bbmodsuite_modlog_check_banplus', 10, 2 );
 
 function bbmodsuite_modlog_set_topic_action_handler( $action, $content, $type ) {
 	add_action( $action, create_function( '$a', '$a = \'<a href="\' . get_topic_link( $a ) . \'">\' . get_topic_title( $a ) . \'</a>\'; bbmodsuite_modlog_log( sprintf( \'' . addslashes( $content ) . '\', $a ), ' . addslashes( $type ) . ' );' ) );

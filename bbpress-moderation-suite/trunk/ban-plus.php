@@ -152,7 +152,7 @@ function bbmodsuite_banplus_admin_newbanajax() {
 	$name = str_replace( array( '%', '?' ), array( '\\%', '\\?' ), substr( $_POST['text'], 0, $_POST['pos'] ) ) . '%' . str_replace( array( '%', '?' ), array( '\\%', '\\?' ), substr( $_POST['text'], $_POST['pos'] ) );
 
 	global $bbdb;
-	$results = $bbdb->get_col( $bbdb->prepare( 'SELECT `user_nicename` FROM `' . $bbdb->users . '` WHERE `user_nicename` LIKE %s OR `user_login` LIKE %s OR `ID`=%d ORDER BY LENGTH(`user_nicename`) ASC LIMIT 15', $name, $name, stripslashes( $_POST['text'] ) ) );
+	$results = $bbdb->get_col( $bbdb->prepare( 'SELECT `user_nicename` FROM `' . $bbdb->users . '` WHERE ( `user_nicename` LIKE %s OR `user_login` LIKE %s OR `ID` = %d ) AND `ID` != %d ORDER BY LENGTH(`user_nicename`) ASC LIMIT 15', $name, $name, $_POST['text'], bb_get_current_user_info( 'ID' ) ) );
 
 	exit( '["' . implode( '","', array_map( 'addslashes', $results ) ) . '"]' );
 }

@@ -2,6 +2,8 @@
 
 /* This is not an individual plugin, but a part of the bbPress Moderation Suite. */
 
+/* $Id$ */
+
 function bbmodsuite_banplus_install() {
 	if ( bb_get_option( 'bbmodsuite_banplus_options' ) ) return;
 	bb_update_option( 'bbmodsuite_banplus_current_bans', array() );
@@ -48,7 +50,7 @@ function bbmodsuite_banplus_set_ban( $user_id, $type = 'temp', $length = 86400, 
 	if ( ( $user->has_cap( 'moderate' ) && !bb_current_user_can( 'administrate' ) ) || ( $user->has_cap( 'administrate' ) && !bb_current_user_can( 'use_keys' ) ) )
 		return false;
 
-	$current_bans = $bbmodsuite_cache['bans'];
+	$current_bans = $bbmodsuite_cache['banplus']['bans'];
 	if ( $type === 'unban' ) {
 		if ( !isset( $current_bans[$user_id] ) )
 			return true;
@@ -133,6 +135,13 @@ function bbmodsuite_banplus_get_ban_types() {
 	return apply_filters( 'bbmodsuite_banplus_ban_types', $types );
 }
 
+
+function bbmodsuite_banplus_admin_add_jquery() {
+	wp_enqueue_script( 'jquery' );
+}
+if ( $_GET['page'] == 'new_ban' )
+	add_action( 'bbpress_moderation_suite_ban_plus', 'bbmodsuite_banplus_admin_add_jquery' );
+
 function bbpress_moderation_suite_ban_plus() { ?>
 <h2><?php _e( 'Ban Plus', 'bbpress-moderation-suite' ); ?></h2>
 <div class="table-filter">
@@ -189,6 +198,9 @@ function bbpress_moderation_suite_ban_plus() { ?>
 	<input class="submit" type="submit" name="submit" value="<?php _e( 'Ban user', 'bbpress-moderation-suite' ); ?>" />
 </fieldset>
 </form>
+<script type="text/javascript">
+
+</script>
 <?php	} elseif ( $_SERVER['REQUEST_METHOD'] === 'POST' && bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite-banplus-new-submit' ) ) {
 			if ( !$user = bb_get_user( $_POST['user_id'] ) )
 				if ( !$user = bb_get_user( $_POST['user_id'], array( 'by' => 'nicename' ) ) )

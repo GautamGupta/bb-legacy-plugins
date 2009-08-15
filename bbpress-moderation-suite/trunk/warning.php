@@ -2,6 +2,8 @@
 
 /* This is not an individual plugin, but a part of the bbPress Moderation Suite. */
 
+/* $Id$ */
+
 function bbmodsuite_warning_install() {
 	global $bbmodsuite_cache;
 	if ( !$bbmodsuite_cache['warning'] = bb_get_option( 'bbmodsuite_warning_options' ) ) {

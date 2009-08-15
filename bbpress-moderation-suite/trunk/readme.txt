@@ -83,7 +83,7 @@ Here's an example of what a `ban-plus.php` template might look like:
 `<?php bb_get_header(); ?>
 
 <div class="notice error" id="message"><p>You have been blocked from the forum until 
-<?php echo bb_datetime_format_i18n( $ban['until'] ); ?>, starting on <?php echo bb_datetime_format_i18n( $ban['on'] ); ?>. This ban will last <?php echo bb_since( time() - $ban['length'] ); ?> in total. Your ban will end in <?php echo bb_since( time() * 2 - $ban['until'] ); ?>. The reason for the ban was:</p><?php echo $ban['notes']; ?></div>
+<?php echo bb_datetime_format_i18n( $ban['until'] ); ?>, starting on <?php echo bb_datetime_format_i18n( $ban['on'] ); ?>. This ban will last <?php echo bb_since( time() - $ban['length'], true ); ?> in total. Your ban will end in <?php echo bb_since( time() * 2 - $ban['until'], true ); ?>. The reason for the ban was:</p><?php echo $ban['notes']; ?></div>
 
 <?php bb_get_footer(); ?>`
 
@@ -96,12 +96,13 @@ Here's an example of what a `ban-plus.php` template might look like:
 * [The Ban Plus "you've been banned" page can now be edited ](http://bbpress.org/plugins/topic/bbpress-moderation-suite/other_notes/)
 * Admin interface now matches bbPress 1.0
 * Mod Log categorization fixed.
-* New top level navigation menu for easy access.
-* Ban Plus now has hooks.
-* Probation discontinued - use the Bozo plugin that came with your forum instead.
-* Mod Log can now filter different types of messages. Unfortunately, you will need to uninstall and reinstall the Mod Log Moderation Helper before you can use this feature.
+* New top level navigation menu for easy access
+* Ban Plus now has hooks
+* Probation discontinued - use the Bozo plugin that came with your forum instead
+* Mod Log can now filter different types of messages. Unfortunately, you will need to uninstall and reinstall the Mod Log Moderation Helper before you can use this feature
 * Mod Log now hides duplicate messages by default.
-* Mod Log now has pagination.
+* Mod Log now has pagination
+* The Ban Plus "unban" button now works properly
 
 = 0.1-alpha6 =
 * Major code cleanup

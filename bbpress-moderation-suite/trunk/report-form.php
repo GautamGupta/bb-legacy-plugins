@@ -1,4 +1,8 @@
-<ol id="thread"><li>
+<?php
+
+/* $Id$ */
+
+?><ol id="thread"><li>
 <?php
 bb_post_template();
 ?>

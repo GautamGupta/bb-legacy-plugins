@@ -116,15 +116,16 @@ function bbmodsuite_banplus_maybe_block_user() {
 		switch ( $current_bans[bb_get_current_user_info( 'ID' )]['type'] ) {
 			case 'temp':
 				if ( bb_get_template( 'ban-plus.php', false ) ) {
-					bb_load_template( 'ban-plus.php', array( 'ban' => $current_bans[bb_get_current_user_info( 'ID' )]['until'] ), $current_bans[bb_get_current_user_info( 'ID' )]['until'] );
-					break;
+					bb_load_template( 'ban-plus.php', array( 'ban' => $current_bans[bb_get_current_user_info( 'ID' )] ), $current_bans[bb_get_current_user_info( 'ID' )] );
+					exit;
 				}
 				bb_die( sprintf( __( 'You are banned from this forum until %s from now.  The person who banned you said the reason was: %s', 'bbpress-moderation-suite' ), bb_since( time() - ( $current_bans[bb_get_current_user_info( 'ID' )]['until'] - time() ), true ), $current_bans[bb_get_current_user_info( 'ID' )]['notes'] ) );
 				break;
 		}
 	}
 }
-bbmodsuite_banplus_maybe_block_user();
+if ( bb_get_location() != 'login-page' ) // Let them log out
+	bbmodsuite_banplus_maybe_block_user();
 
 function bbmodsuite_banplus_get_ban_types() {
 	global $bbmodsuite_active_plugins;
@@ -189,11 +190,14 @@ function bbpress_moderation_suite_ban_plus() { ?>
 </fieldset>
 </form>
 <?php	} elseif ( $_SERVER['REQUEST_METHOD'] === 'POST' && bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite-banplus-new-submit' ) ) {
-			$user_id = bb_get_user_id( $_POST['user_id'] );
-			if ( !$user_id ) { ?>
+			if ( !$user = bb_get_user( $_POST['user_id'] ) )
+				if ( !$user = bb_get_user( $_POST['user_id'], array( 'by' => 'nicename' ) ) )
+					if ( !$user = bb_get_user( $_POST['user_id'], array( 'by' => 'username' ) ) ) { ?>
 <div class="error"><p><?php _e( 'User not found', 'bbpress-moderation-suite' ); ?></p></div>
-<?php			return;
-			}
+<?php					return;
+					}
+
+			$user_id = $user->ID;
 
 			$username   = get_user_display_name( $user_id );
 			$time       = (int)$_POST['time'];

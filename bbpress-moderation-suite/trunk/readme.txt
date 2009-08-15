@@ -78,6 +78,15 @@ If a `ban-plus.php` file is found in the template directory, it will be loaded w
 * `banned_by` - The user ID of the person who started the ban
 * `notes` - Any notes left by the person who started the ban
 
+Here's an example of what a `ban-plus.php` template might look like:
+
+`<?php bb_get_header(); ?>
+
+<div class="notice error" id="message"><p>You have been blocked from the forum until 
+<?php echo bb_datetime_format_i18n( $ban['until'] ); ?>, starting on <?php echo bb_datetime_format_i18n( $ban['on'] ); ?>. This ban will last <?php echo bb_since( time() - $ban['length'] ); ?> in total. Your ban will end in <?php echo bb_since( time() * 2 - $ban['until'] ); ?>. The reason for the ban was:</p><?php echo $ban['notes']; ?></div>
+
+<?php bb_get_footer(); ?>`
+
 == Mod Log API ==
 
 

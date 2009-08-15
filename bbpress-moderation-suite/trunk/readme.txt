@@ -62,12 +62,11 @@ Your theme is using old functions.  Find `<?php post_ip_link(); ?> <?php post_ed
 
 = How do I solve issue X? =
 
-If you can't figure out an issue with the bbPress Moderation Suite by yourself, post a comment on this page or my blog.
+If you can't figure out an issue with the bbPress Moderation Suite by yourself, post a comment on this page.
 
 == Screenshots ==
 
-1. Can you spot what happened because there was a report? Don't worry, there's a setting to make this a bit less obtrusive.
-2. The Warning administration screen
+1. The moderation helper (de)activation system.
 
 == Ban Plus API ==
 If a `ban-plus.php` file is found in the template directory, it will be loaded with a global variable `$ban` that includes:

@@ -12,6 +12,8 @@ Text Domain: bbpress-moderation-suite
 Domain Path: /translations/
 */
 
+/* $Id$ */
+
 function bbmodsuite_init() {
 	global $bbmodsuite_plugins, $bbmodsuite_active_plugins, $bbmodsuite_cache;
 

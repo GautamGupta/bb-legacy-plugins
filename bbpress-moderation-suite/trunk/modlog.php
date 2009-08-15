@@ -2,6 +2,8 @@
 
 /* This is not an individual plugin, but a part of the bbPress Moderation Suite. */
 
+/* $Id$ */
+
 function bbmodsuite_modlog_install() {
 	global $bbdb;
 

@@ -2,7 +2,7 @@
 /*
 Plugin Name: My Views module - Statistics
 Description: This plugin is part of the My Views plugin. It adds forum statistics to list of views.		
-Plugin URI:  http://bbpress.org/plugins/topic/67
+Plugin URI:  http://bbpress.org/plugins/topic/my-views
 Author: _ck_
 Author URI: http://bbShowcase.org
 Version: 0.1.2
@@ -12,7 +12,7 @@ Version: 0.1.2
 
 if (is_callable('bb_register_view')) {	// Build 876+   alpha trunk
 	$query = array('append_meta'=>false,'sticky'=>false);	// attempt to short-circuit bb_query     	
-    	bb_register_view("statistics","Forum Statistics",$query);
+    	bb_register_view("statistics","Forum Statistics",$query, false);
 
 } else {		// Build 214-875	(0.8.2.1)
 

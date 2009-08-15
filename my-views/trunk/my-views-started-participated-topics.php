@@ -2,17 +2,17 @@
 /*
 Plugin Name: My Views module - Started/Participated Topics
 Description: This plugin is part of the My Views plugin. It adds Started/Participated Topic Views to the list of views.		
-Plugin URI:  http://bbpress.org/plugins/topic/67
+Plugin URI:  http://bbpress.org/plugins/topic/my-views
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.2
+Version: 0.1.4
 */ 
 
 if (is_callable('bb_register_view')) {	// Build 876+   alpha trunk
 
 function my_views_add_started_participated_topics() {		
 	$query = array('append_meta'=>false,'sticky'=>false);	// attempt to short-circuit bb_query
-	bb_register_view("latest-discussions","Latest Discussions", $query);
+	bb_register_view("latest-discussions",__("Latest Discussions"), $query);
 	if (bb_is_user_logged_in()) {
 		if (function_exists('unread_posts_init')  ) {bb_register_view("new-posts","Topics with new posts",$query);}
     		bb_register_view("my-topics","Topics I've Started",$query);
@@ -47,14 +47,20 @@ if ($view=='latest-discussions' || ($user_id && ($view=='my-topics' || $view=='m
 	$limit = bb_get_option('page_topics');
 	$offset = ($page-1)*$limit;
 	$sort=" DESC ";
-	$where = apply_filters('get_latest_topics_where',"WHERE topic_status=0 ");
+	$where="WHERE topic_status=0 ";			
+	if (isset($_REQUEST['days'])) {$field="topic_start_time"; $days=$_REQUEST['days'];}
+	elseif (isset($_REQUEST['days_started'])) {$field="topic_start_time"; $days=$_REQUEST['days_started'];}
+	elseif (isset($_REQUEST['days_replied'])) {$field="topic_time"; $days=$_REQUEST['days_replied'];}
+	if (!empty($field)) {$time=gmdate('Y-m-d H:00:00',time()-intval($days)*86400); $where.=" AND $field>'$time' ";}
+	$where = apply_filters('get_latest_topics_where',$where);
 	if ($user_id) {
 		if ($view=='my-topics') {
 		$where = $where." AND topic_poster=$user_id ";		
 		}
 		elseif ($view=='my-posts') {
 		
-		// limit *9 is a lazy workaround to avoid a join, as topic_static=0 in next query filters out deleted
+		// limit *9 is a lazy workaround to avoid a join, as topic_static=0 in next query filters out deleted - this needs to be redone as a join 
+		
 		$my_posts = $bbdb->get_results("SELECT topic_id FROM $bbdb->posts WHERE post_status=0 AND poster_id=$user_id ORDER BY cast(post_id as UNSIGNED) DESC LIMIT ".$limit*9);
 		foreach ($my_posts as $i=>$discard) {$trans[$my_posts[$i]->topic_id] =& $my_posts[$i];} 
 		unset($my_posts); 	 // huge query, release memory

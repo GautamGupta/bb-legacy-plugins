@@ -2,14 +2,10 @@
 /*
 Plugin Name: My Views
 Description:  My Views is a powerful addition to the default "views" in bbPress. It will let you customize output and adds several new views.
-Plugin URI:  http://bbpress.org/plugins/topic/67
+Plugin URI:  http://bbpress.org/plugins/topic/my-views
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.1.3
-
-License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
-
-Donate: http://bbshowcase.org/donate/
+Version: 0.1.4
 */
 
 function my_views_init() {	//	to do: make much nicer with admin interface
@@ -19,14 +15,20 @@ $my_views['remove_views']=array("weird-view1","weird-view2");	// remove any view
 
 $my_views['prefered_order']=array(	// force views to list in the order that you desire
 	"latest-discussions","subscribed-topics","no-replies","untagged","my-topics","my-posts","new-posts","most-views","most-posts","least-views","least-posts",
-	"polls","support-forum-no","installed-plugins","available-plugins","installed-themes","available-themes","statistics"
+	"polls","support-forum-no","random-topics","leaderboard","installed-plugins","available-plugins","installed-themes","available-themes","statistics"
 	);
+
+$my_views['rss']=array(	//  this is a list of custom views where RSS is handled by My Views
+	"latest-discussions","subscribed-topics","my-topics","my-posts","new-posts","most-views","most-posts","least-views","least-posts","polls","random-topics"
+);
 
 $my_views['view_pages_label']=__("pages: ");
 
-$my_views['access_level']=array();	// not implimented yet
+$my_views['access_level']=array();	// not implemented yet
 
-// stop editing - seriously, you can't do anything helpful below yet
+
+/*        stop editing - seriously, you can't do anything helpful below yet        */
+
 
 /*  optional header and footer html code - not used publicly
 $my_views['header']='
@@ -65,9 +67,9 @@ foreach ($my_views['remove_views'] as $view) {
 }
 if (!is_callable('bb_register_view')) {return $views;}	
 }
-if (!is_callable('bb_register_view')) {add_filter('bb_views','my_views_init',100 );} else {add_action('bb_init', 'my_views_init',100);}
+if (!is_callable('bb_register_view')) {add_filter('bb_views','my_views_init',1000 );} else {add_action('bb_init', 'my_views_init',1000);}
 
-function my_views_unsticky($view,$page){	// quick way to fix incorrect stickies on top of custom views
+function my_views_unsticky($view,$page=1){	// quick way to fix incorrect stickies on top of custom views
 // todo: make this find real stickies within results and re-sticky-fy
 if (intval($page)>1 || !in_array($view,array('no-replies','untagged',''))) {unset($GLOBALS['stickies']);}
 }
@@ -116,224 +118,32 @@ global $my_views;
 if (isset($my_views['footer'])) {echo $my_views['footer'];}
 }
 
-function my_views_table_sort() {	// makes the views table sortable via client-side javascript - eventually should be external javascript .js
-if (is_view()) :
-?>
-
-<script type="text/javascript"> 
-addEvent(window, "load", sortables_init);
-
-var SORT_COLUMN_INDEX;
-
-function sortables_init() {
-    if (!document.getElementsByTagName) return;
-    tbls = document.getElementsByTagName("table");
-    for (ti=0;ti<tbls.length;ti++) {
-        thisTbl = tbls[ti];
-//        if (((' '+thisTbl.className+' ').indexOf("sortable") != -1) && (thisTbl.id)) {
-            // initTable(thisTbl.id);
-            ts_makeSortable(thisTbl);
-//       }
-    }
-}
-
-function ts_makeSortable(table) {
-    if (table.rows && table.rows.length > 0) {
-        var firstRow = table.rows[0];
-    }
-    if (!firstRow) return;
-    
-    // We have a first row: assume it's the header, and make its contents clickable links
-    for (var i=0;i<firstRow.cells.length;i++) {
-        var cell = firstRow.cells[i];
-        var txt = ts_getInnerText(cell);
-        cell.innerHTML = '<a href="#" target="_self" class="sortheader" '+ 
-        'onclick="ts_resortTable(this, '+i+');return false;">' + 
-        txt+'<span class="sortarrow">&nbsp;&nbsp;&#8597;</span></a>';
-    }
-}
-
-function ts_getInnerText(el) {
-	if (typeof el == "string") return el;
-	if (typeof el == "undefined") { return el };
-	if (el.innerText) {if (el.innerText=="") {return el.innerHTML;} else {return el.innerText;}}   //Not needed but it is faster
-	var str = "";
-	
-	var cs = el.childNodes;
-	var l = cs.length;
-	for (var i = 0; i < l; i++) {
-		switch (cs[i].nodeType) {
-			case 1: //ELEMENT_NODE
-				str += ts_getInnerText(cs[i]);
-				break;
-			case 3:	//TEXT_NODE
-				str += cs[i].nodeValue;
-				break;
-		}
+function my_views_table_sort() {	// makes the views table sortable via client-side javascript
+	if (is_view()) {	
+		// $url=bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),"\\"),array("","/"),dirname(__FILE__)),' /\\').'/my-views-tinytable-sort.js?'.time(); 	
+		$url=bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),"\\"),array("","/"),dirname(__FILE__)),' /\\').'/my-views-table-sort.js?1a'; 	
+		echo '<script type="text/javascript" defer="defer" src="'.$url.'"></script>';
 	}
-	if (str=="") {return el.innerHTML;}
-	return str;
-}
-
-function ts_resortTable(lnk,clid) {
-    // get the span
-    var span;
-    for (var ci=0;ci<lnk.childNodes.length;ci++) {
-        if (lnk.childNodes[ci].tagName && lnk.childNodes[ci].tagName.toLowerCase() == 'span') span = lnk.childNodes[ci];
-    }
-    var spantext = ts_getInnerText(span);
-    var td = lnk.parentNode;
-    var column = clid || td.cellIndex;
-    var table = getParent(td,'TABLE');
-    
-    // Work out a type for the column
-    if (table.rows.length <= 1) return;
-    var itm = ts_getInnerText(table.rows[1].cells[column]);
-    sortfn = ts_sort_caseinsensitive;
-    if (itm.match(/^\d\d[\/-]\d\d[\/-]\d\d\d\d$/)) sortfn = ts_sort_date;
-    if (itm.match(/^\d\d[\/-]\d\d[\/-]\d\d$/)) sortfn = ts_sort_date;
-    if (itm.match(/^[£$]/)) sortfn = ts_sort_currency;
-    if (itm.match(/^[\d\.]+$/)) sortfn = ts_sort_numeric;
-    if ((itm.match(/^[\d\,]+$/)) || itm==" n/a ") sortfn = ts_sort_recursive_comma;
-    if (itm=="n/a") sortfn = ts_sort_recursive_comma;
-
-    // if (itm.match(/^(.*\s)?([-+\u00A3\u20AC]?\d+)(\d{3}\b)/)) {alert("comma"); sortfn = ts_sort_currency;}  
-    SORT_COLUMN_INDEX = column;
-    var firstRow = new Array();
-    var newRows = new Array();
-    for (i=0;i<table.rows[0].length;i++) { firstRow[i] = table.rows[0][i]; }
-    for (j=1;j<table.rows.length;j++) { newRows[j-1] = table.rows[j]; }
-
-    newRows.sort(sortfn);
-
-    if (span.getAttribute("sortdir") == 'down') {
-        ARROW = '&nbsp;&nbsp;&uarr;';
-        newRows.reverse();
-        span.setAttribute('sortdir','up');
-    } else {
-        ARROW = '&nbsp;&nbsp;&darr;';
-        span.setAttribute('sortdir','down');
-    }
-    
-    // We appendChild rows that already exist to the tbody, so it moves them rather than creating new ones
-    // don't do sortbottom rows
-    for (i=0;i<newRows.length;i++) { if (!newRows[i].className || (newRows[i].className && (newRows[i].className.indexOf('sortbottom') == -1))) table.tBodies[0].appendChild(newRows[i]);}
-    // do sortbottom rows only
-    for (i=0;i<newRows.length;i++) { if (newRows[i].className && (newRows[i].className.indexOf('sortbottom') != -1)) table.tBodies[0].appendChild(newRows[i]);}
-    
-    // Assign updated classes to the rows when the sort's finished    
-    for (i=0;i<table.rows.length;i++) {     	
-    	if (table.rows[i].className!='sortbottom') {
-    	if (i%2 == 0) table.rows[i].className='alt';
-    	else table.rows[i].className='';    	
-    	}
-    }
-    
-    // Delete any other arrows there may be showing
-    var allspans = document.getElementsByTagName("span");
-    for (var ci=0;ci<allspans.length;ci++) {
-        if (allspans[ci].className == 'sortarrow') {
-            if (getParent(allspans[ci],"table") == getParent(lnk,"table")) { // in the same table as us?
-                allspans[ci].innerHTML = '&nbsp;&nbsp;&nbsp;';
-            }
-        }
-    }
-        
-    span.innerHTML = ARROW;
-}
-
-function getParent(el, pTagName) {
-	if (el == null) return null;
-	else if (el.nodeType == 1 && el.tagName.toLowerCase() == pTagName.toLowerCase())	// Gecko bug, supposed to be uppercase
-		return el;
-	else
-		return getParent(el.parentNode, pTagName);
-}
-function ts_sort_date(a,b) {
-    // y2k notes: two digit years less than 50 are treated as 20XX, greater than 50 are treated as 19XX
-    aa = ts_getInnerText(a.cells[SORT_COLUMN_INDEX]);
-    bb = ts_getInnerText(b.cells[SORT_COLUMN_INDEX]);
-    if (aa.length == 10) {
-        dt1 = aa.substr(6,4)+aa.substr(3,2)+aa.substr(0,2);
-    } else {
-        yr = aa.substr(6,2);
-        if (parseInt(yr) < 50) { yr = '20'+yr; } else { yr = '19'+yr; }
-        dt1 = yr+aa.substr(3,2)+aa.substr(0,2);
-    }
-    if (bb.length == 10) {
-        dt2 = bb.substr(6,4)+bb.substr(3,2)+bb.substr(0,2);
-    } else {
-        yr = bb.substr(6,2);
-        if (parseInt(yr) < 50) { yr = '20'+yr; } else { yr = '19'+yr; }
-        dt2 = yr+bb.substr(3,2)+bb.substr(0,2);
-    }
-    if (dt1==dt2) return 0;
-    if (dt1<dt2) return -1;
-    return 1;
-}
-
-function ts_sort_currency(a,b) { 
-    aa = ts_getInnerText(a.cells[SORT_COLUMN_INDEX]).replace(/[^0-9.]/g,'');
-    bb = ts_getInnerText(b.cells[SORT_COLUMN_INDEX]).replace(/[^0-9.]/g,'');
-    return parseFloat(aa) - parseFloat(bb);
-}
-
-function ts_sort_recursive_comma(a,b) { 
-try {
-    aa = parseInt(ts_getInnerText(a.cells[SORT_COLUMN_INDEX]).replace(/[^0-9]/g,''));
-    if (isNaN(aa)) aa = 0;
-    bb = parseInt(ts_getInnerText(b.cells[SORT_COLUMN_INDEX]).replace(/[^0-9]/g,''));
-    if (isNaN(bb)) bb = 0;
-    return aa - bb;
-} catch(dummy) {return 0;}    
-}
-
-function ts_sort_numeric(a,b) { 
-    aa = ts_getInnerText(a.cells[SORT_COLUMN_INDEX]).replace(/[^0-9.]/g,'');
-    if (isNaN(aa)) aa = 0;
-    bb = ts_getInnerText(b.cells[SORT_COLUMN_INDEX]).replace(/[^0-9.]/g,'');
-    if (isNaN(bb)) bb = 0;
-    return aa-bb;
-}
-
-function ts_sort_caseinsensitive(a,b) {
-try {
-    aa = ts_getInnerText(a.cells[SORT_COLUMN_INDEX]).toLowerCase();
-    bb = ts_getInnerText(b.cells[SORT_COLUMN_INDEX]).toLowerCase();
-    if (aa==bb) return 0;
-    if (aa<bb) return -1;
-    return 1;
-} catch(dummy) {return 0;}    
-}
-
-function ts_sort_default(a,b) {
-    aa = ts_getInnerText(a.cells[SORT_COLUMN_INDEX]);
-    bb = ts_getInnerText(b.cells[SORT_COLUMN_INDEX]);
-    if (aa==bb) return 0;
-    if (aa<bb) return -1;
-    return 1;
-}
-
-function addEvent(elm, evType, fn, useCapture)
-// addEvent and removeEvent
-// cross-browser event handling for IE5+,  NS6 and Mozilla
-// By Scott Andrew
-{
-  if (elm.addEventListener){
-    elm.addEventListener(evType, fn, useCapture);
-    return true;
-  } else if (elm.attachEvent){
-    var r = elm.attachEvent("on"+evType, fn);
-    return r;
-  } else {
-    alert("Handler could not be removed");
-  }
-} 
-</script>
-
-<?php 
-endif;  // is_view
 } 
 add_action('bb_foot', 'my_views_table_sort');
+
+
+function my_views_rss() {
+global $my_views, $bb_db_override, $view, $bb_views, $title, $link, $link_self, $description, $feed, $feed_id, $topics, $posts;
+if ($feed!='view') {return;}
+if (!in_array($feed_id,$my_views['rss'])) {return;}
+$view=$feed_id; 
+$title = $bb_views[$feed_id]['title'];
+$bb_db_override=true;
+do_action( 'bb_custom_view', $view );
+if (empty($posts)) {
+$posts=array(); 
+if (!empty($topics)) {	// adds last posts to RSS - could optionally use  first_posts
+	bb_cache_last_posts();
+	foreach ($topics as $topic) {$posts[]=bb_get_last_post($topic->topic_id);}
+}
+}
+}
+add_action( 'bb_rss.php_pre_db', 'my_views_rss' );
 
 ?>

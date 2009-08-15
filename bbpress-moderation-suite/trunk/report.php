@@ -459,7 +459,7 @@ function bbmodsuite_report_count( $type = 'all' ) {
 	return $bbdb->get_var( $bbdb->prepare( 'SELECT COUNT(*) FROM `' . $bbdb->prefix . 'bbmodsuite_reports` WHERE `report_type`=%s', $type ) );
 }
 
-function bbmodsuite_report_link( $parts ) {
+function bbmodsuite_report_link( $parts, $args ) {
 	$post_id = get_post_id();
 	if ( bb_current_user_can( 'participate' ) && !bb_current_user_can( 'delete_post', $post_id ) ) {
 		$post_author_id = get_post_author_id( $post_id );
@@ -472,11 +472,11 @@ function bbmodsuite_report_link( $parts ) {
 		if ( $post_author_id != bb_get_current_user_info( 'ID' ) && ( $options['max_level'] === 'none' || !$post_author->has_cap( $options['max_level'] ) ) ) {
 			$title   = __( 'Report this post to a moderator.', 'bbpress-moderation-suite' );
 			$href    = str_replace( '\\', '/', substr( BB_PLUGIN_URL, 0, -1 ) . str_replace( realpath( BB_PLUGIN_DIR ), '', dirname( __FILE__ ) ) . '/' . basename( __FILE__ ) );
-			$parts[] = '<a class="report_post" title="' . $title . '" href="' . $href . '?report=' . $post_id . '&amp;_nonce=' . bb_create_nonce( 'bbmodsuite-report-' . $post_id ) . '">' . __( 'Report', 'bbpress-moderation-suite' ) . '</a>';
+			$parts['report'] = $args['before_each'] . '<a class="report_post" title="' . $title . '" href="' . $href . '?report=' . $post_id . '&amp;_nonce=' . bb_create_nonce( 'bbmodsuite-report-' . $post_id ) . '">' . __( 'Report', 'bbpress-moderation-suite' ) . '</a>' . $args['after_each'];
 		}
 	}
 	return $parts;
 }
-add_filter( 'bb_post_admin', 'bbmodsuite_report_link' );
+add_filter( 'bb_post_admin', 'bbmodsuite_report_link', 10, 2 );
 
 ?>

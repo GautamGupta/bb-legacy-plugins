@@ -78,7 +78,7 @@ function bbmodsuite_warning_update_user_ban( $user_id, $warning_count, $cron = f
 	return true;
 }
 
-function bbmodsuite_warning_link( $parts ) {
+function bbmodsuite_warning_link( $parts, $args ) {
 	global $bbmodsuite_cache;
 	$options = $bbmodsuite_cache['warning'];
 	if ( bb_current_user_can( $options['min_level'] ) ) {
@@ -106,12 +106,12 @@ function bbmodsuite_warning_link( $parts ) {
 					'bbmodsuite-warning-warn_' . $user_id . '_' . $post_id
 				)
 			);
-			$parts[] = '<a class="warn-user" title="' . $title . '" href="' . $link . '">' . __( 'Warn', 'bbpress-moderation-suite' ) . '</a>';
+			$parts['warn'] = $args['before_each'] . '<a class="warn-user" title="' . $title . '" href="' . $link . '">' . __( 'Warn', 'bbpress-moderation-suite' ) . '</a>' . $args['after_each'];
 		}
 	}
 	return $parts;
 }
-add_filter( 'bb_post_admin', 'bbmodsuite_warning_link' );
+add_filter( 'bb_post_admin', 'bbmodsuite_warning_link', 10, 2 );
 
 function bbmodsuite_warning_types() {
 	global $bbmodsuite_cache;

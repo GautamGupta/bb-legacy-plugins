@@ -3,7 +3,7 @@
 Plugin Name: My Views module - Installed/Available Plugins
 Description: This plugin is part of the My Views plugin. It adds Installed/Available Plugins to the list of views.
 		Note that "Available Plugins" view requires the "Plugin Browser" plugin by Sam Bauers.		
-Plugin URI:  http://bbpress.org/plugins/topic/67
+Plugin URI:  http://bbpress.org/plugins/topic/my-views
 Author: _ck_
 Author URI: http://bbShowcase.org
 Version: 0.1.0
@@ -11,8 +11,8 @@ Version: 0.1.0
 
 if (is_callable('bb_register_view')) {	// Build 876+   alpha trunk
     $query = array('append_meta'=>false,'sticky'=>false);	// attempt to short-circuit bb_query 
-    bb_register_view("installed-plugins","Installed bbPress Plugins",$query);
-    bb_register_view("available-plugins","Available bbPress Plugins",$query);
+    bb_register_view("installed-plugins","Installed bbPress Plugins",$query, false);
+    bb_register_view("available-plugins","Available bbPress Plugins",$query, false);
 
 } else {		// Build 214-875	(0.8.2.1)
 

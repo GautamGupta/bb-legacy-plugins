@@ -2,7 +2,7 @@
 /*
 Plugin Name: My Views module - Polls
 Description: This plugin is part of the My Views plugin. It adds Topics with Polls to the list of views.		
-Plugin URI:  http://bbpress.org/plugins/topic/67
+Plugin URI:  http://bbpress.org/plugins/topic/my-views
 Author: _ck_
 Author URI: http://bbShowcase.org
 Version: 0.1.3

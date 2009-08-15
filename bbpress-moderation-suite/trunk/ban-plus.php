@@ -261,12 +261,13 @@ jQuery(function($){
 			}, function(data){
 				ul.empty();
 				$.each(data, function(i, name){
-					$('<li/>').css({
-						listStyle: 'none'
-					}).text(name).click(function(){
-						$('#user_id').val($(this).text());
-						ul.empty();
-					}).appendTo(ul);
+					if (name.length)
+						$('<li/>').css({
+							listStyle: 'none'
+						}).text(name).click(function(){
+							$('#user_id').val($(this).text());
+							ul.empty();
+						}).appendTo(ul);
 				});
 			}, 'json');
 		}, 750, this.value, this.selectionStart);

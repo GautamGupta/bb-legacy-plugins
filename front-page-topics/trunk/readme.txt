@@ -68,6 +68,10 @@ anywhere before `</IfModule>` where `/forums/` is the path to your bbpress insta
 
 * previously unreleased bugfix for front-page-pagination (avoid get_page_number_links)
 
+= Version 0.0.7 {2009-8-14) =
+
+* use api to generate navigation if pretty permalinks are off
+
 == To Do ==
 
 * optionally calculate number of stickies on a page and enforce topic count limit including stickies (overriding bbPress's default behaviour)

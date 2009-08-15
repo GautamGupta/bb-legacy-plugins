@@ -83,13 +83,11 @@ If a `ban-plus.php` file is found in the template directory, it will be loaded w
 
 == Changelog ==
 
-= 0.1-beta2 =
+= 0.1-beta1 =
 * [The Ban Plus "you've been banned" page can now be edited ](http://bbpress.org/plugins/topic/bbpress-moderation-suite/other_notes/)
 * Admin interface now matches bbPress 1.0
 * Mod Log categorization fixed.
 * New top level navigation menu for easy access.
-
-= 0.1-beta1 =
 * Ban Plus now has hooks.
 * Probation discontinued - use the Bozo plugin that came with your forum instead.
 * Mod Log can now filter different types of messages. Unfortunately, you will need to uninstall and reinstall the Mod Log Moderation Helper before you can use this feature.

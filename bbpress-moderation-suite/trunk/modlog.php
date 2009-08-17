@@ -345,7 +345,7 @@ add_action( 'bbmodsuite_banplus_ban', 'bbmodsuite_modlog_check_banplus', 10, 2 )
 function bbmodsuite_modlog_check_banplus_unban( $user_id, $ban ) {
 	bbmodsuite_modlog_log( sprintf( __( 'unbanned %s %s early.', 'bbpress-moderation-suite' ), strpos( $user_id, 'ip_' ) === false ? get_user_display_name( $user_id ) : ( '<em>' . substr( $user_id, 3 ) . '</em>' ), bb_since( time() * 2 - $ban['until'] ) ), 'banplus' );
 }
-add_action( 'bbmodsuite_banplus_unban', 'bbmodsuite_modlog_check_banplus', 10, 2 );
+add_action( 'bbmodsuite_banplus_unban', 'bbmodsuite_modlog_check_banplus_unban', 10, 2 );
 
 function bbmodsuite_modlog_set_topic_action_handler( $action, $content, $type ) {
 	add_action( $action, create_function( '$a', '$a = \'<a href="\' . get_topic_link( $a ) . \'">\' . get_topic_title( $a ) . \'</a>\'; bbmodsuite_modlog_log( sprintf( \'' . addslashes( $content ) . '\', $a ), ' . addslashes( $type ) . ' );' ) );

@@ -53,7 +53,7 @@ function bbmodsuite_banplus_set_ban( $user_id, $type = 'temp', $length = 86400, 
 	}
 
 	$current_bans = $bbmodsuite_cache['banplus']['bans'];
-	if ( $type === 'unban' ) {
+	if ( $type == 'unban' ) {
 		if ( !isset( $current_bans[$user_id] ) )
 			return true;
 		do_action( 'bbmodsuite_banplus_unban', $user_id, $current_bans[$user_id] );

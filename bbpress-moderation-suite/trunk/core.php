@@ -203,4 +203,11 @@ function bbpress_moderation_suite() {
 </table>
 <?php
 }
+
+function bbmodsuite_stripslashes( $string ) {
+	if ( function_exists( 'get_magic_quotes_gpc' ) && get_magic_quotes_gpc() )
+		return stripslashes( $string );
+	return $string;
+}
+
 ?>

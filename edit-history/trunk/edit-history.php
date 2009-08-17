@@ -51,9 +51,9 @@ foreach ($edit_history as $edit) {
 </div>		
 <div class="threadpost">
 	<?php $link=get_user_name($edit->user_id); //  user_profile_link($id) ?>
-	<div><span style="background:#eeee00;">&nbsp;<?php printf( __('Edited %s ago by %s'), bb_since($edit->time), $link); ?>&nbsp;</span></div>
+	<div><span style="background:#eeee00;" title="<?php echo date('r',$edit->time); ?>">&nbsp;<?php printf( __('Edited %s ago by %s'), bb_since($edit->time), $link); ?>&nbsp;</span></div>
 	<div class="post"><?php  echo force_balance_tags(apply_filters( 'post_text', edit_history_visual($bb_post->post_text, $newer), $bb_post->post_id)); ?></div>
-	<div class="poststuff"><?php printf( __('Edited %s ago by %s'), bb_since($edit->time), $link); ?></div>
+	<div class="poststuff" title="<?php echo date('r',$edit->time); ?>"><?php printf( __('Edited %s ago by %s'), bb_since($edit->time), $link); ?></div>
 </div>
 </li>
 <?php

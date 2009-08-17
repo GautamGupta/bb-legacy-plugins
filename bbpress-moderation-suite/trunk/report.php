@@ -71,7 +71,7 @@ if ( !defined( 'BB_PATH' ) && isset( $_GET['report'] ) ) {
 
 		function bbmodsuite_report_form( $a, $b ) {
 			if ( $b === 'post-form.php' ) {
-				return dirname( __FILE__ ) . '/report-form.php';
+				return $template = bb_get_template( 'report-form.php' ) ? $template : dirname( __FILE__ ) . '/report-form.php';
 			}
 			return $a;
 		}
@@ -82,7 +82,7 @@ if ( !defined( 'BB_PATH' ) && isset( $_GET['report'] ) ) {
 		if ( $_POST['report_reason'] !== '0' && !array_key_exists( $_POST['report_reason'], bbmodsuite_report_reasons() ) )
 			bb_die( __( 'Invalid report', 'bbpress-moderation-suite' ) );
 		$report_reason  = $_POST['report_reason'];
-		$report_content = htmlspecialchars( $_POST['report_content'] );
+		$report_content = htmlspecialchars( bbmodsuite_stripslashes( $_POST['report_content'] ) );
 		$reported_post  = $_GET['report'];
 		$report_from    = bb_get_current_user_info( 'ID' );
 		$reported_at    = bb_current_time( 'mysql' );
@@ -110,14 +110,23 @@ function bbpress_moderation_suite_report() { ?>
 <?php
 	switch ( $_GET['page'] ) {
 		case 'resolve_report':
-			if ( !bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite-report-resolve-submit_' . $_GET['report'] ) ) return;
+			if ( !bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite-report-resolve-submit_' . $_GET['report'] ) )
+				return;
+
 			global $bbdb;
 			if ( trim( $_POST['resolve_content'] ) && ( $_POST['resolve_type'] === '0' || array_key_exists( (int)$_POST['resolve_type'], bbmodsuite_report_resolve_types() ) ) )
 				$report_id = $bbdb->get_var( $bbdb->prepare( 'SELECT `ID` FROM `' . $bbdb->prefix . 'bbmodsuite_reports` WHERE `report_type`=\'new\' AND `ID`=%d', $_GET['report'] ) );
+
 			if ( !$report_id ) { ?>
 <div class="error"><p><?php _e( 'Invalid resolve attempt.', 'bbpress-moderation-suite' ); ?></p></div>
 <?php		} else {
-				if ( $bbdb->update( $bbdb->prefix . 'bbmodsuite_reports', array( 'report_type' => 'resolved', 'resolve_content' => htmlspecialchars( trim( $_POST['resolve_content'] ) ), 'resolved_at' => bb_current_time( 'mysql' ), 'resolved_by' => bb_get_current_user_info( 'ID' ), 'resolve_type' => (int)$_POST['resolve_type'] ), array( 'ID' => $report_id ) ) ) { ?>
+				if ( $bbdb->update( $bbdb->prefix . 'bbmodsuite_reports', array(
+					'report_type' => 'resolved',
+					'resolve_content' => htmlspecialchars( trim( bbmodsuite_stripslashes( $_POST['resolve_content'] ) ) ),
+					'resolved_at' => bb_current_time( 'mysql' ),
+					'resolved_by' => bb_get_current_user_info( 'ID' ),
+					'resolve_type' => (int)$_POST['resolve_type']
+				), array( 'ID' => $report_id ) ) ) { ?>
 <div class="updated"><p><?php _e( 'Successfully resolved report.', 'bbpress-moderation-suite' ); ?></p></div>
 <?php			}
 			}
@@ -190,11 +199,11 @@ function bbpress_moderation_suite_report() { ?>
 		<tr<?php alt_class( 'reported_post' ); ?>>
 			<td><?php echo get_user_display_name( $report->report_from ); ?></td>
 			<td><strong><?php echo $reasons[$report->report_reason]; ?></strong>
-				<?php echo stripslashes( bb_autop( $report->report_content ) ); ?>
+				<?php echo bb_autop( $report->report_content ); ?>
 			</td>
 			<td><?php echo get_user_display_name( $report->resolved_by ); ?></td>
 			<td><strong><?php echo $resolve_types[$report->resolve_type]; ?></strong>
-				<?php echo stripslashes( bb_autop( $report->resolve_content ) ); ?>
+				<?php echo bb_autop( $report->resolve_content ); ?>
 			</td>
 			<td class="action">
 				<a target="_blank" href="<?php post_link( $report->reported_post ); ?>"><?php _e( 'View reported post', 'bbpress-moderation-suite' ); ?></a>
@@ -309,22 +318,22 @@ $options = $bbmodsuite_cache['report'];
 <?php
 	foreach ( $reports as $report ) {
 		$resolve_url = bb_nonce_url(
-						bb_get_uri(
-										'bb-admin/admin-base.php',
-										array(
-											'page' => 'resolve_reports',
-											'report' => $report->ID,
-											'plugin' => 'bbpress_moderation_suite_report',
-										),
-										BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
-						), 'bbmodsuite-report-resolve_' . $report->ID
+			bb_get_uri(
+				'bb-admin/admin-base.php',
+				array(
+					'page' => 'resolve_reports',
+					'report' => $report->ID,
+					'plugin' => 'bbpress_moderation_suite_report',
+				),
+				BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
+			), 'bbmodsuite-report-resolve_' . $report->ID
 		);
 ?>
 
 		<tr<?php alt_class( 'reported_post' ); ?>>
 			<td><?php echo get_user_display_name( $report->report_from ); ?></td>
 			<td><strong><?php echo $reasons[$report->report_reason]; ?></strong>
-				<?php echo stripslashes( bb_autop( $report->report_content ) ); ?>
+				<?php echo bb_autop( $report->report_content ); ?>
 			</td>
 			<td class="action">
 				<a target="_blank" href="<?php post_link( $report->reported_post ); ?>"><?php _e( 'View reported post', 'bbpress-moderation-suite' ); ?></a><br />

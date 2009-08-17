@@ -151,7 +151,7 @@ function bbpress_moderation_suite_warning() {
 					'from'  => bb_get_current_user_info( 'ID' ),
 					'type'  => $warn_type,
 					'date'  => time(),
-					'notes' => bb_autop( htmlspecialchars( trim( $_POST['warn_content'] ) ) ),
+					'notes' => bb_autop( htmlspecialchars( trim( bbmodsuite_stripslashes( $_POST['warn_content'] ) ) ) ),
 					'post'  => $_GET['post'],
 				);
 				bbmodsuite_warning_update_user_ban( $_GET['user'], count( $warnings ) );

@@ -23,7 +23,7 @@ function bbmodsuite_banplus_uninstall() {
 /**
  * bbmodsuite_banplus_set_ban() - Set a ban on a user
  *
- * @param int|string $user_id The ID or username of the user to ban.
+ * @param int|string $user_id The ID of the user to ban or an IP address or CIDR range with the prefix ip_.
  * @param string $type 'temp' for temporary. Other plugins can add more.
  * @param int $length How long the ban should be in seconds. Defaults to 1 day.
  * @param string $notes The reason for the ban.
@@ -36,19 +36,21 @@ function bbmodsuite_banplus_set_ban( $user_id, $type = 'temp', $length = 86400, 
 	$the_options = $bbmodsuite_cache['banplus']['options'];
 	if ( !bb_current_user_can( $the_options['min_level'] ) )
 		return false;
-	$user_id = bb_get_user_id( $user_id );
-	if ( !$user_id )
-		return false;
-	if ( $user_id === bb_get_current_user_info( 'ID' ) )
-		return false;
+	if ( strpos( $user_id, 'ip_' ) === false ) {
+		$user_id = bb_get_user_id( $user_id );
+		if ( !$user_id )
+			return false;
+		if ( $user_id === bb_get_current_user_info( 'ID' ) )
+			return false;
 
-	if ( class_exists( 'BP_User' ) )
-		$user = new BP_User( $user_id );
-	else
-		$user = new WP_User( $user_id );
+		if ( class_exists( 'BP_User' ) )
+			$user = new BP_User( $user_id );
+		else
+			$user = new WP_User( $user_id );
 
-	if ( ( $user->has_cap( 'moderate' ) && !bb_current_user_can( 'administrate' ) ) || ( $user->has_cap( 'administrate' ) && !bb_current_user_can( 'use_keys' ) ) )
-		return false;
+		if ( ( $user->has_cap( 'moderate' ) && !bb_current_user_can( 'administrate' ) ) || ( $user->has_cap( 'administrate' ) && !bb_current_user_can( 'use_keys' ) ) )
+			return false;
+	}
 
 	$current_bans = $bbmodsuite_cache['banplus']['bans'];
 	if ( $type === 'unban' ) {
@@ -111,6 +113,27 @@ function bbmodsuite_banplus_init() {
 }
 bbmodsuite_banplus_init();
 
+function bbmodsuite_banplus_maybe_block_ip() {
+	$cur_ip = vsprintf( '%08b%08b%08b%08b', explode( '.', $_SERVER['REMOTE_ADDR'] ) );
+	global $bbmodsuite_cache;
+	$current_bans = $bbmodsuite_cache['banplus']['bans'];
+	foreach ( $current_bans as $id => $ban ) {
+		if ( strpos( $id, 'ip_' ) !== false ) {
+			list( $ip, $cidr ) = explode( '/', substr( $id, 3 ) );
+			if ( !$cidr )
+				$cidr = 32;
+			$ip = vsprintf( '%08b%08b%08b%08b', explode( '.', $ip ) );
+			if ( substr( $ip, 0, $cidr ) == substr( $ip, 0, $cidr ) ) {
+				if ( bb_get_template( 'ban-plus-ip.php', false ) ) {
+					bb_load_template( 'ban-plus-ip.php', array( 'ban' => $ban, 'ban_ip' => substr( $id, 3 ) ), $ban );
+					exit;
+				}
+				bb_die( sprintf( __( 'Your IP address (%s) is banned from this forum until %s from now.  The person who banned %s said the reason was: </p>%s<p>If you are a moderator or administrator, you can still <a href="%s">log in</a>.', 'bbpress-moderation-suite' ), $_SERVER['REMOTE_ADDR'], substr( $id, 3 ), bb_since( time() * 2 - $ban['until'], true ), $ban['notes'], bb_get_uri( 'bb-login.php', null, BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_USER_FORMS ) ) );
+			}
+		}
+	}
+}
+
 function bbmodsuite_banplus_maybe_block_user() {
 	global $bbmodsuite_cache;
 	$current_bans = $bbmodsuite_cache['banplus']['bans'];
@@ -122,11 +145,12 @@ function bbmodsuite_banplus_maybe_block_user() {
 					exit;
 				}
 				bb_die( sprintf( __( 'You are banned from this forum until %s from now.  The person who banned you said the reason was: %s', 'bbpress-moderation-suite' ), bb_since( time() * 2 - $current_bans[bb_get_current_user_info( 'ID' )]['until'], true ), $current_bans[bb_get_current_user_info( 'ID' )]['notes'] ) );
-				break;
 		}
 	}
+	if ( !bb_current_user_can( 'moderate' ) ) // Moderators and up are excempt from IP bans.
+		bbmodsuite_banplus_maybe_block_ip();
 }
-if ( bb_get_location() != 'login-page' ) // Let them log out
+if ( bb_get_location() != 'login-page' ) // Let them log in and out
 	bbmodsuite_banplus_maybe_block_user();
 
 function bbmodsuite_banplus_get_ban_types() {
@@ -163,12 +187,81 @@ function bbpress_moderation_suite_ban_plus() { ?>
 <h2><?php _e( 'Ban Plus', 'bbpress-moderation-suite' ); ?></h2>
 <div class="table-filter">
 	<a<?php if ( !in_array( $_GET['page'], array( 'new_ban', 'admin' ) ) ) echo ' class="current"'; ?> href="<?php echo bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_ban_plus', 'page' => 'current_bans' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>"><?php _e( 'Current bans', 'bbpress-moderation-suite' ); ?> <span class="count">(<?php echo bb_number_format_i18n( $GLOBALS['bbmodsuite_cache']['banplus']['bans'] ); ?>)</span></a> |
-	<a<?php if ( $_GET['page'] === 'new_ban' ) echo ' class="current"'; ?> href="<?php echo bb_nonce_url( bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_ban_plus', 'page' => 'new_ban' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ), 'bbmodsuite-banplus-new' ); ?>"><?php _e( 'Ban a user', 'bbpress-moderation-suite' ); ?></a>
+	<a<?php if ( $_GET['page'] === 'new_ban' ) echo ' class="current"'; ?> href="<?php echo bb_nonce_url( bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_ban_plus', 'page' => 'new_ban' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ), 'bbmodsuite-banplus-new' ); ?>"><?php _e( 'Ban a user', 'bbpress-moderation-suite' ); ?></a> |
+	<a<?php if ( $_GET['page'] === 'new_ip_ban' ) echo ' class="current"'; ?> href="<?php echo bb_nonce_url( bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_ban_plus', 'page' => 'new_ip_ban' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ), 'bbmodsuite-banplus-new-ip' ); ?>"><?php _e( 'Ban an IP address', 'bbpress-moderation-suite' ); ?></a>
 	<?php if ( bb_current_user_can( 'use_keys' ) ) { ?>| <a<?php if ( $_GET['page'] === 'admin' ) echo ' class="current"'; ?> href="<?php echo bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_ban_plus', 'page' => 'admin' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>"><?php _e( 'Administration', 'bbpress-moderation-suite' ); ?></a><?php } ?>
 </div>
 <?php switch ( $_GET['page'] ) {
+	case 'new_ip_ban':
+		if ( strtoupper( $_SERVER['REQUEST_METHOD'] ) == 'GET' ) {
+			if ( !bb_verify_nonce( $_GET['_wpnonce'], 'bbmodsuite-banplus-new-ip' ) ) { ?>
+<div class="error"><p><?php _e( 'Invalid banning attempt.', 'bbpress-moderation-suite' ); ?></p></div>
+<?php			return;
+			} ?>
+<form class="settings" method="post" action="<?php bb_uri( 'bb-admin/admin-base.php', array( 'page' => 'new_ip_ban', 'plugin' => 'bbpress_moderation_suite_ban_plus' ), BB_URI_CONTEXT_FORM_ACTION + BB_URI_CONTEXT_BB_ADMIN ); ?>">
+<fieldset>
+	<div>
+		<label for="ip">
+			<?php _e( 'IP address or CIDR range', 'bbpress-moderation-suite' ); ?>
+		</label>
+		<div>
+			<input id="ip" name="ip" type="text" class="text"/>
+			<p><?php printf( __( 'As an example, your IP address is %s. <a href="http://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing">CIDR ranges</a> are limited to /16-/32.', 'bbpress-moderation-suite' ), $_SERVER['REMOTE_ADDR'] ); ?></p>
+			<p><?php _e( 'Moderators, administrators, and key masters are not be affected by IP bans.', 'bbpress-moderation-suite' ); ?></p>
+		</div>
+	</div>
+	<div>
+		<label for="time">
+			<?php _e( 'Time', 'bbpress-moderation-suite' ); ?>
+		</label>
+		<div>
+			<input id="time" name="time" type="text" value="1" class="text short" />
+			<select id="time_multiplier" name="time_multiplier">
+				<option value="60"><?php _e( 'minutes', 'bbpress-moderation-suite' ); ?></option>
+				<option value="3600"><?php _e( 'hours', 'bbpress-moderation-suite' ); ?></option>
+				<option value="86400" selected="selected"><?php _e( 'days', 'bbpress-moderation-suite' ); ?></option>
+				<option value="604800"><?php _e( 'weeks', 'bbpress-moderation-suite' ); ?></option>
+				<option value="2592000"><?php _e( 'months', 'bbpress-moderation-suite' ); ?></option>
+			</select>
+			<p><?php _e( 'How long will the ban last?', 'bbpress-moderation-suite' ); ?></p>
+		</div>
+	</div>
+	<div>
+		<label for="notes">
+			<?php _e( 'Notes', 'bbpress-moderation-suite' ); ?>
+		</label>
+		<div>
+			<textarea id="notes" name="notes" rows="15" cols="43"></textarea>
+			<p><?php _e( 'Why are you banning this IP?  This might be shown to anyone who is blocked.', 'bbpress-moderation-suite' ); ?></p>
+		</div>
+	</div>
+</fieldset>
+<fieldset class="submit">
+	<?php bb_nonce_field( 'bbmodsuite-banplus-new-ip-submit' ); ?>
+	<input class="submit" type="submit" name="submit" value="<?php _e( 'Ban user', 'bbpress-moderation-suite' ); ?>" />
+</fieldset>
+</form>
+<?php	} elseif ( strtoupper( $_SERVER['REQUEST_METHOD'] ) == 'POST' && bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite-banplus-new-ip-submit' ) ) {
+			if ( !preg_match( '#^[12]?[0-9]{1,2}(\.[12]?[0-9]{1,2}){3}(/1[6-9]|/2[0-9]|/3[0-2])?$#', $_POST['ip'] ) ) { ?>
+<div class="error"><p><?php _e( 'Invalid IP. IP addresses must be <a href="http://en.wikipedia.org/wiki/IPv4">IPv4</a> with optional <a href="http://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing">CIDR</a>.', 'bbpress-moderation-suite' ); ?></p></div>
+<?php			return;
+			}
+
+			$time       = (int)$_POST['time'];
+			$multiplier = (int)$_POST['time_multiplier'];
+			$length     = $time * $multiplier;
+			$notes      = $_POST['notes'];
+			if ( bbmodsuite_banplus_set_ban( 'ip_' . $_POST['ip'], 'temp', $length, $notes ) ) {
+?>
+<div class="updated"><p><?php printf( __( 'The IP "%s" has been successfully banned.', 'bbpress-moderation-suite' ), $_POST['ip'] ); ?></p></div>
+<?php } else { ?>
+<div class="error"><p><?php _e( 'The banning attempt failed.', 'bbpress-moderation-suite' ); ?></p></div>
+<?php } } else { ?>
+<div class="error"><p><?php _e( 'Invalid banning attempt.', 'bbpress-moderation-suite' ); ?></p></div>
+<?php	}
+		break;
 	case 'new_ban':
-		if ( $_SERVER['REQUEST_METHOD'] === 'GET' ) {
+		if ( strtoupper( $_SERVER['REQUEST_METHOD'] ) == 'GET' ) {
 			if ( !bb_verify_nonce( $_GET['_wpnonce'], 'bbmodsuite-banplus-new' ) ) { ?>
 <div class="error"><p><?php _e( 'Invalid banning attempt.', 'bbpress-moderation-suite' ); ?></p></div>
 <?php			return;
@@ -274,7 +367,7 @@ jQuery(function($){
 	});
 });
 </script>
-<?php	} elseif ( $_SERVER['REQUEST_METHOD'] === 'POST' && bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite-banplus-new-submit' ) ) {
+<?php	} elseif ( strtoupper( $_SERVER['REQUEST_METHOD'] ) == 'POST' && bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite-banplus-new-submit' ) ) {
 			if ( !$user = bb_get_user( $_POST['user_id'] ) )
 				if ( !$user = bb_get_user( $_POST['user_id'], array( 'by' => 'nicename' ) ) )
 					if ( !$user = bb_get_user( $_POST['user_id'], array( 'by' => 'username' ) ) ) { ?>
@@ -294,8 +387,7 @@ jQuery(function($){
 <div class="updated"><p><?php printf( __( 'The user "%s" has been successfully banned.', 'bbpress-moderation-suite' ), $username ); ?></p></div>
 <?php } else { ?>
 <div class="error"><p><?php _e( 'The banning attempt failed.', 'bbpress-moderation-suite' ); ?></p></div>
-<?php } ?>
-<?php	} else { ?>
+<?php } } else { ?>
 <div class="error"><p><?php _e( 'Invalid banning attempt.', 'bbpress-moderation-suite' ); ?></p></div>
 <?php	}
 		break;
@@ -387,7 +479,7 @@ jQuery(function($){
 ?>
 
 		<tr<?php alt_class( 'banned_user' ); ?>>
-			<td><?php echo get_user_display_name( $user_id ); ?></td>
+			<td><?php echo strpos( $user_id, 'ip_' ) === false ? get_user_display_name( $user_id ) : ( strpos( $user_id, '/' ) ? '<strong>IP range:</strong> ' . substr( $user_id, 3 ) : '<strong>IP address:</strong> ' . substr( $user_id, 3 ) ); ?></td>
 			<td><?php echo get_user_display_name( $ban['banned_by'] ); ?></td>
 			<td><?php echo date( 'Y-m-d H:i:s', $ban['until'] ); ?></td>
 			<td><?php echo $ban['notes']; ?></td>

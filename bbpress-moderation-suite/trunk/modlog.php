@@ -338,9 +338,14 @@ function bbmodsuite_modlog_check_user_delete( $user_id ) {
 add_action( 'bb_delete_user', 'bbmodsuite_modlog_check_user_delete' );
 
 function bbmodsuite_modlog_check_banplus( $user_id, $ban ) {
-	bbmodsuite_modlog_log( sprintf( __( 'banned %s for %s. Notes: %s', 'bbpress-moderation-suite' ), get_user_display_name( $user_id ), bb_since( time() - $ban['length'] ), $ban['notes'] ), 'banplus' );
+	bbmodsuite_modlog_log( sprintf( __( 'banned %s for %s. Notes: %s', 'bbpress-moderation-suite' ), strpos( $user_id, 'ip_' ) === false ? get_user_display_name( $user_id ) : ( '<em>' . substr( $user_id, 3 ) . '</em>' ), bb_since( time() - $ban['length'] ), $ban['notes'] ), 'banplus' );
 }
 add_action( 'bbmodsuite_banplus_ban', 'bbmodsuite_modlog_check_banplus', 10, 2 );
+
+function bbmodsuite_modlog_check_banplus_unban( $user_id, $ban ) {
+	bbmodsuite_modlog_log( sprintf( __( 'unbanned %s %s early.', 'bbpress-moderation-suite' ), strpos( $user_id, 'ip_' ) === false ? get_user_display_name( $user_id ) : ( '<em>' . substr( $user_id, 3 ) . '</em>' ), bb_since( time() * 2 - $ban['until'] ) ), 'banplus' );
+}
+add_action( 'bbmodsuite_banplus_unban', 'bbmodsuite_modlog_check_banplus', 10, 2 );
 
 function bbmodsuite_modlog_set_topic_action_handler( $action, $content, $type ) {
 	add_action( $action, create_function( '$a', '$a = \'<a href="\' . get_topic_link( $a ) . \'">\' . get_topic_title( $a ) . \'</a>\'; bbmodsuite_modlog_log( sprintf( \'' . addslashes( $content ) . '\', $a ), ' . addslashes( $type ) . ' );' ) );

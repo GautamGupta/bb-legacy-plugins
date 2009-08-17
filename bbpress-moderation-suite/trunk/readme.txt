@@ -88,12 +88,18 @@ Here's an example of what a `ban-plus.php` template might look like:
 
 <?php bb_get_footer(); ?>`
 
+For IP bans, `ban-plus-ip.php` will be used if possible. The only difference is an additional global variable, `$ban_ip` which is the IP address or CIDR range that was banned.
+
 == Mod Log API ==
 To log other actions - for example, those caused by an unrelated plugin - use `bbmodsuite_modlog_log( $content, $type )`
 
 In order to define a new type, you will have to add a filter to `bbmodsuite_modlog_get_type_description` and return the user friendly version if the non-user friendly version is given. For example, you could return `Topic deletion` if the argument to the function is `topic_delete`, and otherwise just return the argument.
 
 == Changelog ==
+
+= 0.1-beta2 =
+* Mod Log now tracks unbanning as well as banning
+* IP addresses and CIDR ranges (from /16 to /32) can now be blocked
 
 = 0.1-beta1 =
 * [The Ban Plus "you've been banned" page can now be edited](http://bbpress.org/plugins/topic/bbpress-moderation-suite/other_notes/)
@@ -115,22 +121,22 @@ In order to define a new type, you will have to add a filter to `bbmodsuite_modl
 * Mod Log now logs topic deletion
 
 = 0.1-alpha5 =
-* Report "obtrusive mode" made optional. (See [this post](http://bbpress.org/plugins/topic/bbpress-moderation-suite/#post-2845))
-* Moderation Log added.
+* Report "obtrusive mode" made optional (See [this post](http://bbpress.org/plugins/topic/bbpress-moderation-suite/#post-2845))
+* Moderation Log added
 
 = 0.1-alpha4 =
-* Warning **actually works** now.
-* Options are now cached, so each individual mod helper will not ask the database for its options multiple times per pageload.
+* Warning **actually works** now
+* Options are now cached, so each individual mod helper will not ask the database for its options multiple times per pageload
 
 = 0.1-alpha3 =
 * Warning added. ***Early version, lots of bugs***
-* Report only uses one bb_options entry. The downside: You need to de- and re-activate this Moderation Helper, and it **will** forget your settings.
-* A few "idiot checks" have been added. Don't worry if you trigger one. It doesn't *necessarily* mean you're an idiot.
+* Report only uses one bb_options entry. The downside: You need to de- and re-activate this Moderation Helper, and it **will** forget your settings
+* A few "idiot checks" have been added. Don't worry if you trigger one. It doesn't *necessarily* mean you're an idiot
 
 = 0.1-alpha2 =
-* Ban Plus added.
-* Errors and messages look less weird.
-* Links to administration panels for each sub-plugin added.
+* Ban Plus added
+* Errors and messages look less weird
+* Links to administration panels for each sub-plugin added
 
 = 0.1-alpha1 =
 * First public release

@@ -50,7 +50,7 @@ foreach ($plugins as $status=>$data) {
 
 ?>
 <tr class=sortbottom>
-	<th nowrap>Total Plugins: <?php echo $count; ?></th><th nowrap>Authors: <?php echo count($authors); ?></th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th>
+	<th nowrap>Total Plugins: <?php echo $count; ?></th><th nowrap>Authors: <?php echo count($authors); ?></th><th><a href="http://bbshowcase.org/donate/">Donate</a></th><th>&nbsp;</th><th>&nbsp;</th>
 </tr>
 </table>
 

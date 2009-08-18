@@ -245,9 +245,11 @@ function create_bb_topic()
 {
 	$forum_id = bb_get_option('bbwp_forum_id');
 	$post_categories = unserialize(stripslashes($_POST['categories']));
-	foreach (unserialize(bb_get_option('bbwp_forum_categories')) as $category => $forum)
-		if (in_array($category, $post_categories))
-			$forum_id = $forum;
+	$accordance = unserialize(bb_get_option('bbwp_forum_categories'));
+	if (is_array($accordance))
+		foreach ($accordance as $category => $forum)
+			if (in_array($category, $post_categories))
+				$forum_id = $forum;
 	$topic_id = bb_insert_topic(array('topic_title' => stripslashes($_POST['topic']), 'forum_id' => $forum_id, 'tags' => stripslashes($_POST['tags'])));
 	remove_all_filters('pre_post');
 	$post_id = bb_insert_post(array('topic_id' => $topic_id, 'post_text' => stripslashes($_POST['post_content'])));

@@ -365,7 +365,7 @@ endswitch;
 
 <?php if ($total && count($users)>5) {echo $pagelinks;} ?>
 
-<p class="submit">
+<p class="submit" align="right">
 <input type="submit" class="deleted" name="mass_delete_users_delete_button" value="<?php _e('Delete Checked Users &raquo;') ?>" onclick="var numchecked = getNumChecked(document.getElementById('deleteusers')); if(numchecked < 1) { alert('<?php _e("Please select some users to delete"); ?>'); return false } return confirm('<?php printf(__("You are about to delete %s users  \\n  \'Cancel\' to stop, \'OK\' to delete."), "' + numchecked + '"); ?>')" />
 <?php /*
 <input type="submit" class="normal" name="mass_delete_users_undelete_button" value="<?php _e('Undelete Checked Users &raquo;') ?>" onclick="var numchecked = getNumChecked(document.getElementById('deleteusers')); if(numchecked < 1) { alert('<?php _e("Please select some users to undelete"); ?>'); return false } return confirm('<?php printf(__("You are about to undelete %s users  \\n  \'Cancel\' to stop, \'OK\' to undelete."), "' + numchecked + '"); ?>')" />

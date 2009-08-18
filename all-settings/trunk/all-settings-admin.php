@@ -8,8 +8,8 @@ if ( !bb_current_user_can('use_keys') )
 	?>
 
   <h2><?php _e('All Settings'); ?></h2>
-  <form name="form" action="<?php echo bb_get_admin_tab_link("all_settings"); ?>" method="post" id="all-settings">
-    
+  <form name="form" action="<?php echo bb_get_admin_tab_link("all_settings"); ?>" method="post" id="all-settings" class="settings">
+   
   <?php bb_nonce_field('all-settings') ?>
   <input type="hidden" name="action" value="update" />
   <table class="widefat">
@@ -70,10 +70,11 @@ endforeach;
 ?>
   </table>
 <?php $options_to_update = implode(',', $options_to_update); ?>
-<p class="submit"><input type="hidden" name="page_options" value="<?php echo $options_to_update; ?>" /><input type="submit" name="Update" value="<?php _e('Save Changes') ?>" /></p>
+<p class="submit"><input type="hidden" name="page_options" value="<?php echo $options_to_update; ?>" /><input class="submit" type="submit" name="Update" value="<?php _e('Save Changes') ?>" /></p>
 
 <p><small>(bb-config.php) indicates option is either currently set in bb-config.php or might only be changeable from there via <b>$bb->option="value";</b></small></p> 
-<p><small>(calcuated) indicates option has been determined by bbPress based on other options, might be changeable in bb-config.php</small></p>
+<p><small>(calculated) indicates option has been determined by bbPress based on other options, might be changeable in bb-config.php</small></p>
+  
   
   </form>
 

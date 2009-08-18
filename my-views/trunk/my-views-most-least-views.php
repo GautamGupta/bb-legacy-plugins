@@ -58,7 +58,7 @@ if ($view=='least-views' || $view=='most-views')  {
 }
 
 function forums_views_append($forums) {
-	if (!is_front() && !is_forum()) {return;}
+	if (!is_front() && !is_forum()) {return $forums;}
 	global $bbdb, $forums_views; 
 	if (empty($forums_views)) {$forums_views=bb_get_option('forums_views');}
 	if (empty($forums_views) || floor($forums_views[0]/300)!=floor(time()/300)) {

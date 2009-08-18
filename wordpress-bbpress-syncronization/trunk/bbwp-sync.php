@@ -4,7 +4,7 @@ Plugin Name: bbPress-WordPress syncronization
 Plugin URI: http://bobrik.name/code/wordpress/wordpress-bbpress-syncronization/
 Description: Sync your WordPress comments to bbPress forum and back.
 Author: Ivan Babrou <ibobrik@gmail.com>
-Version: 0.7.7
+Version: 0.7.8
 Author URI: http://bobrik.name
 
 Copyright 2008 Ivan Babroŭ (email : ibobrik@gmail.com)
@@ -27,8 +27,8 @@ Boston, MA 02111-1307, USA.
 
 
 // for version checking
-$bbwp_version = 77;
-$min_version = 60;
+$bbwp_version = 78;
+$min_version = 78;
 
 require_once(dirname(__FILE__).'/../../bb-load.php');
 
@@ -71,6 +71,7 @@ function bbwp_send_command($pairs = array())
 			$pairs['user'] = 0;
 		}
 	}
+	$answer = '';
 	if (substr($url, 0, 5) == 'https')
 	{
 		// must use php-curl to work with https
@@ -81,7 +82,6 @@ function bbwp_send_command($pairs = array())
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
 		$answer = curl_exec($ch);
 		curl_close($ch);
-		return $answer;
 	} else
 	{
 		$port = $matches[3] ? $matches[3] : 80;
@@ -107,8 +107,10 @@ function bbwp_send_command($pairs = array())
 			fclose($fs);
 			$response = explode("\r\n\r\n", $response, 2);
 		}
-		return $response[1];
+		$answer = $response[1];
 	}
+	// f*cking windows dirty hacks. hate you, dumb idiots from micro$oft!
+	return trim(trim($answer, "\xEF\xBB\xBF"));
 }
 
 function bbwp_test_pair()
@@ -241,7 +243,12 @@ function bbwp_get_real_post_status($id)
 
 function create_bb_topic()
 {
-	$topic_id = bb_insert_topic(array('topic_title' => stripslashes($_POST['topic']), 'forum_id' => bb_get_option('bbwp_forum_id'), 'tags' => stripslashes($_POST['tags'])));
+	$forum_id = bb_get_option('bbwp_forum_id');
+	$post_categories = unserialize(stripslashes($_POST['categories']));
+	foreach (unserialize(bb_get_option('bbwp_forum_categories')) as $category => $forum)
+		if (in_array($category, $post_categories))
+			$forum_id = $forum;
+	$topic_id = bb_insert_topic(array('topic_title' => stripslashes($_POST['topic']), 'forum_id' => $forum_id, 'tags' => stripslashes($_POST['tags'])));
 	remove_all_filters('pre_post');
 	$post_id = bb_insert_post(array('topic_id' => $topic_id, 'post_text' => stripslashes($_POST['post_content'])));
 	bb_delete_post($post_id, status_wp2bb($_POST['comment_approved']));
@@ -524,11 +531,44 @@ function bbwp_options()
 							echo '<option value="'.$forum->forum_id.'"'.
 								($forum_id == $forum->forum_id ? ' selected="selected"':'').
 								'>'.$forum->forum_name.'</option>';
-						?>
+					?>
 				</select>
 				<p><?php
 					echo ($err == 3 ? '<b>' : '').
 						__('You need to set the forum for syncronization.', 'bbwp-sync').
+						($err == 3 ? '</b>' : '');
+				?></p>
+			</div>
+		</div>
+		<div>
+			<label for="forum_categories">
+				<?php _e('Category-Forum accordance:', 'bbwp-sync') ?>
+			</label>
+			<div class="inputs">
+				<textarea name="forum_categories" id="forum_categories" rows="10" cols="40"><?php
+						if (isset($_POST['submit']) && bbwp_check_categories('check', $_POST['forum_categories']) != 0)
+						{
+							// editing field
+							echo implode("\n", bbwp_check_categories('fix', $_POST['forum_categories']));
+						} else
+						{
+							// gettin' info from db
+							if (isset($_POST['submit']))
+							{
+								$accordance = bbwp_get_cat_accordance($_POST['forum_categories']);
+								bb_update_option('bbwp_forum_categories', serialize($accordance));
+							} else {
+								$accordance = unserialize(bb_get_option('bbwp_forum_categories'));
+							}
+							$wp_categories = unserialize(bbwp_send_command(array('action' => 'get_categories')));
+							if (is_array($accordance))
+								foreach ($accordance as $cat_id => $forum_id)
+									echo $wp_categories[$cat_id].' => '.$forum_id."\n";
+						}
+				?></textarea>
+				<p><?php
+					echo ($err == 3 ? '<b>' : '').
+						__('This is optional. Use nex syntax: «Category name => forum_id», one option per line.', 'bbwp-sync').
 						($err == 3 ? '</b>' : '');
 				?></p>
 			</div>
@@ -728,11 +768,88 @@ function check_bb_settings()
 	if (!bb_get_user(bb_get_option('bbwp_anonymous_user_id')))
 		return 4; // anonymous user id not found
 	$active_plugins = $bbdb->get_var('SELECT meta_value FROM '.$bbdb->prefix.'meta WHERE object_type = "bb_option" AND meta_key = "active_plugins"');
-	if (strpos($active_plugins, bb_plugin_basename(__FILE__)) === false)
+	// slashes must be identical. may be strange in 0.0000000000000000001% of situations
+	if (strpos(str_replace('\\', '/', $active_plugins), str_replace(bb_plugin_basename(__FILE__), '\\', '/')) === false)
 		return 5; // bbpress part not activated
 	if (!correct_wpbb_version())
 		return 6;
 	return 0; // everything is ok
+}
+
+function bbwp_check_categories($target, $data)
+{
+	// checking text, not serialized data from db
+	// target may be 'check' or 'fix'
+	// if 'fix', returns corrected text
+	global $bbdb;
+	$wp_categories = unserialize(bbwp_send_command(array('action' => 'get_categories')));
+	$new_lines = array();
+	foreach (explode("\n", $data) as $acc)
+	{
+		$correct_line = true;
+		if (trim($acc) == '')
+			continue;
+		$pos = strpos($acc, ' => ');
+		if ($pos === false)
+		{
+			if ($target == 'check')
+			{
+				return 1;
+			} else
+			{
+				$correct_line = false;
+				$new_lines[] = '['.__('Invalid line', 'bbwp-sync').'] '.$acc;
+			}
+		}
+		$cat = substr($acc, 0, $pos);
+		if ($correct_line && !in_array($cat, $wp_categories))
+		{
+			if ($target == 'check')
+			{
+				return 2;
+			} else
+			{
+				$correct_line = false;
+				$new_lines[] = '['.__('Invalid category name', 'bbwp-sync').'] '.$acc;
+			}
+		}
+		$forum_id = $bbdb->get_row('SELECT * FROM '.$bbdb->prefix.'forums WHERE forum_id = '.((int) substr($acc, $pos+4)), ARRAY_A);
+		if ($correct_line && !$forum_id)
+		{
+			if ($target == 'check')
+			{
+				return 3;
+			} else
+			{
+				$correct_line = false;
+				$new_lines[] = '['.__('Invalid forum id', 'bbwp-sync').'] '.$acc;
+			}
+		}
+		if ($correct_line)
+			$new_lines[] = $acc;
+	}
+	if ($target == 'check')
+		return 0;
+	else
+		return $new_lines;
+}
+
+function bbwp_get_cat_accordance($data)
+{
+	$wp_categories = unserialize(bbwp_send_command(array('action' => 'get_categories')));
+	$accordance = array();
+	foreach (explode("\n", $data) as $acc)
+	{
+		$pos = strpos($acc, ' => ');
+		$cat = substr($acc, 0, $pos);
+		foreach ($wp_categories as $id => $name)
+			if ($name == $cat)
+			{
+				$accordance[$id] = (int) substr($acc, $pos+4);
+				break;
+			}
+	}
+	return $accordance;
 }
 
 function bb_status_error($code)
@@ -892,7 +1009,12 @@ function bbwp_correct_links($text)
 function bbwp_warning()
 {
 	if (bb_get_option('bbwp_plugin_status') != 'enabled')
-		echo '<div class="updated" id="message"><p><strong>'.__('Syncrinization with WordPress is not enabled.').'</strong> '.sprintf(__('You must <a href="%1$s">check options and enable plugin</a> to make it working.'), 'admin-base.php?plugin=bbwp_options').'</p></div>';
+		echo '<div class="updated" id="message"><p><strong>'.__('Synchronization with WordPress is not enabled.').'</strong> '.sprintf(__('You must <a href="%1$s">check options and enable plugin</a> to make it work.'), 'admin-base.php?plugin=bbwp_options').'</p></div>';
+	$request = array(
+		'action' => 'get_categories'
+	);
+	$answer = bbwp_send_command($request);
+	error_log(print_r(unserialize($answer), true));
 }
 
 

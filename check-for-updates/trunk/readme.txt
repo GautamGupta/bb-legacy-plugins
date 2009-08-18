@@ -43,3 +43,7 @@ Avoid plugin security issues and bugs by checking periodically.
 = Version 0.0.2 (2009-04-09) =
 
 *   first try CURL before fallback to fsockopen, also check BB_PLUGIN_DIR as well as BBPLUGINDIR before fallback to bb-plugins
+
+= Version 0.0.3 (2009-08-18) =
+
+*   switch to API for admin menu insert (required for 1.0.3 compatibility)

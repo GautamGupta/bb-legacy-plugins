@@ -52,8 +52,21 @@ if (substr($_SERVER['PHP_SELF'], -13) != 'bbwp-sync.php')
 }
 
 
+// action => answer
+// for actions that only return data and don't change their arguments
+$bbwp_cachable_requests = array(
+	'test' => '',
+	'keytest' => '',
+	'get_wpbb_version' => '',
+	'get_categories' => '',
+	'check_wp_settings' => ''
+);
+
 function bbwp_send_command($pairs = array())
 {
+	global $bbwp_cachable_requests;
+	if (isset($bbwp_cachable_requests[$pairs['action']]) && !empty($bbwp_cachable_requests[$pairs['action']]))
+		return $bbwp_cachable_requests[$pairs['action']];
 	$url = bb_get_option('bbwp_wordpress_url')."?wpbb-listener";
 	preg_match('@https?://([\-_\w\.]+)+(:(\d+))?/(.*)@', $url, $matches);
 	if (!$matches)
@@ -110,7 +123,9 @@ function bbwp_send_command($pairs = array())
 		$answer = $response[1];
 	}
 	// f*cking windows dirty hacks. hate you, dumb idiots from micro$oft!
-	return trim(trim($answer, "\xEF\xBB\xBF"));
+	$answer = trim(trim($answer, "\xEF\xBB\xBF"));
+	$bbwp_cachable_requests[$pairs['action']] = $answer;
+	return $answer;
 }
 
 function bbwp_test_pair()
@@ -153,7 +168,7 @@ function bbwp_listener()
 	{
 		bb_set_current_user(bb_get_option('bbwp_anonymous_user_id'));
 	}
-	//error_log("GOT COMMAND for bbPress part: ".$_POST['action']);
+	// error_log("GOT COMMAND for bbPress part: ".$_POST['action']);
 	if ($_POST['action'] == 'test')
 	{
 		echo serialize(array('test' => 1));
@@ -250,11 +265,15 @@ function create_bb_topic()
 		foreach ($accordance as $category => $forum)
 			if (in_array($category, $post_categories))
 				$forum_id = $forum;
-	$topic_id = bb_insert_topic(array('topic_title' => stripslashes($_POST['topic']), 'forum_id' => $forum_id, 'tags' => stripslashes($_POST['tags'])));
+	$tags = stripslashes($_POST['tags']);
+	if (trim(bb_get_option('bbwp_crosspost_tag')) != '')
+		$tags .= ', '.bb_get_option('bbwp_crosspost_tag');
+	$topic_id = bb_insert_topic(array('topic_title' => stripslashes($_POST['topic']), 'forum_id' => $forum_id, 'tags' => $tags));
 	remove_all_filters('pre_post');
 	$post_id = bb_insert_post(array('topic_id' => $topic_id, 'post_text' => stripslashes($_POST['post_content'])));
 	bb_delete_post($post_id, status_wp2bb($_POST['comment_approved']));
 	$result = bbwp_add_table_item($_POST["post_id"], 0, $topic_id, $post_id, '', '', '');
+	bb_update_meta($topic_id, 'bbwp_sync', '1', 'topic');
 	$data = serialize(array("topic_id" => $topic_id, "post_id" => $post_id, "result" => $result));
 	echo $data;
 }
@@ -475,7 +494,7 @@ function bbwp_options()
 				<?php _e('WordPress url:', 'bbwp-sync') ?>
 			</label>
 			<div class="inputs">
-				<input class="text" name="wordpress_url" value="<?php echo bb_get_option('bbwp_wordpress_url'); ?>" />
+				<input class="text" id="wordpress_url" name="wordpress_url" value="<?php echo bb_get_option('bbwp_wordpress_url'); ?>" />
 				<p><?php
 				$err = check_bb_settings(); // only one error at once, let's show other if only previvous was fixed
 				if (!bb_get_option('bbwp_wordpress_url'))
@@ -501,7 +520,7 @@ function bbwp_options()
 				<?php _e('Secret key:', 'bbwp-sync') ?>
 			</label>
 			<div class="inputs">
-				<input class="text" name="secret_key" value="<?php echo bb_get_option('bbwp_secret_key'); ?>" />
+				<input class="text" id="secret_key" name="secret_key" value="<?php echo bb_get_option('bbwp_secret_key'); ?>" />
 				<p><?php
 				if ((!bb_get_option('bbwp_secret_key') && bbwp_secret_key_equal()) || ($err != 0 && $err != 2))
 				{
@@ -576,11 +595,20 @@ function bbwp_options()
 			</div>
 		</div>
 		<div>
+			<label for="crosspost_tag">
+				<?php _e('Crosspost tag:', 'bbwp-sync') ?>
+			</label>
+			<div class="inputs">
+				<input class="text" name="crosspost_tag" id="crosspost_tag" value="<?php echo bb_get_option('bbwp_crosspost_tag'); ?>" />
+				<p><?php _e('Optional. Crossposted from WordPress topics will have that tag. Leave empty to disable', 'bbwp-sync'); ?></p>
+			</div>
+		</div>
+		<div>
 			<label for="anonymous_user">
 				<?php _e('Anonymous user:', 'bbwp-sync') ?>
 			</label>
 			<div class="inputs">
-				<input class="text" name="anonymous_user" value="<?php echo bb_get_option('bbwp_anonymous_user_id'); ?>" />
+				<input class="text" id="anonymous_user" name="anonymous_user" value="<?php echo bb_get_option('bbwp_anonymous_user_id'); ?>" />
 				<p><?php
 					echo ($err == 4 ? '<b>' : '').
 						__('User id for posts on forum from unregistered users in WordPress', 'bbwp-sync').
@@ -593,7 +621,7 @@ function bbwp_options()
 				<?php _e('Sync all posts:', 'bbwp-sync') ?>
 			</label>
 			<div class="inputs">
-				<input type="checkbox" name="sync_all_posts"<?php echo (bb_get_option('bbwp_sync_all_posts') == 'enabled') ? ' checked="checked"' : '';?> />
+				<input type="checkbox" id="sync_all_posts" name="sync_all_posts"<?php echo (bb_get_option('bbwp_sync_all_posts') == 'enabled') ? ' checked="checked"' : '';?> />
 				<p><?php _e('Sync post even if not approved. Post will have the same status in WordPress', 'bbwp-sync'); ?></p>
 			</div>
 		</div>
@@ -612,17 +640,17 @@ function bbwp_options()
 				<?php _e('Sync posts back:', 'bbwp-sync') ?>
 			</label>
 			<div class="inputs">
-				<input type="checkbox" name="sync_posts_back"<?php echo (bb_get_option('bbwp_sync_posts_back') == 'enabled') ? ' checked="checked"' : '';?> />
+				<input type="checkbox" id="sync_posts_back" name="sync_posts_back"<?php echo (bb_get_option('bbwp_sync_posts_back') == 'enabled') ? ' checked="checked"' : '';?> />
 				<p><?php _e('You may disable syncing posts from forum back to WordPress. You need to have a good reason to do that', 'bbwp-sync'); ?></p>
 			</div>
 		</div>
 		<div>
-			<label for="enable_plugin" style="font-weight:bold">
+			<label for="plugin_status" style="font-weight:bold">
 				<?php _e('Enable plugin', 'bbwp-sync'); ?>
 			</label>
 			<div class="inputs">
 			<?php $check = check_bbwp_settings(); if ($check['code'] != 0) bbwp_set_global_plugin_status('disabled'); ?>
-				<input type="checkbox" name="plugin_status"<?php echo (bb_get_option('bbwp_plugin_status') == 'enabled') ? ' checked="checked"' : ''; echo ($check['code'] == 0) ? '' : ' disabled="disabled"'; ?> />
+				<input type="checkbox" id="plugin_status" name="plugin_status"<?php echo (bb_get_option('bbwp_plugin_status') == 'enabled') ? ' checked="checked"' : ''; echo ($check['code'] == 0) ? '' : ' disabled="disabled"'; ?> />
 				<p><?php echo ($check['code'] == 0) ? __('Allowed by both parts', 'bbwp-sync') : __('Not allowed: ', 'bbwp-sync').$check['message'] ?></p>
 			</div>
 		</div>
@@ -641,6 +669,7 @@ function bbwp_process_options()
 	{
 		bb_update_option('bbwp_forum_id', (int) $_POST['forum_id']);
 		bb_update_option('bbwp_wordpress_url', $_POST['wordpress_url']);
+		bb_update_option('bbwp_crosspost_tag', $_POST['crosspost_tag']);
 		bb_update_option('bbwp_secret_key', $_POST['secret_key']);
 		bb_update_option('bbwp_anonymous_user_id', (int) $_POST['anonymous_user']);
 		bbwp_set_global_plugin_status($_POST['plugin_status'] == 'on' ? 'enabled' : 'disabled');
@@ -804,7 +833,7 @@ function bbwp_check_categories($target, $data)
 			}
 		}
 		$cat = substr($acc, 0, $pos);
-		if ($correct_line && !in_array($cat, $wp_categories))
+		if ($correct_line && (!is_array($wp_categories) || !in_array($cat, $wp_categories)))
 		{
 			if ($target == 'check')
 			{
@@ -921,7 +950,10 @@ function edit_wp_tags($post, $tags)
 function edit_bb_tags()
 {
 	bb_remove_topic_tags($_POST['topic']);
-	bb_add_topic_tags($_POST['topic'], $_POST['tags']);
+	$tags = stripslashes($_POST['tags']);
+	if (trim(bb_get_option('bbwp_crosspost_tag')))
+		$tags .= ', '.bb_get_option('bbwp_crosspost_tag');
+	bb_add_topic_tags($_POST['topic'], $tags);
 }
 
 function bbwp_pretagremove($id)
@@ -1020,7 +1052,6 @@ function bbwp_warning()
 		'action' => 'get_categories'
 	);
 	$answer = bbwp_send_command($request);
-	error_log(print_r(unserialize($answer), true));
 }
 
 

@@ -1000,12 +1000,16 @@ function bbwp_topic_anonymous_user($poster)
 function bbwp_correct_links($text)
 {
 	$siteurl = preg_replace('|(://[^/]+/)(.*)|', '${1}', bb_get_option('uri'));
+	if (substr($siteurl, -1) != '/')
+		$siteurl .= '/';
 	$current_url = substr($siteurl, 0, -1).preg_replace('|(.*/)[^/]*|', '${1}', $_SERVER['REQUEST_URI']);
+	if (substr($current_url, -1) != '/')
+		$current_url .= '/';
 	// ':' is for protocol handling, must be replaced by '(://)', but doesn't work :-(
 	// for absolute links with starting '/'
-	$text = preg_replace('|([(href)(src)])=(["\'])/([^"\':]+)\2|', '${1}=${2}'.$siteurl.'${3}${2}', $text);
+	$text = preg_replace('/(href|src)=(["\'])\/([^"\':]+)\2/', '${1}=${2}'.$siteurl.'${3}${2}', $text);
 	// for links not starting with '/'
-	return preg_replace('|([(href)(src)])=(["\'])([^"\':]+)\2|', '${1}=${2}'.$current_url.'${3}${2}', $text);
+	return preg_replace('/(href|src)=(["\'])([^"\':]+)\2/', '${1}=${2}'.$current_url.'${3}${2}', $text);
 }
 
 function bbwp_warning()

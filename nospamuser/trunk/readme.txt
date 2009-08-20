@@ -1,24 +1,34 @@
 === bb-NoSpamUser ===
 Contributors: Nightgunner5
 Tags: spam, user, login, protection, admin, registration
-Requires at least: 0.8
+Requires at least: 1.0
 Tested up to: trunk
 Stable tag: 0.7
 
 bb-NoSpamUser blocks potential spammers from registering on your forum.
 
 == Description ==
+bb-NoSpamUser blocks potential spammers from registering on your forum by checking with [Stop Forum Spam](http://www.stopforumspam.com/) for IP address, email address, and username.
 
-bb-NoSpamUser blocks potential spammers from registering on your forum. It compares the username and the email-address with the ones in the database at http://www.stopforumspam.com/ If it gets a positive result, it immediately prevents the potential spammer from registering on your forum.
-
-This is a port of a WordPress plugin.
+The spam checks are cached for 7 days to lessen the load on [Stop Forum Spam](http://www.stopforumspam.com/) and your own server. Optionally, a reCAPTCHA can be shown to lesser spammers to allow false positives to be bypassed.
 
 == Installation ==
-
-1. Upload `bb-nospamuser.php` to the `/my-plugins/` directory at the root of your forums.
-  * (if you don't have one, create one.)
-1. Activate the plugin through the `Plugins` menu in bbPress
+1. Upload the entire `nospamuser` folder to the `my-plugins` folder at the root of your forums.
+2. Activate the plugin through the `Plugins` menu in bbPress admin.
+3. Modify the settings in the administration panel.
 
 == Screenshots ==
-
 1. bb-NoSpamUser can block spammers via IP, email, or username.
+
+== Changelog ==
+= 0.8 =
+* Complete rewrite
+
+= 0.7 =
+* Minimum frequency setting added
+
+= 0.6 =
+* Changed to cURL, removed SimpleXML requirement
+
+= 0.4 =
+* Initial release

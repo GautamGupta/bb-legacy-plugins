@@ -105,7 +105,7 @@ function nospamuser_admin_parse() {
 	}
 }
 if ( strtoupper( $_SERVER['REQUEST_METHOD'] ) == 'POST' )
-	add_action( 'nospamuser_admin_pre_head' );
+	add_action( 'nospamuser_admin_pre_head', 'nospamuser_admin_parse' );
 
 function nospamuser_admin() {
 	$settings = bb_get_option( 'nospamuser-settings' );
@@ -147,13 +147,13 @@ function nospamuser_admin() {
 		),
 		'recaptcha_pub' => array(
 			'title' => __( 'reCAPTCHA public key', 'nospamuser' ),
-			'note' => sprintf( __( '<a href="%s">Get it here</a>.', 'nospamuser' ), add_query_arg( 'http://recaptcha.net/api/getkey', array( 'domain' => $_SERVER['SERVER_NAME'], 'app' => 'bb-NoSpamUser' ) ) ),
+			'note' => sprintf( __( '<a href="%s">Get it here</a>.', 'nospamuser' ), 'http://recaptcha.net/api/getkey?domain=' . urlencode( $_SERVER['SERVER_NAME'] ) . '&app=bb-NoSpamUser' ),
 			'class' => array( 'code', 'long' ),
 			'value' => $settings['recaptcha_pub']
 		),
 		'recaptcha_priv' => array(
 			'title' => __( 'reCAPTCHA private key', 'nospamuser' ),
-			'note' => sprintf( __( '<a href="%s">Get it here</a>.', 'nospamuser' ), add_query_arg( 'http://recaptcha.net/api/getkey', array( 'domain' => $_SERVER['SERVER_NAME'], 'app' => 'bb-NoSpamUser' ) ) ),
+			'note' => sprintf( __( '<a href="%s">Get it here</a>.', 'nospamuser' ), 'http://recaptcha.net/api/getkey?domain=' . urlencode( $_SERVER['SERVER_NAME'] ) . '&app=bb-NoSpamUser' ),
 			'class' => array( 'code', 'long' ),
 			'value' => $settings['recaptcha_priv']
 		)
@@ -178,13 +178,13 @@ foreach ( $options as $option => $args ) {
 function nospamuser_admin_add() {
 	bb_admin_add_submenu( __( 'bb-NoSpamUser', 'nospamuser' ), 'use_keys', 'nospamuser_admin', 'options-general.php' );
 }
-add_action( 'bb_menu_generator', 'nospamuser_admin_add' );
+add_action( 'bb_admin_menu_generator', 'nospamuser_admin_add' );
 
 function nospamuser_check( $type, $data ) {
 	$settings = bb_get_option( 'nospamuser-settings' );
 
 	if ( !is_array( $result = bb_get_transient( 'nospamuser-' . $type . '-' . md5( $data ) ) ) ) {
-		$ch = curl_init( add_query_arg( 'http://www.stopforumspam.com/api', array( $type => $data ) ) );
+		$ch = curl_init( 'http://www.stopforumspam.com/api?' . urlencode( $type ) . '=' . urlencode( $data ) );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 		$response = curl_exec( $ch );
 		curl_close( $ch );

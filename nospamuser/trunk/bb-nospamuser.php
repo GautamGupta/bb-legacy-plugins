@@ -2,7 +2,7 @@
 /*
 Plugin Name: bb-NoSpamUser
 Version: 0.8
-Plugin URI: http://nightgunner5.wordpress.com/tag/nospamuser/
+Plugin URI: http://nightgunner5.wordpress.com/tag/bb-nospamuser/
 Description: Prevents known spam users from registering on your forum.
 Author: Nightgunner5
 Author URI: http://llamaslayers.net/
@@ -20,7 +20,8 @@ if ( !function_exists( 'add_action' ) ) {
 		if ( $settings['recaptcha_mode'] == 'aggressive' )
 			exit;
 
-		require_once dirname( __FILE__ ) . '/recaptchalib.php';
+		if ( !function_exists( 'recaptcha_check_answer' ) ) // Compatibility with anything else that uses reCAPTCHA
+			require_once dirname( __FILE__ ) . '/recaptchalib.php';
 
 		$resp = recaptcha_check_answer( $settings['recaptcha_priv'], $_SERVER['REMOTE_ADDR'], $_POST['recaptcha_challenge_field'], $_POST['recaptcha_response_field'] );
 
@@ -169,7 +170,7 @@ foreach ( $options as $option => $args ) {
 	</fieldset>
 	<fieldset class="submit">
 		<?php bb_nonce_field( 'nospamuser-admin' ); ?>
-		<input class="submit" type="submit" name="submit" value="<?php _e('Save Changes') ?>" />
+		<input class="submit" type="submit" name="submit" value="<?php _e('Save Changes'); ?>" />
 	</fieldset>
 </form>
 <?php

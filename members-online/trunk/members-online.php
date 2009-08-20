@@ -86,7 +86,7 @@ if (empty($time)) {$time=time()-$members_online['timeout'];}
 	$results=$bbdb->get_results("SELECT ID,user_login FROM $bbdb->users LEFT JOIN $bbdb->usermeta ON ID=user_id WHERE meta_key='last_online' AND cast(meta_value AS unsigned)>'$time' ORDER BY meta_value DESC");
 	if (!empty($results)) {				
 		$output="";  $rewrite = bb_get_option( 'mod_rewrite' ); $bb_uri=bb_get_option('uri');
-		if (empty($rewrite)) {$uri=$bb_uri.bb_get_option('uri') . "profile.php?id=";} else {$uri=$bb_uri."profile/"; }
+		if (empty($rewrite)) {$uri=$bb_uri."profile.php?id=";} else {$uri=$bb_uri."profile/"; }
 		foreach ($results as $result) { $key=$result->ID; $value=$result->user_login;
 			if (empty($rewrite) || $rewrite !== 'slugs' ) {$stub=$key;} else {$stub= bb_user_nicename_sanitize($value);}
 			$output.=" <a rel='nofollow' href='".attribute_escape($uri.$stub)."'>$value</a>, ";

@@ -64,7 +64,7 @@ if ((defined('BB_IS_ADMIN') && BB_IS_ADMIN) || !(strpos($_SERVER['REQUEST_URI'],
 	if (isset($_GET['plugin']) && $_GET['plugin']=="mini_stats_admin") { // load entire core only when needed
 	@require_once("mini-stats-init.php");
 	} 
-	function mini_stats_admin_page() {global $mini_stats,$bb_submenu; $bb_submenu['content.php'][] = array(__('Mini Stats'), $mini_stats['level'], 'mini_stats_admin');}
+	function mini_stats_admin_page() {global $mini_stats; bb_admin_add_submenu( __('Mini Stats'), $mini_stats['level'], 'mini_stats_admin','content.php');}
 	add_action( 'bb_admin_menu_generator', 'mini_stats_admin_page',200);	// try to be last menu feature		
 }
 
@@ -105,7 +105,7 @@ if ($display>1) {
 $output.=" <span class='mini_stats_wrap mini_stats_member'>";
 if (!empty($results->latest)) {
 	$output.=__('Latest:');  $rewrite = bb_get_option( 'mod_rewrite' ); $bb_uri=bb_get_option('uri');
-	if (empty($rewrite)) {$uri=$bb_uri.bb_get_option('uri') . "profile.php?id=";} else {$uri=$bb_uri."profile/"; }
+	if (empty($rewrite)) {$uri=$bb_uri."profile.php?id=";} else {$uri=$bb_uri."profile/"; }
 	foreach ($results->latest as $key=>$value) {
 		if (empty($rewrite) || $rewrite !== 'slugs' ) {$stub=$key;} else {$stub= bb_user_nicename_sanitize($value);}
 		$output.=" <a href='".attribute_escape($uri.$stub)."'>$value</a>, ";

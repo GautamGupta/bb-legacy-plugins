@@ -34,6 +34,7 @@ RewriteRule ^pm/?(.*)$ /forums/my-plugins/bbpm/index.php?$1 [L]
 
 = 0.1-alpha6 =
 * Notices for incorrect my-plugins permissions and location.
+* Backend rewrite, now messages can have multiple recipients.
 * Admin styling fixed.
 = 0.1-alpha5 =
 * Various tweaks and fixes

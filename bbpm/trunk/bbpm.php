@@ -7,32 +7,25 @@ Version: 0.1-alpha6
 Author: Nightgunner5
 Author URI: http://llamaslayers.net/daily-llama/
 Text Domain: bbpm
-Domain Path: translations
+Domain Path: /translations/
 */
 
 load_plugin_textdomain( 'bbpm', dirname( __FILE__ ) . '/translations' );
 
-if ( version_compare( bb_get_option( 'version' ), '1.0-dev', '<' ) )
-	include_once dirname( __FILE__ ) . '/compat.php';
-
 class bbPM_Message {
 	private $read_link;
-	private $delete_link;
 	private $reply_link;
 
 	private $ID;
 	private $title;
-	private $read;
 	private $from;
-	private $to;
 	private $text;
 	private $date;
-	private $del_s;
-	private $del_r;
 	private $reply;
 	private $reply_to;
 	private $thread_depth;
 	private $exists;
+	private $thread;
 
 	function bbPM_Message( $ID ) {
 		global $bbpm, $bbdb;
@@ -58,16 +51,11 @@ class bbPM_Message {
 			$this->read_link    = BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?' . $row->pm_thread . '#pm-' . $row->ID;
 			$this->reply_link   = BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?' . $row->ID . '/reply';
 		}
-		$this->delete_link  = bb_nonce_url( BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/pm.php?delete=' . $row->ID, 'bbpm-delete-' . $row->ID );
 		$this->ID           = (int)$row->ID;
 		$this->title        = apply_filters( 'get_topic_title', $row->pm_title );
-		$this->read         = (bool)(int)$row->pm_read;
 		$this->from         = new BP_User( (int)$row->pm_from );
-		$this->to           = new BP_User( (int)$row->pm_to );
 		$this->text         = apply_filters( 'get_post_text', $row->pm_text );
 		$this->date         = (int)$row->sent_on;
-		$this->del_s        = (bool)(int)$row->del_sender;
-		$this->del_r        = (bool)(int)$row->del_reciever;
 		$this->reply        = (bool)(int)$row->reply_to;
 		$this->reply_to     = (int)$row->reply_to;
 		$this->thread_depth = (int)$row->thread_depth;
@@ -78,23 +66,13 @@ class bbPM_Message {
 	function __get( $varName ) {
 		return $this->$varName;
 	}
-
-	function delete() {
-		global $bbdb;
-
-		$bbdb->query( $bbdb->prepare( 'DELETE FROM `' . $bbdb->bbpm . '` WHERE `ID`=%d LIMIT 1', $this->ID ) );
-
-		if ( function_exists( 'wp_cache_delete' ) )
-			wp_cache_delete( $this->ID, 'bbpm' );
-	}
 }
 
 class bbPM {
 	var $settings;
 	private $version;
 	private $max_inbox;
-	private $current_id;
-	private $current_sent_id;
+	private $current_pm;
 	private $the_pm;
 	private $all_pm;
 
@@ -105,28 +83,28 @@ class bbPM {
 		// Put two slashes before the next line if you do not want a "PM this user" link in every profile.
 		add_action( 'bb_profile.php', array( &$this, 'profile_filter_action' ) );
 		// Put two slashes before each of the next two lines if you do not want a "PM this user" link under the author name of every post.
-		add_filter( 'post_author_title_link', array( &$this, 'post_title_filter' ), 10, 2 );
-		add_filter( 'post_author_title', array( &$this, 'post_title_filter' ), 10, 2 );
+		add_filter( 'post_author_title_link', array( &$this, 'post_title_filter' ), 11, 2 );
+		add_filter( 'post_author_title', array( &$this, 'post_title_filter' ), 11, 2 );
 
-		if ( $this->settings['auto_add_link'] )
-			add_filter( 'bb_logout_link', array( &$this, 'header_link' ) );
 		add_action( 'bb_admin_menu_generator', array( &$this, 'admin_add' ) );
 		add_filter( 'bb_template', array( &$this, 'template_filter' ), 10, 2 );
 
-		$this->current_id      = 0;
-		$this->current_sent_id = 0;
+		$this->current_pm = array();
 
 		$this->settings = bb_get_option( 'bbpm_settings' );
 		$this->version = $this->settings ? $this->settings['version'] : false;
 
-		if ( !$this->version || version_compare( $this->version, '0.1-alpha5', '<' ) )
+		if ( !$this->version || $this->version != '0.1-alpha6' )
 			$this->update();
+
+		if ( $this->settings['auto_add_link'] )
+			add_filter( 'bb_logout_link', array( &$this, 'header_link' ) );
 
 		$this->max_inbox = $this->settings['max_inbox'];
 	}
 
 	function __get( $varName ) {
-		if ( !in_array( $varName, array( 'version', 'max_inbox', 'current_id', 'current_sent_id', 'the_pm' ) ) )
+		if ( !in_array( $varName, array( 'version', 'max_inbox', 'current_pm', 'the_pm' ) ) )
 			return null;
 		return $this->$varName;
 	}
@@ -203,15 +181,34 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 					$bbdb->query( 'UPDATE `' . $bbdb->bbpm . '` SET `pm_thread`=\'' . $threads . '\' WHERE `ID` in (' . implode( ',', $this->update_helper_0_1_alpha4( $pm ) ) . ')' );
 				}
 
-			case '1.0-alpha4b':
+			case '0.1-alpha4b':
 				$this->settings['auto_add_link'] = true;
 
+			case '0.1-alpha5':
+				$threads_done = array();
+
+				$messages = $bbdb->get_results( 'SELECT * FROM `' . $bbdb->bbpm . '`' );
+
+				foreach ( $messages as $message ) {
+					if ( in_array( (int)$message->pm_thread, $threads_done ) )
+						continue;
+
+					$threads_done[] = (int)$message->pm_thread;
+
+					if ( $message->reply_to )
+						$message->pm_title = substr( $message->pm_title, 4 );
+
+					bb_update_meta( (int)$message->pm_thread, 'title', $message->pm_title, 'bbpm_thread' );
+					bb_update_meta( (int)$message->pm_thread, 'to', $message->pm_from == $message->pm_to ? ',' . $message->pm_to . ',' : ',' . $message->pm_from . ',' . $message->pm_to . ',', 'bbpm_thread' );
+					bb_update_meta( (int)$message->pm_thread, 'last_message', (int)$bbdb->get_var( $bbdb->prepare( 'SELECT `ID` FROM `' . $bbdb->bbpm . '` WHERE `pm_thread` = %d ORDER BY `ID` DESC LIMIT 1', $message->pm_thread ) ), 'bbpm_thread' );
+				}
+
 				// At the end of all of the updates:
-				$this->settings['version'] = '0.1-alpha5';
-				$this->version             = '0.1-alpha5';
+				$this->settings['version'] = '0.1-alpha6';
+				$this->version             = '0.1-alpha6';
 				bb_update_option( 'bbpm_settings', $this->settings );
 
-			case '1.0-alpha5':
+			case '0.1-alpha6':
 				// Do nothing, this is the newest version.
 		}
 	}
@@ -232,89 +229,173 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		return array_unique( $thread_items );
 	}
 
-	function count_pm( $user_id = 0, $sent = false, $unread_only = false ) {
+	function count_pm( $user_id = 0, $unread_only = false ) {
 		global $bbdb;
 
-		if ( $sent )
-			return (int)$bbdb->get_var( $bbdb->prepare( 'SELECT COUNT(*) FROM `' . $bbdb->bbpm . '` WHERE `pm_from`=%d AND `del_sender`=0' . ( $unread_only ? ' AND `pm_read`=0' : '' ), bb_get_user_id( $user_id ? $user_id : bb_get_current_user_info( 'ID' ) ) ) );
-		else
-			return (int)$bbdb->get_var( $bbdb->prepare( 'SELECT COUNT(*) FROM `' . $bbdb->bbpm . '` WHERE `pm_to`=%d AND `del_reciever`=0' . ( $unread_only ? ' AND `pm_read`=0' : '' ), bb_get_user_id( $user_id ? $user_id : bb_get_current_user_info( 'ID' ) ) ) );
+		$thread_member_of = (array)$bbdb->get_col( $bbdb->prepare( 'SELECT `object_id` FROM `' . $bbdb->meta . '` WHERE `object_type`=%s AND `meta_key`=%s AND `meta_value` LIKE %s ORDER BY `object_id` DESC', 'bbpm_thread', 'to', '%,' . $user_id . ',%' ) );
+		$threads = count( $thread_member_of );
+
+		if ( $unread_only )
+			foreach ( $thread_member_of as $thread )
+				if ( $this->get_last_read( $thread ) == $this->get_thread_meta( $thread, 'last_message' ) )
+					$threads--;
+
+		return $threads;
 	}
 
-	function have_pm() {
+	function pm_pages() {
+		return;
+
 		global $bbdb;
 
-		$pm_id = (int)$bbdb->get_var( $bbdb->prepare( 'SELECT `ID` FROM `' . $bbdb->bbpm . '` WHERE `pm_to`=%d AND `del_reciever`=0 ORDER BY `sent_on` DESC LIMIT ' . $this->current_id . ',1', bb_get_current_user_info( 'id' ) ) );
+		$total = $bbdb->get_var( $bbdb->prepare( 'SELECT COUNT(*) FROM `' . $bbdb->meta . '` WHERE `meta_value` LIKE %s AND `object_type`=%s', '%,' . bb_get_current_user_info( 'ID' ) . ',%', 'bbpm_thread' ) );
+	}
 
-		if ( $pm_id ) {
-			$this->current_id++;
-			$this->the_pm = new bbPM_Message( $pm_id );
-			return true;
+	function have_pm( $start = 0, $end = 0 ) {
+		$start = (int)$start;
+		$end   = (int)$end;
+
+		if ( $start < 0 )
+			$start = 0;
+
+		if ( $end < 1 )
+			$end = 2147483647;
+
+		if ( $start > $end )
+			return false;
+
+		$end -= $start;
+
+		if ( !isset( $this->current_pm[$start . '_' . $end] ) ) {
+			global $bbdb;
+
+			$threads = (array)$bbdb->get_col( $bbdb->prepare( 'SELECT `object_id` FROM `' . $bbdb->meta . '` WHERE `object_type`=%s AND `meta_key`=%s AND `meta_value` LIKE %s ORDER BY `object_id` DESC LIMIT ' . $start . ',' . $end, 'bbpm_thread', 'to', '%,' . bb_get_current_user_info( 'id' ) . ',%' ) );
+
+			$thread_members = (array)$bbdb->get_col( $bbdb->prepare( 'SELECT `meta_value` FROM `' . $bbdb->meta . '` WHERE `object_type`=%s AND `meta_key`=%s AND `meta_value` LIKE %s ORDER BY `object_id` DESC LIMIT ' . $start . ',' . $end, 'bbpm_thread', 'to', '%,' . bb_get_current_user_info( 'id' ) . ',%' ) );
+
+			$thread_titles = (array)$bbdb->get_col( $bbdb->prepare( 'SELECT `meta_value` FROM `' . $bbdb->meta . '` WHERE `object_type`=%s AND `meta_key`=%s AND `object_id` IN (' . implode( ',', array_map( 'intval', $threads ) ) . ') ORDER BY `object_id` DESC', 'bbpm_thread', 'title' ) );
+
+			$thread_messages = (array)$bbdb->get_col( $bbdb->prepare( 'SELECT `meta_value` FROM `' . $bbdb->meta . '` WHERE `object_type`=%s AND `meta_key`=%s AND `object_id` IN (' . implode( ',', array_map( 'intval', $threads ) ) . ') ORDER BY `object_id` DESC', 'bbpm_thread', 'last_message' ) );
+
+			$this->current_pm[$start . '_' . $end] = array();
+
+			foreach ( $threads as $i => $thread ) {
+				$this->current_pm[$start . '_' . $end][] = array( 'id' => (int)$thread, 'members' => array_filter( explode( ',', $thread_members[$i] ) ), 'title' => $thread_titles[$i], 'last_message' => (int)$thread_messages[$i] );
+			}
+
+			if ( $this->current_pm[$start . '_' . $end] ) {
+				$this->the_pm = reset( $this->current_pm[$start . '_' . $end] );
+				return true;
+			}
+			return false;
 		}
+
+		if ( $this->the_pm = next( $this->current_pm[$start . '_' . $end] ) )
+			return true;
 		return false;
 	}
 
-	function sent_pm() {
-		global $bbdb;
+	/**
+	 * @param int $id_reciever
+	 * @param string $title
+	 * @param string $message
+	 * @return string|bool The URL of the new message or false if any of the message boxes is full.
+	 */
+	function send_message( $id_reciever, $title, $message ) {
+		if ( $this->count_pm( $pm['pm_from'] ) > $this->max_inbox || $this->count_pm( $pm['pm_to'] ) > $this->max_inbox )
+			return false;
 
-		$pm_id = (int)$bbdb->get_var( $bbdb->prepare( 'SELECT `ID` FROM `' . $bbdb->bbpm . '` WHERE `pm_from`=%d AND `del_sender`=0 ORDER BY `sent_on` DESC LIMIT ' . $this->current_sent_id . ',1', bb_get_current_user_info( 'id' ) ) );
-
-		if ( $pm_id ) {
-			$this->current_sent_id++;
-			$this->the_pm = new bbPM_Message( $pm_id );
-			return true;
-		}
-		return false;
-	}
-
-	function send_message( $id_reciever, $title, $message, $reply_to = null ) { // Returns the url of the new message.
 		global $bbdb;
 
 		$pm = array(
-			'pm_title'  => attribute_escape( $title ),
 			'pm_from'   => (int)bb_get_current_user_info( 'ID' ),
-			'pm_to'     => (int)$id_reciever,
 			'pm_text'   => apply_filters( 'pre_post', $message ),
-			'sent_on'   => time(),
-			'pm_thread' => $bbdb->get_var( 'SELECT MAX( `pm_thread` ) FROM `' . $bbdb->bbpm . '`' ) + 1,
+			'sent_on'   => bb_current_time( 'timestamp' ),
+			'pm_thread' => $bbdb->get_var( 'SELECT MAX( `pm_thread` ) FROM `' . $bbdb->bbpm . '`' ) + 1
 		);
-
-		if ( $reply_to && $this->can_read_message( $reply_to ) && $this->can_read_message( $reply_to, (int)$id_reciever ) ) {
-			$pm['reply_to']     = (int)$reply_to;
-			$reply_to           = new bbPM_Message( $reply_to );
-			$pm['thread_depth'] = $reply_to->thread_depth + 1;
-			$pm['pm_thread']    = $reply_to->thread;
-		}
-
-		if ( $this->count_pm( $pm['pm_from'], true ) > $this->max_inbox || $this->count_pm( $pm['pm_to'] ) > $this->max_inbox )
-			return false;
 
 		$bbdb->insert( $bbdb->bbpm, $pm );
 
 		$msg = new bbPM_Message( $bbdb->insert_id );
 
-		bb_mail( bb_get_user_email( $id_reciever ), get_user_display_name( bb_get_current_user_info( 'ID' ) ) . ' has sent you a private message on ' . bb_get_option( 'name' ) . '!', 'Hello, ' . get_user_display_name( $id_reciever ) . '!
+		bb_update_meta( $pm['pm_thread'], 'title', $title, 'bbpm_thread' );
+		bb_update_meta( $pm['pm_thread'], 'to', bb_get_current_user_info( 'ID' ) == $id_reciever ? ',' . $id_reciever . ',' : ',' . bb_get_current_user_info( 'ID' ) . ',' . $id_reciever . ',', 'bbpm_thread' );
+
+		if ( bb_get_current_user_info( 'ID' ) != $id_reciever )
+			bb_mail( bb_get_user_email( $id_reciever ), get_user_display_name( bb_get_current_user_info( 'ID' ) ) . ' has sent you a private message on ' . bb_get_option( 'name' ) . '!', 'Hello, ' . get_user_display_name( $id_reciever ) . '!
 
 ' . get_user_display_name( bb_get_current_user_info( 'ID' ) ) . ' has sent you a private message on ' . bb_get_option( 'name' ) . '!
 
 To read it now, go to the following address:
 
 ' . $msg->read_link );
+		bb_update_meta( $pm['pm_thread'], 'last_message', $msg->ID, 'bbpm_thread' );
 
 		return $msg->read_link;
 	}
 
-	function get_thread( $id, $firstonly = false ) {
+	function send_reply( $reply_to, $message ) {
+		global $bbdb;
+
+		$reply_to = new bbPM_Message( $reply_to );
+
+		$pm = array(
+			'pm_from'      => (int)bb_get_current_user_info( 'ID' ),
+			'pm_text'      => apply_filters( 'pre_post', $message ),
+			'sent_on'      => bb_current_time( 'timestamp' ),
+			'pm_thread'    => $reply_to->thread,
+			'reply_to'     => (int)$reply_to->ID,
+			'thread_depth' => $reply_to->thread_depth + 1
+		);
+
+		$bbdb->insert( $bbdb->bbpm, $pm );
+
+		$msg = new bbPM_Message( $bbdb->insert_id );
+
+		bb_update_meta( $pm['pm_thread'], 'last_message', $msg->ID, 'bbpm_thread' );
+
+		$to = array_filter( explode( ',', $bbdb->get_var( $bbdb->prepare( 'SELECT `meta_value` FROM `' . $bbdb->meta . '` WHERE `meta_key` = %s AND `object_type` = %s AND `object_id` = %d', 'to', 'bbpm_thread', $pm['pm_thread'] ) ) ) );
+		foreach ( $to as $recipient ) {
+			bb_mail( bb_get_user_email( $recipient ), get_user_display_name( bb_get_current_user_info( 'ID' ) ) . ' has sent you a private message on ' . bb_get_option( 'name' ) . '!', 'Hello, ' . get_user_display_name( $recipient ) . '!
+
+' . get_user_display_name( bb_get_current_user_info( 'ID' ) ) . ' has sent you a private message on ' . bb_get_option( 'name' ) . '!
+
+To read it now, go to the following address:
+
+' . $msg->read_link );
+		}
+
+		return $msg->read_link;
+	}
+
+	private function _make_thread( $thread, $reply_to = null ) {
+		$ret = array();
+
+		foreach ( $thread as $pm ) {
+			if ( $pm->reply_to == $reply_to ) {
+				$ret[] = $pm->ID;
+				$ret = array_merge( $ret, $this->_make_thread( $thread, $pm->ID ) );
+			}
+		}
+
+		return $ret;
+	}
+
+	function get_thread( $id ) {
 		global $bbdb;
 
 		if ( !function_exists( 'wp_cache_get' ) || false === $thread_ids = wp_cache_get( (int)$id, 'bbpm-thread' ) ) {
-			$thread_ids = (array)$bbdb->get_col( $bbdb->prepare( 'SELECT `ID` FROM `' . $bbdb->bbpm . '` WHERE `pm_thread`=%d ORDER BY `ID`', $id ) );
+			$thread_posts = (array)$bbdb->get_results( $bbdb->prepare( 'SELECT * FROM `' . $bbdb->bbpm . '` WHERE `pm_thread` = %d ORDER BY `ID`', $id ) );
+
+			if ( function_exists( 'wp_cache_add' ) )
+				foreach ( $thread_posts as $pm )
+					wp_cache_add( (int)$pm->ID, $pm, 'bbpm' );
+
+			$thread_ids = $this->_make_thread( $thread_posts );
+
 			if ( function_exists( 'wp_cache_add' ) )
 				wp_cache_add( (int)$id, $thread_ids, 'bbpm-thread' );
 		}
-
-		if ( $firstonly )
-			return new bbPM_Message( $thread_ids[0] );
 
 		$thread = array();
 		foreach ( $thread_ids as $ID ) {
@@ -324,65 +405,56 @@ To read it now, go to the following address:
 		return $thread;
 	}
 
+	function get_thread_title( $thread_ID ) {
+		return $this->get_thread_meta( $thread_ID, 'title' );
+	}
+
+	function get_thread_members( $thread_ID ) {
+		return array_values( array_filter( explode( ',', $this->get_thread_meta( $thread_ID, 'to' ) ) ) );
+	}
+
 	function can_read_message( $ID, $user_id = 0 ) {
 		$msg = new bbPM_Message( $ID );
 		if ( !$msg->exists )
 			return false;
 
-		if ( !$user_id )
-			$user_id = bb_get_current_user_info( 'ID' );
-
-		if ( $msg->from->ID == $user_id && !$msg->del_s )
-			return 'from';
-		if ( $msg->to->ID == $user_id && !$msg->del_r )
-			return 'to';
-
-		return false;
+		return $this->can_read_thread( $msg->thread, $user_id );
 	}
 
 	function can_read_thread( $ID, $user_id = 0 ) {
-		$msg = $this->get_thread( $ID, true );
-
-		if ( !$msg->exists )
-			return false;
-
+		$user_id = (int)$user_id;
 
 		if ( !$user_id )
 			$user_id = bb_get_current_user_info( 'ID' );
 
-		if ( $msg->from->ID == $user_id && !$msg->del_s )
-			return 'from';
-		if ( $msg->to->ID == $user_id && !$msg->del_r )
-			return 'to';
-
-		return false;
+		global $bbdb;
+		return !!$bbdb->get_var( $bbdb->prepare( 'SELECT COUNT(*) FROM `' . $bbdb->meta . '` WHERE `object_type` = %s AND `object_id` = %d AND `meta_value` LIKE %s AND `meta_key` = %s', 'bbpm_thread', $ID, '%,' . $user_id . ',%', 'to' ) );
 	}
 
-	function delete_message( $ID ) {
+	function unsubscribe( $ID ) {
 		global $bbdb;
 
-		if ( !$who = $this->can_read_message( $ID ) )
-			bb_die( __( 'You can\'t delete that message!', 'bbpm' ) );
-
-		$msg = new bbPM_Message( $ID );
-
-		$total_delete = false;
-
-		if ( $who == 'from' ) {
-			if ( $msg->del_r ) {
-				$msg->delete();
-			} else {
-				$bbdb->update( $bbdb->bbpm, array( 'del_sender' => 1 ), compact( 'ID' ) );
-				if ( function_exists( 'wp_cache_delete' ) )
-					wp_cache_delete( $ID, 'bbpm' );
+		if ( $members = $this->get_thread_meta( $ID, 'to' ) ) {
+			if ( strpos( $members, ',' . bb_get_current_user_info( 'ID' ) . ',' ) !== false ) {
+				$members = str_replace( ',' . bb_get_current_user_info( 'ID' ), '', $members );
+				if ( $members == ',' ) {
+					$bbdb->query( $bbdb->prepare( 'DELETE FROM `' . $bbdb->bbpm . '` WHERE `pm_thread` = %d', $ID ) );
+					$bbdb->query( $bbdb->prepare( 'DELETE FROM `' . $bbdb->meta . '` WHERE `object_type` = %s AND `object_id` = %d', 'bbpm_thread', $ID ) );
+				} else {
+					bb_update_meta( $ID, 'to', $members, 'bbpm_thread' );
+				}
 			}
-		} else {
-			if ( $msg->del_s ) {
-				$msg->delete();
-			} else {
-				$bbdb->update( $bbdb->bbpm, array( 'del_reciever' => 1 ), compact( 'ID' ) );
-				if ( function_exists( 'wp_cache_delete' ) )
-					wp_cache_delete( $ID, 'bbpm' );
+		}
+	}
+
+	function add_member( $ID, $user ) {
+		global $bbdb;
+
+		if ( $members = $this->get_thread_meta( $ID, 'to' ) ) {
+			if ( strpos( $members, ',' . $user . ',' ) === false ) {
+				$members .= ',' . $user;
+				bb_update_meta( $ID, 'to', $members, 'bbpm_thread' );
+				bb_mail( bb_get_user_email( $user ), sprintf( __( '%s has added you to a conversation on %s!', 'bbpm' ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ) ), sprintf( __( "Hello, %s!\n%s has added you to a private message conversation on %s!\nTo read it now, go to the following address:\n%s", 'bbpm' ), get_user_display_name( $user ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ), bb_get_option( 'mod_rewrite' ) ? bb_get_uri( 'pm/' . $ID ) : BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?' . $ID ) );
 			}
 		}
 	}
@@ -440,7 +512,7 @@ To read it now, go to the following address:
 	}
 
 	function header_link( $link ) {
-		$count = $this->count_pm( bb_get_current_user_info( 'ID' ), false, true );
+		$count = $this->count_pm( bb_get_current_user_info( 'ID' ), true );
 
 		if ( $count )
 			return $link . ' | <big><a href="' . $this->get_link() . '">' . sprintf( _n( '1 new Private Message!', '%s new Private Messages!', $count, 'bbpm' ), bb_number_format_i18n( $count ) ) . '</a></big>';
@@ -448,8 +520,57 @@ To read it now, go to the following address:
 	}
 
 	function admin_add() {
-		global $bb_submenu;
-		$bb_submenu['options-general.php'][] = array( __( 'bbPM', 'bbpm' ), 'use_keys', 'bbpm_admin_page' );
+		bb_admin_add_submenu( __( 'bbPM', 'bbpm' ), 'use_keys', 'bbpm_admin_page', 'options-general.php' );
+	}
+
+	function get_last_read( $thread_ID ) {
+		return (int)bb_get_usermeta( bb_get_current_user_info( 'ID' ), 'bbpm_last_read_' . (int)$thread_ID );
+	}
+
+	function get_thread_meta( $thread_ID, $key ) {
+		global $bbdb;
+
+		if ( !function_exists( 'wp_cache_get' ) || false === $result = wp_cache_get( $key, 'bbpm-thread-' . $thread_ID ) ) {
+			$result = $bbdb->get_var( $bbdb->prepare( 'SELECT `meta_value` FROM `' . $bbdb->meta . '` WHERE `object_type` = %s AND `meta_key` = %s AND `object_id` = %d', 'bbpm_thread', $key, $thread_ID ) );
+
+			if ( function_exists( 'wp_cache_add' ) )
+				wp_cache_add( $key, $result, 'bbpm-thread-' . $thread_ID );
+		}
+
+		return $result;
+	}
+
+	function mark_read( $thread_ID ) {
+		bb_update_usermeta( bb_get_current_user_info( 'ID' ), 'bbpm_last_read_' . (int)$thread_ID, (int)$this->get_thread_meta( $thread_ID, 'last_message' ) );
+	}
+
+	/* Loop - Threads */
+	function thread_alt_class() {
+		alt_class( 'bbpm_threads', $this->the_pm['last_message'] == $this->get_last_read( $this->the_pm['id'] ) ? '' : 'unread_posts_row' );
+	}
+
+	function thread_freshness() {
+		$the_pm = new bbPM_Message( $this->the_pm['last_message'] );
+
+		echo bb_since( $the_pm->date );
+	}
+
+	function thread_unsubscribe_url() {
+		echo bb_nonce_url( BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/pm.php?unsubscribe=' . $this->the_pm['id'], 'bbpm-unsubscribe-' . $this->the_pm['id'] );
+	}
+
+	function thread_read_before() {
+		if ( $this->the_pm['last_message'] != $this->get_last_read( $this->the_pm['id'] ) ) {
+			echo '<span class="unread_posts">';
+
+			if ( !function_exists( 'utplugin_show_unread' ) )
+				echo '<strong>New:</strong> ';
+		}
+	}
+
+	function thread_read_after() {
+		if ( $this->the_pm['last_message'] != $this->get_last_read( $this->the_pm['id'] ) )
+			echo '</span>';
 	}
 }
 global $bbpm;
@@ -516,7 +637,7 @@ function bbPM_update_helper_helper_0_1_alpha4( $data ) {
 function bbpm_messages_link() {
 	global $bbpm;
 
-	$count = $bbpm->count_pm( bb_get_current_user_info( 'ID' ), false, true );
+	$count = $bbpm->count_pm( bb_get_current_user_info( 'ID' ), true );
 
 	if ( $count )
 		echo '<a class="pm-new-messages-link" href="' . $bbpm->get_link() . '">' . sprintf( _n( '1 new Private Message!', '%s new Private Messages!', $count, 'bbpm' ), bb_number_format_i18n( $count ) ) . '</a>';

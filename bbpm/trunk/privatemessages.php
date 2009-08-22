@@ -5,9 +5,9 @@ status_header( 200 );
 bb_auth( 'logged_in' ); // Is the user logged in?
 
 // Plugin compatibility
-remove_filter('topic_title', 'utplugin_show_unread');
-remove_filter('topic_link', 'utplugin_link_latest');
-remove_filter('post_text', 'utplugin_update_log');
+remove_filter( 'topic_title', 'utplugin_show_unread' );
+remove_filter( 'topic_link', 'utplugin_link_latest' );
+remove_filter( 'post_text', 'utplugin_update_log' );
 
 global $bbpm;
 
@@ -32,7 +32,7 @@ bb_get_header(); ?>
 </p>
 <p>
 	<label for="to"><?php _e( 'Send PM to:', 'bbpm' ); ?><br/></label>
-	<input name="to" type="text" id="to" size="50" maxlength="100" tabindex="2"<?php if ( $action ) echo ' value="' . urldecode( $action ) . '"'; ?> />
+	<input name="to" type="text" id="to" size="50" maxlength="100" tabindex="2"<?php if ( $action ) echo ' value="' . esc_attr( urldecode( $action ) ) . '"'; ?> />
 </p>
 <?php do_action( 'post_form_pre_post' ); ?>
 <p>
@@ -40,7 +40,7 @@ bb_get_header(); ?>
 	<textarea name="message" cols="50" rows="8" id="message" tabindex="3"></textarea>
 </p>
 <p class="submit">
-  <input type="submit" id="postformsub" name="Submit" value="<?php echo attribute_escape( __( 'Send Message &raquo;', 'bbpm' ) ); ?>" tabindex="4" />
+	<input type="submit" id="postformsub" name="Submit" value="<?php echo attribute_escape( __( 'Send Message &raquo;', 'bbpm' ) ); ?>" tabindex="4" />
 </p>
 
 <p><?php _e('Allowed markup:'); ?> <code><?php allowed_markup(); ?></code>. <br /><?php _e('You can also put code in between backtick ( <code>`</code> ) characters.'); ?></p>
@@ -55,56 +55,42 @@ bb_get_header(); ?>
 	if ( !(int)$get || ( ( !$bbpm->can_read_message( $get ) && $action == 'reply' ) || ( !$bbpm->can_read_thread( $get ) && $action != 'reply' ) ) ) {
 _e( 'Private Messages', 'bbpm' ); ?></h3>
 
-<h2><?php _e('Inbox', 'bbpm'); ?></h2>
+<h2><?php _e( 'Private Messages', 'bbpm' ); ?></h2>
 <table id="latest">
 <tr>
-	<th><?php _e('Subject', 'bbpm'); ?> &#8212; <a href="<?php $bbpm->new_pm_link(); ?>"><?php _e( 'New &raquo;', 'bbpm' ); ?></a></th>
-	<th><?php _e('From', 'bbpm'); ?></th>
-	<th><?php _e('Freshness'); ?></th>
-	<th><?php _e('Actions'); ?></th>
+	<th><?php _e( 'Subject', 'bbpm' ); ?> &#8212; <a href="<?php $bbpm->new_pm_link(); ?>"><?php _e( 'New &raquo;', 'bbpm' ); ?></a></th>
+	<th><?php _e( 'Members', 'bbpm' ); ?></th>
+	<th><?php _e( 'Freshness' ); ?></th>
+	<th><?php _e( 'Actions' ); ?></th>
 </tr>
 
-<?php
-while ($bbpm->have_pm()) {
-	$the_pm =& $bbpm->the_pm;
-?>
-<tr<?php alt_class( 'pm_inbox', $the_pm->read ? '' : 'unread_posts_row' ); ?>>
-	<td><a href="<?php echo $the_pm->read_link; ?>"><?php
-	if ( !$the_pm->read )
-		echo '<span class="unread_posts">';
-	echo $the_pm->title;
-	if ( !$the_pm->read )
-		echo '</span>';
+<?php while ( $bbpm->have_pm( 0, 30 ) ) { ?>
+<tr<?php $bbpm->thread_alt_class(); ?>>
+	<td><a href="<?php echo bb_get_option( 'mod_rewrite' ) ? bb_get_uri( 'pm/' . $bbpm->the_pm['id'] ) : BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?' . $bbpm->the_pm['id']; ?>"><?php
+	$bbpm->thread_read_before();
+	echo esc_html( $bbpm->the_pm['title'] );
+	$bbpm->thread_read_after();
 ?></a></td>
-	<td><a href="<?php echo get_user_profile_link( $the_pm->from->ID ); ?>"><?php echo apply_filters( 'post_author', apply_filters( 'get_post_author', empty( $the_pm->from->display_name ) ? $the_pm->from->data->user_login : $the_pm->from->display_name, $the_pm->from->ID ) ); ?></a></td>
-	<td><?php echo bb_since( $the_pm->date ); ?></td>
-	<td><a href="<?php echo $the_pm->delete_link; ?>"><?php _e( 'Delete', 'bbpm' ); ?></a></td>
+	<td><?php
+
+$first = true;
+
+foreach ( $bbpm->the_pm['members'] as $member ) {
+	if ( !$first )
+		echo ', ';
+	$first = false;
+
+	$user = new BP_User( (int)$member );
+
+?><a href="<?php echo get_user_profile_link( $user->ID ); ?>"><?php echo apply_filters( 'post_author', apply_filters( 'get_post_author', empty( $user->display_name ) ? $user->data->user_login : $user->display_name, $user->ID ) ); ?></a><?php
+}
+
+?></td>
+	<td><?php $bbpm->thread_freshness(); ?></td>
+	<td><a href="<?php $bbpm->thread_unsubscribe_url(); ?>"><?php _e( 'Unsubscribe', 'bbpm' ); ?></a></td>
 </tr>
 <?php } ?>
 </table>
-
-<h2><?php _e('Outbox', 'bbpm'); ?></h2>
-<table id="forumlist">
-<tr>
-	<th><?php _e('Subject', 'bbpm'); ?></th>
-	<th><?php _e('To', 'bbpm'); ?></th>
-	<th><?php _e('Freshness'); ?></th>
-	<th><?php _e('Actions'); ?></th>
-</tr>
-
-<?php
-while ( $bbpm->sent_pm() ) {
-	$the_pm =& $bbpm->the_pm;
-?>
-<tr<?php alt_class( 'pm_outbox' ); ?>>
-	<td><a href="<?php echo $the_pm->read_link; ?>"><?php echo $the_pm->title; ?></a></td>
-	<td><a href="<?php echo get_user_profile_link( $the_pm->to->ID ); ?>"><?php echo apply_filters( 'post_author', apply_filters( 'get_post_author', empty( $the_pm->to->display_name ) ? $the_pm->to->data->user_login : $the_pm->to->display_name, $the_pm->to->ID ) ); ?></a></td>
-	<td><?php echo bb_since( $the_pm->date ); ?></td>
-	<td><a href="<?php echo $the_pm->delete_link; ?>"><?php _e( 'Delete', 'bbpm' ); ?></a></td>
-</tr>
-<?php } ?>
-</table>
-
 <?php } else {
 	switch ( $action ) {
 		case 'reply':

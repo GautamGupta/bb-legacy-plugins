@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: bbPress Attachments
-Plugin URI: http://bbpress.org/plugins/topic/104
+Plugin URI: http://bbpress.org/plugins/topic/bb-attachments
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
@@ -88,6 +88,7 @@ $bb_attachments['db']="bb_attachments";   //   $bbdb->prefix."attachments";  // 
 
 add_action( 'bb_init', 'bb_attachments_init');
 add_action( 'bb_post.php', 'bb_attachments_process_post');
+add_action( 'bb-post.php', 'bb_attachments_process_post');
 add_action( 'bb_delete_post', 'bb_attachments_recount');
 add_filter('post_text', 'bb_attachments_bbcode',250);	
 
@@ -352,7 +353,7 @@ while(list($key,$value) = each($_FILES['bb_attachments']['name'])) {
     			if ($size>0 && $filename) {	// we still save the status code if any but don't copy file until status = 0
       								
 				$failed=$bbdb->get_var("
-				INSERT INTO ".$bb_attachments['db']." ( `time`  , `post_id` , `user_id`, `user_ip`, `status` , `size` , `ext` , `mime` , `filename` )
+				INSERT INTO ".$bb_attachments['db']." ( time  , post_id , user_id, user_ip, status , size , ext , mime , filename )
 				VALUES ('$time', '$post_id' ,  '$user_id' , inet_aton('$user_ip') , $status, '$size', '".addslashes($ext)."', '$mime', '".addslashes($filename)."')				
 				");
 				
@@ -402,7 +403,7 @@ while(list($key,$value) = each($_FILES['bb_attachments']['name'])) {
 		else {$status=2;}
 		if (!empty($tmp) && file_exists($tmp)) {@unlink($tmp);}	// never, ever, leave temporary file behind for security
 		if ($status>0) {
-			if ($id>0) {$bbdb->query("UPDATE ".$bb_attachments['db']." SET `status` = $status WHERE `id` = $id");}
+			if ($id>0) {$bbdb->query("UPDATE ".$bb_attachments['db']." SET 'status' = $status WHERE 'id' = $id");}
 			$error=""; if ($_FILES['bb_attachments']['error'][$key]>0) {$error=" (".$bb_attachments['errors'][$_FILES['bb_attachments']['error'][$key]].") ";}
 			$output.="<li><span style='color:red'><strong>$filename "." <span class='num'>(".round($size/1024,1)." KB)</span> ".__('error:')." ".$bb_attachments['status'][$status]."</strong>$error</span></li>";
 		} else {			
@@ -724,24 +725,24 @@ function bb_attachments_install() {
 global $bbdb,$bb_attachments; 
 $bbdb->query("CREATE TABLE IF NOT EXISTS ".$bb_attachments['db']." (
 		id		int(10)        UNSIGNED NOT NULL auto_increment,
-		time       	int(10)        UNSIGNED NOT NULL default 0,
-		post_id 	int(10)        UNSIGNED NOT NULL default 0,
-		user_id 	int(10)        UNSIGNED NOT NULL default 0,
-		user_ip 	int(10) 	       UNSIGNED NOT NULL default 0,
-		status       	tinyint(10) UNSIGNED NOT NULL default 0,
-		downloads 	int(10)         UNSIGNED NOT NULL default 0,
-		size        	int(10)         UNSIGNED NOT NULL default 0,
+		time       	int(10)        UNSIGNED NOT NULL default '0',
+		post_id 	int(10)        UNSIGNED NOT NULL default '0',
+		user_id 	int(10)        UNSIGNED NOT NULL default '0',
+		user_ip 	int(10) 	       UNSIGNED NOT NULL default '0',
+		status       	tinyint(10) UNSIGNED NOT NULL default '0',
+		downloads 	int(10)         UNSIGNED NOT NULL default '0',
+		size        	int(10)         UNSIGNED NOT NULL default '0',
 		ext 	     	varchar(255)           NOT NULL default '',
 		mime     	varchar(255) 	         NOT NULL default '',
 		filename     	varchar(255) 	         NOT NULL default '',
-		PRIMARY KEY (id),
-		INDEX (post_id)
+		PRIMARY KEY ( id ),
+		INDEX ( post_id )
 		) CHARSET utf8  COLLATE utf8_general_ci");	
 		
-$bbdb->query("ALTER TABLE `".$bb_attachments['db']."` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci,
-CHANGE `ext` `ext` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-CHANGE `mime` `mime` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-CHANGE `filename` `filename` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL");
+$bbdb->query("ALTER TABLE ".$bb_attachments['db']." DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci,
+CHANGE 'ext' 'ext' VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+CHANGE 'mime' 'mime' VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+CHANGE 'filename' 'filename' VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL");
 
 if (!file_exists($bb_attachments['path'])) {		// this usually fails for open_basedir or safe-mode but we'll give it a shot
 	$oldumask = umask(0);

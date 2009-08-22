@@ -13,7 +13,7 @@ Block spammers before they ever register on your forum.
 
 == Installation ==
 
-1. Upload the `project-honey-pot-for-bbpress` folder to your `my-plguins` folder.
+1. Upload the `php4bb` folder to your `my-plguins` folder.
 2. Activate the plugin through the Plugins menu in bbPress.
 3. Fill out the settings page.
 

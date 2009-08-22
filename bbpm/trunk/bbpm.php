@@ -504,7 +504,7 @@ To read it now, go to the following address:
 
 		if ( $members = $this->get_thread_meta( $ID, 'to' ) ) {
 			if ( strpos( $members, ',' . $user . ',' ) === false ) {
-				$members .= ',' . $user;
+				$members .= $user . ',';
 				bb_update_meta( $ID, 'to', $members, 'bbpm_thread' );
 				bb_mail( bb_get_user_email( $user ), sprintf( __( '%s has added you to a conversation on %s!', 'bbpm' ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ) ), sprintf( __( "Hello, %s!\n%s has added you to a private message conversation on %s!\nTo read it now, go to the following address:\n%s", 'bbpm' ), get_user_display_name( $user ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ), bb_get_option( 'mod_rewrite' ) ? bb_get_uri( 'pm/' . $ID ) : BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?' . $ID ) );
 			}

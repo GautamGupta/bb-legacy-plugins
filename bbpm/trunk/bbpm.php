@@ -232,8 +232,14 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 	function count_pm( $user_id = 0, $unread_only = false ) {
 		global $bbdb;
 
-		$thread_member_of = (array)$bbdb->get_col( $bbdb->prepare( 'SELECT `object_id` FROM `' . $bbdb->meta . '` WHERE `object_type`=%s AND `meta_key`=%s AND `meta_value` LIKE %s ORDER BY `object_id` DESC', 'bbpm_thread', 'to', '%,' . $user_id . ',%' ) );
+		$thread_member_of = (array)$bbdb->get_col( $bbdb->prepare( 'SELECT `object_id` FROM `' . $bbdb->meta . '` WHERE `object_type`=%s AND `meta_key`=%s AND `meta_value` LIKE %s', 'bbpm_thread', 'to', '%,' . $user_id . ',%' ) );
+
+		if ( function_exists( 'wp_cache_add' ) )
+			wp_cache_add( $user_id, $thread_member_of, 'bbpm-user-messages' );
+
 		$threads = count( $thread_member_of );
+
+		$this->cache_threads( $thread_member_of );
 
 		if ( $unread_only )
 			foreach ( $thread_member_of as $thread )
@@ -269,19 +275,20 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		if ( !isset( $this->current_pm[$start . '_' . $end] ) ) {
 			global $bbdb;
 
-			$threads = (array)$bbdb->get_col( $bbdb->prepare( 'SELECT `object_id` FROM `' . $bbdb->meta . '` WHERE `object_type`=%s AND `meta_key`=%s AND `meta_value` LIKE %s ORDER BY `object_id` DESC LIMIT ' . $start . ',' . $end, 'bbpm_thread', 'to', '%,' . bb_get_current_user_info( 'id' ) . ',%' ) );
+			if ( function_exists( 'wp_cache_get' ) && false !== $threads = wp_cache_get( bb_get_current_user_info( 'ID' ), 'bbpm-user-messages' ) )
+				$threads = array_slice( $threads, $start, $end );
+			else
+				$threads = (array)$bbdb->get_col( $bbdb->prepare( 'SELECT `object_id` FROM `' . $bbdb->meta . '` WHERE `object_type` = %s AND `meta_key` = %s AND `meta_value` LIKE %s LIMIT ' . $start . ',' . $end, 'bbpm_thread', 'to', '%,' . bb_get_current_user_info( 'ID' ) . ',%' ) );
 
-			$thread_members = (array)$bbdb->get_col( $bbdb->prepare( 'SELECT `meta_value` FROM `' . $bbdb->meta . '` WHERE `object_type`=%s AND `meta_key`=%s AND `meta_value` LIKE %s ORDER BY `object_id` DESC LIMIT ' . $start . ',' . $end, 'bbpm_thread', 'to', '%,' . bb_get_current_user_info( 'id' ) . ',%' ) );
-
-			$thread_titles = (array)$bbdb->get_col( $bbdb->prepare( 'SELECT `meta_value` FROM `' . $bbdb->meta . '` WHERE `object_type`=%s AND `meta_key`=%s AND `object_id` IN (' . implode( ',', array_map( 'intval', $threads ) ) . ') ORDER BY `object_id` DESC', 'bbpm_thread', 'title' ) );
-
-			$thread_messages = (array)$bbdb->get_col( $bbdb->prepare( 'SELECT `meta_value` FROM `' . $bbdb->meta . '` WHERE `object_type`=%s AND `meta_key`=%s AND `object_id` IN (' . implode( ',', array_map( 'intval', $threads ) ) . ') ORDER BY `object_id` DESC', 'bbpm_thread', 'last_message' ) );
+			$this->cache_threads( $threads );
 
 			$this->current_pm[$start . '_' . $end] = array();
 
-			foreach ( $threads as $i => $thread ) {
-				$this->current_pm[$start . '_' . $end][] = array( 'id' => (int)$thread, 'members' => array_filter( explode( ',', $thread_members[$i] ) ), 'title' => $thread_titles[$i], 'last_message' => (int)$thread_messages[$i] );
+			foreach ( $threads as $thread ) {
+				$this->current_pm[$start . '_' . $end][] = array( 'id' => $thread, 'members' => $this->get_thread_members( $thread ), 'title' => $this->get_thread_title( $thread ), 'last_message' => $this->get_thread_meta( $thread, 'last_message' ) );
 			}
+
+			usort( $this->current_pm[$start . '_' . $end], array( &$this, '_newer_last_message' ) );
 
 			if ( $this->current_pm[$start . '_' . $end] ) {
 				$this->the_pm = reset( $this->current_pm[$start . '_' . $end] );
@@ -293,6 +300,10 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		if ( $this->the_pm = next( $this->current_pm[$start . '_' . $end] ) )
 			return true;
 		return false;
+	}
+
+	function _newer_last_message( $a, $b ) {
+		return $a['last_message'] > $b['last_message'] ? -1 : 1;
 	}
 
 	/**
@@ -368,13 +379,13 @@ To read it now, go to the following address:
 		return $msg->read_link;
 	}
 
-	private function _make_thread( $thread, $reply_to = null ) {
+	private function _make_thread( $thread, $reply_to = null, $thread_id = null ) {
 		$ret = array();
 
 		foreach ( $thread as $pm ) {
-			if ( $pm->reply_to == $reply_to ) {
+			if ( ( ( $thread_id && $pm->pm_thread == $thread_id ) || !$thread_id ) && $pm->reply_to == $reply_to ) {
 				$ret[] = $pm->ID;
-				$ret = array_merge( $ret, $this->_make_thread( $thread, $pm->ID ) );
+				$ret = array_merge( $ret, $this->_make_thread( $thread, $pm->ID, $thread_id ) );
 			}
 		}
 
@@ -405,6 +416,48 @@ To read it now, go to the following address:
 		return $thread;
 	}
 
+	function cache_threads( $IDs ) {
+		if ( !function_exists( 'wp_cache_add' ) )
+			return;
+
+		foreach ( $IDs as $i => $id ) {
+			if ( wp_cache_get( $id, 'bbpm-cached' ) )
+				unset( $IDs[$i] );
+
+			wp_cache_add( $id, true, 'bbpm-cached' );
+		}
+
+		if ( !$IDs )
+			return;
+
+		global $bbdb;
+
+		$users = array();
+
+		$thread_posts = (array)$bbdb->get_results( 'SELECT * FROM `' . $bbdb->bbpm . '` WHERE `pm_thread` IN (' . implode( ',', array_map( 'intval', $IDs ) ) . ') ORDER BY `ID`' );
+		$thread_meta = (array)$bbdb->get_results( 'SELECT `object_id`,`meta_key`,`meta_value` FROM `' . $bbdb->meta . '` WHERE `object_type` = \'bbpm_thread\' AND `object_id` IN (' . implode( ',', array_map( 'intval', $IDs ) ) . ')' );
+
+		foreach ( $thread_meta as $meta ) {
+			wp_cache_add( $meta->meta_key, $meta->meta_value, 'bbpm-thread-' . $meta->object_id );
+
+			if ( $meta->meta_key == 'to' )
+				$users = array_merge( $users, explode( ',', $meta->meta_value ) );
+		}
+
+		foreach ( $thread_posts as $pm )
+			wp_cache_add( (int)$pm->ID, $pm, 'bbpm' );
+
+		foreach ( $IDs as $id ) {
+			$thread_ids = $this->_make_thread( $thread_posts, null, $id );
+
+			wp_cache_add( (int)$id, $thread_ids, 'bbpm-thread' );
+		}
+
+		$users = array_values( array_filter( array_unique( $users ) ) );
+
+		bb_cache_users( $users );
+	}
+
 	function get_thread_title( $thread_ID ) {
 		return $this->get_thread_meta( $thread_ID, 'title' );
 	}
@@ -427,8 +480,7 @@ To read it now, go to the following address:
 		if ( !$user_id )
 			$user_id = bb_get_current_user_info( 'ID' );
 
-		global $bbdb;
-		return !!$bbdb->get_var( $bbdb->prepare( 'SELECT COUNT(*) FROM `' . $bbdb->meta . '` WHERE `object_type` = %s AND `object_id` = %d AND `meta_value` LIKE %s AND `meta_key` = %s', 'bbpm_thread', $ID, '%,' . $user_id . ',%', 'to' ) );
+		return strpos( $this->get_thread_meta( $ID, 'to' ), ',' . $user_id . ',' ) !== false;
 	}
 
 	function unsubscribe( $ID ) {
@@ -490,7 +542,7 @@ To read it now, go to the following address:
 	}
 
 	function post_title_filter( $text, $post_id ) {
-		if ( ($user_id = get_post_author_id( $post_id )) && bb_current_user_can( 'write_posts' ) ) {
+		if ( $post_id && ( $user_id = get_post_author_id( $post_id ) ) && bb_current_user_can( 'write_posts' ) ) {
 			$text .= "<br/>\n";
 			$text .= '<a href="' . $this->get_send_link( $user_id ) . '">' . __( 'PM this user', 'bbpm' ) . '</a>';
 		}
@@ -528,9 +580,8 @@ To read it now, go to the following address:
 	}
 
 	function get_thread_meta( $thread_ID, $key ) {
-		global $bbdb;
-
 		if ( !function_exists( 'wp_cache_get' ) || false === $result = wp_cache_get( $key, 'bbpm-thread-' . $thread_ID ) ) {
+			global $bbdb;
 			$result = $bbdb->get_var( $bbdb->prepare( 'SELECT `meta_value` FROM `' . $bbdb->meta . '` WHERE `object_type` = %s AND `meta_key` = %s AND `object_id` = %d', 'bbpm_thread', $key, $thread_ID ) );
 
 			if ( function_exists( 'wp_cache_add' ) )
@@ -541,7 +592,8 @@ To read it now, go to the following address:
 	}
 
 	function mark_read( $thread_ID ) {
-		bb_update_usermeta( bb_get_current_user_info( 'ID' ), 'bbpm_last_read_' . (int)$thread_ID, (int)$this->get_thread_meta( $thread_ID, 'last_message' ) );
+		if ( $this->get_last_read( $thread_ID ) != $this->get_thread_meta( $thread_ID, 'last_message' ) )
+			bb_update_usermeta( bb_get_current_user_info( 'ID' ), 'bbpm_last_read_' . (int)$thread_ID, (int)$this->get_thread_meta( $thread_ID, 'last_message' ) );
 	}
 
 	/* Loop - Threads */

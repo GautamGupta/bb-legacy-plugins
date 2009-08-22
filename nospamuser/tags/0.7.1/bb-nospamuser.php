@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: bb-NoSpamUser
-Version: 0.8
+Version: 0.7.1
 Plugin URI: http://nightgunner5.wordpress.com/tag/bb-nospamuser/
 Description: Prevents known spam users from registering on your forum.
 Author: Nightgunner5

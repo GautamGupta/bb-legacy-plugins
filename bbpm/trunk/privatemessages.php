@@ -52,7 +52,7 @@ bb_get_header(); ?>
 
 <?php break;
 	default:
-	if ( !(int)$get || ( ( !$bbpm->can_read_message( $get ) && $action == 'reply' ) || ( !$bbpm->can_read_thread( $get ) && $action != 'reply' ) ) ) {
+	if ( !(int)$get || ( ( $action == 'reply' && !$bbpm->can_read_message( $get ) ) || ( $action != 'reply' && !$bbpm->can_read_thread( $get ) ) ) ) {
 _e( 'Private Messages', 'bbpm' ); ?></h3>
 
 <h2><?php _e( 'Private Messages', 'bbpm' ); ?></h2>

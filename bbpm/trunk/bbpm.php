@@ -626,9 +626,17 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 			echo '</span>';
 	}
 }
-global $bbpm;
-$bbpm = new bbPM;
 
+/**
+ * @global bbPM $GLOBALS['bbpm']
+ * @name $bbpm
+ */
+$GLOBALS['bbpm'] = new bbPM;
+
+/**
+ * @since 0.1-alpha1
+ * @return bool true if the current page is the private messaging page, false otherwise.
+ */
 function is_pm() {
 	return substr( ltrim( str_replace( bb_get_option( 'path' ), '', $_SERVER['REQUEST_URI'] . '/' ), '/' ), 0, 3 ) == 'pm/';
 }
@@ -683,10 +691,23 @@ function bbpm_admin_header() {
 }
 add_action( 'bb_admin-header.php', 'bbpm_admin_header' );
 
+/**
+ * @access private
+ */
 function bbPM_update_helper_helper_0_1_alpha4( $data ) {
 	return $data->ID;
 }
 
+/**
+ * Used to get a bbPM header link in a different place in the template.
+ *
+ * @see bbPM::header_link()
+ * @global bbPM 
+ * @uses bbPM::get_link() linking to the PM page
+ * @uses bbPM::count_pm() counting new messages
+ * @since 0.1-alpha5
+ * @return void
+ */
 function bbpm_messages_link() {
 	global $bbpm;
 

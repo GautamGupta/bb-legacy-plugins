@@ -138,7 +138,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 							'pm_read'  => (int)$msg->seen,
 							'pm_from'  => (int)$msg->id_sender,
 							'pm_to'    => (int)$msg->id_receiver,
-							'pm_text'  => apply_filters( 'pre_post', $msg->message ),
+							'pm_text'  => apply_filters( 'pre_post', $msg->message, 0, 0 ),
 							'sent_on'  => strtotime( $msg->created_on ),
 						) );
 
@@ -325,7 +325,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 
 		$pm = array(
 			'pm_from'   => (int)bb_get_current_user_info( 'ID' ),
-			'pm_text'   => apply_filters( 'pre_post', $message ),
+			'pm_text'   => apply_filters( 'pre_post', $message, 0, 0 ),
 			'sent_on'   => bb_current_time( 'timestamp' ),
 			'pm_thread' => $bbdb->get_var( 'SELECT MAX( `pm_thread` ) FROM `' . $bbdb->bbpm . '`' ) + 1
 		);
@@ -355,7 +355,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 
 		$pm = array(
 			'pm_from'      => (int)bb_get_current_user_info( 'ID' ),
-			'pm_text'      => apply_filters( 'pre_post', $message ),
+			'pm_text'      => apply_filters( 'pre_post', $message, 0, 0 ),
 			'sent_on'      => bb_current_time( 'timestamp' ),
 			'pm_thread'    => $reply_to->thread,
 			'reply_to'     => (int)$reply_to->ID,

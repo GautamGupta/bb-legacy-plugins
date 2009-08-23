@@ -16,15 +16,6 @@ Users can send private messages to each other. Replies are threaded, and more th
 1. Upload the entire `bbpm` plugin to the `my-plugins` directory of your bbPress installation. If you don't have one, create it!
 2. Activate the plugin in your administration panel.
 
-== Frequently Asked Questions ==
-
-= I use bbPress 0.9 and I get a 404 error when I click on Private Messages =
-You will need to add the following code to your .htaccess file. If your bbPress installation is not at /forums, change the code accordingly.
-
-`
-RewriteRule ^pm/?(.*)$ /forums/my-plugins/bbpm/index.php?$1 [L]
-`
-
 == Screenshots ==
 
 1. Members can send messages to each other as simply as typing in a username, title, and message.
@@ -38,6 +29,7 @@ RewriteRule ^pm/?(.*)$ /forums/my-plugins/bbpm/index.php?$1 [L]
 * Admin styling fixed.
 * Database queries drastically optimized (6 queries on most pages instead of 25+).
 * 0.9 compatibility removed, upgrade your bbPress installation!
+* Throttle (like the one used on posting) added
 
 = 0.1-alpha5 =
 * Various tweaks and fixes

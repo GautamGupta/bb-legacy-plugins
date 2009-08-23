@@ -9,12 +9,12 @@ bbPM - The new way to private message.
 
 == Description ==
 
-Users can send private messages to each other. There is threading of replies and individual messages can be deleted.
+Users can send private messages to each other. Replies are threaded, and more than two users can participate in a single conversation.
 
 == Installation ==
 
 1. Upload the entire `bbpm` plugin to the `my-plugins` directory of your bbPress installation. If you don't have one, create it!
-1. Activate the plugin in your administration panel.
+2. Activate the plugin in your administration panel.
 
 == Frequently Asked Questions ==
 

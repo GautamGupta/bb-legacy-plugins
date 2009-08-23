@@ -101,6 +101,7 @@ In order to define a new type, you will have to add a filter to `bbmodsuite_modl
 * Mod Log now tracks unbanning as well as banning
 * IP addresses and CIDR ranges (from /16 to /32) can now be blocked
 * Backslashes will no longer appear before apostrophes (new reports/bans/warnings only, old ones will still have them)
+* Plugins can ban users by using the `$override` argument in `bbmodsuite_banplus_set_ban`
 
 = 0.1-beta1 =
 * [The Ban Plus "you've been banned" page can now be edited](http://bbpress.org/plugins/topic/bbpress-moderation-suite/other_notes/)

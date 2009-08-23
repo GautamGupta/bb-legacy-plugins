@@ -27,16 +27,17 @@ function bbmodsuite_banplus_uninstall() {
  * @param string $type 'temp' for temporary. Other plugins can add more.
  * @param int $length How long the ban should be in seconds. Defaults to 1 day.
  * @param string $notes The reason for the ban.
+ * @param bool $override Set this to true if you want to ban a user without checking for permissions.
  * @return bool true on success, false on error
  * @global $bbmodsuite_cache Cache of options and bans
  */
-function bbmodsuite_banplus_set_ban( $user_id, $type = 'temp', $length = 86400, $notes = '' ) {
+function bbmodsuite_banplus_set_ban( $user_id, $type = 'temp', $length = 86400, $notes = '', $override = false ) {
 	global $bbmodsuite_cache;
 
 	$the_options = $bbmodsuite_cache['banplus']['options'];
-	if ( !bb_current_user_can( $the_options['min_level'] ) )
+	if ( !$override && !bb_current_user_can( $the_options['min_level'] ) )
 		return false;
-	if ( strpos( $user_id, 'ip_' ) === false ) {
+	if ( !$override && strpos( $user_id, 'ip_' ) === false ) {
 		$user_id = bb_get_user_id( $user_id );
 		if ( !$user_id )
 			return false;

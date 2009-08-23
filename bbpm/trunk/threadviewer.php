@@ -118,6 +118,7 @@ jQuery(function($){
 				$('#respond').hide('normal', function(){$(this).remove()});
 				return false;
 			})).end().show('fast');
+			$('#message')[0].focus();
 		});
 		return false;
 	});

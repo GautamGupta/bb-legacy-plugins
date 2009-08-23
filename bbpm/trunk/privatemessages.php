@@ -52,10 +52,10 @@ bb_get_header(); ?>
 
 <?php break;
 	default:
-	if ( !(int)$get || ( ( $action == 'reply' && !$bbpm->can_read_message( $get ) ) || ( $action != 'reply' && !$bbpm->can_read_thread( $get ) ) ) ) {
+	if ( $get == 'page' || !(int)$get || ( ( $action == 'reply' && !$bbpm->can_read_message( $get ) ) || ( $action != 'reply' && !$bbpm->can_read_thread( $get ) ) ) ) {
 _e( 'Private Messages', 'bbpm' ); ?></h3>
 
-<h2><?php _e( 'Private Messages', 'bbpm' ); ?></h2>
+<h2><?php _e( 'Private Messages', 'bbpm' ); ?> <?php if ( $get == 'page' && $action > 1 ) printf( __( '(Page %s)', 'bbpm' ), bb_number_format_i18n( $action ) ); ?></h2>
 <table id="latest">
 <tr>
 	<th><?php _e( 'Subject', 'bbpm' ); ?> &#8212; <a href="<?php $bbpm->new_pm_link(); ?>"><?php _e( 'New &raquo;', 'bbpm' ); ?></a></th>
@@ -64,7 +64,7 @@ _e( 'Private Messages', 'bbpm' ); ?></h3>
 	<th><?php _e( 'Actions' ); ?></th>
 </tr>
 
-<?php while ( $bbpm->have_pm( 0, 30 ) ) { ?>
+<?php while ( $bbpm->have_pm( bb_get_option( 'page_topics' ) * max( $get == 'page' ? $action - 1 : 0, 0 ), bb_get_option( 'page_topics' ) ) ) { ?>
 <tr<?php $bbpm->thread_alt_class(); ?>>
 	<td><a href="<?php echo bb_get_option( 'mod_rewrite' ) ? bb_get_uri( 'pm/' . $bbpm->the_pm['id'] ) : BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?' . $bbpm->the_pm['id']; ?>"><?php
 	$bbpm->thread_read_before();
@@ -91,7 +91,8 @@ foreach ( $bbpm->the_pm['members'] as $member ) {
 </tr>
 <?php } ?>
 </table>
-<?php } else {
+<?php $bbpm->pm_pages( max( $get == 'page' ? $action - 1 : 0, 0 ) );
+} else {
 	switch ( $action ) {
 		case 'reply':
 			$the_pm =& new bbPM_Message( $get );

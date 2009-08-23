@@ -203,6 +203,8 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 					bb_update_meta( (int)$message->pm_thread, 'last_message', (int)$bbdb->get_var( $bbdb->prepare( 'SELECT `ID` FROM `' . $bbdb->bbpm . '` WHERE `pm_thread` = %d ORDER BY `ID` DESC LIMIT 1', $message->pm_thread ) ), 'bbpm_thread' );
 				}
 
+				$bbdb->query( 'ALTER TABLE `' . $bbdb->bbpm . '` DROP COLUMN `pm_to`, DROP COLUMN `pm_title`, DROP COLUMN `pm_read`, DROP COLUMN `del_sender`, DROP COLUMN `del_reciever`' );
+
 				// At the end of all of the updates:
 				$this->settings['version'] = '0.1-alpha6';
 				$this->version             = '0.1-alpha6';
@@ -230,16 +232,21 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 	}
 
 	function count_pm( $user_id = 0, $unread_only = false ) {
+		if ( !$user_id )
+			$user_id = bb_get_current_user_info( 'ID' );
+
 		global $bbdb;
 
-		$thread_member_of = (array)$bbdb->get_col( $bbdb->prepare( 'SELECT `object_id` FROM `' . $bbdb->meta . '` WHERE `object_type`=%s AND `meta_key`=%s AND `meta_value` LIKE %s', 'bbpm_thread', 'to', '%,' . $user_id . ',%' ) );
+		if ( !function_exists( 'wp_cache_get' ) || false === $thread_member_of = wp_cache_get( $user_id, 'bbpm-user-messages' ) ) {
+			$thread_member_of = (array)$bbdb->get_col( $bbdb->prepare( 'SELECT `object_id` FROM `' . $bbdb->meta . '` WHERE `object_type`=%s AND `meta_key`=%s AND `meta_value` LIKE %s', 'bbpm_thread', 'to', '%,' . $user_id . ',%' ) );
 
-		if ( function_exists( 'wp_cache_add' ) )
-			wp_cache_add( $user_id, $thread_member_of, 'bbpm-user-messages' );
+			$this->cache_threads( $thread_member_of );
+
+			if ( function_exists( 'wp_cache_add' ) )
+				wp_cache_add( $user_id, $thread_member_of, 'bbpm-user-messages' );
+		}
 
 		$threads = count( $thread_member_of );
-
-		$this->cache_threads( $thread_member_of );
 
 		if ( $unread_only )
 			foreach ( $thread_member_of as $thread )
@@ -249,12 +256,10 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		return $threads;
 	}
 
-	function pm_pages() {
-		return;
+	function pm_pages( $current ) {
+		$total = ceil( $this->count_pm() / bb_get_option( 'page_topics' ) );
 
-		global $bbdb;
-
-		$total = $bbdb->get_var( $bbdb->prepare( 'SELECT COUNT(*) FROM `' . $bbdb->meta . '` WHERE `meta_value` LIKE %s AND `object_type`=%s', '%,' . bb_get_current_user_info( 'ID' ) . ',%', 'bbpm_thread' ) );
+		echo bb_paginate_links( array( 'current' => $current, 'total' => $total, 'base' => $this->get_link() . '%_%', 'format' => bb_get_option( 'mod_rewrite' ) ? '/page/%#%' : '?page/%#%' ) );
 	}
 
 	function have_pm( $start = 0, $end = 0 ) {
@@ -313,7 +318,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 	 * @return string|bool The URL of the new message or false if any of the message boxes is full.
 	 */
 	function send_message( $id_reciever, $title, $message ) {
-		if ( $this->count_pm( $pm['pm_from'] ) > $this->max_inbox || $this->count_pm( $pm['pm_to'] ) > $this->max_inbox )
+		if ( $this->count_pm() > $this->max_inbox || $this->count_pm( $id_reciever ) > $this->max_inbox )
 			return false;
 
 		global $bbdb;
@@ -333,14 +338,12 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		bb_update_meta( $pm['pm_thread'], 'to', bb_get_current_user_info( 'ID' ) == $id_reciever ? ',' . $id_reciever . ',' : ',' . bb_get_current_user_info( 'ID' ) . ',' . $id_reciever . ',', 'bbpm_thread' );
 
 		if ( bb_get_current_user_info( 'ID' ) != $id_reciever )
-			bb_mail( bb_get_user_email( $id_reciever ), get_user_display_name( bb_get_current_user_info( 'ID' ) ) . ' has sent you a private message on ' . bb_get_option( 'name' ) . '!', 'Hello, ' . get_user_display_name( $id_reciever ) . '!
+			bb_mail( bb_get_user_email( $id_reciever ), sprintf( __( '%s has sent you a private message on %s!', 'bbpm' ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ) ), sprintf( __( "Hello, %s!\n\n%s has sent you a private message on %s!\n\nTo read it now, go to the following address:\n\n%s", 'bbpm' ), get_user_display_name( $id_reciever ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ), $msg->read_link ) );
 
-' . get_user_display_name( bb_get_current_user_info( 'ID' ) ) . ' has sent you a private message on ' . bb_get_option( 'name' ) . '!
-
-To read it now, go to the following address:
-
-' . $msg->read_link );
 		bb_update_meta( $pm['pm_thread'], 'last_message', $msg->ID, 'bbpm_thread' );
+
+		do_action( 'bbpm_new', $msg );
+		do_action( 'bbpm_send', $msg );
 
 		return $msg->read_link;
 	}
@@ -367,23 +370,20 @@ To read it now, go to the following address:
 
 		$to = array_filter( explode( ',', $bbdb->get_var( $bbdb->prepare( 'SELECT `meta_value` FROM `' . $bbdb->meta . '` WHERE `meta_key` = %s AND `object_type` = %s AND `object_id` = %d', 'to', 'bbpm_thread', $pm['pm_thread'] ) ) ) );
 		foreach ( $to as $recipient ) {
-			bb_mail( bb_get_user_email( $recipient ), get_user_display_name( bb_get_current_user_info( 'ID' ) ) . ' has sent you a private message on ' . bb_get_option( 'name' ) . '!', 'Hello, ' . get_user_display_name( $recipient ) . '!
-
-' . get_user_display_name( bb_get_current_user_info( 'ID' ) ) . ' has sent you a private message on ' . bb_get_option( 'name' ) . '!
-
-To read it now, go to the following address:
-
-' . $msg->read_link );
+			bb_mail( bb_get_user_email( $recipient ), sprintf( __( '%s has sent you a private message on %s!', 'bbpm' ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ) ), sprintf( __( "Hello, %s!\n\n%s has sent you a private message on %s!\n\nTo read it now, go to the following address:\n\n%s", 'bbpm' ), get_user_display_name( $recipient ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ), $msg->read_link ) );
 		}
+
+		do_action( 'bbpm_reply', $msg );
+		do_action( 'bbpm_send', $msg );
 
 		return $msg->read_link;
 	}
 
-	private function _make_thread( $thread, $reply_to = null, $thread_id = null ) {
+	private function _make_thread( $thread, $reply_to = null ) {
 		$ret = array();
 
 		foreach ( $thread as $pm ) {
-			if ( ( ( $thread_id && $pm->pm_thread == $thread_id ) || !$thread_id ) && $pm->reply_to == $reply_to ) {
+			if ( $pm->reply_to == $reply_to ) {
 				$ret[] = $pm->ID;
 				$ret = array_merge( $ret, $this->_make_thread( $thread, $pm->ID, $thread_id ) );
 			}
@@ -433,8 +433,8 @@ To read it now, go to the following address:
 		global $bbdb;
 
 		$users = array();
+		$posts = array();
 
-		$thread_posts = (array)$bbdb->get_results( 'SELECT * FROM `' . $bbdb->bbpm . '` WHERE `pm_thread` IN (' . implode( ',', array_map( 'intval', $IDs ) ) . ') ORDER BY `ID`' );
 		$thread_meta = (array)$bbdb->get_results( 'SELECT `object_id`,`meta_key`,`meta_value` FROM `' . $bbdb->meta . '` WHERE `object_type` = \'bbpm_thread\' AND `object_id` IN (' . implode( ',', array_map( 'intval', $IDs ) ) . ')' );
 
 		foreach ( $thread_meta as $meta ) {
@@ -442,16 +442,14 @@ To read it now, go to the following address:
 
 			if ( $meta->meta_key == 'to' )
 				$users = array_merge( $users, explode( ',', $meta->meta_value ) );
+			if ( $meta->meta_key == 'last_message' )
+				$posts[] = (int)$meta->meta_value;
 		}
+
+		$thread_posts = (array)$bbdb->get_results( 'SELECT * FROM `' . $bbdb->bbpm . '` WHERE `ID` IN (' . implode( ',', $posts ) . ') ORDER BY `ID`' );
 
 		foreach ( $thread_posts as $pm )
 			wp_cache_add( (int)$pm->ID, $pm, 'bbpm' );
-
-		foreach ( $IDs as $id ) {
-			$thread_ids = $this->_make_thread( $thread_posts, null, $id );
-
-			wp_cache_add( (int)$id, $thread_ids, 'bbpm-thread' );
-		}
 
 		$users = array_values( array_filter( array_unique( $users ) ) );
 
@@ -500,6 +498,9 @@ To read it now, go to the following address:
 	}
 
 	function add_member( $ID, $user ) {
+		if ( $this->count_pm( $user ) > $this->max_inbox )
+			return false;
+
 		global $bbdb;
 
 		if ( $members = $this->get_thread_meta( $ID, 'to' ) ) {
@@ -616,7 +617,7 @@ To read it now, go to the following address:
 			echo '<span class="unread_posts">';
 
 			if ( !function_exists( 'utplugin_show_unread' ) )
-				echo '<strong>New:</strong> ';
+				echo '<strong>' . __( 'New:', 'bbpm' ) . '</strong> ';
 		}
 	}
 
@@ -648,7 +649,7 @@ function bbpm_admin_page() {
 <fieldset>
 	<div id="option-max_inbox">
 		<label for="max_inbox">
-			<?php _e( 'Maximum inbox/outbox size', 'bbpm' ); ?>
+			<?php _e( 'Maximum PM threads per user', 'bbpm' ); ?>
 		</label>
 		<div class="inputs">
 			<input type="text" class="text short" id="max_inbox" name="max_inbox" value="<?php echo $bbpm->settings['max_inbox']; ?>" />

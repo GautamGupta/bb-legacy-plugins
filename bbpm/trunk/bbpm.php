@@ -486,7 +486,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 
 		if ( $members = $this->get_thread_meta( $ID, 'to' ) ) {
 			if ( strpos( $members, ',' . bb_get_current_user_info( 'ID' ) . ',' ) !== false ) {
-				$members = str_replace( ',' . bb_get_current_user_info( 'ID' ), '', $members );
+				$members = str_replace( ',' . bb_get_current_user_info( 'ID' ) . ',', ',', $members );
 				if ( $members == ',' ) {
 					$bbdb->query( $bbdb->prepare( 'DELETE FROM `' . $bbdb->bbpm . '` WHERE `pm_thread` = %d', $ID ) );
 					$bbdb->query( $bbdb->prepare( 'DELETE FROM `' . $bbdb->meta . '` WHERE `object_type` = %s AND `object_id` = %d', 'bbpm_thread', $ID ) );

@@ -1044,6 +1044,26 @@ function bbwp_correct_links($text)
 	return preg_replace('/(href|src)=(["\'])([^"\':]+)\2/', '${1}=${2}'.$current_url.'${3}${2}', $text);
 }
 
+function bbwp_post_exists()
+{
+	if (get_option('bbwp_plugin_status') != 'enabled')
+		return false; // plugin disabled
+	global $topic;
+	$row = bbwp_get_table_item('bb_topic_id', $topic->topic_id);
+	if ($row)
+		return true;
+	else
+		return false;
+}
+
+function bbwp_post_url()
+{
+	global $topic;
+	$row = bbwp_get_table_item('bb_topic_id', $post->ID);
+	$answer = unserialize(bbwp_send_command(array('action' => 'get_post_link', 'post_id' => $row['wp_post_id'])));
+	return $answer['link'];
+}
+
 function bbwp_warning()
 {
 	if (bb_get_option('bbwp_plugin_status') != 'enabled')

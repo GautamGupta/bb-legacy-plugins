@@ -1046,7 +1046,7 @@ function bbwp_correct_links($text)
 
 function bbwp_post_exists()
 {
-	if (get_option('bbwp_plugin_status') != 'enabled')
+	if (bb_get_option('bbwp_plugin_status') != 'enabled')
 		return false; // plugin disabled
 	global $topic;
 	$row = bbwp_get_table_item('bb_topic_id', $topic->topic_id);
@@ -1059,7 +1059,7 @@ function bbwp_post_exists()
 function bbwp_post_url()
 {
 	global $topic;
-	$row = bbwp_get_table_item('bb_topic_id', $post->ID);
+	$row = bbwp_get_table_item('bb_topic_id', $topic->topic_id);
 	$answer = unserialize(bbwp_send_command(array('action' => 'get_post_link', 'post_id' => $row['wp_post_id'])));
 	return $answer['link'];
 }

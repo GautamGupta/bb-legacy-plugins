@@ -9,7 +9,7 @@ Author URI: http://bbshowcase.org
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
-Donate: http://amazon.com/paypage/P2FBORKDEFQIVM
+Donate: http://bbshowcase.org/donate/
 */ 
 
 if (bb_get_location()=="register-page") {	// determines if we're actually on register.php and only hooks in that case
@@ -25,14 +25,21 @@ function terms_of_service() {	// show the form
 	echo '<fieldset><legend>'.__("Terms of Service").'</legend>'
 	.'<div id="terms_of_service" style="padding:0.5em 1em 1em 1em; margin:0em 3em; background: #eee; color: #000; overflow:auto; height:7em;">';	
 	@readfile(rtrim(dirname(__FILE__),' /\\').'/terms-of-service.html');	 
-	echo '</div><table width="100%"><tr class="required"><th scope="row" nowrap><sup class="required">*</sup> '.__("I understand and agree:").'</th><td width="72%">'
+	echo '</div><table width="100%"><tr class="required"><th scope="row" nowrap><sup class="required" style="color:red;">*</sup> '.__("I understand and agree:").'</th><td width="72%">'
 	.'<input name="terms_of_service" type="checkbox" id="terms_of_service" value="agree" style="vertical-align:middle;width:1.40em;height:1.40em; margin-top:4px;" />'
 	.'</td></tr></table></fieldset>';	
 } 
 
 function terms_of_service_check() {	// examine the answer
-	if ($_POST && (!isset($_POST['terms_of_service']) || $_POST['terms_of_service']!="agree")) {
-		bb_die(__("You must agree to the terms of service to use the forum").",<br /><a href='register.php'>".__("please go back and try again")."</a>.");
+	if ($_POST && (!isset($_POST['terms_of_service']) || $_POST['terms_of_service']!="agree")) {		
+		bb_get_header();	?>
+		<br clear='both' /><h2 id='register' style='margin-left:2em;'>
+		<div class="indent">
+		<h2 id="register"><?php _e('Error'); ?></h2>
+		<p align='center'><font size='+1'><?php _e("You must agree to the Terms of Service"); ?>
+		<br /><a href='register.php'><?php _e("Please go back and try again"); ?>.</a></font>
+		<?php bb_get_footer();
+		exit;
 	}
 }
 
@@ -46,6 +53,6 @@ function terms_of_service_get() {
 	<?php @readfile(rtrim(dirname(__FILE__),' /\\').'/terms-of-service.html');
 	echo '</div></div>';
 	bb_get_footer(); 
-	exit();	
+	exit;	
 }
 ?>

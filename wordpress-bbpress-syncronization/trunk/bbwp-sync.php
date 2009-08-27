@@ -98,11 +98,9 @@ function bbwp_send_command($pairs = array())
 	} else
 	{
 		$port = $matches[3] ? $matches[3] : 80;
-		
 		$request = '';
 		foreach ($pairs as $key => $data)
 			$request .= $key.'='.urlencode(stripslashes($data)).'&';
-
 		$http_request  = "POST /$matches[4] HTTP/1.0\r\n";
 		$http_request .= "Host: $matches[1]\r\n";
 		$http_request .= "Content-Type: application/x-www-form-urlencoded; charset=" . bb_get_option('charset') . "\r\n";
@@ -110,7 +108,6 @@ function bbwp_send_command($pairs = array())
 		$http_request .= "User-Agent: WordPress/".bb_get_option('version')." | WordPress-bbPress	syncronization\r\n";
 		$http_request .= "\r\n";
 		$http_request .= $request;
-
 		$response = '';
 		if( false != ( $fs = @fsockopen($matches[1], $port, $errno, $errstr, 10) ) ) {
 			fwrite($fs, $http_request);
@@ -149,7 +146,7 @@ function bbwp_compare_keys_local()
 	return $_POST['secret_key'] == md5(bb_get_option('bbwp_secret_key')) ? 1 : 0;
 }
 
-function correct_wpbb_version()
+function bbwp_check_wpbb_version()
 {
 	$answer = unserialize(bbwp_send_command(array('action' => 'get_wpbb_version')));
 	global $min_version;
@@ -186,11 +183,11 @@ function bbwp_listener()
 	}
 	if ($_POST['action'] == 'check_bb_settings')
 	{
-		$code = check_bb_settings();
-		echo serialize(array('code' => $code, 'message' => bb_status_error($code)));
+		$code = bbwp_check_bb_settings();
+		echo serialize(array('code' => $code, 'message' => bbwp_status_error($code)));
 	} elseif ($_POST['action'] == 'set_bb_plugin_status')
 	{
-		set_bb_plugin_status();
+		bbwp_set_bb_plugin_status();
 	} elseif ($_POST['action'] == 'get_bbwp_version')
 	{
 		global $bbwp_version;
@@ -204,28 +201,25 @@ function bbwp_listener()
 	}
 	if ($_POST['action'] == 'create_topic')
 	{
-		create_bb_topic();
+		bbwp_create_bb_topic();
 	} elseif ($_POST['action'] == 'continue_topic')
 	{
-		continue_bb_topic();
+		bbwp_continue_bb_topic();
 	} elseif ($_POST['action'] == 'edit_post')
 	{
-		edit_bb_post();
-	} elseif ($_POST['action'] == 'edit_post_status')
-	{
-		edit_bb_post_status();
+		bbwp_edit_bb_post();
 	} elseif ($_POST['action'] == 'open_bb_topic')
 	{
-		open_bb_topic();
+		bbwp_open_bb_topic();
 	} elseif ($_POST['action'] == 'close_bb_topic')
 	{
-		close_bb_topic();
+		bbwp_close_bb_topic();
 	} elseif ($_POST['action'] == 'edit_bb_tags')
 	{
-		edit_bb_tags();
+		bbwp_edit_bb_tags();
 	} elseif ($_POST['action'] == 'delete_post')
 	{
-		delete_bb_post();
+		bbwp_delete_bb_post();
 	} elseif ($_POST['action'] == 'get_topic_link')
 	{
 		echo serialize(array('link' => get_topic_link($_POST['topic_id'])));
@@ -256,7 +250,7 @@ function bbwp_get_real_post_status($id)
 	return $bbdb->get_var('SELECT post_status FROM '.$bbdb->prefix.'posts WHERE post_id = '.$id);
 }
 
-function create_bb_topic()
+function bbwp_create_bb_topic()
 {
 	$forum_id = bb_get_option('bbwp_forum_id');
 	$post_categories = unserialize(stripslashes($_POST['categories']));
@@ -271,19 +265,19 @@ function create_bb_topic()
 	$topic_id = bb_insert_topic(array('topic_title' => stripslashes($_POST['topic']), 'forum_id' => $forum_id, 'tags' => $tags));
 	remove_all_filters('pre_post');
 	$post_id = bb_insert_post(array('topic_id' => $topic_id, 'post_text' => stripslashes($_POST['post_content'])));
-	bb_delete_post($post_id, status_wp2bb($_POST['comment_approved']));
+	bb_delete_post($post_id, bbwp_status_wp2bb($_POST['comment_approved']));
 	$result = bbwp_add_table_item($_POST["post_id"], 0, $topic_id, $post_id, '', '', '');
 	bb_update_meta($topic_id, 'bbwp_sync', '1', 'topic');
 	$data = serialize(array("topic_id" => $topic_id, "post_id" => $post_id, "result" => $result));
 	echo $data;
 }
 
-function continue_bb_topic()
+function bbwp_continue_bb_topic()
 {
 	$row = bbwp_get_table_item('wp_post_id', $_POST["post_id"]);
 	remove_all_filters('pre_post');
 	$post_id = bb_insert_post(array("topic_id" => $row['bb_topic_id'], "post_text" => stripslashes($_POST["post_content"])));
-	bb_delete_post($post_id, status_wp2bb($_POST['comment_approved']));
+	bb_delete_post($post_id, bbwp_status_wp2bb($_POST['comment_approved']));
 	// empty user info if not anonymous user
 	$user = bb_get_current_user();
 	if (bb_get_option('bbwp_anonymous_user_id') != $user->ID)
@@ -297,10 +291,10 @@ function continue_bb_topic()
 	echo $data;
 }
 
-function edit_bb_post()
+function bbwp_edit_bb_post()
 {
-	if (isset($_POST['get_row_by']) && $_POST['get_row_by'] == 'wp_post')
-		$row = bbwp_get_table_item('wp_post_id', $_POST["post_id"]);
+	if (isset($_POST['get_row_by']) && $_POST['get_row_by'] == 'bb_post_id')
+		$row = bbwp_get_table_item('bb_post_id', $_POST["bb_post_id"]);
 	else
 		$row = bbwp_get_table_item('wp_comment_id', $_POST["comment_id"]);
 	// updating topic title
@@ -315,12 +309,15 @@ function edit_bb_post()
 		$_POST['comment_author_email'] = '';
 		$_POST['comment_author_url'] = '';
 	}
-	bbwp_update_table_item('wp_comment_id', $_POST['comment_id'], $_POST['comment_author'], $_POST['comment_author_email'], $_POST['comment_author_url']);
+	if (isset($_POST['get_row_by']) && $_POST['get_row_by'] == 'bb_post_id')
+		bbwp_update_table_item('bb_post_id', $_POST['bb_post_id'], $_POST['comment_author'], $_POST['comment_author_email'], $_POST['comment_author_url']);
+	else
+		bbwp_update_table_item('wp_comment_id', $_POST['comment_id'], $_POST['comment_author'], $_POST['comment_author_email'], $_POST['comment_author_url']);
 	bb_insert_post(array('post_text' => stripslashes($_POST['post_content']), 'post_id' => $row['bb_post_id'], 'topic_id' => $row['bb_topic_id']));
-	bb_delete_post($row['bb_post_id'], status_wp2bb($_POST['comment_approved']));
+	bb_delete_post($row['bb_post_id'], bbwp_status_wp2bb($_POST['comment_approved']));
 }
 
-function delete_bb_post()
+function bbwp_delete_bb_post()
 {
 	bb_remove_filter('bb_delete_post', 'bbwp_afteredit');
 	$row = bbwp_get_table_item('wp_comment_id', $_POST['comment_id']);
@@ -332,12 +329,12 @@ function delete_bb_post()
 	bbwp_delete_table_item('wp_comment_id', $_POST['comment_id']);
 }
 
-function open_bb_topic()
+function bbwp_open_bb_topic()
 {
 	bb_open_topic($_POST['topic_id']);
 }
 
-function close_bb_topic()
+function bbwp_close_bb_topic()
 {
 	bb_close_topic($_POST['topic_id']);
 }
@@ -378,7 +375,7 @@ function bbwp_afteredit($id)
 	if ($row)
 	{
 		// have it in database, must sync
-		edit_wp_comment($post, $row['wp_comment_id']);
+		bbwp_edit_wp_comment($post, $row['wp_comment_id']);
 	} else
 	{
 		if (bbwp_sync_that_status($id))
@@ -387,7 +384,7 @@ function bbwp_afteredit($id)
 				return; // syncing back disabled
 			$row = bbwp_get_table_item('bb_topic_id', $post->topic_id);
 			if ($row)
-				add_wp_comment($post, $row['wp_post_id']);
+				bbwp_add_wp_comment($post, $row['wp_post_id']);
 		}
 	}
 }
@@ -404,11 +401,11 @@ function bbwp_afterpost($id)
 			return; // syncing back disabled
 		// need to duplicate in WordPress
 		if (bbwp_sync_that_status($id))
-			add_wp_comment($post, $row['wp_post_id']);
+			bbwp_add_wp_comment($post, $row['wp_post_id']);
 	}
 }
 
-function add_wp_comment($post, $wp_post_id)
+function bbwp_add_wp_comment($post, $wp_post_id)
 {
 	$request = array(
 		'action' => 'add_comment',
@@ -424,7 +421,7 @@ function add_wp_comment($post, $wp_post_id)
 	bbwp_add_table_item($wp_post_id, $data['comment_id'], $post->topic_id, $post->post_id, '', '', '');
 }
 
-function edit_wp_comment($post, $comment_id)
+function bbwp_edit_wp_comment($post, $comment_id)
 {
 	// FIXME: get post text original way
 	global $bbdb;
@@ -465,7 +462,7 @@ function bbwp_afteropening($id)
 	bbwp_send_command($request);
 }
 
-function status_wp2bb($status)
+function bbwp_status_wp2bb($status)
 {
 	// return bbPress post status equal to WordPres comment status
 	if ($status == 1)
@@ -496,7 +493,7 @@ function bbwp_options()
 			<div class="inputs">
 				<input class="text" id="wordpress_url" name="wordpress_url" value="<?php echo bb_get_option('bbwp_wordpress_url'); ?>" />
 				<p><?php
-				$err = check_bb_settings(); // only one error at once, let's show other if only previvous was fixed
+				$err = bbwp_check_bb_settings(); // only one error at once, let's show other if only previvous was fixed
 				if (!bb_get_option('bbwp_wordpress_url'))
 				{
 					_e('Please submit with last "/"! We will test that after submussion', 'bbwp-sync');
@@ -649,7 +646,7 @@ function bbwp_options()
 				<?php _e('Enable plugin', 'bbwp-sync'); ?>
 			</label>
 			<div class="inputs">
-			<?php $check = check_bbwp_settings(); if ($check['code'] != 0) bbwp_set_global_plugin_status('disabled'); ?>
+			<?php $check = bbwp_check_settings(); if ($check['code'] != 0) bbwp_set_global_plugin_status('disabled'); ?>
 				<input type="checkbox" id="plugin_status" name="plugin_status"<?php echo (bb_get_option('bbwp_plugin_status') == 'enabled') ? ' checked="checked"' : ''; echo ($check['code'] == 0) ? '' : ' disabled="disabled"'; ?> />
 				<p><?php echo ($check['code'] == 0) ? __('Allowed by both parts', 'bbwp-sync') : __('Not allowed: ', 'bbwp-sync').$check['message'] ?></p>
 			</div>
@@ -716,17 +713,17 @@ function bbwp_install()
 	// next options must be cheched by another conditions!
 }
 
-function deactivate_bbwp()
+function bbwp_deactivate()
 {
 	// deactivate on disabling
 	bbwp_set_global_plugin_status('disabled');
 }
 
-function check_bbwp_settings()
+function bbwp_check_settings()
 {
-	$wp_settings = check_wp_settings();
-	$bb_code = check_bb_settings();
-	$bb_message = bb_status_error($bb_code);
+	$wp_settings = bbwp_check_wp_settings();
+	$bb_code = bbwp_check_bb_settings();
+	$bb_message = bbwp_status_error($bb_code);
 	# it's better to check bbPress ability to connect first
 	if ($wp_settings['code'] == 1)
 	{
@@ -751,10 +748,10 @@ function check_bbwp_settings()
 function bbwp_set_global_plugin_status($status)
 {
 	// FIXME: fix something here.
-	$wp_settings = check_wp_settings();
-	if ((check_bb_settings() == 0 && $wp_settings['code'] == 0 && $status == 'enabled') || $status == 'disabled')
+	$wp_settings = bbwp_check_wp_settings();
+	if ((bbwp_check_bb_settings() == 0 && $wp_settings['code'] == 0 && $status == 'enabled') || $status == 'disabled')
 	{
-		$wp_status = set_wp_plugin_status($status);
+		$wp_status = bbwp_set_wp_plugin_status($status);
 		if ($wp_status['status'] == $status)
 		{
 			bb_update_option('bbwp_plugin_status', $status);
@@ -763,15 +760,15 @@ function bbwp_set_global_plugin_status($status)
 	}
 	// disable everything, something wrong
 	$status = 'disabled';
-	$wp_status = set_wp_plugin_status($status);
+	$wp_status = bbwp_set_wp_plugin_status($status);
 	bb_update_option('bbwp_plugin_status', $status);		
 }
 
-function set_bb_plugin_status()
+function bbwp_set_bb_plugin_status()
 {
 	// to be call through http request
 	$status = $_POST['status'];
-	if ((check_bb_settings == 0 && $status == 'enabled') || $status == 'disabled')
+	if ((bbwp_check_bb_settings == 0 && $status == 'enabled') || $status == 'disabled')
 	{
 		bb_update_option('bbwp_plugin_status', $status);
 	} else {
@@ -782,7 +779,7 @@ function set_bb_plugin_status()
 	echo $data;
 }
 
-function check_bb_settings()
+function bbwp_check_bb_settings()
 {
 	if (!bbwp_test_pair())
 	{
@@ -802,7 +799,7 @@ function check_bb_settings()
 	// slashes must be identical. may be strange in 0.0000000000000000001% of situations
 	if (strpos(str_replace('\\', '/', $active_plugins), str_replace(bb_plugin_basename(__FILE__), '\\', '/')) === false)
 		return 5; // bbpress part not activated
-	if (!correct_wpbb_version())
+	if (!bbwp_check_wpbb_version())
 		return 6;
 	return 0; // everything is ok
 }
@@ -883,7 +880,7 @@ function bbwp_get_cat_accordance($data)
 	return $accordance;
 }
 
-function bb_status_error($code)
+function bbwp_status_error($code)
 {
 	if ($code == 0)
 		return __('Everything is ok!', 'bbwp-sync');
@@ -901,7 +898,7 @@ function bb_status_error($code)
 		return __('Too old WordPress part plugin version', 'bbwp-sync');
 }
 
-function set_wp_plugin_status($status)
+function bbwp_set_wp_plugin_status($status)
 {
 	// when enabling in bbPress
 	$request = array(
@@ -913,7 +910,7 @@ function set_wp_plugin_status($status)
 	return $data;
 }
 
-function check_wp_settings()
+function bbwp_check_wp_settings()
 {
 	$answer = bbwp_send_command(array('action' => 'check_wp_settings'));
 	$data = unserialize($answer);
@@ -933,11 +930,11 @@ function bbwp_aftertagedit($id)
 		{
 			$tags[] = $tag->name;
 		}
-		edit_wp_tags($row['wp_post_id'], $tags);
+		bbwp_edit_wp_tags($row['wp_post_id'], $tags);
 	}
 }
 
-function edit_wp_tags($post, $tags)
+function bbwp_edit_wp_tags($post, $tags)
 {
 	$request = array(
 		'action' => 'edit_wp_tags',
@@ -947,7 +944,7 @@ function edit_wp_tags($post, $tags)
 	bbwp_send_command($request);
 }
 
-function edit_bb_tags()
+function bbwp_edit_bb_tags()
 {
 	bb_remove_topic_tags($_POST['topic']);
 	$tags = stripslashes($_POST['tags']);
@@ -973,7 +970,7 @@ function bbwp_pretagremove($id)
 				$tags[] = $tag->name;
 			}
 		}
-		edit_wp_tags($row['wp_post_id'], $tags);
+		bbwp_edit_wp_tags($row['wp_post_id'], $tags);
 	}
 }
 
@@ -1077,7 +1074,7 @@ function bbwp_warning()
 
 add_action('bb_init', 'bbwp_add_textdomain');
 bb_register_plugin_activation_hook(__FILE__, 'bbwp_install');
-bb_register_plugin_deactivation_hook(__FILE__, 'deactivate_bbwp');
+bb_register_plugin_deactivation_hook(__FILE__, 'bbwp_deactivate');
 add_action('bb_tag_added', 'bbwp_aftertagedit');
 add_action('bb_pre_tag_removed', 'bbwp_pretagremove');
 add_action('bb_update_post', 'bbwp_afteredit');

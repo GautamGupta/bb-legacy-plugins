@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package bbPM
+ * @version 0.1-alpha7
+ * @author Nightgunner5
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU General Public License, Version 3 or higher
+ * @todo Code cleanup
+ */
 
 global $bbpm;
 

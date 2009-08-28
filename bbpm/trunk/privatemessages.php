@@ -1,4 +1,11 @@
 <?php
+/**
+ * @package bbPM
+ * @version 0.1-alpha7
+ * @author Nightgunner5
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU General Public License, Version 3 or higher
+ * @todo Code cleanup
+ */
 
 status_header( 200 );
 
@@ -8,6 +15,8 @@ bb_auth( 'logged_in' ); // Is the user logged in?
 remove_filter( 'topic_title', 'utplugin_show_unread' );
 remove_filter( 'topic_link', 'utplugin_link_latest' );
 remove_filter( 'post_text', 'utplugin_update_log' );
+if ( isset( $GLOBALS['support_forum'] ) && $GLOBALS['support_forum']->isActive() )
+	remove_action( 'post_form_pre_post', array( &$GLOBALS['support_forum'], 'addStatusSelectToPostForm' ) );
 
 global $bbpm;
 
@@ -64,7 +73,7 @@ _e( 'Private Messages', 'bbpm' ); ?></h3>
 	<th><?php _e( 'Actions' ); ?></th>
 </tr>
 
-<?php while ( $bbpm->have_pm( bb_get_option( 'page_topics' ) * max( $get == 'page' ? $action - 1 : 0, 0 ), bb_get_option( 'page_topics' ) ) ) { ?>
+<?php while ( $bbpm->have_pm( bb_get_option( 'page_topics' ) * max( $action - 1, 0 ), bb_get_option( 'page_topics' ) ) ) { ?>
 <tr<?php $bbpm->thread_alt_class(); ?>>
 	<td><a href="<?php echo bb_get_option( 'mod_rewrite' ) ? bb_get_uri( 'pm/' . $bbpm->the_pm['id'] ) : BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?' . $bbpm->the_pm['id']; ?>"><?php
 	$bbpm->thread_read_before();
@@ -163,10 +172,15 @@ echo apply_filters( 'post_author_title_link', apply_filters( 'get_post_author_ti
 		default:
 ?><a href="<?php echo $bbpm->get_link(); ?>"><?php _e( 'Private Messages', 'bbpm' ); ?></a> &raquo; <?php _e( 'Read', 'bbpm' ); ?></h3>
 <?php
-			if ( $template = bb_get_template( 'threadviewer.php', false ) )
-				require_once $template;
-			else
-				require_once dirname( __FILE__ ) . '/threadviewer.php';
+			if ( !$template = bb_get_template( 'bbpm-threadviewer.php', false ) )
+				$template = dirname( __FILE__ ) . '/threadviewer.php';
+
+			/**
+			 * Loads up the thread viewer.
+			 *
+			 * @uses threadviewer.php (the default)
+			 */
+			require_once $template;
 		}
 	}
 } ?>

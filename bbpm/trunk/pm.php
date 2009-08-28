@@ -1,7 +1,22 @@
 <?php
+/**
+ * @package bbPM
+ * @version 0.1-alpha7
+ * @author Nightgunner5
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU General Public License, Version 3 or higher
+ */
 
+/**
+ * Prevent {@link http://bbpress.org/plugins/topic/subscribe-to-topic/ Subscribe to Topic}
+ * from removing "unsubscribe" from the query string.
+ *
+ * @since 0.1-alpha6b
+ */
 define( 'BBPM_STT_FIX', true );
 
+/**
+ * Load the bbPress core
+ */
 require_once dirname( dirname( dirname( __FILE__ ) ) ) . '/bb-load.php';
 
 bb_auth( 'logged_in' ); // Is the user logged in?

@@ -3,30 +3,108 @@
 Plugin Name: bbPM
 Plugin URI: http://nightgunner5.wordpress.com/tag/bbpm/
 Description: Adds the ability for users of a forum to send private messages to each other.
-Version: 0.1-alpha6b
+Version: 0.1-alpha7
 Author: Nightgunner5
-Author URI: http://llamaslayers.net/daily-llama/
+Author URI: http://llamaslayers.net/
 Text Domain: bbpm
 Domain Path: /translations/
 */
+/**
+ * @package bbPM
+ * @version 0.1-alpha7
+ * @author Nightgunner5
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU General Public License, Version 3 or higher
+ * @todo Make email optional for each type on the user and forum level
+ */
 
 load_plugin_textdomain( 'bbpm', dirname( __FILE__ ) . '/translations' );
 
+
+/**
+ * Private message class
+ *
+ * To get private message number 15 from the database and check if it existed, you would do the following:
+ * <code>
+ * $message = new bbPM_Message( 15 );
+ * if ( $message->exists )
+ *     echo 'Private message 15 exists!';
+ * else
+ *     echo 'Private message 15 does not exist.';
+ * </code>
+ *
+ * @package bbPM
+ * @since 0.1-alpha1
+ * @author Nightgunner5
+ */
 class bbPM_Message {
-	private $read_link;
-	private $reply_link;
+	/**
+	 * @var string The URL of the thread that has this message
+	 * @since 0.1-alpha1
+	 */
+	var $read_link;
+	/**
+	 * @var string The URL of the page that has the reply form for this message
+	 * @since 0.1-alpha1
+	 */
+	var $reply_link;
 
-	private $ID;
-	private $title;
-	private $from;
-	private $text;
-	private $date;
-	private $reply;
-	private $reply_to;
-	private $thread_depth;
-	private $exists;
-	private $thread;
+	/**
+	 * @var int The message ID
+	 * @since 0.1-alpha1
+	 */
+	var $ID;
+	/**
+	 * @var string The PM thread's title
+	 * @since 0.1-alpha1
+	 */
+	var $title;
+	/**
+	 * @var BP_User The sender of the message
+	 * @since 0.1-alpha1
+	 */
+	var $from;
+	/**
+	 * @var string The PM's text content in HTML
+	 * @since 0.1-alpha1
+	 */
+	var $text;
+	/**
+	 * @var int The unix timestamp of when this private message was sent
+	 * @since 0.1-alpha1
+	 */
+	var $date;
+	/**
+	 * @var bool True if this is a reply, false if this is the first message in a thread
+	 * @since 0.1-alpha1
+	 */
+	var $reply;
+	/**
+	 * @var int The ID of the message this is a reply to or 0
+	 * @since 0.1-alpha1
+	 */
+	var $reply_to;
+	/**
+	 * @var int The depth of this message in the thread. 0 for the first message, 1 for direct replies, 2 for replies to direct replies, etc.
+	 * @since 0.1-alpha1
+	 */
+	var $thread_depth;
+	/**
+	 * @var bool True if this message exists, false if this message does not
+	 * @since 0.1-alpha1
+	 */
+	var $exists;
+	/**
+	 * @var int The ID of this PM's thread
+	 * @since 0.1-alpha6
+	 */
+	var $thread;
 
+	/**
+	 * Gets a private message from the database (or cache, if available)
+	 *
+	 * @param int $ID The ID of the private message to retrieve.
+	 * @see bbPM_Message
+	 */
 	function bbPM_Message( $ID ) {
 		global $bbpm, $bbdb;
 
@@ -52,7 +130,7 @@ class bbPM_Message {
 			$this->reply_link   = BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?' . $row->ID . '/reply';
 		}
 		$this->ID           = (int)$row->ID;
-		$this->title        = apply_filters( 'get_topic_title', $row->pm_title );
+		$this->title        = apply_filters( 'get_topic_title', $bbpm->get_thread_title( $row->pm_thread ) );
 		$this->from         = new BP_User( (int)$row->pm_from );
 		$this->text         = apply_filters( 'get_post_text', $row->pm_text );
 		$this->date         = (int)$row->sent_on;
@@ -62,20 +140,53 @@ class bbPM_Message {
 		$this->thread       = (int)$row->pm_thread;
 		$this->exists       = true;
 	}
-
-	function __get( $varName ) {
-		return $this->$varName;
-	}
 }
 
+/**
+ * Most of the bbPM functionality is included in this class.
+ *
+ * @package bbPM
+ * @since 0.1-alpha1
+ * @author Nightgunner5
+ */
 class bbPM {
+	/**
+	 * @var array The bbPM settings, as chosen by the user
+	 * @since 0.1-alpha3
+	 */
 	var $settings;
-	private $version;
-	private $max_inbox;
-	private $current_pm;
-	private $the_pm;
-	private $all_pm;
 
+	/**
+	 * @var string The current bbPM version
+	 * @since 0.1-alpha1
+	 */
+	var $version;
+
+	/**
+	 * @var int The maximum number of PM conversations per user
+	 * @since 0.1-alpha1
+	 * @deprecated use {@link bbPM::$settings}['max_inbox']
+	 */
+	var $max_inbox;
+
+	/**
+	 * @var array The current list of bbPM threads
+	 * @since 0.1-alpha6
+	 * @access private
+	 */
+	private $current_pm;
+
+	/**
+	 * @var string The current bbPM thread
+	 * @since 0.1-alpha1
+	 */
+	var $the_pm;
+
+	/**
+	 * Initializes bbPM
+	 *
+	 * @global BPDB_Multi Adds bbpm table
+	 */
 	function bbPM() { // INIT
 		global $bbdb;
 		$bbdb->bbpm = $bbdb->prefix . 'bbpm';
@@ -88,6 +199,8 @@ class bbPM {
 
 		add_action( 'bb_admin_menu_generator', array( &$this, 'admin_add' ) );
 		add_filter( 'bb_template', array( &$this, 'template_filter' ), 10, 2 );
+
+		add_action( 'bb_recount_list', array( &$this, 'add_recount' ) );
 
 		$this->current_pm = array();
 
@@ -106,12 +219,9 @@ class bbPM {
 		$this->max_inbox = $this->settings['max_inbox'];
 	}
 
-	function __get( $varName ) {
-		if ( !in_array( $varName, array( 'version', 'max_inbox', 'current_pm', 'the_pm' ) ) )
-			return null;
-		return $this->$varName;
-	}
-
+	/**
+	 * @access private
+	 */
 	private function update() {
 		global $bbdb;
 		switch ( $this->version ) { // Don't use break - each update needs to be installed.
@@ -209,17 +319,30 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 				$bbdb->query( 'ALTER TABLE `' . $bbdb->bbpm . '` DROP COLUMN `pm_to`, DROP COLUMN `pm_title`, DROP COLUMN `pm_read`, DROP COLUMN `del_sender`, DROP COLUMN `del_reciever`' );
 
 			case '0.1-alpha6':
+			case '0.1-alpha6b':
+
+				$this->settings['email_new']     = true;
+				$this->settings['email_reply']   = true;
+				$this->settings['email_add']     = true;
+				$this->settings['email_message'] = false;
+
+				wp_cache_flush( 'bbpm-user-messages' ); // For memcached
 
 				// At the end of all of the updates:
-				$this->settings['version'] = '0.1-alpha6b';
-				$this->version             = '0.1-alpha6b';
+				$this->settings['version'] = '0.1-alpha7';
+				$this->version             = '0.1-alpha7';
 				bb_update_option( 'bbpm_settings', $this->settings );
 
-			case '0.1-alpha6b':
+			case '0.1-alpha7':
 				// Do nothing, this is the newest version.
 		}
 	}
 
+	/**
+	 * @since 0.1-alpha4
+	 * @access private
+	 * @see bbPM::update()
+	 */
 	private function update_helper_0_1_alpha4( $start_id ) {
 		global $bbdb;
 
@@ -236,11 +359,19 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		return array_unique( $thread_items );
 	}
 
+	/**
+	 * @global BPDB_Multi Accessing the database
+	 * @param int $user_id The user to get a count of private message threads from (default current user)
+	 * @param bool $unread_only True to get only unread threads, false to get all threads that a user has access to.
+	 * @return int The number of private message threads that matched the criteria.
+	 */
 	function count_pm( $user_id = 0, $unread_only = false ) {
+		global $bbdb;
+
+		$user_id = (int)$user_id;
+
 		if ( !$user_id )
 			$user_id = bb_get_current_user_info( 'ID' );
-
-		global $bbdb;
 
 		if ( !function_exists( 'wp_cache_get' ) || false === $thread_member_of = wp_cache_get( $user_id, 'bbpm-user-messages' ) ) {
 			$thread_member_of = (array)$bbdb->get_col( $bbdb->prepare( 'SELECT `object_id` FROM `' . $bbdb->meta . '` WHERE `object_type`=%s AND `meta_key`=%s AND `meta_value` LIKE %s', 'bbpm_thread', 'to', '%,' . $user_id . ',%' ) );
@@ -261,12 +392,32 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		return $threads;
 	}
 
+	/**
+	 * @uses bbPM::count_pm() counting total messages
+	 * @param int $current The current page number
+	 * @return void
+	 */
 	function pm_pages( $current ) {
 		$total = ceil( $this->count_pm() / bb_get_option( 'page_topics' ) );
 
-		echo bb_paginate_links( array( 'current' => $current, 'total' => $total, 'base' => $this->get_link() . '%_%', 'format' => bb_get_option( 'mod_rewrite' ) ? '/page/%#%' : '?page/%#%' ) );
+		echo bb_paginate_links( array(
+			'current' => $current,
+			'total' => $total,
+			'base' => $this->get_link() . '%_%',
+			'format' => bb_get_option( 'mod_rewrite' ) ? '/page/%#%' : '?page/%#%'
+		) );
 	}
 
+	/**
+	 * Get the next private message thread, if available
+	 *
+	 * @global BPDB_Multi Getting PM threads
+	 * @see bbPM::the_pm This will have the PM thread data
+	 * @since 0.1-alpha1
+	 * @param int $start The starting index of the PM threads to get
+	 * @param int $end The ending index of the PM threads to get - Must be greater than $start
+	 * @return bool True if the next private message could be found, false otherwise
+	 */
 	function have_pm( $start = 0, $end = 0 ) {
 		$start = (int)$start;
 		$end   = (int)$end;
@@ -312,6 +463,9 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		return false;
 	}
 
+	/**
+	 * @access private
+	 */
 	function _newer_last_message( $a, $b ) {
 		return $a['last_message'] > $b['last_message'] ? -1 : 1;
 	}
@@ -342,6 +496,11 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		bb_update_meta( $pm['pm_thread'], 'title', $title, 'bbpm_thread' );
 		bb_update_meta( $pm['pm_thread'], 'to', bb_get_current_user_info( 'ID' ) == $id_reciever ? ',' . $id_reciever . ',' : ',' . bb_get_current_user_info( 'ID' ) . ',' . $id_reciever . ',', 'bbpm_thread' );
 
+		if ( function_exists( 'wp_cache_delete' ) ) {
+			wp_cache_delete( $id_reciever, 'bbpm-user-messages' );
+			wp_cache_delete( bb_get_current_user_info( 'ID' ), 'bbpm-user-messages' );
+		}
+
 		if ( bb_get_current_user_info( 'ID' ) != $id_reciever )
 			bb_mail( bb_get_user_email( $id_reciever ), sprintf( __( '%s has sent you a private message on %s!', 'bbpm' ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ) ), sprintf( __( "Hello, %s!\n\n%s has sent you a private message on %s!\n\nTo read it now, go to the following address:\n\n%s", 'bbpm' ), get_user_display_name( $id_reciever ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ), $msg->read_link ) );
 
@@ -353,6 +512,15 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		return $msg->read_link;
 	}
 
+	/**
+	 * Send a reply to a private message
+	 *
+	 * @param int $reply_to The ID of the message that is being replied to
+	 * @param string $message The reply message
+	 * @return string A link to the new message
+	 * @global BPDB_Multi sending the reply
+	 * @since 0.1-alpha6
+	 */
 	function send_reply( $reply_to, $message ) {
 		global $bbdb;
 
@@ -362,7 +530,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 			'pm_from'      => (int)bb_get_current_user_info( 'ID' ),
 			'pm_text'      => apply_filters( 'pre_post', $message, 0, 0 ),
 			'sent_on'      => bb_current_time( 'timestamp' ),
-			'pm_thread'    => $reply_to->thread,
+			'pm_thread'    => (int)$reply_to->thread,
 			'reply_to'     => (int)$reply_to->ID,
 			'thread_depth' => $reply_to->thread_depth + 1
 		);
@@ -375,7 +543,8 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 
 		$to = array_filter( explode( ',', $bbdb->get_var( $bbdb->prepare( 'SELECT `meta_value` FROM `' . $bbdb->meta . '` WHERE `meta_key` = %s AND `object_type` = %s AND `object_id` = %d', 'to', 'bbpm_thread', $pm['pm_thread'] ) ) ) );
 		foreach ( $to as $recipient ) {
-			bb_mail( bb_get_user_email( $recipient ), sprintf( __( '%s has sent you a private message on %s!', 'bbpm' ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ) ), sprintf( __( "Hello, %s!\n\n%s has sent you a private message on %s!\n\nTo read it now, go to the following address:\n\n%s", 'bbpm' ), get_user_display_name( $recipient ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ), $msg->read_link ) );
+			if ( $to != bb_get_current_user_info( 'ID' ) )
+				bb_mail( bb_get_user_email( $recipient ), sprintf( __( '%s has sent you a private message on %s!', 'bbpm' ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ) ), sprintf( __( "Hello, %s!\n\n%s has sent you a private message on %s!\n\nTo read it now, go to the following address:\n\n%s", 'bbpm' ), get_user_display_name( $recipient ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ), $msg->read_link ) );
 		}
 
 		do_action( 'bbpm_reply', $msg );
@@ -384,6 +553,9 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		return $msg->read_link;
 	}
 
+	/**
+	 * @access private
+	 */
 	private function _make_thread( $thread, $reply_to = null ) {
 		$ret = array();
 
@@ -397,6 +569,15 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		return $ret;
 	}
 
+	/**
+	 * Get the messages in a private messaging thread
+	 *
+	 * @since 0.1-alpha4b
+	 * @param int $id The ID number of the thread to get
+	 * @return array The array of private messages in the thread, or an empty array if the thread does not exist.
+	 * @global BPDB_Multi Get the threads
+	 * @uses bbPM_Message The thread is given as an array of {@link bbPM_Message}s
+	 */
 	function get_thread( $id ) {
 		global $bbdb;
 
@@ -421,12 +602,20 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		return $thread;
 	}
 
+	/**
+	 * Store the meta and last messages of each thread in the cache
+	 *
+	 * @since 0.1-alpha6
+	 * @global BPDB_Multi Get the meta and last messages
+	 * @param array $IDs An array of integer IDs of PM threads
+	 * @return void
+	 */
 	function cache_threads( $IDs ) {
 		if ( !function_exists( 'wp_cache_add' ) )
 			return;
 
 		foreach ( $IDs as $i => $id ) {
-			if ( wp_cache_get( $id, 'bbpm-cached' ) )
+			if ( !(int)$id || wp_cache_get( $id, 'bbpm-cached' ) )
 				unset( $IDs[$i] );
 
 			wp_cache_add( $id, true, 'bbpm-cached' );
@@ -461,14 +650,39 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		bb_cache_users( $users );
 	}
 
+	/**
+	 * Get the title of a private message thread
+	 *
+	 * @since 0.1-alpha6
+	 * @param int $thread_ID The ID of the thread
+	 * @return string The title of the thread
+	 * @uses bbPM::get_thread_meta() Getting the thread's title
+	 */
 	function get_thread_title( $thread_ID ) {
 		return $this->get_thread_meta( $thread_ID, 'title' );
 	}
 
+	/**
+	 * Get the IDs of the members of a private message thread
+	 *
+	 * @since 0.1-alpha6
+	 * @param int $thread_ID The ID of the thread
+	 * @return array The members of the thread
+	 * @uses bbPM::get_thread_meta() Getting the thread's member list
+	 */
 	function get_thread_members( $thread_ID ) {
 		return array_values( array_filter( explode( ',', $this->get_thread_meta( $thread_ID, 'to' ) ) ) );
 	}
 
+	/**
+	 * Figure out if a user can read a given PM
+	 *
+	 * @since 0.1-alpha1
+	 * @param int $ID The ID of the PM
+	 * @param int $user_id The ID of the user, or zero for the current user
+	 * @return bool True if the user can read the message, false if they cannot
+	 * @uses bbPM::can_read_thread() If the message exists, the thread is checked, because there are no message-based permissions
+	 */
 	function can_read_message( $ID, $user_id = 0 ) {
 		$msg = new bbPM_Message( $ID );
 		if ( !$msg->exists )
@@ -477,6 +691,15 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		return $this->can_read_thread( $msg->thread, $user_id );
 	}
 
+	/**
+	 * Figure out if a user can read a given PM thread
+	 *
+	 * @since 0.1-alpha4b
+	 * @param int $ID The ID of the thread
+	 * @param int $user_id The ID of the user, or zero for the current user
+	 * @return bool True if the user can read the thread, false if they cannot
+	 * @uses bbPM::get_thread_meta() Check for the user ID in the thread's member list
+	 */
 	function can_read_thread( $ID, $user_id = 0 ) {
 		$user_id = (int)$user_id;
 
@@ -486,6 +709,15 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		return strpos( $this->get_thread_meta( $ID, 'to' ), ',' . $user_id . ',' ) !== false;
 	}
 
+	/**
+	 * Unsubscribe the current user from a PM thread
+	 *
+	 * @since 0.1-alpha6
+	 * @param int $ID The ID of the thread to unsubscribe from
+	 * @return void
+	 * @uses bbPM::get_thread_meta() Check if the current user is actually on the member list
+	 * @global BPDB_Multi Delete the thread if it has no members left
+	 */
 	function unsubscribe( $ID ) {
 		global $bbdb;
 
@@ -499,16 +731,27 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 						wp_cache_flush( 'bbpm-thread-' . $ID );
 				} else {
 					bb_update_meta( $ID, 'to', $members, 'bbpm_thread' );
-					if ( function_exists( 'wp_cache_delete' ) )
-						wp_cache_delete( 'to', 'bbpm-thread-' . $ID );
+					if ( function_exists( 'wp_cache_set' ) )
+						wp_cache_set( 'to', $members, 'bbpm-thread-' . $ID );
 				}
+				if ( function_exists( 'wp_cache_delete' ) )
+					wp_cache_delete( bb_get_current_user_info( 'ID' ), 'bbpm-user-messages' );
 				do_action( 'bbpm_unsubscribe', $ID );
 			}
 		}
 	}
 
+	/**
+	 * Add a member to a PM thread
+	 *
+	 * @since 0.1-alpha6
+	 * @param int $ID The ID of the thread
+	 * @param int $user The ID of the user
+	 * @return bool|void True if the user was added, false if the user has reached their message limit, and null if the PM thread doesn't exist
+	 * @uses bbPM::count_pm() Count the messages a user has, make sure the limit is not exceeded
+	 */
 	function add_member( $ID, $user ) {
-		if ( $this->count_pm( $user ) > $this->max_inbox )
+		if ( $this->count_pm( $user ) > $this->settings['max_inbox'] )
 			return false;
 
 		global $bbdb;
@@ -517,14 +760,23 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 			if ( strpos( $members, ',' . $user . ',' ) === false ) {
 				$members .= $user . ',';
 				bb_update_meta( $ID, 'to', $members, 'bbpm_thread' );
-				if ( function_exists( 'wp_cache_delete' ) )
+
+				if ( function_exists( 'wp_cache_delete' ) ) {
 					wp_cache_delete( 'to', 'bbpm-thread-' . $ID );
+					wp_cache_delete( $user, 'bbpm-user-messages' );
+				}
+
 				do_action( 'bbpm_add_member', $ID, $user );
+
 				bb_mail( bb_get_user_email( $user ), sprintf( __( '%s has added you to a conversation on %s!', 'bbpm' ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ) ), sprintf( __( "Hello, %s!\n%s has added you to a private message conversation on %s!\nTo read it now, go to the following address:\n%s", 'bbpm' ), get_user_display_name( $user ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ), bb_get_option( 'mod_rewrite' ) ? bb_get_uri( 'pm/' . $ID ) : BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?' . $ID ) );
 			}
+			return true;
 		}
 	}
 
+	/**
+	 * Echoes the URL of the page where new private messaging threads can be created
+	 */
 	function new_pm_link() {
 		if ( bb_get_option( 'mod_rewrite' ) )
 			bb_uri( 'pm/new' );
@@ -532,6 +784,9 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 			echo BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?new';
 	}
 
+	/**
+	 * @access private
+	 */
 	function template_filter( $a, $b ) {
 		if ( is_pm() && $b == '404.php' ) {
 			if ( !$template = bb_get_template( 'privatemessages.php', false ) ) {
@@ -543,10 +798,16 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		return $a;
 	}
 
+	/**
+	 * @access private
+	 */
 	function profile_filter_action() {
 		add_filter( 'get_profile_info_keys', array( &$this, 'profile_filter' ) );
 	}
 
+	/**
+	 * @access private
+	 */
 	function profile_filter( $keys ) {
 		global $user_id;
 		if ( bb_get_current_user_info( 'ID' ) != $user_id && bb_current_user_can( 'write_posts' ) ) {
@@ -555,7 +816,10 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		return $keys;
 	}
 
-	function post_title_filter( $text, $post_id ) {
+	/**
+	 * @access private
+	 */
+	function post_title_filter( $text, $post_id = 0 ) {
 		if ( $post_id && ( $user_id = get_post_author_id( $post_id ) ) && bb_current_user_can( 'write_posts' ) ) {
 			$text .= "<br/>\n";
 			$text .= '<a href="' . $this->get_send_link( $user_id ) . '">' . __( 'PM this user', 'bbpm' ) . '</a>';
@@ -563,20 +827,36 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		return $text;
 	}
 
+	/**
+	 * Get the URL of the PM list page
+	 *
+	 * @since 0.1-alpha1
+	 * @return string The URL
+	 */
 	function get_link() {
 		if ( bb_get_option( 'mod_rewrite' ) )
 			return bb_get_uri( 'pm' );
 		return BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/';
 	}
 
+	/**
+	 * Get the URL of a page where a private message can be written to a given user.
+	 *
+	 * @since 0.1-alpha3
+	 * @param int $user_id The ID of the user
+	 * @return string The URL
+	 */
 	function get_send_link( $user_id = 0 ) {
-		$user_name = get_user_name( bb_get_user_id( $user_id ) );
+		$user_name = get_user_nicename( bb_get_user_id( $user_id ) );
 
 		if ( bb_get_option( 'mod_rewrite' ) )
-			return bb_get_uri( 'pm/new/' . urlencode( $user_name ) );
-		return BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?new/' . urlencode( $user_name );
+			return bb_get_uri( 'pm/new/' . $user_name );
+		return BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?new/' . $user_name;
 	}
 
+	/**
+	 * @access private
+	 */
 	function header_link( $link ) {
 		$count = $this->count_pm( bb_get_current_user_info( 'ID' ), true );
 
@@ -585,14 +865,32 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		return $link . ' | <a href="' . $this->get_link() . '">' . __( 'Private Messages', 'bbpm' ) . '</a>';
 	}
 
+	/**
+	 * @access private
+	 */
 	function admin_add() {
 		bb_admin_add_submenu( __( 'bbPM', 'bbpm' ), 'use_keys', 'bbpm_admin_page', 'options-general.php' );
 	}
 
+	/**
+	 * Get the message ID that a user last read in a PM thread
+	 *
+	 * @since 0.1-alpha6
+	 * @param int $thread_ID The ID of the thread
+	 * @return int The ID of the last message read by the user, or 0 if the user has never read the thread
+	 */
 	function get_last_read( $thread_ID ) {
 		return (int)bb_get_usermeta( bb_get_current_user_info( 'ID' ), 'bbpm_last_read_' . (int)$thread_ID );
 	}
 
+	/**
+	 * Get information about a bbPM thread
+	 *
+	 * @since 0.1-alpha6
+	 * @param int $thread_ID The ID of the thread to get information about
+	 * @param string $key The type of information to get
+	 * @return string|void The information requested, or null if the information could not be found.
+	 */
 	function get_thread_meta( $thread_ID, $key ) {
 		if ( !function_exists( 'wp_cache_get' ) || false === $result = wp_cache_get( $key, 'bbpm-thread-' . $thread_ID ) ) {
 			global $bbdb;
@@ -605,28 +903,47 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		return $result;
 	}
 
+	/**
+	 * Mark a PM thread as read for the current user
+	 *
+	 * @since 0.1-alpha6
+	 * @uses bbPM::get_last_read Get the current last read ID to reduce database usage
+	 * @param int $thread_ID The ID of the PM thread to mark as read
+	 * @return void
+	 */
 	function mark_read( $thread_ID ) {
 		if ( $this->get_last_read( $thread_ID ) != $this->get_thread_meta( $thread_ID, 'last_message' ) )
 			bb_update_usermeta( bb_get_current_user_info( 'ID' ), 'bbpm_last_read_' . (int)$thread_ID, (int)$this->get_thread_meta( $thread_ID, 'last_message' ) );
 	}
 
-	/* Loop - Threads */
+	/**
+	 * @since 0.1-alpha6
+	 */
 	function thread_alt_class() {
 		alt_class( 'bbpm_threads', $this->the_pm['last_message'] == $this->get_last_read( $this->the_pm['id'] ) ? '' : 'unread_posts_row' );
 	}
 
+	/**
+	 * @since 0.1-alpha6
+	 */
 	function thread_freshness() {
 		$the_pm = new bbPM_Message( $this->the_pm['last_message'] );
 
-		echo bb_since( $the_pm->date );
+		echo apply_filters( 'bbpm_freshness', bb_since( $the_pm->date ), $the_pm->date );
 	}
 
+	/**
+	 * @since 0.1-alpha6
+	 */
 	function thread_unsubscribe_url() {
 		echo bb_nonce_url( BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/pm.php?unsubscribe=' . $this->the_pm['id'], 'bbpm-unsubscribe-' . $this->the_pm['id'] );
 	}
 
+	/**
+	 * @since 0.1-alpha6
+	 */
 	function thread_read_before() {
-		if ( $this->the_pm['last_message'] != $this->get_last_read( $this->the_pm['id'] ) ) {
+		if ( $this->the_pm && $this->the_pm['last_message'] != $this->get_last_read( $this->the_pm['id'] ) ) {
 			echo '<span class="unread_posts">';
 
 			if ( !function_exists( 'utplugin_show_unread' ) )
@@ -634,19 +951,119 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		}
 	}
 
+	/**
+	 * @since 0.1-alpha6
+	 */
 	function thread_read_after() {
-		if ( $this->the_pm['last_message'] != $this->get_last_read( $this->the_pm['id'] ) )
+		if ( $this->the_pm && $this->the_pm['last_message'] != $this->get_last_read( $this->the_pm['id'] ) )
 			echo '</span>';
 	}
 
+	/**
+	 * Compatibility with {@link http://bbpress.org/plugins/topic/subscribe-to-topic/ Subscribe to Topic}.
+	 *
+	 * Used when {@link bbPM::unsubscribe()} is called from {@link pm.php} so
+	 * {@link http://bbpress.org/plugins/topic/subscribe-to-topic/ Subscribe to Topic}
+	 * doesn't remove the unsubscribe parameter from the URL, and so topics aren't
+	 * unsubscribed from unknowingly.
+	 *
+	 * @since 0.1-alpha6b
+	 * @see BBPM_STT_FIX
+	 */
 	function subscribe_to_topic_fix() {
-		remove_filter( 'bb_init', 'stt_init', 150 );
+		remove_action( 'bb_init', 'stt_init', 150 );
+	}
+
+	/**
+	 * @see bbPM::recount()
+	 * @access private
+	 * @since 0.1-alpha7
+	 */
+	function add_recount() {
+		global $recount_list;
+
+		$recount_list[] = array( 'bbpm', __( 'Remove deleted users from bbPM threads', 'bbpm' ), array( &$this, 'recount' ) );
+	}
+
+	/**
+	 * Delete unused bbPM data
+	 *
+	 * So far, the actions used are:
+	 *
+	 * - Remove users that have been deleted from thread member lists
+	 * - Delete threads with no users (this only deletes threads if they had deleted users in them, otherwise threads should be deleted automatically)
+	 *
+	 * @todo Optimize this (maybe ask _ck_)
+	 * @since 0.1-alpha7
+	 * @return string A description of the actions used
+	 * @global BPDB_Multi Get, set, and delete as needed
+	 */
+	function recount() {
+		global $bbdb;
+
+		$result = __( 'Cleaning up bbPM messages&hellip; ', 'bbpm' );		
+
+		// Get all of the PM thread member lists
+		$members = $bbdb->get_results( $bbdb->prepare( 'SELECT `object_id`,`meta_value` FROM `' . $bbdb->meta . '` WHERE `object_type` = %s AND `meta_key` = %s', 'bbpm_thread', 'to' ) );
+		$users = array();
+
+		foreach ( $members as $thread ) {
+			$member = array_slice( explode( ',', $thread->meta_value ), 1, -1 );
+			foreach ( $member as $user ) {
+				if ( !isset( $users[$user] ) )
+					$users[$user] = true;
+			}
+		}
+
+		$users = array_keys( $users );
+
+		bb_cache_users( $users );
+
+		$users_noexist = array();
+
+		foreach ( $users as $user ) {
+			if ( !bb_get_user( $user ) ) {
+				$users_noexist[] = ',' . $user . ',';
+			}
+		}
+
+		$threads_delete = array();
+
+		if ( $users_noexist ) {
+			foreach ( $members as $thread ) {
+				if ( $thread->meta_value != $_members = str_replace( $users_noexist, ',', $thread->meta_value ) ) {
+					if ( $_members == ',' ) {
+						$threads_delete[] = $thread->object_id;
+					} else {
+						bb_update_meta( $thread->object_id, 'to', $_members, 'bbpm_thread' );
+						if ( function_exists( 'wp_cache_set' ) )
+							wp_cache_set( 'to', $_members, 'bbpm-thread-' . $thread->object_id );
+					}
+				}
+			}
+
+			$result .= sprintf( _n( 'Removed %s nonexistant user from bbPM threads.', 'Removed %s nonexistant users from bbPM threads.', count( $users_noexist ), 'bbpm' ), bb_number_format_i18n( count( $users_noexist ) ) );
+		}
+
+		if ( count( $threads_delete ) ) {
+			if ( function_exists( 'wp_cache_flush' ) )
+				foreach ( $threads_delete as $ID )
+					wp_cache_flush( 'bbpm-thread-' . $ID );
+
+			$bbdb->query( 'DELETE FROM `' . $bbdb->bbpm . '` WHERE `pm_thread` IN (' . implode( ',', $threads_delete ) . ')' );
+			$bbdb->query( 'DELETE FROM `' . $bbdb->meta . '` WHERE `object_type` = \'bbpm_thread\' AND `object_id`  IN (' . implode( ',', $threads_delete ) . ')' );
+
+			$result .= sprintf( _n( 'Deleted %s thread. ', 'Deleted %s threads. ', count( $threads_delete ), 'bbpm' ), bb_number_format_i18n( count( $threads_delete ) ) );
+		}
+
+		return $result;
 	}
 }
 
 /**
  * @global bbPM $GLOBALS['bbpm']
  * @name $bbpm
+ * @since 0.1-alpha1
  */
 $GLOBALS['bbpm'] = new bbPM;
 
@@ -717,6 +1134,12 @@ function bbPM_update_helper_helper_0_1_alpha4( $data ) {
 
 /**
  * Used to get a bbPM header link in a different place in the template.
+ *
+ * To use this, add the following code to your template where you would like it
+ * to appear, and change the admin setting so it won't show up twice.
+ * <code>
+ * <?php if ( function_exists( 'bbpm_messages_link' ) ) bbpm_messages_link(); ?>
+ * </code>
  *
  * @see bbPM::header_link()
  * @global bbPM 

@@ -11,6 +11,8 @@ bbPM - The new way to private message.
 
 Users can send private messages to each other. Replies are threaded, and more than two users can participate in a single conversation.
 
+[Developer documentation can be found here.](http://nightgunner5.is-a-geek.net:1337/phpdoc/bbpm/)
+
 == Installation ==
 
 1. Upload the entire `bbpm` plugin to the `my-plugins` directory of your bbPress installation. If you don't have one, create it!
@@ -22,6 +24,9 @@ Users can send private messages to each other. Replies are threaded, and more th
 2. Replies are threaded, and the reply form is loaded using ajax.
 
 == Changelog ==
+
+= 0.1-alpha7 =
+* Recount option to remove deleted users from bbPM threads
 
 = 0.1-alpha6b =
 * Subscribe to Topic will no longer prevent users from unsubscribing from PM threads.

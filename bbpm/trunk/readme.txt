@@ -28,6 +28,8 @@ Users can send private messages to each other. Replies are threaded, and more th
 = 0.1-alpha7 =
 * Recount option to remove deleted users from bbPM threads
 * Adding users to a thread now redirects properly without pretty permalinks
+* Pagination now works as expected
+* Emails sent when new messages are created can be disabled
 
 = 0.1-alpha6b =
 * Subscribe to Topic will no longer prevent users from unsubscribing from PM threads.

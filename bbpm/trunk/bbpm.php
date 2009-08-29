@@ -14,7 +14,7 @@ Domain Path: /translations/
  * @version 0.1-alpha7
  * @author Nightgunner5
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU General Public License, Version 3 or higher
- * @todo Make email optional for each type on the user and forum level
+ * @todo Make email optional for each type on the user level
  */
 
 load_plugin_textdomain( 'bbpm', dirname( __FILE__ ) . '/translations' );
@@ -501,8 +501,30 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 			wp_cache_delete( bb_get_current_user_info( 'ID' ), 'bbpm-user-messages' );
 		}
 
-		if ( bb_get_current_user_info( 'ID' ) != $id_reciever )
-			bb_mail( bb_get_user_email( $id_reciever ), sprintf( __( '%s has sent you a private message on %s!', 'bbpm' ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ) ), sprintf( __( "Hello, %s!\n\n%s has sent you a private message on %s!\n\nTo read it now, go to the following address:\n\n%s", 'bbpm' ), get_user_display_name( $id_reciever ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ), $msg->read_link ) );
+		if ( $this->settings['email_new'] && bb_get_current_user_info( 'ID' ) != $id_reciever )
+			bb_mail( bb_get_user_email( $id_reciever ),
+				sprintf(
+					__( '%s has sent you a private message on %s: "%s"', 'bbpm' ),
+					get_user_display_name( bb_get_current_user_info( 'ID' ) ),
+					bb_get_option( 'name' ),
+					$title
+				), $this->settings['email_message'] ? sprintf(
+					__( "Hello, %s!\n\n%s has sent you a private message entitled \"%s\" on %s!\n\nTo read it now, go to the following address:\n\n%s\n\nDo NOT reply to this message.\n\nThe contents of the message are:\n\n%s", 'bbpm' ),
+					get_user_display_name( $id_reciever ),
+					get_user_display_name( bb_get_current_user_info( 'ID' ) ),
+					$title,
+					bb_get_option( 'name' ),
+					$msg->read_link,
+					strip_tags( $msg->text )
+				) : sprintf(
+					__( "Hello, %s!\n\n%s has sent you a private message entitled \"%s\" on %s!\n\nTo read it now, go to the following address:\n\n%s", 'bbpm' ),
+					get_user_display_name( $id_reciever ),
+					get_user_display_name( bb_get_current_user_info( 'ID' ) ),
+					$title,
+					bb_get_option( 'name' ),
+					$msg->read_link
+				)
+			);
 
 		bb_update_meta( $pm['pm_thread'], 'last_message', $msg->ID, 'bbpm_thread' );
 
@@ -541,10 +563,35 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 
 		bb_update_meta( $pm['pm_thread'], 'last_message', $msg->ID, 'bbpm_thread' );
 
-		$to = array_filter( explode( ',', $bbdb->get_var( $bbdb->prepare( 'SELECT `meta_value` FROM `' . $bbdb->meta . '` WHERE `meta_key` = %s AND `object_type` = %s AND `object_id` = %d', 'to', 'bbpm_thread', $pm['pm_thread'] ) ) ) );
-		foreach ( $to as $recipient ) {
-			if ( $to != bb_get_current_user_info( 'ID' ) )
-				bb_mail( bb_get_user_email( $recipient ), sprintf( __( '%s has sent you a private message on %s!', 'bbpm' ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ) ), sprintf( __( "Hello, %s!\n\n%s has sent you a private message on %s!\n\nTo read it now, go to the following address:\n\n%s", 'bbpm' ), get_user_display_name( $recipient ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ), $msg->read_link ) );
+		if ( $this->settings['email_reply'] ) {
+			$to = $this->get_thread_members( $pm['pm_thread'] );
+
+			foreach ( $to as $recipient ) {
+				if ( $to != bb_get_current_user_info( 'ID' ) )
+					bb_mail( bb_get_user_email( $recipient ),
+						sprintf(
+							__( '%s has sent you a private message on %s: "%s"', 'bbpm' ),
+							get_user_display_name( bb_get_current_user_info( 'ID' ) ),
+							bb_get_option( 'name' ),
+							$this->get_thread_title( $msg->thread )
+						), $this->settings['email_message'] ? sprintf(
+							__( "Hello, %s!\n\n%s has sent you a private message entitled \"%s\" on %s!\n\nTo read it now, go to the following address:\n\n%s\n\nDo NOT reply to this message.\n\nThe contents of the message are:\n\n%s", 'bbpm' ),
+							get_user_display_name( $recipient ),
+							get_user_display_name( bb_get_current_user_info( 'ID' ) ),
+							$this->get_thread_title( $msg->thread ),
+							bb_get_option( 'name' ),
+							$msg->read_link,
+							strip_tags( $msg->text )
+						) : sprintf(
+							__( "Hello, %s!\n\n%s has sent you a private message entitled \"%s\" on %s!\n\nTo read it now, go to the following address:\n\n%s", 'bbpm' ),
+							get_user_display_name( $recipient ),
+							get_user_display_name( bb_get_current_user_info( 'ID' ) ),
+							$this->get_thread_title( $msg->thread ),
+							bb_get_option( 'name' ),
+							$msg->read_link
+						)
+					);
+			}
 		}
 
 		do_action( 'bbpm_reply', $msg );
@@ -768,7 +815,23 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 
 				do_action( 'bbpm_add_member', $ID, $user );
 
-				bb_mail( bb_get_user_email( $user ), sprintf( __( '%s has added you to a conversation on %s!', 'bbpm' ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ) ), sprintf( __( "Hello, %s!\n%s has added you to a private message conversation on %s!\nTo read it now, go to the following address:\n%s", 'bbpm' ), get_user_display_name( $user ), get_user_display_name( bb_get_current_user_info( 'ID' ) ), bb_get_option( 'name' ), bb_get_option( 'mod_rewrite' ) ? bb_get_uri( 'pm/' . $ID ) : BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?' . $ID ) );
+				if ( $this->settings['email_add'] ) {
+					bb_mail( bb_get_user_email( $user ),
+						sprintf(
+							__( '%s has added you to a conversation on %s: "%s"', 'bbpm' ),
+							get_user_display_name( bb_get_current_user_info( 'ID' ) ),
+							bb_get_option( 'name' ),
+							$this->get_thread_title( $ID )
+						), sprintf(
+							__( "Hello, %s!\n\n%s has added you to a private message conversation titled \"%s\" on %s!\n\nTo read it now, go to the following address:\n\n%s", 'bbpm' ),
+							get_user_display_name( $user ),
+							get_user_display_name( bb_get_current_user_info( 'ID' ) ),
+							$this->get_thread_title( $ID ),
+							bb_get_option( 'name' ),
+							bb_get_option( 'mod_rewrite' ) ? bb_get_uri( 'pm/' . $ID ) : BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?' . $ID
+						)
+					);
+				}
 			}
 			return true;
 		}
@@ -1081,9 +1144,14 @@ function bbpm_admin_page() {
 	if ( bb_verify_nonce( $_POST['_wpnonce'], 'bbpm-admin' ) ) {
 		$bbpm->settings['max_inbox'] = max( (int)$_POST['max_inbox'], 1 );
 		$bbpm->settings['auto_add_link'] = !empty( $_POST['auto_add_link'] );
+		$bbpm->settings['email_new'] = !empty( $_POST['email_new'] );
+		$bbpm->settings['email_reply'] = !empty( $_POST['email_reply'] );
+		$bbpm->settings['email_add'] = !empty( $_POST['email_add'] );
+		$bbpm->settings['email_message'] = !empty( $_POST['email_message'] );
 
 		bb_update_option( 'bbpm_settings', $bbpm->settings );
 	}
+
 ?>
 <h2><?php _e( 'bbPM', 'bbpm' ); ?></h2>
 <?php do_action( 'bb_admin_notices' ); ?>
@@ -1104,6 +1172,17 @@ function bbpm_admin_page() {
 		<div class="inputs">
 			<input type="checkbox" id="auto_add_link" name="auto_add_link"<?php if ( $bbpm->settings['auto_add_link'] ) echo ' checked="checked"'; ?> />
 			<p><?php _e( 'You will need to add <code>&lt;?php if ( function_exists( \'bbpm_messages_link\' ) ) bbpm_messages_link(); ?&gt;</code> to your template if you disable this.', 'bbpm' ); ?></p>
+		</div>
+	</div>
+	<div id="option-email_settings">
+		<div class="label">
+			<?php _e( 'Email options', 'bbpm' ); ?>
+		</div>
+		<div class="inputs">
+			<input type="checkbox" id="email_new" name="email_new"<?php if ( $bbpm->settings['email_new'] ) echo ' checked="checked"'; ?> /> <?php _e( 'When a new message is recieved', 'bbpm' ); ?><br />
+			<input type="checkbox" id="email_reply" name="email_reply"<?php if ( $bbpm->settings['email_reply'] ) echo ' checked="checked"'; ?> /> <?php _e( 'When a new reply is recieved', 'bbpm' ); ?><br />
+			<input type="checkbox" id="email_add" name="email_add"<?php if ( $bbpm->settings['email_add'] ) echo ' checked="checked"'; ?> /> <?php _e( 'When a user is added to a conversation', 'bbpm' ); ?><br />
+			<input type="checkbox" id="email_message" name="email_message"<?php if ( $bbpm->settings['email_message'] ) echo ' checked="checked"'; ?> /> <?php _e( 'Include contents of message', 'bbpm' ); ?>
 		</div>
 	</div>
 </fieldset>

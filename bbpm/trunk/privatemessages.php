@@ -73,7 +73,7 @@ _e( 'Private Messages', 'bbpm' ); ?></h3>
 	<th><?php _e( 'Actions' ); ?></th>
 </tr>
 
-<?php while ( $bbpm->have_pm( bb_get_option( 'page_topics' ) * max( $action - 1, 0 ), bb_get_option( 'page_topics' ) ) ) { ?>
+<?php while ( $bbpm->have_pm( bb_get_option( 'page_topics' ) * max( $action - 1, 0 ), bb_get_option( 'page_topics' ) * max( $action, 1 ) ) ) { ?>
 <tr<?php $bbpm->thread_alt_class(); ?>>
 	<td><a href="<?php echo bb_get_option( 'mod_rewrite' ) ? bb_get_uri( 'pm/' . $bbpm->the_pm['id'] ) : BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?' . $bbpm->the_pm['id']; ?>"><?php
 	$bbpm->thread_read_before();
@@ -100,7 +100,7 @@ foreach ( $bbpm->the_pm['members'] as $member ) {
 </tr>
 <?php } ?>
 </table>
-<?php $bbpm->pm_pages( max( $get == 'page' ? $action - 1 : 0, 0 ) );
+<?php $bbpm->pm_pages( max( $get == 'page' ? $action : 1, 1 ) );
 } else {
 	switch ( $action ) {
 		case 'reply':

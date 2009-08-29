@@ -1135,7 +1135,7 @@ $GLOBALS['bbpm'] = new bbPM;
  * @return bool true if the current page is the private messaging page, false otherwise.
  */
 function is_pm() {
-	return substr( ltrim( str_replace( bb_get_option( 'path' ), '', $_SERVER['REQUEST_URI'] . '/' ), '/' ), 0, 3 ) == 'pm/';
+	return substr( ltrim( substr( $_SERVER['REQUEST_URI'] . '/', strlen( bb_get_option( 'path' ) ) ), '/' ), 0, 3 ) == 'pm/';
 }
 
 function bbpm_admin_page() {

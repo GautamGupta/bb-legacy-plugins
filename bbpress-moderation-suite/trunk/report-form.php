@@ -1,8 +1,10 @@
 <?php
 
+/* This is not an individual plugin, but a part of the bbPress Moderation Suite. */
+
 /* $Id$ */
 
-?><ol id="thread"><li>
+?><ol id="thread"><li class="alt">
 <?php
 bb_post_template();
 ?>
@@ -12,9 +14,8 @@ bb_post_template();
 	<label for="report_reason"><?php _e( 'What is your reason for reporting this post?', 'bbpress-moderation-suite' ); ?>
 		<select name="report_reason" id="report_reason" tabindex="1">
 <?php foreach ( bbmodsuite_report_reasons() as $id => $reason ) { ?>
-			<option value="<?php echo $id; ?>"><?php echo $reason; ?></option>
+			<option value="<?php echo $id; ?>"<?php if ( $id == 'd41d8cd98f00b204e9800998ecf8427e' ) echo ' selected="selected"'; ?>><?php echo $reason; ?></option>
 <?php } ?>
-			<option value="0" selected="selected"><?php _e( 'Other', 'bbpress-moderation-suite' ); ?></option>
 		</select>
 	</label>
 </p>
@@ -24,5 +25,5 @@ bb_post_template();
 	</label>
 </p>
 <p class="submit">
-  <input type="submit" id="postformsub" name="Submit" value="<?php echo attribute_escape( __( 'Send Report &raquo;', 'bbpress-moderation-suite' ) ); ?>" tabindex="3" />
+	<input type="submit" id="postformsub" name="Submit" value="<?php echo attribute_escape( __( 'Send Report &raquo;', 'bbpress-moderation-suite' ) ); ?>" tabindex="3" />
 </p>

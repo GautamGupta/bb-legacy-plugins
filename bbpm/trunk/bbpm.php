@@ -910,7 +910,9 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 	 * @return string The URL
 	 */
 	function get_send_link( $user_id = 0 ) {
-		$user_name = get_user_nicename( bb_get_user_id( $user_id ) );
+		$user = bb_get_user( $user_id );
+		if ( $user )
+			$user_name = $user->user_nicename;
 
 		if ( bb_get_option( 'mod_rewrite' ) )
 			return bb_get_uri( 'pm/new/' . $user_name );

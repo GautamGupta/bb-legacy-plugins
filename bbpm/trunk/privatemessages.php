@@ -70,7 +70,7 @@ _e( 'Private Messages', 'bbpm' ); ?></h3>
 	<th><?php _e( 'Subject', 'bbpm' ); ?> &#8212; <a href="<?php $bbpm->new_pm_link(); ?>"><?php _e( 'New &raquo;', 'bbpm' ); ?></a></th>
 	<th><?php _e( 'Members', 'bbpm' ); ?></th>
 	<th><?php _e( 'Freshness' ); ?></th>
-	<th><?php _e( 'Actions' ); ?></th>
+	<th><?php _e( 'Actions', 'bbpm' ); ?></th>
 </tr>
 
 <?php while ( $bbpm->have_pm( bb_get_option( 'page_topics' ) * max( $action - 1, 0 ), bb_get_option( 'page_topics' ) * max( $action, 1 ) ) ) { ?>

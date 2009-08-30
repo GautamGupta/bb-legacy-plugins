@@ -15,7 +15,7 @@ function bbmodsuite_report_install() {
 			`report_content` text NOT NULL,
 			`report_type` varchar(250) NOT NULL default \'new\',
 			`resolved_by` int(10) NOT NULL default \'0\',
-			`resolve_type` varchar(32) NOT NULL default \'d41d8cd98f00b204e980098ecf8427e\',
+			`resolve_type` varchar(32) NOT NULL default \'d41d8cd98f00b204e9800998ecf8427e\',
 			`resolve_content` text NOT NULL default \'\',
 			`reported_at` datetime NOT NULL,
 			`resolved_at` datetime,
@@ -124,8 +124,7 @@ function bbpress_moderation_suite_report() { ?>
 <?php
 	switch ( $_GET['page'] ) {
 		case 'resolve_report':
-			if ( !bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite-report-resolve-submit_' . $_GET['report'] ) )
-				return;
+			bb_check_admin_referer( 'bbmodsuite-report-resolve-submit_' . $_GET['report'] );
 
 			global $bbdb;
 			if ( trim( $_POST['resolve_content'] ) && ( $_POST['resolve_type'] === '0' || array_key_exists( (int)$_POST['resolve_type'], bbmodsuite_report_resolve_types() ) ) )
@@ -155,10 +154,10 @@ function bbpress_moderation_suite_report() { ?>
 		</label>
 		<div>
 			<select name="resolve_type" id="resolve_type" tabindex="1">
-<?php foreach ( bbmodsuite_report_resolve_types() as $id => $reason ) { ?>
-				<option value="<?php echo $id; ?>"><?php echo $reason; ?></option>
+<?php $types = bbmodsuite_report_resolve_types();
+foreach ( $types as $id => $reason ) { ?>
+				<option value="<?php echo $id; ?>"<?php if ( $id == 'd41d8cd98f00b204e9800998ecf8427e' ) echo ' selected="selected"'; ?>><?php echo $reason; ?></option>
 <?php } ?>
-				<option value="0" selected="selected"><?php _e( 'Other', 'bbpress-moderation-suite' ); ?></option>
 			</select>
 		</div>
 	</div>
@@ -212,11 +211,11 @@ function bbpress_moderation_suite_report() { ?>
 
 		<tr<?php alt_class( 'reported_post' ); ?>>
 			<td><?php echo get_user_display_name( $report->report_from ); ?></td>
-			<td><strong><?php echo $reasons[$report->report_reason]; ?></strong>
+			<td><strong><?php echo isset( $reasons[$report->report_reason] ) ? $reasons[$report->report_reason] : $reasons['d41d8cd98f00b204e9800998ecf8427e']; ?></strong>
 				<?php echo bb_autop( $report->report_content ); ?>
 			</td>
 			<td><?php echo get_user_display_name( $report->resolved_by ); ?></td>
-			<td><strong><?php echo $resolve_types[$report->resolve_type]; ?></strong>
+			<td><strong><?php echo isset( $resolve_types[$report->resolve_type] ) ? $resolve_types[$report->resolve_type] : $resolve_types['d41d8cd98f00b204e9800998ecf8427e']; ?></strong>
 				<?php echo bb_autop( $report->resolve_content ); ?>
 			</td>
 			<td class="action">
@@ -347,7 +346,7 @@ function bbpress_moderation_suite_report() { ?>
 
 		<tr<?php alt_class( 'reported_post' ); ?>>
 			<td><?php echo get_user_display_name( $report->report_from ); ?></td>
-			<td><strong><?php echo $reasons[$report->report_reason]; ?></strong>
+			<td><strong><?php echo isset( $reasons[$report->report_reason] ) ? $reasons[$report->report_reason] : $reasons['d41d8cd98f00b204e9800998ecf8427e']; ?></strong>
 				<?php echo bb_autop( $report->report_content ); ?>
 			</td>
 			<td class="action">
@@ -406,6 +405,10 @@ function bbmodsuite_report_get_reports_css() {
 
 function bbmodsuite_report_css() {
 	$options = bb_get_option( 'bbmodsuite_report_options' );
+
+	if ( !bb_current_user_can( $options['min_level'] ) || !bbmodsuite_report_count( 'new' ) )
+		return;
+
 	echo '<style type="text/css">
 /* <![CDATA[ */';
 	if ( $options['obtrusive'] )
@@ -476,7 +479,9 @@ function bbmodsuite_report_resolve_types() {
 }
 
 function bbmodsuite_report_header() {
-	if ( !bb_current_user_can( 'moderate' ) ) return;
+	$options = bb_get_option( 'bbmodsuite_report_options' );
+
+	if ( !bb_current_user_can( $options['min_level'] ) ) return;
 	$link   = bb_get_uri(
 		'bb-admin/admin-base.php',
 		array(
@@ -485,7 +490,7 @@ function bbmodsuite_report_header() {
 		),
 		BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
 	);
-	$number = number_format( bbmodsuite_report_count( 'new' ) );
+	$number = bb_number_format_i18n( bbmodsuite_report_count( 'new' ) );
 	if ( $number == '0' )
 		return;
 	if ( $number == '1' )
@@ -526,7 +531,7 @@ function bbmodsuite_report_link( $parts, $args ) {
 			$post_author = new WP_User( $post_author_id );
 		global $bbmodsuite_cache;
 		$options = bb_get_option( 'bbmodsuite_report_options' );
-		if ( $post_author_id != bb_get_current_user_info( 'ID' ) && ( $options['max_level'] === 'none' || !$post_author->has_cap( $options['max_level'] ) ) ) {
+		if ( $post_author_id != bb_get_current_user_info( 'ID' ) && ( $options['max_level'] == 'none' || !$post_author->has_cap( $options['max_level'] ) ) ) {
 			$title   = __( 'Report this post to a moderator.', 'bbpress-moderation-suite' );
 			$href    = str_replace( '\\', '/', substr( BB_PLUGIN_URL, 0, -1 ) . str_replace( realpath( BB_PLUGIN_DIR ), '', dirname( __FILE__ ) ) . '/' . basename( __FILE__ ) );
 			$parts['report'] = $args['before_each'] . '<a class="report_post" title="' . $title . '" href="' . $href . '?report=' . $post_id . '&amp;_nonce=' . bb_create_nonce( 'bbmodsuite-report-' . $post_id ) . '">' . __( 'Report', 'bbpress-moderation-suite' ) . '</a>' . $args['after_each'];

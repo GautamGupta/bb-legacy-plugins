@@ -40,11 +40,11 @@ function bbmodsuite_report_uninstall() {
 	bb_delete_option( 'bbmodsuite_report_options' );
 }
 
-if ( !defined( 'BB_PATH' ) && isset( $_GET['report'] ) ) {
-	if ( file_exists( '../bb-load.php' ) )
-		include_once '../bb-load.php';
+if ( !function_exists( 'add_action' ) && isset( $_GET['report'] ) ) {
+	if ( file_exists( '../../bb-load.php' ) )
+		require_once '../../bb-load.php';
 	elseif ( file_exists( '../../bb-load.php' ) )
-		include_once '../../bb-load.php';
+		require_once '../../../bb-load.php';
 	else
 		exit( 'Fatal error.' );
 	if ( strtoupper( $_SERVER['REQUEST_METHOD'] ) === 'GET' ) {
@@ -65,7 +65,7 @@ if ( !defined( 'BB_PATH' ) && isset( $_GET['report'] ) ) {
 		$forums = false;
 
 		function bbmodsuite_report_form_uri_buffer( $content ) {
-			return str_replace( 'action="' . bb_get_option('uri') . 'bb-post.php">', 'action="' . bbmodsuite_report_form_uri( '', 'bb-post.php' ) . '">', $content );
+			return str_replace( 'action="' . bb_get_uri( 'bb-post.php' ) . '">', 'action="' . bbmodsuite_report_form_uri( '', 'bb-post.php' ) . '">', $content );
 		}
 		ob_start( 'bbmodsuite_report_form_uri_buffer' );
 
@@ -90,6 +90,7 @@ if ( !defined( 'BB_PATH' ) && isset( $_GET['report'] ) ) {
 		$bbdb->insert( $bbdb->prefix . 'bbmodsuite_reports', compact( 'report_reason', 'report_content', 'reported_post', 'report_from', 'reported_at' ) );
 		bb_die( __( '<p>Your report was submitted. The moderation staff will review the post in question.</p>', 'bbpress-moderation-suite' ) );
 	}
+	exit;
 }
 
 function bbmodsuite_report_init() {
@@ -439,12 +440,12 @@ function bbmodsuite_report_resolve_types() {
 function bbmodsuite_report_header() {
 	if ( !bb_current_user_can( 'moderate' ) ) return;
 	$link   = bb_get_uri(
-					'bb-admin/admin-base.php',
-					array(
-						'page' => 'new_reports',
-						'plugin' => 'bbpress_moderation_suite_report',
-					),
-					BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
+		'bb-admin/admin-base.php',
+		array(
+			'page' => 'new_reports',
+			'plugin' => 'bbpress_moderation_suite_report',
+		),
+		BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
 	);
 	$number = number_format( bbmodsuite_report_count( 'new' ) );
 	if ( $number == '0' )
@@ -466,8 +467,15 @@ if ( version_compare( bb_get_option( 'version' ), '1.0dev', '<' ) )
 
 function bbmodsuite_report_count( $type = 'all' ) {
 	global $bbdb;
-	if ( $type === 'all' ) return $bbdb->get_var( 'SELECT COUNT(*) FROM `' . $bbdb->prefix . 'bbmodsuite_reports`' );
-	return $bbdb->get_var( $bbdb->prepare( 'SELECT COUNT(*) FROM `' . $bbdb->prefix . 'bbmodsuite_reports` WHERE `report_type`=%s', $type ) );
+
+	if ( false === $count = wp_cache_get( $type, 'bbmodsuite-report' ) ) {
+		if ( $type == 'all' )
+			$count = $bbdb->get_var( 'SELECT COUNT(*) FROM `' . $bbdb->prefix . 'bbmodsuite_reports`' );
+		else
+			$count = $bbdb->get_var( $bbdb->prepare( 'SELECT COUNT(*) FROM `' . $bbdb->prefix . 'bbmodsuite_reports` WHERE `report_type`=%s', $type ) );
+		wp_cache_add( $type, $count, 'bbmodsuite-report' );
+	}
+	return $count;
 }
 
 function bbmodsuite_report_link( $parts, $args ) {

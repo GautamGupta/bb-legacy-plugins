@@ -5,17 +5,17 @@
 /* $Id$ */
 
 function bbmodsuite_report_install() {
-	global $bbdb, $bbmodsuite_cache;
+	global $bbdb;
 	$bbdb->query(
 		'CREATE TABLE IF NOT EXISTS `' . $bbdb->prefix . 'bbmodsuite_reports` (
 			`ID` int(10) NOT NULL auto_increment,
-			`report_reason` int(10) NOT NULL default \'0\',
+			`report_reason` varchar(32) NOT NULL default \'d41d8cd98f00b204e9800998ecf8427e\',
 			`report_from` int(10) NOT NULL,
 			`reported_post` int(10) NOT NULL,
 			`report_content` text NOT NULL,
 			`report_type` varchar(250) NOT NULL default \'new\',
 			`resolved_by` int(10) NOT NULL default \'0\',
-			`resolve_type` int(10) NOT NULL default \'0\',
+			`resolve_type` varchar(32) NOT NULL default \'d41d8cd98f00b204e980098ecf8427e\',
 			`resolve_content` text NOT NULL default \'\',
 			`reported_at` datetime NOT NULL,
 			`resolved_at` datetime,
@@ -23,14 +23,37 @@ function bbmodsuite_report_install() {
 		)'
 	);
 
-	if ( !$bbmodsuite_cache['report'] = bb_get_option( 'bbmodsuite_report_options' ) ) {
-		bb_update_option( 'bbmodsuite_report_options', array( 'min_level' => 'moderate', 'max_level' => 'moderate', 'types' => '', 'resolve_types' => '', 'obtrusive' => true ) );
-		$bbmodsuite_cache['report'] = array( 'min_level' => 'moderate', 'max_level' => 'moderate', 'types' => '', 'resolve_types' => '', 'obtrusive' => true );
+	if ( !$options = bb_get_option( 'bbmodsuite_report_options' ) ) {
+		bb_update_option( 'bbmodsuite_report_options', $options = array( 'min_level' => 'moderate', 'max_level' => 'moderate', 'types' => array(), 'resolve_types' => array(), 'obtrusive' => true, 'version' => '0.1-beta2' ) );
 	}
 
-	if ( !isset( $bbmodsuite_cache['report']['obtrusive'] ) ) {
-		$bbmodsuite_cache['report']['obtrusive'] = true;
-		bb_update_option( 'bbmodsuite_report_options', $bbmodsuite_cache['report'] );
+	if ( !isset( $options['version'] ) || $options['version'] != '0.1-beta2' ) {
+		switch ( isset( $options['version'] ) ? $options['version'] : false ) {
+			case false:
+				if ( !isset( $options['obtrusive'] ) )
+					$options['obtrusive'] = true;
+
+				$bbdb->query( 'ALTER TABLE `' . $bbdb->prefix . 'bbmodsuite_reports` MODIFY `report_reason` varchar(32) NOT NULL default \'d41d8cd98f00b204e9800998ecf8427e\', MODIFY `resolve_type` varchar(32) NOT NULL default \'d41d8cd98f00b204e9800998ecf8427e\'' );
+
+				$report_types = array_keys( bbmodsuite_report_reasons() );
+				foreach ( $report_types as $old => $new )
+					$bbdb->update( $bbdb->prefix . 'bbmodsuite_reports', array(
+						'report_reason' => $new
+					), array(
+						'report_reason' => $old
+					) );
+
+				$resolve_types = array_keys( bbmodsuite_report_resolve_types() );
+				foreach ( $resolve_types as $old => $new )
+					$bbdb->update( $bbdb->prefix . 'bbmodsuite_reports', array(
+						'resolve_type' => $new
+					), array(
+						'resolve_type' => $old
+					) );
+				break;
+		}
+		$options['version'] = '0.1-beta2';
+		bb_update_option( 'bbmodsuite_report_options', $options );
 	}
 }
 
@@ -47,6 +70,7 @@ if ( !function_exists( 'add_action' ) && isset( $_GET['report'] ) ) {
 		require_once '../../../bb-load.php';
 	else
 		exit( 'Fatal error.' );
+
 	if ( strtoupper( $_SERVER['REQUEST_METHOD'] ) === 'GET' ) {
 		if ( !bb_verify_nonce( $_GET['_nonce'], 'bbmodsuite-report-' . $_GET['report'] ) )
 			bb_die( __( 'Invalid report', 'bbpress-moderation-suite' ) );
@@ -57,17 +81,12 @@ if ( !function_exists( 'add_action' ) && isset( $_GET['report'] ) ) {
 			bb_die( __( 'Invalid report', 'bbpress-moderation-suite' ) );
 
 		function bbmodsuite_report_form_uri( $a, $b ) {
-			if ( $b === 'bb-post.php' )
+			if ( $b == 'bb-post.php' )
 				return str_replace( '\\', '/', substr( BB_PLUGIN_URL, 0, -1 ) . str_replace( realpath( BB_PLUGIN_DIR ), '', dirname( __FILE__ ) ) . '/' . basename( __FILE__ ) . '?report=' . $_GET['report'] );
 			return $a;
 		}
 		add_filter( 'bb_get_uri', 'bbmodsuite_report_form_uri', 10, 2 );
 		$forums = false;
-
-		function bbmodsuite_report_form_uri_buffer( $content ) {
-			return str_replace( 'action="' . bb_get_uri( 'bb-post.php' ) . '">', 'action="' . bbmodsuite_report_form_uri( '', 'bb-post.php' ) . '">', $content );
-		}
-		ob_start( 'bbmodsuite_report_form_uri_buffer' );
 
 		function bbmodsuite_report_form( $a, $b ) {
 			if ( $b === 'post-form.php' ) {
@@ -79,8 +98,9 @@ if ( !function_exists( 'add_action' ) && isset( $_GET['report'] ) ) {
 
 		bb_load_template( 'front-page.php' );
 	} else {
-		if ( $_POST['report_reason'] !== '0' && !array_key_exists( $_POST['report_reason'], bbmodsuite_report_reasons() ) )
+		if ( !array_key_exists( $_POST['report_reason'], bbmodsuite_report_reasons() ) )
 			bb_die( __( 'Invalid report', 'bbpress-moderation-suite' ) );
+
 		$report_reason  = $_POST['report_reason'];
 		$report_content = htmlspecialchars( bbmodsuite_stripslashes( $_POST['report_content'] ) );
 		$reported_post  = $_GET['report'];
@@ -92,13 +112,6 @@ if ( !function_exists( 'add_action' ) && isset( $_GET['report'] ) ) {
 	}
 	exit;
 }
-
-function bbmodsuite_report_init() {
-	global $bbmodsuite_cache;
-	if ( empty( $bbmodsuite_cache['report'] ) )
-		$bbmodsuite_cache['report'] = bb_get_option( 'bbmodsuite_report_options' );
-}
-add_action( 'bbmodsuite_init', 'bbmodsuite_report_init' );
 
 function bbpress_moderation_suite_report() { ?>
 <h2><?php _e( 'Reports', 'bbpress-moderation-suite' ); ?></h2>
@@ -167,8 +180,8 @@ function bbpress_moderation_suite_report() { ?>
 		case 'resolved_reports':
 			global $bbdb;
 			$reports       = (array)$bbdb->get_results( 'SELECT ID, report_reason, report_from, reported_post, report_content, resolved_by, resolve_type, resolve_content FROM `' . $bbdb->prefix . 'bbmodsuite_reports` WHERE `report_type`=\'resolved\'' );
-			$reasons       = bbmodsuite_report_reasons() + array( __( 'Other', 'bbpress-moderation-suite' ) );
-			$resolve_types = bbmodsuite_report_resolve_types() + array( __( 'Other', 'bbpress-moderation-suite' ) );
+			$reasons       = bbmodsuite_report_reasons();
+			$resolve_types = bbmodsuite_report_resolve_types();
 ?><h2><?php _e( 'Resolved Reports', 'bbpress-moderation-suite' ); ?></h2>
 <table class="widefat">
 	<thead>
@@ -221,21 +234,22 @@ function bbpress_moderation_suite_report() { ?>
 		break;
 		case 'admin':
 			if ( bb_current_user_can( 'use_keys' ) ) {
+				global $bbmodsuite_cache;
+				$options = bb_get_option( 'bbmodsuite_report_options' );
 				if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
 					if ( bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite-report-admin' ) ) {
-						$types         = trim( $_POST['report_types'] );
-						$resolve_types = trim( $_POST['resolve_types'] );
+						$types         = bbmodsuite_report_parse_types( $_POST['report_types'] );
+						$resolve_types = bbmodsuite_report_parse_types( $_POST['resolve_types'] );
 						$min_level     = in_array( $_POST['min_level'], array( 'moderate', 'administrate', 'use_keys' ) ) ? $_POST['min_level'] : 'moderate';
 						$max_level     = in_array( $_POST['max_level'], array( 'moderate', 'administrate', 'use_keys', 'none' ) ) ? $_POST['max_level'] : 'moderate';
 						$obtrusive     = !!$_POST['obtrusive'];
-						bb_update_option( 'bbmodsuite_report_options', compact( 'types', 'resolve_types', 'min_level', 'max_level', 'obtrusive' ) ); ?>
+						$options = array_merge( $options, compact( 'types', 'resolve_types', 'min_level', 'max_level', 'obtrusive' ) );
+						bb_update_option( 'bbmodsuite_report_options', $options ); ?>
 <div class="updated"><p><?php _e( 'Settings successfully saved.', 'bbpress-moderation-suite' ); ?></p></div>
 <?php } else { ?>
 <div class="error"><p><?php _e( 'Saving the settings failed.', 'bbpress-moderation-suite' ); ?></p></div>
 <?php }
 }
-global $bbmodsuite_cache;
-$options = $bbmodsuite_cache['report'];
 ?>
 <form class="settings" method="post" action="<?php bb_uri( 'bb-admin/admin-base.php', array( 'page' => 'admin', 'plugin' => 'bbpress_moderation_suite_report' ), BB_URI_CONTEXT_FORM_ACTION + BB_URI_CONTEXT_BB_ADMIN ); ?>">
 <fieldset>
@@ -244,7 +258,7 @@ $options = $bbmodsuite_cache['report'];
 			<?php _e( 'Report types', 'bbpress-moderation-suite' ); ?>
 		</label>
 		<div>
-			<textarea id="report_types" name="report_types" rows="15" cols="43"><?php echo attribute_escape( $options['types'] ); ?></textarea>
+			<textarea id="report_types" name="report_types" rows="15" cols="43"><?php echo attribute_escape( implode( "\n", (array)$options['types'] ) ); ?></textarea>
 			<p><?php _e( 'Fill this box with generic reasons to report posts. (One per line)', 'bbpress-moderation-suite' ); ?></p>
 		</div>
 	</div>
@@ -253,7 +267,7 @@ $options = $bbmodsuite_cache['report'];
 			<?php _e( 'Resolve types', 'bbpress-moderation-suite' ); ?>
 		</label>
 		<div>
-			<textarea id="resolve_types" name="resolve_types" rows="15" cols="43"><?php echo attribute_escape( $options['resolve_types'] ); ?></textarea>
+			<textarea id="resolve_types" name="resolve_types" rows="15" cols="43"><?php echo attribute_escape( implode( "\n", (array)$options['resolve_types'] ) ); ?></textarea>
 			<p><?php _e( 'Fill this box with generic ways of resolving reports. (One per line)', 'bbpress-moderation-suite' ); ?></p>
 		</div>
 	</div>
@@ -265,7 +279,7 @@ $options = $bbmodsuite_cache['report'];
 			<select id="min_level" name="min_level">
 				<option value="moderate"<?php if ( $options['min_level'] === 'moderate' ) echo ' selected="selected"'; ?>><?php _e( 'Moderator' ); ?></option>
 				<option value="administrate"<?php if ( $options['min_level'] === 'administrate' ) echo ' selected="selected"'; ?>><?php _e( 'Administrator' ); ?></option>
-				<option value="use_keys"<?php if ( $options['min_level'] === 'use_keys' ) echo ' selected="selected"'; ?>><?php _e( 'Keymaster' ); ?></option>
+				<option value="use_keys"<?php if ( $options['min_level'] === 'use_keys' ) echo ' selected="selected"'; ?>><?php _e( 'Key master' ); ?></option>
 			</select>
 			<p><?php _e( 'What should the minimum user level to view and resolve reports be?', 'bbpress-moderation-suite' ); ?></p>
 		</div>
@@ -278,7 +292,7 @@ $options = $bbmodsuite_cache['report'];
 			<select id="max_level" name="max_level">
 				<option value="moderate"<?php if ( $options['max_level'] === 'moderate' ) echo ' selected="selected"'; ?>><?php _e( 'Moderator' ); ?></option>
 				<option value="administrate"<?php if ( $options['max_level'] === 'administrate' ) echo ' selected="selected"'; ?>><?php _e( 'Administrator' ); ?></option>
-				<option value="use_keys"<?php if ( $options['max_level'] === 'use_keys' ) echo ' selected="selected"'; ?>><?php _e( 'Keymaster' ); ?></option>
+				<option value="use_keys"<?php if ( $options['max_level'] === 'use_keys' ) echo ' selected="selected"'; ?>><?php _e( 'Key master' ); ?></option>
 				<option value="none"<?php if ( $options['max_level'] === 'none' ) echo ' selected="selected"'; ?>><?php _e( 'None', 'bbpress-moderation-suite' ); ?></option>
 			</select>
 			<p><?php _e( 'What should the maximum user level able to be reported be?', 'bbpress-moderation-suite' ); ?></p>
@@ -304,8 +318,8 @@ $options = $bbmodsuite_cache['report'];
 	case 'new_reports':
 	default:
 		global $bbdb;
-		$reports = (array)$bbdb->get_results( 'SELECT ID, report_reason, report_from, reported_post, report_content FROM `' . $bbdb->prefix . 'bbmodsuite_reports` WHERE `report_type`=\'new\'' );
-		$reasons = bbmodsuite_report_reasons() + array( __( 'Other', 'bbpress-moderation-suite' ) );
+		$reports = (array)$bbdb->get_results( 'SELECT `ID`, `report_reason`, `report_from`, `reported_post`, `report_content` FROM `' . $bbdb->prefix . 'bbmodsuite_reports` WHERE `report_type`=\'new\'' );
+		$reasons = bbmodsuite_report_reasons();
 ?><table class="widefat">
 	<thead>
 		<tr>
@@ -354,19 +368,33 @@ $options = $bbmodsuite_cache['report'];
 
 function bbmodsuite_report_admin_add() {
 	global $bbmodsuite_cache;
-	$options = $bbmodsuite_cache['report'];
+	$options = bb_get_option( 'bbmodsuite_report_options' );
 	bb_admin_add_submenu( __( 'Reports', 'bbpress-moderation-suite' ), $options['min_level'], 'bbpress_moderation_suite_report', 'bbpress_moderation_suite' );
 }
 add_action( 'bb_admin_menu_generator', 'bbmodsuite_report_admin_add' );
 
+function bbmodsuite_report_parse_types( $raw ) {
+	$parsed = array();
+
+	$raw = array_map( 'trim', explode( "\n", bbmodsuite_stripslashes( $raw ) ) );
+
+	foreach ( $raw as $type ) {
+		if ( strlen( $type ) ) {
+			$parsed[md5( $type )] = $type;
+		}
+	}
+
+	return $parsed;
+}
+
 function bbmodsuite_report_get_reports_css() {
 	global $posts, $bbdb;
 	if ( !$posts ) return;
-	$new_reports = $bbdb->get_results( $bbdb->prepare( 'SELECT `reported_post` FROM `' . $bbdb->prefix . 'bbmodsuite_reports` WHERE `report_type`=%s', 'new' ) );
+	$new_reports = $bbdb->get_results( $bbdb->prepare( 'SELECT `reported_post` FROM `' . $bbdb->prefix . 'bbmodsuite_reports` WHERE `report_type` = %s', 'new' ) );
 	$reported_post_ids = array();
 	foreach ( $new_reports as $new_report ) {
 		foreach ( $posts as $post ) {
-			if ( $new_report->reported_post === $post->post_id )
+			if ( $new_report->reported_post == $post->post_id )
 				$reported_post_ids[] = $new_report->reported_post;
 		}
 	}
@@ -377,10 +405,10 @@ function bbmodsuite_report_get_reports_css() {
 }
 
 function bbmodsuite_report_css() {
-	global $bbmodsuite_cache;
+	$options = bb_get_option( 'bbmodsuite_report_options' );
 	echo '<style type="text/css">
 /* <![CDATA[ */';
-	if ( $bbmodsuite_cache['report']['obtrusive'] )
+	if ( $options['obtrusive'] )
 		echo '
 	.reports_waiting {
 		position: fixed;
@@ -420,20 +448,30 @@ function bbmodsuite_report_css() {
 add_action( 'bb_head', 'bbmodsuite_report_css' );
 
 function bbmodsuite_report_reasons() {
-	global $bbmodsuite_cache;
-	$options = $bbmodsuite_cache['report'];
-	$reasons = explode( "\n", ".\n" . $options['types'] );
-	$reasons = array_filter( $reasons );
-	unset( $reasons[0] );
+	$options = bb_get_option( 'bbmodsuite_report_options' );
+	$reasons = $options['types'];
+	if ( !is_array( $reasons ) ) {
+		$reasons = explode( "\n", $reasons );
+		$reasons = array_values( array_filter( $reasons ) );
+		$reasons = array_combine( array_map( 'md5', $reasons ), $reasons );
+		$options['types'] = $reasons;
+		bb_update_option( 'bbmodsuite_report_options', $options );
+	}
+	$reasons['d41d8cd98f00b204e9800998ecf8427e'] = __( 'Other', 'bbpress-moderation-suite' );
 	return $reasons;
 }
 
 function bbmodsuite_report_resolve_types() {
-	global $bbmodsuite_cache;
-	$options = $bbmodsuite_cache['report'];
-	$reasons = explode( "\n", ".\n" . $options['resolve_types'] );
-	$reasons = array_filter( $reasons );
-	unset( $reasons[0] );
+	$options = bb_get_option( 'bbmodsuite_report_options' );
+	$reasons = $options['resolve_types'];
+	if ( !is_array( $reasons ) ) {
+		$reasons = explode( "\n", $reasons );
+		$reasons = array_values( array_filter( $reasons ) );
+		$reasons = array_combine( array_map( 'md5', $reasons ), $reasons );
+		$options['resolve_types'] = $reasons;
+		bb_update_option( 'bbmodsuite_report_options', $options );
+	}
+	$reasons['d41d8cd98f00b204e9800998ecf8427e'] = __( 'Other', 'bbpress-moderation-suite' );
 	return $reasons;
 }
 
@@ -487,7 +525,7 @@ function bbmodsuite_report_link( $parts, $args ) {
 		else
 			$post_author = new WP_User( $post_author_id );
 		global $bbmodsuite_cache;
-		$options = $bbmodsuite_cache['report'];
+		$options = bb_get_option( 'bbmodsuite_report_options' );
 		if ( $post_author_id != bb_get_current_user_info( 'ID' ) && ( $options['max_level'] === 'none' || !$post_author->has_cap( $options['max_level'] ) ) ) {
 			$title   = __( 'Report this post to a moderator.', 'bbpress-moderation-suite' );
 			$href    = str_replace( '\\', '/', substr( BB_PLUGIN_URL, 0, -1 ) . str_replace( realpath( BB_PLUGIN_DIR ), '', dirname( __FILE__ ) ) . '/' . basename( __FILE__ ) );

@@ -87,11 +87,12 @@ $bb_attachments['db']="bb_attachments";   //   $bbdb->prefix."attachments";  // 
 // really stop editing!
 
 add_action( 'bb_init', 'bb_attachments_init');
-add_action( 'bb_post.php', 'bb_attachments_process_post');
-add_action( 'bb-post.php', 'bb_attachments_process_post');
 add_action( 'bb_delete_post', 'bb_attachments_recount');
 add_filter('post_text', 'bb_attachments_bbcode',250);	
-
+if (isset($_FILES['bb_attachments']))  {
+add_action( 'bb_post.php', 'bb_attachments_process_post');
+add_action( 'bb-post.php', 'bb_attachments_process_post');
+}
 bb_register_activation_hook(str_replace(array(str_replace("/","\\",BB_PLUGIN_DIR),str_replace("/","\\",BB_CORE_PLUGIN_DIR)),array("user#","core#"),__FILE__), 'bb_attachments_install');
 
 function bb_attachments_init() {
@@ -721,7 +722,7 @@ if ((!$mime || strpos($mime,'file -bi')!==false) && function_exists('getimagesiz
 return substr($mime,0,strpos($mime.";",";"));	
 }
 
-function bb_attachments_install() {
+function bb_attachments_install() { 
 global $bbdb,$bb_attachments; 
 $bbdb->query("CREATE TABLE IF NOT EXISTS ".$bb_attachments['db']." (
 		id		int(10)        UNSIGNED NOT NULL auto_increment,

@@ -127,7 +127,7 @@ function bbpress_moderation_suite_report() { ?>
 			bb_check_admin_referer( 'bbmodsuite-report-resolve-submit_' . $_GET['report'] );
 
 			global $bbdb;
-			if ( trim( $_POST['resolve_content'] ) && ( $_POST['resolve_type'] === '0' || array_key_exists( (int)$_POST['resolve_type'], bbmodsuite_report_resolve_types() ) ) )
+			if ( trim( $_POST['resolve_content'] ) && array_key_exists($_POST['resolve_type'], bbmodsuite_report_resolve_types() ) )
 				$report_id = $bbdb->get_var( $bbdb->prepare( 'SELECT `ID` FROM `' . $bbdb->prefix . 'bbmodsuite_reports` WHERE `report_type`=\'new\' AND `ID`=%d', $_GET['report'] ) );
 
 			if ( !$report_id ) { ?>

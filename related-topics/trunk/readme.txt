@@ -76,6 +76,12 @@ $bb->load_options = true;
 
 * stop words added to improve title keyword scan (non-english forums will need to change)
 
+= Version 0.0.5 (2009-09-03) =
+
+* real-time lookup during new topic creation based on title (optional)
+
+* tags are now cross referenced with words in title
+
 == To Do ==
 
 * cache results (current adds a few queries per topic view)

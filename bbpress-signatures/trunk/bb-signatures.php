@@ -17,9 +17,11 @@ add_action('bb_init', 'bb_signatures_initialize');
 add_action('bb_head', 'bb_signatures_add_css');
 add_action('extra_profile_info', 'add_signature_to_profile_edit');
 add_action('profile_edited', 'update_user_signature');
-add_action('bb_post.php', 'bb_signatures_exclude_posts_update');
 add_action('bb_update_post', 'bb_signatures_exclude_posts_update');
 add_filter('post_text','add_signature_to_post',5);
+if (defined('BACKPRESS_PATH')) {add_action('bb-post.php', 'bb_signatures_exclude_posts_update');}
+else {add_action('bb_post.php', 'bb_signatures_exclude_posts_update');}
+
 
 if ((defined('BB_IS_ADMIN') && BB_IS_ADMIN) || !(strpos($_SERVER['REQUEST_URI'],"/bb-admin/")===false)) { // "stub" only load functions if in admin 
 	if (isset($_GET['plugin']) && ($_GET['plugin']=="bb_signatures_admin" || strpos($_GET['plugin'],"bb-signatures.php"))) {require_once("bb-signatures-admin.php");} 
@@ -38,9 +40,9 @@ function bb_signatures_initialize() {
 		$bb_signatures['minimum_user_level']="participate";   // participate, moderate, administrate  (watchout for typos)
 		$bb_signatures['one_per_user_per_page']=true;    // only one signature shown for a user even if they have 2+ posts on a page
 		$bb_signatures['allow_per_post_signature_toggle']=true;    // allows user decide which posts should have signatures
-		$bb_signatures['allow_html']=true ;  // not implimented yet, obeys post text rules
-		$bb_signatures['allow_smilies']=true ;  // not implimented yet, obeys post text rules
-		$bb_signatures['allow_images']=true ;  // not implimented yet, obeys post text rules
+		$bb_signatures['allow_html']=true ;  // not implemented yet, obeys post text rules
+		$bb_signatures['allow_smilies']=true ;  // not implemented yet, obeys post text rules
+		$bb_signatures['allow_images']=true ;  // not implemented yet, obeys post text rules
 		$bb_signatures['signature_question']="Show your signature on this post?";
 		$bb_signatures['signature_instructions']="You may enter a short signature which will be shown below your posts.";
 		$bb_signatures['style']=".signature {padding:1em; border-top:1px solid #ccc; font-size:0.87em; color:#444;}";   // add clear:both; for very bottom		
@@ -51,16 +53,16 @@ function bb_signatures_initialize() {
 		$bb_signatures_type['minimum_user_level']="participate,moderate,administrate";   // participate, moderate, administrate  (watchout for typos)
 		$bb_signatures_type['one_per_user_per_page']="binary";    // only one signature shown for a user even if they have 2+ posts on a page
 		$bb_signatures_type['allow_per_post_signature_toggle']="binary";    // let's user decide which posts should have signatures
-		$bb_signatures_type['allow_html']="binary";  // not implimented yet, obeys post text rules
-		$bb_signatures_type['allow_smilies']="binary";  // not implimented yet, obeys post text rules
-		$bb_signatures_type['allow_images']="binary";  // not implimented yet, obeys post text rules
+		$bb_signatures_type['allow_html']="binary";  // not implemented yet, obeys post text rules
+		$bb_signatures_type['allow_smilies']="binary";  // not implemented yet, obeys post text rules
+		$bb_signatures_type['allow_images']="binary";  // not implemented yet, obeys post text rules
 		$bb_signatures_type['signature_question']="input";
 		$bb_signatures_type['signature_instructions']="input";		
 		$bb_signatures_type['style']="textarea";
 		
-		$bb_signatures_extra['allow_html']="disabled";  // not implimented yet, obeys post text rules
-		$bb_signatures_extra['allow_smilies']="disabled" ;  // not implimented yet, obeys post text rules
-		$bb_signatures_extra['allow_images']="disabled" ;  // not implimented yet, obeys post text rules
+		$bb_signatures_extra['allow_html']="disabled";  // not implemented yet, obeys post text rules
+		$bb_signatures_extra['allow_smilies']="disabled" ;  // not implemented yet, obeys post text rules
+		$bb_signatures_extra['allow_images']="disabled" ;  // not implemented yet, obeys post text rules
 	// }
 }	
 	

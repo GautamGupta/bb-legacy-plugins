@@ -13,7 +13,8 @@ License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 global $bb_polls;
 
 add_action( 'bb_send_headers', 'bb_polls_initialize');	// bb_init
-add_action( 'bb_post.php', 'bb_polls_save_on_new' );	// catch $_POST on new topic for new poll
+if (defined('BACKPRESS_PATH')) {add_action( 'bb-post.php', 'bb_polls_save_on_new' );}
+else {add_action( 'bb_post.php', 'bb_polls_save_on_new' );}
 
 function bb_polls_initialize() {	
 	global $bb_polls, $bb_polls_type, $bb_polls_label;

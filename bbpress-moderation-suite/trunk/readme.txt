@@ -103,6 +103,7 @@ In order to define a new type, you will have to add a filter to `bbmodsuite_modl
 * Backslashes will no longer appear before apostrophes (new reports/bans/warnings only, old ones will still have them)
 * Plugins can ban users by using the `$override` argument in `bbmodsuite_banplus_set_ban`
 * Report backend rewrite, removing report/resolve types will no longer cause errors.
+* Warnings can now be sent via bbPM instead of email. If the bbPM option is chosen, the warnings will be sent by the recipient to help the moderators stay anonymous.
 
 = 0.1-beta1 =
 * [The Ban Plus "you've been banned" page can now be edited](http://bbpress.org/plugins/topic/bbpress-moderation-suite/other_notes/)

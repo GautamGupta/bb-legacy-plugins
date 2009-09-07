@@ -207,7 +207,7 @@ class bbPM {
 		$this->settings = bb_get_option( 'bbpm_settings' );
 		$this->version = $this->settings ? $this->settings['version'] : false;
 
-		if ( !$this->version || $this->version != '0.1-alpha6b' )
+		if ( !$this->version || $this->version != '0.1-alpha7' )
 			$this->update();
 
 		if ( $this->settings['auto_add_link'] )
@@ -325,6 +325,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 				$this->settings['email_reply']   = true;
 				$this->settings['email_add']     = true;
 				$this->settings['email_message'] = false;
+				$this->settings['threads_per_page'] = 0;
 
 				wp_cache_flush( 'bbpm-user-messages' ); // For memcached
 
@@ -393,12 +394,20 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 	}
 
 	/**
+	 * @uses bbPM::$settings to get the pagination settings
+	 * @return int the number of threads per page
+	 */
+	function threads_per_page() {
+		return $this->settings['threads_per_page'] ? $this->settings['threads_per_page'] : bb_get_option( 'page_topics' );
+	}
+
+	/**
 	 * @uses bbPM::count_pm() counting total messages
 	 * @param int $current The current page number
 	 * @return void
 	 */
 	function pm_pages( $current ) {
-		$total = ceil( $this->count_pm() / bb_get_option( 'page_topics' ) );
+		$total = ceil( $this->count_pm() / $this->threads_per_page() );
 
 		echo bb_paginate_links( array(
 			'current' => $current,
@@ -436,12 +445,13 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		if ( !isset( $this->current_pm[$start . '_' . $end] ) ) {
 			global $bbdb;
 
-			if ( function_exists( 'wp_cache_get' ) && false !== $threads = wp_cache_get( bb_get_current_user_info( 'ID' ), 'bbpm-user-messages' ) )
+			if ( function_exists( 'wp_cache_get' ) && false !== $threads = wp_cache_get( bb_get_current_user_info( 'ID' ), 'bbpm-user-messages' ) ) {
+				usort( $threads, array( &$this, '_newer_last_message_1' ) );
 				$threads = array_slice( $threads, $start, $end );
-			else
-				$threads = (array)$bbdb->get_col( $bbdb->prepare( 'SELECT `object_id` FROM `' . $bbdb->meta . '` WHERE `object_type` = %s AND `meta_key` = %s AND `meta_value` LIKE %s LIMIT ' . $start . ',' . $end, 'bbpm_thread', 'to', '%,' . bb_get_current_user_info( 'ID' ) . ',%' ) );
-
-			$this->cache_threads( $threads );
+			} else {
+				$threads = (array)$bbdb->get_col( $bbdb->prepare( 'SELECT `object_id` FROM `' . $bbdb->meta . '` as `m` JOIN `' . $bbdb->bbpm . '` as `b` ON `m`.`object_id` = `b`.`pm_thread` WHERE `object_type` = %s AND `meta_key` = %s AND `meta_value` LIKE %s GROUP BY `b`.`pm_thread` ORDER BY `b`.`ID` DESC LIMIT ' . $start . ',' . $end, 'bbpm_thread', 'to', '%,' . bb_get_current_user_info( 'ID' ) . ',%' ) );
+				$this->cache_threads( $threads );
+			}
 
 			$this->current_pm[$start . '_' . $end] = array();
 
@@ -449,7 +459,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 				$this->current_pm[$start . '_' . $end][] = array( 'id' => $thread, 'members' => $this->get_thread_members( $thread ), 'title' => $this->get_thread_title( $thread ), 'last_message' => $this->get_thread_meta( $thread, 'last_message' ) );
 			}
 
-			usort( $this->current_pm[$start . '_' . $end], array( &$this, '_newer_last_message' ) );
+			usort( $this->current_pm[$start . '_' . $end], array( &$this, '_newer_last_message_2' ) );
 
 			if ( $this->current_pm[$start . '_' . $end] ) {
 				$this->the_pm = reset( $this->current_pm[$start . '_' . $end] );
@@ -466,7 +476,14 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 	/**
 	 * @access private
 	 */
-	function _newer_last_message( $a, $b ) {
+	function _newer_last_message_1( $a, $b ) {
+		return $this->get_thread_meta( $a, 'last_message' ) > $this->get_thread_meta( $b, 'last_message' ) ? -1 : 1;
+	}
+
+	/**
+	 * @access private
+	 */
+	function _newer_last_message_2( $a, $b ) {
 		return $a['last_message'] > $b['last_message'] ? -1 : 1;
 	}
 
@@ -1150,6 +1167,7 @@ function bbpm_admin_page() {
 		$bbpm->settings['email_reply'] = !empty( $_POST['email_reply'] );
 		$bbpm->settings['email_add'] = !empty( $_POST['email_add'] );
 		$bbpm->settings['email_message'] = !empty( $_POST['email_message'] );
+		$bbpm->settings['threads_per_page'] = max( (int)$_POST['threads_per_page'], 0 );
 
 		bb_update_option( 'bbpm_settings', $bbpm->settings );
 	}
@@ -1185,6 +1203,15 @@ function bbpm_admin_page() {
 			<input type="checkbox" id="email_reply" name="email_reply"<?php if ( $bbpm->settings['email_reply'] ) echo ' checked="checked"'; ?> /> <?php _e( 'When a new reply is recieved', 'bbpm' ); ?><br />
 			<input type="checkbox" id="email_add" name="email_add"<?php if ( $bbpm->settings['email_add'] ) echo ' checked="checked"'; ?> /> <?php _e( 'When a user is added to a conversation', 'bbpm' ); ?><br />
 			<input type="checkbox" id="email_message" name="email_message"<?php if ( $bbpm->settings['email_message'] ) echo ' checked="checked"'; ?> /> <?php _e( 'Include contents of message', 'bbpm' ); ?>
+		</div>
+	</div>
+	<div id="option-threads_per_page">
+		<label for="threads_per_page">
+			<?php _e( 'Maximum PM threads per page', 'bbpm' ); ?>
+		</label>
+		<div class="inputs">
+			<input type="text" class="text short" id="threads_per_page" name="threads_per_page" value="<?php echo $bbpm->settings['threads_per_page']; ?>" />
+			<p><?php _e( 'Enter 0 or leave this blank to use your forum\'s default setting.', 'bbpm' ); ?></p>
 		</div>
 	</div>
 </fieldset>

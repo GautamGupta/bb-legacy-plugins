@@ -5,15 +5,35 @@
 /* $Id$ */
 
 function bbmodsuite_warning_install() {
-	global $bbmodsuite_cache;
-	if ( !$bbmodsuite_cache['warning'] = bb_get_option( 'bbmodsuite_warning_options' ) ) {
-		bb_update_option( 'bbmodsuite_warning_options', array( 'types' => '', 'min_level' => 'moderate', 'cron_every' => 604800, 'expire_time' => 7776000, 'ban' => array() ) );
-		$bbmodsuite_cache['warning'] = array( 'types' => '', 'min_level' => 'moderate', 'cron_every' => 604800, 'expire_time' => 7776000, 'ban' => array() );
+	if ( !$options = bb_get_option( 'bbmodsuite_warning_options' ) ) {
+		bb_update_option( 'bbmodsuite_warning_options', array( 'types' => array(), 'min_level' => 'moderate', 'cron_every' => 604800, 'expire_time' => 7776000, 'ban' => array(), 'version' => '0.1-beta2' ) );
 		return;
 	}
 	$change = false;
 	if ( !isset( $options['ban'] ) ) {
 		$options['ban'] = array();
+		$change = true;
+	}
+	if ( empty( $options['version'] ) ) {
+		global $bbdb;
+
+		$all_warnings = $bbdb->get_results( 'SELECT `user_id`, `meta_value` FROM `' . $bbdb->usermeta . '` WHERE `meta_key` = \'bbmodsuite_warnings\'' );
+
+		$types = array_values( bbmodsuite_warning_types() );
+
+		foreach ( $all_warnings as $warnings ) {
+			$user = $warnings->user_id;
+			$warnings = unserialize( $warnings->meta_value );
+
+			foreach ( $warnings as &$warning ) {
+				$warning['type'] = $types[$warning['type']];
+			}
+
+			bb_update_usermeta( $user, 'bbmodsuite_warnings', $warnings );
+		}
+
+		$options['version'] = '0.1-beta2';
+
 		$change = true;
 	}
 	if ( $change )
@@ -116,12 +136,31 @@ function bbmodsuite_warning_link( $parts, $args ) {
 add_filter( 'bb_post_admin', 'bbmodsuite_warning_link', 10, 2 );
 
 function bbmodsuite_warning_types() {
-	global $bbmodsuite_cache;
-	$options = $bbmodsuite_cache['warning'];
-	$types   = explode( "\n", ".\n" . $options['types'] );
-	$types   = array_filter( $types );
-	unset( $types[0] );
+	$options = bb_get_option( 'bbmodsuite_warning_options' );
+	$types = $options['types'];
+	if ( !is_array( $types ) ) {
+		$types = explode( "\n", $types );
+		$types = array_values( array_filter( $types ) );
+		$types = array_combine( array_map( 'md5', $types ), $types );
+		$options['types'] = $types;
+		bb_update_option( 'bbmodsuite_warning_options', $options );
+	}
+	$types['d41d8cd98f00b204e9800998ecf8427e'] = __( 'Other', 'bbpress-moderation-suite' );
 	return $types;
+}
+
+function bbmodsuite_warning_parse_types( $raw ) {
+	$parsed = array();
+
+	$raw = array_map( 'trim', explode( "\n", bbmodsuite_stripslashes( $raw ) ) );
+
+	foreach ( $raw as $type ) {
+		if ( strlen( $type ) ) {
+			$parsed[md5( $type )] = $type;
+		}
+	}
+
+	return $parsed;
 }
 
 function bbmodsuite_warning_admin_add_jquery() {
@@ -141,12 +180,16 @@ function bbpress_moderation_suite_warning() {
 <?php switch ( $_GET['page'] ) {
 		case 'warn_user':
 			if ( $_SERVER['REQUEST_METHOD'] === 'POST' && bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite-warning-warn-submit_' . $_GET['user'] . '_' . $_GET['post'] ) ) {
+				$options = bb_get_option( 'bbmodsuite_warning_options' );
+
 				$warnings = bb_get_usermeta( $_GET['user'], 'bbmodsuite_warnings' );
 				if ( empty( $warnings ) )
 					$warnings = array();
+
 				$warn_type = (int)$_POST['warn_type'];
 				if ( !in_array( $warn_type, bbmodsuite_warning_types() ) )
 					$warn_type = 0;
+
 				$warnings[] = array(
 					'from'  => bb_get_current_user_info( 'ID' ),
 					'type'  => $warn_type,
@@ -154,8 +197,22 @@ function bbpress_moderation_suite_warning() {
 					'notes' => bb_autop( htmlspecialchars( trim( bbmodsuite_stripslashes( $_POST['warn_content'] ) ) ) ),
 					'post'  => $_GET['post'],
 				);
+
 				bbmodsuite_warning_update_user_ban( $_GET['user'], count( $warnings ) );
-				bb_mail( bb_get_user_email( $_GET['user'] ), 'Warning', htmlspecialchars( trim( $_POST['warn_content'] ) ) );
+
+				if ( class_exists( 'bbPM' ) && $options['bbpm'] ) {
+					global $bbpm;
+
+					$user_id = bb_get_current_user_info( 'ID' );
+					bb_set_current_user( $_POST['user'] );
+
+					if ( !$bbpm->send_message( $_GET['user'], __( 'Warning', 'bbpress-moderation-suite' ), __( '<strong>You have been warned. This message was automatically sent with your username.</strong>', 'bbpress-moderation-suite' ) . "\n\n" . esc_html( bbmodsuite_stripslashes( $_POST['warn_content'] ) ) ) )
+						bb_mail( bb_get_user_email( $_GET['user'] ), __( 'Warning', 'bbpress-moderation-suite' ), trim( bbmodsuite_stripslashes( $_POST['warn_content'] ) ) );
+
+					bb_set_current_user( $user_id );
+				} else
+					bb_mail( bb_get_user_email( $_GET['user'] ), __( 'Warning', 'bbpress-moderation-suite' ), trim( bbmodsuite_stripslashes( $_POST['warn_content'] ) ) );
+
 				bb_update_usermeta( $_GET['user'], 'bbmodsuite_warnings', $warnings );
 				bb_update_usermeta( $_GET['user'], 'bbmodsuite_warnings_count', count( $warnings ) ); ?>
 <div class="updated"><p><?php _e( 'User successfully warned.', 'bbpress-moderation-suite' ); ?></p></div>
@@ -177,9 +234,8 @@ function bbpress_moderation_suite_warning() {
 		<div>
 			<select name="warn_type" id="warn_type" tabindex="1">
 <?php foreach ( bbmodsuite_warning_types() as $id => $type ) { ?>
-				<option value="<?php echo $id; ?>"><?php echo $type; ?></option>
+				<option value="<?php echo $id; ?>"<?php if ( $id == 'd41d8cd98f00b204e9800998ecf8427e' ) echo ' selected="selected"'; ?>><?php echo $type; ?></option>
 <?php } ?>
-				<option value="0" selected="selected"><?php _e( 'Other', 'bbpress-moderation-suite' ); ?></option>
 			</select>
 		</div>
 	</div>
@@ -203,7 +259,7 @@ function bbpress_moderation_suite_warning() {
 			if ( bb_current_user_can( 'use_keys' ) ) { ?>
 <h2><?php _e( 'Administration', 'bbpress-moderation-suite' ); ?></h2>
 <?php			if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
-					$types = trim( $_POST['warn_types'] );
+					$types = bbmodsuite_warning_parse_types( trim( $_POST['warn_types'] ) );
 					$min_level  = in_array( $_POST['min_level'], array( 'moderate', 'administrate', 'use_keys' ) ) ? $_POST['min_level'] : 'moderate';
 					$cron_every = (int)$_POST['cron_every'];
 					if ( $cron_every === 0 )
@@ -225,15 +281,15 @@ function bbpress_moderation_suite_warning() {
 					}
 					ksort( $ban );
 					$ban = array_values( $ban );
-					bb_update_option( 'bbmodsuite_warning_options', compact( 'types', 'min_level', 'cron_every', 'expire_time', 'ban' ) );
+					$bbpm = $_POST['bbpm'] == 'bbpm';
+					bb_update_option( 'bbmodsuite_warning_options', compact( 'types', 'min_level', 'cron_every', 'expire_time', 'ban', 'bbpm' ) );
 					global $bbmodsuite_cache;
 					$bbmodsuite_cache['warning'] = compact( 'types', 'min_level', 'cron_every', 'expire_time', 'ban' );
 					wp_clear_scheduled_hook( 'bbmodsuite_warning_cron' );
 					wp_schedule_single_event( time() + $cron_every, 'bbmodsuite_warning_cron' ); ?>
 <div class="updated"><p><?php _e( 'Settings successfully saved.', 'bbpress-moderation-suite' ); ?></p></div>
 <?php			}
-				global $bbmodsuite_cache;
-				$options = $bbmodsuite_cache['warning'];
+				$options = bb_get_option( 'bbmodsuite_warning_options' );
 ?>
 <form class="settings" method="post" action="<?php bb_uri( 'bb-admin/admin-base.php', array( 'page' => 'admin', 'plugin' => 'bbpress_moderation_suite_warning' ), BB_URI_CONTEXT_FORM_ACTION + BB_URI_CONTEXT_BB_ADMIN ); ?>">
 <fieldset>
@@ -242,7 +298,7 @@ function bbpress_moderation_suite_warning() {
 			<?php _e( 'Possible reasons for warning users', 'bbpress-moderation-suite' ); ?>
 		</label>
 		<div>
-			<textarea id="warn_types" name="warn_types" rows="15" cols="43"><?php echo attribute_escape( $options['types'] ); ?></textarea>
+			<textarea id="warn_types" name="warn_types" rows="15" cols="43"><?php echo esc_html( implode( "\n", $options['types'] ) ); ?></textarea>
 		</div>
 	</div>
 	<div>
@@ -253,7 +309,7 @@ function bbpress_moderation_suite_warning() {
 			<select id="min_level" name="min_level">
 				<option value="moderate"<?php if ( $options['min_level'] === 'moderate' ) echo ' selected="selected"'; ?>><?php _e( 'Moderator' ); ?></option>
 				<option value="administrate"<?php if ( $options['min_level'] === 'administrate' ) echo ' selected="selected"'; ?>><?php _e( 'Administrator' ); ?></option>
-				<option value="use_keys"<?php if ( $options['min_level'] === 'use_keys' ) echo ' selected="selected"'; ?>><?php _e( 'Keymaster' ); ?></option>
+				<option value="use_keys"<?php if ( $options['min_level'] === 'use_keys' ) echo ' selected="selected"'; ?>><?php _e( 'Key master' ); ?></option>
 			</select>
 			<p><?php _e( 'What should the minimum user level to warn users be?', 'bbpress-moderation-suite' ); ?></p>
 		</div>
@@ -263,7 +319,7 @@ function bbpress_moderation_suite_warning() {
 			<?php _e( 'Check interval', 'bbpress-moderation-suite' ); ?>
 		</label>
 		<div>
-			<input id="cron_every" name="cron_every" class="text short" type="text" value="<?php echo $options['cron_every'] / 604800 ?>" /> weeks
+			<input id="cron_every" name="cron_every" class="text short" type="text" value="<?php echo $options['cron_every'] / 604800 ?>" /> <?php _e( 'weeks', 'bbpress-moderation-suite' ); ?>
 			<p><?php _e( 'How long should bbPress Moderation Suite wait between checks for expired warnings?', 'bbpress-moderation-suite' ); ?></p>
 		</div>
 	</div>
@@ -272,16 +328,27 @@ function bbpress_moderation_suite_warning() {
 			<?php _e( 'Expiration time', 'bbpress-moderation-suite' ); ?>
 		</label>
 		<div>
-			<input id="expire_time" name="expire_time" class="text short" type="text" value="<?php echo $options['expire_time'] / 2592000 ?>" /> months
+			<input id="expire_time" name="expire_time" class="text short" type="text" value="<?php echo $options['expire_time'] / 2592000 ?>" /> <?php _e( 'months', 'bbpress-moderation-suite' ); ?>
 			<p><?php _e( 'How old should warnings be for bbPress Moderation Suite to delete them?', 'bbpress-moderation-suite' ); ?></p>
 		</div>
 	</div>
+<?php if ( class_exists( 'bbPM' ) ) { ?>
+	<div>
+		<label>
+			<?php _e( 'bbPM Integration', 'bbpress-moderation-suite' ); ?>
+		</label>
+		<div>
+			<input id="bbpm_only" name="bbpm" class="radio" type="radio" value="bbpm"<?php if ( $options['bbpm'] ) echo ' checked="checked"'; ?>/> <?php _e( 'Send a private message', 'bbpress-moderation-suite' ); ?><br/>
+			<input id="email_only" name="bbpm" class="radio" type="radio" value="email"<?php if ( !$options['bbpm'] ) echo ' checked="checked"'; ?>/> <?php _e( 'Send an email', 'bbpress-moderation-suite' ); ?>
+		</div>
+	</div>
+<?php } ?>
 </fieldset>
 <?php global $bbmodsuite_active_plugins; if ( !in_array( 'banplus', $bbmodsuite_active_plugins ) ) { ?>
 <div class="updated"><p><?php _e( 'Ban Plus is not active. The banning settings will be saved, but not used.', 'bbpress-moderation-suite' ); ?></p></div>
 <?php } ?>
 <fieldset id="banning-options">
-<?php for ( $i = 0; $i < count( $options['ban'] ); $i++ ) { ?>
+<?php for ( $i = 0; $i < max( count( $options['ban'] ), 1 ); $i++ ) { ?>
 	<div>
 		<label for="banat[<?php echo $i ?>]">
 			<?php _e( 'Ban automatically after:', 'bbpress-moderation-suite' ); ?>
@@ -357,6 +424,7 @@ $_page_link_args = array(
 	'next_text' => __( '&raquo;' )
 );
 echo $page_number_links = get_page_number_links( $_page_link_args );
+
 ?></span>
 		<div class="clear"></div>
 	</div>
@@ -426,7 +494,7 @@ echo $page_number_links = get_page_number_links( $_page_link_args );
 		</tr>
 	</thead>
 	<tbody>
-<?php		$types = bbmodsuite_warning_types() + array( __( 'Other', 'bbpress-moderation-suite' ) );
+<?php		$types = bbmodsuite_warning_types();
 			$warnings = count( $warnings ) < $page * 30 ? array() : array_slice( $warnings, $page * 30, 30 );
 			foreach ( $warnings as $warning ) { ?>
 		<tr>

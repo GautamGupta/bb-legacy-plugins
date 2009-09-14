@@ -2,10 +2,10 @@
 /*
 Plugin Name: Page Cornr
 Plugin URI: http://bbpress.org/plugins/topic/page-cornr/
-Description: Adds a page peel in the corner of the site... with jQuery! no Flash :D (Original WP plugin by Luxiano)
+Description: Adds a page peel in the corner of the site... with jQuery! no Flash :D
 Version: 0.3.6
-Author: Tomcraft1980
-Author URI: http://www.xtc-modified.org
+Author: Luxiano
+Author URI: http://www.luxiano.com.ar
 */
 
 	// for version control and installation

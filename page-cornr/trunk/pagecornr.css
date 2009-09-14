@@ -1,0 +1,19 @@
+#pagecornr {
+	position: absolute;
+	right: 0; top: 0;
+}
+#pagecornr img {
+	width: 50px; height: 52px;
+	z-index: 99;
+	position: absolute;
+	right: 0; top: 0;
+	-ms-interpolation-mode: bicubic;
+}
+#pagecornr .bg_msg {
+	width: 50px; height: 50px;
+	position: absolute;
+	z-index: 98;
+	right: 0; top: 0;
+	background: url('images/ad.png') no-repeat right top;
+	text-indent: -9999px;
+}

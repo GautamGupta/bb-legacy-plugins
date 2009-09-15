@@ -1,6 +1,6 @@
 === Page Cornr ===
-Contributors: lucianohpcv
-Donate link: http://pledgie.com/campaigns/5371
+Contributors: Tomcraft1980
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6302373
 Tags: advertising, jquery, page flip, page peel, corner
 Requires at least: 0.9
 Tested up to: 1.0.2
@@ -9,6 +9,8 @@ Stable tag: 0.3.6
 Adds page peel to your blog.
 
 == Description ==
+
+Adapted Version of lucianohpcv's WordPress plugin: http://wordpress.org/extend/plugins/page-cornr/
 
 Adds a page peel in the corner of the site... with jQuery! no Flash :D
 

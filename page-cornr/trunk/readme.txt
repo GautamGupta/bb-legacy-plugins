@@ -2,8 +2,8 @@
 Contributors: lucianohpcv
 Donate link: http://pledgie.com/campaigns/5371
 Tags: advertising, jquery, page flip, page peel, corner
-Requires at least: 2.7
-Tested up to: 2.8.2
+Requires at least: 0.9
+Tested up to: 1.0.2
 Stable tag: 0.3.6
 
 Adds page peel to your blog.
@@ -18,8 +18,8 @@ If your theme's stylesheet modifies the body's width, PageCornr will look bad. U
 
 == Installation ==
 
-1. Upload contents of `page-cornr.zip` to `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
+1. Upload contents of `page-cornr.zip` to `/my-plugins/page-cornr` directory
+2. Activate the plugin through the 'Plugins' menu in bbPress
 3. Go to 'Settings', 'Page Cornr Options', where you can set the ad's URL and the altertative text.
 
 == Frequently Asked Questions ==

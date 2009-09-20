@@ -1,0 +1,203 @@
+# WordPress - bbPress syncronization plugin.
+# Copyright (C) Ivan Babrou
+# This file is distributed under the same license as the wordpress-bbpress syncronization package.
+# Ivan Babrou <ibobrik@gmail.com>, 2009.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: ibobrik@gmail.com\n"
+"POT-Creation-Date: 2009-07-22 17:24+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: bbwp-sync.php:477
+msgid "WordPress syncronization"
+msgstr ""
+
+#: bbwp-sync.php:483
+msgid "WordPress syncronization options"
+msgstr ""
+
+#: bbwp-sync.php:491
+msgid "WordPress url:"
+msgstr ""
+
+#: bbwp-sync.php:499
+msgid "Please submit with last \"/\"! We will test that after submussion"
+msgstr ""
+
+#: bbwp-sync.php:504 bbwp-sync.php:529 bbwp-sync.php:743 bbwp-sync.php:886
+msgid "Everything is ok!"
+msgstr ""
+
+#: bbwp-sync.php:507
+msgid "URL is incorrect or connection error, please verify it (full variant): "
+msgstr ""
+
+#: bbwp-sync.php:517
+msgid "Secret key:"
+msgstr ""
+
+#: bbwp-sync.php:524
+msgid "We need it for secure communication between your systems"
+msgstr ""
+
+#: bbwp-sync.php:532
+msgid "Error! Not equal secret keys in WordPress and bbPress"
+msgstr ""
+
+#: bbwp-sync.php:540
+msgid "Forum:"
+msgstr ""
+
+#: bbwp-sync.php:547
+msgid "Select forum"
+msgstr ""
+
+#: bbwp-sync.php:556
+msgid "You need to set the forum for syncronization."
+msgstr ""
+
+#: bbwp-sync.php:563
+msgid "Category-Forum accordance:"
+msgstr ""
+
+#: bbwp-sync.php:589
+msgid ""
+"This is optional. Use nex syntax: «Category name => forum_id», one option per "
+"line."
+msgstr ""
+
+#: bbwp-sync.php:596
+msgid "Crosspost tag:"
+msgstr ""
+
+#: bbwp-sync.php:600
+msgid ""
+"Optional. Crossposted from WordPress topics will have that tag. Leave empty "
+"to disable"
+msgstr ""
+
+#: bbwp-sync.php:605
+msgid "Anonymous user:"
+msgstr ""
+
+#: bbwp-sync.php:611
+msgid "User id for posts on forum from unregistered users in WordPress"
+msgstr ""
+
+#: bbwp-sync.php:618
+msgid "Sync all posts:"
+msgstr ""
+
+#: bbwp-sync.php:622
+msgid ""
+"Sync post even if not approved. Post will have the same status in WordPress"
+msgstr ""
+
+#: bbwp-sync.php:627
+msgid "Show anonymous userinfo:"
+msgstr ""
+
+#: bbwp-sync.php:630
+msgid "Show name"
+msgstr ""
+
+#: bbwp-sync.php:631
+msgid "Show email"
+msgstr ""
+
+#: bbwp-sync.php:632
+msgid "Show url"
+msgstr ""
+
+#: bbwp-sync.php:637
+msgid "Sync posts back:"
+msgstr ""
+
+#: bbwp-sync.php:641
+msgid ""
+"You may disable syncing posts from forum back to WordPress. You need to have "
+"a good reason to do that"
+msgstr ""
+
+#: bbwp-sync.php:646
+msgid "Enable plugin"
+msgstr ""
+
+#: bbwp-sync.php:651
+msgid "Allowed by both parts"
+msgstr ""
+
+#: bbwp-sync.php:651
+msgid "Not allowed: "
+msgstr ""
+
+#: bbwp-sync.php:657
+msgid "Update Configuration &raquo;"
+msgstr ""
+
+#: bbwp-sync.php:678
+msgid "Configuration saved."
+msgstr ""
+
+#: bbwp-sync.php:829
+msgid "Invalid line"
+msgstr ""
+
+#: bbwp-sync.php:841
+msgid "Invalid category name"
+msgstr ""
+
+#: bbwp-sync.php:853 bbwp-sync.php:892
+msgid "Invalid forum id"
+msgstr ""
+
+#: bbwp-sync.php:888
+msgid "Cannot establish connection to WordPress part"
+msgstr ""
+
+#: bbwp-sync.php:890
+msgid "Invalid secret key"
+msgstr ""
+
+#: bbwp-sync.php:894
+msgid "Invalid anonymous user id"
+msgstr ""
+
+#: bbwp-sync.php:896
+msgid "bbPress part is not activated"
+msgstr ""
+
+#: bbwp-sync.php:898
+msgid "Too old WordPress part plugin version"
+msgstr ""
+
+#: bbwp-sync.php:986
+msgid "Posted by unregistered user: "
+msgstr ""
+
+#: bbwp-sync.php:989
+msgid "E-mail"
+msgstr ""
+
+#: bbwp-sync.php:999
+msgid "URL"
+msgstr ""
+
+#: bbwp-sync.php:1067
+msgid "Synchronization with WordPress is not enabled."
+msgstr ""
+
+#: bbwp-sync.php:1067
+#, php-format
+msgid ""
+"You must <a href=\"%1$s\">check options and enable plugin</a> to make it "
+"work."
+msgstr ""

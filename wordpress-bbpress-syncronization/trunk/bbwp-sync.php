@@ -4,7 +4,7 @@ Plugin Name: bbPress-WordPress syncronization
 Plugin URI: http://bobrik.name/code/wordpress/wordpress-bbpress-syncronization/
 Description: Sync your WordPress comments to bbPress forum and back.
 Author: Ivan Babrou <ibobrik@gmail.com>
-Version: 0.7.8
+Version: 0.8.0
 Author URI: http://bobrik.name
 
 Copyright 2008 Ivan Babroŭ (email : ibobrik@gmail.com)
@@ -27,7 +27,7 @@ Boston, MA 02111-1307, USA.
 
 
 // for version checking
-$bbwp_version = 78;
+$bbwp_version = 80;
 $min_version = 78;
 
 require_once(dirname(__FILE__).'/../../bb-load.php');
@@ -482,7 +482,7 @@ function bbwp_options()
 ?>
 <h2><?php _e('WordPress syncronization options', 'bbwp-sync'); ?></h2>
 
-<div style="vert-align:center;margin:4px">Please donate if you like this plugin: <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ibobrik%40gmail%2ecom&lc=US&item_name=WordPress%2dbbPress%20syncronization%20plugin&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHostedGuest"><img src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" alt="Donate!" /></a></div>
+<div style="padding:10px;border-bottom:1px dotted #aaa"><span style="margin:10px auto;font-weight:bold;">Please <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ibobrik%40gmail%2ecom&lc=US&item_name=WordPress%2dbbPress%20syncronization%20plugin&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHostedGuest">donate</a> if you like this plugin, or at least <a href="http://bobrik.name/code/wordpress/wordpress-bbpress-syncronization/">give feedback</a>, it's important to developers.</span> <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ibobrik%40gmail%2ecom&lc=US&item_name=WordPress%2dbbPress%20syncronization%20plugin&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHostedGuest" style="float:right;"><img src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" alt="Donate!" /></a></div>
 
 <form class="settings" method="post" action="">
 	<fieldset>
@@ -1064,7 +1064,7 @@ function bbwp_post_url()
 function bbwp_warning()
 {
 	if (bb_get_option('bbwp_plugin_status') != 'enabled')
-		echo '<div class="updated" id="message"><p><strong>'.__('Synchronization with WordPress is not enabled.').'</strong> '.sprintf(__('You must <a href="%1$s">check options and enable plugin</a> to make it work.'), 'admin-base.php?plugin=bbwp_options').'</p></div>';
+		echo '<div class="updated" id="message"><p><strong>'.__('Synchronization with WordPress is not enabled.', 'bbwp-sync').'</strong> '.sprintf(__('You must <a href="%1$s">check options and enable plugin</a> to make it work.', 'bbwp-sync'), 'admin-base.php?plugin=bbwp_options').'</p></div>';
 	$request = array(
 		'action' => 'get_categories'
 	);

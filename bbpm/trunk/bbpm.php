@@ -14,7 +14,6 @@ Domain Path: /translations/
  * @version 0.1-alpha7
  * @author Nightgunner5
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU General Public License, Version 3 or higher
- * @todo Make email optional for each type on the user level
  */
 
 load_plugin_textdomain( 'bbpm', dirname( __FILE__ ) . '/translations' );
@@ -174,7 +173,7 @@ class bbPM {
 	 * @since 0.1-alpha6
 	 * @access private
 	 */
-	private $current_pm;
+	var $current_pm;
 
 	/**
 	 * @var string The current bbPM thread
@@ -196,6 +195,10 @@ class bbPM {
 		// Put two slashes before each of the next two lines if you do not want a "PM this user" link under the author name of every post.
 		add_filter( 'post_author_title_link', array( &$this, 'post_title_filter' ), 11, 2 );
 		add_filter( 'post_author_title', array( &$this, 'post_title_filter' ), 11, 2 );
+
+		add_action( 'bb_profile-edit.php', array( &$this, 'profile_edit_filter_action' ) );
+
+		add_filter( 'get_profile_info_keys', array( &$this, 'profile_save_filter' ), 10, 2 );
 
 		add_action( 'bb_admin_menu_generator', array( &$this, 'admin_add' ) );
 		add_filter( 'bb_template', array( &$this, 'template_filter' ), 10, 2 );
@@ -222,7 +225,7 @@ class bbPM {
 	/**
 	 * @access private
 	 */
-	private function update() {
+	function update() {
 		global $bbdb;
 		switch ( $this->version ) { // Don't use break - each update needs to be installed.
 			case false:
@@ -344,7 +347,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 	 * @access private
 	 * @see bbPM::update()
 	 */
-	private function update_helper_0_1_alpha4( $start_id ) {
+	function update_helper_0_1_alpha4( $start_id ) {
 		global $bbdb;
 
 		$thread_items = array( $start_id );
@@ -518,7 +521,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 			wp_cache_delete( bb_get_current_user_info( 'ID' ), 'bbpm-user-messages' );
 		}
 
-		if ( $this->settings['email_new'] && bb_get_current_user_info( 'ID' ) != $id_reciever )
+		if ( $this->settings['email_new'] && !bb_get_user_meta( $id_reciever, 'bbpm_emailme' ) && bb_get_current_user_info( 'ID' ) != $id_reciever )
 			bb_mail( bb_get_user_email( $id_reciever ),
 				sprintf(
 					__( '%s has sent you a private message on %s: "%s"', 'bbpm' ),
@@ -584,7 +587,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 			$to = $this->get_thread_members( $pm['pm_thread'] );
 
 			foreach ( $to as $recipient ) {
-				if ( $to != bb_get_current_user_info( 'ID' ) )
+				if ( $to != bb_get_current_user_info( 'ID' ) && !bb_get_user_meta( $recipient, 'bbpm_emailme' ) )
 					bb_mail( bb_get_user_email( $recipient ),
 						sprintf(
 							__( '%s has sent you a private message on %s: "%s"', 'bbpm' ),
@@ -620,7 +623,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 	/**
 	 * @access private
 	 */
-	private function _make_thread( $thread, $reply_to = null ) {
+	function _make_thread( $thread, $reply_to = null ) {
 		$ret = array();
 
 		foreach ( $thread as $pm ) {
@@ -832,7 +835,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 
 				do_action( 'bbpm_add_member', $ID, $user );
 
-				if ( $this->settings['email_add'] ) {
+				if ( $this->settings['email_add'] && !bb_get_user_meta( $user, 'bbpm_emailme' ) ) {
 					bb_mail( bb_get_user_email( $user ),
 						sprintf(
 							__( '%s has added you to a conversation on %s: "%s"', 'bbpm' ),
@@ -893,6 +896,27 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		if ( bb_get_current_user_info( 'ID' ) != $user_id && bb_current_user_can( 'write_posts' ) ) {
 			echo '<a href="' . $this->get_send_link( $user_id ) . '">' . __( 'PM this user', 'bbpm' ) . '</a>';
 		}
+		return $keys;
+	}
+
+	/**
+	 * @access private
+	 */
+	function profile_edit_filter_action() {
+		add_filter( 'get_profile_info_keys', array( &$this, 'profile_edit_filter' ) );
+	}
+
+	/**
+	 * @access private
+	 */
+	function profile_edit_filter( $keys ) {
+		$keys['bbpm_emailme'] = array( 0, __( 'Don\'t email me when I get a PM', 'bbpm' ), 'checkbox' );
+		return $keys;
+	}
+
+	function profile_save_filter( $keys, $context ) {
+		if ( $context == 'profile-edit' )
+			$keys = $this->profile_edit_filter( $keys );
 		return $keys;
 	}
 

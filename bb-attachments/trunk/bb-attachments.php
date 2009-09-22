@@ -12,6 +12,7 @@ License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 Donate: http://bbshowcase.org/donate/
 */
 
+global $bb_attachments;
 $bb_attachments['role']['see']="read"; 		 // minimum role to see list of attachments = read/participate/moderate/administrate
 $bb_attachments['role']['inline']="read";    // minimum role to view inline reduced images = read/participate/moderate/administrate
 $bb_attachments['role']['download']="participate";  // minimum role to download original = read/participate/moderate/administrate

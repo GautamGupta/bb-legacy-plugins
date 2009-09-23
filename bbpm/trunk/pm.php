@@ -22,6 +22,32 @@ require_once dirname( dirname( dirname( __FILE__ ) ) ) . '/bb-load.php';
 bb_auth( 'logged_in' ); // Is the user logged in?
 
 global $bbpm, $bb_current_user;
+// Don't throttle searches.
+if ( strtoupper( $_SERVER['REQUEST_METHOD'] ) == 'POST' && !empty( $_POST['search'] ) ) {
+	header( 'Content-Type: application/json' );
+
+	if ( !bb_verify_nonce( $_POST['_wpnonce'], 'bbpm-user-search' ) )
+		exit( '[]' );
+
+	$name = $_POST['search'];
+	if ( function_exists( 'get_magic_quotes_gpc' ) && get_magic_quotes_gpc() )
+		$name = stripslashes( $name );
+	$name = str_replace( array( '%', '?' ), array( '\\%', '\\?' ), substr( $name, 0, $_POST['pos'] ) ) . '%' . str_replace( array( '%', '?' ), array( '\\%', '\\?' ), substr( $name, $_POST['pos'] ) );
+
+	$not = array( bb_get_current_user_info( 'ID' ) );
+
+	if ( !empty( $_POST['thread'] ) && $bbpm->can_read_thread( $_POST['thread'] ) )
+		$not = $bbpm->get_thread_members( (int)$_POST['thread'] );
+
+	global $bbdb;
+	$results = $bbdb->get_col( $bbdb->prepare( 'SELECT `user_nicename` FROM `' . $bbdb->users . '` WHERE ( `user_nicename` LIKE %s OR `user_login` LIKE %s OR `display_name` LIKE %s OR `ID` = %d ) AND `ID` NOT IN (' . implode( ', ', $not ) . ') ORDER BY LENGTH(`user_nicename`) ASC LIMIT 15', $name, $name, $name, $_POST['text'] ) );
+
+	if ( !$results )
+		exit( '[]' );
+
+	exit( '["' . implode( '","', array_map( 'addslashes', $results ) ) . '"]' );
+}
+
 if ( $throttle_time = bb_get_option( 'throttle_time' ) )
 	if ( isset( $bb_current_user->data->last_posted ) && time() < $bb_current_user->data->last_posted + $throttle_time && !bb_current_user_can( 'throttle' ) )
 		bb_die( __( 'Slow down; you move too fast.' ) );

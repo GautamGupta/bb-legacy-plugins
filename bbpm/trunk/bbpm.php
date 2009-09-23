@@ -521,7 +521,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 			wp_cache_delete( bb_get_current_user_info( 'ID' ), 'bbpm-user-messages' );
 		}
 
-		if ( $this->settings['email_new'] && !bb_get_user_meta( $id_reciever, 'bbpm_emailme' ) && bb_get_current_user_info( 'ID' ) != $id_reciever )
+		if ( $this->settings['email_new'] && !bb_get_usermeta( $id_reciever, 'bbpm_emailme' ) && bb_get_current_user_info( 'ID' ) != $id_reciever )
 			bb_mail( bb_get_user_email( $id_reciever ),
 				sprintf(
 					__( '%s has sent you a private message on %s: "%s"', 'bbpm' ),
@@ -587,7 +587,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 			$to = $this->get_thread_members( $pm['pm_thread'] );
 
 			foreach ( $to as $recipient ) {
-				if ( $to != bb_get_current_user_info( 'ID' ) && !bb_get_user_meta( $recipient, 'bbpm_emailme' ) )
+				if ( $to != bb_get_current_user_info( 'ID' ) && !bb_get_usermeta( $recipient, 'bbpm_emailme' ) )
 					bb_mail( bb_get_user_email( $recipient ),
 						sprintf(
 							__( '%s has sent you a private message on %s: "%s"', 'bbpm' ),
@@ -835,7 +835,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 
 				do_action( 'bbpm_add_member', $ID, $user );
 
-				if ( $this->settings['email_add'] && !bb_get_user_meta( $user, 'bbpm_emailme' ) ) {
+				if ( $this->settings['email_add'] && !bb_get_usermeta( $user, 'bbpm_emailme' ) ) {
 					bb_mail( bb_get_user_email( $user ),
 						sprintf(
 							__( '%s has added you to a conversation on %s: "%s"', 'bbpm' ),

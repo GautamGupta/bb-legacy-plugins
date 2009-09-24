@@ -19,7 +19,7 @@ $css_post_id_prefix="post-"; // change this to the DIV you are using for posts i
 /******************/
 /* Attached hooks */
 /******************/
-// add_action('post_post_form','ashfame_recent_bbpress_replies'); // this is not working as of now - gotta fix it
+add_action('post_post_form','ashfame_recent_bbpress_replies'); // this is not working as of now - gotta fix it
 add_action('bb_head','ashfame_recent_bbpress_replies_style'); // comment this line to remove the default styling and use your own in your theme's stylesheet
 
 /************************/
@@ -32,8 +32,11 @@ function ashfame_recent_bbpress_replies_style() // this hooks up the styling to 
 	echo "\n<style type=\"text/css\">$css</style>\n";
 }
 
-function ashfame_recent_bbpress_replies($limit=5,$heading_opening_tag="<h2>",$heading_closing_tag="</h2>") // You can call the following function anywhere in your template 
+function ashfame_recent_bbpress_replies($limit='5',$heading_opening_tag="<h2>",$heading_closing_tag="</h2>") // You can call the following function anywhere in your template 
 {
+	if (!is_numeric($limit)) // fix for 'post_post_form' action
+		$limit = 5;
+	
 	global $bbdb, $bb_table_prefix, $query_recent_replies,$css_post_id_prefix;
 	$where = " WHERE post_status = 0 AND post_position <> 1 ";
 	$query_recent_replies = "SELECT * from ".$bb_table_prefix."topics JOIN ".$bb_table_prefix."posts ON ".$bb_table_prefix."topics.topic_id = ".$bb_table_prefix."posts.topic_id ".$where." ORDER BY post_time DESC LIMIT ".$limit;
@@ -51,7 +54,7 @@ function ashfame_recent_bbpress_replies($limit=5,$heading_opening_tag="<h2>",$he
 	
 	foreach($recent_replies as $recent_reply)
 	{
-		echo "\n<li><a href=\"".get_user_profile_link ($recent_reply->poster_id)."\">".get_user_display_name ($recent_reply->poster_id)."</a> on <a href=\"".get_topic_link($recent_reply->topic_id);
+		echo "\n<li>".bb_get_profile_link( array( 'id' => $recent_reply->poster_id, 'text' => get_user_display_name( $recent_reply->poster_id ) ) )." on <a href=\"".get_topic_link($recent_reply->topic_id);
 		$page = (int)$recent_reply->post_position / bb_get_option_from_db('page_topics') ;
 		
 		if ($page > 1)

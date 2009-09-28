@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1-alpha7\n"
 "Report-Msgid-Bugs-To: http://bbpress.org/plugins/topic/bbpm/\n"
-"POT-Creation-Date: 2009-08-30 13:27+0000\n"
+"POT-Creation-Date: 2009-09-28 13:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,12 +17,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: bbpm.php:507 bbpm.php:573
+#: bbpm.php:527 bbpm.php:593
 #, php-format
 msgid "%s has sent you a private message on %s: \"%s\""
 msgstr ""
 
-#: bbpm.php:512 bbpm.php:578
+#: bbpm.php:532 bbpm.php:598
 #, php-format
 msgid ""
 "Hello, %s!\n"
@@ -40,7 +40,7 @@ msgid ""
 "%s"
 msgstr ""
 
-#: bbpm.php:520 bbpm.php:586
+#: bbpm.php:540 bbpm.php:606
 #, php-format
 msgid ""
 "Hello, %s!\n"
@@ -52,12 +52,12 @@ msgid ""
 "%s"
 msgstr ""
 
-#: bbpm.php:821
+#: bbpm.php:841
 #, php-format
 msgid "%s has added you to a conversation on %s: \"%s\""
 msgstr ""
 
-#: bbpm.php:826
+#: bbpm.php:846
 #, php-format
 msgid ""
 "Hello, %s!\n"
@@ -69,132 +69,144 @@ msgid ""
 "%s"
 msgstr ""
 
-#: bbpm.php:877 bbpm.php:888
+#: bbpm.php:897 bbpm.php:929
 msgid "PM this user"
 msgstr ""
 
-#: bbpm.php:927 bbpm.php:1236
+#: bbpm.php:913
+msgid "Don't email me when I get a PM"
+msgstr ""
+
+#: bbpm.php:970 bbpm.php:1289
 #, php-format
 msgid "1 new Private Message!"
 msgid_plural "%s new Private Messages!"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bbpm.php:928 bbpm.php:1238 privatemessages.php:35 privatemessages.php:65
-#: privatemessages.php:67 privatemessages.php:108 privatemessages.php:173
+#: bbpm.php:971 bbpm.php:1291 privatemessages.php:35 privatemessages.php:132
+#: privatemessages.php:134 privatemessages.php:175 privatemessages.php:240
 msgid "Private Messages"
 msgstr ""
 
 #. #-#-#-#-#  plugin.pot (PACKAGE VERSION)  #-#-#-#-#
 #. Plugin Name of an extension
-#: bbpm.php:935 bbpm.php:1156
+#: bbpm.php:978 bbpm.php:1200
 msgid "bbPM"
 msgstr ""
 
-#: bbpm.php:1013
+#: bbpm.php:1056
 msgid "New:"
 msgstr ""
 
-#: bbpm.php:1048
+#: bbpm.php:1091
 msgid "Remove deleted users from bbPM threads"
 msgstr ""
 
-#: bbpm.php:1067
+#: bbpm.php:1110
 msgid "Cleaning up bbPM messages&hellip; "
 msgstr ""
 
-#: bbpm.php:1108
+#: bbpm.php:1151
 #, php-format
 msgid "Removed %s nonexistant user from bbPM threads."
 msgid_plural "Removed %s nonexistant users from bbPM threads."
 msgstr[0] ""
 msgstr[1] ""
 
-#: bbpm.php:1119
+#: bbpm.php:1162
 #, php-format
 msgid "Deleted %s thread. "
 msgid_plural "Deleted %s threads. "
 msgstr[0] ""
 msgstr[1] ""
 
-#: bbpm.php:1162
+#: bbpm.php:1206
 msgid "Maximum PM threads per user"
 msgstr ""
 
-#: bbpm.php:1170
+#: bbpm.php:1214
 msgid "Automatically add header link"
 msgstr ""
 
-#: bbpm.php:1174
+#: bbpm.php:1218
 msgid ""
 "You will need to add <code>&lt;?php if ( function_exists"
 "( 'bbpm_messages_link' ) ) bbpm_messages_link(); ?&gt;</code> to your "
 "template if you disable this."
 msgstr ""
 
-#: bbpm.php:1179
+#: bbpm.php:1223
 msgid "Email options"
 msgstr ""
 
-#: bbpm.php:1182
+#: bbpm.php:1226
 msgid "When a new message is recieved"
 msgstr ""
 
-#: bbpm.php:1183
+#: bbpm.php:1227
 msgid "When a new reply is recieved"
 msgstr ""
 
-#: bbpm.php:1184
+#: bbpm.php:1228
 msgid "When a user is added to a conversation"
 msgstr ""
 
-#: bbpm.php:1185
+#: bbpm.php:1229
 msgid "Include contents of message"
 msgstr ""
 
-#: bbpm.php:1191
+#: bbpm.php:1234
+msgid "Maximum PM threads per page"
+msgstr ""
+
+#: bbpm.php:1238
+msgid "Enter 0 or leave this blank to use your forum's default setting."
+msgstr ""
+
+#: bbpm.php:1244
 msgid "Save settings"
 msgstr ""
 
-#: bbpm.php:1199
+#: bbpm.php:1252
 #, php-format
 msgid ""
 "bbPM is installed in the \"<code>%s</code>\" directory. It should be "
 "installed in \"<code>my-plugins</code>\""
 msgstr ""
 
-#: bbpm.php:1202
+#: bbpm.php:1255
 #, php-format
 msgid ""
 "The <code>my-plugins</code> directory has its permissions set to %s. This is "
 "not recommended. Please use 755 instead."
 msgstr ""
 
-#: pm.php:27
+#: pm.php:53
 msgid "Slow down; you move too fast."
 msgstr ""
 
-#: pm.php:36 pm.php:58 pm.php:61
+#: pm.php:62 pm.php:84 pm.php:87
 msgid "You need to choose a valid person to send the message to."
 msgstr ""
 
-#: pm.php:49 pm.php:78
+#: pm.php:75 pm.php:104
 msgid "You are not allowed to write private messages.  Are you logged in?"
 msgstr ""
 
-#: pm.php:51 pm.php:80
+#: pm.php:77 pm.php:106
 msgid "You need to actually submit some content!"
 msgstr ""
 
-#: pm.php:53
+#: pm.php:79
 msgid "Please enter a private message title."
 msgstr ""
 
-#: pm.php:68 pm.php:92
+#: pm.php:94 pm.php:118
 msgid "Either your outbox or the recipient's inbox is full."
 msgstr ""
 
-#: pm.php:85
+#: pm.php:111
 msgid "There was an error sending your message."
 msgstr ""
 
@@ -210,98 +222,98 @@ msgstr ""
 msgid "Send PM to:"
 msgstr ""
 
-#: privatemessages.php:48 privatemessages.php:156
+#: privatemessages.php:115 privatemessages.php:223
 msgid "Message:"
 msgstr ""
 
-#: privatemessages.php:52 privatemessages.php:160
+#: privatemessages.php:119 privatemessages.php:227
 msgid "Send Message &raquo;"
 msgstr ""
 
-#: privatemessages.php:55 privatemessages.php:163
+#: privatemessages.php:122 privatemessages.php:230
 msgid "Allowed markup:"
 msgstr ""
 
-#: privatemessages.php:55 privatemessages.php:163
+#: privatemessages.php:122 privatemessages.php:230
 msgid ""
 "You can also put code in between backtick ( <code>`</code> ) characters."
 msgstr ""
 
-#: privatemessages.php:67
+#: privatemessages.php:134
 #, php-format
 msgid "(Page %s)"
 msgstr ""
 
-#: privatemessages.php:70
+#: privatemessages.php:137
 msgid "Subject"
 msgstr ""
 
-#: privatemessages.php:70
+#: privatemessages.php:137
 msgid "New &raquo;"
 msgstr ""
 
-#: privatemessages.php:71 threadviewer.php:38
+#: privatemessages.php:138 threadviewer.php:40
 msgid "Members"
 msgstr ""
 
-#: privatemessages.php:72
+#: privatemessages.php:139
 msgid "Freshness"
 msgstr ""
 
-#: privatemessages.php:73
+#: privatemessages.php:140
 msgid "Actions"
 msgstr ""
 
-#: privatemessages.php:99
+#: privatemessages.php:166
 msgid "Unsubscribe"
 msgstr ""
 
-#: privatemessages.php:108 privatemessages.php:173
+#: privatemessages.php:175 privatemessages.php:240
 msgid "Read"
 msgstr ""
 
-#: privatemessages.php:146 threadviewer.php:111
+#: privatemessages.php:213 threadviewer.php:181
 #, php-format
 msgid "Sent %s ago"
 msgstr ""
 
-#: privatemessages.php:146
+#: privatemessages.php:213
 msgid "Delete"
 msgstr ""
 
-#: privatemessages.php:146 threadviewer.php:111
+#: privatemessages.php:213 threadviewer.php:181
 msgid "Reply"
 msgstr ""
 
-#: threadviewer.php:26
+#: threadviewer.php:28
 #, php-format
 msgid "%s post"
 msgid_plural "%s posts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: threadviewer.php:27
+#: threadviewer.php:29
 #, php-format
 msgid "%s voice"
 msgid_plural "%s voices"
 msgstr[0] ""
 msgstr[1] ""
 
-#: threadviewer.php:30
+#: threadviewer.php:32
 #, php-format
 msgid "Started %1$s ago by %2$s"
 msgstr ""
 
-#: threadviewer.php:32
+#: threadviewer.php:34
 #, php-format
 msgid "<a href=\"%1$s\">Latest reply</a> from %2$s"
 msgstr ""
 
-#: threadviewer.php:58
+#: threadviewer.php:60
 msgid "Add &raquo;"
 msgstr ""
 
-#: threadviewer.php:124
+#: threadviewer.php:194
 msgid "[Cancel]"
 msgstr ""
 

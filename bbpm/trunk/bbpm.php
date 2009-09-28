@@ -3,7 +3,7 @@
 Plugin Name: bbPM
 Plugin URI: http://nightgunner5.wordpress.com/tag/bbpm/
 Description: Adds the ability for users of a forum to send private messages to each other.
-Version: 0.1-alpha7
+Version: 0.1-beta1
 Author: Nightgunner5
 Author URI: http://llamaslayers.net/
 Text Domain: bbpm
@@ -11,7 +11,7 @@ Domain Path: /translations/
 */
 /**
  * @package bbPM
- * @version 0.1-alpha7
+ * @version 0.1-beta1
  * @author Nightgunner5
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU General Public License, Version 3 or higher
  */
@@ -547,6 +547,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 			);
 
 		bb_update_meta( $pm['pm_thread'], 'last_message', $msg->ID, 'bbpm_thread' );
+		bb_update_usermeta( bb_get_current_user_info( 'ID' ), 'bbpm_last_read_' . $pm['pm_thread'], $msg->ID );
 
 		do_action( 'bbpm_new', $msg );
 		do_action( 'bbpm_send', $msg );
@@ -613,6 +614,8 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 					);
 			}
 		}
+
+		bb_update_usermeta( bb_get_current_user_info( 'ID' ), 'bbpm_last_read_' . $pm['pm_thread'], $msg->ID );
 
 		do_action( 'bbpm_reply', $msg );
 		do_action( 'bbpm_send', $msg );
@@ -1167,6 +1170,8 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 }
 
 /**
+ * The bbPM object
+ *
  * @global bbPM $GLOBALS['bbpm']
  * @name $bbpm
  * @since 0.1-alpha1

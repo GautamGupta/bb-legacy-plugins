@@ -25,6 +25,9 @@ Users can send private messages to each other. Replies are threaded, and more th
 
 == Changelog ==
 
+= 0.1-beta1 =
+* bbPM no longer thinks that messages are new to the person who sent them
+
 = 0.1-alpha7 =
 * Recount option to remove deleted users from bbPM threads
 * Adding users to a thread now redirects properly without pretty permalinks

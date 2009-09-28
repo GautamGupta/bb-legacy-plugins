@@ -1,7 +1,7 @@
 <?php
 /**
  * @package bbPM
- * @version 0.1-alpha7
+ * @version 0.1-beta1
  * @author Nightgunner5
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU General Public License, Version 3 or higher
  * @todo Code cleanup
@@ -190,13 +190,16 @@ jQuery(function($){
 	$('.pm-reply').click(function(){
 		$('#respond').hide('normal', function(){$(this).remove()});
 		var pm = $(this).parents('li');
-		$('<div id="respond"/>').appendTo(pm).hide().load($(this).attr('href') + ' #respond', function(){
-			$(this).find('textarea').css({width: '99%'}).end().find('#reply').append(' ').append($('<a href="#"><small style="font-size:small"><?php echo addslashes( __( '[Cancel]', 'bbpm' ) ); ?></small></a>').click(function(){
+		$('<div id="respond"/>').appendTo(pm).hide();
+		$.get($(this).attr('href'), {}, function(page){
+			page = page.substr(page.indexOf('<div id="respond">') + 18);
+			page = page.substr(0, page.indexOf('</form>') + 7);
+			$('#respond').html(page).find('textarea').css({width: '99%'}).end().find('#reply').append(' ').append($('<a href="#"><small style="font-size:small"><?php echo addslashes( __( '[Cancel]', 'bbpm' ) ); ?></small></a>').click(function(){
 				$('#respond').hide('normal', function(){$(this).remove()});
 				return false;
 			})).end().show('fast');
 			$('#message')[0].focus();
-		});
+		}, 'text');
 		return false;
 	});
 });

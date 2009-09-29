@@ -1,0 +1,237 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Gautam
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/ajaxed-chat\n"
+"POT-Creation-Date: 2009-09-29 10:43+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ajaxed-chat.php:131
+msgid "You need to be a registered user to login to the Chat!"
+msgstr ""
+
+#. #-#-#-#-#  plugin.pot (PACKAGE VERSION)  #-#-#-#-#
+#. Plugin Name of an extension
+#: ajaxed-chat.php:138
+msgid "Ajaxed Chat"
+msgstr ""
+
+#: ajaxed-chat.php:198
+msgid "Your changes have been saved successfully!"
+msgstr ""
+
+#: ajaxed-chat.php:206
+msgid ""
+"New version of Ajaxed Chat is available! Please download the latest version "
+msgstr ""
+
+#: ajaxed-chat.php:206 ajaxed-chat.php:367
+msgid "here"
+msgstr ""
+
+#: ajaxed-chat.php:216
+msgid "Maybe you would consider"
+msgstr ""
+
+#: ajaxed-chat.php:216
+msgid "donating"
+msgstr ""
+
+#: ajaxed-chat.php:216
+msgid "or following me on"
+msgstr ""
+
+#: ajaxed-chat.php:222
+msgid "Ajaxed Chat Settings"
+msgstr ""
+
+#: ajaxed-chat.php:230
+msgid "General Settings"
+msgstr ""
+
+#: ajaxed-chat.php:235
+msgid "You can call the Ajaxed Chat by putting this code in your template:"
+msgstr ""
+
+#: ajaxed-chat.php:240
+msgid "Server ID:"
+msgstr ""
+
+#: ajaxed-chat.php:243
+msgid "Chat Name:"
+msgstr ""
+
+#: ajaxed-chat.php:246
+msgid "Channel Names:"
+msgstr ""
+
+#: ajaxed-chat.php:247
+msgid "Separated by commas (\",\") - Do not put spaces after commas"
+msgstr ""
+
+#: ajaxed-chat.php:249
+msgid "Admin Password:"
+msgstr ""
+
+#: ajaxed-chat.php:252
+msgid "Language:"
+msgstr ""
+
+#: ajaxed-chat.php:270
+msgid "Storage Method:"
+msgstr ""
+
+#: ajaxed-chat.php:271
+msgid "File"
+msgstr ""
+
+#: ajaxed-chat.php:273
+msgid "Mysql"
+msgstr ""
+
+#: ajaxed-chat.php:281
+msgid "Chat Box Settings"
+msgstr ""
+
+#: ajaxed-chat.php:287
+msgid "Turn on Ping?"
+msgstr ""
+
+#: ajaxed-chat.php:292
+msgid "Turn off Flood Checking?"
+msgstr ""
+
+#: ajaxed-chat.php:297
+msgid "Turn off the Censor Proxy?"
+msgstr ""
+
+#: ajaxed-chat.php:302
+msgid "Disable the timestamp on each chat message?"
+msgstr ""
+
+#: ajaxed-chat.php:307
+msgid "Disable text logging of the chat?"
+msgstr ""
+
+#: ajaxed-chat.php:312
+msgid "Disable unregistered users from viewing the chat?"
+msgstr ""
+
+#: ajaxed-chat.php:322
+msgid "Layout Settings"
+msgstr ""
+
+#: ajaxed-chat.php:327
+msgid "Height of Chat Box:"
+msgstr ""
+
+#: ajaxed-chat.php:330
+msgid "Theme:"
+msgstr ""
+
+#: ajaxed-chat.php:353
+msgid "Save Changes"
+msgstr ""
+
+#: ajaxed-chat.php:354
+msgid ""
+"Please run the /rehash command in chat room after you have done any changes "
+"to the configuration."
+msgstr ""
+
+#: ajaxed-chat.php:361 ajaxed-chat.php:367
+msgid "Plugin Info"
+msgstr ""
+
+#: ajaxed-chat.php:365
+msgid "Helpful Plugin Links"
+msgstr ""
+
+#: ajaxed-chat.php:367
+msgid "or"
+msgstr ""
+
+#: ajaxed-chat.php:368
+msgid "Chat Commands"
+msgstr ""
+
+#: ajaxed-chat.php:369
+msgid "Frequently Asked Questions"
+msgstr ""
+
+#: ajaxed-chat.php:370
+msgid "Support Forum"
+msgstr ""
+
+#: ajaxed-chat.php:371
+msgid "Other Ajaxed Chat Platforms"
+msgstr ""
+
+#: ajaxed-chat.php:380
+msgid "Support by Donating"
+msgstr ""
+
+#: ajaxed-chat.php:384
+msgid ""
+"Surely the fact that we're making the web a chatable place one forum at a "
+"time is worth a donation, right?"
+msgstr ""
+
+#: ajaxed-chat.php:386 ajaxed-chat.php:411
+msgid "Help support the development of this plugin by donating!"
+msgstr ""
+
+#: ajaxed-chat.php:391 ajaxed-chat.php:396
+msgid ""
+"Get the latest information about the plugin and the latest news about "
+"Internet & Technology in the world!"
+msgstr ""
+
+#: ajaxed-chat.php:392
+msgid "Follow us on Twitter!"
+msgstr ""
+
+#: ajaxed-chat.php:397
+msgid "Visit our Website!"
+msgstr ""
+
+#: ajaxed-chat.php:411
+msgid "Donate"
+msgstr ""
+
+#: ajaxed-chat.php:411
+msgid ""
+"now to get to this list and your name with your website link will be here!"
+msgstr ""
+
+#: ajaxed-chat.php:418
+msgid "Shout Outs"
+msgstr ""
+
+#. Plugin URI of an extension
+msgid "http://www.gaut.am/bbpress/plugins/ajaxed-chat/"
+msgstr ""
+
+#. Description of an extension
+msgid ""
+"Adds a MultiUser Chat Room using PHP and Ajax with PHPFreeChat Script "
+"(phpfreechat.net)"
+msgstr ""
+
+#. Author of an extension
+msgid "Gautam"
+msgstr ""
+
+#. Author URI of an extension
+msgid "http://gaut.am/"
+msgstr ""

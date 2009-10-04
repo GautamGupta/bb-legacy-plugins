@@ -94,8 +94,9 @@ $offset = (intval($page) -1) *  $per_page;  		// if (isset($_GET['page']))  {} e
 
 $query="";
 
-if ($user_role) {	
-	$query.="LEFT JOIN $bbdb->usermeta as meta ON ID=meta.user_id WHERE (meta_key='$bbdb->prefix"."capabilities' AND meta_value LIKE '%:\"$user_role\";%' )";
+if ($user_role) {
+	if ($user_role=="inactive") {$norole=" OR meta_value IS NULL ";} else {$norole="";}
+	$query.="LEFT JOIN $bbdb->usermeta as meta ON ID=meta.user_id AND meta_key='$bbdb->prefix"."capabilities' WHERE (meta_value LIKE '%:\"$user_role\";%' $norole)";
 }
 
 if ($user_text) {	
@@ -343,8 +344,8 @@ echo "<span title='".bb_since($user->user_registered,true)." ago'>".date( 'Y-m-d
 break;   
 case "status" : echo $user->user_status;   break;   
 case "role" :   
-	$capabilities=(isset($user->bb_capabilities)) ? $user->bb_capabilities : $user->capabilities;  // makes compatibile for 0.8.x - 1.0a
-	echo reset(array_keys($capabilities)); 	
+	$capabilities=(isset($user->bb_capabilities)) ? $user->bb_capabilities : $user->capabilities;  // makes compatibile for 0.8.x - 1.0a	
+	if (is_array($capabilities)) {echo reset(array_keys($capabilities));} else {echo "(none)";}
 break;
 case "posts" :   echo empty($data->posts) ? 0 : $data->posts; break;
 case "comments" :  echo empty($data->comments) ? 0 : $data->comments; break;

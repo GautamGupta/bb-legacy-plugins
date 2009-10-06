@@ -1,0 +1,718 @@
+/*
+ Admin Stylesheet for
+ Social It plugin (for bbPress) by www.gaut.am
+*/
+
+div.socialit-wrap {
+	font-family:arial,sans-serif;
+	font-size:14px;
+	font-weight:normal;
+	padding-left:18px;
+}
+.socialit-wrap fieldset {
+	border:1px dotted #666666;
+	clear:both;
+	margin-top:20px;
+	padding:0 18px 18px;
+}
+.socialit-wrap fieldset legend {
+	background:#F9F9F9 none repeat scroll 0 0;
+	font-size:18px;
+}
+.socialit_option {
+	display:block;
+	font-weight:bold;
+	margin-top:12px;
+}
+.iconator label {
+	background-image:url('../images/socialit-sprite.png');
+	background-repeat:no-repeat;
+	cursor:move;
+	float:left;
+	height:45px;
+	margin:12px 2px !important;
+	text-align:center;
+	width:60px;
+}
+.iconator label input {margin-top:30px;}
+#clearShortUrlsLabel {
+	font-size:11px;
+	height:14px;
+	line-height:14px;
+}
+#clearShortUrls {margin-right:4px;}
+.share-sexy {
+	background:transparent url('../images/socialit-trans.png') no-repeat scroll 0 -346px;
+}
+.share-care {
+	background:transparent url('../images/socialit-trans.png') no-repeat scroll 0 0;
+}
+.share-care-old {
+	background:transparent url('../images/socialit-trans.png') no-repeat scroll 0 -746px;
+}
+.share-love {
+	background:transparent url('../images/socialit-trans.png') no-repeat scroll 0 -1146px;
+}
+.share-wealth {
+	background:transparent url('../images/socialit-trans.png') no-repeat scroll 0 -1535px;
+	padding:50px 0 0 25px !important;
+}
+.share-enjoy {
+	background:transparent url('../images/socialit-trans.png') no-repeat scroll 0 -1895px;
+}
+.bgimg {
+	display:block;
+	float:left;
+	margin:10px 0 0;
+	padding:50px 0 0 11px;
+	width:195px;
+}
+#xtrastyle {
+	height:120px;
+	width:100%;
+}
+.defaulttags-label {
+  color: #777;
+}
+.socialit-donations {
+	background:#FFDDDD;
+	border:1px dotted #666666;
+	margin:20px 0;
+	padding:18px;
+	text-align:center;
+	width:240px;
+}
+.socialit-donations p {text-align:left;}
+.socialit-donations h2 {margin-top:0;}
+div.socialit-success {
+	background:#B4EFAB;
+	border:1px solid #8BE57E;
+	color:#337129;
+	font-size:10px;
+	font-weight:bold;
+	height:24px;
+	line-height:20px;
+	margin:35px 0 0;
+	padding:3px 10px 0;
+	width:97%;
+}
+div.socialit-error {
+	background:#FEB1B1;
+	border:1px solid #FE9090;
+	color:#820101;
+	font-size:10px;
+	font-weight:bold;
+	height:24px;
+	line-height:20px;
+	margin:35px 0 0;
+	padding:3px 10px 0;
+	width:97%;
+}
+div.socialit-information {
+	background:#A3D0FF;
+	border:1px solid #6AB3FF;
+	color:#004185;
+	font-size:10px;
+	font-weight:bold;
+	height:24px;
+	line-height:20px;
+	margin:35px 15px 0 0;
+	padding:3px 10px 0;
+	width:97%;
+}
+
+div#clearurl {
+	-moz-border-radius: 3px;
+	-khtml-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	border-style: solid;
+	border-width: 1px;
+	margin: 5px 0 2px 0;
+	padding: 0 0.65em;
+	font-size: 0.9em;
+}
+
+div#update-message {
+	-moz-border-radius: 3px;
+	-khtml-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	border-style: solid;
+	border-width: 1px;
+	margin: 5px 0 2px 0;
+	padding: 0 0.65em;
+	font-size: 0.9em;
+}
+
+
+div.socialit-warning {
+	background:#F0FEB1;
+	font-size:10px;
+	border:1px solid #D5D458;
+	color:#7F7200;
+	font-weight:bold;
+	height:24px;
+	line-height:20px;
+	margin:35px 0 0;
+	padding:3px 10px 0;
+	width:97%;
+}
+.socialit-warning a, .socialit-information a, .socialit-error a, .socialit-success a {text-decoration:underline;}
+.socialit-warning a {color:#6F6300;}
+.socialit-error a {color:#CB0000;}
+.socialit-information a {color:#1B466F;}
+.socialit-success a {color:#1D5F12;}
+label.socialit-newsvine {background-position:left top;}
+label.socialit-linkedin {background-position:-70px top;}
+label.socialit-devmarks {background-position:-140px top;}
+label.socialit-google {background-position:-210px top;}
+label.socialit-scriptstyle {background-position:-280px top;}
+label.socialit-mail {background-position:-350px top;}
+label.socialit-comfeed {background-position:-420px top;}
+label.socialit-twitter {background-position:-490px top;}
+label.socialit-technorati {background-position:-560px top;}
+label.socialit-stumbleupon {background-position:-630px top;}
+label.socialit-reddit {background-position:-700px top;}
+label.socialit-myspace {background-position:-770px top;}
+label.socialit-mixx {background-position:-840px top;}
+label.socialit-diigo {background-position:-910px top;}
+label.socialit-digg {background-position:-980px top;}
+label.socialit-designfloat {background-position:-1050px top;}
+label.socialit-yahoobuzz {background-position:-1120px top;}
+label.socialit-delicious {background-position:-1190px top;}
+label.socialit-blinklist {background-position:-1260px top;}
+label.socialit-facebook {background-position:-1330px top;}
+label.socialit-misterwong {background-position:-1400px top;}
+label.socialit-izeby {background-position:-1470px top;}
+label.socialit-twittley {background-position:-1540px top;}
+label.socialit-tipd {background-position:-1610px top;}
+label.socialit-pfbuzz {background-position:-1680px top;}
+label.socialit-friendfeed {background-position:-1750px top;}
+label.socialit-blogmarks {background-position:-1820px top;}
+label.socialit-fwisp {background-position:-1890px top;}
+label.socialit-designmoo {background-position:-1960px top;}
+label.socialit-bobrdobr {background-position:-2030px top;}
+label.socialit-memoryru {background-position:-2100px top;}
+label.socialit-100zakladok {background-position:-2170px top;}
+label.socialit-yandex {background-position:-2240px top;}
+label.socialit-moemesto {background-position:-2310px top;}
+label.socialit-marrows {background-position:-2380px top;} 
+label.socialit-identica {background-position:-2450px top;} 
+label.socialit-hackernews {background-position:-2520px top;} 
+label.socialit-ning {background-position:-2590px top;} 
+label.socialit-designbump {background-position:-2660px top;} 
+label.socialit-printfriendly {background-position:-2730px top;}
+label.socialit-fleck{ background-position:-2800px top !important; }
+label.socialit-netvibes{ background-position:-2870px top !important; }
+label.socialit-netvouz{ background-position:-2940px top !important; }
+label.socialit-nujij{ background-position:-3010px top !important; }
+label.socialit-globalgrind{ background-position:-3080px top !important; }
+label.socialit-wikio{ background-position:-3150px top !important; }
+label.socialit-xerpi{ background-position:-3220px top !important; }
+label.socialit-sphinn{ background-position:-3290px top !important; }
+label.socialit-blogospherenews{ background-position:-3360px top !important; }
+label.socialit-posterous{ background-position:-3430px top !important; }
+label.socialit-techmeme{ background-position:-3500px top !important; }
+label.socialit-ekudos{ background-position:-3570px top !important; }
+label.socialit-pingfm{ background-position:-3640px top !important; }
+label.socialit-tomuse{ background-position:-3710px top !important; }
+
+.clear {
+	clear:both;
+}
+.clearbig {
+	clear:both;
+	height:15px;
+}
+.hidden {
+	display:none;
+}
+.floright {
+	clear:none;
+	float:right;
+	margin:0 0 0 10px;
+}
+.floleft {
+	clear:none;
+	float:left;
+	margin:0 10px 0 0;
+}
+.padding {
+	padding:10px;
+	overflow:hidden;
+}
+div#socialit-col-left {
+	float:left;
+	margin:10px 10px 0 0;
+}
+#socialit-col-left label {
+	margin:0 12px 0 0;
+}
+ul#socialit-sortables li {
+	list-style-type:none;
+	margin:0 300px 20px 0;
+}
+ul#socialit-sortables {
+	list-style-type:none;
+}
+div.box-right-body ul.credits {
+	list-style-type:none;
+	list-style-position:outside;
+}
+div.box-right-body ul.credits li {
+	background:url(../images/icons/star-small.png) no-repeat left 2px;
+	padding-left:17px;
+	line-height:19px;
+	font-size:11px;
+}
+div.box-right-body ul.credits li a {
+	text-decoration:none;
+}
+div.box-mid-head {
+	background:transparent url('../images/flo-head.jpg') repeat-x scroll 0 0;
+	border:1px solid #DBDBDB;
+	cursor:move;
+	height:27px;
+	text-align:right;
+	width:100%;
+}
+div.box-mid-head h2 {
+	color:#21759B;
+	float:left;
+	font-family:Georgia,"Times New Roman","Bitstream Charter",Times,serif;
+	font-size:14px;
+	font-style:normal;
+	font-weight:normal;
+	height:24px;
+	line-height:20px;
+	margin:0;
+	padding:3px 0 0 10px;
+	text-align:left;
+}
+div.box-mid-head a:hover {
+	border:medium none;
+}
+div.box-mid-head input {
+	border:1px solid #CCCCCC;
+}
+div.box-mid-body {
+	background:#F8F8F8 url('../images/white-pix.jpg') repeat-x scroll center top;
+	border-bottom:1px solid #DBDBDB;
+	border-left:1px solid #DBDBDB;
+	border-right:1px solid #DBDBDB;
+	display:table;
+	width:100%;
+}
+div.box-mid-body h3 {
+	display:block;
+	font-size:16px;
+	font-weight:bold;
+	margin:8px 0;
+}
+div#socialit-col-right {
+	clear:none;
+	float:left;
+	position:absolute;
+	right:1.3%;
+	width:256px;
+	margin: 10px 10px 0 0;
+}
+div.box-right {
+	float:left;
+	margin-bottom:20px;
+}
+div.box-right-head {
+	background:transparent url('../images/flo-head.jpg') repeat-x scroll 0 0;
+	border:1px solid #DBDBDB;
+	float:left;
+	height:27px;
+	width:256px;
+}
+div.box-right-head h3 {
+	color:#21759B;
+	float:left;
+	font-family:Georgia,"Times New Roman","Bitstream Charter",Times,serif;
+	font-size:14px;
+	font-style:normal;
+	font-weight:normal;
+	height:24px;
+	line-height:20px;
+	margin:0;
+	padding:3px 0 0 10px;
+	text-align:left;
+}
+div.box-right-body {
+	background:#F8F8F8 url('../images/white-pix.jpg') repeat-x scroll center top;
+	border-bottom:1px solid #DBDBDB;
+	border-left:1px solid #DBDBDB;
+	border-right:1px solid #DBDBDB;
+	float:left;
+	width:256px;
+}
+div.box-right-body h4 {
+	display:block;
+	font-size:16px;
+	font-weight:bold;
+	margin:8px 0;
+}
+div.box-right-body ul {
+	list-style-image:none;
+	list-style-position:inside;
+	list-style-type:none;
+	margin:0;
+}
+div.box-right-body ul li strong {
+	color:#454545;
+	font-weight:bold;
+}
+span.socialit-rating {
+	background:transparent url('../images/icons/nostar.png') no-repeat scroll 0 0;
+	display:inline-block;
+	height:16px;
+	margin:0 0 -2px;
+	width:80px;
+}
+span.socialit-rating-1 {
+	background:transparent url('../images/icons/1star.png') no-repeat scroll 0 0;
+	display:inline-block;
+	height:16px;
+	margin:0 0 -2px;
+	width:80px;
+}
+span.socialit-rating-2 {
+	background:transparent url('../images/icons/2star.png') no-repeat scroll 0 0;
+	display:inline-block;
+	height:16px;
+	margin:0 0 -2px;
+	width:80px;
+}
+span.socialit-rating-3 {
+	background:transparent url('../images/icons/3star.png') no-repeat scroll 0 0;
+	display:inline-block;
+	height:16px;
+	margin:0 0 -2px;
+	width:80px;
+}
+span.socialit-rating-4 {
+	background:transparent url('../images/icons/4star.png') no-repeat scroll 0 0;
+	display:inline-block;
+	height:16px;
+	margin:0 0 -2px;
+	width:80px;
+}
+span.socialit-rating-5 {
+	background:transparent url('../images/icons/5star.png') no-repeat scroll 0 0;
+	display:inline-block;
+	height:16px;
+	margin:0 0 -2px;
+	width:80px;
+}
+div.box-right-body ol {
+	counter-reset:cnt;
+	list-style-type:none;
+	margin:0;
+}
+div.box-right-body ol li {
+	counter-increment:cnt;
+	line-height:10px;
+	margin:22px 0;
+}
+div.box-right-body ol li:before {
+	color:#D5D5D5;
+	content:counter(cnt, decimal-leading-zero);
+	font-family:"Courier New",monospace;
+	font-size:26px;
+	font-weight:bold;
+	width:20px;
+}
+div.box-right-body ol li:hover:before {
+	color:#21759B;
+}
+div.box-right-body ol li a {
+	color:#57717F;
+	display:block;
+	margin:-14px 0 0 33px;
+	text-decoration:none;
+}
+div.box-right-body ol li:hover a {
+	color:#21759B;
+	font-weight:bold;
+}
+div.box-right-body ol li span {
+	clear:none;
+	color:#57717F;
+	float:right;
+	margin:-15px 0 0;
+}
+div.box-right-body ol li:hover span {
+	color:#D54E21;
+}
+li.sortHelper {
+	border:3px dashed #666666;
+}
+div.bnav {
+	float:right;
+	height:27px;
+	width:80px;
+}
+div.bnav img {
+	cursor:pointer;
+	float:right;
+	margin-right:5px;
+	margin-top:5px;
+}
+div.inputfield {
+	clear:both;
+	float:left;
+	height:24px;
+	margin-bottom:10px;
+	width:100%;
+}
+div.inputfield label {
+	float:left;
+	width:140px;
+}
+div.inputfield input {
+	border:1px solid #CCCCCC;
+	float:left;
+	height:18px;
+	padding:2px 0 0 2px;
+	width:198px;
+}
+div.inputfield select {
+	border:1px solid #CCCCCC;
+	float:left;
+	height:22px;
+}
+div.inputfield div {
+	clear:right;
+	float:left;
+	height:22px;
+	width:100px;
+}
+div.inputfield input#field3, div.inputfield input#field4, div.inputfield input#field5, div.inputfield input#field6 {
+	border:medium none;
+	float:left;
+	height:22px;
+	margin:0 4px 0 0;
+	padding:0;
+	width:22px;
+}
+div.inputfield input.longfield {
+	border:1px solid #CCCCCC;
+	float:left;
+	height:18px;
+	padding:2px 0 0 2px;
+	width:338px;
+}
+div.dialog-box-succes {
+	background:#B4EFAB;
+	border:1px solid #8BE57E;
+	color:#337129;
+	float:left;
+	font-weight:bold;
+	height:24px;
+	line-height:20px;
+	margin-bottom:20px;
+	padding:3px 10px 0;
+	width:97.5%;
+}
+div.dialog-box-error {
+	background:#FEB1B1;
+	border:1px solid #FE9090;
+	color:#820101;
+	float:left;
+	font-weight:bold;
+	height:24px;
+	line-height:20px;
+	margin-bottom:20px;
+	padding:3px 10px 0;
+	width:97.5%;
+}
+div.dialog-box-warning {
+	background:#F0FEB1;
+	border:1px solid #D5D458;
+	color:#7F7200;
+	float:left;
+	font-size:10px;
+	font-weight:bold;
+	height:auto;
+	line-height:20px;
+	margin-bottom:10px;
+	padding:3px 10px 2px;
+	width:97.5%;
+}
+div.dialog-box-information {
+	background:#A3D0FF;
+	border:1px solid #6AB3FF;
+	color:#004185;
+	float:left;
+	font-size:10px;
+	font-weight:bold;
+	height:24px;
+	line-height:20px;
+	margin-bottom:10px;
+	padding:3px 10px 0;
+	width:97.5%;
+}
+img.dialog-ico {
+	float:left;
+	margin:2px 10px 0 0;
+}
+div.dialog-left {
+	float:left;
+}
+div.dialog-box-information a {
+	color:#004185;
+	text-decoration:underline;
+}
+div.dialog-box-information a:hover {
+	color:#21759B;
+}
+div.dialog-right {
+	float:right;
+}
+img.del-x {
+	cursor:pointer;
+	margin-top:7px;
+}
+img.box-icons {
+	clear:none;
+	float:left;
+	margin:5px 0 0 7px;
+}
+div.socialit-donate-button {
+	width:100%;
+}
+div.socialit-donate-button a{
+	display:block;
+	margin:10px 0;
+}
+div.socialit-twitter-button a.socialit-buttons {
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	border-radius:10px;
+	background:#F2F2F2 url('../images/white-grad.png') repeat-x scroll 0 0;
+	border:1px solid #21759B;
+	color:#21759B;
+	display:inline-block;
+	font-family:tahoma,arial,sans-serif;
+	font-size:11px;
+	height:20px;
+	width:106px;
+	line-height:19px;
+	margin:5px 59px 5px;
+	padding:0 8px;
+	text-decoration:none;
+	text-shadow:0 1px 0 #FFFFFF;
+}
+
+div.socialit-twitter-button a.socialit-buttons:hover {
+	background:transparent url('../images/button-grad.png') repeat-x scroll 0 0;
+	border:1px solid #13455B;
+	color:#FFFFFF;
+	text-shadow:0 1px 0 #13455B;
+}
+
+div.socialit-website-button a.socialit-buttons {
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	border-radius:10px;
+	background:#F2F2F2 url('../images/white-grad.png') repeat-x scroll 0 0;
+	border:1px solid #21759B;
+	color:#21759B;
+	display:inline-block;
+	font-family:tahoma,arial,sans-serif;
+	font-size:11px;
+	height:20px;
+	line-height:19px;
+	margin:5px 68px 5px;
+	padding:0 8px;
+	text-decoration:none;
+	text-shadow:0 1px 0 #FFFFFF;
+}
+
+div.socialit-website-button a.socialit-buttons:hover {
+	background:transparent url('../images/button-grad.png') repeat-x scroll 0 0;
+	border:1px solid #13455B;
+	color:#FFFFFF;
+	text-shadow:0 1px 0 #13455B;
+}
+
+.shebang-info {
+	cursor:pointer;
+	left:5px;
+	position:relative;
+	top:3px;
+}
+.dtags-info {
+	cursor:pointer;
+	left:5px;
+	position:relative;
+	top:3px;
+}
+#defaulttags {
+	width:40%;
+}
+#tag-info {
+	background:#B3C3EF none repeat scroll 0 0;
+	border:1px solid #8BA2DF;
+	font-style:italic;
+	line-height:20px;
+	padding:10px;
+	overflow:hidden;
+}
+.dtags-close {
+	color:#4f659f;
+	font-style:normal;
+	float:right;
+	display:inline;
+	text-decoration:none;
+	cursor:pointer;
+}
+
+.sfp-info {
+	cursor:pointer;
+	left:3px;
+	position:relative;
+	top:1px;
+}
+#sfi-info {
+	background:#B3C3EF none repeat scroll 0 0;
+	border:1px solid #8BA2DF;
+	font-style:italic;
+	line-height:20px;
+	padding:10px;
+	overflow:hidden;
+}
+.sfi-close {
+	color:#4f659f;
+	font-style:normal;
+	float:right;
+	display:inline;
+	text-decoration:none;
+	cursor:pointer;
+}
+
+#placement-info {
+	background:#B3C3EF none repeat scroll 0 0;
+	border:1px solid #8BA2DF;
+	font-style:italic;
+	line-height:20px;
+	padding:10px;
+	overflow:hidden;
+}
+
+/*
+.socialitlogo {
+	width:264px;
+	height:47px;
+	text-indent:-999em;
+	background:url('../images/socialit-logo.png') no-repeat 0 0;
+}
+*/
+
+.submit {
+	padding-bottom:10px;
+}

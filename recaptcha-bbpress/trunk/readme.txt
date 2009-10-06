@@ -26,6 +26,10 @@ On signing up, you will receive two keys, a public key and a private key. In the
 
 <strong>I have an error even when insterted both keys.</strong><br/>
 For some reason, I find that you may need to put in a trailing space when inserting the public/private keys, check if it's present.
+
+<strong>I am testing the signup procedure, and am getting a "Prove you are human" error, even though I'm sure it's correct</strong><br/>
+The error is generated because you are using an email address to sign up to the plugin that's already registered at the forum, try using a different email address.
+
 == Shameless Begging ==
 If you like this plugin, I would appreciate a linkback to http://www.gospelrhys.co.uk. Or donations at http://www.gospelrhys.co.uk/donations/
 

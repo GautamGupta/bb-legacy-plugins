@@ -64,9 +64,11 @@ function bbmodsuite_report_uninstall() {
 }
 
 if ( !function_exists( 'add_action' ) && isset( $_GET['report'] ) ) {
-	if ( file_exists( '../../bb-load.php' ) )
-		require_once '../../bb-load.php';
+	if ( file_exists( '../bb-load.php' ) )
+		require_once '../bb-load.php';
 	elseif ( file_exists( '../../bb-load.php' ) )
+		require_once '../../bb-load.php';
+	elseif ( file_exists( '../../../bb-load.php' ) )
 		require_once '../../../bb-load.php';
 	else
 		exit( 'Fatal error.' );
@@ -96,7 +98,11 @@ if ( !function_exists( 'add_action' ) && isset( $_GET['report'] ) ) {
 		}
 		add_filter( 'bb_template', 'bbmodsuite_report_form', 10, 2 );
 
-		bb_load_template( 'front-page.php' );
+		bb_get_header();
+		echo '<div class="bbcrumb"><a href="' . bb_get_uri() . '">' . bb_get_option('name') . '</a> &raquo; ' . __( 'Report', 'bbpress-moderation-suite' ) . '</div>';
+		post_form();
+		bb_get_footer();
+		exit;
 	} else {
 		if ( !array_key_exists( $_POST['report_reason'], bbmodsuite_report_reasons() ) )
 			bb_die( __( 'Invalid report', 'bbpress-moderation-suite' ) );
@@ -110,7 +116,6 @@ if ( !function_exists( 'add_action' ) && isset( $_GET['report'] ) ) {
 		$bbdb->insert( $bbdb->prefix . 'bbmodsuite_reports', compact( 'report_reason', 'report_content', 'reported_post', 'report_from', 'reported_at' ) );
 		bb_die( __( '<p>Your report was submitted. The moderation staff will review the post in question.</p>', 'bbpress-moderation-suite' ) );
 	}
-	exit;
 }
 
 function bbpress_moderation_suite_report() { ?>
@@ -138,7 +143,7 @@ function bbpress_moderation_suite_report() { ?>
 					'resolve_content' => htmlspecialchars( trim( bbmodsuite_stripslashes( $_POST['resolve_content'] ) ) ),
 					'resolved_at' => bb_current_time( 'mysql' ),
 					'resolved_by' => bb_get_current_user_info( 'ID' ),
-					'resolve_type' => (int)$_POST['resolve_type']
+					'resolve_type' => $_POST['resolve_type']
 				), array( 'ID' => $report_id ) ) ) { ?>
 <div class="updated"><p><?php _e( 'Successfully resolved report.', 'bbpress-moderation-suite' ); ?></p></div>
 <?php			}

@@ -13,13 +13,17 @@ Author URI: http://ilfilosofo.com/
  */
 class LoginLess_Posting 
 {
-	protected $_anon_user_id = 7844145; // the user ID we're using for the anonymous user in certain situations
+	protected $_anon_user_id = 0; // the user ID we're using for the anonymous user in certain situations
+	protected $_user_login_base = 'anonymousloginlessuser';
+
 	public $allow_new_topics = false; // whether to allow non-logged-in users to post new topics
 	public $allow_new_posts = false; // whether to allow non-logged-in users to post new posts
 
 	public function __construct() 
 	{
 		$this->attach_events();
+
+		$this->_anon_user_id = bb_get_option('loginless-anon-id');
 	}
 
 	/**
@@ -83,6 +87,8 @@ class LoginLess_Posting
 		add_filter('bb_get_user_email', array(&$this, 'filter_bb_get_user_email'), 99);
 		add_filter('get_topic_author', array(&$this, 'filter_get_topic_author'), 99, 2);
 		add_filter('get_topic_last_poster', array(&$this, 'filter_get_topic_last_poster'), 99, 2);
+
+		bb_register_plugin_activation_hook(__FILE__, array(&$this, 'event_plugin_activation')); 
 	}
 
 	/**
@@ -168,8 +174,8 @@ class LoginLess_Posting
 
 		// if the "author" is the anonymous id, then let's save the name in the post meta 
 		if ( $this->_anon_user_id == $post->poster_id ) {
-			$email = wp_specialchars($_POST['post-form-email']);
-			$name = wp_specialchars($_POST['post-form-anon-name']);
+			$email = wp_specialchars($_POST['email']);
+			$name = wp_specialchars($_POST['author']);
 	
 			// associate the user of this post with correct username / email
 			bb_update_postmeta( $post_id, '_anon_user_name', $name );
@@ -187,11 +193,28 @@ class LoginLess_Posting
 
 		// if using the anonymous user id, then let's save the name in the meta table
 		if ( $this->_anon_user_id == $topic->topic_poster ) {
-			$email = wp_specialchars($_POST['post-form-email']);
-			$name = wp_specialchars($_POST['post-form-anon-name']);
+			$email = wp_specialchars($_POST['email']);
+			$name = wp_specialchars($_POST['author']);
 
 			// let's associate that email address with the posted user's name
 			bb_update_topicmeta( $topic_id, '_anon_user_name-' . $email, $name );
+		}
+	}
+
+	public function event_plugin_activation()
+	{
+		// get the anonymous user, if it exists	
+		$anon_id = bb_get_option('loginless-anon-id');
+		if ( empty( $anon_id ) ) {
+			$sitename = strtolower( $_SERVER['SERVER_NAME'] );
+			if ( substr( $sitename, 0, 4 ) == 'www.' ) {
+				$sitename = substr( $sitename, 4 );
+			}
+			$user_id = bb_new_user( $this->_user_login_base, $this->_user_login_base . '@' . $sitename, '');	
+			if ( ! is_wp_error($user_id) && ! empty($user_id) ) {
+				$this->_anon_user_id = intval($user_id);
+				return bb_update_option('loginless-anon-id', intval($user_id));
+			}
 		}
 	}
 
@@ -202,7 +225,7 @@ class LoginLess_Posting
 		?>
 		<input type="hidden" name="loginless-form-submission" id="loginless-form-submission" value="1" />
 		<p>
-			<input type="text" name="author" id="author" value="<?php echo esc_attr($comment_author); ?>" size="22" tabindex="1" <?php if ($req) echo "aria-required='true'"; ?> />
+			<input type="text" name="author" id="author" value="<?php echo esc_attr($comment_author); ?>" size="22" <?php if ($req) echo "aria-required='true'"; ?> />
 			<label for="author"><small><?php 
 				printf(	
 					__('Name %s', 'loginless-posting'),
@@ -212,7 +235,7 @@ class LoginLess_Posting
 		</p>
 			
 		<p>
-			<input type="text" name="email" id="email" value="<?php echo esc_attr($comment_author_email); ?>" size="22" tabindex="2" <?php if ($req) echo "aria-required='true'"; ?> />
+			<input type="text" name="email" id="email" value="<?php echo esc_attr($comment_author_email); ?>" size="22" <?php if ($req) echo "aria-required='true'"; ?> />
 			<label for="email"><small><?php
 				printf(
 					__('Mail (will not be published) %s', 'loginless-posting'),
@@ -222,7 +245,7 @@ class LoginLess_Posting
 		</p>
 
 		<p>
-			<input type="text" name="url" id="url" value="<?php echo esc_attr($comment_author_url); ?>" size="22" tabindex="3" />
+			<input type="text" name="url" id="url" value="<?php echo esc_attr($comment_author_url); ?>" size="22" />
 			<label for="url"><small><?php _e('Website', 'loginless-posting'); ?></small></label>
 		</p>
 
@@ -232,6 +255,11 @@ class LoginLess_Posting
 	public function event_post_post_form() 
 	{
 		$content = ob_get_clean();
+		// need to move "<form..>" to the beginning of $content
+		if ( preg_match('#(<form[^>]*>)#s', $content, $matches) ) {
+			$content = str_replace($matches[0], '', $content);
+			$content = $matches[0] . "\n" . $content;
+		}
 		if ( bb_is_topic() ) {
 			$new_field = $this->get_nonce('create-post_' . get_topic_id());
 		} else {
@@ -377,7 +405,7 @@ class LoginLess_WP_Auth extends WP_Auth {
 	public function validate_auth_cookie( $cookie = null, $scheme = 'auth' )
 	{
 		// only mess around with this in the situation of a non-logged-in user posting a topic or post
-		if ( ! empty($_POST['post-user-not-logged']) 
+		if ( ! empty($_POST['loginless-form-submission']) 
 			&& empty( $cookie ) 
 			&& 'logged_in' == $scheme 
 			&& ( $_db = loginless_posting_get_backtrace_functions() ) 

@@ -78,7 +78,7 @@ function related_topics_init() {
 	RTbox=document.createElement("div");
 	RTbox.style.margin="0 0 4px 2px";
 	RTbox.id="related_topics"; RTbox.last=""; RTbox.search="";
-	RTtitle=document.forms['postform'].topic;
+	RTtitle=document.getElementById('topic');  // document.forms['postform'].topic ?? stopped working ??
 	RTtitle.setAttribute("autocomplete","off");	
 	RTtitle.onfocus=related_topics;
 	RTtitle.onkeyup=related_topics_key;

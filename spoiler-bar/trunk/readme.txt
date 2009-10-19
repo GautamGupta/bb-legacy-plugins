@@ -1,9 +1,11 @@
 === Spoiler Tags ===
 Tags: html, spoiler
 Contributors: ipstenu, _ck_
-Requires at least: Unknown
-Tested up to: 1.0alpha2
+Requires at least: 0.9
+Tested up to: 1.0
 Stable Tag: 0.4
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5227973
+
 
 Allow users to include &lt;spoiler&gt;&lt;/spoiler&gt; tags in their posts.
 

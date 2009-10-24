@@ -1,26 +1,37 @@
 === Allow Images ===
 Tags: images, html
-Contributors: mdawaffe
+Contributors: mdawaffe, qayqay12
 Requires at least: 0.8.4
-Tested up to: 0.8.4
-Stable Tag: 0.7.1
+Tested up to: 1.0.2
+Stable Tag: 0.9
 
 Allow users to include &lt;img /&gt; tags in their posts.
 
 == Description ==
 
-With this plugin, users may include image tags in their posts.  The images must
-be pngs, gifs or jpegs.
+With this simple plugin, users may include image tags in their posts.  
 
 == Installation ==
 
-Add the `allow-images.php` file to bbPress' `my-plugins/` directory.
+1. Add the `allow-images.php` file to bbPress' `my-plugins/` directory.
+2. Activate the plugin through the 'Plugins' menu in WordPress
 
 == Frequently Asked Questions ==
 
-= Is allowing images in posts a security risk? =
-This plugin only allows certain types of files to be linked to as an image, so
-the security risk is minimal.  Be that as it may, there is always the
-possibility of a security risk when allowing people to post content on your site
-that is stored elsewhere.  Use this plugin at your own risk.
+= How to prevent big images to break the forum's layout ? =
+Add this to your CSS:
+#thread .post img {max-width:450px;} 
+= Is there any restriction on the image url or file extension ? =
+nop. Not anymore.
+= Why isn't &lt;img /&gt; allowed by default in bbpress ? =
+Maybe because people may add huge images or p0rn or other unwanted content that would bothers other users and slow down your website. Who knows ? 
+= How big is this plugin ? =
+5 short lines :-)
+= What is the average velocity of an unladen swallow? =
+What you mean? an African or European swallow? 
 
+== Changelog ==
+
+= 0.9 =
+* Fix the compatibilty issue with bbpress 1.0.2
+* No more check on file extension. 

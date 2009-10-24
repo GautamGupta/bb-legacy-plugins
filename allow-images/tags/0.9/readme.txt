@@ -14,7 +14,7 @@ With this simple plugin, users may include image tags in their posts.
 == Installation ==
 
 1. Add the `allow-images.php` file to bbPress' `my-plugins/` directory.
-2. Activate the plugin through the 'Plugins' menu in WordPress
+2. Activate the plugin through the 'Plugins' menu in bbPress.
 
 == Frequently Asked Questions ==
 

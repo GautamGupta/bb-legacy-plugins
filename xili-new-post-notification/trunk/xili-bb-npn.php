@@ -105,9 +105,9 @@ function admin_notification_new_post() {
 	$header .= 'Content-Transfer-Encoding: 7bit'."\n";
 	
 	$subject = __('There is a new post on: ','xnpn').$topic->topic_title;
-	$msg = __('Hello,\n\n','xnpn').get_user_name($bb_current_user->ID).__(' has posted here:\n','xnpn').get_topic_link($topic_id);
+	$msg = __('Hello,<br /><br />','xnpn').get_user_name($bb_current_user->ID).__(' has posted here:<br />','xnpn').get_topic_link($topic_id);
 	if ('' == bb_get_option('xnpn_email')) {
-		$msg = __('Hi Keymaster, don\'t forget to visit New Post Notification settings in forum admin UI\n\n and save a good email.','xnpn').$msg;
+		$msg = __('Hi Keymaster, don\'t forget to visit New Post Notification settings in forum admin UI<br /><br />and save a good email.','xnpn').$msg;
 		bb_mail(bb_get_option('from_email'), $subject, $msg, $header);
 	} else {
 		bb_mail(bb_get_option('xnpn_email'), $subject, $msg, $header);

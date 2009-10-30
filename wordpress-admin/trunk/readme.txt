@@ -29,21 +29,6 @@ This plugin was created to allow WordPress, WordPress MU, and BuddyPress to be a
 
 == Changelog ==
 
-= 3.0 =
-* Successfully stops the Login/Logout Problem
-* Successfully stops the Headers Being Sent Problem
-* As Far As I Can Tell, It Is A Bug Free Release
-* Works with WP/WPMU 2.8.x and bbPress 1.x
-
-= 2.1 Beta =
-* Attempts to solve the Login/Logout Problem
-* Attempst to solve the headers Being Sent Problem	
-
-= 2.0 =
-* Second Version of bbPress Admin. It has been adapted to have a backend interface to set the forums directory.
-* Looks Neater and is much easier to use.
-* Works with WP/WPMU 2.8.2 and bbPress 1.0.1
-
 = 1.0 =
-* First Version of bbPress Admin. It is very simple and rudimentary at this point.
-* Working with WP/WPMU 2.8.1 and bbPress 1.0.1
+* First Version of WordPress Admin.
+* Working with WP/WPMU 2.8.x and bbPress 1.x.x

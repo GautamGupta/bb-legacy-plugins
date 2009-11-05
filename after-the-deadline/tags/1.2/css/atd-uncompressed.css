@@ -1,0 +1,183 @@
+/*
+ AtD Stylesheet for
+ After the Deadline - Spell Checker Plugin
+ (for bbPress) by www.gaut.am
+*/
+
+/* Custom */
+.atd_container {
+   /* You can add custom styling to the button here if you want */
+}
+
+/* AtD error styles */
+
+.hiddenSpellError
+{
+   border-bottom: 2px solid red;
+   cursor: default;
+}
+
+.hiddenGrammarError
+{
+   border-bottom: 2px solid green;
+   cursor: default;
+}
+
+.hiddenSuggestion
+{
+   border-bottom: 2px solid blue;
+   cursor: default;
+}
+
+/* Menu styles derived from:
+ * jquery.spellchecker.js - a simple jQuery Spell Checker
+ * Copyright (c) 2008 Richard Willis
+ * MIT license  : http://www.opensource.org/licenses/mit-license.php
+ * Project      : http://jquery-spellchecker.googlecode.com
+ */
+
+#suggestmenu 
+{
+   background: #fff;
+   position: absolute;
+   display: none;
+   z-index: 9999;
+   overflow: hidden;
+   margin-top: 1px;
+   text-align: left;
+   font-size: 12px;
+   font-family: Tahoma, Verdana, Arial, Helvetica;
+   cursor:default
+}
+
+#suggestmenu strong 
+{
+   background: #ddd;
+   font-weight: bold;
+   padding:3px 6px 3px 6px;    
+   display:block;               
+   border:1px solid #ccc;
+   color: black;
+   cursor:default;
+}
+
+#suggestmenu em 
+{
+   text-align:center;    
+   padding:3px 6px 3px 6px;    
+   display:block;               
+   border-top:1px solid #ccc;
+   border-left:1px solid #ccc;
+   cursor:default;
+}
+
+#suggestmenu a, #suggestmenu a:visited 
+{
+   background: #fff;
+   border-left:1px solid #bbb;
+   border-right:1px solid #bbb;
+   padding:3px 6px 3px 6px;
+   display:block;
+   margin:0px;
+   text-decoration:none;
+   color:#333;
+   outline:none;
+   cursor:default;
+}
+
+#suggestmenu a.first, #suggestmenu a.first:visited 
+{
+   border-top:1px solid #ccc;
+   cursor:default;
+}
+
+.spell_sep_bottom 
+{
+   border-bottom: 1px solid #ccc;
+   cursor:default;
+}
+
+.spell_sep_top 
+{
+   border-top: 1px solid #ccc;
+   cursor:default;
+}
+
+#suggestmenu a:hover 
+{
+   color:#000;
+   background: #dbecf3;
+   cursor:default;
+}
+
+#suggestmenu .foot 
+{
+   border-top:1px solid #ddd;
+   background:#fff;
+   cursor:default;
+}
+
+#suggestmenu .foot a, #suggestmenu .foot a:visited 
+{
+   outline:none;
+   cursor:default;
+}
+
+/* jQuery Alerts Plugin CSS */
+
+#popup_container {
+	font-family: Arial, sans-serif;
+	font-size: 12px;
+	min-width: 300px; /* Dialog will be no smaller than this */
+	max-width: 600px; /* Dialog will wrap after this width */
+	background: #FFF;
+	border: solid 5px #999;
+	color: #000;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+
+#popup_title {
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+	line-height: 1.75em;
+	color: #666;
+	background: #CCC url(../images/title.gif) top repeat-x;
+	border: solid 1px #FFF;
+	border-bottom: solid 1px #999;
+	cursor: default;
+	padding: 0em;
+	margin: 0em;
+}
+
+#popup_content {
+	background: 16px 16px no-repeat url(../images/info.gif);
+	padding: 1em 1.75em;
+	margin: 0em;
+}
+
+#popup_content.alert {
+	background-image: url(../images/info.gif);
+}
+
+#popup_content.confirm {
+	background-image: url(../images/important.gif);
+}
+
+#popup_content.prompt {
+	background-image: url(../images/help.gif);
+}
+
+#popup_message {
+	padding-left: 48px;
+}
+
+#popup_panel {
+	text-align: center;
+	margin: 1em 0em 0em 1em;
+}
+
+#popup_prompt {
+	margin: .5em 0em;
+}

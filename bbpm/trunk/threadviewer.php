@@ -124,6 +124,12 @@ jQuery(function($){
 				});
 			}, 'json');
 		}, 750, this.value, this.selectionStart);
+	}).blur(function(){
+		ul.empty();
+		ul.hide();
+		try {
+			clearTimeout(autocompleteTimeout);
+		} catch (ex) {}
 	});
 });
 //]]></script>

@@ -1,0 +1,167 @@
+# SOME DESCRIPTIVE TITLE.
+# This file is put in the public domain.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/bbpress-latest-discussion\n"
+"POT-Creation-Date: 2009-06-22 17:12+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: BBpress.php:89
+msgid "BBpress Latest Discussions Option"
+msgstr ""
+
+#: BBpress.php:89
+msgid "BbLD Option"
+msgstr ""
+
+#: BBpress.php:301
+msgid "Discussion Forum"
+msgstr ""
+
+#: BBpress.php:302
+msgid "Topic"
+msgstr ""
+
+#: BBpress.php:303
+msgid "Posts"
+msgstr ""
+
+#: BBpress.php:304
+msgid "Last Poster"
+msgstr ""
+
+#: BBpress.php:469 BBpress.php:517
+msgid "BbLD Widget Title:"
+msgstr ""
+
+#: BBpress.php:590
+msgid "BBpress Latest Discussions"
+msgstr ""
+
+#: BBpress.php:596
+msgid "Bbpress URL:"
+msgstr ""
+
+#: BBpress.php:600
+msgid "Post Limit:"
+msgstr ""
+
+#: BBpress.php:602
+msgid "Set the number of topic you want to show."
+msgstr ""
+
+#: BBpress.php:605
+msgid "Text Limit:"
+msgstr ""
+
+#: BBpress.php:607
+msgid "Set the length of text you want to show"
+msgstr ""
+
+#: BBpress.php:610
+msgid "Bbpress DB Prefix:"
+msgstr ""
+
+#: BBpress.php:612
+msgid ""
+"Enter the table prefix for your bbPress installation. The table prefix is "
+"found in your bbPress installation's config.php file."
+msgstr ""
+
+#: BBpress.php:615
+msgid "Share UserData:"
+msgstr ""
+
+#: BBpress.php:618
+msgid "Check this option if you are share Wordpress/Bbpress userdata."
+msgstr ""
+
+#: BBpress.php:622
+msgid "Permalink Format:"
+msgstr ""
+
+#: BBpress.php:635
+msgid "Exclude Forums:"
+msgstr ""
+
+#: BBpress.php:655
+msgid ""
+"Use this option if you want to exclude forum from being display on wordpress."
+msgstr ""
+
+#: BBpress.php:657
+msgid "There is no forum to be display."
+msgstr ""
+
+#: BBpress.php:663
+msgid "Donate Link:"
+msgstr ""
+
+#: BBpress.php:666
+msgid "If you like my work. Please donate a link back using this option."
+msgstr ""
+
+#: BBpress.php:673
+msgid "Encoding Format:"
+msgstr ""
+
+#: BBpress.php:679
+msgid ""
+"It will show how the plugin display the title depend on each encoding. By "
+"default it is UTF-8. Each refresh will show different title."
+msgstr ""
+
+#: BBpress.php:685
+msgid "Backward Compatibility:"
+msgstr ""
+
+#: BBpress.php:688
+msgid "Check this option if you are using Bbpress 9.0.*."
+msgstr ""
+
+#: BBpress.php:693
+msgid "External DB:"
+msgstr ""
+
+#: BBpress.php:696
+msgid ""
+"Only enable this option if your Bbpress database is not the same as "
+"Wordpress database."
+msgstr ""
+
+#: BBpress.php:700
+msgid "Bbpress DB User:"
+msgstr ""
+
+#: BBpress.php:704
+msgid "Bbpress DB Pass:"
+msgstr ""
+
+#: BBpress.php:708
+msgid "Bbpress DB Name:"
+msgstr ""
+
+#: BBpress.php:712
+msgid "Bbpress DB Host:"
+msgstr ""
+
+#: BBpress.php:717
+msgid "Update Option &raquo;"
+msgstr ""
+
+#: BBpress.php:722
+msgid "BbLD Templates System"
+msgstr ""
+
+#: BBpress.php:865
+msgid "Save Templates Change &raquo;"
+msgstr ""

@@ -75,6 +75,14 @@ For more support and help, please go <a href="http://forums.atsutane.net/forum/b
 
 == Changelog ==
 
+= 1.6.3 (2009-11-14) =
+
+* Fix typo error on admin page.
+
+= 1.6.2 (2009-11-09) =
+
+* Fix BuddyPress permalink to support custom 'groups' slugs. Props Ashley L.
+
 = 1.6.1 (2009-10-16) =
 
 * Add Support For BuddyPress 1.1

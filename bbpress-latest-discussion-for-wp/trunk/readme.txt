@@ -4,7 +4,7 @@ Tags: bbpress, wordpress, latest, discussion, bbld, widget, plugin, sidebar, pos
 Contributors: Atsutane
 Requires at least: 2.0.5
 Tested up to: 2.9
-Stable Tag: 1.5
+Stable Tag: 1.6
 
 This plugin will generates Latest Discussion list from your bbpress forum into your wordpress page.
 
@@ -74,6 +74,12 @@ For more support and help, please go <a href="http://forums.atsutane.net/forum/b
 5. Sample shot with Gravatar support
 
 == Changelog ==
+
+= 1.6.1 (2009-10-16) =
+
+* Add Support For BuddyPress 1.1
+* Try to fix several problem with title display.
+* Fix paging number problem.
 
 = 1.5.2 (2009-07-12) =
 

@@ -7,8 +7,11 @@ Version: 0.1-beta1
 Author: Nightgunner5
 Author URI: http://llamaslayers.net/
 Text Domain: bbpm
-Domain Path: /translations/
+Domain Path: translations/
 */
+
+
+
 /**
  * @package bbPM
  * @version 0.1-beta1
@@ -16,7 +19,7 @@ Domain Path: /translations/
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU General Public License, Version 3 or higher
  */
 
-load_plugin_textdomain( 'bbpm', dirname( __FILE__ ) . '/translations' );
+bb_load_plugin_textdomain( 'bbpm', dirname( __FILE__ ) . '/translations' );
 
 
 /**

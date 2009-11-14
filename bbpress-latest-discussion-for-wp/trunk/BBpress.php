@@ -7,7 +7,7 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://forums.atsutane.net/forum/bbpress-latest-discussion
 Description: This plugin will generates Latest Discussion list from your bbpress forum into your wordpress. It has the ability to generate latest discussion on sidebar also. The administrator can also set the behavior for this plugin. Even if your bbpress is not intergrated with your wordpress. U still can use this plugin with a little change on the option page. Bbpress Latest Discussion has been around since almost 2 years ago at Bbpress.org.
 Author: Atsutane Shirane
-Version: 1.5.2
+Version: 1.6.1
 Author URI: http://www.atsutane.net/
 
 	This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ Author URI: http://www.atsutane.net/
 $plugin_dir = basename(dirname(__FILE__));
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '1.5.2';
+$BbLD_version = '1.6.1';
 
 ### BBpress Latest Discussions Advertisment
 add_action('wp_head', 'bbld');
@@ -89,6 +89,13 @@ function wpbb_add_pages() {
 	add_options_page(__("BBpress Latest Discussions Option", 'bbpress-latest-discussion'), __('BbLD Option', 'bbpress-latest-discussion'), 8, __FILE__, 'wp_bb_option');
 }
 
+//add_filter('plugin_row_meta', 'wpbb_plugin_links');
+function wpbb_plugin_links($links) {
+	$links[] = '<a href="options-general.php?page=bbpress-latest-discussion/BBpress.php">' . __('Settings') . '</a>';
+	$links[] = '<a href="http://forums.atsutane.net/">' . __('Support') . '</a>';
+	return $links;
+}
+
 ### Function: Trim some text
 function wpbb_trim($paragraph, $limit) {
 	$original = strlen($paragraph);
@@ -107,7 +114,10 @@ function wpbb_permalink($type,$topicid, $slug = '',$total = 0,$limit = 30, $foru
 	//echo '<!-- BBLD PERMALINK DEBUG: TOTAL ('.$total.') LIMIT ('.$limit.') -->';
 	if ($total > $limit) {
 		$math_bbld = $total / $limit;
-		$pageno = round($math_bbld + 0.5);
+		$pageno = round($math_bbld);
+		if ($math_bbld > $pageno) {
+			$pageno = $pageno + 1;
+		}
 	}
 	$bbld_option = get_option('bbld_option');
 	if ($bbld_option['slug'] == 1) {
@@ -132,7 +142,12 @@ function wpbb_permalink($type,$topicid, $slug = '',$total = 0,$limit = 30, $foru
 			$bp_group = str_replace("-forum", "", $forumslug);
 			$bp_group = str_replace("amp-", "", $bp_group);
 			$bp_group = str_replace("-amp", "", $bp_group);
-			$permalink = get_settings('home') . '/groups/' . $bp_group . '/forum/topic/' . $topicid;
+			if (BP_VERSION >= 1.1) {
+				$permalink = get_settings('home') . '/groups/' . $bp_group . '/forum/topic/' . $slug;
+			}
+			else {
+				$permalink = get_settings('home') . '/groups/' . $bp_group . '/forum/topic/' . $topicid;
+			}
 		}
 		else {
 			$bp_group = str_replace("-forum", "", $slug);
@@ -318,7 +333,7 @@ function wp_bb_get_discuss($exclude = 0) {
 				$misc_no = $misc_no - 1;
 				$tr_class = 'alt1';
 			}
-			$title_text = bbld_utf8($bbtopic->topic_title, $bbld_option['utf8']);
+			$title_text = bbld_utf8(html_entity_decode(htmlspecialchars_decode(stripslashes($bbtopic->topic_title), ENT_QUOTES), ENT_QUOTES, $bbld_option['utf8']), $bbld_option['utf8']);
 			$title_text = wpbb_trim($title_text, $bbld_option['trim']);
 			$user_data = bbld_intergrated($bbtopic->topic_last_poster,$bbtopic->topic_last_poster_name,$bbtopic->user_email,$bbtopic->display_name);
 			$template_data_body = stripslashes($bbld_template['body']);
@@ -405,7 +420,7 @@ function bbld_getside() {
 	$bbld_template = get_option('bbld_template');
 	if ($bbtopic) {
 		foreach ( $bbtopic as $bbtopic ) {
-			$title_text = bbld_utf8($bbtopic->topic_title, $bbld_option['utf8']);
+			$title_text = bbld_utf8(html_entity_decode(htmlspecialchars_decode(stripslashes($bbtopic->topic_title), ENT_QUOTES), ENT_QUOTES, $bbld_option['utf8']), $bbld_option['utf8']);
 			$title_text = wpbb_trim($title_text, $bbld_option['trim']);
 			$forum_url = wpbb_permalink('forum',$bbtopic->forum_id,$bbtopic->forum_slug);
 			$user_data = bbld_intergrated($bbtopic->topic_last_poster,$bbtopic->topic_last_poster_name,$bbtopic->user_email,$bbtopic->display_name);
@@ -630,7 +645,7 @@ function wp_bb_option() {
 	<label><input type='radio' name='bbld_permalink' value='no' <?php if ($bbld_option['slug'] == 'no') { echo 'checked="checked"'; } ?> /> None ... /forum.php?id=1</label><br />
 	<label><input type='radio' name='bbld_permalink' value='1' <?php if ($bbld_option['slug'] == 1) { echo 'checked="checked"'; } ?> /> Numeric .../forum/1</label><br />
 	<label><input type='radio' name='bbld_permalink' value='slug' <?php if ($bbld_option['slug'] == 'slug') { echo 'checked="checked"'; } ?> /> Name based .../forum/first-forum</label><br />
-	<label><input type='radio' name='bbld_permalink' value='buddypress' <?php if (!defined('BP_VERSION')) { echo 'disabled="disabled"'; } if ($bbld_option['slug'] == 'buddypress') { echo 'checked="checked"'; } ?> /> BuddyPress Support [<a href="http://buddypress.org/">BuddyPress</a>]</label><br />
+	<label><input type='radio' name='bbld_permalink' value='buddypress' <?php if (!defined('BP_VERSION')) { echo 'disabled="disabled"'; } if ($bbld_option['slug'] == 'buddypress') { echo 'checked="checked"'; } ?> /> BuddyPress Support v<?php echo BP_VERSION; ?> [<a href="http://buddypress.org/">BuddyPress</a>]</label><br />
 	<p>Choose Bbpress permalink type.</p>
 	</fieldset>
 </td>

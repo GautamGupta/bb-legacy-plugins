@@ -7,7 +7,7 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://forums.atsutane.net/forum/bbpress-latest-discussion
 Description: This plugin will generates Latest Discussion list from your bbpress forum into your wordpress. It has the ability to generate latest discussion on sidebar also. The administrator can also set the behavior for this plugin. Even if your bbpress is not intergrated with your wordpress. U still can use this plugin with a little change on the option page. Bbpress Latest Discussion has been around since almost 2 years ago at Bbpress.org.
 Author: Atsutane Shirane
-Version: 1.6.2
+Version: 1.6.3
 Author URI: http://www.atsutane.net/
 
 	This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ Author URI: http://www.atsutane.net/
 $plugin_dir = basename(dirname(__FILE__));
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '1.6.2';
+$BbLD_version = '1.6.3';
 
 ### BBpress Latest Discussions Advertisment
 add_action('wp_head', 'bbld');
@@ -89,10 +89,13 @@ function wpbb_add_pages() {
 	add_options_page(__("BBpress Latest Discussions Option", 'bbpress-latest-discussion'), __('BbLD Option', 'bbpress-latest-discussion'), 8, __FILE__, 'wp_bb_option');
 }
 
-//add_filter('plugin_row_meta', 'wpbb_plugin_links');
-function wpbb_plugin_links($links) {
-	$links[] = '<a href="options-general.php?page=bbpress-latest-discussion/BBpress.php">' . __('Settings') . '</a>';
-	$links[] = '<a href="http://forums.atsutane.net/">' . __('Support') . '</a>';
+add_filter('plugin_row_meta', 'wpbb_plugin_links' ,10,2);
+function wpbb_plugin_links($links, $file) {
+	$base = plugin_basename(__FILE__);
+	if ($file == $base) {
+		$links[] = '<a href="options-general.php?page=bbpress-latest-discussion/BBpress.php">' . __('Settings') . '</a>';
+		$links[] = '<a href="http://forums.atsutane.net/">' . __('Support') . '</a>';
+	}
 	return $links;
 }
 
@@ -605,9 +608,9 @@ function wp_bb_option() {
 	}
 ?>
 <div class="wrap">
-	<p class="bbldright"><a href="http://www.atsutane.net" title="Atsutane Dot Net" alt="Atsutane Dot Net" ><img src="<?php echo get_option('siteurl'); ?>/wp-content/plugins/<?php echo $plugin_dir; ?>/images/atsutane.gif" alt="Atsutane Dot Net" /></a></p>
 	<div id="icon-bbld" class="icon32"><br /></div>
 <h2><?php _e('BBpress Latest Discussions', 'bbpress-latest-discussion'); echo ' ('.$BbLD_version.')'; ?> <a href="http://forums.atsutane.net/forum/bbpress-latest-discussion"><small>[Support Forum]</small></a></h2>
+<p><a href="http://forums.atsutane.net/forum/bbpress-latest-discussion" title="Atsutane Dot Net" alt="Atsutane Dot Net" ><img src="http://feeds.feedburner.com/AtsutaneDotNetBbld.gif" alt="Atsutane Dot Net" /></a></p>
 <?php if ($update_msg) { _e("$update_msg", 'bbpress-latest-discussion'); } ?>
 <?php if (!$bbld_option['donate']) { echo "<div id='message' class='updated fade'><p>If you like my work. Please donate a link back.</p></div>"; } ?>
 <form method="post" action="<?php echo $ori_url; ?>">
@@ -645,7 +648,7 @@ function wp_bb_option() {
 	<label><input type='radio' name='bbld_permalink' value='no' <?php if ($bbld_option['slug'] == 'no') { echo 'checked="checked"'; } ?> /> None ... /forum.php?id=1</label><br />
 	<label><input type='radio' name='bbld_permalink' value='1' <?php if ($bbld_option['slug'] == 1) { echo 'checked="checked"'; } ?> /> Numeric .../forum/1</label><br />
 	<label><input type='radio' name='bbld_permalink' value='slug' <?php if ($bbld_option['slug'] == 'slug') { echo 'checked="checked"'; } ?> /> Name based .../forum/first-forum</label><br />
-	<label><input type='radio' name='bbld_permalink' value='buddypress' <?php if (!defined('BP_VERSION')) { echo 'disabled="disabled"'; } if ($bbld_option['slug'] == 'buddypress') { echo 'checked="checked"'; } ?> /> BuddyPress Support v<?php echo BP_VERSION; ?> [<a href="http://buddypress.org/">BuddyPress</a>]</label><br />
+	<label><input type='radio' name='bbld_permalink' value='buddypress' <?php if (!defined('BP_VERSION')) { echo 'disabled="disabled"'; } if ($bbld_option['slug'] == 'buddypress') { echo 'checked="checked"'; } ?> /> BuddyPress Support [<a href="http://buddypress.org/">BuddyPress</a>]</label><br />
 	<p>Choose Bbpress permalink type.</p>
 	</fieldset>
 </td>

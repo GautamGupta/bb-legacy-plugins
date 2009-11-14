@@ -1,0 +1,66 @@
+#icon-bbld {
+	background: transparent url(images/bbicon.png) no-repeat;
+}
+
+.bbldright {
+	float: right;
+}
+
+#Content {
+	background-color: #fafafa;
+	border: 1px solid #a2b6cb;
+	padding: 10px;
+	margin-top: -13px;
+}
+
+UL#Tabs {
+	font-family: Verdana, Arial;
+	font-size: 12px;
+	font-weight: bold;
+	list-style-type: none;
+	padding-bottom: 28px;
+	border-bottom: 1px solid #a2b6cb;
+	margin-bottom: 12px;
+	z-index: 1;
+}
+
+#Tabs LI.Tab {
+	float: left;
+	height: 25px;
+	background-color: #deedfb;
+	margin: 2px 0px 0px 5px;
+	border: 1px solid #a2b6cb;
+}
+
+#Tabs LI.Tab A {
+	float: right;
+	display: block;
+	color: #666666;
+	text-decoration: none;
+	padding: 5px;
+}
+
+#Tabs LI.Tab A:hover {
+	background-color: #bfe0fe;
+	border-bottom: 1px solid #bfe0fe;
+}
+
+#Tabs LI.SelectedTab {
+	float: left;
+	height: 25px;
+	background-color: #fafafa;
+	margin: 2px 0px 0px 5px;
+	border-top: 1px solid #a2b6cb;
+	border-right: 1px solid #a2b6cb;
+	border-bottom: 1px solid #fafafa;
+	border-left: 1px solid #a2b6cb;
+}
+
+#Tabs LI.SelectedTab A {
+	float: right;
+	display: block;
+	color: #666666;
+	text-decoration: none;
+	padding: 5px;
+	cursor: default;
+}

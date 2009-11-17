@@ -247,9 +247,10 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 				' );
 
 				$legacy_messages = (array)$bbdb->get_results( 'SELECT * FROM `' . $bbdb->prefix . 'privatemessages`' );
+				$legacy_threads = array();
 
 				if ( $legacy_messages ) {
-					foreach ( $legacy_messages as $msg )
+					foreach ( $legacy_messages as $msg ) {
 						$bbdb->insert( $bbdb->bbpm, array(
 							'pm_title' => attribute_escape( $msg->pmtitle ),
 							'pm_read'  => (int)$msg->seen,
@@ -257,13 +258,17 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 							'pm_to'    => (int)$msg->id_receiver,
 							'pm_text'  => apply_filters( 'pre_post', $msg->message, 0, 0 ),
 							'sent_on'  => strtotime( $msg->created_on ),
+							'reply_to' => @$legacy_threads[$msg->pmtitle . ':' . min( $msg->id_sender, $msg->id_receiver ) . ':' . max( $msg->id_sender, $msg->id_receiver )]
 						) );
+
+						$legacy_threads[$msg->pmtitle . ':' . min( $msg->id_sender, $msg->id_receiver ) . ':' . max( $msg->id_sender, $msg->id_receiver )] = $bbdb->insert_id;
+					}
 
 					$bbdb->query( 'DROP TABLE `' . $bbdb->prefix . 'privatemessages`' );
 				}
 				$this->settings['max_inbox'] = 50; // Will be configurable later.
 
-				unset( $legacy_messages );
+				unset( $legacy_messages, $legacy_threads );
 			case '0.1-dev':
 				$bbdb->query( 'ALTER TABLE `' . $bbdb->bbpm . '` ADD `thread_depth` INT( 10 ) UNSIGNED NOT NULL DEFAULT \'0\'' );
 

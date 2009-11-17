@@ -10,8 +10,6 @@ Text Domain: bbpm
 Domain Path: translations/
 */
 
-
-
 /**
  * @package bbPM
  * @version 0.1-beta1
@@ -291,7 +289,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 				$bbdb->query( 'ALTER TABLE `' . $bbdb->bbpm . '` ADD `pm_thread` BIGINT UNSIGNED NOT NULL, ADD INDEX ( pm_thread )' );
 
 			case '0.1-alpha4':
-				$_all_pm = (array)$bbdb->get_col( 'SELECT `ID` FROM `' . $bbdb->bbpm . '` WHERE `reply_to` IS NULL AND `thread_id`=0' );
+				$_all_pm = (array)$bbdb->get_col( 'SELECT `ID` FROM `' . $bbdb->bbpm . '` WHERE `reply_to` IS NULL AND `pm_thread`=0' );
 				$threads = 0;
 
 				foreach ( $_all_pm as $pm ) {

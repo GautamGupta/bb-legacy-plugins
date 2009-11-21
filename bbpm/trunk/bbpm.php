@@ -130,7 +130,7 @@ class bbPM_Message {
 			$this->reply_link   = BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?' . $row->ID . '/reply';
 		}
 		$this->ID           = (int)$row->ID;
-		$this->title        = apply_filters( 'get_topic_title', $bbpm->get_thread_title( $row->pm_thread ) );
+		$this->title        = apply_filters( 'get_topic_title', $bbpm->get_thread_title( $row->pm_thread ), 0 );
 		$this->from         = new BP_User( (int)$row->pm_from );
 		$this->text         = apply_filters( 'get_post_text', $row->pm_text );
 		$this->date         = (int)$row->sent_on;

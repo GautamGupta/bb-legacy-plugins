@@ -25,6 +25,10 @@ Users can send private messages to each other. Replies are threaded, and more th
 
 == Changelog ==
 
+= 0.1-beta2 =
+* Danish translation from Daniel Juhl
+* The last read message in each thread will remain read, and all the messages before it will also be marked read.
+
 = 0.1-beta1 =
 * bbPM no longer thinks that messages are new to the person who sent them
 * Conversion from the deprecated Private Messaging plugin now works as planned

@@ -3,7 +3,7 @@
 Plugin Name: bbPM
 Plugin URI: http://nightgunner5.wordpress.com/tag/bbpm/
 Description: Adds the ability for users of a forum to send private messages to each other.
-Version: 0.1-beta1
+Version: 0.1-beta2
 Author: Nightgunner5
 Author URI: http://llamaslayers.net/
 Text Domain: bbpm
@@ -12,7 +12,7 @@ Domain Path: translations/
 
 /**
  * @package bbPM
- * @version 0.1-beta1
+ * @version 0.1-beta2
  * @author Nightgunner5
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU General Public License, Version 3 or higher
  */
@@ -323,6 +323,9 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 					bb_update_meta( (int)$message->pm_thread, 'title', $message->pm_title, 'bbpm_thread' );
 					bb_update_meta( (int)$message->pm_thread, 'to', $message->pm_from == $message->pm_to ? ',' . $message->pm_to . ',' : ',' . $message->pm_from . ',' . $message->pm_to . ',', 'bbpm_thread' );
 					bb_update_meta( (int)$message->pm_thread, 'last_message', (int)$bbdb->get_var( $bbdb->prepare( 'SELECT `ID` FROM `' . $bbdb->bbpm . '` WHERE `pm_thread` = %d ORDER BY `ID` DESC LIMIT 1', $message->pm_thread ) ), 'bbpm_thread' );
+					$last_read = (int)$bbdb->get_var( $bbdb->prepare( 'SELECT `ID` FROM `' . $bbdb->bbpm . '` WHERE `pm_thread` = %d AND `seen` = 1 ORDER BY `ID` DESC LIMIT 1', $message->pm_thread ) );
+					bb_update_usermeta( $message->pm_to, 'bbpm_last_read_' . $message->pm_thread, $last_read );
+					bb_update_usermeta( $message->pm_from, 'bbpm_last_read_' . $message->pm_thread, $last_read );
 				}
 
 				$bbdb->query( 'ALTER TABLE `' . $bbdb->bbpm . '` DROP COLUMN `pm_to`, DROP COLUMN `pm_title`, DROP COLUMN `pm_read`, DROP COLUMN `del_sender`, DROP COLUMN `del_reciever`' );

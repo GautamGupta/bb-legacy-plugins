@@ -1,0 +1,380 @@
+# bbPM
+# Copyright (C) 2009 Nightgunner5
+# This file is distributed under the same license as the bbPress package.
+# Nightgunner5 <nightgunner5@llamaslayers.net>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: bbPM 0.1-beta1\n"
+"Report-Msgid-Bugs-To: http://bbpress.org/plugins/topic/bbpm/\n"
+"POT-Creation-Date: 2009-09-28 13:15+0000\n"
+"PO-Revision-Date: 2009-11-21 16:43+0100\n"
+"Last-Translator: Daniel Juhl Mogensen <daniel.juhl@nextmint.com>\n"
+"Language-Team: Daniel Juhl Mogensen <daniel.juhl@nextmint.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1\n"
+"X-Poedit-Language: Danish\n"
+"X-Poedit-Country: DENMARK\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: bbpm.php:527
+#: bbpm.php:593
+#, php-format
+msgid "%s has sent you a private message on %s: \"%s\""
+msgstr "%s har sendt din en privat besked på %s: \"%s\""
+
+#: bbpm.php:532
+#: bbpm.php:598
+#, php-format
+msgid ""
+"Hello, %s!\n"
+"\n"
+"%s has sent you a private message entitled \"%s\" on %s!\n"
+"\n"
+"To read it now, go to the following address:\n"
+"\n"
+"%s\n"
+"\n"
+"Do NOT reply to this message.\n"
+"\n"
+"The contents of the message are:\n"
+"\n"
+"%s"
+msgstr ""
+"Hej, %s!\n"
+"\n"
+"%s har sent dig en privat besked med titlen \"%s\" på %s!\n"
+"\n"
+"For at læse den nu, gå til den følgende adresse:\n"
+"\n"
+"%s\n"
+"\n"
+"Svar IKKE på denne email.\n"
+"\n"
+"Beskedens indhold er:\n"
+"\n"
+"%s"
+
+#: bbpm.php:540
+#: bbpm.php:606
+#, php-format
+msgid ""
+"Hello, %s!\n"
+"\n"
+"%s has sent you a private message entitled \"%s\" on %s!\n"
+"\n"
+"To read it now, go to the following address:\n"
+"\n"
+"%s"
+msgstr ""
+"Hej, %s!\n"
+"\n"
+"%s har sendt dig en privat besked med titlen \"%s\" på %s!\n"
+"\n"
+"For at læse den nu, gå til den følgende adresse:\n"
+"\n"
+"%s"
+
+#: bbpm.php:841
+#, php-format
+msgid "%s has added you to a conversation on %s: \"%s\""
+msgstr "%s har tilføjet dig til en samtale på %s: \"%s\""
+
+#: bbpm.php:846
+#, php-format
+msgid ""
+"Hello, %s!\n"
+"\n"
+"%s has added you to a private message conversation titled \"%s\" on %s!\n"
+"\n"
+"To read it now, go to the following address:\n"
+"\n"
+"%s"
+msgstr ""
+"Hej, %s!\n"
+"\n"
+"%s har tilføjet dig til en privat samtalte med titlen \"%s\" på %s!\n"
+"\n"
+"For at læse den nu, gå til den følgende adresse:\n"
+"\n"
+"%s"
+
+#: bbpm.php:897
+#: bbpm.php:929
+msgid "PM this user"
+msgstr "PB denne bruger"
+
+#: bbpm.php:913
+msgid "Don't email me when I get a PM"
+msgstr "Send ikke en email til mig, når jeg modtager en PB"
+
+#: bbpm.php:970
+#: bbpm.php:1289
+#, php-format
+msgid "1 new Private Message!"
+msgid_plural "%s new Private Messages!"
+msgstr[0] "1 ny Privat Besked!"
+msgstr[1] "%s nye Private Beskeder!"
+
+#: bbpm.php:971
+#: bbpm.php:1291
+#: privatemessages.php:35
+#: privatemessages.php:132
+#: privatemessages.php:134
+#: privatemessages.php:175
+#: privatemessages.php:240
+msgid "Private Messages"
+msgstr "Private Beskeder"
+
+#. #-#-#-#-#  plugin.pot (PACKAGE VERSION)  #-#-#-#-#
+#. Plugin Name of an extension
+#: bbpm.php:978
+#: bbpm.php:1200
+msgid "bbPM"
+msgstr "bbPM"
+
+#: bbpm.php:1056
+msgid "New:"
+msgstr "Ny:"
+
+#: bbpm.php:1091
+msgid "Remove deleted users from bbPM threads"
+msgstr "Fjern slettede brugere fra bbPM tråde"
+
+#: bbpm.php:1110
+msgid "Cleaning up bbPM messages&hellip; "
+msgstr "Renser bbPM beskeder&hellip; "
+
+#: bbpm.php:1151
+#, php-format
+msgid "Removed %s nonexistant user from bbPM threads."
+msgid_plural "Removed %s nonexistant users from bbPM threads."
+msgstr[0] "Fjernede %s ikke-eksisterende bruger fra bbPM tråde."
+msgstr[1] "Fjernede %s ikke-eksisterende brugere fra bbPM tråde."
+
+#: bbpm.php:1162
+#, php-format
+msgid "Deleted %s thread. "
+msgid_plural "Deleted %s threads. "
+msgstr[0] "Slettede %s tråd."
+msgstr[1] "Slettede %s tråde."
+
+#: bbpm.php:1206
+msgid "Maximum PM threads per user"
+msgstr "Antal PB tråde per bruger"
+
+#: bbpm.php:1214
+msgid "Automatically add header link"
+msgstr "Automatisk tilføj header link"
+
+#: bbpm.php:1218
+msgid "You will need to add <code>&lt;?php if ( function_exists( 'bbpm_messages_link' ) ) bbpm_messages_link(); ?&gt;</code> to your template if you disable this."
+msgstr "Du skal tilføje <code>&lt;?php if ( function_exists( 'bbpm_messages_link' ) ) bbpm_messages_link(); ?&gt;</code> til din template hvis du deaktiverer dette."
+
+#: bbpm.php:1223
+msgid "Email options"
+msgstr "Email indstillinger"
+
+#: bbpm.php:1226
+msgid "When a new message is recieved"
+msgstr "Når en ny besked er modtaget"
+
+#: bbpm.php:1227
+msgid "When a new reply is recieved"
+msgstr "Når et nyt svar er modtaget"
+
+#: bbpm.php:1228
+msgid "When a user is added to a conversation"
+msgstr "Når en bruger tilføjes en samtale"
+
+#: bbpm.php:1229
+msgid "Include contents of message"
+msgstr "Medtag beskedens indhold"
+
+#: bbpm.php:1234
+msgid "Maximum PM threads per page"
+msgstr "Antal PB tråde per side"
+
+#: bbpm.php:1238
+msgid "Enter 0 or leave this blank to use your forum's default setting."
+msgstr "Indtast 0 eller lad være blank for at bruge dit forum's standard indstillinger."
+
+#: bbpm.php:1244
+msgid "Save settings"
+msgstr "Gem indstilling"
+
+#: bbpm.php:1252
+#, php-format
+msgid "bbPM is installed in the \"<code>%s</code>\" directory. It should be installed in \"<code>my-plugins</code>\""
+msgstr "bbPM er installeret i \"<code>%s</code>\" mappen. Denne burde være installeret i \"<code>my-plugins</code>\""
+
+#: bbpm.php:1255
+#, php-format
+msgid "The <code>my-plugins</code> directory has its permissions set to %s. This is not recommended. Please use 755 instead."
+msgstr "Mappen <code>my-plugins</code> har sine rettigheder sat til %s. Dette er ikke anbefalet. Brug venligst 755 istedet."
+
+#: pm.php:53
+msgid "Slow down; you move too fast."
+msgstr "Sæt farten ned; du er for hurtig."
+
+#: pm.php:62
+#: pm.php:84
+#: pm.php:87
+msgid "You need to choose a valid person to send the message to."
+msgstr "Du skal vælge en eksisterende bruger at sende beskeden til."
+
+#: pm.php:75
+#: pm.php:104
+msgid "You are not allowed to write private messages.  Are you logged in?"
+msgstr "Du har ikke tilladelse til at sende private beskeder.  Er du logget ind?"
+
+#: pm.php:77
+#: pm.php:106
+msgid "You need to actually submit some content!"
+msgstr "Du er nødt til rent faktisk at sende noget."
+
+#: pm.php:79
+msgid "Please enter a private message title."
+msgstr "Skriv venligst en titel til din private besked."
+
+#: pm.php:94
+#: pm.php:118
+msgid "Either your outbox or the recipient's inbox is full."
+msgstr "Enten din eller modtagerens indbakke er fuld."
+
+#: pm.php:111
+msgid "There was an error sending your message."
+msgstr "Der opstod en fejl ved afsendelsen af din besked."
+
+#: privatemessages.php:35
+msgid "New"
+msgstr "Ny"
+
+#: privatemessages.php:39
+msgid "PM title: (be brief and descriptive)"
+msgstr "PB titel: (vær kort og beskrivende)"
+
+#: privatemessages.php:43
+msgid "Send PM to:"
+msgstr "Send PB til:"
+
+#: privatemessages.php:115
+#: privatemessages.php:223
+msgid "Message:"
+msgstr "Besked:"
+
+#: privatemessages.php:119
+#: privatemessages.php:227
+msgid "Send Message &raquo;"
+msgstr "Send Besked &raquo;"
+
+#: privatemessages.php:122
+#: privatemessages.php:230
+msgid "Allowed markup:"
+msgstr "Tilladte HTML koder:"
+
+#: privatemessages.php:122
+#: privatemessages.php:230
+msgid "You can also put code in between backtick ( <code>`</code> ) characters."
+msgstr "You can also put code in between backtick ( <code>`</code> ) characters."
+
+#: privatemessages.php:134
+#, php-format
+msgid "(Page %s)"
+msgstr "(Side %s)"
+
+#: privatemessages.php:137
+msgid "Subject"
+msgstr "Emne"
+
+#: privatemessages.php:137
+msgid "New &raquo;"
+msgstr "Ny &raquo;"
+
+#: privatemessages.php:138
+#: threadviewer.php:40
+msgid "Members"
+msgstr "Medlemmer"
+
+#: privatemessages.php:139
+msgid "Freshness"
+msgstr "Tid"
+
+#: privatemessages.php:140
+msgid "Actions"
+msgstr "Handlinger"
+
+#: privatemessages.php:166
+msgid "Unsubscribe"
+msgstr "Afmeld"
+
+#: privatemessages.php:175
+#: privatemessages.php:240
+msgid "Read"
+msgstr "Læs"
+
+#: privatemessages.php:213
+#: threadviewer.php:181
+#, php-format
+msgid "Sent %s ago"
+msgstr "Sendt %s siden"
+
+#: privatemessages.php:213
+msgid "Delete"
+msgstr "Slet"
+
+#: privatemessages.php:213
+#: threadviewer.php:181
+msgid "Reply"
+msgstr "Svar"
+
+#: threadviewer.php:28
+#, php-format
+msgid "%s post"
+msgid_plural "%s posts"
+msgstr[0] "%s besked"
+msgstr[1] "%s beskeder"
+
+#: threadviewer.php:29
+#, php-format
+msgid "%s voice"
+msgid_plural "%s voices"
+msgstr[0] "%s stemme"
+msgstr[1] "%s stemmer"
+
+#: threadviewer.php:32
+#, php-format
+msgid "Started %1$s ago by %2$s"
+msgstr "Startet %1$s siden af %2$s"
+
+#: threadviewer.php:34
+#, php-format
+msgid "<a href=\"%1$s\">Latest reply</a> from %2$s"
+msgstr "<a href=\"%1$s\">Seneste svar</a> fra %2$s"
+
+#: threadviewer.php:60
+msgid "Add &raquo;"
+msgstr "Tilføj &raquo;"
+
+#: threadviewer.php:194
+msgid "[Cancel]"
+msgstr "[Annuller]"
+
+#. Plugin URI of an extension
+msgid "http://nightgunner5.wordpress.com/tag/bbpm/"
+msgstr "http://nightgunner5.wordpress.com/tag/bbpm/"
+
+#. Description of an extension
+msgid "Adds the ability for users of a forum to send private messages to each other."
+msgstr "Tilføjer muligheden for at brugere af et forum kan sende private beskeder til hinanden."
+
+#. Author of an extension
+msgid "Nightgunner5"
+msgstr "Nightgunner5"
+
+#. Author URI of an extension
+msgid "http://llamaslayers.net/"
+msgstr "http://llamaslayers.net/"
+

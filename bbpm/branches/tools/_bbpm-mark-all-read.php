@@ -14,8 +14,6 @@ function bbpm_mark_all_read() {
 
 	$threads = $bbdb->get_results( 'SELECT `object_id`,`meta_value` FROM `' . $bbdb->meta . '` WHERE `object_type`=\'bbpm_thread\' AND `meta_key`=\'last_message\'' );
 
-	print_r( $threads );
-
 	foreach ( $threads as $thread ) {
 		foreach ( $userthreads[$thread->object_id] as $user ) {
 			bb_update_usermeta( $user, 'bbpm_last_read_' . $thread->object_id, $thread->meta_value );

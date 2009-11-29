@@ -36,7 +36,7 @@ function php4bb_maybe_block() {
 	$response = explode( '.', $response );
 
 	if ( $response[0] != '127' )
-		return
+		return;
 
 	$days = (int)$response[1];
 	$threat = (int)$response[2];

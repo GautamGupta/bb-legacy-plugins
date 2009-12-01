@@ -2,8 +2,7 @@
 
 function role_manager_admin_do_submit() {
 	if ( !bb_verify_nonce( $_REQUEST['_wpnonce'], 'role-manager_' . $_GET['submit'] . ( in_array( $_GET['submit'], array( 'edit', 'delete' ) ) ? '-' . $_GET['role'] : '' ) ) ) {
-		_e( 'Nothing to see here.' );
-		return;
+		bb_die( __( 'Nothing to see here.', 'role-manager' ) );
 	}
 
 	switch ( $_GET['submit'] ) {
@@ -11,18 +10,16 @@ function role_manager_admin_do_submit() {
 			$old_roles = bb_get_option( 'role_manager_default' );
 
 			if ( isset( $old_roles[$_GET['role']] ) ) { // Exists by default, probably a bad idea to get rid of it.
-?>
-<h2>Role <strong><?php echo $old_roles[$_GET['role']][0]; ?></strong> cannot be deleted.</h2>
-<?php			return;
+				printf( __( '<h2>Role <strong>%s</strong> is a default and cannot be deleted.</h2>', 'role-manager' ), $old_roles[$_GET['role']][0] );
+				return;
 			}
 
 			$new_roles = bb_get_option( 'role_manager_roles' );
 			$role = $new_roles[$_GET['role']][0];
 			unset( $new_roles[$_GET['role']] );
 			bb_update_option( 'role_manager_roles', $new_roles );
-?>
-<h2>Role <strong><?php echo $role; ?></strong> deleted.</h2>
-<?php		break;
+			printf( __( '<h2>Role <strong>%s</strong> deleted.</h2>', 'role-manager' ), $role ); 
+			break;
 		case 'edit':
 			$_roles = bb_get_option( 'role_manager_roles' );
 			if ( !isset( $_roles[$_GET['role']] ) )
@@ -64,14 +61,10 @@ function role_manager_admin_do_submit() {
 			$roles = bb_get_option( 'role_manager_roles' );
 			$roles[$role_name] = $new_role;
 			bb_update_option( 'role_manager_roles', $roles );
-?>
-<h2>Role <strong><?php echo $_POST['role']; ?></strong> created.</h2>
-<?php
+			printf( __( '<h2>Role <strong>%s</strong> created.</h2>', 'role-manager' ), $_POST['role'] );
 			break;
 	}
 }
-
-
 
 function role_manager_admin_show_create_role( $role ) {
 	$templates = role_manager_get_possible_roles();
@@ -158,28 +151,81 @@ foreach ( $all_caps as $cap => $desc ) { ?>
 <?php
 }
 
-
-
 function role_manager_admin_show_main() {
 	global $bb_roles;
 
 	$old_roles = bb_get_option( 'role_manager_default' );
-
-	$names = $bb_roles->role_names;
+	$all_caps  = role_manager_get_possible_caps();
+	$all_roles = role_manager_get_possible_roles();
+	$names     = $bb_roles->role_names;
 	ksort( $names );
 ?>
-<h2>Role manager <small>[<a href="<?php bb_uri( '/bb-admin/admin-base.php', array( 'plugin' => 'role_manager', 'action' => 'create' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>">Add new</a>]</small></h2>
+<h2><?php _e( 'Roles', 'role-manager' ); ?></h2>
 
-<ul>
-<?php foreach ( $names as $key => $name ) {
-	if ( $key == 'blocked' )
+
+<table id="topics-list" class="widefat">
+<thead>
+<tr>
+	<th scope="col"><?php _e( 'Name', 'role-manager' ); ?> &mdash; <a href="<?php bb_uri( '/bb-admin/admin-base.php', array( 'plugin' => 'role_manager', 'action' => 'create' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>"><?php _e( 'Add new &raquo;', 'role-manager' ); ?></a></th>
+	<th scope="col"><?php _e( 'Roles', 'role-manager' ); ?></th>
+	<th scope="col"><?php _e( 'Capabilities', 'role-manager' ); ?></th>
+</tr>
+</thead>
+<tfoot>
+<tr>
+	<th scope="col"><?php _e( 'Name', 'role-manager' ); ?> &mdash; <a href="<?php bb_uri( '/bb-admin/admin-base.php', array( 'plugin' => 'role_manager', 'action' => 'create' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>"><?php _e( 'Add new &raquo;', 'role-manager' ); ?></a></th>
+	<th scope="col"><?php _e( 'Roles', 'role-manager' ); ?></th>
+	<th scope="col"><?php _e( 'Capabilities', 'role-manager' ); ?></th>
+</tr>
+</thead>
+
+<tbody>
+<?php
+foreach ( $names as $key => $name ) {
+	if ( $key == 'blocked' ) // This one should never be edited.
 		continue;
 ?>
-	<li style="font-size: 1.5em"<?php alt_class( 'role-manager_roles' ); ?>><a href="<?php bb_uri( '/bb-admin/admin-base.php', array( 'plugin' => 'role_manager', 'action' => 'edit', 'role' => $key ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>"><?php echo $name; ?></a>
-
-<?php if ( !isset( $old_roles[$key] ) ) { ?> <small>[<a href="<?php echo attribute_escape( bb_nonce_url( bb_get_uri( '/bb-admin/admin-base.php', array( 'plugin' => 'role_manager', 'action' => 'submit', 'submit' => 'delete', 'role' => $key ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ), 'role-manager_delete-' . $key ) ); ?>">Delete</a>]</small><?php } ?></li>
+<tr id="role-<?php echo $key; ?>"<?php alt_class( 'roles' ); ?>>
+	<td class="topic" style="width: 10%">
+		<span class="row-title">
+			<a href="<?php bb_uri( '/bb-admin/admin-base.php', array( 'plugin' => 'role_manager', 'action' => 'edit', 'role' => $key ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>"><?php echo $name; ?></a>
+		</span>
+		<div>
+			<span class="row-actions">
+				<a href="<?php bb_uri( 'bb-admin/users.php', array( 'userrole[]' => $key ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>"><?php _e( 'View', 'role-manager' ); ?></a>
+				| <a href="<?php bb_uri( '/bb-admin/admin-base.php', array( 'plugin' => 'role_manager', 'action' => 'edit', 'role' => $key ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ); ?>"><?php _e( 'Edit', 'role-manager' ); ?></a>
+				<?php if ( !isset( $old_roles[$key] ) ) { ?>
+				| <a href="<?php echo esc_attr( bb_nonce_url( bb_get_uri( '/bb-admin/admin-base.php', array( 'plugin' => 'role_manager', 'action' => 'submit', 'submit' => 'delete', 'role' => $key ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ), 'role-manager_delete-' . $key ) ); ?>"><?php _e( 'Delete', 'role-manager' ); ?></a>
+				<?php } ?>
+			</span>&nbsp;
+		</div>
+	</td>
+	<td style="width: 10%; font: 1.25em monospace">
+		<?php
+			$role = $bb_roles->get_role( $key );
+			$caps = $role->capabilities;
+			foreach ( $all_roles as $cap => $desc ) { ?>
+		<span title="<?php echo esc_attr( $desc[0] ); ?>" style="color: <?php
+		if ( empty( $caps[$cap] ) )
+			echo '#070">&#x2714;';
+		else
+			echo '#700">&#x2718;'; ?></span>
+		<?php } ?>
+	</td>
+	<td style="font: 1.25em monospace">
+		<?php foreach ( $all_caps as $cap => $desc ) { ?>
+		<span title="<?php echo esc_attr( $desc ); ?>" style="color: <?php
+		if ( empty( $caps[$cap] ) )
+			echo '#070">&#x2714;';
+		else
+			echo '#700">&#x2718;'; ?></span>
+		<?php } ?>
+	</td>
+</tr>
 <?php } ?>
-</ul>
+</tbody>
+</table>
+
 <?php
 }
 

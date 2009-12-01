@@ -9,8 +9,7 @@ Author URI: http://llamaslayers.net/daily-llama/
 */
 
 function role_manager_admin_menu() {
-	global $bb_submenu;
-	$bb_submenu['content.php'][] = array( __( 'Roles', 'role-manager' ), 'manage_roles', 'role_manager' );
+	bb_admin_add_submenu( __( 'Roles', 'role-manager' ), 'manage_roles', 'role_manager', 'users.php' );
 }
 add_action( 'bb_admin_menu_generator', 'role_manager_admin_menu' );
 

@@ -69,36 +69,37 @@ function role_manager_admin_do_submit() {
 function role_manager_admin_show_create_role( $role ) {
 	$templates = role_manager_get_possible_roles();
 ?>
-<h2>Create role <?php echo $role; ?></h2>
+<h2><?php if ( $role )
+	printf( __( 'Create role %s', 'role-manager' ), $role );
+else
+	_e( 'New role', 'role-manager' ); ?></h2>
 <form class="settings" action="<?php bb_uri( '/bb-admin/admin-base.php', array( 'plugin' => 'role_manager', 'action' => 'submit', 'submit' => 'create' ), BB_URI_CONTEXT_FORM_ACTION + BB_URI_CONTEXT_BB_ADMIN ); ?>" method="post">
 <fieldset>
-<div>
-	<label for="based_on">Base role on:</label>
-	<div>
+<div id="option-based_on">
+	<label for="based_on"><?php _e( 'Base role on:', 'role-manager' ); ?></label>
+	<div class="inputs">
 		<select id="based_on" name="based_on" class="select">
 <?php foreach ( $templates as $template ) { ?>
-			<option value="<?php echo $template[1]; ?>"><?php echo $template[0]; ?></option>
+			<option value="<?php echo esc_attr( $template[1] ); ?>"><?php echo esc_html( $template[0] ); ?></option>
 <?php } ?>
-			<option value="blank" selected="selected">Start with a blank slate</option>
+			<option value="blank" selected="selected"><?php esc_html_e( 'Start with a blank slate', 'role-manager' ); ?></option>
 		</select>
 	</div>
 </div>
-<div>
-	<label for="role">Role name:</label>
-	<div>
+<div id="option-role">
+	<label for="role"><?php _e( 'Role name:', 'role-manager' ); ?></label>
+	<div class="inputs">
 		<input id="role" name="role" type="text" class="text long" />
 	</div>
 </div>
-</fieldset>
 <fieldset class="submit">
-	<input type="submit" class="submit" value="Create role" />
 <?php bb_nonce_field( 'role-manager_create' ); ?>
+	<input type="submit" class="submit" name="submit" value="<?php esc_attr_e( 'Create role', 'role-manager' ); ?>" />
+</fieldset>
 </fieldset>
 </form>
 <?php
 }
-
-
 
 function role_manager_admin_show_role( $_role ) {
 	global $bb_roles;
@@ -113,15 +114,22 @@ function role_manager_admin_show_role( $_role ) {
 
 	$role = array( $bb_roles->role_names[$_role], $bb_roles->get_role( $_role )->capabilities );
 ?>
-<h2>Editing role <strong><?php echo attribute_escape( $role[0] ); ?></strong></h2>
-<form method="post" action="<?php bb_uri( '/bb-admin/admin-base.php', array( 'plugin' => 'role_manager', 'action' => 'submit', 'submit' => 'edit', 'role' => $_role ), BB_URI_CONTEXT_FORM_ACTION + BB_URI_CONTEXT_BB_ADMIN ); ?>">
+<h2><?php printf( __( 'Editing role <strong>%s</strong>', 'role-manager' ), esc_html( $role[0] ) ); ?></h2>
+<form method="post" action="<?php bb_uri( '/bb-admin/admin-base.php', array( 'plugin' => 'role_manager', 'action' => 'submit', 'submit' => 'edit', 'role' => $_role ), BB_URI_CONTEXT_FORM_ACTION + BB_URI_CONTEXT_BB_ADMIN ); ?>" class="settings">
+<fieldset>
 <table class="widefat">
 <thead>
 <tr>
-	<th>Grant</th>
-	<th>Description</th>
+	<th scope="col"><?php _e( 'Grant', 'role-manager' ); ?></th>
+	<th scope="col"><?php _e( 'Description' ); ?></th>
 </tr>
 </thead>
+<tfoot>
+<tr>
+	<th scope="col"><?php _e( 'Grant', 'role-manager' ); ?></th>
+	<th scope="col"><?php _e( 'Description' ); ?></th>
+</tr>
+</tfoot>
 <tbody>
 <?php
 
@@ -132,21 +140,24 @@ $desc_length = max( array_map( 'strlen', $all_caps ) ) + 1;
 
 foreach ( $all_roles as $cap => $desc ) { ?>
 <tr<?php alt_class( 'role-manager_caps' ); ?>>
-	<td><input type="checkbox"<?php if ( isset( $caps[$cap] ) ) echo ' checked="checked"'; ?> disabled="disabled" /></td>
-	<td><strong>Role:</strong> <big><?php echo attribute_escape( $desc[0] ); ?></big></td>
+	<td style="width: 5%"><input type="checkbox"<?php if ( isset( $caps[$cap] ) ) echo ' checked="checked"'; ?> disabled="disabled" /></td>
+	<td><strong><?php _e( 'Role', 'role-manager' ); ?>:</strong> <big><?php echo esc_html( $desc[0] ); ?></big></td>
 </tr>
 <?php }
 
 foreach ( $all_caps as $cap => $desc ) { ?>
 <tr<?php alt_class( 'role-manager_caps' ); ?>>
-	<td><input type="checkbox"<?php if ( isset( $caps[$cap] ) ) echo ' checked="checked"'; ?> id="<?php echo $cap; ?>" name="<?php echo $cap; ?>" /></td>
-	<td><?php echo attribute_escape( $desc ); ?></td>
+	<td style="width: 5%"><input type="checkbox"<?php if ( isset( $caps[$cap] ) ) echo ' checked="checked"'; ?> id="<?php echo $cap; ?>" name="<?php echo $cap; ?>" /></td>
+	<td><?php echo esc_html( $desc ); ?></td>
 </tr>
 <?php } ?>
 </tbody>
 </table>
-<input type="submit" class="submit" value="Save" />
+<fieldset class="submit">
+<input type="submit" class="submit" name="submit" value="<?php _e( 'Save', 'role-manager' ); ?>" />
 <?php bb_nonce_field( 'role-manager_edit-' . $_role ); ?>
+</fieldset>
+</fieldset>
 </form>
 <?php
 }
@@ -228,5 +239,3 @@ foreach ( $names as $key => $name ) {
 
 <?php
 }
-
-?>

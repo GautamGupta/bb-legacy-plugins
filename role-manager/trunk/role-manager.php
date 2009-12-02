@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Role Manager
-Description: Allows keymasters to change the capabilities that each role has and even create new roles.
-Version: 0.2
-Plugin URI: http://llamaslayers.net/daily-llama/tag/bbpress-role-manager/
+Description: Allows key masters to change the capabilities that each role has and even create new roles.
+Version: 0.2.1
+Plugin URI: http://nightgunner5.wordpress.com/tag/role-manager/
 Author: Nightgunner5
-Author URI: http://llamaslayers.net/daily-llama/
+Author URI: http://nightgunner5.wordpress.com/
 */
 
 function role_manager_admin_menu() {
@@ -187,5 +187,3 @@ function role_manager_get_possible_caps() {
 
 	return $caps;
 }
-
-?>

@@ -75,6 +75,10 @@ For more support and help, please go <a href="http://forums.atsutane.net/forum/b
 
 == Changelog ==
 
+= 1.6.4 (2009-11-26) =
+
+* Add wp nonce into both BBld forms.
+
 = 1.6.3 (2009-11-14) =
 
 * Fix typo error on admin page.

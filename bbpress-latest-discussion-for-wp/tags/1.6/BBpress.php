@@ -7,25 +7,24 @@ Plugin Name: BBpress Latest Discussions
 Plugin URI: http://forums.atsutane.net/forum/bbpress-latest-discussion
 Description: This plugin will generates Latest Discussion list from your bbpress forum into your wordpress. It has the ability to generate latest discussion on sidebar also. The administrator can also set the behavior for this plugin. Even if your bbpress is not intergrated with your wordpress. U still can use this plugin with a little change on the option page. Bbpress Latest Discussion has been around since almost 2 years ago at Bbpress.org.
 Author: Atsutane Shirane
-Version: 1.6.3
+Version: 1.6.4
 Author URI: http://www.atsutane.net/
 
-	This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-  
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 */
 
 $plugin_dir = basename(dirname(__FILE__));
 
 ### BBpress Latest Discussions Version Number
-$BbLD_version = '1.6.3';
+$BbLD_version = '1.6.4';
 
 ### BBpress Latest Discussions Advertisment
 add_action('wp_head', 'bbld');
@@ -573,7 +572,8 @@ function wp_bb_option() {
 	$ori_url = $_SERVER['REQUEST_URI'];
 	$bbld_template = get_option('bbld_template');
 	$bbld_option = get_option('bbld_option');
-	if ($_POST['wpbb_save']){
+	if ($_POST['wpbb_save']) {
+		check_admin_referer('bbld_save_option');
 		$bbld_option['url'] = $_POST['bburl'];
 		$bbld_option['limit'] = $_POST['bblimit'];
 		$bbld_option['prefix'] = $_POST['bbprefix'];
@@ -592,7 +592,8 @@ function wp_bb_option() {
 		update_option('bbld_option', $bbld_option);
 		$update_msg = "<div id='message' class='updated fade'><p>BBpress Latest Discussions options saved successfully.</p></div>";
 	}
-	if ($_POST['wpbb_save_template']){
+	if ($_POST['wpbb_save_template']) {
+		check_admin_referer('bbld_save_template');
 		$bbld_template['header'] = $_POST['bbld_postpage_header'];
 		$bbld_template['body'] = $_POST['bbld_postpage_body'];
 		$bbld_template['footer'] = $_POST['bbld_postpage_footer'];
@@ -614,6 +615,11 @@ function wp_bb_option() {
 <?php if ($update_msg) { _e("$update_msg", 'bbpress-latest-discussion'); } ?>
 <?php if (!$bbld_option['donate']) { echo "<div id='message' class='updated fade'><p>If you like my work. Please donate a link back.</p></div>"; } ?>
 <form method="post" action="<?php echo $ori_url; ?>">
+<?php
+	if (function_exists('wp_nonce_field')) {
+		wp_nonce_field('bbld_save_option');
+	}
+?>
 <table class="form-table">
 <tr valign="top">
 <th scope="row"><label for="bburl"><?php _e('Bbpress URL:', 'bbpress-latest-discussion'); ?></label></th>
@@ -753,6 +759,11 @@ function wp_bb_option() {
 </ul>
 
 <form method="post" action="<?php echo $ori_url; ?>">
+<?php
+	if (function_exists('wp_nonce_field')) {
+		wp_nonce_field('bbld_save_template');
+	}
+?>
 <div id="Content">
 <div id="PostPage">
 <table class="form-table">

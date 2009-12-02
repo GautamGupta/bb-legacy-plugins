@@ -217,7 +217,7 @@ foreach ( $names as $key => $name ) {
 			$caps = $role->capabilities;
 			foreach ( $all_roles as $cap => $desc ) { ?>
 		<span title="<?php echo esc_attr( $desc[0] ); ?>" style="color: <?php
-		if ( empty( $caps[$cap] ) )
+		if ( !empty( $caps[$cap] ) )
 			echo '#070">&#x2714;';
 		else
 			echo '#700">&#x2718;'; ?></span>
@@ -226,7 +226,7 @@ foreach ( $names as $key => $name ) {
 	<td style="font: 1.25em monospace">
 		<?php foreach ( $all_caps as $cap => $desc ) { ?>
 		<span title="<?php echo esc_attr( $desc ); ?>" style="color: <?php
-		if ( empty( $caps[$cap] ) )
+		if ( !empty( $caps[$cap] ) )
 			echo '#070">&#x2714;';
 		else
 			echo '#700">&#x2718;'; ?></span>

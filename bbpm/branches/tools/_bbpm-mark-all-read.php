@@ -8,7 +8,7 @@ function bbpm_mark_all_read() {
 	$threadids = array();
 
 	foreach ( $threads as $thread ) {
-		$userthreads[$thread_object_id] = explode( ',', trim( $thread->meta_value, ',' ) );
+		$userthreads[$thread->object_id] = explode( ',', trim( $thread->meta_value, ',' ) );
 		$threadids[] = $thread->object_id;
 	}
 

@@ -520,9 +520,12 @@ echo $page_number_links = get_page_number_links( $_page_link_args );
 	}
 }
 
+function bbmodsuite_warning_can_view() {
+	$options = bb_get_option( 'bbmodsuite_warning_options' );
+	return $options['min_level'];
+}
+
 function bbmodsuite_warning_admin_add() {
-	bb_admin_add_submenu( __( 'Warning', 'bbpress-moderation-suite' ), 'moderate', 'bbpress_moderation_suite_warning', 'bbpress_moderation_suite' );
+	bb_admin_add_submenu( __( 'Warning', 'bbpress-moderation-suite' ), bbmodsuite_warning_can_view(), 'bbpress_moderation_suite_warning', 'bbpress_moderation_suite' );
 }
 add_action( 'bb_admin_menu_generator', 'bbmodsuite_warning_admin_add' );
-
-?>

@@ -101,6 +101,9 @@ In order to define a new type, you will have to add a filter to `bbmodsuite_modl
 
 == Changelog ==
 
+= 0.1 =
+* Moderators can now view the main Moderation page with a list of active moderation helpers.
+
 = 0.1-rc1 =
 * Mod Log now tracks unbanning as well as banning
 * IP addresses and CIDR ranges (from /16 to /32) can now be blocked

@@ -21,28 +21,32 @@ function bbmodsuite_init() {
 
 	$bbmodsuite_plugins = array(
 		'report' => array(
-			'name' => __( 'Report', 'bbpress-moderation-suite' ),
+			'name'        => __( 'Report', 'bbpress-moderation-suite' ),
 			'description' => __( 'Allows users to report posts for consideration by the moderation team.', 'bbpress-moderation-suite' ),
-			'filename' => 'report.php',
-			'panel' => 'bbpress_moderation_suite_report',
+			'filename'    => 'report.php',
+			'panel'       => 'bbpress_moderation_suite_report',
+			'can_view'    => 'bbmodsuite_report_can_view'
 		),
 		'banplus' => array(
-			'name' => __( 'Ban Plus', 'bbpress-moderation-suite' ),
+			'name'        => __( 'Ban Plus', 'bbpress-moderation-suite' ),
 			'description' => __( 'Implements advanced banning features like temporary banning and automated banning (if used with the Warnings assistant)  Ban Plus does not use the core rank system, so removing the plugin will unban everyone banned using this method.', 'bbpress-moderation-suite' ),
-			'filename' => 'ban-plus.php',
-			'panel' => 'bbpress_moderation_suite_ban_plus',
+			'filename'    => 'ban-plus.php',
+			'panel'       => 'bbpress_moderation_suite_ban_plus',
+			'can_view'    => 'bbmodsuite_banplus_can_view'
 		),
 		'warning' => array(
-			'name' => __( 'Warning', 'bbpress-moderation-suite' ),
+			'name'        => __( 'Warning', 'bbpress-moderation-suite' ),
 			'description' => __( 'Allows moderators and higher to warn users that break rules. Can be set to automatically block or (if Ban Plus is active) temporarily ban problematic users from the forums.', 'bbpress-moderation-suite' ),
-			'filename' => 'warning.php',
-			'panel' => 'bbpress_moderation_suite_warning',
+			'filename'    => 'warning.php',
+			'panel'       => 'bbpress_moderation_suite_warning',
+			'can_view'    => 'bbmodsuite_warning_can_view'
 		),
 		'modlog' => array(
-			'name' => __( 'Moderation Log', 'bbpress-moderation-suite' ),
+			'name'        => __( 'Moderation Log', 'bbpress-moderation-suite' ),
 			'description' => __( 'Keeps track of important moderator actions.', 'bbpress-moderation-suite' ),
-			'filename' => 'modlog.php',
-			'panel' => 'bbpress_moderation_suite_modlog',
+			'filename'    => 'modlog.php',
+			'panel'       => 'bbpress_moderation_suite_modlog',
+			'can_view'    => 'bbmodsuite_modlog_can_view'
 		)
 	);
 
@@ -136,6 +140,9 @@ function bbpress_moderation_suite() {
 		<tbody>
 <?php
 	foreach ( $bbmodsuite_plugins as $plugin => $plugin_data ) {
+		if ( !bb_current_user_can( 'manage_plugins' ) && ( !in_array( $plugin, $bbmodsuite_active_plugins ) || empty( $plugin_data['can_view'] ) || !function_exists( $plugin_data['can_view'] ) || !bb_current_user_can( call_user_func( $plugin_data['can_view'] ) ) ) )
+			continue;
+
 		$class        = 'inactive';
 		$action       = 'activate';
 		$action_class = 'edit';
@@ -222,5 +229,3 @@ function bbmodsuite_stripslashes( $string ) {
 		return stripslashes( $string );
 	return $string;
 }
-
-?>

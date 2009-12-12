@@ -370,10 +370,13 @@ foreach ( $types as $id => $reason ) { ?>
 	}
 }
 
-function bbmodsuite_report_admin_add() {
-	global $bbmodsuite_cache;
+function bbmodsuite_report_can_view() {
 	$options = bb_get_option( 'bbmodsuite_report_options' );
-	bb_admin_add_submenu( __( 'Reports', 'bbpress-moderation-suite' ), $options['min_level'], 'bbpress_moderation_suite_report', 'bbpress_moderation_suite' );
+	return $options['min_level'];
+}
+
+function bbmodsuite_report_admin_add() {
+	bb_admin_add_submenu( __( 'Reports', 'bbpress-moderation-suite' ), bbmodsuite_report_can_view(), 'bbpress_moderation_suite_report', 'bbpress_moderation_suite' );
 }
 add_action( 'bb_admin_menu_generator', 'bbmodsuite_report_admin_add' );
 
@@ -545,5 +548,3 @@ function bbmodsuite_report_link( $parts, $args ) {
 	return $parts;
 }
 add_filter( 'bb_post_admin', 'bbmodsuite_report_link', 10, 2 );
-
-?>

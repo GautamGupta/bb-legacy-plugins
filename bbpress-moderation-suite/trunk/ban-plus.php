@@ -160,7 +160,6 @@ function bbmodsuite_banplus_get_ban_types() {
 	return apply_filters( 'bbmodsuite_banplus_ban_types', $types );
 }
 
-
 function bbmodsuite_banplus_admin_add_jquery() {
 	wp_enqueue_script( 'jquery' );
 }
@@ -499,10 +498,12 @@ jQuery(function($){
 	}
 }
 
-function bbmodsuite_banplus_admin_add() {
+function bbmodsuite_banplus_can_view() {
 	global $bbmodsuite_cache;
-	bb_admin_add_submenu( __( 'Ban Plus', 'bbpress-moderation-suite' ), $bbmodsuite_cache['banplus']['options']['min_level'], 'bbpress_moderation_suite_ban_plus', 'bbpress_moderation_suite' );
+	return $bbmodsuite_cache['banplus']['options']['min_level'];
+}
+
+function bbmodsuite_banplus_admin_add() {
+	bb_admin_add_submenu( __( 'Ban Plus', 'bbpress-moderation-suite' ), bbmodsuite_banplus_can_view(), 'bbpress_moderation_suite_ban_plus', 'bbpress_moderation_suite' );
 }
 add_action( 'bb_admin_menu_generator', 'bbmodsuite_banplus_admin_add' );
-
-?>

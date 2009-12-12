@@ -133,8 +133,12 @@ function bbmodsuite_modlog_admin_add_jquery() {
 }
 add_action( 'bbpress_moderation_suite_modlog_pre_head', 'bbmodsuite_modlog_admin_add_jquery' );
 
+function bbmodsuite_modlog_can_view() {
+	return 'administrate';
+}
+
 function bbmodsuite_modlog_admin_add() {
-	bb_admin_add_submenu( __( 'Moderation Log', 'bbpress-moderation-suite' ), 'administrate', 'bbpress_moderation_suite_modlog', 'bbpress_moderation_suite' );
+	bb_admin_add_submenu( __( 'Moderation Log', 'bbpress-moderation-suite' ), bbmodsuite_modlog_can_view(), 'bbpress_moderation_suite_modlog', 'bbpress_moderation_suite' );
 }
 add_action( 'bb_admin_menu_generator', 'bbmodsuite_modlog_admin_add' );
 
@@ -355,5 +359,3 @@ bbmodsuite_modlog_set_topic_action_handler( 'close_topic', __( 'closed topic "%s
 bbmodsuite_modlog_set_topic_action_handler( 'open_topic', __( 'opened topic "%s"', 'bbpress-moderation-suite'), 'topic_open' );
 bbmodsuite_modlog_set_topic_action_handler( 'sticky_topic', __( 'stickied topic "%s"', 'bbpress-moderation-suite' ), 'topic_sticky' );
 bbmodsuite_modlog_set_topic_action_handler( 'unsticky_topic', __( 'unstickied topic "%s"', 'bbpress-moderation-suite' ), 'topic_unsticky' );
-
-?>

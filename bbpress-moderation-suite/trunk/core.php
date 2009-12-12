@@ -60,7 +60,8 @@ add_action( 'bb_init', 'bbmodsuite_init' );
 
 function bbmodsuite_admin_add() {
 	bb_admin_add_menu( __( 'Moderation', 'bbpress-moderation-suite' ), 'moderate', 'bbpress_moderation_suite', false, '', 'bbmodsuite-menu' );
-	bb_admin_add_submenu( __( 'bbPress Moderation Suite', 'bbpress-moderation-suite' ), 'use_keys', 'bbpress_moderation_suite', 'bbpress_moderation_suite' );
+	if ( bb_current_user_can( 'manage_plugins' ) )
+		bb_admin_add_submenu( __( 'bbPress Moderation Suite', 'bbpress-moderation-suite' ), 'manage_plugins', 'bbpress_moderation_suite', 'bbpress_moderation_suite' );
 }
 add_action( 'bb_admin_menu_generator', 'bbmodsuite_admin_add' );
 

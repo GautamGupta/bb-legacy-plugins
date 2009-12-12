@@ -60,8 +60,7 @@ add_action( 'bb_init', 'bbmodsuite_init' );
 
 function bbmodsuite_admin_add() {
 	bb_admin_add_menu( __( 'Moderation', 'bbpress-moderation-suite' ), 'moderate', 'bbpress_moderation_suite', false, '', 'bbmodsuite-menu' );
-	if ( bb_current_user_can( 'manage_plugins' ) )
-		bb_admin_add_submenu( __( 'bbPress Moderation Suite', 'bbpress-moderation-suite' ), 'manage_plugins', 'bbpress_moderation_suite', 'bbpress_moderation_suite' );
+	bb_admin_add_submenu( __( 'bbPress Moderation Suite', 'bbpress-moderation-suite' ), 'moderate', 'bbpress_moderation_suite', 'bbpress_moderation_suite' );
 }
 add_action( 'bb_admin_menu_generator', 'bbmodsuite_admin_add' );
 
@@ -164,9 +163,11 @@ function bbpress_moderation_suite() {
 ?>		<tr class="<?php echo $class; ?>">
 			<td class="plugin-name">
 				<span class="row-title"><?php echo $plugin_data['name']; ?></span>
-				<div><span class="row-actions"><a class="<?php echo $action_class; ?>" href="<?php echo $href; ?>"><?php echo $action_text; ?></a>
+				<div><span class="row-actions">
+				<?php if ( bb_current_user_can( 'manage_plugins' ) ) { ?>
+					<a class="<?php echo $action_class; ?>" href="<?php echo $href; ?>"><?php echo $action_text; ?></a>
 <?php if ( in_array( $plugin, $bbmodsuite_active_plugins ) ) { ?>
-				<a class="delete" href="<?php echo attribute_escape(
+					<a class="delete" href="<?php echo attribute_escape(
 	bb_nonce_url(
 		bb_get_uri(
 			'bb-admin/admin-base.php',
@@ -181,7 +182,7 @@ function bbpress_moderation_suite() {
 	)
 ); ?>"><?php _e( 'Uninstall', 'bbpress-moderation-suite' ); ?></a>
 <?php if ( !empty( $plugin_data['panel'] ) ) { ?>
-			<a href="<?php echo attribute_escape(
+				<a href="<?php echo attribute_escape(
 	bb_get_uri(
 		'bb-admin/admin-base.php',
 		array( 'plugin' => $plugin_data['panel'] ),
@@ -190,7 +191,17 @@ function bbpress_moderation_suite() {
 );
 ?>"><?php _e( 'Administration', 'bbpress-moderation-suite' ); ?></a>
 <?php }
-} ?></span></div>
+} } else { ?>
+<?php if ( !empty( $plugin_data['panel'] ) ) { ?>
+				<a href="<?php echo attribute_escape(
+	bb_get_uri(
+		'bb-admin/admin-base.php',
+		array( 'plugin' => $plugin_data['panel'] ),
+		BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
+	)
+);
+?>"><?php _e( 'View', 'bbpress-moderation-suite' ); ?></a>
+<?php } ?></span></div>
 			</td>
 			<td class="plugin-description">
 				<p><?php echo $plugin_data['description']; ?></p>
@@ -198,6 +209,7 @@ function bbpress_moderation_suite() {
 		</tr>
 <?php
 	}
+}
 ?>
 
 	</tbody>

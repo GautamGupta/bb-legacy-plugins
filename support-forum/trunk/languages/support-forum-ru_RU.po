@@ -1,0 +1,140 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: support-forum-ru\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/support-forum\n"
+"POT-Creation-Date: 2008-05-08 23:54+1000\n"
+"PO-Revision-Date: 2009-12-06 06:33+0300\n"
+"Last-Translator: Sergey Biryukov <npocmop@gmail.com>\n"
+"Language-Team: ru.wordpress.org <npocmop@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11) ? 0 : ((n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20)) ? 1 : 2);\n"
+"X-Poedit-Language: Russian\n"
+"X-Poedit-Country: RUSSIAN FEDERATION\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: support-forum.php:194
+msgid "This version of the <em>Support forum</em> plugin requires bbPress version 0.9"
+msgstr "Эта версия плагина <em>Support forum</em> требует bbPress версии 0.9"
+
+#: support-forum.php:206
+#: support-forum.php:960
+#: support-forum.php:977
+msgid "resolved"
+msgstr "решенная"
+
+#: support-forum.php:207
+#: support-forum.php:961
+#: support-forum.php:979
+msgid "not resolved"
+msgstr "нерешенная"
+
+#: support-forum.php:208
+#: support-forum.php:962
+#: support-forum.php:981
+msgid "not a support question"
+msgstr "обычная"
+
+#: support-forum.php:383
+#, php-format
+msgid "Support topics that are %s"
+msgstr "Темы с пометкой &laquo;%s&raquo;"
+
+#: support-forum.php:387
+#, php-format
+msgid "Support topics that are %s and are more than 2 hours old"
+msgstr "Темы с пометкой &laquo;%s&raquo; и старше 2 часов"
+
+#: support-forum.php:466
+msgid "Change"
+msgstr "Сменить"
+
+#: support-forum.php:504
+#: support-forum.php:510
+#: support-forum.php:515
+#: support-forum.php:730
+msgid "This topic is"
+msgstr "Эта тема"
+
+#: support-forum.php:504
+#: support-forum.php:672
+#: support-forum.php:1009
+msgid "sticky"
+msgstr "прилеплена"
+
+#: support-forum.php:510
+#: support-forum.php:649
+#: support-forum.php:1002
+msgid "closed"
+msgstr "закрыта"
+
+#: support-forum.php:821
+#: support-forum.php:918
+msgid "Support forum"
+msgstr "Форум поддержки"
+
+#: support-forum.php:870
+msgid "Update performed"
+msgstr "Обновление выполнено"
+
+#: support-forum.php:872
+msgid "No update required"
+msgstr "Обновление не требуется"
+
+#: support-forum.php:924
+msgid "Name"
+msgstr "Имя"
+
+#: support-forum.php:924
+msgid "Description"
+msgstr "Описание"
+
+#: support-forum.php:939
+msgid "Enable support forum"
+msgstr "Включить форум поддержки"
+
+#: support-forum.php:958
+msgid "Set the default status for topics:"
+msgstr "Выберите статус по умолчанию для новой темы:"
+
+#: support-forum.php:967
+msgid "Allow the poster of the topic to set the status on topic creation"
+msgstr "Разрешить автору темы устанавливать статус при создании"
+
+#: support-forum.php:969
+msgid "Allow the poster of the topic to set the status at any time"
+msgstr "Разрешить комментаторам устанавливать статус в любое время"
+
+#: support-forum.php:974
+msgid "Choose which statuses will have a view:"
+msgstr "Выберите статусы, которые требуется просматривать отдельно:"
+
+#: support-forum.php:986
+msgid "Use resolution status icons on topics"
+msgstr "Использовать иконки статуса темы"
+
+#: support-forum.php:999
+msgid "Use lock icon on closed topics (applies to all forums)"
+msgstr "Использовать иконку закрытой темы (во всех форумах)"
+
+#: support-forum.php:1006
+msgid "Use sticky icon on sticky topics (applies to all forums)"
+msgstr "Использовать иконку прилепленной темы (во всех форумах)"
+
+#: support-forum.php:1021
+msgid "If you used support forum plugin version 1.0, you will need to update existing topics to work with version 2.x"
+msgstr "Если вы пользовались плагином версии 1.0, нужно обновить существующие темы для работы с версией 2.x"
+
+#: support-forum.php:1024
+msgid "Update topics to version 2.x"
+msgstr "Обновить темы до версии 2.x"
+
+#: support-forum.php:1028
+msgid "Save support forum settings"
+msgstr "Сохранить настройки плагина"
+
+#: support-forum.php:1084
+msgid "Settings saved"
+msgstr "Настройки сохранены"
+

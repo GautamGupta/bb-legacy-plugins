@@ -82,7 +82,7 @@ define( BUSY_TOPIC_IMAGE, 'hot.png' );
 define( STICKY_TOPIC_IMAGE, 'sticky.png' );
 
 // the URL base for where to find the default icon set.
-define( ICON_SET_URL_BASE, BB_PLUGIN_URL.'topic-icons/icon-sets/' );
+define( ICON_SET_URL_BASE, BB_PLUGIN_URL.'bb-topic-icons/icon-sets/' );
 
 /****************************************************************************
  *

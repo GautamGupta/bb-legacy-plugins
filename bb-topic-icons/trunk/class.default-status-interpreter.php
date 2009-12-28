@@ -7,6 +7,10 @@ class DefaultStatusInterpreter implements StatusInterpreter {
     	$this->busy_threshold = $threshold;
     }
 
+	public function getAllStatuses() {
+		return array('normal', 'hot', 'sticky', 'closed');
+	}
+
     public function getStatus($location, $topic) {
         if ($this->is_sticky_topic($location, $topic)) {
             return "sticky";

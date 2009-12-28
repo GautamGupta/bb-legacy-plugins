@@ -101,55 +101,31 @@ $status_interpreter = new DefaultStatusInterpreter(3);
 $status_renderer = new DefaultStatusRenderer();
 
 function topic_icons_legend() {
+	global $status_interpreter, $status_renderer;
+
 	$icon_set_name = topic_icons_get_active_icon_set();
 	$icon_set_url = ICON_SET_URL_BASE . $icon_set_name;
-	$images = array(STICKY_TOPIC_IMAGE, NORMAL_TOPIC_IMAGE, BUSY_TOPIC_IMAGE, CLOSED_TOPIC_IMAGE);
-	$descriptions = array(STICKY_TOPIC_DESC, NORMAL_TOPIC_DESC, BUSY_TOPIC_DESC, CLOSED_TOPIC_DESC);
+	$statuses = $status_interpreter->getAllStatuses();
 	
 	echo '<ul id="'.LEGEND_CLASS.'">';
-	for ($i=0; $i < count($images); $i++) {
-		echo '<li><img src="'.$icon_set_url.'/'.$images[$i];
-		echo '" width="'.ICON_WIDTH.'" height="'.ICON_HEIGHT.'" align="absmiddle" alt="';
-		echo $descriptions[$i].' Topic Icon">&nbsp;';
-		echo $descriptions[$i].' Topic</li>';
+	for ($i=0; $i < count($statuses); $i++) {
+		$image = $status_renderer->renderStatus($statuses[$i]);
+		$tooltip = $status_renderer->renderStatusTooltip($statuses[$i]);
+
+		if (isset($image) && strlen($image) > 0 &&
+			isset($tooltip) && strlen($tooltip) > 0) {
+			echo '<li><img src="'.$icon_set_url.'/'.$image.
+				'" width="'.ICON_WIDTH.'" height="'.ICON_HEIGHT.
+				'" align="absmiddle">&nbsp;'.$tooltip.'</li>';
+		}
 	}
 	echo '</ul>';
 }
 
 function topic_icons_css() {
-?>
-<style type="text/css"><!--
-.topic-icon-image {
-	width: <?php echo ICON_WIDTH; ?>px;
-	height: <?php echo ICON_HEIGHT; ?>px;
-	margin-right: <?php echo ICON_TEXT_GAP; ?>px;
-	position: relative;
-	float: left;
-}
-
-.topic-icon-image a span {
-	display: none;
-}
-
-.topic-icon-image a:hover {
-	position: relative;
-}
-
-.topic-icon-image a:hover span {
-	display: block;
-   	position: absolute;
-	top: 0px; 
-	left: 10px;
-   	padding: 5px; 
-   	margin: 10px; 
-   	z-index: 100;
-   	background: #ffc; 
-   	border: 1px dotted #333;
-	opacity: 0.8;
-	color: #000;
-}
---></style>
-<?php
+	echo "\n<style type=\"text/css\"><!--\n";
+	require( 'bb-topic-icons.css' );
+	echo "\n--></style>";
 }
 
 function topic_icons_get_active_icon_set() {

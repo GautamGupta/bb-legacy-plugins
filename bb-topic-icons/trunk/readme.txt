@@ -25,11 +25,21 @@ Firstly, have you installed and activated the plugin?  See the installation inst
 
 Secondly, if the plugin is being reported as active, the template itself might be misbehaving, you will need to look for where the `frontpage.php` file is looking at topics - there will be a hard-coded 'sticky' text there.  Swap that text for a call to the built-in bbPress function: `<?php bb_topic_labels(); ?>` that handles topic labelling, and things should work.
 
-= Can I use different icons =
+= Can I use different icons? =
 
 Sure you can.  In the `bb-topic-icons` directory, there's a `icon-sets` subdirectory.  In future versions of the plugin, different icon sets will be installable by copying them to this directory, or via a plugin API.  For now, take a look in the default icon-set - the four icon files live in that directory.  Upload your own files, and in the `bb-topic-icons.php` file, change the filename constants and icon sizes if you need to.
 
+= Can I change the toolips? =
+
+If you want to change the text that is displayed, `class.default-status-renderer.php` is the file to look in - you will see a map that converts a given status value to the tooltip description.
+
+If you want to change the CSS styling of the tooltips, take a look at `bb-topic-icons.css` for the various styles that are applied.
+
 == Change Log ==
+
+= Version 0.4 =
+
+Added CSS styled tooltip displays for the various status icons, and made them clickable to display the appropriate topics.  Pulled out the stylesheet into its own file (bb-topic-icons.css) to aid in comprehension.
 
 = Version 0.3 =
 

@@ -156,11 +156,13 @@ function topic_icons_get_active_icon_set() {
 function topic_icons_label( $label ) {
 	global $topic, $status_interpreter, $status_renderer;
 	
-	$status = $status_interpreter->getStatus(bb_get_location(), $topic);
-
-	$output = $status_renderer->renderStatus($status);
+	if (bb_is_front() || bb_is_forum() || bb_is_view() || bb_is_tag()) {		
+		$status = $status_interpreter->getStatus(bb_get_location(), $topic);
+		$output = $status_renderer->renderStatus($status);
+		return sprintf(__('<div class="%s">%s</div>'), $output, $label);
+	}
 	
-	return sprintf(__('<div class="%s">%s</div>'), $output, $label);
+	return $label;
 }
 
 function topic_icons_init( ) {

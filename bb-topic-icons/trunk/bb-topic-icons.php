@@ -5,7 +5,7 @@ Plugin URI: http://devt.caffeinatedbliss.com/bbpress/topic-icons
 Description: Adds configurable icons next to topics based on their status
 Author: Paul Hawke
 Author URI: http://paul.caffeinatedbliss.com/
-Version: 0.3
+Version: 0.4
 */
 
 /****************************************************************************
@@ -117,11 +117,9 @@ function topic_icons_legend() {
 }
 
 function topic_icons_css() {
-	$icon_set_name = topic_icons_get_active_icon_set();
-	$icon_set_url = ICON_SET_URL_BASE . $icon_set_name;
 ?>
 <style type="text/css"><!--
-.<?php echo NORMAL_TOPIC_CLASS; ?>, .<?php echo BUSY_TOPIC_CLASS; ?>, .<?php echo STICKY_TOPIC_CLASS; ?>, .<?php echo CLOSED_TOPIC_CLASS; ?> {
+.topic-icon-image {
 	width: <?php echo ICON_WIDTH; ?>px;
 	height: <?php echo ICON_HEIGHT; ?>px;
 	margin-right: <?php echo ICON_TEXT_GAP; ?>px;
@@ -129,20 +127,26 @@ function topic_icons_css() {
 	float: left;
 }
 
-.<?php echo NORMAL_TOPIC_CLASS; ?> {
-	background: url(<?php echo $icon_set_url.'/'.NORMAL_TOPIC_IMAGE; ?>) no-repeat;
+.topic-icon-image a span {
+	display: none;
 }
 
-.<?php echo BUSY_TOPIC_CLASS; ?> {
-	background: url(<?php echo $icon_set_url.'/'.BUSY_TOPIC_IMAGE; ?>) no-repeat;
+.topic-icon-image a:hover {
+	position: relative;
 }
 
-.<?php echo STICKY_TOPIC_CLASS; ?> {
-	background: url(<?php echo $icon_set_url.'/'.STICKY_TOPIC_IMAGE; ?>) no-repeat;
-}
-
-.<?php echo CLOSED_TOPIC_CLASS; ?> {
-	background: url(<?php echo $icon_set_url.'/'.CLOSED_TOPIC_IMAGE; ?>) no-repeat;
+.topic-icon-image a:hover span {
+	display: block;
+   	position: absolute;
+	top: 0px; 
+	left: 10px;
+   	padding: 5px; 
+   	margin: 10px; 
+   	z-index: 100;
+   	background: #ffc; 
+   	border: 1px dotted #333;
+	opacity: 0.8;
+	color: #000;
 }
 --></style>
 <?php
@@ -157,9 +161,20 @@ function topic_icons_label( $label ) {
 	global $topic, $status_interpreter, $status_renderer;
 	
 	if (bb_is_front() || bb_is_forum() || bb_is_view() || bb_is_tag()) {		
+		$icon_set_name = topic_icons_get_active_icon_set();
+		$icon_set_url = ICON_SET_URL_BASE . $icon_set_name;
+
 		$status = $status_interpreter->getStatus(bb_get_location(), $topic);
-		$output = $status_renderer->renderStatus($status);
-		return sprintf(__('<div class="%s">%s</div>'), $output, $label);
+		$image = $status_renderer->renderStatus($status);
+		$tooltip = $status_renderer->renderStatusTooltip($status);
+
+		if (strlen($tooltip) > 0) {		
+			return sprintf(__('<div class="topic-icon-image"><a href="%s"><img src="%s" width="%s" height="%s" alt="%s" border="0"><span>%s</span></a></div> %s'), 
+				get_topic_link($topic->topic_id), $icon_set_url.'/'.$image, ICON_WIDTH, ICON_HEIGHT, $tooltip, $tooltip, $label);
+		} else {
+			return sprintf(__('<div class="topic-icon-image"><a href="%s"><img src="%s" width="%s" height="%s" alt="%s" border="0"></a></div> %s'), 
+				get_topic_link($topic->topic_id), $icon_set_url.'/'.$image, ICON_WIDTH, ICON_HEIGHT, $tooltip, $label);
+		}
 	}
 	
 	return $label;

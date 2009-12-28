@@ -31,6 +31,10 @@ Sure you can.  In the `bb-topic-icons` directory, there's a `icon-sets` subdirec
 
 == Change Log ==
 
+= Version 0.3 =
+
+Major code cleanup - internal architecture made object-oriented, with a split between determining a given topic's status and secondly rendering that status.  This paves the way for supporting custom statuses (and therefore supporting the 'support forum' plugin) in the future.
+
 = Version 0.2 =
 
 Thanks to 'hpguru' for reporting the bug - downloads from bbPress.org were called "bb-topic-icons" and the code itself was looking for a "topic-icons" directory - quick rename of files to fix the issue.

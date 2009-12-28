@@ -5,7 +5,7 @@ Plugin URI: http://devt.caffeinatedbliss.com/bbpress/topic-icons
 Description: Adds configurable icons next to topics based on their status
 Author: Paul Hawke
 Author URI: http://paul.caffeinatedbliss.com/
-Version: 0.2
+Version: 0.3
 */
 
 /****************************************************************************
@@ -92,6 +92,14 @@ define( ICON_SET_URL_BASE, BB_PLUGIN_URL.'bb-topic-icons/icon-sets/' );
  *
  ****************************************************************************/
 
+require( 'interface.status-interpreter.php' );
+require( 'interface.status-renderer.php' );
+require( 'class.default-status-interpreter.php' );
+require( 'class.default-status-renderer.php' );
+
+$status_interpreter = new DefaultStatusInterpreter(3);
+$status_renderer = new DefaultStatusRenderer();
+
 function topic_icons_legend() {
 	$icon_set_name = topic_icons_get_active_icon_set();
 	$icon_set_url = ICON_SET_URL_BASE . $icon_set_name;
@@ -145,62 +153,21 @@ function topic_icons_get_active_icon_set() {
 	return 'default';
 }
 
-function topic_icons_closed_label( $label ) {
-	global $topic;
-
-	if (topic_icons_is_closed())
-		return sprintf(__('<div class="closed-post">%s</div>'), $label);
-
-	return $label;
-}
-
-function topic_icons_sticky_label( $label ) {
-	global $topic;
+function topic_icons_label( $label ) {
+	global $topic, $status_interpreter, $status_renderer;
 	
-	if (topic_icons_is_sticky()) {
-		return sprintf(__('<div class="sticky-post">%s</div>'), $label);
-	}
+	$status = $status_interpreter->getStatus(bb_get_location(), $topic);
 
-	return $label;
-}
-
-function topic_icons_all_other_label( $label ) {
-	global $topic;
+	$output = $status_renderer->renderStatus($status);
 	
-	if (!topic_icons_is_closed() && !topic_icons_is_sticky()) {
-		if (topic_icons_is_hot()) {
-			return sprintf(__('<div class="hot-post">%s</div>'), $label);
-		} else {
-			return sprintf(__('<div class="normal-post">%s</div>'), $label);
-		}
-	}
-
-	return $label;
-}
-
-function topic_icons_is_sticky() {
-	global $topic;
-	return (bb_is_front()) ? ( '2' === $topic->topic_sticky ) : 
-	  ( '1' === $topic->topic_sticky || '2' === $topic->topic_sticky );
-}
-
-function topic_icons_is_closed() {
-	global $topic;
-	return ( '0' === $topic->topic_open );
-}
-
-function topic_icons_is_hot() {
-	global $topic;
-	return ( $topic->topic_posts > BUSY_THRESHOLD );
+	return sprintf(__('<div class="%s">%s</div>'), $output, $label);
 }
 
 function topic_icons_init( ) {
 	remove_filter('bb_topic_labels', 'bb_closed_label', 10);
 	remove_filter('bb_topic_labels', 'bb_sticky_label', 20);
 
-	add_filter('bb_topic_labels', 'topic_icons_closed_label', 11);
-	add_filter('bb_topic_labels', 'topic_icons_sticky_label', 21);
-	add_filter('bb_topic_labels', 'topic_icons_all_other_label', 22);
+	add_filter('bb_topic_labels', 'topic_icons_label', 11);
 
 	add_action('bb_head', 'topic_icons_css');
 }

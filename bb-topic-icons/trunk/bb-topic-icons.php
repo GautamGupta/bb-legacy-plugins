@@ -5,7 +5,7 @@ Plugin URI: http://devt.caffeinatedbliss.com/bbpress/topic-icons
 Description: Adds configurable icons next to topics based on their status
 Author: Paul Hawke
 Author URI: http://paul.caffeinatedbliss.com/
-Version: 0.1
+Version: 0.2
 */
 
 /****************************************************************************

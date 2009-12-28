@@ -464,7 +464,8 @@ function bbmodsuite_report_reasons() {
 	if ( !is_array( $reasons ) ) {
 		$reasons = explode( "\n", $reasons );
 		$reasons = array_values( array_filter( $reasons ) );
-		$reasons = array_combine( array_map( 'md5', $reasons ), $reasons );
+		if ( count( $reasons ) )
+			$reasons = array_combine( array_map( 'md5', $reasons ), $reasons );
 		$options['types'] = $reasons;
 		bb_update_option( 'bbmodsuite_report_options', $options );
 	}
@@ -478,7 +479,8 @@ function bbmodsuite_report_resolve_types() {
 	if ( !is_array( $reasons ) ) {
 		$reasons = explode( "\n", $reasons );
 		$reasons = array_values( array_filter( $reasons ) );
-		$reasons = array_combine( array_map( 'md5', $reasons ), $reasons );
+		if ( count( $reasons ) )
+			$reasons = array_combine( array_map( 'md5', $reasons ), $reasons );
 		$options['resolve_types'] = $reasons;
 		bb_update_option( 'bbmodsuite_report_options', $options );
 	}

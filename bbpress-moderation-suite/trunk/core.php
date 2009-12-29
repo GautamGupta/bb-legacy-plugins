@@ -210,12 +210,12 @@ function bbpress_moderation_suite() {
 ?>"><?php _e( 'View', 'bbpress-moderation-suite' ); ?></a>
 <?php } ?></span></div>
 			</td>
+<?php } ?>
 			<td class="plugin-description">
 				<p><?php echo $plugin_data['description']; ?></p>
 			</td>
 		</tr>
 <?php
-	}
 }
 ?>
 

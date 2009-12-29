@@ -5,9 +5,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.1-rc1\n"
+"Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: http://bbpress.org/plugins/topic/bbpress-moderation-suite/\n"
-"POT-Creation-Date: 2009-12-09 21:00+0000\n"
+"POT-Creation-Date: 2009-12-29 19:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 #, php-format
 msgid ""
 "Your IP address (%s) is banned from this forum until %s from now.  The "
-"person who banned %s said the reason was: </p>%s<p>If you are a moderator or "
+"person who banned %s said the reason was:</p>%s<p>If you are a moderator or "
 "administrator, you can still <a href=\"%s\">log in</a>."
 msgstr ""
 
@@ -30,195 +30,195 @@ msgid ""
 "said the reason was: %s"
 msgstr ""
 
-#: ban-plus.php:188 ban-plus.php:504 core.php:30 modlog.php:185
+#: ban-plus.php:187 ban-plus.php:507 core.php:31 modlog.php:189
 msgid "Ban Plus"
 msgstr ""
 
-#: ban-plus.php:190
+#: ban-plus.php:189
 msgid "Current bans"
 msgstr ""
 
-#: ban-plus.php:191
+#: ban-plus.php:190
 msgid "Ban a user"
 msgstr ""
 
-#: ban-plus.php:192
+#: ban-plus.php:191
 msgid "Ban an IP address"
 msgstr ""
 
-#: ban-plus.php:193 core.php:190 report.php:127 warning.php:178
+#: ban-plus.php:192 core.php:199 report.php:127 warning.php:178
 #: warning.php:260
 msgid "Administration"
 msgstr ""
 
-#: ban-plus.php:199 ban-plus.php:261 ban-plus.php:267 ban-plus.php:392
+#: ban-plus.php:198 ban-plus.php:260 ban-plus.php:266 ban-plus.php:391
 msgid "Invalid banning attempt."
 msgstr ""
 
-#: ban-plus.php:206
+#: ban-plus.php:205
 msgid "IP address or CIDR range"
 msgstr ""
 
-#: ban-plus.php:210
+#: ban-plus.php:209
 #, php-format
 msgid ""
 "As an example, your IP address is %s. <a href=\"http://en.wikipedia.org/wiki/"
 "Classless_Inter-Domain_Routing\">CIDR ranges</a> are limited to /16-/32."
 msgstr ""
 
-#: ban-plus.php:211
+#: ban-plus.php:210
 msgid ""
 "Moderators, administrators, and key masters are not be affected by IP bans."
 msgstr ""
 
-#: ban-plus.php:216 ban-plus.php:283
+#: ban-plus.php:215 ban-plus.php:282
 msgid "Time"
 msgstr ""
 
-#: ban-plus.php:221 ban-plus.php:288 warning.php:361 warning.php:380
+#: ban-plus.php:220 ban-plus.php:287 warning.php:361 warning.php:380
 #: warning.php:395
 msgid "minutes"
 msgstr ""
 
-#: ban-plus.php:222 ban-plus.php:289 warning.php:362 warning.php:381
+#: ban-plus.php:221 ban-plus.php:288 warning.php:362 warning.php:381
 #: warning.php:395
 msgid "hours"
 msgstr ""
 
-#: ban-plus.php:223 ban-plus.php:290 warning.php:363 warning.php:382
+#: ban-plus.php:222 ban-plus.php:289 warning.php:363 warning.php:382
 #: warning.php:395
 msgid "days"
 msgstr ""
 
-#: ban-plus.php:224 ban-plus.php:291 warning.php:322 warning.php:364
+#: ban-plus.php:223 ban-plus.php:290 warning.php:322 warning.php:364
 #: warning.php:383 warning.php:395
 msgid "weeks"
 msgstr ""
 
-#: ban-plus.php:225 ban-plus.php:292 warning.php:331 warning.php:365
+#: ban-plus.php:224 ban-plus.php:291 warning.php:331 warning.php:365
 #: warning.php:384 warning.php:395
 msgid "months"
 msgstr ""
 
-#: ban-plus.php:227 ban-plus.php:294
+#: ban-plus.php:226 ban-plus.php:293
 msgid "How long will the ban last?"
 msgstr ""
 
-#: ban-plus.php:232 ban-plus.php:299 ban-plus.php:458 report.php:171
+#: ban-plus.php:231 ban-plus.php:298 ban-plus.php:457 report.php:171
 #: report.php:196 warning.php:244 warning.php:492
 msgid "Notes"
 msgstr ""
 
-#: ban-plus.php:236
+#: ban-plus.php:235
 msgid ""
 "Why are you banning this IP?  This might be shown to anyone who is blocked."
 msgstr ""
 
-#: ban-plus.php:242 ban-plus.php:309
+#: ban-plus.php:241 ban-plus.php:308
 msgid "Ban user"
 msgstr ""
 
-#: ban-plus.php:247
+#: ban-plus.php:246
 msgid ""
 "Invalid IP. IP addresses must be <a href=\"http://en.wikipedia.org/wiki/IPv4"
 "\">IPv4</a> with optional <a href=\"http://en.wikipedia.org/wiki/"
 "Classless_Inter-Domain_Routing\">CIDR</a>."
 msgstr ""
 
-#: ban-plus.php:257
+#: ban-plus.php:256
 #, php-format
 msgid "The IP \"%s\" has been successfully banned."
 msgstr ""
 
-#: ban-plus.php:259 ban-plus.php:390
+#: ban-plus.php:258 ban-plus.php:389
 msgid "The banning attempt failed."
 msgstr ""
 
-#: ban-plus.php:274
+#: ban-plus.php:273
 msgid "Username"
 msgstr ""
 
-#: ban-plus.php:278
+#: ban-plus.php:277
 msgid "Who are you banning? (Username)"
 msgstr ""
 
-#: ban-plus.php:303
+#: ban-plus.php:302
 msgid "Why are you banning this user?  This might be shown to the user."
 msgstr ""
 
-#: ban-plus.php:375
+#: ban-plus.php:374
 msgid "User not found"
 msgstr ""
 
-#: ban-plus.php:388
+#: ban-plus.php:387
 #, php-format
 msgid "The user \"%s\" has been successfully banned."
 msgstr ""
 
-#: ban-plus.php:398
+#: ban-plus.php:397
 msgid "User successfully unbanned."
 msgstr ""
 
-#: ban-plus.php:400
+#: ban-plus.php:399
 msgid "User could not be unbanned."
 msgstr ""
 
-#: ban-plus.php:420
+#: ban-plus.php:419
 msgid "Options successfully saved."
 msgstr ""
 
-#: ban-plus.php:422
+#: ban-plus.php:421
 msgid "Failed to save options."
 msgstr ""
 
-#: ban-plus.php:429
+#: ban-plus.php:428
 msgid "Minimum user level to ban"
 msgstr ""
 
-#: ban-plus.php:433 report.php:284 report.php:297 warning.php:310
+#: ban-plus.php:432 report.php:284 report.php:297 warning.php:310
 msgid "Moderator"
 msgstr ""
 
-#: ban-plus.php:434 report.php:285 report.php:298 warning.php:311
+#: ban-plus.php:433 report.php:285 report.php:298 warning.php:311
 msgid "Administrator"
 msgstr ""
 
-#: ban-plus.php:435
+#: ban-plus.php:434
 msgid "Keymaster"
 msgstr ""
 
-#: ban-plus.php:437
+#: ban-plus.php:436
 msgid ""
 "Users can only ban other users of a lower rank. Keymasters can ban anyone.  "
 "What user level should be the lowest allowed to ban users?"
 msgstr ""
 
-#: ban-plus.php:443
+#: ban-plus.php:442
 msgid "Save settings"
 msgstr ""
 
-#: ban-plus.php:455 modlog.php:66 warning.php:435
+#: ban-plus.php:454 modlog.php:66 warning.php:435
 msgid "User"
 msgstr ""
 
-#: ban-plus.php:456
+#: ban-plus.php:455
 msgid "Banned by"
 msgstr ""
 
-#: ban-plus.php:457
+#: ban-plus.php:456
 msgid "Until"
 msgstr ""
 
-#: ban-plus.php:459 report.php:197 report.php:332 warning.php:437
+#: ban-plus.php:458 report.php:197 report.php:332 warning.php:437
 #: warning.php:493
 msgid "Actions"
 msgstr ""
 
-#: ban-plus.php:488
+#: ban-plus.php:487
 msgid "Unban"
 msgstr ""
 
-#: core.php:24 report.php:102 report.php:542
+#: core.php:24 report.php:102 report.php:547
 msgid "Report"
 msgstr ""
 
@@ -226,7 +226,7 @@ msgstr ""
 msgid "Allows users to report posts for consideration by the moderation team."
 msgstr ""
 
-#: core.php:31
+#: core.php:32
 msgid ""
 "Implements advanced banning features like temporary banning and automated "
 "banning (if used with the Warnings assistant)  Ban Plus does not use the "
@@ -234,58 +234,58 @@ msgid ""
 "this method."
 msgstr ""
 
-#: core.php:36 warning.php:173 warning.php:209 warning.php:210 warning.php:214
-#: warning.php:524
+#: core.php:38 warning.php:173 warning.php:209 warning.php:210 warning.php:214
+#: warning.php:529
 msgid "Warning"
 msgstr ""
 
-#: core.php:37
+#: core.php:39
 msgid ""
 "Allows moderators and higher to warn users that break rules. Can be set to "
 "automatically block or (if Ban Plus is active) temporarily ban problematic "
 "users from the forums."
 msgstr ""
 
-#: core.php:42 modlog.php:37 modlog.php:137
+#: core.php:45 modlog.php:37 modlog.php:141
 msgid "Moderation Log"
 msgstr ""
 
-#: core.php:43
+#: core.php:46
 msgid "Keeps track of important moderator actions."
 msgstr ""
 
-#: core.php:62
+#: core.php:66
 msgid "Moderation"
 msgstr ""
 
-#: core.php:63 core.php:120
+#: core.php:67 core.php:124
 msgid "bbPress Moderation Suite"
 msgstr ""
 
-#: core.php:85
+#: core.php:89
 #, php-format
 msgid "Plugin \"%s\" <strong>activated</strong>"
 msgstr ""
 
-#: core.php:95
+#: core.php:99
 #, php-format
 msgid "Plugin \"%s\" <strong>deactivated</strong>"
 msgstr ""
 
-#: core.php:106
+#: core.php:110
 #, php-format
 msgid ""
 "Plugin \"%s\" <strong>deactivated</strong> and <strong>uninstalled</strong>"
 msgstr ""
 
-#: core.php:118
+#: core.php:122
 #, php-format
 msgid ""
 "Your <code>%1$s</code> folder needs to be moved to the <code>my-plugins</"
 "code> folder.  It is currently in the <code>%2$s</code> folder."
 msgstr ""
 
-#: core.php:121
+#: core.php:125
 msgid ""
 "bbPress Moderation Suite is a set of tools to help moderate your forums.  "
 "There are multiple parts, each able to function separately from the others.  "
@@ -294,24 +294,28 @@ msgid ""
 "of its database usage!"
 msgstr ""
 
-#: core.php:125 core.php:132
+#: core.php:129 core.php:136
 msgid "Moderation Assistants"
 msgstr ""
 
-#: core.php:126 core.php:133 report.php:194 report.php:331
+#: core.php:130 core.php:137 report.php:194 report.php:331
 msgid "Description"
 msgstr ""
 
-#: core.php:142
+#: core.php:149
 msgid "Activate"
 msgstr ""
 
-#: core.php:147
+#: core.php:154
 msgid "Deactivate"
 msgstr ""
 
-#: core.php:181
+#: core.php:190
 msgid "Uninstall"
+msgstr ""
+
+#: core.php:210
+msgid "View"
 msgstr ""
 
 #: modlog.php:37
@@ -339,199 +343,199 @@ msgstr ""
 msgid "Content"
 msgstr ""
 
-#: modlog.php:160
+#: modlog.php:164
 msgid "Moderation Helper activation"
 msgstr ""
 
-#: modlog.php:161
+#: modlog.php:165
 msgid "Moderation Helper deactivation"
 msgstr ""
 
-#: modlog.php:162
+#: modlog.php:166
 msgid "Moderation Helper uninstallation"
 msgstr ""
 
-#: modlog.php:164
+#: modlog.php:168
 msgid "Plugin (de)activation"
 msgstr ""
 
-#: modlog.php:166
+#: modlog.php:170
 msgid "Forum deletion"
 msgstr ""
 
-#: modlog.php:168
+#: modlog.php:172
 msgid "Post editing"
 msgstr ""
 
-#: modlog.php:169
+#: modlog.php:173
 msgid "Post deletion"
 msgstr ""
 
-#: modlog.php:170
+#: modlog.php:174
 msgid "Post undeletion"
 msgstr ""
 
-#: modlog.php:171
+#: modlog.php:175
 msgid "Post spamming"
 msgstr ""
 
-#: modlog.php:172
+#: modlog.php:176
 msgid "Post unspamming"
 msgstr ""
 
-#: modlog.php:174
+#: modlog.php:178
 msgid "Topic deletion"
 msgstr ""
 
-#: modlog.php:175
+#: modlog.php:179
 msgid "Topic undeletion"
 msgstr ""
 
-#: modlog.php:176
+#: modlog.php:180
 msgid "Topic closing"
 msgstr ""
 
-#: modlog.php:177
+#: modlog.php:181
 msgid "Topic opening"
 msgstr ""
 
-#: modlog.php:178
+#: modlog.php:182
 msgid "Topic stickying"
 msgstr ""
 
-#: modlog.php:179
+#: modlog.php:183
 msgid "Topic unstickying"
 msgstr ""
 
-#: modlog.php:181
+#: modlog.php:185
 msgid "User bozoing"
 msgstr ""
 
-#: modlog.php:182
+#: modlog.php:186
 msgid "User unbozoing"
 msgstr ""
 
-#: modlog.php:183
+#: modlog.php:187
 msgid "User deletion"
 msgstr ""
 
-#: modlog.php:200
+#: modlog.php:204
 #, php-format
 msgid "activated the bbPress Moderation Suite %s plugin"
 msgstr ""
 
-#: modlog.php:201
+#: modlog.php:205
 #, php-format
 msgid "deactivated the bbPress Moderation Suite %s plugin"
 msgstr ""
 
-#: modlog.php:202
+#: modlog.php:206
 #, php-format
 msgid "uninstalled the bbPress Moderation Suite %s plugin"
 msgstr ""
 
-#: modlog.php:216
+#: modlog.php:220
 msgid "activated plugins: "
 msgstr ""
 
-#: modlog.php:228 modlog.php:239
+#: modlog.php:232 modlog.php:243
 msgid "deactivated plugins: "
 msgstr ""
 
-#: modlog.php:242
+#: modlog.php:246
 msgid " and "
 msgstr ""
 
-#: modlog.php:256
+#: modlog.php:260
 msgid "deleted forum: "
 msgstr ""
 
-#: modlog.php:276
+#: modlog.php:280
 #, php-format
 msgid "edited %s's post on the topic \"%s\"."
 msgstr ""
 
-#: modlog.php:287
+#: modlog.php:291
 #, php-format
 msgid "deleted %s's post on the topic \"%s\"."
 msgstr ""
 
-#: modlog.php:289
+#: modlog.php:293
 #, php-format
 msgid "marked %s's post on the topic \"%s\" as spam."
 msgstr ""
 
-#: modlog.php:293
+#: modlog.php:297
 #, php-format
 msgid "undeleted %s's post on the topic \"%s\"."
 msgstr ""
 
-#: modlog.php:295
+#: modlog.php:299
 #, php-format
 msgid "marked %s's post on the topic \"%s\" as not spam."
 msgstr ""
 
-#: modlog.php:298
+#: modlog.php:302
 #, php-format
 msgid "changed %s's post on the topic \"%s\" from deleted to spam."
 msgstr ""
 
-#: modlog.php:300
+#: modlog.php:304
 #, php-format
 msgid "changed %s's post on the topic \"%s\" from spam to deleted."
 msgstr ""
 
-#: modlog.php:307
+#: modlog.php:311
 #, php-format
 msgid "deleted topic \"%s\"."
 msgstr ""
 
-#: modlog.php:309
+#: modlog.php:313
 #, php-format
 msgid "undeleted topic \"%s\"."
 msgstr ""
 
-#: modlog.php:325
+#: modlog.php:329
 #, php-format
 msgid "marked %s as a bozo."
 msgstr ""
 
-#: modlog.php:327
+#: modlog.php:331
 #, php-format
 msgid "unmarked %s as a bozo."
 msgstr ""
 
-#: modlog.php:336
+#: modlog.php:340
 #, php-format
 msgid "deleted %s."
 msgstr ""
 
-#: modlog.php:341
+#: modlog.php:345
 #, php-format
 msgid "banned %s for %s. Notes: %s"
 msgstr ""
 
-#: modlog.php:346
+#: modlog.php:350
 #, php-format
 msgid "unbanned %s %s early."
 msgstr ""
 
-#: modlog.php:354
+#: modlog.php:358
 #, php-format
 msgid "closed topic \"%s\""
 msgstr ""
 
-#: modlog.php:355
+#: modlog.php:359
 #, php-format
 msgid "opened topic \"%s\""
 msgstr ""
 
-#: modlog.php:356
+#: modlog.php:360
 #, php-format
 msgid "stickied topic \"%s\""
 msgstr ""
 
-#: modlog.php:357
+#: modlog.php:361
 #, php-format
 msgid "unstickied topic \"%s\""
 msgstr ""
@@ -562,7 +566,7 @@ msgid ""
 "question.</p>"
 msgstr ""
 
-#: report.php:122 report.php:376
+#: report.php:122 report.php:379
 msgid "Reports"
 msgstr ""
 
@@ -668,20 +672,20 @@ msgstr ""
 msgid "Save Changes"
 msgstr ""
 
-#: report.php:468 report.php:482 warning.php:148
+#: report.php:472 report.php:487 warning.php:148
 msgid "Other"
 msgstr ""
 
-#: report.php:502
+#: report.php:507
 msgid "There is a new report waiting for you!"
 msgstr ""
 
-#: report.php:504
+#: report.php:509
 #, php-format
 msgid "There are <span>%s</span> new reports waiting for you!"
 msgstr ""
 
-#: report.php:540
+#: report.php:545
 msgid "Report this post to a moderator."
 msgstr ""
 

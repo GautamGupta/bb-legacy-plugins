@@ -100,9 +100,10 @@ To log other actions - for example, those caused by an unrelated plugin - use `b
 In order to define a new type, you will have to add a filter to `bbmodsuite_modlog_get_type_description` and return the user friendly version if the non-user friendly version is given. For example, you could return `Topic deletion` if the argument to the function is `topic_delete`, and otherwise just return the argument.
 
 == Changelog ==
-
 = 0.1 =
 * Moderators can now view the main Moderation page with a list of active moderation helpers.
+* IP ban message order fixed.
+* `bbmodsuite_banplus_unban` changed to `bbmodsuite_banplus_automated_unban` for expired bans.
 
 = 0.1-rc1 =
 * Mod Log now tracks unbanning as well as banning
@@ -151,3 +152,7 @@ In order to define a new type, you will have to add a filter to `bbmodsuite_modl
 
 = 0.1-alpha1 =
 * First public release
+
+== Upgrade Notice ==
+= 0.1 =
+UI and minor backend fixes only. See Changelog for details.

@@ -101,7 +101,7 @@ function bbmodsuite_banplus_init() {
 	$changed = false;
 	foreach ( $current_bans as $user_id => $ban ) {
 		if ( $ban['until'] < time() ) {
-			do_action( 'bbmodsuite_banplus_unban', $user_id, $current_bans[$user_id] );
+			do_action( 'bbmodsuite_banplus_automated_unban', $user_id, $current_bans[$user_id] );
 			unset( $current_bans[$user_id] );
 			$changed = true;
 		}
@@ -129,7 +129,7 @@ function bbmodsuite_banplus_maybe_block_ip() {
 					bb_load_template( 'ban-plus-ip.php', array( 'ban' => $ban, 'ban_ip' => substr( $id, 3 ) ), $ban );
 					exit;
 				}
-				bb_die( sprintf( __( 'Your IP address (%s) is banned from this forum until %s from now.  The person who banned %s said the reason was: </p>%s<p>If you are a moderator or administrator, you can still <a href="%s">log in</a>.', 'bbpress-moderation-suite' ), $_SERVER['REMOTE_ADDR'], substr( $id, 3 ), bb_since( time() * 2 - $ban['until'], true ), $ban['notes'], bb_get_uri( 'bb-login.php', null, BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_USER_FORMS ) ) );
+				bb_die( sprintf( __( 'Your IP address (%s) is banned from this forum until %s from now.  The person who banned %s said the reason was:</p>%s<p>If you are a moderator or administrator, you can still <a href="%s">log in</a>.', 'bbpress-moderation-suite' ), $_SERVER['REMOTE_ADDR'], bb_since( time() * 2 - $ban['until'], array( 'levels' => 2 ) ), substr( $id, 3 ), $ban['notes'], bb_get_uri( 'bb-login.php', null, BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_USER_FORMS ) ) );
 			}
 		}
 	}

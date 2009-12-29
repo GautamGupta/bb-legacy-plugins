@@ -36,7 +36,7 @@ load_plugin_textdomain('socialit', '/my-plugins/social-it/languages/');
 
 //defines
 define('SOCIALIT_OPTIONS','SocialIt');
-define('SOCIALIT_VER','1.5');
+define('SOCIALIT_VER','1.6-dev');
 define('SOCIALIT_PLUGPATH', bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),"\\"),array("","/"),dirname(__FILE__)),' /\\').'/');
 define('SOCIALIT_PLUGDIR', dirname(__FILE__).'/');
 

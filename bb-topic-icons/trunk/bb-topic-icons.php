@@ -112,7 +112,8 @@ function topic_icons_init( ) {
 	add_action('bb_admin_menu_generator', 'topic_icons_admin_page_add');
 	add_action('bb_admin-header.php', 'topic_icons_admin_page_process');
 	
-	topic_icons_register_status_interpreter('default', new DefaultStatusInterpreter(BUSY_THRESHOLD));
+	$busy = topic_icons_get_busy_threshold();
+	topic_icons_register_status_interpreter('default', new DefaultStatusInterpreter($busy));
 	topic_icons_register_status_renderer('default', new DefaultStatusRenderer());
 }
 

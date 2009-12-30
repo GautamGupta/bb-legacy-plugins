@@ -14,7 +14,6 @@ function topic_icons_admin_page() {
 	echo '<h2>Topic Icons</h2>';
 
 	$icon_set_name = topic_icons_get_active_icon_set();
-	$icon_set_url = ICON_SET_URL_BASE . $icon_set_name;
 	$statuses = get_active_status_interpreter()->getAllStatuses();
 	$renderer = get_active_status_renderer();
 
@@ -58,6 +57,7 @@ function topic_icons_admin_page() {
 	echo '<tbody>';
 	for ($j=0; $j < count($iconsets); $j++) {	
 		echo '<tr><td><input type="radio" name="icon-set" value="'.$iconsets[$j].'"'.($icon_set_name==$iconsets[$j] ? ' checked' : '').'>&nbsp;'.$iconsets[$j].'</td>';
+		$icon_set_url = ICON_SET_URL_BASE . $iconsets[$j];
 		for ($i=0; $i < count($statuses); $i++) {
 			$image = $renderer->renderStatus($statuses[$i]);
 			$tooltip = $renderer->renderStatusTooltip($statuses[$i]);

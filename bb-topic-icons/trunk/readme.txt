@@ -37,6 +37,10 @@ If you want to change the CSS styling of the tooltips, take a look at `bb-topic-
 
 == Change Log ==
 
+= Version 0.5 =
+
+The long awaited admin screen, detection of additional icon-sets if they have   been installed and general code cleanup.  A second built-in icon set "grey-blox" has been added too.
+
 = Version 0.4 =
 
 Added CSS styled tooltip displays for the various status icons, and made them clickable to display the appropriate topics.  Pulled out the stylesheet into its own file (bb-topic-icons.css) to aid in comprehension.

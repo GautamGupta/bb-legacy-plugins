@@ -23,6 +23,7 @@ The spam checks are cached for 7 days to lessen the load on [Stop Forum Spam](ht
 == Changelog ==
 = 0.8 =
 * Complete rewrite
+* Marking a user as bozo reports them to Stop Forum Spam.
 
 = 0.7 =
 * Minimum frequency setting added

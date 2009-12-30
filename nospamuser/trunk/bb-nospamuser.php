@@ -260,4 +260,47 @@ if ( bb_get_location() == 'register-page' ) {
 	add_filter( 'is_email', 'nospamuser_check_email', 10, 3 );
 }
 
-?>
+function nospamuser_check_bozo( $user_id ) { // Most of this function is taken from Akismet
+	$settings = bb_get_option( 'nospamuser-settings' );
+
+	if ( empty( $settings['api_key'] ) )
+		return;
+
+	global $bb_current_user, $user_obj;
+	$bb_current_id = bb_get_current_user_info( 'id' );
+	bb_set_current_user( $user_id );
+	if ( $bb_current_id && $bb_current_id != $user_id )
+		if ( $user_obj->data->is_bozo || !$bb_current_user->data->is_bozo )
+			return;
+	bb_set_current_user( (int) $bb_current_id );
+
+	$request  = 'username=' . $user_obj->user_login;
+	$request .= '&ip_addr=' . $user_obj->data->nospamuser_ip;
+	$request .= '&email=' . $user_obj->user_email;
+	$request .= '&api_key=' . $settings['api_key'];
+
+	$http_request  = 'POST /post.php HTTP/1.0' . "\r\n";
+	$http_request .= 'Host: www.stopforumspam.com' . "\r\n";
+	$http_request .= 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' . "\r\n";
+	$http_request .= 'Content-Length: ' . strlen( $request ) . "\r\n";
+	$http_request .= 'User-Agent: bbPress/' . bb_get_option( 'version' ) . ' | NoSpamUser/0.8' . "\r\n";
+	$http_request .= "\r\n";
+	$http_request .= $request;
+	if ( $fs = @fsockopen( $host, $port, $errno, $errstr, 10 ) ) {
+		fwrite( $fs, $http_request );
+		fclose( $fs );
+	}
+}
+add_action( 'profile_edited', 'nospamuser_check_bozo' );
+
+function nospamuser_set_user_ip_field( $user_id ) {
+	bb_update_usermeta( $user_id, 'nospamuser_ip', $_SERVER['REMOTE_ADDR'] );
+}
+add_action( 'register_user', 'nospamuser_set_user_ip_field' );
+
+function nospamuser_maybe_set_user_ip_field() {
+	if ( bb_is_user_logged_in() && !bb_get_usermeta( bb_get_current_user_info( 'ID' ), 'nospamuser_ip' ) )
+		nospamuser_set_user_ip_field( bb_get_current_user_info( 'ID' ) );
+}
+add_action( 'bb_init', 'nospamuser_maybe_set_user_ip_field' );
+

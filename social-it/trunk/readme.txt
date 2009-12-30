@@ -96,7 +96,7 @@ Please report all bugs via the [Bug Report Form](http://gaut.am/contact/) for qu
 * Fixed dashboard styling in IE
 * Added ability to select all, none, and popular networks
 * Added a German Background Image
-* Optimized/Reduced file sizes
+* Optimized and reduced file sizes
 * Plugin now uses sprite for all icons in dashboard
 * Updated the screenshots
 

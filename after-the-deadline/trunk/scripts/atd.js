@@ -81,7 +81,7 @@ var AtD =
       var text = encodeURIComponent(jQuery.trim(html));
       jQuery.ajax({
          type : "POST",
-         url : AtD.plugpath + 'check.php?url=/checkDocument',
+         url : AtD.plugpath + 'includes/check.php?url=/checkDocument',
          data : 'key=' + AtD.api_key + '&data=' + text,
          format : 'raw', 
          dataType : (jQuery.browser.msie) ? "text" : "xml",

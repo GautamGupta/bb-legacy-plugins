@@ -44,7 +44,8 @@ function bb_bavatars_filter( $avatar, $id_or_email, $size, $default ) {
 	if ( is_object( $id_or_email ) ) {
 		$id = $id_or_email->user_id;
 	} elseif ( ( function_exists( 'is_email' ) && is_email( $id_or_email ) ) || ( !function_exists( 'is_email' ) && !is_numeric( $id_or_email ) ) ) {
-		$id = bb_get_user( $id_or_email, array( 'by' => 'email' ) )->ID;
+		$id = bb_get_user( $id_or_email, array( 'by' => 'email' ) );
+		$id = $id->ID;
 	} else {
 		$id = (int)$id_or_email;
 	}

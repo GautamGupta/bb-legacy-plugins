@@ -146,6 +146,9 @@ function php4bb_admin_page() {
 <?php do_action( 'bb_admin_notices' ); ?>
 
 <p><?php _e( 'If you haven\'t already, <a href="http://www.projecthoneypot.org/?rf=59295">join Project Honey Pot</a>.', 'php4bb' ); ?></p>
+<?php if ( $blocks = (int)bb_get_option( 'php4bb_blocks' ) ) { ?>
+<p><?php printf( _n( 'By the way, this plugin has blocked %d spammer from your forum.', 'By the way, this plugin has blocked %d spammers from your forum.', $blocks ), $blocks ); ?></p>
+<?php } ?>
 <form class="settings" method="post" action="<?php bb_uri('bb-admin/admin-base.php', array( 'plugin' => 'php4bb_admin_page' ), BB_URI_CONTEXT_FORM_ACTION + BB_URI_CONTEXT_BB_ADMIN); ?>">
 	<fieldset>
 <?php
@@ -168,5 +171,3 @@ function php4bb_admin_add() {
 	bb_admin_add_submenu( __( 'Project Honey Pot for bbPress', 'php4bb' ), 'use_keys', 'php4bb_admin_page', 'options-general.php' );
 }
 add_action( 'bb_admin_menu_generator', 'php4bb_admin_add' );
-
-?>

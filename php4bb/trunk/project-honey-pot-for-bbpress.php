@@ -15,6 +15,7 @@ $php4bb_counter = mt_rand( 1, 7 );
 
 function php4bb_block() {
 	$settings = bb_get_option( 'php4bb' );
+	bb_update_option( 'php4bb_blocks', bb_get_option( 'php4bb_blocks' ) + 1 );
 	if ( $settings['httpbl-redirect'] ) {
 		wp_redirect( $settings['httpbl-redirect'] );
 		exit;
@@ -90,5 +91,3 @@ function php4bb_generate_hpot_link() {
 
 if ( bb_is_admin() )
 	require_once dirname( __FILE__ ) . '/project-honey-pot-for-bbpress-admin.php';
-
-?>

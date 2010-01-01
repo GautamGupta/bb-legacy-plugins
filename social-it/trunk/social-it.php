@@ -32,11 +32,11 @@ Author URI: http://gaut.am/
 */
 
 // Create Text Domain For Translations
-load_plugin_textdomain('socialit', '/my-plugins/social-it/languages/');
+bb_load_plugin_textdomain( 'socialit', dirname( __FILE__ ) . '/languages' );
 
 //defines
 define('SOCIALIT_OPTIONS','SocialIt');
-define('SOCIALIT_VER','1.6-dev');
+define('SOCIALIT_VER','1.5');
 define('SOCIALIT_PLUGPATH', bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),"\\"),array("","/"),dirname(__FILE__)),' /\\').'/');
 define('SOCIALIT_PLUGDIR', dirname(__FILE__).'/');
 

@@ -1,0 +1,1193 @@
+# Translation of the WordPress plugin Social It 1.5 by Gautam.
+# Copyright (C) 2010 Gautam
+# This file is distributed under the same license as the Social It package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Social It 1.5\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/social-it\n"
+"POT-Creation-Date: 2010-01-01 05:47+0000\n"
+"PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: includes/bookmarks-data.php:8 includes/bookmarks-data.php:13
+#: includes/bookmarks-data.php:18 includes/bookmarks-data.php:23
+#: includes/bookmarks-data.php:28 includes/bookmarks-data.php:33
+#: includes/bookmarks-data.php:38 includes/bookmarks-data.php:43
+#: includes/bookmarks-data.php:48 includes/bookmarks-data.php:53
+#: includes/bookmarks-data.php:58 includes/bookmarks-data.php:63
+#: includes/bookmarks-data.php:68 includes/bookmarks-data.php:73
+#: includes/bookmarks-data.php:83 includes/bookmarks-data.php:93
+#: includes/bookmarks-data.php:98 includes/bookmarks-data.php:103
+#: includes/bookmarks-data.php:108 includes/bookmarks-data.php:113
+#: includes/bookmarks-data.php:118 includes/bookmarks-data.php:123
+#: includes/bookmarks-data.php:128 includes/bookmarks-data.php:133
+#: includes/bookmarks-data.php:138 includes/bookmarks-data.php:143
+#: includes/bookmarks-data.php:148 includes/bookmarks-data.php:153
+#: includes/bookmarks-data.php:158 includes/bookmarks-data.php:163
+#: includes/bookmarks-data.php:168 includes/bookmarks-data.php:173
+#: includes/bookmarks-data.php:178 includes/bookmarks-data.php:183
+#: includes/bookmarks-data.php:188 includes/bookmarks-data.php:193
+#: includes/bookmarks-data.php:198 includes/bookmarks-data.php:203
+#: includes/bookmarks-data.php:208 includes/bookmarks-data.php:213
+#: includes/bookmarks-data.php:218 includes/bookmarks-data.php:223
+#: includes/bookmarks-data.php:228 includes/bookmarks-data.php:233
+#: includes/bookmarks-data.php:238 includes/bookmarks-data.php:243
+#: includes/bookmarks-data.php:248 includes/bookmarks-data.php:253
+#: includes/bookmarks-data.php:258 includes/bookmarks-data.php:263
+#: includes/bookmarks-data.php:268 includes/bookmarks-data.php:273
+#: includes/bookmarks-data.php:278 includes/bookmarks-data.php:283
+#: includes/bookmarks-data.php:288 includes/bookmarks-data.php:293
+#: includes/bookmarks-data.php:298 includes/bookmarks-data.php:303
+#: includes/bookmarks-data.php:308 includes/bookmarks-data.php:313
+#: includes/bookmarks-data.php:318 includes/bookmarks-data.php:323
+#: includes/bookmarks-data.php:328 includes/bookmarks-data.php:333
+#: includes/bookmarks-data.php:338 includes/bookmarks-data.php:343
+#: includes/bookmarks-data.php:348 includes/bookmarks-data.php:353
+#: includes/bookmarks-data.php:358 includes/bookmarks-data.php:363
+#: includes/bookmarks-data.php:368 includes/bookmarks-data.php:373
+#: includes/bookmarks-data.php:378 includes/bookmarks-data.php:383
+#: includes/bookmarks-data.php:388
+msgid "Check this box to include "
+msgstr ""
+
+#: includes/bookmarks-data.php:8 includes/bookmarks-data.php:9
+msgid "Script &amp; Style"
+msgstr ""
+
+#: includes/bookmarks-data.php:8 includes/bookmarks-data.php:13
+#: includes/bookmarks-data.php:18 includes/bookmarks-data.php:23
+#: includes/bookmarks-data.php:28 includes/bookmarks-data.php:33
+#: includes/bookmarks-data.php:38 includes/bookmarks-data.php:43
+#: includes/bookmarks-data.php:48 includes/bookmarks-data.php:53
+#: includes/bookmarks-data.php:58 includes/bookmarks-data.php:63
+#: includes/bookmarks-data.php:68 includes/bookmarks-data.php:73
+#: includes/bookmarks-data.php:78 includes/bookmarks-data.php:83
+#: includes/bookmarks-data.php:88 includes/bookmarks-data.php:93
+#: includes/bookmarks-data.php:98 includes/bookmarks-data.php:103
+#: includes/bookmarks-data.php:108 includes/bookmarks-data.php:113
+#: includes/bookmarks-data.php:118 includes/bookmarks-data.php:123
+#: includes/bookmarks-data.php:128 includes/bookmarks-data.php:133
+#: includes/bookmarks-data.php:138 includes/bookmarks-data.php:143
+#: includes/bookmarks-data.php:148 includes/bookmarks-data.php:153
+#: includes/bookmarks-data.php:158 includes/bookmarks-data.php:163
+#: includes/bookmarks-data.php:168 includes/bookmarks-data.php:173
+#: includes/bookmarks-data.php:178 includes/bookmarks-data.php:183
+#: includes/bookmarks-data.php:188 includes/bookmarks-data.php:193
+#: includes/bookmarks-data.php:198 includes/bookmarks-data.php:203
+#: includes/bookmarks-data.php:208 includes/bookmarks-data.php:213
+#: includes/bookmarks-data.php:218 includes/bookmarks-data.php:223
+#: includes/bookmarks-data.php:228 includes/bookmarks-data.php:233
+#: includes/bookmarks-data.php:238 includes/bookmarks-data.php:243
+#: includes/bookmarks-data.php:248 includes/bookmarks-data.php:253
+#: includes/bookmarks-data.php:258 includes/bookmarks-data.php:263
+#: includes/bookmarks-data.php:268 includes/bookmarks-data.php:273
+#: includes/bookmarks-data.php:278 includes/bookmarks-data.php:283
+#: includes/bookmarks-data.php:288 includes/bookmarks-data.php:293
+#: includes/bookmarks-data.php:298 includes/bookmarks-data.php:303
+#: includes/bookmarks-data.php:308 includes/bookmarks-data.php:313
+#: includes/bookmarks-data.php:318 includes/bookmarks-data.php:323
+#: includes/bookmarks-data.php:328 includes/bookmarks-data.php:333
+#: includes/bookmarks-data.php:338 includes/bookmarks-data.php:343
+#: includes/bookmarks-data.php:348 includes/bookmarks-data.php:353
+#: includes/bookmarks-data.php:358 includes/bookmarks-data.php:363
+#: includes/bookmarks-data.php:368 includes/bookmarks-data.php:373
+#: includes/bookmarks-data.php:378 includes/bookmarks-data.php:383
+#: includes/bookmarks-data.php:388
+msgid " in your bookmarking menu"
+msgstr ""
+
+#: includes/bookmarks-data.php:9 includes/bookmarks-data.php:64
+#: includes/bookmarks-data.php:154 includes/bookmarks-data.php:194
+#: includes/bookmarks-data.php:254 includes/bookmarks-data.php:259
+#: includes/bookmarks-data.php:264 includes/bookmarks-data.php:269
+#: includes/bookmarks-data.php:319 includes/bookmarks-data.php:334
+#: includes/bookmarks-data.php:344 includes/bookmarks-data.php:349
+#: includes/bookmarks-data.php:369
+msgid "Submit this to "
+msgstr ""
+
+#: includes/bookmarks-data.php:13 includes/bookmarks-data.php:14
+msgid "Blinklist"
+msgstr ""
+
+#: includes/bookmarks-data.php:14 includes/bookmarks-data.php:19
+#: includes/bookmarks-data.php:34 includes/bookmarks-data.php:49
+#: includes/bookmarks-data.php:54 includes/bookmarks-data.php:69
+#: includes/bookmarks-data.php:99 includes/bookmarks-data.php:109
+#: includes/bookmarks-data.php:129 includes/bookmarks-data.php:134
+#: includes/bookmarks-data.php:139 includes/bookmarks-data.php:159
+#: includes/bookmarks-data.php:169 includes/bookmarks-data.php:224
+#: includes/bookmarks-data.php:274 includes/bookmarks-data.php:279
+#: includes/bookmarks-data.php:299 includes/bookmarks-data.php:359
+#: includes/bookmarks-data.php:374 includes/bookmarks-data.php:389
+msgid "Share this on "
+msgstr ""
+
+#: includes/bookmarks-data.php:18
+msgid "Delicious"
+msgstr ""
+
+#: includes/bookmarks-data.php:19
+msgid "del.icio.us"
+msgstr ""
+
+#: includes/bookmarks-data.php:23
+msgid "Digg"
+msgstr ""
+
+#: includes/bookmarks-data.php:24
+msgid "Digg this!"
+msgstr ""
+
+#: includes/bookmarks-data.php:28 includes/bookmarks-data.php:29
+msgid "Diigo"
+msgstr ""
+
+#: includes/bookmarks-data.php:29
+msgid "Post this on "
+msgstr ""
+
+#: includes/bookmarks-data.php:33 includes/bookmarks-data.php:34
+msgid "Reddit"
+msgstr ""
+
+#: includes/bookmarks-data.php:38
+msgid "Yahoo! Buzz"
+msgstr ""
+
+#: includes/bookmarks-data.php:39
+msgid "Buzz up!"
+msgstr ""
+
+#: includes/bookmarks-data.php:43
+msgid "Stumbleupon"
+msgstr ""
+
+#: includes/bookmarks-data.php:44
+msgid "Stumble upon something good? Share it on StumbleUpon"
+msgstr ""
+
+#: includes/bookmarks-data.php:48 includes/bookmarks-data.php:49
+msgid "Technorati"
+msgstr ""
+
+#: includes/bookmarks-data.php:53 includes/bookmarks-data.php:54
+msgid "Mixx"
+msgstr ""
+
+#: includes/bookmarks-data.php:58 includes/bookmarks-data.php:59
+msgid "MySpace"
+msgstr ""
+
+#: includes/bookmarks-data.php:59 includes/bookmarks-data.php:214
+#: includes/bookmarks-data.php:239 includes/bookmarks-data.php:384
+msgid "Post this to "
+msgstr ""
+
+#: includes/bookmarks-data.php:63 includes/bookmarks-data.php:64
+msgid "DesignFloat"
+msgstr ""
+
+#: includes/bookmarks-data.php:68 includes/bookmarks-data.php:69
+msgid "Facebook"
+msgstr ""
+
+#: includes/bookmarks-data.php:73
+msgid "Twitter"
+msgstr ""
+
+#: includes/bookmarks-data.php:74
+msgid "Tweet This!"
+msgstr ""
+
+#: includes/bookmarks-data.php:78 includes/bookmarks-data.php:88
+msgid "Check this box to include the "
+msgstr ""
+
+#: includes/bookmarks-data.php:78
+msgid "\"Email to a Friend\" link"
+msgstr ""
+
+#: includes/bookmarks-data.php:79
+msgid "Email this to a friend?"
+msgstr ""
+
+#: includes/bookmarks-data.php:80
+msgid "I thought this article might interest you."
+msgstr ""
+
+#: includes/bookmarks-data.php:80 includes/bookmarks-data.php:90
+msgid "You can read the full article here"
+msgstr ""
+
+#: includes/bookmarks-data.php:83 includes/bookmarks-data.php:84
+msgid "Orkut"
+msgstr ""
+
+#: includes/bookmarks-data.php:84
+msgid "Promote this on "
+msgstr ""
+
+#: includes/bookmarks-data.php:88 includes/bookmarks-data.php:89
+msgid "ToMuse"
+msgstr ""
+
+#: includes/bookmarks-data.php:89
+msgid "Suggest this article to "
+msgstr ""
+
+#: includes/bookmarks-data.php:90
+msgid "New tip submitted via the Social It Plugin for bbPress!"
+msgstr ""
+
+#: includes/bookmarks-data.php:90
+msgid "I would like to submit this article"
+msgstr ""
+
+#: includes/bookmarks-data.php:90
+msgid "for possible inclusion on ToMuse."
+msgstr ""
+
+#: includes/bookmarks-data.php:93
+msgid "a 'Subscribe to Comments' link"
+msgstr ""
+
+#: includes/bookmarks-data.php:94
+msgid "Subscribe to the comments for this post?"
+msgstr ""
+
+#: includes/bookmarks-data.php:98 includes/bookmarks-data.php:99
+msgid "Linkedin"
+msgstr ""
+
+#: includes/bookmarks-data.php:103 includes/bookmarks-data.php:104
+msgid "Newsvine"
+msgstr ""
+
+#: includes/bookmarks-data.php:104
+msgid "Seed this on "
+msgstr ""
+
+#: includes/bookmarks-data.php:108 includes/bookmarks-data.php:109
+msgid "Devmarks"
+msgstr ""
+
+#: includes/bookmarks-data.php:113 includes/bookmarks-data.php:114
+msgid "Google Bookmarks"
+msgstr ""
+
+#: includes/bookmarks-data.php:114 includes/bookmarks-data.php:119
+#: includes/bookmarks-data.php:124 includes/bookmarks-data.php:174
+#: includes/bookmarks-data.php:179 includes/bookmarks-data.php:184
+#: includes/bookmarks-data.php:189 includes/bookmarks-data.php:209
+#: includes/bookmarks-data.php:379
+msgid "Add this to "
+msgstr ""
+
+#: includes/bookmarks-data.php:118 includes/bookmarks-data.php:119
+msgid "Mister Wong"
+msgstr ""
+
+#: includes/bookmarks-data.php:120
+msgid "www.mister-wong.com"
+msgstr ""
+
+#: includes/bookmarks-data.php:123 includes/bookmarks-data.php:124
+msgid "Izeby"
+msgstr ""
+
+#: includes/bookmarks-data.php:128 includes/bookmarks-data.php:129
+msgid "Tipd"
+msgstr ""
+
+#: includes/bookmarks-data.php:133 includes/bookmarks-data.php:134
+msgid "PFBuzz"
+msgstr ""
+
+#: includes/bookmarks-data.php:138 includes/bookmarks-data.php:139
+msgid "FriendFeed"
+msgstr ""
+
+#: includes/bookmarks-data.php:143 includes/bookmarks-data.php:144
+msgid "BlogMarks"
+msgstr ""
+
+#: includes/bookmarks-data.php:144
+msgid "Mark this on "
+msgstr ""
+
+#: includes/bookmarks-data.php:148 includes/bookmarks-data.php:149
+msgid "Blogger"
+msgstr ""
+
+#: includes/bookmarks-data.php:149
+msgid "Blog this on "
+msgstr ""
+
+#: includes/bookmarks-data.php:153 includes/bookmarks-data.php:154
+msgid "Twittley"
+msgstr ""
+
+#: includes/bookmarks-data.php:158 includes/bookmarks-data.php:159
+msgid "Fwisp"
+msgstr ""
+
+#: includes/bookmarks-data.php:163 includes/bookmarks-data.php:164
+msgid "DesignMoo"
+msgstr ""
+
+#: includes/bookmarks-data.php:164
+msgid "Moo this on "
+msgstr ""
+
+#: includes/bookmarks-data.php:168 includes/bookmarks-data.php:169
+msgid "BobrDobr"
+msgstr ""
+
+#: includes/bookmarks-data.php:168 includes/bookmarks-data.php:173
+#: includes/bookmarks-data.php:178 includes/bookmarks-data.php:183
+#: includes/bookmarks-data.php:188
+msgid " (Russian)"
+msgstr ""
+
+#: includes/bookmarks-data.php:173 includes/bookmarks-data.php:174
+msgid "Yandex.Bookmarks"
+msgstr ""
+
+#: includes/bookmarks-data.php:178 includes/bookmarks-data.php:179
+msgid "Memory.ru"
+msgstr ""
+
+#: includes/bookmarks-data.php:183 includes/bookmarks-data.php:184
+msgid "100 bookmarks"
+msgstr ""
+
+#: includes/bookmarks-data.php:188 includes/bookmarks-data.php:189
+msgid "MyPlace"
+msgstr ""
+
+#: includes/bookmarks-data.php:193 includes/bookmarks-data.php:194
+msgid "Hacker News"
+msgstr ""
+
+#: includes/bookmarks-data.php:198 includes/bookmarks-data.php:199
+msgid "Print Friendly"
+msgstr ""
+
+#: includes/bookmarks-data.php:199
+msgid "Send this page to "
+msgstr ""
+
+#: includes/bookmarks-data.php:203
+msgid "Design Bump"
+msgstr ""
+
+#: includes/bookmarks-data.php:204
+msgid "Bump this on "
+msgstr ""
+
+#: includes/bookmarks-data.php:204
+msgid "DesignBump"
+msgstr ""
+
+#: includes/bookmarks-data.php:208 includes/bookmarks-data.php:209
+msgid "Ning"
+msgstr ""
+
+#: includes/bookmarks-data.php:213 includes/bookmarks-data.php:214
+msgid "Identica"
+msgstr ""
+
+#: includes/bookmarks-data.php:218 includes/bookmarks-data.php:219
+msgid "Xerpi"
+msgstr ""
+
+#: includes/bookmarks-data.php:219
+msgid "Save this to "
+msgstr ""
+
+#: includes/bookmarks-data.php:223 includes/bookmarks-data.php:224
+msgid "Wikio"
+msgstr ""
+
+#: includes/bookmarks-data.php:228 includes/bookmarks-data.php:229
+msgid "TechMeme"
+msgstr ""
+
+#: includes/bookmarks-data.php:229
+msgid "Tip this to "
+msgstr ""
+
+#: includes/bookmarks-data.php:233 includes/bookmarks-data.php:234
+msgid "Sphinn"
+msgstr ""
+
+#: includes/bookmarks-data.php:234
+msgid "Sphinn this on "
+msgstr ""
+
+#: includes/bookmarks-data.php:238 includes/bookmarks-data.php:239
+msgid "Posterous"
+msgstr ""
+
+#: includes/bookmarks-data.php:243 includes/bookmarks-data.php:244
+msgid "Global Grind"
+msgstr ""
+
+#: includes/bookmarks-data.php:244
+msgid "Grind this! on "
+msgstr ""
+
+#: includes/bookmarks-data.php:248 includes/bookmarks-data.php:249
+msgid "Ping.fm"
+msgstr ""
+
+#: includes/bookmarks-data.php:249
+msgid "Ping this on "
+msgstr ""
+
+#: includes/bookmarks-data.php:253 includes/bookmarks-data.php:254
+msgid "NUjij"
+msgstr ""
+
+#: includes/bookmarks-data.php:253 includes/bookmarks-data.php:258
+msgid " (Dutch)"
+msgstr ""
+
+#: includes/bookmarks-data.php:258 includes/bookmarks-data.php:259
+msgid "eKudos"
+msgstr ""
+
+#: includes/bookmarks-data.php:263 includes/bookmarks-data.php:264
+msgid "Netvouz"
+msgstr ""
+
+#: includes/bookmarks-data.php:268 includes/bookmarks-data.php:269
+msgid "Netvibes"
+msgstr ""
+
+#: includes/bookmarks-data.php:273 includes/bookmarks-data.php:274
+msgid "Fleck"
+msgstr ""
+
+#: includes/bookmarks-data.php:278 includes/bookmarks-data.php:279
+msgid "Blogosphere News"
+msgstr ""
+
+#: includes/bookmarks-data.php:283
+msgid "Web Blend"
+msgstr ""
+
+#: includes/bookmarks-data.php:284
+msgid "Blend this!"
+msgstr ""
+
+#: includes/bookmarks-data.php:288
+msgid "Wykop"
+msgstr ""
+
+#: includes/bookmarks-data.php:288
+msgid " (Polish)"
+msgstr ""
+
+#: includes/bookmarks-data.php:289
+msgid "Add this to Wykop!"
+msgstr ""
+
+#: includes/bookmarks-data.php:293
+msgid "BlogEngage"
+msgstr ""
+
+#: includes/bookmarks-data.php:294
+msgid "Engage with this article!"
+msgstr ""
+
+#: includes/bookmarks-data.php:298 includes/bookmarks-data.php:299
+msgid "Hyves"
+msgstr ""
+
+#: includes/bookmarks-data.php:303 includes/bookmarks-data.php:304
+msgid "Pusha"
+msgstr ""
+
+#: includes/bookmarks-data.php:303
+msgid " (Swedish)"
+msgstr ""
+
+#: includes/bookmarks-data.php:304
+msgid "Push this on "
+msgstr ""
+
+#: includes/bookmarks-data.php:308 includes/bookmarks-data.php:309
+msgid "Hatena Bookmarks"
+msgstr ""
+
+#: includes/bookmarks-data.php:308
+msgid " (Japanese)"
+msgstr ""
+
+#: includes/bookmarks-data.php:309
+msgid "Bookmarks this on "
+msgstr ""
+
+#: includes/bookmarks-data.php:313 includes/bookmarks-data.php:314
+msgid "MyLinkVault"
+msgstr ""
+
+#: includes/bookmarks-data.php:314
+msgid "Store this link on "
+msgstr ""
+
+#: includes/bookmarks-data.php:318 includes/bookmarks-data.php:319
+msgid "SlashDot"
+msgstr ""
+
+#: includes/bookmarks-data.php:323 includes/bookmarks-data.php:324
+msgid "Squidoo"
+msgstr ""
+
+#: includes/bookmarks-data.php:324
+msgid "Add to a lense on "
+msgstr ""
+
+#: includes/bookmarks-data.php:328 includes/bookmarks-data.php:329
+msgid "Propeller"
+msgstr ""
+
+#: includes/bookmarks-data.php:329
+msgid "Submit this story to "
+msgstr ""
+
+#: includes/bookmarks-data.php:333 includes/bookmarks-data.php:334
+msgid "FAQpal"
+msgstr ""
+
+#: includes/bookmarks-data.php:338 includes/bookmarks-data.php:339
+msgid "Evernote"
+msgstr ""
+
+#: includes/bookmarks-data.php:339
+msgid "Clip this to "
+msgstr ""
+
+#: includes/bookmarks-data.php:343 includes/bookmarks-data.php:344
+msgid "Meneame"
+msgstr ""
+
+#: includes/bookmarks-data.php:343 includes/bookmarks-data.php:348
+msgid " (Spanish)"
+msgstr ""
+
+#: includes/bookmarks-data.php:348 includes/bookmarks-data.php:349
+msgid "Bitacoras"
+msgstr ""
+
+#: includes/bookmarks-data.php:353 includes/bookmarks-data.php:354
+msgid "JumpTags"
+msgstr ""
+
+#: includes/bookmarks-data.php:354
+msgid "Submit this link to "
+msgstr ""
+
+#: includes/bookmarks-data.php:358 includes/bookmarks-data.php:359
+msgid "Bebo"
+msgstr ""
+
+#: includes/bookmarks-data.php:363 includes/bookmarks-data.php:364
+msgid "N4G"
+msgstr ""
+
+#: includes/bookmarks-data.php:364
+msgid "Submit tip to "
+msgstr ""
+
+#: includes/bookmarks-data.php:368 includes/bookmarks-data.php:369
+msgid "Strands"
+msgstr ""
+
+#: includes/bookmarks-data.php:373 includes/bookmarks-data.php:374
+msgid "Tumblr"
+msgstr ""
+
+#: includes/bookmarks-data.php:378 includes/bookmarks-data.php:379
+msgid "Stumpedia"
+msgstr ""
+
+#: includes/bookmarks-data.php:383 includes/bookmarks-data.php:384
+msgid "Current"
+msgstr ""
+
+#: includes/bookmarks-data.php:388 includes/bookmarks-data.php:389
+msgid "Plurk"
+msgstr ""
+
+#. #-#-#-#-#  plugin.pot (Social It 1.5)  #-#-#-#-#
+#. Plugin Name of an extension
+#: includes/functions.php:93 includes/functions.php:160
+msgid "Social It"
+msgstr ""
+
+#: includes/functions.php:194
+msgid ""
+"New version of Social It is available! Please download the latest version "
+msgstr ""
+
+#: includes/functions.php:194 includes/functions.php:738
+msgid "here"
+msgstr ""
+
+#: includes/functions.php:210
+msgid "Social It Options Imported Successfully!"
+msgstr ""
+
+#: includes/functions.php:212
+msgid "Social It Options Import failed!"
+msgstr ""
+
+#: includes/functions.php:215
+msgid ""
+"Found syntax errors in file being imported. Social It Options Import failed!"
+msgstr ""
+
+#: includes/functions.php:218
+msgid ""
+"Did not receive any file to be imported. Social It Options Import failed!"
+msgstr ""
+
+#: includes/functions.php:224
+msgid "Your changes have been saved successfully!"
+msgstr ""
+
+#: includes/functions.php:227
+msgid ""
+"You can't display the menu if you don't choose a few sites to add to it!"
+msgstr ""
+
+#: includes/functions.php:232
+msgid ""
+"You need to select the primary category for any articles submitted to "
+"Twittley."
+msgstr ""
+
+#: includes/functions.php:233
+msgid ""
+"You need to set at least 1 default tag for any articles submitted to "
+"Twittley."
+msgstr ""
+
+#: includes/functions.php:276
+msgid " Short URL(s) have been reset."
+msgstr ""
+
+#: includes/functions.php:295
+msgid "Maybe you would consider"
+msgstr ""
+
+#: includes/functions.php:295
+msgid "donating"
+msgstr ""
+
+#: includes/functions.php:295
+msgid "or following me on"
+msgstr ""
+
+#: includes/functions.php:308
+msgid "Enabled Networks"
+msgstr ""
+
+#: includes/functions.php:312
+msgid "Select the Networks to display. Drag to reorder."
+msgstr ""
+
+#: includes/functions.php:315
+msgid "All"
+msgstr ""
+
+#: includes/functions.php:316
+msgid "None"
+msgstr ""
+
+#: includes/functions.php:317
+msgid "Most Popular"
+msgstr ""
+
+#: includes/functions.php:331
+msgid "Functionality Settings"
+msgstr ""
+
+#: includes/functions.php:337
+msgid "This will clear <u>ALL</u> short URLs. - Are you sure?"
+msgstr ""
+
+#: includes/functions.php:340 includes/functions.php:504
+#: includes/functions.php:507 includes/functions.php:557
+#: includes/functions.php:605 includes/functions.php:608
+#: includes/functions.php:625 includes/functions.php:628
+#: includes/functions.php:631
+msgid "Yes"
+msgstr ""
+
+#: includes/functions.php:340 includes/functions.php:663
+#: includes/functions.php:671 includes/functions.php:702
+msgid "Cancel"
+msgstr ""
+
+#: includes/functions.php:344
+msgid "Twitter Options:"
+msgstr ""
+
+#: includes/functions.php:345
+msgid "Twitter ID:"
+msgstr ""
+
+#: includes/functions.php:353
+msgid "Which URL Shortener?"
+msgstr ""
+
+#: includes/functions.php:369
+msgid "Reset all Short URLs"
+msgstr ""
+
+#: includes/functions.php:440
+msgid "Yahoo! Buzz Defaults:"
+msgstr ""
+
+#: includes/functions.php:441
+msgid "Default Content Category: "
+msgstr ""
+
+#: includes/functions.php:461
+msgid "Default Media Type:"
+msgstr ""
+
+#: includes/functions.php:475
+msgid "Twittley Defaults:"
+msgstr ""
+
+#: includes/functions.php:476
+msgid "Primary Content Category:"
+msgstr ""
+
+#: includes/functions.php:494
+msgid ""
+"Enter a comma separated list of general tags which describe your site's "
+"posts as a whole. Try not to be too specific, as one post may fall into "
+"different \"tag categories\" than other posts."
+msgstr ""
+
+#: includes/functions.php:495
+msgid ""
+"This list is primarily used as a failsafe in case you forget to enter "
+"WordPress tags for a particular post, in which case this list of tags would "
+"be used so as to bring at least *somewhat* relevant search queries based on "
+"the general tags that you enter here."
+msgstr ""
+
+#: includes/functions.php:495 includes/functions.php:621
+msgid "Click here to close this message"
+msgstr ""
+
+#: includes/functions.php:495 includes/functions.php:621
+msgid "close"
+msgstr ""
+
+#: includes/functions.php:497
+msgid "Default Tags:"
+msgstr ""
+
+#: includes/functions.php:498
+msgid "Click here for help with this option"
+msgstr ""
+
+#: includes/functions.php:502
+msgid "General Functionality Options:"
+msgstr ""
+
+#: includes/functions.php:503
+msgid "Add nofollow to the links?"
+msgstr ""
+
+#: includes/functions.php:505 includes/functions.php:508
+#: includes/functions.php:558 includes/functions.php:562
+#: includes/functions.php:606 includes/functions.php:609
+#: includes/functions.php:626 includes/functions.php:629
+#: includes/functions.php:632
+msgid "No"
+msgstr ""
+
+#: includes/functions.php:506
+msgid "Open links in new window?"
+msgstr ""
+
+#: includes/functions.php:515
+msgid "Plugin Aesthetics"
+msgstr ""
+
+#: includes/functions.php:520
+msgid "Warning!"
+msgstr ""
+
+#: includes/functions.php:521
+msgid "This option is intended "
+msgstr ""
+
+#: includes/functions.php:521
+msgid "STRICTLY"
+msgstr ""
+
+#: includes/functions.php:521
+msgid ""
+" for users who understand how to edit CSS/JS and intend to change/edit the "
+"associated images themselves. No support will be offered for this feature, "
+"as I cannot be held accountable for your coding/image-editing mistakes. "
+"Furthermore, this feature was implemented as a favor to the thousands of you "
+"who asked for such a feature, and as such, I would appreciate it if you "
+"could refrain from sending nasty emails when you break the plugin due to "
+"coding errors of your own."
+msgstr ""
+
+#: includes/functions.php:522
+msgid "How it works..."
+msgstr ""
+
+#: includes/functions.php:523
+msgid ""
+"Since you have chosen for the plugin to override the style settings with "
+"your own custom mods, it will now pull the files from the new folders it is "
+"going to create on your server as soon as you save your changes. The file/"
+"folder locations should be as follows:"
+msgstr ""
+
+#: includes/functions.php:535
+msgid ""
+"Once you have saved your changes, you will be able to edit the image sprite "
+"that holds all of the icons for socialit as well as the CSS which "
+"accompanies it. Just be sure that you do in fact edit the CSS if you edit "
+"the images, as it is unlikely the heights, widths, and background positions "
+"of the images will stay the same after you are done."
+msgstr ""
+
+#: includes/functions.php:536
+msgid ""
+"Just a quick note... When you edit the styles and images to include your own "
+"custom backgrounds, icons, and CSS styles, be aware that those changes will "
+"not be reflected on the plugin options page. In other words: when you select "
+"your networks to be displayed, or when you select the background image to "
+"use, it will still be displaying the images from the original plugin "
+"directory."
+msgstr ""
+
+#: includes/functions.php:538
+msgid ""
+"If you happen to completely screw up the code, you can follow these "
+"directions to reset the plugin back to normal and try again if you wish:"
+msgstr ""
+
+#: includes/functions.php:540
+msgid ""
+"Login to your server via FTP or SSH. (whichever you are more comfortable "
+"with)"
+msgstr ""
+
+#: includes/functions.php:541
+msgid "Navigate to your forum's root directory."
+msgstr ""
+
+#: includes/functions.php:542
+msgid "Delete the directory named \"socialit-mods\"."
+msgstr ""
+
+#: includes/functions.php:543
+msgid "Login to your bbPress dashboard."
+msgstr ""
+
+#: includes/functions.php:544
+msgid "Go to the Social It plugin options page. (Settings -> Social It)"
+msgstr ""
+
+#: includes/functions.php:545
+msgid "Deselect the \"Use custom mods\" option."
+msgstr ""
+
+#: includes/functions.php:546
+msgid "Save your changes."
+msgstr ""
+
+#: includes/functions.php:548
+msgid "Close Message"
+msgstr ""
+
+#: includes/functions.php:552
+msgid "Override Styles With Custom Mods Instead?"
+msgstr ""
+
+#: includes/functions.php:556
+msgid "Animate-expand multi-lined bookmarks?"
+msgstr ""
+
+#: includes/functions.php:559
+msgid "Auto-space/center the bookmarks?"
+msgstr ""
+
+#: includes/functions.php:560
+msgid "Space"
+msgstr ""
+
+#: includes/functions.php:561
+msgid "Center"
+msgstr ""
+
+#: includes/functions.php:564
+msgid "Background Image"
+msgstr ""
+
+#: includes/functions.php:566
+msgid "Use a background image?"
+msgstr ""
+
+#: includes/functions.php:596
+msgid "Menu Placement"
+msgstr ""
+
+#: includes/functions.php:601
+msgid ""
+"You can insert the Social It menu anywhere on your forums, the plugin will "
+"take appropiate values of that page. By default, Social It menu is displayed "
+"below the first post of the topic only, but you can insert it on Forums, Tag "
+"pages, or anywhere, just put this code where you want to insert it:"
+msgstr ""
+
+#: includes/functions.php:604
+msgid "Display below first Post in Topic?"
+msgstr ""
+
+#: includes/functions.php:607
+msgid "Show in RSS feed?"
+msgstr ""
+
+#: includes/functions.php:611
+msgid "Hide menu from mobile browsers?"
+msgstr ""
+
+#: includes/functions.php:620
+msgid ""
+"Social It plugin is compatible with <a href=\"http://bbpress.org/plugins/"
+"topic/support-forum/\">Support Forum plugin</a> Made by Aditya Naik & Sam "
+"Bauers. You are seeing these options because that plugin is activated on "
+"your forums. With the help of these options you can configure whether to "
+"show Social It on non-resolved, resolved or non support topics."
+msgstr ""
+
+#: includes/functions.php:623
+msgid "Compatibility with Support Forum Plugin"
+msgstr ""
+
+#: includes/functions.php:624
+msgid "Display Social It on Non-Resolved Topics?"
+msgstr ""
+
+#: includes/functions.php:627
+msgid "Display Social It on Resolved Topics?"
+msgstr ""
+
+#: includes/functions.php:630
+msgid "Display Social It on Non-Support Topics?"
+msgstr ""
+
+#: includes/functions.php:644
+msgid "Save Changes"
+msgstr ""
+
+#: includes/functions.php:654
+msgid "Import Social It Options"
+msgstr ""
+
+#: includes/functions.php:660
+msgid ""
+"All of your current Social It options will be overwritten by the imported "
+"value. Are you sure you want to overwrite all settings?"
+msgstr ""
+
+#: includes/functions.php:663 includes/functions.php:671
+#: includes/functions.php:702
+msgid "OK"
+msgstr ""
+
+#: includes/functions.php:668
+msgid ""
+"Only import the short URLs if you had taken a backup of options from this "
+"forum."
+msgstr ""
+
+#: includes/functions.php:674
+msgid ""
+"This functionality will restore your entire Social It options from a file."
+"<br /><strong>Make sure you have done an export and backup the exported file "
+"before you try this!"
+msgstr ""
+
+#: includes/functions.php:678
+msgid "Import Generated Short URLs Too"
+msgstr ""
+
+#: includes/functions.php:682
+msgid "Import Options"
+msgstr ""
+
+#: includes/functions.php:693
+msgid "Export Social It Options"
+msgstr ""
+
+#: includes/functions.php:699
+msgid ""
+"Only export short URLs if you are backing up the options, and are not "
+"importing the options on another forum."
+msgstr ""
+
+#: includes/functions.php:705
+msgid "This functionality will dump your entire Social It options into a file"
+msgstr ""
+
+#: includes/functions.php:707
+msgid "Export Generated Short URLs Too"
+msgstr ""
+
+#: includes/functions.php:720
+msgid "Export Options"
+msgstr ""
+
+#: includes/functions.php:733
+msgid "Helpful Plugin Links"
+msgstr ""
+
+#: includes/functions.php:738
+msgid "Plugin Info"
+msgstr ""
+
+#: includes/functions.php:738
+msgid "or"
+msgstr ""
+
+#: includes/functions.php:739
+msgid "Installation &amp; Usage Guide"
+msgstr ""
+
+#: includes/functions.php:740
+msgid "Frequently Asked Questions"
+msgstr ""
+
+#: includes/functions.php:741
+msgid "Support Forum"
+msgstr ""
+
+#: includes/functions.php:742
+msgid "Other Social It Platforms"
+msgstr ""
+
+#: includes/functions.php:743
+msgid "Submit a Translation"
+msgstr ""
+
+#: includes/functions.php:750
+msgid "Support by Donating"
+msgstr ""
+
+#: includes/functions.php:754
+msgid ""
+"If you like Social It and wish to contribute towards it's continued "
+"development, you can use the form below to do so."
+msgstr ""
+
+#: includes/functions.php:756 includes/functions.php:780
+msgid "Help support the development of this plugin by donating!"
+msgstr ""
+
+#: includes/functions.php:761 includes/functions.php:766
+msgid ""
+"Get the latest information about the plugin and the latest news about "
+"Internet & Technology in the world!"
+msgstr ""
+
+#: includes/functions.php:762
+msgid "Follow Him on Twitter!"
+msgstr ""
+
+#: includes/functions.php:767
+msgid "Visit His Website!"
+msgstr ""
+
+#: includes/functions.php:775
+msgid "Top Supporters"
+msgstr ""
+
+#: includes/functions.php:780
+msgid "Donate"
+msgstr ""
+
+#: includes/functions.php:780
+msgid ""
+"now to get to this list and your name with your website link will be here!"
+msgstr ""
+
+#: includes/functions.php:786
+msgid "Shout Outs"
+msgstr ""
+
+#: includes/functions.php:791
+msgid "Fugue Icons: Pinvoke"
+msgstr ""
+
+#: includes/functions.php:792
+msgid "Fugue Icon Sprite: Alison Barrett"
+msgstr ""
+
+#: includes/functions.php:793
+msgid "Original Skin Icons: Function"
+msgstr ""
+
+#: includes/functions.php:901
+msgid "Show Social It Menu"
+msgstr ""
+
+#: includes/functions.php:904
+msgid "Hide Social It Menu"
+msgstr ""
+
+#: includes/functions.php:925
+msgid "Sorry, but that could not be done."
+msgstr ""
+
+#: includes/functions.php:1019
+msgid "xtrastyle"
+msgstr ""
+
+#. Plugin URI of an extension
+msgid "http://gaut.am/bbpress/plugins/social-it/"
+msgstr ""
+
+#. Description of an extension
+msgid ""
+"Social It adds a (X)HTML compliant list of social bookmarking icons to "
+"topics, front page, tags, etc. See <a href=\"admin-base.php?"
+"plugin=socialit_settings_page\">configuration panel</a> for more settings. "
+"This plugin is inspired from the <a href=\"http://sexybookmarks.net/"
+"\">SexyBookmarks plugin for Wordpress</a>. This plugin is also compatible "
+"with <a href=\"http://bbpress.org/plugins/topic/support-forum/\">Support "
+"Forum plugin</a>."
+msgstr ""
+
+#. Author of an extension
+msgid "Gautam"
+msgstr ""
+
+#. Author URI of an extension
+msgid "http://gaut.am/"
+msgstr ""

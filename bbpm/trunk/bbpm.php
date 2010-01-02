@@ -3,7 +3,7 @@
 Plugin Name: bbPM
 Plugin URI: http://nightgunner5.wordpress.com/tag/bbpm/
 Description: Adds the ability for users of a forum to send private messages to each other.
-Version: 0.1-beta2
+Version: 0.1
 Author: Nightgunner5
 Author URI: http://llamaslayers.net/
 Text Domain: bbpm
@@ -12,7 +12,7 @@ Domain Path: translations/
 
 /**
  * @package bbPM
- * @version 0.1-beta2
+ * @version 0.1
  * @author Nightgunner5
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU General Public License, Version 3 or higher
  */
@@ -183,6 +183,11 @@ class bbPM {
 	var $the_pm;
 
 	/**
+	 * @access private
+	 */
+	var $_profile_context;
+
+	/**
 	 * Initializes bbPM
 	 *
 	 * @global BPDB_Multi Adds bbpm table
@@ -197,9 +202,7 @@ class bbPM {
 		add_filter( 'post_author_title_link', array( &$this, 'post_title_filter' ), 11, 2 );
 		add_filter( 'post_author_title', array( &$this, 'post_title_filter' ), 11, 2 );
 
-		add_action( 'bb_profile-edit.php', array( &$this, 'profile_edit_filter_action' ) );
-
-		add_filter( 'get_profile_info_keys', array( &$this, 'profile_save_filter' ), 10, 2 );
+		add_filter( 'get_profile_info_keys', array( &$this, 'profile_edit_filter' ), 9, 2 );
 
 		add_action( 'bb_admin_menu_generator', array( &$this, 'admin_add' ) );
 		add_filter( 'bb_template', array( &$this, 'template_filter' ), 10, 2 );
@@ -914,21 +917,13 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 	/**
 	 * @access private
 	 */
-	function profile_edit_filter_action() {
-		add_filter( 'get_profile_info_keys', array( &$this, 'profile_edit_filter' ) );
-	}
+	function profile_edit_filter( $keys, $context = '' ) {
+		if ( $context == 'profile-edit' && !$this->_profile_context )
+			$this->_profile_context = true;
 
-	/**
-	 * @access private
-	 */
-	function profile_edit_filter( $keys ) {
-		$keys['bbpm_emailme'] = array( 0, __( 'Don\'t email me when I get a PM', 'bbpm' ), 'checkbox' );
-		return $keys;
-	}
+		if ( $this->_profile_context )
+			$keys['bbpm_emailme'] = array( 0, __( 'Don\'t email me when I get a PM', 'bbpm' ), 'checkbox', '1', '' );
 
-	function profile_save_filter( $keys, $context ) {
-		if ( $context == 'profile-edit' )
-			$keys = $this->profile_edit_filter( $keys );
 		return $keys;
 	}
 
@@ -1305,4 +1300,3 @@ function bbpm_messages_link() {
 		echo '<a class="pm-no-new-messages-link" href="' . $bbpm->get_link() . '">' . __( 'Private Messages', 'bbpm' ) . '</a>';
 }
 
-?>

@@ -1,13 +1,15 @@
 === bbPress Topic Icons ===
 Contributors: paulhawke
-Tags: sticky, closed, busy, topics
+Tags: sticky, closed, busy, topics, skin, skinning, support
 Requires at least: 1.0.2
 Tested up to: 1.0.2
 Stable tag: 1.0.2
 
 == Description ==
 
-This plugin changes the default behavior of bbPress - takes away the words "sticky" and "closed" next to topics and replaces them with small icons - in addition, busy topics and normal topics gain an icon.
+This plugin changes the default behavior of bbPress - takes away the words "sticky" and "closed" next to topics and replaces them with small icons - in addition, busy topics and normal topics gain an icon.  New "icon sets" can be added by simply creating a sub-directory and uploading the image files, allowing the forum to be easily "skinned" with new icons.
+
+Users of the "support forum" plugin can activate the optional second plugin - the "topic icons/support forum connector" which makes topic icons aware of support forum statuses, and the topic icon plugin will take over the job of displaying icons, allowing forums using the "support forum" plugin to similarly be "skinned" easily.
 
 == Screenshots ==
 
@@ -36,6 +38,10 @@ If you want to change the text that is displayed, `class.default-status-renderer
 If you want to change the CSS styling of the tooltips, take a look at `bb-topic-icons.css` for the various styles that are applied.
 
 == Change Log ==
+
+= Version 0.6 =
+
+Created the "support forum connector" to allow support forums to be "skinned" using the topic icon plugin.  Added icon-sets for the default support forum along with a modified "grey-blox" theme for the support forum to show how skinning can take place.
 
 = Version 0.5 =
 

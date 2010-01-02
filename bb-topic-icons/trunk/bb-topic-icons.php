@@ -5,7 +5,7 @@ Plugin URI: http://devt.caffeinatedbliss.com/bbpress/topic-icons
 Description: Adds configurable icons next to topics based on their status
 Author: Paul Hawke
 Author URI: http://paul.caffeinatedbliss.com/
-Version: 0.5
+Version: 0.6
 */
 
 /****************************************************************************
@@ -60,9 +60,10 @@ function topic_icons_legend() {
 	for ($i=0; $i < count($statuses); $i++) {
 		$image = $renderer->renderStatus($statuses[$i]);
 		$tooltip = $renderer->renderStatusTooltip($statuses[$i]);
+		$exists = file_exists(dirname(__FILE__).'/icon-sets/'.$icon_set_name.'/'.$image);
 
 		if (isset($image) && strlen($image) > 0 &&
-			isset($tooltip) && strlen($tooltip) > 0) {
+			isset($tooltip) && strlen($tooltip) > 0 && $exists) {
 			echo '<li><img src="'.$icon_set_url.'/'.$image.
 				'" width="'.ICON_WIDTH.'" height="'.ICON_HEIGHT.
 				'" align="absmiddle">&nbsp;'.$tooltip.'</li>';
@@ -88,8 +89,12 @@ function topic_icons_label( $label ) {
 		$renderer = get_active_status_renderer();
 		$image = $renderer->renderStatus($status);
 		$tooltip = $renderer->renderStatusTooltip($status);
+		$exists = file_exists(dirname(__FILE__).'/icon-sets/'.$icon_set_name.'/'.$image);
 
-		if (strlen($tooltip) > 0) {		
+		if (!$exists) {
+			return sprintf(__('<div class="topic-icon-image"><a href="%s"><img src="%s" width="%s" height="%s" alt="%s" border="0"></a></div> %s'), 
+				get_topic_link($topic->topic_id), ICON_SET_URL_BASE.'/empty.png', ICON_WIDTH, ICON_HEIGHT, $tooltip, $label);
+		} else if (strlen($tooltip) > 0) {		
 			return sprintf(__('<div class="topic-icon-image"><a href="%s"><img src="%s" width="%s" height="%s" alt="%s" border="0"><span>%s</span></a></div> %s'), 
 				get_topic_link($topic->topic_id), $icon_set_url.'/'.$image, ICON_WIDTH, ICON_HEIGHT, $tooltip, $tooltip, $label);
 		} else {
@@ -112,8 +117,7 @@ function topic_icons_init( ) {
 	add_action('bb_admin_menu_generator', 'topic_icons_admin_page_add');
 	add_action('bb_admin-header.php', 'topic_icons_admin_page_process');
 	
-	$busy = topic_icons_get_busy_threshold();
-	topic_icons_register_status_interpreter('default', new DefaultStatusInterpreter($busy));
+	topic_icons_register_status_interpreter('default', new DefaultStatusInterpreter(BUSY_THRESHOLD));
 	topic_icons_register_status_renderer('default', new DefaultStatusRenderer());
 }
 

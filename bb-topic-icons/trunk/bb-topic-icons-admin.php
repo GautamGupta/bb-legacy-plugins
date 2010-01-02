@@ -1,7 +1,7 @@
 <?php
 
 function topic_icons_admin_page_process() {
-	if (isset($_POST['submit'])) {
+	if (isset($_POST['topic-icons-submit'])) {
 		bb_update_option('topic-icons-active-icon-set', $_POST['icon-set']);
 		bb_update_option('topic-icons-active-status-interpreter', $_POST['status-interpreter']);
 		bb_update_option('topic-icons-active-status-renderer', $_POST['status-renderer']);
@@ -49,7 +49,7 @@ function topic_icons_admin_page() {
 	$raw = scandir(dirname(__FILE__).'/icon-sets');
 	$iconsets = array();
 	for ($i=0; $i < count($raw); $i++) {
-		if (strlen($raw[$i]) > 2) {
+		if (strlen($raw[$i]) > 2 && is_dir(dirname(__FILE__).'/icon-sets/'.$raw[$i])) {
 			$iconsets[] = $raw[$i];
 		}
 	}
@@ -61,17 +61,22 @@ function topic_icons_admin_page() {
 		for ($i=0; $i < count($statuses); $i++) {
 			$image = $renderer->renderStatus($statuses[$i]);
 			$tooltip = $renderer->renderStatusTooltip($statuses[$i]);
-	
-			if (isset($image) && strlen($image) > 0) {
+			$exists = file_exists(dirname(__FILE__).'/icon-sets/'.$iconsets[$j].'/'.$image);
+
+			if (isset($image) && strlen($image) > 0 && $exists) {
 				echo '<td><img src="'.$icon_set_url.'/'.$image.
 					'" width="'.ICON_WIDTH.'" height="'.ICON_HEIGHT.
 					'" align="absmiddle">&nbsp;'.$tooltip.'</td>';
+			} else {
+				echo '<td><img src="'.ICON_SET_URL_BASE.'/empty.png'.
+					'" width="'.ICON_WIDTH.'" height="'.ICON_HEIGHT.
+					'" align="absmiddle">&nbsp;</td>';
 			}
 		}
 		echo '</tr>';
 	}
 	echo '</tbody></table>';
-	echo '<input type="submit" name="submit" value="save">';
+	echo '<input type="submit" name="topic-icons-submit" value="save">';
 	echo '</form>';
 }
 

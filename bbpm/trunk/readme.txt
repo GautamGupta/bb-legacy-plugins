@@ -3,7 +3,7 @@ Contributors: Nightgunner5
 Tags: private messaging, messages, pm
 Requires at least: 1.0
 Tested up to: trunk
-Stable tag: 0.1-beta1
+Stable tag: 1.0-beta1
 
 bbPM - The new way to private message.
 
@@ -25,12 +25,12 @@ Users can send private messages to each other. Replies are threaded, and more th
 
 == Changelog ==
 
-= 0.1 =
+= 1.0 =
 * Danish translation from Daniel Juhl
 * The last read message in each thread will remain read, and all the messages before it will also be marked read.
 * "Don't send me emails" button now works as planned.
 
-= 0.1-beta1 =
+= 1.0-beta1 =
 * bbPM no longer thinks that messages are new to the person who sent them
 * Conversion from the deprecated Private Messaging plugin now works as planned
 * Conversion from the deprecated Private Messaging plugin now turns messages with the same title and to/from pair into threads

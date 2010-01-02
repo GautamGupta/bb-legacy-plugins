@@ -5,7 +5,7 @@ Description: Delete all of the bozo users on your forum with just one click.
 Plugin URI: http://nightgunner5.wordpress.com/tag/delete-all-bozos/
 Author: Ben L. (Nightgunner5)
 Author URI: http://nightgunner5.wordpress.com/
-Version: 0.1
+Version: 0.1.1
 Requires at least: 1.0
 Tested up to: trunk
 Text Domain: delete-all-bozos
@@ -20,6 +20,7 @@ function delete_all_bozos() {
 			'bozo'
 		)
 	) );
+	$total_bozos = (int)bb_get_option( 'dabozos_count' );
 ?>
 <h2><?php _e( 'Delete All Bozos', 'delete-all-bozos' ); ?></h2>
 <?php if ( !is_array( $bozos ) ) { ?>
@@ -42,6 +43,8 @@ function delete_all_bozos() {
 	// No $bbdb->prepare needed, because everything is already sanitized.
 	$bbdb->query( "DELETE FROM `{$bbdb->users}` WHERE `ID` IN ( {$IDs} )" );
 	$bbdb->query( "DELETE FROM `{$bbdb->usermeta}` WHERE `user_id` IN ( {$IDs} )" );
+
+	bb_update_option( 'dabozos_count', $total_bozos += count( $bozos ) );
 ?>
 <div id="message" class="updated"><p><?php printf( _n( '%d bozo deleted', '%d bozos deleted.', count( $bozos ), 'delete-all-bozos' ), count( $bozos ) ); ?></p></div>
 <?php } else { ?>
@@ -84,6 +87,9 @@ function delete_all_bozos() {
 <?php bb_nonce_field( 'delete-all-bozos' ); ?>
 </fieldset>
 </form>
+<?php }
+if ( $total_bozos ) { ?>
+<div style="font-size: .75em; position: absolute; bottom: 50px; right: 5px"><?php printf( _n( '%s bozo deleted by Delete All Bozos', '%s bozos deleted by Delete All Bozos', $total_bozos, 'delete-all-bozos' ), bb_number_format_i18n( $total_bozos ) ); ?></div>
 <?php }
 }
 

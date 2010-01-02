@@ -24,7 +24,18 @@ function bbmodsuite_report_install() {
 	);
 
 	if ( !$options = bb_get_option( 'bbmodsuite_report_options' ) ) {
-		bb_update_option( 'bbmodsuite_report_options', $options = array( 'min_level' => 'moderate', 'max_level' => 'moderate', 'types' => array(), 'resolve_types' => array(), 'obtrusive' => true, 'version' => '0.1-beta2' ) );
+		$types = array();
+		$types[md5( __( 'Offensive', 'bbpress-moderation-suite' ) )] = __( 'Offensive', 'bbpress-moderation-suite' );
+		$types[md5( __( 'Spam', 'bbpress-moderation-suite' ) )] = __( 'Spam', 'bbpress-moderation-suite' );
+		$types[md5( __( 'Abusive', 'bbpress-moderation-suite' ) )] = __( 'Abusive', 'bbpress-moderation-suite' );
+
+		$resolve_types = array();
+		$resolve_types[md5( __( 'Invalid', 'bbpress-moderation-suite' ) )] = __( 'Invalid', 'bbpress-moderation-suite' );
+		$resolve_types[md5( __( 'Post deleted', 'bbpress-moderation-suite' ) )] = __( 'Post deleted', 'bbpress-moderation-suite' );
+		$resolve_types[md5( __( 'Post edited', 'bbpress-moderation-suite' ) )] = __( 'Post edited', 'bbpress-moderation-suite' );
+
+
+		bb_update_option( 'bbmodsuite_report_options', $options = array( 'min_level' => 'moderate', 'max_level' => 'moderate', 'types' => $types, 'resolve_types' => $resolve_types, 'obtrusive' => true, 'version' => '0.1-beta2' ) );
 	}
 
 	if ( !isset( $options['version'] ) || $options['version'] != '0.1-beta2' ) {
@@ -114,7 +125,7 @@ if ( !function_exists( 'add_action' ) && isset( $_GET['report'] ) ) {
 		$reported_at    = bb_current_time( 'mysql' );
 		global $bbdb;
 		$bbdb->insert( $bbdb->prefix . 'bbmodsuite_reports', compact( 'report_reason', 'report_content', 'reported_post', 'report_from', 'reported_at' ) );
-		bb_die( __( '<p>Your report was submitted. The moderation staff will review the post in question.</p>', 'bbpress-moderation-suite' ) );
+		bb_die( __( '<p>Your report was submitted. The moderation staff will review the post in question.</p>', 'bbpress-moderation-suite' ), __( 'Report Submitted', 'bbpress-moderation-suite' ) );
 	}
 }
 
@@ -406,8 +417,8 @@ function bbmodsuite_report_get_reports_css() {
 		}
 	}
 	return '#post-' . implode( ' .threadpost, #post-', $reported_post_ids ) . ' .threadpost {
-		background: #900;
-		color: #fff;
+		background: none #900 !important;
+		color: #fff !important;
 	}';
 }
 

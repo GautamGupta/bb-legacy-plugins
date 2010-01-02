@@ -148,7 +148,7 @@ _e( 'Private Messages', 'bbpm' ); ?></h3>
 
 <?php while ( $bbpm->have_pm( bb_get_option( 'page_topics' ) * max( $action - 1, 0 ), bb_get_option( 'page_topics' ) * max( $action, 1 ) ) ) { ?>
 <tr<?php $bbpm->thread_alt_class(); ?>>
-	<td><a href="<?php echo bb_get_option( 'mod_rewrite' ) ? bb_get_uri( 'pm/' . $bbpm->the_pm['id'] ) : BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?' . $bbpm->the_pm['id']; ?>"><?php
+	<td><a href="<?php echo bb_get_option( 'mod_rewrite' ) ? bb_get_uri( 'pm/' . $bbpm->the_pm['id'] ) : bb_get_uri( '', array( 'pm' => $bbpm->the_pm['id'] ) ); ?>"><?php
 	$bbpm->thread_read_before();
 	echo esc_html( $bbpm->the_pm['title'] );
 	$bbpm->thread_read_after();

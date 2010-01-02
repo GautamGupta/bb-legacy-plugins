@@ -177,7 +177,9 @@ foreach ( $options as $option => $args ) {
 		<input class="submit" type="submit" name="submit" value="<?php _e('Save Changes'); ?>" />
 	</fieldset>
 </form>
-<?php
+<?php if ( $blocks = (int)bb_get_option( 'nospamuser-blocks' ) ) { ?>
+<div style="font-size: .75em; position: absolute; bottom: 50px; right: 5px"><?php printf( _n( '%s spammer blocked by bb-NoSpamUser', '%s spammers blocked by bb-NoSpamUser', $blocks, 'nospamuser' ), bb_number_format_i18n( $blocks ) ); ?></div>
+<?php }
 }
 function nospamuser_admin_add() {
 	bb_admin_add_submenu( __( 'bb-NoSpamUser', 'nospamuser' ), 'use_keys', 'nospamuser_admin', 'options-general.php' );
@@ -216,6 +218,8 @@ function nospamuser_check( $type, $data ) {
 
 function nospamuser_block( $type, $data, $noway ) {
 	$settings = bb_get_option( 'nospamuser-settings' );
+
+	bb_update_option( 'nospamuser-blocks', bb_get_option( 'nospamuser-blocks' ) + 1 );
 
 	$types = array(
 		'email' => 'email address',

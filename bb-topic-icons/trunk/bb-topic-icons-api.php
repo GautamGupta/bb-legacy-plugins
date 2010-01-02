@@ -3,14 +3,6 @@
 $status_interpreters = array();
 $status_renderers = array();
 
-function topic_icons_get_busy_threshold() {
-	$busy = bb_get_option('topic-icons-busy-threshold');
-	if (isset($busy)) {
-		return $busy;
-	}
-	return BUSY_THRESHOLD;
-}
-
 function topic_icons_get_active_icon_set() {
 	$active = bb_get_option('topic-icons-active-icon-set');
 	if (isset($active)) {

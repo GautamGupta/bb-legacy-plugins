@@ -23,5 +23,8 @@ If you don't have one, make it at the root of your forum.
 3. If there are no bozos on your forum, you get this message.
 
 == Changelog ==
+= 0.1.1 =
+* Counter of bozos deleted added to admin page
+
 = 0.1 =
 * Initial release

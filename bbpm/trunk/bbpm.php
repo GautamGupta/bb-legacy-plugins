@@ -126,8 +126,8 @@ class bbPM_Message {
 			$this->read_link    = bb_get_uri( 'pm/' . $row->pm_thread ) . '#pm-' . $row->ID;
 			$this->reply_link   = bb_get_uri( 'pm/' . $row->ID . '/reply' );
 		} else {
-			$this->read_link    = BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?' . $row->pm_thread . '#pm-' . $row->ID;
-			$this->reply_link   = BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?' . $row->ID . '/reply';
+			$this->read_link    = bb_get_uri( '', array( 'pm' => $row->pm_thread ) ) . '#pm-' . $row->ID;
+			$this->reply_link   = bb_get_uri( '', array( 'pm' => $row->ID . '/reply' ) );
 		}
 		$this->ID           = (int)$row->ID;
 		$this->title        = apply_filters( 'get_topic_title', $bbpm->get_thread_title( $row->pm_thread ), 0 );
@@ -214,7 +214,7 @@ class bbPM {
 		$this->settings = bb_get_option( 'bbpm_settings' );
 		$this->version = $this->settings ? $this->settings['version'] : false;
 
-		if ( !$this->version || $this->version != '0.1-alpha7' )
+		if ( !$this->version || $this->version != '1.0' )
 			$this->update();
 
 		if ( $this->settings['auto_add_link'] )
@@ -335,7 +335,6 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 
 			case '0.1-alpha6':
 			case '0.1-alpha6b':
-
 				$this->settings['email_new']     = true;
 				$this->settings['email_reply']   = true;
 				$this->settings['email_add']     = true;
@@ -344,12 +343,14 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 
 				wp_cache_flush( 'bbpm-user-messages' ); // For memcached
 
+			case '0.1-alpha7':
+			case '1.0-beta1':
 				// At the end of all of the updates:
-				$this->settings['version'] = '0.1-alpha7';
-				$this->version             = '0.1-alpha7';
+				$this->settings['version'] = '1.0';
+				$this->version             = '1.0';
 				bb_update_option( 'bbpm_settings', $this->settings );
 
-			case '0.1-alpha7':
+			case '1.0':
 				// Do nothing, this is the newest version.
 		}
 	}
@@ -428,7 +429,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 			'current' => $current,
 			'total' => $total,
 			'base' => $this->get_link() . '%_%',
-			'format' => bb_get_option( 'mod_rewrite' ) ? '/page/%#%' : '?page/%#%'
+			'format' => bb_get_option( 'mod_rewrite' ) ? '/page/%#%' : '=page/%#%'
 		) );
 	}
 
@@ -879,14 +880,14 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		if ( bb_get_option( 'mod_rewrite' ) )
 			bb_uri( 'pm/new' );
 		else
-			echo BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?new';
+			bb_uri( '', array( 'pm' => 'new' ) );
 	}
 
 	/**
 	 * @access private
 	 */
 	function template_filter( $a, $b ) {
-		if ( is_pm() && $b == '404.php' ) {
+		if ( ( is_pm() && $b == '404.php' ) || ( !bb_get_option( 'mod_rewrite' ) && is_pm() && $b == 'front-page.php' ) ) {
 			if ( !$template = bb_get_template( 'privatemessages.php', false ) ) {
 				$template = dirname( __FILE__ ) . '/privatemessages.php';
 			}
@@ -947,7 +948,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 	function get_link() {
 		if ( bb_get_option( 'mod_rewrite' ) )
 			return bb_get_uri( 'pm' );
-		return BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/';
+		return bb_get_uri( '?pm' );
 	}
 
 	/**
@@ -964,7 +965,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 
 		if ( bb_get_option( 'mod_rewrite' ) )
 			return bb_get_uri( 'pm/new/' . $user_name );
-		return BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?new/' . $user_name;
+		return bb_get_uri( '', array( 'pm' => 'new/' . $user_name ) );
 	}
 
 	/**
@@ -1300,3 +1301,7 @@ function bbpm_messages_link() {
 		echo '<a class="pm-no-new-messages-link" href="' . $bbpm->get_link() . '">' . __( 'Private Messages', 'bbpm' ) . '</a>';
 }
 
+// Emulate an actual page if pretty permalinks is off.
+if ( isset( $_GET['pm'] ) && !bb_get_option( 'mod_rewrite' ) ) {
+	$_SERVER['REQUEST_URI'] = bb_get_option( 'path' ) . rtrim( 'pm/' . $_GET['pm'], '/' );
+}

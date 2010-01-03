@@ -1,0 +1,197 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: bbPM 0.1-alpha3\n"
+"Report-Msgid-Bugs-To: http://bbpress.org/plugins/topic/bbpm\n"
+"POT-Creation-Date: 2009-05-08 16:07+0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Christian Hellberg <hellberg.christian@gmail.com>\n"
+"Language-Team: Christian Hellberg <hellberg.christian@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1\n"
+"X-Poedit-Language: Finnish\n"
+"X-Poedit-Country: FINLAND\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: ..\n"
+
+#: bbpm.php:282
+msgid "You can't delete that message!"
+msgstr "Et voi poistaa tätä viestiä!"
+
+#: bbpm.php:328
+#: bbpm.php:336
+msgid "PM this user"
+msgstr "Lähetä YV tälle käyttäjälle"
+
+#: bbpm.php:361
+#, php-format
+msgid "1 new Private Message!"
+msgid_plural "%s new Private Messages!"
+msgstr[0] "1 uusi yksityisviesti!"
+msgstr[1] "% uutta yksityisviestiä!"
+
+#: bbpm.php:362
+#: privatemessages.php:23
+#: privatemessages.php:53
+#: privatemessages.php:103
+#: privatemessages.php:168
+msgid "Private Messages"
+msgstr "Yksityisviestit"
+
+#. #-#-#-#-#  plugin.pot (PACKAGE VERSION)  #-#-#-#-#
+#. Plugin Name of an extension
+#: bbpm.php:367
+#: bbpm.php:386
+msgid "bbPM"
+msgstr "bbPM"
+
+#: bbpm.php:391
+msgid "Maximum inbox/outbox size"
+msgstr "Vastaanotettujen/lähetettyjen-kansion maximikoko"
+
+#: bbpm.php:400
+msgid "Save settings"
+msgstr "Tallenna asetukset"
+
+#: pm.php:12
+#: pm.php:32
+msgid "You are not allowed to write private messages.  Are you logged in?"
+msgstr "Sinulla ei ole oikeutta kirjoittaa viestejä. Oletko varmasti kirjautunut sisään?"
+
+#: pm.php:14
+#: pm.php:34
+msgid "You need to actually submit some content!"
+msgstr "Sinun täytyy lisätä jotain sisältöä!"
+
+#: pm.php:16
+msgid "Please enter a private message title."
+msgstr "Ole hyvä ja anna yksityisviestin otsikko."
+
+#: pm.php:19
+msgid "You need to choose a valid person to send the message to."
+msgstr "Sinu täytyy antaa sopiva käyttäjänimi ja lähettää viesti hänelle."
+
+#: pm.php:22
+#: pm.php:43
+msgid "Either your outbox or the recipient's inbox is full."
+msgstr "Lähetettyjen tai vastaanotettujen kansiosi on täynnä. "
+
+#: pm.php:39
+msgid "There was an error sending your message."
+msgstr "On ilmennyt ongelma lähettäessä sinun viestiäsi."
+
+#: pm.php:41
+msgid "Re: "
+msgstr "Re: "
+
+#: privatemessages.php:23
+msgid "New"
+msgstr "Uusi"
+
+#: privatemessages.php:27
+msgid "PM title: (be brief and descriptive)"
+msgstr "YV:n otsikko: (lyhyt, mutta ytimekäs)"
+
+#: privatemessages.php:31
+msgid "Send PM to:"
+msgstr "YV:n saaja:"
+
+#: privatemessages.php:36
+#: privatemessages.php:151
+msgid "Message:"
+msgstr "Viesti:"
+
+#: privatemessages.php:40
+#: privatemessages.php:155
+msgid "Send Message &raquo;"
+msgstr "Lähetä viesti &raquo;"
+
+#: privatemessages.php:43
+#: privatemessages.php:158
+msgid "Allowed markup:"
+msgstr "Sallitut merkinnät:"
+
+#: privatemessages.php:43
+#: privatemessages.php:158
+msgid "You can also put code in between backtick ( <code>`</code> ) characters."
+msgstr "Voit lisätä koodia laittamalla sen ( <code>`</ code> ) merkkien sisään."
+
+#: privatemessages.php:55
+msgid "Inbox"
+msgstr "Saapuneet"
+
+#: privatemessages.php:58
+#: privatemessages.php:80
+msgid "Subject"
+msgstr "Aihe"
+
+#: privatemessages.php:58
+msgid "New &raquo;"
+msgstr "Uusi &raquo;"
+
+#: privatemessages.php:59
+msgid "From"
+msgstr "Keneltä"
+
+#: privatemessages.php:60
+#: privatemessages.php:82
+msgid "Freshness"
+msgstr "Tuoreus"
+
+#: privatemessages.php:61
+#: privatemessages.php:83
+msgid "Actions"
+msgstr "Toiminnot"
+
+#: privatemessages.php:72
+#: privatemessages.php:94
+#: privatemessages.php:141
+#: threadviewer.php:99
+msgid "Delete"
+msgstr "Poista"
+
+#: privatemessages.php:77
+msgid "Outbox"
+msgstr "Lähetetyt"
+
+#: privatemessages.php:81
+msgid "To"
+msgstr "Kenelle"
+
+#: privatemessages.php:103
+#: privatemessages.php:168
+msgid "Read"
+msgstr "Lue"
+
+#: privatemessages.php:141
+#: threadviewer.php:99
+#, php-format
+msgid "Sent %s ago"
+msgstr "Lähetetty %s sitten"
+
+#: privatemessages.php:141
+#: threadviewer.php:99
+msgid "Reply"
+msgstr "Vastaa"
+
+#: threadviewer.php:112
+msgid "[Cancel]"
+msgstr "[Peruuta]"
+
+#. Plugin URI of an extension
+msgid "http://nightgunner5.wordpress.com/tag/bbpm/"
+msgstr "http://nightgunner5.wordpress.com/tag/bbpm/"
+
+#. Description of an extension
+msgid "Adds the ability for users of a forum to send private messages to each other."
+msgstr "Ajout de la possibilité pour les utilisateurs d'un forum pour envoyer des messages privés les uns aux autres."
+
+#. Author of an extension
+msgid "Nightgunner5"
+msgstr "Nightgunner5"
+
+#. Author URI of an extension
+msgid "http://llamaslayers.net/daily-llama/"
+msgstr "http://llamaslayers.net/daily-llama/"
+

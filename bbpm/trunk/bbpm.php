@@ -3,7 +3,7 @@
 Plugin Name: bbPM
 Plugin URI: http://nightgunner5.wordpress.com/tag/bbpm/
 Description: Adds the ability for users of a forum to send private messages to each other.
-Version: 1.0
+Version: 1.0.1
 Author: Ben L. (Nightgunner5)
 Author URI: http://nightgunner5.wordpress.com/
 Text Domain: bbpm
@@ -12,7 +12,7 @@ Domain Path: translations/
 
 /**
  * @package bbPM
- * @version 1.0
+ * @version 1.0.1
  * @author Nightgunner5
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU General Public License, Version 3 or higher
  */
@@ -601,7 +601,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 			$to = $this->get_thread_members( $pm['pm_thread'] );
 
 			foreach ( $to as $recipient ) {
-				if ( $to != bb_get_current_user_info( 'ID' ) && !bb_get_usermeta( $recipient, 'bbpm_emailme' ) )
+				if ( $recipient != bb_get_current_user_info( 'ID' ) && !bb_get_usermeta( $recipient, 'bbpm_emailme' ) )
 					bb_mail( bb_get_user_email( $recipient ),
 						sprintf(
 							__( '%s has sent you a private message on %s: "%s"', 'bbpm' ),

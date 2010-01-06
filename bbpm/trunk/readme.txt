@@ -25,6 +25,9 @@ Users can send private messages to each other. Replies are threaded, and more th
 
 == Changelog ==
 
+= 1.0.1 =
+* bbPM no longer thinks that replies are new to the person who sent them
+
 = 1.0 =
 * Danish translation from Daniel Juhl
 * The last read message in each thread will remain read, and all the messages before it will also be marked read.

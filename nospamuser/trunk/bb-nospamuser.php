@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: bb-NoSpamUser
-Version: 0.8
+Version: 0.8.1
 Plugin URI: http://nightgunner5.wordpress.com/tag/bb-nospamuser/
 Description: Prevents known spam users from registering on your forum.
 Author: Nightgunner5
@@ -9,7 +9,7 @@ Author URI: http://llamaslayers.net/
 Requires at least: 1.0
 Tested up to: trunk
 Text Domain: nospamuser
-Domain Path: /translations/
+Domain Path: translations/
 */
 
 if ( !function_exists( 'add_action' ) ) {
@@ -100,6 +100,11 @@ function nospamuser_admin_parse() {
 		$success[] = __( 'reCAPTCHA private key', 'nospamuser' );
 	}
 
+	if ( (int)$_POST['stats-public'] != $settings['stats-public'] ) {
+		$settings['stats-public'] = (int)$_POST['stats-public'];
+		$success[] = __( 'Public statistics', 'nospamuser' );
+	}
+
 	if ( $success ) {
 		bb_update_option( 'nospamuser-settings', $settings );
 		bb_admin_notice( __( 'The following settings were updated successfully:', 'nospamuser' ) . '</p><ul><li>' . implode( '</li><li>', $success ) . '</li></ul>', 'updated' );
@@ -160,6 +165,15 @@ function nospamuser_admin() {
 			'note' => sprintf( __( '<a href="%s">Get it here</a>.', 'nospamuser' ), 'http://recaptcha.net/api/getkey?domain=' . urlencode( $_SERVER['SERVER_NAME'] ) . '&app=bb-NoSpamUser' ),
 			'class' => array( 'code', 'long' ),
 			'value' => $settings['recaptcha_priv']
+		),
+		'stats-public' => array(
+			'title' => __( 'Public statistics', 'nospamuser' ),
+			'type' => 'radio',
+			'options' => array(
+				0 => __( 'Keep all statistics private', 'nospamuser' ),
+				1 => sprintf( __( 'Display the number of caught spammers on the <a href="%s">statistics page</a>.', 'nospamuser' ), bb_get_uri( 'statistics.php' ) )
+			),
+			'value' => $settings['stats-public'] ? $settings['stats-public'] : 0
 		)
 	);
 ?><h2><?php _e( 'bb-NoSpamUser', 'nospamuser' ); ?></h2>
@@ -287,11 +301,14 @@ function nospamuser_check_bozo( $user_id ) { // Most of this function is taken f
 	$http_request .= 'Host: www.stopforumspam.com' . "\r\n";
 	$http_request .= 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' . "\r\n";
 	$http_request .= 'Content-Length: ' . strlen( $request ) . "\r\n";
-	$http_request .= 'User-Agent: bbPress/' . bb_get_option( 'version' ) . ' | NoSpamUser/0.8' . "\r\n";
+	$http_request .= 'User-Agent: bbPress/' . bb_get_option( 'version' ) . ' | NoSpamUser/0.8.1' . "\r\n";
 	$http_request .= "\r\n";
 	$http_request .= $request;
-	if ( $fs = @fsockopen( $host, $port, $errno, $errstr, 10 ) ) {
+	if ( $fs = @fsockopen( 'www.stopforumspam.com', 80, $errno, $errstr, 10 ) ) {
 		fwrite( $fs, $http_request );
+		$data = '';
+		while ( !feof( $fs ) )
+			$data .= fread( $fs, 1024 );
 		fclose( $fs );
 	}
 }
@@ -308,3 +325,11 @@ function nospamuser_maybe_set_user_ip_field() {
 }
 add_action( 'bb_init', 'nospamuser_maybe_set_user_ip_field' );
 
+function nospamuser_stats_display() {
+	if ( bb_is_statistics() && ( $settings = bb_get_option( 'nospamuser-settings' ) ) &&
+		( $settings['stats-public'] & 1 ) && ( $blocks = (int)bb_get_option( 'nospamuser-blocks' ) ) )
+		echo '<dt>' . sprintf( __( 'Spammers blocked by <a href="%s" rel="nofollow">bb-NoSpamUser</a>', 'nospamuser' ),
+			'http://bbpress.org/plugins/topic/nospamuser/' ) . '</dt><dd><strong>' . bb_number_format_i18n( $blocks ) .
+			'</strong></dd>';
+}
+add_action( 'bb_stats_left', 'nospamuser_stats_display' );

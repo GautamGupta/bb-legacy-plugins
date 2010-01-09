@@ -163,7 +163,7 @@ function bbmodsuite_banplus_get_ban_types() {
 function bbmodsuite_banplus_admin_add_jquery() {
 	wp_enqueue_script( 'jquery' );
 }
-if ( $_GET['page'] == 'new_ban' )
+if ( isset( $_GET['page'] ) && $_GET['page'] == 'new_ban' )
 	add_action( 'bbpress_moderation_suite_ban_plus_pre_head', 'bbmodsuite_banplus_admin_add_jquery' );
 
 function bbmodsuite_banplus_admin_newbanajax() {
@@ -180,7 +180,7 @@ function bbmodsuite_banplus_admin_newbanajax() {
 
 	exit( '["' . implode( '","', array_map( 'addslashes', $results ) ) . '"]' );
 }
-if ( $_GET['page'] == 'new_ban_ajax' )
+if ( isset( $_GET['page'] ) && $_GET['page'] == 'new_ban_ajax' )
 	add_action( 'bbpress_moderation_suite_ban_plus_pre_head', 'bbmodsuite_banplus_admin_newbanajax' );
 
 function bbpress_moderation_suite_ban_plus() { ?>

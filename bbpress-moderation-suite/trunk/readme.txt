@@ -13,6 +13,8 @@ bbPress Moderation Suite is a set of tools to help moderate your forums. There a
 
 *Remember to tell me (either on my blog or on this plugin page) if you find anything that isn't working at "100% awesome".*
 
+**IMPORTANT: Move! is an alpha-grade (very buggy) plugin. Please keep this in mind before activating it on a live forum.**
+
 = Report =
 
 Report allows users on your forum to report posts to the moderators on your forum. Believe me, if your moderators go on your forums regularly, they'll see the reports very quickly.

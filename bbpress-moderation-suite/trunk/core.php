@@ -9,7 +9,7 @@ Version: 0.1-rc1
 Requires at least: 1.0
 Tested up to: trunk
 Text Domain: bbpress-moderation-suite
-Domain Path: /translations/
+Domain Path: translations/
 */
 
 /* $Id$ */

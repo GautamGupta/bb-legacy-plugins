@@ -22,6 +22,10 @@ function bbpress_moderation_suite_move() { ?>
 <?php	break;
 	case 'merge':
 		$topic = get_topic( $_GET['topic'] );
+		if ( !$topic ) {
+			echo '<p>' . __( 'Topic not found.', 'bbpress-moderation-suite' ) . '</p>';
+			return;
+		}
 		$GLOBALS['bb_posts'] = get_thread( $topic->topic_id, 1 );
 		bb_admin_list_posts(); ?>
 <form class="settings" method="post" action="<?php echo esc_attr( add_query_arg( 'action', 'submit', remove_query_arg( 'post' ) ) ); ?>">
@@ -118,8 +122,131 @@ jQuery(function($){
 </script>
 <?php	 break;
 	case 'split':
-		$topic = get_topic( $_GET['topic'] ); ?>
-<p>Nothing here yet...</p>
+		$topic = get_topic( $_GET['topic'] );
+		if ( !$topic ) {
+			echo '<p>' . __( 'Topic not found.', 'bbpress-moderation-suite' ) . '</p>';
+			return;
+		}
+		global $bb_posts, $bb_post;
+		$bb_posts = get_thread( $topic->topic_id, array( 'per_page' => -1 ) ); ?>
+<form class="settings" method="post" action="<?php echo esc_attr( add_query_arg( 'action', 'submit', remove_query_arg( 'post' ) ) ); ?>">
+<fieldset>
+<table id="posts-list" class="widefat" cellspacing="0" cellpadding="0">
+<thead>
+	<tr>
+		<th scope="col"><?php _e( 'Post' ); ?></th>
+		<th scope="col"><?php _e( 'Author' ); ?></th>
+		<th scope="col"><?php _e( 'Date' ); ?></th>
+		<th scope="col"><?php _e( 'Split?', 'bbpress-moderation-suite' ); ?></th>
+	</tr>
+</thead>
+<tfoot>
+	<tr>
+		<th scope="col"><?php _e( 'Post' ); ?></th>
+		<th scope="col"><?php _e( 'Author' ); ?></th>
+		<th scope="col"><?php _e( 'Date' ); ?></th>
+		<th scope="col"><?php _e( 'Split?', 'bbpress-moderation-suite' ); ?></th>
+	</tr>
+</tfoot>
+<tbody>
+<?php
+		foreach ( $bb_posts as $bb_post ) {
+?>
+	<tr id="post-<?php post_id(); ?>"<?php alt_class('post', post_del_class()); ?>>
+		<td class="post">
+			<?php post_text(); ?>
+			<div style="padding: 0">
+				<span class="row-actions">
+					<a href="<?php echo esc_url( get_post_link() ); ?>"><?php _e( 'View' ); ?></a>
+<?php
+	bb_post_admin( array(
+		'before_each' => ' | ',
+		'each' => array(
+			'undelete' => array(
+				'before' => ' '
+			)
+		),
+		'last_each' => array(
+			'before' => ' | '
+		)
+	) );
+?>
+				</span>&nbsp;
+			</div>
+		</td>
+
+		<td class="author">
+			<a href="<?php user_profile_link( get_post_author_id() ); ?>">
+				<?php post_author_avatar( '16' ); ?>
+				<?php post_author(); ?>
+			</a>
+		</td>
+
+		<td class="date">
+<?php
+	if ( bb_get_post_time( 'U' ) < ( time() - 86400 ) ) {
+		bb_post_time( 'Y/m/d\<\b\r \/\>H:i:s' );
+	} else {
+		printf( __( '%s ago' ), bb_get_post_time( 'since' ) );
+	}
+?>
+		</td>
+
+		<td class="split">
+			<input type="checkbox" class="checkbox" name="post[<?php post_id(); ?>]" id="post[<?php post_id(); ?>]"/>
+		</td>
+	</tr>
+<?php 
+		}
+?>
+</tbody>
+</table>
+</fieldset>
+<fieldset>
+	<div id="option-topicid">
+		<label for="topicid">
+			<?php _e( 'Topic title?', 'bbpress-moderation-suite' ); ?>
+		</label>
+		<div class="inputs">
+			<input type="text" class="text long" id="topicid" name="topicid" />
+		</div>
+	</div>
+	<div id="option-forum">
+		<label for="forum">
+			<?php _e( 'Which forum?', 'bbpress-moderation-suite' ); ?>
+		</label>
+		<div class="inputs">
+			<?php bb_forum_dropdown(); ?>
+		</div>
+	</div>
+</fieldset>
+<fieldset class="submit">
+	<input type="submit" class="submit" name="submit" value="<?php esc_attr_e( 'Submit', 'bbpress-moderation-suite' ); ?>" />
+	<input type="hidden" name="topic" id="topic" value="<?php echo $topic->topic_id; ?>" />
+	<input type="hidden" name="_action" id="_action" value="split" />
+	<?php bb_nonce_field( 'bbmodsuite_move-splittopic_' . $topic->topic_id ); ?>
+</fieldset>
+</form>
+
+<script type="text/javascript">
+//<![CDATA[
+jQuery(function($){
+	var lastChecked;
+	$(':checkbox').click(function(event) {
+		if (lastChecked && event.shiftKey) {
+			var start = $(':checkbox').index(this),
+				end = $(':checkbox').index(lastChecked);
+
+			for (var i = Math.min(start, end); i <= Math.max(start, end); i++) {
+				$(':checkbox')[i].checked = lastChecked.checked;
+			}
+		}
+
+		lastChecked = this;
+	});
+});
+//]]>
+</script>
 <?php	break;
 	case 'move':
 		$post = bb_get_post( $_GET['post'] );
@@ -339,6 +466,40 @@ function bbmodsuite_move_pre_header() {
 					$bbdb->query( $bbdb->prepare( 'UPDATE `' . $bbdb->forums . '` SET `topics` = `topics` - 1 WHERE `forum_id` = %d', $old_topic->forum_id ) );
 					if ( function_exists( 'bbmodsuite_modlog_log' ) )
 						bbmodsuite_modlog_log( sprintf( __( 'merged %1$d post(s) from %2$s to topic: %3$s', 'bbpress-moderation-suite' ), $old_topic->topic_posts, esc_html( $old_topic->topic_title ), '<a href="' . get_topic_link( $new_topic->topic_id ) . '">' . esc_html( get_topic_title( $new_topic->topic_id ) ) . '</a>' ), 'move_mergetopic' );
+					break;
+				case 'split':
+					bb_check_admin_referer( 'bbmodsuite_move-splittopic_' . $_POST['topic'] );
+					$old_topic = get_topic( $_POST['topic'] );
+
+					// Sanity check...
+					if ( empty( $_POST['post'] ) )
+						return;
+					if ( !$old_topic )
+						bb_die( __( 'Invalid request', 'bbpress-moderation-suite' ) );
+					$posts = array_map( 'intval', array_keys( $_POST['post'] ) );
+					if ( $bbdb->get_var( 'SELECT COUNT(*) FROM `' . $bbdb->posts . '` WHERE `topic_id` = ' . $old_topic->topic_id . ' AND `post_id` IN (' . implode( ',', $posts ) . ')' ) != count( $posts ) )
+						bb_die( __( 'Invalid request', 'bbpress-moderation-suite' ) );
+
+					$new_topic = get_topic( bb_insert_topic( array(
+						'topic_title' => $_POST['topicid'],
+						'forum_id'    => $_POST['forum_id']
+					) ) );
+
+					if ( $old_topic->forum_id != $new_topic->forum_id ) {
+						// We're moving the posts out of this forum
+						$bbdb->query( $bbdb->prepare( 'UPDATE `' . $bbdb->forums . '` SET `posts` = `posts` - %d WHERE `forum_id` = %d', count( $posts ), $old_topic->forum_id ) );
+						// And into this forum
+						$bbdb->query( $bbdb->prepare( 'UPDATE `' . $bbdb->forums . '` SET `posts` = `posts` + %d WHERE `forum_id` = %d', count( $posts ), $new_topic->forum_id ) );
+					}
+					// Move the post count first
+					$bbdb->query( $bbdb->prepare( 'UPDATE `' . $bbdb->topics . '` SET `topic_posts` = `topic_posts` - %d WHERE `topic_id` = %d', count( $posts ), $old_topic->topic_id ) );
+					$bbdb->query( $bbdb->prepare( 'UPDATE `' . $bbdb->topics . '` SET `topic_posts` = %d WHERE `topic_id` = %d', count( $posts ), $new_topic->topic_id ) );
+					// Then move the posts
+					$bbdb->query( $bbdb->prepare( 'UPDATE `' . $bbdb->posts . '` SET `topic_id` = %d, `forum_id` = %d WHERE `post_id` IN (' . implode( ',', $posts ) . ')', $new_topic->topic_id, $new_topic->forum_id ) );
+
+					if ( function_exists( 'bbmodsuite_modlog_log' ) )
+						bbmodsuite_modlog_log( sprintf( __( 'splitted %1$d post(s) from %2$s to topic: %3$s', 'bbpress-moderation-suite' ), count( $posts ), esc_html( $old_topic->topic_title ), '<a href="' . get_topic_link( $new_topic->topic_id ) . '">' . esc_html( get_topic_title( $new_topic->topic_id ) ) . '</a>' ), 'move_splittopic' );
+					break;
 			}
 			break;
 		case 'ajax-topic':
@@ -406,7 +567,7 @@ function bbmodsuite_move_topic_admin( $a, $args = null ) {
 		), BB_URI_CONTEXT_FORM_ACTION + BB_URI_CONTEXT_BB_ADMIN ) . '">' . __( 'Merge topic', 'bbpress-moderation-suite' ) . '</a>' . $args['after'];
 		$a['split'] = $args['before'] . '<a href="' . bb_get_uri( 'bb-admin/admin-base.php', array(
 			'plugin' => 'bbpress_moderation_suite_move',
-			'action' => 'merge',
+			'action' => 'split',
 			'topic'  => get_topic_id( $args['topic_id'] )
 		), BB_URI_CONTEXT_FORM_ACTION + BB_URI_CONTEXT_BB_ADMIN ) . '">' . __( 'Split topic', 'bbpress-moderation-suite' ) . '</a>' . $args['after'];
 	}

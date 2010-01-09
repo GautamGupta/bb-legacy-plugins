@@ -1,10 +1,9 @@
 <?php
 /**
  * @package bbPM
- * @version 0.1-beta1
+ * @version 1.0.1
  * @author Nightgunner5
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU General Public License, Version 3 or higher
- * @todo Code cleanup
  */
 
 status_header( 200 );
@@ -221,7 +220,7 @@ echo apply_filters( 'post_author_title_link', apply_filters( 'get_post_author_ti
 </li>
 </ol>
 <div id="respond">
-<h2 id="reply">Reply</h2>
+<h2 id="reply"><?php _e( 'Reply', 'bbpm' ); ?></h2>
 <form class="postform pm-form" method="post" action="<?php echo BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/pm.php'; ?>">
 <fieldset>
 <?php do_action( 'post_form_pre_post' ); ?>

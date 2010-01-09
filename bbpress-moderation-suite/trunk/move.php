@@ -21,8 +21,101 @@ function bbpress_moderation_suite_move() { ?>
 <p><?php _e( 'Action completed successfully.', 'bbpress-moderation-suite' ); ?></p>
 <?php	break;
 	case 'merge':
-		$topic = get_topic( $_GET['topic'] ); ?>
-<p>Nothing here yet...</p>
+		$topic = get_topic( $_GET['topic'] );
+		$GLOBALS['bb_posts'] = get_thread( $topic->topic_id, 1 );
+		bb_admin_list_posts(); ?>
+<form class="settings" method="post" action="<?php echo esc_attr( add_query_arg( 'action', 'submit', remove_query_arg( 'post' ) ) ); ?>">
+<fieldset>
+	<div id="option-topicid">
+		<label for="topicid">
+			<?php _e( 'Which topic?', 'bbpress-moderation-suite' ); ?>
+		</label>
+		<div class="inputs">
+			<input type="text" class="text long" id="topicid" name="topicid" />
+			<p><?php _e( 'Type the ID or slug of the topic you want to merge this one with.', 'bbpress-moderation-suite' ); ?></p>
+		</div>
+	</div>
+</fieldset>
+<fieldset class="submit">
+	<input type="submit" class="submit" name="submit" value="<?php esc_attr_e( 'Submit', 'bbpress-moderation-suite' ); ?>" />
+	<input type="hidden" name="topic" id="topic" value="<?php echo $topic->topic_id; ?>" />
+	<input type="hidden" name="_action" id="_action" value="merge" />
+	<?php bb_nonce_field( 'bbmodsuite_move-mergetopic_' . $topic->topic_id ); ?>
+</fieldset>
+</form>
+
+<script type="text/javascript">
+//<![CDATA[
+jQuery(function($){
+	var autocompleteTimeout, ul = $('<ul/>').css({
+		position: 'absolute',
+		zIndex: 10000,
+		backgroundColor: '#fff',
+		fontSize: '1.2em',
+		padding: 2,
+		marginTop: -1,
+		MozBorderRadius: 2,
+		WebkitBorderRadius: 2,
+		borderRadius: 2,
+		border: '1px solid #ccc',
+		borderTopWidth: '0'
+	}).hide().insertAfter('#topicid');
+	$('#topicid').attr({
+		autocomplete: 'off'
+	}).keyup(function(){
+		// IE compat
+		if (document.selection) {
+			// The current selection
+			var range = document.selection.createRange();
+			// We'll use this as a 'dummy'
+			var stored_range = range.duplicate();
+			// Select all text
+			stored_range.moveToElementText(this);
+			// Now move 'dummy' end point to end point of original range
+			stored_range.setEndPoint('EndToEnd', range);
+			// Now we can calculate start and end points
+			this.selectionStart = stored_range.text.length - range.text.length;
+			this.selectionEnd = this.selectionStart + range.text.length;
+		}
+
+		try {
+			clearTimeout(autocompleteTimeout);
+		} catch (ex) {}
+
+		if (!this.value.length)
+			return;
+
+		autocompleteTimeout = setTimeout(function(text, pos){
+			$.post('<?php echo addslashes( str_replace( '&amp;', '&', bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bbpress_moderation_suite_move', 'action' => 'ajax-topic' ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ) ) ); ?>', {
+				text: text,
+				pos: pos,
+				topic: <?php echo $topic->topic_id; ?>,
+				_wpnonce: '<?php echo bb_create_nonce( 'bbmodsuite_move-gettopic_ajax' ); ?>'
+			}, function(data){
+				ul.empty().show();
+				$.each(data, function(i, d){
+					var name = d[1],
+						val  = d[0];
+					if (name.length)
+						$('<li/>').css({
+							listStyle: 'none'
+						}).text(name).attr({
+							title: val
+						}).click(function(){
+							$('#topicid').val(val);
+							ul.empty();
+						}).appendTo(ul);
+				});
+			}, 'json');
+		}, 750, this.value, this.selectionStart);
+	}).blur(function(){
+		setTimeout(function(){
+			ul.hide();
+		}, 100);
+	});
+});
+//]]>
+</script>
 <?php	 break;
 	case 'split':
 		$topic = get_topic( $_GET['topic'] ); ?>
@@ -122,7 +215,7 @@ jQuery(function($){
 				text: text,
 				pos: pos,
 				topic: <?php echo $post->topic_id; ?>,
-				_wpnonce: '<?php echo bb_create_nonce( 'bbmodsuite_move-movepost_ajax' ); ?>'
+				_wpnonce: '<?php echo bb_create_nonce( 'bbmodsuite_move-gettopic_ajax' ); ?>'
 			}, function(data){
 				ul.empty().show();
 				$.each(data, function(i, d){
@@ -221,12 +314,37 @@ function bbmodsuite_move_pre_header() {
 							bbmodsuite_modlog_log( sprintf( __( 'moved a post by %1$s to topic: %2$s', 'bbpress-moderation-suite' ), '<a href="' . get_user_profile_link( get_post_author_id( $post->post_id ) ) . '">' . get_post_author( $post->post_id ) . '</a>', '<a href="' . get_post_link( $post->post_id ) . '">' . esc_html( get_topic_title( $topic->topic_id ) ) . '</a>' ), 'move_movepost' );
 					}
 					break;
+				case 'merge':
+					bb_check_admin_referer( 'bbmodsuite_move-mergetopic_' . $_POST['topic'] );
+					$old_topic = get_topic( $_POST['topic'] );
+					$new_topic = get_topic( $_POST['topicid'] );
+
+					// Sanity check...
+					if ( !$old_topic || !$new_topic || $old_topic->topic_id == $new_topic->topic_id )
+						bb_die( __( 'Invalid request', 'bbpress-moderation-suite' ) );
+
+					if ( $post->forum_id != $topic->forum_id ) {
+						// We're moving the posts out of this forum
+						$bbdb->query( $bbdb->prepare( 'UPDATE `' . $bbdb->forums . '` SET `posts` = `posts` - %d WHERE `forum_id` = %d', $old_topic->topic_posts, $old_topic->forum_id ) );
+						// And into this forum
+						$bbdb->query( $bbdb->prepare( 'UPDATE `' . $bbdb->forums . '` SET `posts` = `posts` + %d WHERE `forum_id` = %d', $old_topic->topic_posts, $new_topic->forum_id ) );
+					}
+					// Move the post count first
+					$bbdb->query( $bbdb->prepare( 'UPDATE `' . $bbdb->topics . '` SET `topic_posts` = %d WHERE `topic_id` = %d', $old_topic->topic_posts + $new_topic->topic_posts, $new_topic->topic_id ) );
+					// Then move the posts
+					$bbdb->query( $bbdb->prepare( 'UPDATE `' . $bbdb->posts . '` SET `topic_id` = %d, `forum_id` = %d WHERE `topic_id` = %d', $new_topic->topic_id, $new_topic->forum_id, $old_topic->topic_id ) );
+					// And finally, delete the old topic
+					$bbdb->query( $bbdb->prepare( 'DELETE FROM `' . $bbdb->topics . '` WHERE `topic_id` = %d', $old_topic->topic_id ) );
+					// Now that the topic no longer exists, we can remove it from the count
+					$bbdb->query( $bbdb->prepare( 'UPDATE `' . $bbdb->forums . '` SET `topics` = `topics` - 1 WHERE `forum_id` = %d', $old_topic->forum_id ) );
+					if ( function_exists( 'bbmodsuite_modlog_log' ) )
+						bbmodsuite_modlog_log( sprintf( __( 'merged %1$d post(s) from %2$s to topic: %3$s', 'bbpress-moderation-suite' ), $old_topic->topic_posts, esc_html( $old_topic->topic_title ), '<a href="' . get_topic_link( $new_topic->topic_id ) . '">' . esc_html( get_topic_title( $new_topic->topic_id ) ) . '</a>' ), 'move_mergetopic' );
 			}
 			break;
 		case 'ajax-topic':
 			header( 'Content-Type: application/json' );
 
-			if ( !bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite_move-movepost_ajax' ) )
+			if ( !bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite_move-gettopic_ajax' ) )
 				exit;
 
 			$name = bbmodsuite_stripslashes( $_POST['text'] );

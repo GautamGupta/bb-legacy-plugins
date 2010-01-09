@@ -114,7 +114,8 @@ In order to define a new type, you will have to add a filter to `bbmodsuite_modl
 * `bbmodsuite_banplus_unban` changed to `bbmodsuite_banplus_automated_unban` for expired bans.
 * Report submission page no longer has "error" in its title.
 * Default report reasons and resolve types added for new installs.
-* Move! added.
+* Some minor UI fixes
+* Move! moderation helper added.
 
 = 0.1-rc1 =
 * Mod Log now tracks unbanning as well as banning

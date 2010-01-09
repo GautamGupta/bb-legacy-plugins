@@ -1,7 +1,7 @@
 <?php
 /**
  * @package bbPM
- * @version 0.1-beta1
+ * @version 1.0.1
  * @author Nightgunner5
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU General Public License, Version 3 or higher
  */

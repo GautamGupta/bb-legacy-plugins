@@ -1,6 +1,6 @@
 === bbPress Moderation Suite ===
 Contributors: Nightgunner5
-Tags: moderation, banning, ban, report post, report, warn user, warning, moderation log, log, logging
+Tags: moderation, banning, ban, report post, report, warn user, warning, moderation log, log, logging, move, merge, split
 Requires at least: 1.0
 Tested up to: trunk
 Stable tag: 0.1-rc1
@@ -45,8 +45,16 @@ It logs the following actions:
 * Posts
 	* Status change (delete, spam, undelete, unspam)
 	* Editing (by other users)
+	* Moving
+* Topics
+	* Splitting
+	* Merging
 
 [There is a plugin API to allow more logged actions to be added.](http://bbpress.org/plugins/topic/bbpress-moderation-suite/other_notes/)
+
+= Move! =
+
+Move! allows moderators to move, split, and merge topics and posts.
 
 == Installation ==
 
@@ -106,6 +114,7 @@ In order to define a new type, you will have to add a filter to `bbmodsuite_modl
 * `bbmodsuite_banplus_unban` changed to `bbmodsuite_banplus_automated_unban` for expired bans.
 * Report submission page no longer has "error" in its title.
 * Default report reasons and resolve types added for new installs.
+* Move! added.
 
 = 0.1-rc1 =
 * Mod Log now tracks unbanning as well as banning

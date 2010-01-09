@@ -47,15 +47,24 @@ function bbmodsuite_init() {
 			'filename'    => 'modlog.php',
 			'panel'       => 'bbpress_moderation_suite_modlog',
 			'can_view'    => 'bbmodsuite_modlog_can_view'
+		),
+		'move' => array(
+			'name'        => __( 'Move!', 'bbpress-moderation-suite' ),
+			'description' => __( 'Allows moderators to move, split, and merge topics and posts.', 'bbpress-moderation-suite' ),
+			'filename'    => 'move.php',
+			'panel'       => 'bbpress_moderation_suite_move',
+			'can_view'    => 'bbmodsuite_move_can_view'
 		)
 	);
 
 	$bbmodsuite_active_plugins = (array)bb_get_option( 'bbpress_moderation_suite_helpers' );
 	$bbmodsuite_cache = array();
 
-	foreach ( $bbmodsuite_active_plugins as $plugin ) {
-		$bbmodsuite_cache[$plugin] = array();
-		include_once dirname( __FILE__ ) . '/' . $bbmodsuite_plugins[$plugin]['filename'];
+	foreach ( $bbmodsuite_plugins as $plugin => $data ) {
+		if ( in_array( $plugin, $bbmodsuite_active_plugins ) ) {
+			$bbmodsuite_cache[$plugin] = array();
+			include_once dirname( __FILE__ ) . '/' . $data['filename'];
+		}
 	}
 
 	do_action( 'bbmodsuite_init' );

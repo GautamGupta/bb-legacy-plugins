@@ -197,8 +197,7 @@ foreach ( $types as $id => $reason ) { ?>
 			$reports       = (array)$bbdb->get_results( 'SELECT ID, report_reason, report_from, reported_post, report_content, resolved_by, resolve_type, resolve_content FROM `' . $bbdb->prefix . 'bbmodsuite_reports` WHERE `report_type`=\'resolved\'' );
 			$reasons       = bbmodsuite_report_reasons();
 			$resolve_types = bbmodsuite_report_resolve_types();
-?><h2><?php _e( 'Resolved Reports', 'bbpress-moderation-suite' ); ?></h2>
-<table class="widefat">
+?><table class="widefat">
 	<thead>
 		<tr>
 			<th><?php _e( 'Reported By', 'bbpress-moderation-suite' ); ?></th>

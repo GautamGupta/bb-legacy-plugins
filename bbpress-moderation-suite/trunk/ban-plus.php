@@ -167,7 +167,7 @@ if ( isset( $_GET['page'] ) && $_GET['page'] == 'new_ban' )
 	add_action( 'bbpress_moderation_suite_ban_plus_pre_head', 'bbmodsuite_banplus_admin_add_jquery' );
 
 function bbmodsuite_banplus_admin_newbanajax() {
-	header( 'Content-Type: text/plain' );
+	header( 'Content-Type: application/json' );
 
 	if ( !bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite-banplus-new-ajax' ) )
 		exit;
@@ -309,6 +309,7 @@ function bbpress_moderation_suite_ban_plus() { ?>
 </fieldset>
 </form>
 <script type="text/javascript">
+//<![CDATA[
 jQuery(function($){
 	var autocompleteTimeout, ul = $('<ul/>').css({
 		position: 'absolute',
@@ -366,6 +367,7 @@ jQuery(function($){
 		}, 750, this.value, this.selectionStart);
 	});
 });
+//]]>
 </script>
 <?php	} elseif ( strtoupper( $_SERVER['REQUEST_METHOD'] ) == 'POST' && bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite-banplus-new-submit' ) ) {
 			if ( !$user = bb_get_user( $_POST['user_id'] ) )

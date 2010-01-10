@@ -2,9 +2,9 @@
 /*
 Plugin Name: Bavatars
 Plugin Description: Gravatar - Globally recognized + bbPress = Bavatar
-Version: 0.4.1
+Version: 0.5
 Plugin URI: http://nightgunner5.wordpress.com/tag/bavatars/
-Author: Nightgunner5
+Author: Ben L. (Nightgunner5)
 Author URI: http://llamaslayers.net/daily-llama/
 */
 
@@ -105,10 +105,8 @@ if ( bb_is_admin() ) {
 			bb_admin_notice( sprintf( __( 'Bavatars was unable to create the folders needed. Please create a folder called avatars in your forum root and set its permissions to 0777 (drwxrwxrwx). <a href="%s">Click here when you have done this</a>.', 'bavatars' ), bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'bavatars_fix_permissions', 'nonce' => bb_create_nonce( 'bavatars-fix-permissions' ) ), BB_CONTEXT_BB_ADMIN ) ), 'error' );
 		}
 
-		if ( $_GET['plugin'] == 'bavatars_fix_permissions' )
+		if ( isset( $_GET['plugin'] ) && $_GET['plugin'] == 'bavatars_fix_permissions' )
 			bb_admin_add_submenu( '_', 'use_keys', 'bavatars_fix_permissions' );
 	}
 	add_action( 'bb_admin_menu_generator', 'bavatars_admin_init' );
 }
-
-?>

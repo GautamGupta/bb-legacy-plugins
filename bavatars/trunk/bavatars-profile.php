@@ -77,4 +77,4 @@ echo bb_get_avatar( $user_id, 256 );
 	<input type="submit" id="delete" class="delete" name="delete" value="Delete" />
 </form>
 
-<?php bb_get_footer(); ?>
+<?php bb_get_footer();

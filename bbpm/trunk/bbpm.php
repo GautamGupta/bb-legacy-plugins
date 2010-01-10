@@ -1172,6 +1172,11 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 
 		return $result;
 	}
+
+	function post_author_id_filter( $id ) {
+		global $the_pm;
+		return $the_pm->from->ID;
+	}
 }
 
 /**

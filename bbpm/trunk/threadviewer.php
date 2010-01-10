@@ -6,7 +6,9 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU General Public License, Version 3 or higher
  */
 
-global $bbpm;
+global $bbpm, $the_pm, $bb_post;
+
+$bb_post = true; // Hax
 
 $get = (int)$get;
 
@@ -18,6 +20,7 @@ $voices = array();
 foreach ( $messagechain as $pm ) {
 	$voices[(int)$pm->from->ID]++;
 }
+add_filter( 'get_post_author_id', array( &$bbpm, 'post_author_id_filter' ) );
 
 ?>
 <div class="infobox" role="main">
@@ -140,8 +143,7 @@ jQuery(function($){
 
 <ol id="thread">
 <?php
-
-foreach ( $messagechain as $the_pm ) { ?>
+foreach ( $messagechain as $i => $the_pm ) { ?>
 <li id="pm-<?php echo $the_pm->ID; ?>"<?php alt_class( 'bbpm_thread' );
 
 if ( $the_pm->thread_depth )

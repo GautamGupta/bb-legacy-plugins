@@ -2,14 +2,15 @@
 /*
 Plugin Name: Bavatars for WordPress
 Plugin Description: Gravatar - Globally recognized + bbPress = Bavatar, now for WordPress as well!
-Version: 0.4
-Plugin URI: http://llamaslayers.net/daily-llama/tag/bavatars
-Author: Nightgunner5
+Version: 0.5
+Plugin URI: http://nightgunner5.wordpress.com/tag/bavatars/
+Author: Ben L. (Nightgunner5)
 Author URI: http://llamaslayers.net/daily-llama/
 */
 
 define( 'BAVATARS_BBPRESS_URI', 'http://forums.example.com/' ); // The full address of the front page of your forum.
 define( 'BAVATARS_BBPRESS_PATH', '/path/to/bbpress/' ); // The full path to your bbPress installation.
+// If your bbPress forum is in a subdirectory of your WordPress blog, you can use define( 'BAVATARS_BBPRESS_PATH', ABSPATH . 'forum/' ); or the like.
 
 /*
  _____   _____   ______   _____       _____   _____    _   _____   _   ______   ______  
@@ -65,5 +66,3 @@ function bavatars_filter( $avatar, $id_or_email, $size, $default, $alt ) {
 	return '<img alt="' . $alt . '" src="' . trailingslashit( BAVATARS_BBPRESS_URI ) . $location . ' class="avatar avatar-' . $size . ' avatar-bavatar" style="height:' . $size . 'px; width:' . $size . 'px;" />';
 }
 add_filter( 'get_avatar', 'bavatars_filter', 10, 5 );
-
-?>

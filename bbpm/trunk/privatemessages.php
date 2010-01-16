@@ -215,7 +215,7 @@ echo apply_filters( 'post_author_title_link', apply_filters( 'get_post_author_ti
 </div>
 <div class="threadpost">
 	<div class="post"><?php echo apply_filters( 'post_text', apply_filters( 'get_post_text', $the_pm->text ) ); ?></div>
-	<div class="poststuff"><?php printf( __( 'Sent %s ago', 'bbpm' ), bb_since( $the_pm->date ) ); ?> <a href="<?php echo $the_pm->delete_link; ?>"><?php _e( 'Delete', 'bbpm' ); ?></a> <a href="<?php echo $the_pm->reply_link; ?>" class="reply"><?php _e( 'Reply', 'bbpm' ); ?></a></div>
+	<div class="poststuff"><?php printf( __( 'Sent %s ago', 'bbpm' ), bb_since( $the_pm->date ) ); ?> <a href="<?php echo $the_pm->reply_link; ?>" class="reply"><?php _e( 'Reply', 'bbpm' ); ?></a></div>
 </div>
 </li>
 </ol>

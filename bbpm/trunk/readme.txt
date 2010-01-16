@@ -28,6 +28,7 @@ Users can send private messages to each other. Replies are threaded, and more th
 = 1.0.1 =
 * bbPM no longer thinks that replies are new to the person who sent them
 * An attempt at making other plugins work normally (eg. Post Count Plus)
+* bbPress Smilies now works with bbPM.
 
 = 1.0 =
 * Danish translation from Daniel Juhl

@@ -206,6 +206,11 @@ jQuery(function($){
 				return false;
 			})).end().show('fast');
 			$('#message')[0].focus();
+<?php if ( function_exists( 'bb_smilies_init' ) ) { // Compat with bbPress Smilies ?>
+			bbField = undefined;
+			bb_smilies_init();
+			bbField.style.width = '99%';
+<?php } ?>
 		}, 'text');
 		return false;
 	});

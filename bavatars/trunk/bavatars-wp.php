@@ -63,6 +63,6 @@ function bavatars_filter( $avatar, $id_or_email, $size, $default, $alt ) {
 		imagedestroy( $src );
 	}
 
-	return '<img alt="' . $alt . '" src="' . trailingslashit( BAVATARS_BBPRESS_URI ) . $location . ' class="avatar avatar-' . $size . ' avatar-bavatar" style="height:' . $size . 'px; width:' . $size . 'px;" />';
+	return '<img alt="' . $alt . '" src="' . trailingslashit( BAVATARS_BBPRESS_URI ) . $location . '" class="avatar avatar-' . $size . ' avatar-bavatar" style="height:' . $size . 'px; width:' . $size . 'px;" />';
 }
 add_filter( 'get_avatar', 'bavatars_filter', 10, 5 );

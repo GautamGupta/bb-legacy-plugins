@@ -107,8 +107,10 @@ jQuery(function($){
 			}, 'json');
 		}, 750, this.value, this.selectionStart);
 	}).blur(function(){
-		ul.empty();
-		ul.hide();
+		setTimeout(function(){
+			ul.empty();
+			ul.hide();
+		}, 500);
 		try {
 			clearTimeout(autocompleteTimeout);
 		} catch (ex) {}

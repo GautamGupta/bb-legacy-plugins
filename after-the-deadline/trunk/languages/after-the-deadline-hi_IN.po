@@ -1,0 +1,165 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: After the Deadline 1.4\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/after-the-deadline\n"
+"POT-Creation-Date: 2010-01-17 12:12+0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Gautam <gautam.2011@gmail.com>\n"
+"Language-Team: Gautam Gupta <admin@gaut.am>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Hindi\n"
+"X-Poedit-Country: INDIA\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: F:\\after-the-deadline\n"
+
+#: after-the-deadline.php:80
+msgid "Check Spelling"
+msgstr "वर्तनी जाँचें"
+
+#: after-the-deadline.php:98
+msgid "Proofread"
+msgstr "वर्तनी जाँचें"
+
+#: after-the-deadline.php:99
+msgid "Edit Text"
+msgstr "पाठ संपादित करें"
+
+#: after-the-deadline.php:100
+msgid "OK"
+msgstr "ठीक है"
+
+#: after-the-deadline.php:101
+msgid "Cancel"
+msgstr "रद्द"
+
+#: after-the-deadline.php:102
+msgid "Spelling"
+msgstr "वर्तनी"
+
+#: after-the-deadline.php:103
+msgid "Repeated Word"
+msgstr "शब्द दोहराया गया है"
+
+#: after-the-deadline.php:104
+msgid "No suggestions"
+msgstr "कोई सुझाव नहीं है"
+
+#: after-the-deadline.php:105
+msgid "Explain..."
+msgstr "स्पष्ट कीजिये"
+
+#: after-the-deadline.php:106
+msgid "Ignore suggestion"
+msgstr "सुझाव गलत है"
+
+#: after-the-deadline.php:107
+msgid "Ignore all"
+msgstr "ऐसे सरे सुझाव हटाइए"
+
+#: after-the-deadline.php:108
+msgid "Ignore always"
+msgstr "इस वर्तनी को कभी नहीं जाचें"
+
+#: after-the-deadline.php:109
+msgid "Edit Selection..."
+msgstr "इस वर्तनी को संपादित करें"
+
+#: after-the-deadline.php:110
+msgid "No writing errors were found."
+msgstr "सारी वर्तनी सही हैं|"
+
+#: after-the-deadline.php:111
+msgid "Please enter some text in the post textbox to be checked!"
+msgstr "पोस्ट टेक्स्टबॉक्स मैं कुछ शब्द लिकिये ताकि वें जाचें जा सकें|"
+
+#: after-the-deadline.php:112
+msgid "Error!"
+msgstr "ग़लती!"
+
+#: after-the-deadline.php:113
+msgid "No writing errors were found!"
+msgstr "सारी वर्तनी सही हैं|"
+
+#: after-the-deadline.php:114
+msgid "No errors!"
+msgstr "कोई भी गलती नहीं है!"
+
+#: after-the-deadline.php:115
+msgid "There was a problem communicating with the After the Deadline service."
+msgstr "आफ्टर दी देअद्लिने सर्विस से बात नहीं हो पा रही है|"
+
+#: after-the-deadline.php:116
+msgid "Replace selection with"
+msgstr "चुनी हुई वर्तनी बदलिए"
+
+#: after-the-deadline.php:117
+msgid "Replace"
+msgstr "बदलिए"
+
+#: after-the-deadline.php:173
+msgid "The API key was successfully saved!"
+msgstr "अ.प.इ कुंजी सफलतापूर्वक दर्ज करली गयी है|"
+
+#: after-the-deadline.php:177
+msgid "Please enter an API key."
+msgstr "कृपया एक अ.प.इ कुंजी दर्ज करें|"
+
+#: after-the-deadline.php:181
+msgid "The API key you entered is invalid! Please enter the key again."
+msgstr "जो अपने अ.प.इ कुंजी दर्ज की है, वो सही नहीं है| क्रिपिया करके उसे परखें|"
+
+#: after-the-deadline.php:187
+#, php-format
+msgid "New version%s of After the Deadline is available! Please download the latest version from <a href=\"%s\">here</a>."
+msgstr "आफ्टर दी देअद्लिने का नया संस्करण%s उपलब्ध है! कृप्या उसे <a href=\"%s\">यहाँ</a> से डाउनलोड करें|"
+
+#: after-the-deadline.php:192
+#: after-the-deadline.php:211
+msgid "Your AtD API Key"
+msgstr "आपकी अ.प.इ कुंजी"
+
+#: after-the-deadline.php:195
+#: after-the-deadline.php:215
+#, php-format
+msgid "You can get a key from the <a href=\"%s\">After the Deadline</a> website."
+msgstr "आप <a href=\"%s\">यहाँ</a> से एक अ.प.इ कुंजी पा सकते हैं|"
+
+#: after-the-deadline.php:195
+#: after-the-deadline.php:216
+msgid "The disadvantage of not entering a key is that AtD only allows one call at a time/key. This means if a lot of people are using the same (default) key, then their & your performance will degrade as more people use it."
+msgstr "अ.प.इ कुंजी दर्ज न करने का दुर्लभ ये है की आफ्टर दी देअद्लिने सर्विस एक कुंजी से एक वक्त पर एक ही कॉल की अनुमति देती है| इसका मतलब ये है की अगर ज्यादा लोग एक ही कुंजी का इस्तेमाल करें, तो प्लगिन का प्रदर्शन ख़राब हो जाता है|"
+
+#: after-the-deadline.php:200
+msgid "After the Deadline Options"
+msgstr "आफ्टर the देअद्लिने के विकल्प"
+
+#: after-the-deadline.php:226
+#, php-format
+msgid "Happy with the plugin? Why not <a href=\"%s\">buy the author a cup of coffee or two</a> or get him something from his <a href=\"%s\">wishlist</a>?"
+msgstr "प्लगिन से खुश? लिखने वाले को कुछ <a href=\"%s\">दान</a> दीजिये या फिर उसकी <a href=\"%s\">इच्छा सूची</a> देखिये|"
+
+#. #-#-#-#-#  plugin.pot (After the Deadline 1.3)  #-#-#-#-#
+#. Plugin Name of an extension
+#: after-the-deadline.php:233
+msgid "After the Deadline"
+msgstr "आफ्टर दी देअद्लिने"
+
+#. Plugin URI of an extension
+msgid "http://gaut.am/bbpress/plugins/after-the-deadline/"
+msgstr "http://gaut.am/bbpress/plugins/after-the-deadline/"
+
+#. Description of an extension
+msgid "After the Deadline plugin checks spelling, style, and grammar in your bbPress forum posts."
+msgstr "आफ्टर दी देअद्लिने प्लगिन आपके ब्बीप्रेस फोरम मैं वर्तनी और व्याकरण जांचता है|"
+
+#. Author of an extension
+msgid "Gautam Gupta"
+msgstr "गौतम गुप्ता "
+
+#. Author URI of an extension
+msgid "http://gaut.am/"
+msgstr "http://gaut.am/"
+

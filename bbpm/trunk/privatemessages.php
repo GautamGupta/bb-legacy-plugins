@@ -130,6 +130,7 @@ jQuery(function($){
 
 <?php bb_nonce_field( 'bbpm-new' ); ?>
 
+<?php do_action( 'post_form_post_post' ); do_action( 'post_form' ); ?>
 </fieldset>
 </form>
 
@@ -239,6 +240,8 @@ echo apply_filters( 'post_author_title_link', apply_filters( 'get_post_author_ti
 <?php bb_nonce_field( 'bbpm-reply-' . $the_pm->ID ); ?>
 
 <input type="hidden" value="<?php echo $the_pm->ID; ?>" name="reply_to" id="reply_to" />
+
+<?php do_action( 'post_form_post_post' ); do_action( 'post_form' ); ?>
 </fieldset>
 </form>
 </div>

@@ -5,8 +5,9 @@
 */
 
 /* Custom */
-.atd_container {
-   /* You can add custom styling to the button here if you want */
+.atd_container a {
+   background:url('../images/atdbuttontr.gif') scroll 0 0 no-repeat;
+   padding-left:20px;
 }
 
 /* AtD error styles */

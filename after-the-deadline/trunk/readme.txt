@@ -12,21 +12,46 @@ After the Deadline plugin checks for spelling, style, and grammatical errors in 
 
 After the Deadline helps you to write better by spending less time editing.
 
-When you activate the plugin and click the link above the post textbox, the plugin will check the content for spelling, style, and grammatical errors.
+When you activate the plugin and click the proofread link above a textbox, the plugin will check the content for spelling, style, and grammatical errors.
 
-There is also an option for the administrator to enter an [API key](http://www.afterthedeadline.com/profile.slp). Please see FAQ for more information.
+There is also an option for the administrator to enter an [API key](http://www.afterthedeadline.com/profile.slp). Please see [FAQ](http://bbpress.org/plugins/topic/after-the-deadline/faq/) for more information.
 
-Please note that only English is supported for the time being.
+== Other Notes ==
 
-This plugin is based on [After the Deadline](http://www.afterthedeadline.com) by:
-Mudge, Raphael S. (2009) After the Deadline - Language Checking Technology.
-[Automattic](http://open.afterthedeadline.com)
+= Thanks/Credits =
+* [After the Deadline](http://www.afterthedeadline.com) service by Mudge, Raphael S. [Automattic](http://open.afterthedeadline.com)
+* [jQuery Alert Dialogs Plugin](http://abeautifulsite.net/2008/12/jquery-alert-dialogs/) by [A Beautiful Site](http://abeautifulsite.net/)
+
+= Translations =
+You can contribute by translating this plugin. Please refer to [this post](http://gaut.am/) to know how to translate.
+
+= Notes =
+* Only English language is supported for the time being.
+
+= To Do =
+* Add ignore always option
+* Add the option to let the user select ignore types
+* AutoProofread if the user has forgotten to run the spellcheck
+
+= Not on bbPress? =
+You can get AtD elsewhere too! Here are the current platforms:
+
+* [Bookmarklet](http://www.afterthedeadline.com/download.slp?platform=Bookmarklet) - A utility to AtD to any web-page with one click
+* [Intense Debate](http://www.afterthedeadline.com/download.slp?platform=IntenseDebate) - Distributed Comment System for Blogs and Websites
+* [PHP List](http://www.afterthedeadline.com/download.slp?platform=PHPList) - Open Source Newsletter Manager
+* [RoundCube Webmail](http://www.afterthedeadline.com/download.slp?platform=RoundCube) - Browser-based IMAP Client
+* [WordPress](http://www.afterthedeadline.com/download.slp?platform=Wordpress) - Blog Tool and Publishing Platform
+
+Please check [here](http://www.afterthedeadline.com/download.slp) for an updated list.
+
+= Donate =
+* You may donate by going [here](http://gaut.am/donate/AtD/).
 
 == Installation ==
 
 1. Upload the extracted `after-the-deadline` folder to the `/my-plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in bbPress
-3. Optional - Enter an API key by going to `Settings -> After the Deadline`
+3. Optional (but recommended) - Enter an API key by going to `Settings -> After the Deadline`
 4. Enjoy and always write correct English!
 
 == Frequently Asked Questions ==
@@ -48,7 +73,7 @@ If you are using a kakumei based theme, then open the style.css file of the them
 3. Save the file and upload it to the server
 
 = 5. Things aren't going as they should! Some `fsockopen` error is coming! =
-This means that `fsockopen` function is not enabled on your webserver. Please follow these steps to fix this error:
+This means that `fsockopen` function is not enabled on your webserver. Please use the [1.3 version](http://bbpress.org/plugins/topic/after-the-deadline/after-the-deadline.1.3.zip) and follow these steps to fix this error:
 
 1. Open `scripts/atd.js` which is located in the plugin folder.
 2. Find `AtD.checkTextArea('post_content', 'checkLink', 'Edit Text');` (6th line)
@@ -72,6 +97,14 @@ Please make sure that the plugin directory is chmodded to 755.
 2. A Screenshot of the Settings Page
 
 == Changelog ==
+
+= 1.4 (17-01-10) =
+* Addded localization support! Please refer to [this post](http://gaut.am/) to know how to contribute!
+* Updated AtD/jQuery - [Changelog](http://www.polishmywriting.com/atd-jquery/changelog.html)
+* Compatibility with anonymous posting feature, which will be released in bbPress 1.1
+* Compressed Javascript
+* Added Other Notes & Update Notice sections in ReadMe
+* Now the plugin attaches itself to every textbox on every page of your forums (but only for logged in users, or if the anonymous posting feature is turned on which will be introduced in bbPress 1.1)
 
 = 1.3 (22-11-09) =
 * Added an option to enter the API key, please see FAQ for more information
@@ -105,3 +138,8 @@ Upgraded AtD/jQuery - [Changelog](http://www.polishmywriting.com/atd_jquery/chan
 
 = 1.0 (27-10-09) =
 * Initial Release
+
+== Upgrade Notice ==
+
+= 1.4 (17-01-10) =
+Upgraded AtD/jQuery, added some more features and fixed bugs.

@@ -3,7 +3,7 @@
 Plugin Name: After the Deadline
 Plugin URI: http://gaut.am/bbpress/plugins/after-the-deadline/
 Description: After the Deadline plugin checks spelling, style, and grammar in your bbPress forum posts.
-Version: 1.3
+Version: 1.4
 Author: Gautam Gupta
 Author URI: http://gaut.am/
 
@@ -32,11 +32,7 @@ Author URI: http://gaut.am/
  */
 
 /* Create Text Domain For Translations */
-if(function_exists('bb_load_plugin_textdomain')){
-	bb_load_plugin_textdomain( 'after-the-deadline', dirname( __FILE__ ) . '/languages' );
-}elseif(function_exists('load_plugin_textdomain')){
-	load_plugin_textdomain( 'after-the-deadline', dirname( __FILE__ ) . '/languages' );
-}
+load_plugin_textdomain( 'after-the-deadline', dirname(__FILE__) . '/languages' );
 
 /*
  * Defines
@@ -197,7 +193,7 @@ function atd_options(){
 	);
 	?>
 	
-	<h2><?php __('After the Deadline Options', 'after-the-deadline'); ?></h2>
+	<h2><?php _e('After the Deadline Options', 'after-the-deadline'); ?></h2>
 	<?php do_action( 'bb_admin_notices' ); ?>
 	<form method="post" class="settings options">
 		<fieldset>

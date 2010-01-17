@@ -4,7 +4,7 @@ Donate link: http://gaut.am/donate/AtD/
 Tags: after the deadline, writing, spell, spelling, spellchecker, grammar, style, plugin, edit, proofreading, Gautam
 Requires at least: 0.9
 Tested up to: 1.0.2
-Stable tag: 1.3
+Stable tag: 1.4
 
 After the Deadline plugin checks for spelling, style, and grammatical errors in your bbPress forum posts.
 
@@ -23,7 +23,9 @@ There is also an option for the administrator to enter an [API key](http://www.a
 * [jQuery Alert Dialogs Plugin](http://abeautifulsite.net/2008/12/jquery-alert-dialogs/) by [A Beautiful Site](http://abeautifulsite.net/)
 
 = Translations =
-You can contribute by translating this plugin. Please refer to [this post](http://gaut.am/) to know how to translate.
+* Hindi Translation by [Gautam](http://gaut.am/) (me)
+
+You can contribute by translating this plugin. Please refer to [this post](http://gaut.am/translating-wordpress-or-bbpress-plugins/) to know how to translate.
 
 = Notes =
 * Only English language is supported for the time being.
@@ -99,7 +101,7 @@ Please make sure that the plugin directory is chmodded to 755.
 == Changelog ==
 
 = 1.4 (17-01-10) =
-* Addded localization support! Please refer to [this post](http://gaut.am/) to know how to contribute!
+* Addded localization support! Please refer to [this post](http://gaut.am/translating-wordpress-or-bbpress-plugins/) to know how to contribute!
 * Updated AtD/jQuery - [Changelog](http://www.polishmywriting.com/atd-jquery/changelog.html)
 * Compatibility with anonymous posting feature, which will be released in bbPress 1.1
 * Compressed Javascript

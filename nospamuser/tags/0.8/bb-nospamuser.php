@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: bb-NoSpamUser
-Version: 0.8.1
+Version: 0.8
 Plugin URI: http://nightgunner5.wordpress.com/tag/bb-nospamuser/
 Description: Prevents known spam users from registering on your forum.
 Author: Nightgunner5
@@ -12,7 +12,7 @@ Text Domain: nospamuser
 Domain Path: translations/
 */
 
-define( 'NOSPAMUSER_AGENT', ' | NoSpamUser/0.8.1' );
+define( 'NOSPAMUSER_AGENT', ' | NoSpamUser/0.8' );
 
 if ( !function_exists( 'add_action' ) ) {
 	@include_once( dirname( dirname( dirname( __FILE__ ) ) ) . '/bb-load.php' ) or exit;

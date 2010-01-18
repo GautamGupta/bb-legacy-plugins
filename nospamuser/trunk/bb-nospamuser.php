@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: bb-NoSpamUser
-Version: 0.8.1
+Version: 0.8
 Plugin URI: http://nightgunner5.wordpress.com/tag/bb-nospamuser/
 Description: Prevents known spam users from registering on your forum.
 Author: Nightgunner5
@@ -11,6 +11,8 @@ Tested up to: trunk
 Text Domain: nospamuser
 Domain Path: translations/
 */
+
+define( 'NOSPAMUSER_AGENT', ' | NoSpamUser/0.8' );
 
 if ( !function_exists( 'add_action' ) ) {
 	@include_once( dirname( dirname( dirname( __FILE__ ) ) ) . '/bb-load.php' ) or exit;
@@ -42,7 +44,8 @@ function nospamuser_install() {
 		'api_key' => '',
 		'recaptcha_mode' => 'aggressive',
 		'recapthca_pub' => '',
-		'recaptcha_priv' => ''
+		'recaptcha_priv' => '',
+		'stats_public' => 0
 	) ) );
 }
 bb_register_plugin_activation_hook( __FILE__, 'nospamuser_install' );
@@ -133,7 +136,7 @@ function nospamuser_admin() {
 		),
 		'max_occur' => array(
 			'title' => __( 'Maximum frequency', 'nospamuser' ),
-			'note' => __( 'Possible spammers that have at least this many reports will be disallowed in adaptive mode.', 'nospamuser' ),
+			'note' => __( 'Possible spammers that have at least this many reports will be disallowed in adaptive mode. This also affects agressive mode, where spammers with at least this many reports will be blocked even if the maximum days prerequisite is not met.', 'nospamuser' ),
 			'class' => 'short',
 			'value' => $settings['max_occur']
 		),
@@ -202,25 +205,44 @@ add_action( 'bb_admin_menu_generator', 'nospamuser_admin_add' );
 
 function nospamuser_check( $type, $data ) {
 	$settings = bb_get_option( 'nospamuser-settings' );
+	if ( !$settings )
+		bb_update_option( 'nospamuser-settings', $settings = array(
+			'days' => 30,
+			'min_occur' => 5,
+			'max_occur' => 10,
+			'api_key' => '',
+			'recaptcha_mode' => 'aggressive',
+			'recapthca_pub' => '',
+			'recaptcha_priv' => '',
+			'stats_public' => 0
+		) );
 
 	if ( !is_array( $result = bb_get_transient( 'nospamuser-' . $type . '-' . md5( $data ) ) ) ) {
-		$ch = curl_init( 'http://www.stopforumspam.com/api?' . urlencode( $type ) . '=' . urlencode( $data ) );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-		$response = curl_exec( $ch );
-		curl_close( $ch );
+		$wp_http = new WP_Http;
+		$response = $wp_http->get( 'http://www.stopforumspam.com/api?' . urlencode( $type ) . '=' . urlencode( $data ), array(
+			'user-agent' => apply_filters( 'http_headers_useragent', backpress_get_option( 'wp_http_version' ) ) . NOSPAMUSER_AGENT
+		) );
+		$response = $response['body'];
+
 
 		if ( strpos( $response, '<response success="true">' ) === false )
 			return;
 
 		if ( strpos( $response, '<appears>no</appears>' ) !== false )
 			$result = array( 0, 0 );
-		else
-			$result = array( (int)substr( $response, strpos( $response, '<frequency>' ) + 11 ), strtotime( current( explode( '<', substr( $response, strpos( $response, '<lastseen>' ) ) ) ) ) );
+		else {
+			preg_match( '/<lastseen>([^<>]+)<\/lastseen>/', $response, $matches );
+			$result = array( (int)substr( $response, strpos( $response, '<frequency>' ) + 11 ), strtotime( $matches[1] ) );
+		}
 
 		bb_set_transient( 'nospamuser-' . $type . '-' . md5( $data ), $result, 604800 );
 	}
 
-	if ( $result[0] >= $settings['min_occur'] && $result[1] <= time() - $settings['days'] * 86400 ) {
+	if ( $result == array( 0, 0 ) ) // Even if the settings are set incorrectly, non-spammers shouldn't be blocked.
+		return;
+
+	if ( ( $result[0] >= $settings['min_occur'] && $result[1] >= time() - $settings['days'] * 86400 ) ||
+		 ( $result[0] >= $settings['max_occur'] && $settings['recaptcha_mode'] == 'aggressive' ) ) {
 		if ( $result[0] >= $settings['max_occur'] && $settings['recaptcha_mode'] == 'adaptive' )
 			nospamuser_block( $type, $data, true );
 		elseif ( $settings['recaptcha_mode'] == 'aggressive' || !$settings['recaptcha_pub'] || !$settings['recaptcha_priv'] )
@@ -236,18 +258,19 @@ function nospamuser_block( $type, $data, $noway ) {
 	bb_update_option( 'nospamuser-blocks', bb_get_option( 'nospamuser-blocks' ) + 1 );
 
 	$types = array(
-		'email' => 'email address',
-		'ip' => 'IP address',
-		'username' => 'username'
+		'email' => __( 'email address', 'nospamuser' ),
+		'ip' => __( 'IP address', 'nospamuser' ),
+		'username' => __( 'username', 'nospamuser' )
 	);
 
 	if ( $noway )
-		bb_die( sprintf( __( 'Your %s (%s) is listed in <a href="http://www.stopforumspam.com/">Stop Forum Spam</a>\'s database. You have been automatically blocked. If you are not a spammer, you may <a href="http://www.stopforumspam.com/removal">appeal this listing</a>.', 'nospamuser' ), $types[$type], $data ), 'Registration forbidden', 403 );
+		bb_die( sprintf( __( 'Your %1$s (%2$s) is listed in <a href="%3$s">Stop Forum Spam</a>\'s database. You have been automatically blocked. If you are not a spammer, you may <a href="http://www.stopforumspam.com/removal">appeal this listing</a>.', 'nospamuser' ), $types[$type], $data, 'http://www.stopforumspam.com/' . ( $type == 'ip' ? 'ipcheck/' : 'search?q=' ) . $data ), 'Registration forbidden', 403 );
 
 	if ( !isset( $_COOKIE['nospamuser_override'] ) || !bb_verify_nonce( $_COOKIE['nospamuser_override'], 'nospamuser-override-' . $_SERVER['REMOTE_ADDR'] ) ) {
-		require_once dirname( __FILE__ ) . '/recaptchalib.php';
+		if ( !function_exists( 'recaptcha_check_answer' ) ) // Compatibility with anything else that uses reCAPTCHA
+			require_once dirname( __FILE__ ) . '/recaptchalib.php';
 
-		bb_die( sprintf( __( 'Your %s (%s) is listed in <a href="http://www.stopforumspam.com/">Stop Forum Spam</a>\'s database. You have been automatically blocked. If you are not a spammer, you may <a href="http://www.stopforumspam.com/removal">appeal this listing</a> or solve the CAPTCHA below.%s', 'nospamuser' ), $types[$type], $data, '</p><form method="post" action="' . bb_get_plugin_uri( bb_plugin_basename( __FILE__ ) ) . '/bb-nospamuser.php"><script type="text/javascript">var RecaptchaOptions={theme:\'clean\'}</script>' . recaptcha_get_html( $settings['recaptcha_pub'] ) . '<br/><input type="submit" value="' . esc_attr__( 'Submit', 'nospamuser' ) . '"/></form>' ), 'Registration forbidden', 401 );
+		bb_die( sprintf( __( 'Your %1$s (%2$s) is listed in <a href="%3$s">Stop Forum Spam</a>\'s database. You have been automatically blocked. If you are not a spammer, you may <a href="http://www.stopforumspam.com/removal">appeal this listing</a> or solve the CAPTCHA below.', 'nospamuser' ), $types[$type], $data, 'http://www.stopforumspam.com/' . ( $type == 'ip' ? 'ipcheck/' : 'search?q=' ) . $data ) . '<form method="post" action="' . bb_get_plugin_uri( bb_plugin_basename( __FILE__ ) ) . '/bb-nospamuser.php"><script type="text/javascript">var RecaptchaOptions={theme:\'clean\'}</script>' . recaptcha_get_html( $settings['recaptcha_pub'] ) . '<br/><input type="submit" value="' . esc_attr__( 'Submit', 'nospamuser' ) . '"/></form>', 'Registration forbidden', 401 );
 	}
 }
 
@@ -292,25 +315,16 @@ function nospamuser_check_bozo( $user_id ) { // Most of this function is taken f
 			return;
 	bb_set_current_user( (int) $bb_current_id );
 
-	$request  = 'username=' . $user_obj->user_login;
-	$request .= '&ip_addr=' . $user_obj->data->nospamuser_ip;
-	$request .= '&email=' . $user_obj->user_email;
-	$request .= '&api_key=' . $settings['api_key'];
-
-	$http_request  = 'POST /post.php HTTP/1.0' . "\r\n";
-	$http_request .= 'Host: www.stopforumspam.com' . "\r\n";
-	$http_request .= 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' . "\r\n";
-	$http_request .= 'Content-Length: ' . strlen( $request ) . "\r\n";
-	$http_request .= 'User-Agent: bbPress/' . bb_get_option( 'version' ) . ' | NoSpamUser/0.8.1' . "\r\n";
-	$http_request .= "\r\n";
-	$http_request .= $request;
-	if ( $fs = @fsockopen( 'www.stopforumspam.com', 80, $errno, $errstr, 10 ) ) {
-		fwrite( $fs, $http_request );
-		$data = '';
-		while ( !feof( $fs ) )
-			$data .= fread( $fs, 1024 );
-		fclose( $fs );
-	}
+	$wp_http = new WP_Http;
+	$wp_http->post( 'http://www.stopforumspam.com/post.php', array(
+		'body' => array(
+			'username' => $user_obj->user_login,
+			'ip_addr' => $user_obj->data->nospamuser_ip,
+			'email' => $user_obj->user_email,
+			'api_key' => $settings['api_key']
+		),
+		'user-agent' => apply_filters( 'http_headers_useragent', backpress_get_option( 'wp_http_version' ) ) . NOSPAMUSER_AGENT
+	) );
 }
 add_action( 'profile_edited', 'nospamuser_check_bozo' );
 

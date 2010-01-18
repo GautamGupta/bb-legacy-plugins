@@ -21,12 +21,14 @@ The spam checks are cached for 7 days to lessen the load on [Stop Forum Spam](ht
 1. bb-NoSpamUser can block spammers via IP, email, or username.
 
 == Changelog ==
-= 0.8.1 =
-* Fixed reporting code (it was closing the socket too early)
 
 = 0.8 =
 * Complete rewrite
-* Marking a user as bozo reports them to Stop Forum Spam.
+* Marking a user as bozo reports them to Stop Forum Spam
+* Fixed reporting code (it was closing the socket too early)
+* Switched to WP_Http
+* A bug where non-spammers could be blocked has been fixed
+* Serious logic bug fixed
 
 = 0.7 =
 * Minimum frequency setting added

@@ -16,6 +16,10 @@ remove_filter( 'topic_link', 'utplugin_link_latest' );
 remove_filter( 'post_text', 'utplugin_update_log' );
 if ( isset( $GLOBALS['support_forum'] ) && $GLOBALS['support_forum']->isActive() )
 	remove_action( 'post_form_pre_post', array( &$GLOBALS['support_forum'], 'addStatusSelectToPostForm' ) );
+if ( bb_get_option( 'mod_rewrite' ) ) {
+	remove_action( 'bb_foot', 'bbClicker', 9 );
+	remove_action( 'bb_foot', 'bbClicker', 20 );
+}
 
 global $bbpm;
 

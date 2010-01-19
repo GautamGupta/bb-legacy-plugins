@@ -1202,6 +1202,7 @@ function bbpm_admin_page() {
 	if ( bb_verify_nonce( $_POST['_wpnonce'], 'bbpm-admin' ) ) {
 		$bbpm->settings['max_inbox'] = max( (int)$_POST['max_inbox'], 1 );
 		$bbpm->settings['auto_add_link'] = !empty( $_POST['auto_add_link'] );
+		$bbpm->settings['static_reply'] = !empty( $_POST['static_reply'] );
 		$bbpm->settings['email_new'] = !empty( $_POST['email_new'] );
 		$bbpm->settings['email_reply'] = !empty( $_POST['email_reply'] );
 		$bbpm->settings['email_add'] = !empty( $_POST['email_add'] );
@@ -1231,6 +1232,15 @@ function bbpm_admin_page() {
 		<div class="inputs">
 			<input type="checkbox" id="auto_add_link" name="auto_add_link"<?php if ( $bbpm->settings['auto_add_link'] ) echo ' checked="checked"'; ?> />
 			<p><?php _e( 'You will need to add <code>&lt;?php if ( function_exists( \'bbpm_messages_link\' ) ) bbpm_messages_link(); ?&gt;</code> to your template if you disable this.', 'bbpm' ); ?></p>
+		</div>
+	</div>
+	<div id="option-static_reply">
+		<label for="static_reply">
+			<?php _e( 'Add static reply form', 'bbpm' ); ?>
+		</label>
+		<div class="inputs">
+			<input type="checkbox" id="static_reply" name="static_reply"<?php if ( $bbpm->settings['static_reply'] ) echo ' checked="checked"'; ?> />
+			<p><?php _e( 'If checked, bbPM will add a static reply form that replies to the last message at the end of each PM thread page.', 'bbpm' ); ?></p>
 		</div>
 	</div>
 	<div id="option-email_settings">

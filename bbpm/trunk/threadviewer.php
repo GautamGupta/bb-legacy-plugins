@@ -197,6 +197,7 @@ echo apply_filters( 'post_author_title_link', apply_filters( 'get_post_author_ti
 <script type="text/javascript">
 jQuery(function($){
 	$('.pm-reply').click(function(){
+		$('#static-respond').hide('normal');
 		$('#respond').hide('normal', function(){$(this).remove()});
 		var pm = $(this).parents('li');
 		$('<div id="respond"/>').appendTo(pm).hide();
@@ -204,7 +205,10 @@ jQuery(function($){
 			page = page.substr(page.indexOf('<div id="respond">') + 18);
 			page = page.substr(0, page.indexOf('</form>') + 7);
 			$('#respond').html(page).find('textarea').css({width: '99%'}).end().find('#reply').append(' ').append($('<a href="#"><small style="font-size:small"><?php echo addslashes( __( '[Cancel]', 'bbpm' ) ); ?></small></a>').click(function(){
-				$('#respond').hide('normal', function(){$(this).remove()});
+				$('#respond').hide('normal', function(){
+					$(this).remove();
+					$('#static-respond').show('normal');
+				});
 				return false;
 			})).end().show('fast');
 			$('#message')[0].focus();
@@ -218,3 +222,29 @@ jQuery(function($){
 	});
 });
 </script>
+
+<?php if ( $bbpm->settings['static_reply'] ) { ?>
+<div id="static-respond">
+<h2 id="reply"><?php _e( 'Reply', 'bbpm' ); ?></h2>
+<form class="postform pm-form" method="post" action="<?php echo BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/pm.php'; ?>">
+<fieldset>
+<?php do_action( 'post_form_pre_post' ); ?>
+<p>
+	<label for="message"><?php _e( 'Message:', 'bbpm' ); ?><br/></label>
+	<textarea name="message" cols="50" rows="8" id="message" tabindex="3"></textarea>
+</p>
+<p class="submit">
+	<input type="submit" id="postformsub" name="Submit" value="<?php echo attribute_escape( __( 'Send Message &raquo;', 'bbpm' ) ); ?>" tabindex="4" />
+</p>
+
+<p><?php _e('Allowed markup:'); ?> <code><?php allowed_markup(); ?></code>. <br /><?php _e('You can also put code in between backtick ( <code>`</code> ) characters.'); ?></p>
+
+<?php bb_nonce_field( 'bbpm-reply-' . $the_pm->ID ); ?>
+
+<input type="hidden" value="<?php echo $the_pm->ID; ?>" name="reply_to" id="reply_to" />
+
+<?php do_action( 'post_form_post_post' ); do_action( 'post_form' ); ?>
+</fieldset>
+</form>
+</div>
+<?php } ?>

@@ -41,7 +41,7 @@ If you want to change the CSS styling of the tooltips, take a look at `bb-topic-
 
 = Version 0.61 =
 
-Fixed bugs reported by 'Tomcraft1980' and 'nuprn1' in the support-forum icon processing.
+Fixed bugs reported by 'NiksE', 'Tomcraft1980' and 'nuprn1' in the support-forum icon processing.
 
 = Version 0.6 =
 

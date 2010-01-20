@@ -22,11 +22,13 @@ function topic_icons_support_forum_connector_turn_off_labels() {
 }
 
 function topic_icons_support_forum_connector_init( ) {
-	add_action('bb_head', 'topic_icons_support_forum_connector_turn_off_labels');
-	add_action('bb_admin-header.php', 'topic_icons_support_forum_connector_turn_off_labels');
-	
-	topic_icons_register_status_interpreter('support-forum', new SupportForumStatusInterpreter());
-	topic_icons_register_status_renderer('support-forum', new SupportForumStatusRenderer());
+	if (function_exists('topic_icons_register_status_interpreter')) {
+		add_action('bb_head', 'topic_icons_support_forum_connector_turn_off_labels');
+		add_action('bb_admin-header.php', 'topic_icons_support_forum_connector_turn_off_labels');
+
+		topic_icons_register_status_interpreter('support-forum', new SupportForumStatusInterpreter());
+		topic_icons_register_status_renderer('support-forum', new SupportForumStatusRenderer());
+	}
 }
 
 topic_icons_support_forum_connector_init();

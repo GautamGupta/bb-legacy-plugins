@@ -39,6 +39,10 @@ If you want to change the CSS styling of the tooltips, take a look at `bb-topic-
 
 == Change Log ==
 
+= Version 0.61 =
+
+Fixed bugs reported by 'Tomcraft1980' and 'nuprn1' in the support-forum icon processing.
+
 = Version 0.6 =
 
 Created the "support forum connector" to allow support forums to be "skinned" using the topic icon plugin.  Added icon-sets for the default support forum along with a modified "grey-blox" theme for the support forum to show how skinning can take place.

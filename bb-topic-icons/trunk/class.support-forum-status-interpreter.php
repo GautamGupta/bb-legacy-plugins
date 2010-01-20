@@ -15,8 +15,16 @@ class SupportForumStatusInterpreter {
 
   public function getStatus($location, $topic) {
     global $support_forum;
+    
+		$support_forum_active = isset($support_forum);
+		$current_forum_is_support_enabled = false;
+		if ($support_forum_active) {
+    	$enabled = bb_get_option('support_forum_enabled');
+    	$current_forum_is_support_enabled = $support_forum_active && isset($enabled) && 
+    		count($enabled) > 0 && in_array($topic->forum_id, $enabled);
+  	}
 
-    if (isset($topic->topic_resolved) && isset($support_forum)) {
+    if (isset($topic->topic_resolved) && $current_forum_is_support_enabled) {
       return $this->resolve_support_status($topic->topic_resolved);
     }
   
@@ -28,8 +36,7 @@ class SupportForumStatusInterpreter {
         return "sticky";
     }
     
-    $enabled = bb_get_option('support_forum_enabled');
-    if (in_array($topic->forum_id, $enabled) && isset($support_forum)) {
+    if ($current_forum_is_support_enabled) {
       return $this->resolve_support_status(bb_get_option('support_forum_default_status'));
     }
 
@@ -45,7 +52,7 @@ class SupportForumStatusInterpreter {
       return 'non-issue';
   	}
 
-  return $status;
+    return $status;
   }
 
   private function is_sticky_topic($location, $topic) {

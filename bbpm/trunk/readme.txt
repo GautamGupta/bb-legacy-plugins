@@ -31,6 +31,7 @@ Users can send private messages to each other. Replies are threaded, and more th
 * bbPress Smilies now works with bbPM.
 * The username dropdown is slightly easier to click on.
 * Static reply form suggested by [rbat](http://bbpress.org/plugins/topic/bbpm/page/16/#post-5263) added as an option
+* Fixed a bug with adding members to a thread on forums with pretty permalinks turned off
 
 = 1.0 =
 * Danish translation from Daniel Juhl

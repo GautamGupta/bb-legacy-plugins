@@ -864,7 +864,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 							get_user_display_name( bb_get_current_user_info( 'ID' ) ),
 							$this->get_thread_title( $ID ),
 							bb_get_option( 'name' ),
-							bb_get_option( 'mod_rewrite' ) ? bb_get_uri( 'pm/' . $ID ) : BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?' . $ID
+							bb_get_option( 'mod_rewrite' ) ? bb_get_uri( 'pm/' . $ID ) : bb_get_uri( '', array( 'pm' => $ID ) )
 						)
 					);
 				}

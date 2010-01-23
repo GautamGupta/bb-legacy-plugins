@@ -7,15 +7,26 @@
  */
 
 /* Now uses WP_Http since v1.5
- * Includes WP Http Class file if it doesn't exist (for bbPress 0.9 and below)
+ * Also has cURL and file_get_contents for bb0.9 and below
  */
-function atd_http_get($url, $method = 'GET', $data = array()){
-	if( !class_exists( 'WP_Http' ) ){
-		require_once( 'class.wp-http.php' );
+function atd_http( $url, $method = 'GET', $data = array() ){
+	if( class_exists( 'WP_Http' ) ){ // Better way
+		$request = new WP_Http;
+		return wp_remote_retrieve_body( $request->request( $url, array( 'method' => $method, 'body' => $data, 'user-agent' => 'AtD/bbPress v' . ATD_VER ) ) );
+	}else{
+		if ( function_exists( 'curl_init' ) ) { // Use cURL
+			$ch = curl_init();
+			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
+			curl_setopt( $ch, CURLOPT_URL, $url );
+			$source = trim( curl_exec( $ch ) );
+			curl_close( $ch );
+			return $source;
+		} elseif ( function_exists( 'file_get_contents' ) ) { // use file_get_contents()
+			return trim( file_get_contents( $url ) );
+		} else {
+			return false;
+		}
 	}
-	$request = new WP_Http;
-	$result = wp_remote_retrieve_body( $request->request( $url , array( 'method' => $method, 'body' => $data, 'user-agent' => 'AtD/bbPress ' . ATD_VER ) ) );
-	return $result;
 }
 
 /* Check for updates
@@ -23,8 +34,8 @@ function atd_http_get($url, $method = 'GET', $data = array()){
  * Returns false if call was unsuccesfull or newer version isn't available
  */
 function atd_update_check(){
-	$latest_ver = trim(atd_http_get("http://gaut.am/uploads/plugins/updater.php?pid=5&chk=ver&soft=bb&current=".ATD_VER));
-	if($latest_ver && version_compare($latest_ver, ATD_VER, '>')){
+	$latest_ver = trim( atd_http( 'http://gaut.am/uploads/plugins/updater.php?pid=5&chk=ver&soft=bb&current=' . ATD_VER ) );
+	if( $latest_ver && version_compare( $latest_ver, ATD_VER, '>' ) ){
 		return $latest_ver;
 	} else {
 		return false;
@@ -33,8 +44,7 @@ function atd_update_check(){
 
 /* Connect to the AtD service and verify the key the user entered */
 function atd_verify_key( $key ) {
-	$session = trim( atd_http_get( 'http://service.afterthedeadline.com/verify?key=' . urlencode( $key ) ) );
-	return $session;
+	return trim( atd_http( 'http://service.afterthedeadline.com/verify?key=' . urlencode( $key ) ) );
 }
 
 /* Makes a settings page for AtD API key */
@@ -43,31 +53,31 @@ function atd_options(){
 	if ( $_POST['atd_opts_submit'] == 1 ) { /* Settings have been recieved, now save them! */
 		bb_check_admin_referer( 'atd-save-chk' ); /* Security Check */
 		/* Checks on the key, also saving it */
-		$key = trim(strip_tags(stripslashes($_POST['key'])));
-		$key_status = trim(atd_verify_key($key));
-		if ( $key && (strcmp( $key_status, 'valid' ) == 0 || strcmp( $key_status, 'Got it!' ) == 0)){
+		$key = trim( strip_tags( stripslashes( $_POST['key'] ) ) );
+		$key_status = trim( atd_verify_key( $key ) );
+		if ( $key && ( strcmp( $key_status, 'valid' ) == 0 || strcmp( $key_status, 'Got it!' ) == 0 ) ){
 			$atd_plugopts['key'] = $key;
-			bb_update_option(ATD_OPTIONS, $atd_plugopts);
-			bb_admin_notice(__('The API key was successfully saved!', 'after-the-deadline'));
+			bb_update_option( ATD_OPTIONS, $atd_plugopts );
+			bb_admin_notice( __( 'The API key was successfully saved!', 'after-the-deadline' ) );
 		}elseif(!$key){
 			$atd_plugopts['key'] = '';
-			bb_update_option(ATD_OPTIONS, $atd_plugopts);
-			bb_admin_notice(__('Please enter an API key.', 'after-the-deadline'));
+			bb_update_option( ATD_OPTIONS, $atd_plugopts );
+			bb_admin_notice( __( 'Please enter an API key.', 'after-the-deadline' ) );
 		}else{
 			$atd_plugopts['key'] = '';
-			bb_update_option(ATD_OPTIONS, $atd_plugopts);
-			bb_admin_notice(__('The API key you entered is invalid! Please enter the key again.', 'after-the-deadline'));
+			bb_update_option( ATD_OPTIONS, $atd_plugopts );
+			bb_admin_notice( __( 'The API key you entered is invalid! Please enter the key again.', 'after-the-deadline' ) );
 		}
 	}
 	/* Check for Updates */
 	$ver = atd_update_check();
-	if($ver){ /* If available, then notify */
-		bb_admin_notice(sprintf(__('New version%1$s of After the Deadline is available! Please download the latest version from <a href="%2$s">here</a>.', 'after-the-deadline'), ' (v'.$ver.')', 'http://bbpress.org/plugins/topic/after-the-deadline/'));
+	if( $ver ){ /* If available, then notify */
+		bb_admin_notice( sprintf( __( 'New version%1$s of After the Deadline is available! Please download the latest version from <a href="%2$s">here</a>.', 'after-the-deadline' ), ' (v'.$ver.')', 'http://bbpress.org/plugins/topic/after-the-deadline/' ) );
 	}
 	/* Options in an array to be printed, only for bb 1.0+ */
 	$options = array(
 		'key' => array(
-			'title' => __('Your AtD API Key', 'after-the-deadline'),
+			'title' => __( 'Your AtD API Key', 'after-the-deadline' ),
 			'class' => array( 'long' ),
 			'value' => $atd_plugopts['key'] ? $atd_plugopts['key'] : '',
 			'after' => '<div style="clear:both;"></div><strong>'.sprintf(__('You can get a key from the <a href="%s">After the Deadline</a> website.', 'after-the-deadline'), 'http://www.afterthedeadline.com/profile.slp').'</strong><br />'.__('The disadvantage of not entering a key is that AtD only allows one call at a time/key. This means if a lot of people are using the same (default) key, then their & your performance will degrade as more people use it.', 'after-the-deadline')
@@ -80,7 +90,7 @@ function atd_options(){
 	<form method="post" class="settings options">
 		<fieldset>
 			<?php
-			if(function_exists('bb_option_form_element')){ //bb 1.0+
+			if( function_exists( 'bb_option_form_element' ) ){ //bb 1.0+
 				foreach ( $options as $option => $args ) {
 					bb_option_form_element( $option, $args );
 				}

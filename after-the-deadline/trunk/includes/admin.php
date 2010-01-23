@@ -14,12 +14,8 @@ function atd_http_get($url, $method = 'GET', $data = array()){
 		require_once( 'class.wp-http.php' );
 	}
 	$request = new WP_Http;
-	$result = $request->request( $url , array( 'method' => $method, 'body' => $data, 'user-agent' => 'AtD/bbPress ' . ATD_VER ) );
-	if ( !is_wp_error($result) && isset($result['body']) ) {
-		return $result['body'];
-	} else {
-		return false;
-	}
+	$result = wp_remote_retrieve_body( $request->request( $url , array( 'method' => $method, 'body' => $data, 'user-agent' => 'AtD/bbPress ' . ATD_VER ) ) );
+	return $result;
 }
 
 /* Check for updates

@@ -32,7 +32,7 @@ Author URI: http://gaut.am/
  */
 
 /* Create Text Domain For Translations */
-load_plugin_textdomain( 'after-the-deadline', dirname(__FILE__) . '/languages' );
+bb_load_plugin_textdomain( 'after-the-deadline', dirname(__FILE__) . '/languages' );
 
 /*
  * Defines

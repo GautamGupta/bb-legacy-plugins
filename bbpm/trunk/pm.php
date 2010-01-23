@@ -66,7 +66,7 @@ if ( strtoupper( $_SERVER['REQUEST_METHOD'] ) == 'POST' && !empty( $_POST['pm_th
 
 	bb_update_usermeta( bb_get_current_user_info( 'ID' ), 'last_posted', time() );
 
-	wp_redirect( bb_get_option( 'mod_rewrite' ) ? bb_get_uri( 'pm/' . $_POST['pm_thread'] ) : BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/?' . $_POST['pm_thread'] );
+	wp_redirect( bb_get_option( 'mod_rewrite' ) ? bb_get_uri( 'pm/' . $_POST['pm_thread'] ) : bb_get_uri( '', array( 'pm' => $_POST['pm_thread'] ) ) );
 	exit;
 } elseif ( strtoupper( $_SERVER['REQUEST_METHOD'] ) == 'POST' && empty( $_POST['reply_to'] ) ) {
 	bb_check_admin_referer( 'bbpm-new' );

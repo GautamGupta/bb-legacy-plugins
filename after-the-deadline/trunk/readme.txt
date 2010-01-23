@@ -2,8 +2,8 @@
 Contributors: Gautam Gupta
 Donate link: http://gaut.am/donate/AtD/
 Tags: after the deadline, writing, spell, spelling, spellchecker, grammar, style, plugin, edit, proofreading, Gautam
-Requires at least: 0.9
-Tested up to: 1.0.2
+Requires at least: 1.0
+Tested up to: 1.1
 Stable tag: 1.4
 
 After the Deadline plugin checks for spelling, style, and grammatical errors in your bbPress forum posts.
@@ -74,22 +74,15 @@ If you are using a kakumei based theme, then open the style.css file of the them
 2. Replace it with `#post_content {`
 3. Save the file and upload it to the server
 
-= 5. Things aren't going as they should! Some `fsockopen` error is coming! =
-This means that `fsockopen` function is not enabled on your webserver. Please use the [1.3 version](http://bbpress.org/plugins/topic/after-the-deadline/after-the-deadline.1.3.zip) and follow these steps to fix this error:
-
-1. Open `scripts/atd.js` which is located in the plugin folder.
-2. Find `AtD.checkTextArea('post_content', 'checkLink', 'Edit Text');` (6th line)
-3. Replace it with `AtD.checkTextAreaCrossAJAX('post_content', 'checkLink', 'Edit Text');`
-4. Save the file and upload it to the server.
-
-If you do this, you cannot add an API key, and the text limit (2000 for Internet Explorer & 7000 for others) will be imposed.
-
-= 6. The directory of the plugin is not being matched properly! =
+= 5. The directory of the plugin is not being matched properly! =
 If the directory of the plugin could not be matched for some reason, then define `ATD_PLUGPATH` in `bb-config.php` file which is the full URL path to the plugin directory
 It should be set to something like `http://www.example-domain.tld/forums/my-plugins/after-the-deadline/`
 
-= 7. The dialog boxes aren't looking as they should! =
+= 6. The dialog boxes aren't looking as they should! =
 Please make sure that the plugin directory is chmodded to 755.
+
+= 7. This doesn't work with bbPress 0.9! =
+Please use version 1.4
 
 *Please see [this FAQ](http://www.afterthedeadline.com/questions.slp) for more questions*
 
@@ -99,6 +92,9 @@ Please make sure that the plugin directory is chmodded to 755.
 2. A Screenshot of the Settings Page
 
 == Changelog ==
+= 1.5 (xx-xx-10) =
+* Removed compatibility with bbPress 0.9
+* Improved coding efficiency
 
 = 1.4 (17-01-10) =
 * Addded localization support! Please refer to [this post](http://gaut.am/translating-wordpress-or-bbpress-plugins/) to know how to contribute!

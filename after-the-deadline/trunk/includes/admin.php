@@ -10,23 +10,8 @@
  * Also has cURL and file_get_contents for bb0.9 and below
  */
 function atd_http( $url, $method = 'GET', $data = array() ){
-	if( class_exists( 'WP_Http' ) ){ // Better way
-		$request = new WP_Http;
-		return wp_remote_retrieve_body( $request->request( $url, array( 'method' => $method, 'body' => $data, 'user-agent' => 'AtD/bbPress v' . ATD_VER ) ) );
-	}else{
-		if ( function_exists( 'curl_init' ) ) { // Use cURL
-			$ch = curl_init();
-			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-			curl_setopt( $ch, CURLOPT_URL, $url );
-			$source = trim( curl_exec( $ch ) );
-			curl_close( $ch );
-			return $source;
-		} elseif ( function_exists( 'file_get_contents' ) ) { // use file_get_contents()
-			return trim( file_get_contents( $url ) );
-		} else {
-			return false;
-		}
-	}
+	$request = new WP_Http;
+	return wp_remote_retrieve_body( $request->request( $url, array( 'method' => $method, 'body' => $data, 'user-agent' => 'AtD/bbPress v' . ATD_VER ) ) );
 }
 
 /* Check for updates
@@ -90,21 +75,10 @@ function atd_options(){
 	<form method="post" class="settings options">
 		<fieldset>
 			<?php
-			if( function_exists( 'bb_option_form_element' ) ){ //bb 1.0+
-				foreach ( $options as $option => $args ) {
-					bb_option_form_element( $option, $args );
-				}
-			}else{ //bb 0.9 or less
+			foreach ( $options as $option => $args ) {
+				bb_option_form_element( $option, $args );
+			}
 			?>
-			<label for="key"><?php _e('Your AtD API Key', 'after-the-deadline'); ?>:</label>
-			<div>
-				<input type='text' class='text' name='key' id='key' value='<?php echo $atd_plugopts['key'] ? $atd_plugopts['key'] : ''; ?>' />
-				<p>
-					<?php printf(__('You can get a key from the <a href="%s">After the Deadline</a> website.', 'after-the-deadline'), 'http://www.afterthedeadline.com/profile.slp'); ?><br />
-					<?php _e('The disadvantage of not entering a key is that AtD only allows one call at a time/key. This means if a lot of people are using the same (default) key, then their & your performance will degrade as more people use it.', 'after-the-deadline'); ?>
-				</p>
-			</div>
-			<?php } ?>
 		</fieldset>
 		<fieldset class="submit">
 			<?php bb_nonce_field( 'atd-save-chk' ); ?>

@@ -40,26 +40,13 @@ function atd_css_js(){
 				'dialog_replace_selection' => __('Replace selection with', 'after-the-deadline'),
 				'dialog_replace' => __('Replace', 'after-the-deadline'),
 			);
-		if( function_exists( 'wp_enqueue_style' ) && function_exists( 'wp_enqueue_script' ) && function_exists( 'wp_localize_script' ) ){ //bb 1.0+
-			//wp_enqueue_style('after-the-deadline', ATD_PLUGPATH.'css/atd-uncompressed.css', false, ATD_VER, 'all');
-			//wp_enqueue_script('after-the-deadline', ATD_PLUGPATH."scripts/atd-uncompressed.js", array('jquery'), ATD_VER, true);
-			wp_enqueue_style('after-the-deadline', ATD_PLUGPATH.'css/atd.css', false, ATD_VER, 'all');
-			wp_enqueue_script('after-the-deadline', ATD_PLUGPATH."scripts/atd.js", array('jquery'), ATD_VER);
-			wp_localize_script('after-the-deadline', 'AtD', $i18n);
-		}elseif( function_exists( 'bb_register_script' ) && function_exists('bb_enqueue_script' ) && function_exists('bb_localize_script' ) && function_exists( 'bb_deregister_script' ) ){ //bb below 1.0
-			bb_deregister_script('jquery'); //old jQuery cannot work for AtD, atleast 1.2.6
-			bb_register_script('jquery', ATD_PLUGPATH.'scripts/jquery.js', false, '1.3.2'); //so load 1.3.2
-			bb_enqueue_script('after-the-deadline', ATD_PLUGPATH."scripts/atd.js", array('jquery'), ATD_VER);
-			bb_localize_script('after-the-deadline', 'AtD', $i18n);
-			echo "<link rel='stylesheet' id='after-the-deadline-css' href='".ATD_PLUGPATH."css/atd.css' type='text/css' media='all' />";
-		}
+		//wp_enqueue_style('after-the-deadline', ATD_PLUGPATH.'css/atd-uncompressed.css', false, ATD_VER, 'all');
+		//wp_enqueue_script('after-the-deadline', ATD_PLUGPATH."scripts/atd-uncompressed.js", array('jquery'), ATD_VER, true);
+		wp_enqueue_style('after-the-deadline', ATD_PLUGPATH.'css/atd.css', false, ATD_VER, 'all');
+		wp_enqueue_script('after-the-deadline', ATD_PLUGPATH."scripts/atd.js", array('jquery'), ATD_VER);
+		wp_localize_script('after-the-deadline', 'AtD', $i18n);
 	}
 }
 
-/* Add Actions:
- * (1) Hook 'wp_print_scripts' to 'atd_css_js' - Enqueues Script and Style (JS & CSS), for bbPress 1.0+
- * (2) Hook 'bb_print_scripts' to 'atd_css_js' - Same as (1), for bbPress 0.9 and below
- * Above are only done if the user is logged in or loginless posting is enabled
- */
+/* Hook 'wp_print_scripts' to 'atd_css_js' - Enqueues Script and Style (JS & CSS) */
 add_action('wp_print_scripts', 'atd_css_js', 2);
-add_action('bb_print_scripts', 'atd_css_js', 2);

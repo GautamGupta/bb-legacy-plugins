@@ -1,7 +1,7 @@
 <?php
 /*
  * AtD Proxy Script for
- * After the Deadline - Spell Checker Plugin
+ * After the Deadline Plugin
  * (for bbPress) by www.gaut.am
  */
 

@@ -1,7 +1,8 @@
 <?php
 /*
  Functions PHP File for
- Social It plugin (for bbPress) by www.gaut.am
+ Social It Plugin
+ (for bbPress) by www.gaut.am
 */
 
 function socialit_network_input_select($name, $hint) {
@@ -13,12 +14,6 @@ function socialit_network_input_select($name, $hint) {
 		$name,
 		$name
 	);
-}
-
-function socialit_change_plus_apos($content){
-	$content = str_replace('+','%20',$content);
-	$content = str_replace("&#8217;","'",$content);
-	return $content;
 }
 
 // returns the option tag for a form select element
@@ -54,32 +49,13 @@ function socialit_select_option_group($field, $options) {
 }
 
 //curl, file get contents or nothing, used for short url and for updater
-function socialit_nav_browse($url, $use_POST_method = false, $POST_data = null){
-	if (function_exists('curl_init')) {
-		// Use cURL
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_URL, $url);
-		if($use_POST_method){
-			curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $POST_data);
-		}
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 3);
-		$source = trim(curl_exec($ch));
-		curl_close($ch);
-		
-	} elseif (function_exists('file_get_contents')) { // use file_get_contents()
-		$source = trim(file_get_contents($url));
-	} else {
-		$source = null;
-	}
-	return $source;
+function socialit_nav_browse($url, $method = 'GET', $data = array()){
+	return wp_remote_retrieve_body( wp_remote_request( $url, array( 'method' => $method, 'body' => $data, 'user-agent' => 'Social It/bbPress v' . SOCIALIT_VER ) ) );
 }
 
 //check for updates, as bbpress doesnt check itself :(
 function socialit_update_check(){
-	$latest_ver = socialit_nav_browse("http://gaut.am/uploads/plugins/updater.php?pid=1&chk=ver&soft=bb&current=".SOCIALIT_vNum);
+	$latest_ver = socialit_nav_browse("http://gaut.am/uploads/plugins/updater.php?pid=1&chk=ver&soft=bb&current=".SOCIALIT_VER);
 	if($latest_ver && version_compare($latest_ver, SOCIALIT_VER, '>')){
 		return $latest_ver;
 	}else{
@@ -89,68 +65,7 @@ function socialit_update_check(){
 
 //add sidebar link to settings page
 function socialit_menu_link() {
-	if (function_exists('bb_admin_add_submenu')) {
-		bb_admin_add_submenu( __( 'Social It' ), 'administrate', 'socialit_settings_page', 'options-general.php' );
-	}
-}
-
-//get current page rss link, code taken from functions.bb-template.php in bb-includes, posts' rss prefered instead of topics'
-function socialit_get_current_rss_link(){
-	switch (bb_get_location()) {
-		case 'profile-page':
-			if ( $tab = isset($_GET['tab']) ? $_GET['tab'] : bb_get_path(2) )
-				if ($tab != 'favorites')
-					break;
-			
-			$feed = get_favorites_rss_link(0, BB_URI_CONTEXT_LINK_ALTERNATE_HREF + BB_URI_CONTEXT_BB_FEED);
-			break;
-		
-		case 'topic-page':
-			$feed = get_topic_rss_link(0, BB_URI_CONTEXT_LINK_ALTERNATE_HREF + BB_URI_CONTEXT_BB_FEED);
-			break;
-		
-		case 'tag-page':
-			if (bb_is_tag()) {
-				$feed = bb_get_tag_posts_rss_link(0, BB_URI_CONTEXT_LINK_ALTERNATE_HREF + BB_URI_CONTEXT_BB_FEED);
-			}
-			break;
-		
-		case 'forum-page':
-			$feed = bb_get_forum_posts_rss_link(0, BB_URI_CONTEXT_LINK_ALTERNATE_HREF + BB_URI_CONTEXT_BB_FEED);
-			break;
-		
-		case 'front-page':
-			$feed = bb_get_posts_rss_link(BB_URI_CONTEXT_LINK_ALTERNATE_HREF + BB_URI_CONTEXT_BB_FEED);
-			break;
-		
-		case 'view-page':
-			global $bb_views, $view;
-			if ($bb_views[$view]['feed']) {
-				$feed = bb_get_view_rss_link(null, BB_URI_CONTEXT_LINK_ALTERNATE_HREF + BB_URI_CONTEXT_BB_FEED);
-			}
-			break;
-		default:
-			$feed = bb_get_posts_rss_link(BB_URI_CONTEXT_LINK_ALTERNATE_HREF + BB_URI_CONTEXT_BB_FEED);
-			break;
-	}
-	return $feed;
-}
-
-//gets current URL, returns string, taken from Support Forum Plugin
-function socialit_get_current_url(){
-	$schema = 'http://';
-	if (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') {
-		$schema = 'https://';
-	}
-	if ($querystring = $_SERVER['QUERYSTRING']) {
-		$querystring = ltrim($querystring, '?&');
-		$querystring = rtrim($querystring, '&');
-		if ($querystring) {
-			$querystring = '?' . $querystring;
-		}
-	}
-	$uri = $schema . $_SERVER['HTTP_HOST'] . rtrim($_SERVER['REQUEST_URI'], '?&') . $querystring;
-	return $uri;
+	bb_admin_add_submenu( __( 'Social It', 'social-it' ), 'administrate', 'socialit_settings_page', 'options-general.php' );
 }
 
 //write settings page
@@ -180,7 +95,14 @@ function socialit_settings_page() {
 			copy($socialit_oldloc.'css/style.css', $socialit_newloc.'css/style.css');
 			copy($socialit_oldloc.'js/social-it-public.js', $socialit_newloc.'js/social-it-public.js');
 			copy($socialit_oldloc.'images/socialit-sprite.png', $socialit_newloc.'images/socialit-sprite.png');
-			copy($socialit_oldloc.'images/socialit-trans.png', $socialit_newloc.'images/socialit-trans.png');
+			
+			copy($socialit_oldloc.'images/share-enjoy.png', $socialit_newloc.'images/share-enjoy.png');
+			copy($socialit_oldloc.'images/share-german.png', $socialit_newloc.'images/share-german.png');
+			copy($socialit_oldloc.'images/share-love-hearts.png', $socialit_newloc.'images/share-love-hearts.png');
+			copy($socialit_oldloc.'images/share-wealth.png', $socialit_newloc.'images/share-wealth.png');
+			copy($socialit_oldloc.'images/sharing-caring-hearts.png', $socialit_newloc.'images/sharing-caring-hearts.png');
+			copy($socialit_oldloc.'images/sharing-caring.png', $socialit_newloc.'images/sharing-caring.png');
+			copy($socialit_oldloc.'images/sharing-sexy.png', $socialit_newloc.'images/sharing-sexy.png');
 		}
 	}
 	
@@ -240,11 +162,25 @@ function socialit_settings_page() {
 		}
 		
 		if (!$error_message) {
+			//generate a new sprite, to reduce the size of the image, only for PHP 5 with GD
+			if( phpversion() >= '5' && extension_loaded( 'gd' ) && function_exists( 'gd_info' ) && !$_POST['custom-mods'] ) {
+				require_once( 'sprite-gen/Sprite.php' ); //main file, which includes other classes
+				SpriteConfig::set( 'relImageOutputDirectory', SOCIALIT_RELDIR.'/images' ); //relative to web root, this is where the generated sprite images will go
+				SpriteConfig::set( 'relTmplOutputDirectory', SOCIALIT_RELDIR.'/css' ); //relative to web root, this is where template files and generated CSS will go
+				SpriteConfig::set( 'cacheTime', 0 ); //Set the cacheTime to 0 to prevent any caching
+				SpriteConfig::set( 'transparentImagePath', SOCIALIT_RELDIR.'/images/1_1_trans.gif' );
+				foreach( $_POST['bookmark'] as $bookmark ){
+					$bookmark = explode( '-', $bookmark );
+					Sprite::ppRegister( SOCIALIT_RELDIR.'/images/icons/' . $bookmark[1] . '.png' );
+				}
+				Sprite::process(); //Now we run the processSprites() function. This MUST be run before you can access any of the Sprites in your template or elsewhere.
+				$socialit_plugopts['custom-css'] = SOCIALIT_PLUGPATH . 'css/' . trim(SpriteStyleRegistry::getFileName()); //cssfilename
+			}
 			foreach (array(
 				'topic', 'xtrastyle', 'reloption', 'targetopt', 'bookmark', 
 				'twittid', 'ybuzzcat', 'ybuzzmed', 
 				'twittcat', 'defaulttags', 'bgimg-yes', 'mobile-hide', 'bgimg',
-				'feed', 'expand', 'autocenter', 'custom-mods',
+				'feed', 'expand', 'autocenter', 'custom-mods', 'scriptInFooter',
 				'sfpnonres', 'sfpres', 'sfpnonsup',
 				'shorty',
 			) as $field) $socialit_plugopts[$field] = $_POST[$field];
@@ -311,7 +247,7 @@ function socialit_settings_page() {
 					<div class="padding">
 						<p><?php _e('Select the Networks to display. Drag to reorder.', 'socialit'); ?></p>
 						<ul class="multi-selection"> 
- 		                                        <li>Select:&nbsp;</li> 
+ 		                                        <li><?php _e('Select', 'socialit'); ?>:&nbsp;</li> 
  		                                        <li><a id="sel-all" href="javascript:void(0);"><?php _e('All', 'socialit'); ?></a>&nbsp;|&nbsp;</li> 
  		                                        <li><a id="sel-none" href="javascript:void(0);"><?php _e('None', 'socialit'); ?></a>&nbsp;|&nbsp;</li> 
  		                                        <li><a id="sel-pop" href="javascript:void(0);"><?php _e('Most Popular', 'socialit'); ?></a>&nbsp;</li> 
@@ -363,6 +299,7 @@ function socialit_settings_page() {
 									'cligs' => 'cli.gs',
 									'supr' => 'su.pr',
 									'tiny' => 'tinyurl.com',
+									'slly'=>'SexyURL (sl.ly)',
 								));
 							?>
 							</select>
@@ -370,62 +307,62 @@ function socialit_settings_page() {
 							<div id="shortyapimdiv-bitly" <?php if($socialit_plugopts['shorty'] != 'bitly') { ?>class="hide"<?php } ?>>
 							<div class="clearbig"></div>
 								<div id="shortyapidiv-bitly">
-									<label for="shortyapiuser-bitly">User ID:</label>
+									<label for="shortyapiuser-bitly"><?php _e('User ID', 'socialit'); ?>:</label>
 									<input type="text" id="shortyapiuser-bitly" name="shortyapiuser-bitly" value="<?php echo $socialit_plugopts['shortyapi']['bitly']['user']; ?>" />
-									<label for="shortyapikey-bitly">API Key:</label>
+									<label for="shortyapikey-bitly"><?php _e('API Key', 'socialit'); ?>:</label>
 									<input type="text" id="shortyapikey-bitly" name="shortyapikey-bitly" value="<?php echo $socialit_plugopts['shortyapi']['bitly']['key']; ?>" />
 								</div>
 							</div>
 							<div id="shortyapimdiv-trim" <?php if($socialit_plugopts['shorty'] != 'trim') { ?>class="hide"<?php } ?>>
 								<span class="socialit_option" id="shortyapidivchk-trim">
-									<input <?php echo (($socialit_plugopts['shortyapi']['trim']['chk'] == "1")? 'checked=""' : ""); ?> name="shortyapichk-trim" id="shortyapichk-trim" type="checkbox" value="1" /> Track Generated Links?
+									<input <?php echo (($socialit_plugopts['shortyapi']['trim']['chk'] == "1")? 'checked=""' : ""); ?> name="shortyapichk-trim" id="shortyapichk-trim" type="checkbox" value="1" /> <?php _e('Track Generated Links?', 'socialit'); ?>
 								</span>
 								<div class="clearbig"></div>
 								<div id="shortyapidiv-trim" <?php if(!isset($socialit_plugopts['shortyapi']['trim']['chk'])) { ?>class="hide"<?php } ?>>
-									<label for="shortyapiuser-trim">User ID:</label>
+									<label for="shortyapiuser-trim"><?php _e('User ID', 'socialit'); ?>:</label>
 									<input type="text" id="shortyapiuser-trim" name="shortyapiuser-trim" value="<?php echo $socialit_plugopts['shortyapi']['trim']['user']; ?>" />
-									<label for="shortyapikey-trim">Password:</label>
+									<label for="shortyapikey-trim"><?php _e('Password', 'socialit'); ?>:</label>
 									<input type="text" id="shortyapipass-trim" name="shortyapipass-trim" value="<?php echo $socialit_plugopts['shortyapi']['trim']['pass']; ?>" />
 								</div>
 							</div>
 							<div id="shortyapimdiv-snip" <?php if($socialit_plugopts['shorty'] != 'snip') { ?>class="hide"<?php } ?>>
 								<div class="clearbig"></div>
 								<div id="shortyapidiv-snip">
-									<label for="shortyapiuser-snip">User ID:</label>
+									<label for="shortyapiuser-snip"><?php _e('User ID', 'socialit'); ?>:</label>
 									<input type="text" id="shortyapiuser-snip" name="shortyapiuser-snip" value="<?php echo $socialit_plugopts['shortyapi']['snip']['user']; ?>" />
-									<label for="shortyapikey-snip">API Key:</label>
+									<label for="shortyapikey-snip"><?php _e('API Key', 'socialit'); ?>:</label>
 									<input type="text" id="shortyapikey-snip" name="shortyapikey-snip" value="<?php echo $socialit_plugopts['shortyapi']['snip']['key']; ?>" />
 								</div>
 							</div>
 							<div id="shortyapimdiv-tinyarrow" <?php if($socialit_plugopts['shorty'] != 'tinyarrow') { ?>class="hide"<?php } ?>>
 								<span class="socialit_option" id="shortyapidivchk-tinyarrow">
-									<input <?php echo (($socialit_plugopts['shortyapi']['tinyarrow']['chk'] == "1")? 'checked=""' : ""); ?> name="shortyapichk-tinyarrow" id="shortyapichk-tinyarrow" type="checkbox" value="1" /> Track Generated Links?
+									<input <?php echo (($socialit_plugopts['shortyapi']['tinyarrow']['chk'] == "1")? 'checked=""' : ""); ?> name="shortyapichk-tinyarrow" id="shortyapichk-tinyarrow" type="checkbox" value="1" /> <?php _e('Track Generated Links?', 'socialit'); ?>
 								</span>
 								<div class="clearbig"></div>
 								<div id="shortyapidiv-tinyarrow" <?php if(!isset($socialit_plugopts['shortyapi']['tinyarrow']['chk'])) { ?>class="hide"<?php } ?>>
-									<label for="shortyapiuser-tinyarrow">User ID:</label>
+									<label for="shortyapiuser-tinyarrow"><?php _e('User ID', 'socialit'); ?>:</label>
 									<input type="text" id="shortyapiuser-tinyarrow" name="shortyapiuser-tinyarrow" value="<?php echo $socialit_plugopts['shortyapi']['tinyarrow']['user']; ?>" />
 								</div>
 							</div>
 							<div id="shortyapimdiv-cligs" <?php if($socialit_plugopts['shorty'] != 'cligs') { ?>class="hide"<?php } ?>>
 								<span class="socialit_option" id="shortyapidivchk-cligs">
-									<input <?php echo (($socialit_plugopts['shortyapi']['cligs']['chk'] == "1")? 'checked=""' : ""); ?> name="shortyapichk-cligs" id="shortyapichk-cligs" type="checkbox" value="1" /> Track Generated Links?
+									<input <?php echo (($socialit_plugopts['shortyapi']['cligs']['chk'] == "1")? 'checked=""' : ""); ?> name="shortyapichk-cligs" id="shortyapichk-cligs" type="checkbox" value="1" /> <?php _e('Track Generated Links?', 'socialit'); ?>
 								</span>
 								<div class="clearbig"></div>
 								<div id="shortyapidiv-cligs" <?php if(!isset($socialit_plugopts['shortyapi']['cligs']['chk'])) { ?>class="hide"<?php } ?>>
-									<label for="shortyapikey-cligs">API Key:</label>
+									<label for="shortyapikey-cligs"><?php _e('API Key', 'socialit'); ?>:</label>
 									<input type="text" id="shortyapikey-cligs" name="shortyapikey-cligs" value="<?php echo $socialit_plugopts['shortyapi']['cligs']['key']; ?>" />
 								</div>
 							</div>
 							<div id="shortyapimdiv-supr" <?php if($socialit_plugopts['shorty'] != 'supr') { ?>class="hide"<?php } ?>>
 								<span class="socialit_option" id="shortyapidivchk-supr">
-									<input <?php echo (($socialit_plugopts['shortyapi']['supr']['chk'] == "1")? 'checked=""' : ""); ?> name="shortyapichk-supr" id="shortyapichk-supr" type="checkbox" value="1" /> Track Generated Links?
+									<input <?php echo (($socialit_plugopts['shortyapi']['supr']['chk'] == "1")? 'checked=""' : ""); ?> name="shortyapichk-supr" id="shortyapichk-supr" type="checkbox" value="1" /> <?php _e('Track Generated Links?', 'socialit'); ?>
 								</span>
 								<div class="clearbig"></div>
 								<div id="shortyapidiv-supr" <?php if(!isset($socialit_plugopts['shortyapi']['supr']['chk'])) { ?>class="hide"<?php } ?>>
-									<label for="shortyapiuser-supr">User ID:</label>
+									<label for="shortyapiuser-supr"><?php _e('User ID', 'socialit'); ?>:</label>
 									<input type="text" id="shortyapiuser-supr" name="shortyapiuser-supr" value="<?php echo $socialit_plugopts['shortyapi']['supr']['user']; ?>" />
-									<label for="shortyapikey-supr">API Key:</label>
+									<label for="shortyapikey-supr"><?php _e('API Key', 'socialit'); ?>:</label>
 									<input type="text" id="shortyapikey-supr" name="shortyapikey-supr" value="<?php echo $socialit_plugopts['shortyapi']['supr']['key']; ?>" />
 								</div>
 							</div>
@@ -522,7 +459,7 @@ function socialit_settings_page() {
 							<h3><?php _e('How it works...', 'socialit'); ?></h3> 
 							<p><?php _e('Since you have chosen for the plugin to override the style settings with your own custom mods, it will now pull the files from the new folders it is going to create on your server as soon as you save your changes. The file/folder locations should be as follows:', 'socialit'); ?></p> 
 							<ul>
-								<?php $newloc = bb_get_option('uri').'socialit-mods/'; ?>
+							<?php $newloc = bb_get_option('uri').'socialit-mods/'; ?>
 							      <li class="custom-mods-folder"><a href="<?php echo $newloc; ?>"><?php echo $newloc; ?></a></li> 
 							      <li class="custom-mods-folder"><a href="<?php echo $newloc.'css'; ?>"><?php echo $newloc.'css'; ?></a></li> 
 							      <li class="custom-mods-folder"><a href="<?php echo $newloc.'js'; ?>"><?php echo $newloc.'js'; ?></a></li> 
@@ -530,7 +467,13 @@ function socialit_settings_page() {
 							      <li class="custom-mods-code"><a href="<?php echo $newloc.'js/social-it-public.js'; ?>"><?php echo $newloc.'js/social-it-public.js'; ?></a></li> 
 							      <li class="custom-mods-code"><a href="<?php echo $newloc.'css/style.css'; ?>"><?php echo $newloc.'css/style.css'; ?></a></li> 
 							      <li class="custom-mods-image"><a href="<?php echo $newloc.'images/socialit-sprite.png'; ?>"><?php echo $newloc.'images/socialit-sprite.png'; ?></a></li> 
-							      <li class="custom-mods-image"><a href="<?php echo $newloc.'images/socialit-trans.png'; ?>"><?php echo $newloc.'images/socialit-trans.png'; ?></a></li> 
+							      <li class="custom-mods-image"><a href="<?php echo $newloc.'images/share-enjoy.png'; ?>"><?php echo $newloc.'images/share-enjoy.png'; ?></a></li>
+								<li class="custom-mods-image"><a href="<?php echo $newloc.'images/share-german.png'; ?>"><?php echo $newloc.'images/share-german.png'; ?></a></li>
+								<li class="custom-mods-image"><a href="<?php echo $newloc.'images/share-love-hearts.png'; ?>"><?php echo $newloc.'images/share-love-hearts.png'; ?></a></li>
+								<li class="custom-mods-image"><a href="<?php echo $newloc.'images/share-wealth.png'; ?>"><?php echo $newloc.'images/share-wealth.png'; ?></a></li>
+								<li class="custom-mods-image"><a href="<?php echo $newloc.'images/sharing-caring-hearts.png'; ?>"><?php echo $newloc.'images/sharing-caring-hearts.png'; ?></a></li>
+								<li class="custom-mods-image"><a href="<?php echo $newloc.'images/sharing-caring.png'; ?>"><?php echo $newloc.'images/sharing-caring.png'; ?></a></li>
+								<li class="custom-mods-image"><a href="<?php echo $newloc.'images/sharing-sexy.png'; ?>"><?php echo $newloc.'images/sharing-sexy.png'; ?></a></li>
 							</ul> 
 							<p><?php _e('Once you have saved your changes, you will be able to edit the image sprite that holds all of the icons for socialit as well as the CSS which accompanies it. Just be sure that you do in fact edit the CSS if you edit the images, as it is unlikely the heights, widths, and background positions of the images will stay the same after you are done.', 'socialit'); ?></p> 
 							<p><?php _e('Just a quick note... When you edit the styles and images to include your own custom backgrounds, icons, and CSS styles, be aware that those changes will not be reflected on the plugin options page. In other words: when you select your networks to be displayed, or when you select the background image to use, it will still be displaying the images from the original plugin directory.', 'socialit'); ?></p> 
@@ -553,6 +496,8 @@ function socialit_settings_page() {
  		                                          </label> 
  		                                          <input <?php echo (($socialit_plugopts['custom-mods'] == "yes")? 'checked' : ""); ?> name="custom-mods" id="custom-mods" type="checkbox" value="yes" /> 
  		                                    </div>
+						    <span class="socialit_option"><?php _e('Load scripts in Footer', 'socialit'); ?> <input type="checkbox" id="scriptInFooter" name="scriptInFooter" <?php echo (($socialit_plugopts['scriptInFooter'] == "1")? 'checked' : ""); ?> value="1" /></span> 
+ 		                                    <label for="scriptInFooter"><?php _e("Check this box if you want the Social It javascript to be loaded in your blog's footer.", "socialit"); ?> (<a href="http://developer.yahoo.com/performance/rules.html#js_bottom">?</a>)</label>
 						<span class="socialit_option"><?php _e('Animate-expand multi-lined bookmarks?', 'socialit'); ?></span>
 						<label><input <?php echo (($socialit_plugopts['expand'] == "1")? 'checked="checked"' : ""); ?> name="expand" id="expand-yes" type="radio" value="1" /> <?php _e('Yes', 'socialit'); ?></label>
 						<label><input <?php echo (($socialit_plugopts['expand'] != "1")? 'checked="checked"' : ""); ?> name="expand" id="expand-no" type="radio" value="0" /> <?php _e('No', 'socialit'); ?></label>
@@ -566,25 +511,25 @@ function socialit_settings_page() {
 							<?php _e('Use a background image?', 'socialit'); ?> <input <?php echo (($socialit_plugopts['bgimg-yes'] == "yes")? 'checked=""' : ""); ?> name="bgimg-yes" id="bgimg-yes" type="checkbox" value="yes" />
 						</span>
 						<div id="bgimgs" <?php if(!isset($socialit_plugopts['bgimg-yes'])) { ?>class="hide"<?php } else { echo " "; }?>>
-							<label class="bgimg share-sexy">
+							<label class="share-sexy">
 								<input <?php echo (($socialit_plugopts['bgimg'] == "sexy")? 'checked="checked"' : ""); ?> id="bgimg-sexy" name="bgimg" type="radio" value="sexy" />
 							</label>
-							<label class="bgimg share-care">
+							<label class="share-care">
 								<input <?php echo (($socialit_plugopts['bgimg'] == "caring")? 'checked="checked"' : ""); ?> id="bgimg-caring" name="bgimg" type="radio" value="caring" />
 							</label>
-							<label class="bgimg share-care-old">
+							<label class="share-care-old">
 								<input <?php echo (($socialit_plugopts['bgimg'] == "care-old")? 'checked="checked"' : ""); ?> id="bgimg-care-old" name="bgimg" type="radio" value="care-old" />
 							</label>
-							<label class="bgimg share-love">
+							<label class="share-love">
 								<input <?php echo (($socialit_plugopts['bgimg'] == "love")? 'checked="checked"' : ""); ?> id="bgimg-love" name="bgimg" type="radio" value="love" />
 							</label>
-							<label class="bgimg share-wealth">
+							<label class="share-wealth">
 								<input <?php echo (($socialit_plugopts['bgimg'] == "wealth")? 'checked="checked"' : ""); ?> id="bgimg-wealth" name="bgimg" type="radio" value="wealth" />
 							</label>
-							<label class="bgimg share-enjoy">
+							<label class="share-enjoy">
 								<input <?php echo (($socialit_plugopts['bgimg'] == "enjoy")? 'checked="checked"' : ""); ?> id="bgimg-enjoy" name="bgimg" type="radio" value="enjoy" />
 							</label>
-							<label class="bgimg share-german"> 
+							<label class="share-german"> 
  		                                                <input <?php echo (($socialit_plugopts['bgimg'] == "german")? 'checked="checked"' : ""); ?> id="bgimg-german" name="bgimg" type="radio" value="german" /> 
 							</label>
 						</div>
@@ -800,325 +745,6 @@ function socialit_settings_page() {
 	<?php
 } //closing brace for function "socialit_settings_page"
 
-
-function socialit_get_fetch_url() {
-	global $socialit_plugopts;
-	
-	$perms = trim(socialit_get_current_url());
-	
-	//check if the link is already genereted or not, if yes, then return the link 
- 	$fetch_url = trim($socialit_plugopts['shorturls'][md5($perms)]); 
- 	if($fetch_url){
- 	        return $fetch_url;
- 	}
-
-	$url_more = "";
-	$use_POST_method = false;
-	$POST_data = null;
-	// which short url service should be used?
-	if($socialit_plugopts['shorty'] == "e7t") {
-		$first_url = "http://b2l.me/api.php?alias=&url=".$perms; //now no e7t, instead b2l
-	}elseif($socialit_plugopts['shorty'] == "b2l") {
-		$first_url = "http://b2l.me/api.php?alias=&url=".$perms;
-	} elseif($socialit_plugopts['shorty'] == "tiny") {
-		$first_url = "http://tinyurl.com/api-create.php?url=".$perms;
-	} elseif($socialit_plugopts['shorty'] == "snip") {
-		$first_url = "http://snipr.com/site/getsnip";
-		$use_POST_method = true;
-		$POST_data = "snipformat=simple&sniplink=".rawurlencode($perms)."&snipuser=".$socialit_plugopts['shortyapi']['snip']['user']."&snipapi=".$socialit_plugopts['shortyapi']['snip']['key'];
-	} elseif($socialit_plugopts['shorty'] == "cligs") {
-		$first_url = "http://cli.gs/api/v1/cligs/create?url=".urlencode($perms)."&appid=SocialIt";
-		if($socialit_plugopts['shortyapi']['cligs']['chk'] == 1){
-			$first_url .= "&key=".$socialit_plugopts['shortyapi']['cligs']['key'];
-		}
-	} elseif($socialit_plugopts['shorty'] == "supr") {
-		$first_url = "http://su.pr/api/simpleshorten?url=".$perms;
-		if($socialit_plugopts['shortyapi']['supr']['chk'] == 1){
-			$first_url .= "&login=".$socialit_plugopts['shortyapi']['supr']['user']."&apiKey=".$socialit_plugopts['shortyapi']['supr']['key'];
-		}
-	} elseif($socialit_plugopts['shorty'] == "bitly") {
-		$first_url = "http://api.bit.ly/shorten?version=2.0.1&longUrl=".$perms."&history=1&login=".$socialit_plugopts['shortyapi']['bitly']['user']."&apiKey=".$socialit_plugopts['shortyapi']['bitly']['key']."&format=json";
-	} elseif($socialit_plugopts['shorty'] == "trim"){
-		if($socialit_plugopts['shortyapi']['trim']['chk'] == 1){
-			$first_url = "http://api.tr.im/api/trim_url.json?url=".$perms."&username=".$socialit_plugopts['shortyapi']['trim']['user']."&password=".$socialit_plugopts['shortyapi']['trim']['pass'];
-		}else{
-			$first_url = "http://api.tr.im/api/trim_simple?url=".$perms;
-		}
-	} elseif($socialit_plugopts['shorty'] == "tinyarrow") {
-		$first_url = "http://tinyarro.ws/api-create.php?";
-		if($socialit_plugopts['shortyapi']['tinyarrow']['chk'] == 1){
-			$first_url .= "&userid=".$socialit_plugopts['shortyapi']['tinyarrow']['user'];
-		}
-		$first_url .= "&url=".$perms;
-	} else { //default is e7t.us
-		$first_url = "http://b2l.me/api.php?alias=&url=".$perms;
-	}
-	// retrieve the shortened URL
-	$fetch_url = socialit_nav_browse($first_url, $use_POST_method, $POST_data);
-	if($socialit_plugopts['shorty'] == "trim" && $socialit_plugopts['shortyapi']['trim']['chk'] == 1){
-		$fetch_array = json_decode($fetch_url, true);
-		$fetch_url = $fetch_array['url'];
-	}
-	if($socialit_plugopts['shorty'] == "bitly"){
-		$fetch_array = json_decode($fetch_url, true);
-		$fetch_url = $fetch_array['results'][$perms]['shortUrl'];
-	}
-	if ($fetch_url) { // remote call made and was successful
-		$fetch_url = trim($fetch_url);
-		$socialit_plugopts['shorturls'][md5($perms)] = $fetch_url;
-		bb_update_option(SOCIALIT_OPTIONS, $socialit_plugopts); // update values for future use
-	} else { //return the permalink, getting the short url was not successful
-		$fetch_url = $perms;
-	}
-	
-	return $fetch_url;
-}
-
-function bookmark_list_item($name, $opts = array()) {
-	global $socialit_plugopts, $socialit_bookmarks_data;
-
-	$url = $socialit_bookmarks_data[$name]['baseUrl'];
-	foreach ($opts as $key=>$value) {
-		$url=str_replace(strtoupper($key), $value, $url);
-	}
-	
-	return sprintf(
-		'<li class="%s"><a href="%s" rel="%s"%s title="%s">%s</a></li>',
-		$name,
-		$url,
-		$socialit_plugopts['reloption'],
-		$socialit_plugopts['targetopt']=="_blank"?' class="external"':'',
-		$socialit_bookmarks_data[$name]['share'],
-		$socialit_bookmarks_data[$name]['share']
-	);
-}
-
-//shows an option to the topic creator/mod+ whether to hide the social bookmarking menu on the particular topic or not
-function socialit_hide_show($parts){
-	$topic = get_topic(get_topic_id());
-	if($topic && bb_current_user_can('delete_topic', $topic->topic_id)){
-		if(bb_get_topicmeta($topic->topic_id, 'hide_socialit') == 'true'){
-			$display = esc_html( __('Show Social It Menu', 'socialit') );
-			$uri = socialit_get_current_url()."?socialit_hide_show=1&shs_opt=1&tid=".$topic->topic_id;
-		} else {
-			$display = esc_html( __('Hide Social It Menu', 'socialit') );
-			$uri = socialit_get_current_url()."?socialit_hide_show=1&shs_opt=2&tid=".$topic->topic_id;
-		}
-		$uri = esc_url(bb_nonce_url($uri, 'socialit_hide_show_'.$topic->topic_id));
-		$parts[] = '[<a href="' . $uri . '">' . $display . '</a>]';
-		return $parts;
-	}
-	return $parts;
-}
-
-//does appropiate action for the above function
-function socialit_hide_show_do(){
-	if(bb_is_topic() && $_GET['socialit_hide_show'] == "1" && isset($_GET['shs_opt']) && isset($_GET['tid']) && bb_current_user_can('moderate')){
-		$topic = get_topic($_GET['tid']);
-		if(bb_verify_nonce($_GET['_wpnonce'], 'socialit_hide_show_'.$topic->topic_id)){
-			if($_GET['shs_opt'] == "2"){
-				bb_update_topicmeta($topic->topic_id, 'hide_socialit', 'true');
-			}else{
-				bb_delete_topicmeta($topic->topic_id, 'hide_socialit');
-			}
-		}else{
-			_e('Sorry, but that could not be done.', 'socialit');
-			exit;
-		}
-		wp_redirect(get_topic_link($topic->topic_id));
-	}
-}
-
-function get_socialit() {
-	global $socialit_plugopts, $bbdb, $public_tags, $socialit_is_mobile, $socialit_is_bot;
-	$dont_get_si = false;
-	$topic = get_topic(get_topic_id());
-	if((class_exists('Support_Forum')) && ($topic)){ //compatibility with Support Forum plugin for bbPress
-		$support_forum = new Support_Forum();
-		if($support_forum->isActive() && in_array($topic->forum_id, $support_forum->enabled)){
-			if(($socialit_plugopts['sfpnonres'] == "no" && $support_forum->getTopicStatus() == "no") || ($socialit_plugopts['sfpres'] == "no" && $support_forum->getTopicStatus() == "yes") || ($socialit_plugopts['sfpnonsup'] == "no" && $support_forum->getTopicStatus() == "mu")){
-				$dont_get_si = true;
-			}
-		}
-	}
-	if($socialit_plugopts['mobile-hide']=='yes' && ($socialit_is_mobile || $socialit_is_bot)) {
-		$dont_get_si = true;
-	}
-	if(bb_is_topic() && bb_get_topicmeta($topic->topic_id, 'hide_socialit') == true){
-		$dont_get_si = true;
-	}
-	if(!$dont_get_si){
-		if(bb_is_topic()){
-			$perms = urlencode(get_topic_link());
-			$title = get_topic_title();
-			$feedperms = strtolower($perms);
-			// Grab post tags for Twittley tags. If there aren't any, use default tags set in plugin options page
-			$get_tags = bb_get_topic_tags(get_topic_id());
-			if ($get_tags){
-				foreach($get_tags as $tag) {
-					$keywords = $keywords.$tag->name.',';
-				}
-			}
-			$topic_id_ft = get_topic_id(); //topic id for getting text
-			$first_post = (int) $bbdb->get_var("SELECT post_id FROM $bbdb->posts WHERE topic_id = $topic_id_ft ORDER BY post_id ASC LIMIT 1");
-			$socialit_content = get_post_text($first_post);
-		}else{
-			$perms = socialit_get_current_url(); 
-			$title = bb_get_title();
-			$feedperms = strtolower($perms);
-			$socialit_content = bb_get_option('description');
-		}
-		if (strlen($title) >= 80) {
-			$short_title = urlencode(substr($title, 0, 80)."[..]");
-		}else{
-			$short_title = urlencode($title);
-		}
-		$title = urlencode($title);
-		$site_name = bb_get_option('name');
-		$socialit_content = urlencode(substr(strip_tags(strip_shortcodes($socialit_content)),0,300));
-		$socialit_content = socialit_change_plus_apos($socialit_content);
-		$mail_subject = socialit_change_plus_apos($title);
-		$post_summary = stripslashes($socialit_content);
-		if (!empty($keywords)) {
-			$d_tags = $keywords;
-		}else {
-			$d_tags = $socialit_plugopts['defaulttags'];
-		}
-		$site_name = bb_get_option('name');
-		$y_cat = $socialit_plugopts['ybuzzcat'];
-		$y_med = $socialit_plugopts['ybuzzmed'];
-		$t_cat = $socialit_plugopts['twittcat'];
-		$short_url = socialit_get_fetch_url();
-		$current_rss_link = socialit_get_current_rss_link();
-		
-		// Temporary fix for bug that breaks layout when using NextGen Gallery plugin
-		if( (strpos($post_summary, '[') || strpos($post_summary, ']')) ) {
-			$post_summary = "";
-		}
-		if( (strpos($socialit_content, '[') || strpos($socialit_content,']')) ) {
-			$socialit_content = "";
-		}
-		
-		// select the background
-		if(!isset($socialit_plugopts['bgimg-yes'])) {
-			$bgchosen = '';
-		} elseif($socialit_plugopts['bgimg'] == 'sexy') {
-			$bgchosen = ' social-it-bg-sexy';
-		} elseif($socialit_plugopts['bgimg'] == 'caring') {
-			$bgchosen = ' social-it-bg-caring';
-		} elseif($socialit_plugopts['bgimg'] == 'care-old') {
-			$bgchosen = ' social-it-bg-caring-old';
-		} elseif($socialit_plugopts['bgimg'] == 'love') {
-			$bgchosen = ' social-it-bg-love';
-		}  elseif($socialit_plugopts['bgimg'] == 'wealth') {
-			$bgchosen = ' social-it-bg-wealth';
-		}  elseif($socialit_plugopts['bgimg'] == 'enjoy') {
-			$bgchosen = ' social-it-bg-enjoy';
-		}
-		
-		$style=($socialit_plugopts['autocenter'])?'':' style="'.__($socialit_plugopts['xtrastyle']).'"';
-		$isfeed = bb_is_feed();
-		if ($isfeed) $style=''; // do not add inline styles to the feed.
-		$expand = $socialit_plugopts['expand']?' social-it-expand':'';
-		if ($socialit_plugopts['autocenter'] == 1) { 
-			$autocenter=' social-it-center'; 
-		} elseif ($socialit_plugopts['autocenter'] == 2) { 
-			$autocenter=' social-it-spaced'; 
-		} else { 
-			$autocenter=''; 
-		}
-		
-		//write the menu
-		$socials = "\n\n".'<!-- Start Of Code Generated By Social It Plugin By www.gaut.am -->'."\n".'<div class="social-it'.$expand.$autocenter.$bgchosen.'"'.$style.'><ul class="socials">';
-		foreach ($socialit_plugopts['bookmark'] as $name) {
-			if ($name=='socialit-twitter') {
-				$socials.=bookmark_list_item($name, array(
-					'post_by'=>(!empty($socialit_plugopts['twittid']))?"(via+@".$socialit_plugopts['twittid'].")":'',
-					'short_title'=>$short_title,
-					'fetch_url'=>$short_url,
-				));
-			}
-			elseif ($name=='socialit-mail') {
-				$socials.=bookmark_list_item($name, array(
-					'title'=>$mail_subject,
-					'post_summary'=>$post_summary,
-					'permalink'=>$perms,
-				));
-			}
-			elseif ($name=='socialit-diigo') {
-				$socials.=bookmark_list_item($name, array(
-					'socialit_teaser'=>$socialit_content,
-					'permalink'=>$perms,
-					'title'=>$title,
-				));
-			}
-			elseif ($name=='socialit-linkedin') {
-				$socials.=bookmark_list_item($name, array(
-					'post_summary'=>$post_summary,
-					'site_name'=>$site_name,
-					'permalink'=>$perms,
-					'title'=>$title,
-				));
-			}
-			elseif ($name=='socialit-comfeed') {
-				$socials.=bookmark_list_item($name, array(
-					'permalink'=>$current_rss_link,
-				));
-			} 
-			elseif ($name=='socialit-yahoobuzz') {
-				$socials.=bookmark_list_item($name, array(
-					'permalink'=>$perms,
-					'title'=>$title,
-					'yahooteaser'=>$socialit_content,
-					'yahoocategory'=>$y_cat,
-					'yahoomediatype'=>$y_med,
-				));
-			} 
-			elseif ($name=='socialit-twittley') {
-				$socials.=bookmark_list_item($name, array(
-					'permalink'=>urlencode($perms),
-					'title'=>$title,
-					'post_summary'=>$post_summary,
-					'twitt_cat'=>$t_cat,
-					'default_tags'=>$d_tags,
-				));
-			}
-			else {
-				$socials.=bookmark_list_item($name, array(
-					'post_summary'=>$post_summary,
-					'permalink'=>$perms,
-					'title'=>$title,
-				));
-			}
-		}
-		$socials .= '</ul><div style="clear:both;"></div></div><!-- End Of Code Generated By Social It Plugin By www.gaut.am -->'."\n\n";
-		return $socials;
-	}
-}
-
-// This function is what allows people to insert the menu wherever they please rather than above/below a post...
-function selfserv_socialit() {
-	echo get_socialit();
-}
-
-//write the <head> code
-function socialit_public() {
-	if(bb_get_topicmeta(get_topic_id(), 'hide_socialit') == true) {
-		echo "\n\n".'<!-- Social It has been disabled on this page -->'."\n\n";
-	}else{
-		global $socialit_plugopts;
-		$link = ($socialit_plugopts['custom-mods'] == 'yes') ? bb_get_option('uri').'socialit-mods/' : SOCIALIT_PLUGPATH;
-		echo "\n\n".'<!-- Start Of Code Generated By Social It Plugin By www.gaut.am -->'."\n";
-		wp_register_style('social-it', $link.'css/style.css', false, SOCIALIT_VER, 'all');
-		wp_print_styles('social-it');
-		if ($socialit_plugopts['expand'] || $socialit_plugopts['autocenter'] || $socialit_plugopts['targetopt']=='_blank') {
-			wp_register_script('social-it-public-js', $link."js/social-it-public.js", array('jquery'), SOCIALIT_VER);
-			wp_print_scripts('social-it-public-js');
-		}
-		echo '<!-- End Of Code Generated By Social It Plugin By www.gaut.am -->'."\n\n";
-	}
-}
-
 //styles for admin area
 function socialit_admin() {
 	if($_GET['plugin'] == 'socialit_settings_page'){
@@ -1138,17 +764,5 @@ function socialit_admin() {
 	}
 }
 
-function socialit_insert_in_post($post_content) {
-	global $socialit_plugopts, $bbdb;
-	// decide whether or not to generate the bookmarks.
-	$istopic = bb_is_topic();
-	if (($istopic && $socialit_plugopts['topic'] == 1) || (bb_is_feed() && $socialit_plugopts['feed'] == 1) && (bb_get_topicmeta(get_topic_id(), 'hide_socialit') != "true")){ //socials should be generated and added
-		$post_id_fc = get_post_id(); //post id for check
-		if(bb_is_first($post_id_fc)){
-			$post_content .= get_socialit();
-		}
-	}
-	return $post_content;
-}
-
-?>
+add_action('bb_admin_menu_generator', 'socialit_menu_link', -998); //link in settings
+add_action('bb_admin_head', 'socialit_admin', 997); //admin css

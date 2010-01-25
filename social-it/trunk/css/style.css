@@ -3,19 +3,19 @@
  Social It plugin (for bbPress) by www.gaut.am
 */
 
-div.social-it { margin:20px 0 0 0; clear: both !important; }
+div.social-it { margin:20px 0; clear: both !important; }
 div.social-it-expand { height: 29px; overflow: hidden; }
-.social-it-bg-sexy, .social-it-bg-caring, .social-it-bg-caring-old, .social-it-bg-love, .social-it-bg-wealth, .social-it-bg-enjoy, .social-it-bg-german { background:url('../images/socialit-trans.png') no-repeat !important; }
-div.social-it-bg-sexy { padding: 28px 0 0 10px !important; background-position: left -348px !important; }
-div.social-it-bg-caring { padding: 26px 0 0 10px !important; background-position: left 0 !important; }
-div.social-it-bg-caring-old { padding: 26px 0 0 10px !important; background-position: left -748px !important; }
-div.social-it-bg-love { padding: 26px 0 0 10px !important; background-position: left -1148px !important; }	
-div.social-it-bg-wealth { margin-left: 15px !important; padding: 35px 0 0 20px !important; background-position: left -1535px !important; }
-div.social-it-bg-enjoy { padding: 26px 0 0 10px !important; background-position: left -1895px !important; }
-div.social-it-bg-german { padding:35px 0 0 20px !important; background-position:left -2248px !important; }
+div.social-it-bg-sexy { padding: 28px 0 0 10px !important; background:transparent url('../images/sharing-sexy.png') no-repeat !important; }
+div.social-it-bg-caring { padding: 26px 0 0 10px !important; background:transparent url('../images/sharing-caring-hearts.png') no-repeat !important; }
+div.social-it-bg-caring-old { padding: 26px 0 0 10px !important; background:transparent url('../images/sharing-caring.png') no-repeat !important; }
+div.social-it-bg-love { padding: 26px 0 0 10px !important; background:transparent url('../images/share-love-hearts.png') no-repeat !important; }	
+div.social-it-bg-wealth { margin-left: 15px !important; padding: 35px 0 0 20px !important; background:transparent url('../images/share-wealth.png') no-repeat !important; }
+div.social-it-bg-enjoy { padding: 26px 0 0 10px !important; background:transparent url('../images/share-enjoy.png') no-repeat !important; }
+div.social-it-bg-german { padding:35px 0 0 20px !important; background:transparent url('../images/share-german.png') no-repeat !important; }
 div.social-it ul.socials { width:100% !important; margin:0 !important; padding:0 !important; float: left !important; }
 div.social-it ul.socials { background:transparent none !important; border:0 none !important; outline:0 none !important; }
 div.social-it ul.socials li {
+	background:url('../images/socialit-sprite.png') no-repeat;
 	display:inline !important;
 	float:left !important;
 	list-style-type:none !important;
@@ -36,15 +36,13 @@ div.social-it ul.socials a {
 	height:29px !important;
 	text-indent: -9999px !important;
 	background-color:transparent !important;
+	text-decoration:none !important;
 }
 div.social-it ul.socials a:hover, div.social-it ul.socials li:hover { background-color:transparent !important; border:0 none !important; outline:0 none !important; }
-li.socialit-diigo, li.socialit-diigo:hover, li.socialit-digg, li.socialit-digg:hover, li.socialit-reddit, li.socialit-reddit:hover, li.socialit-stumbleupon, li.socialit-stumbleupon:hover, li.socialit-delicious, li.socialit-delicious:hover, li.socialit-yahoobuzz, li.socialit-yahoobuzz:hover, li.socialit-blinklist, li.socialit-blinklist:hover, li.socialit-technorati, li.socialit-technorati:hover, li.socialit-facebook, li.socialit-facebook:hover, li.socialit-twitter, li.socialit-twitter:hover, li.socialit-myspace, li.socialit-myspace:hover, li.socialit-mixx, li.socialit-mixx:hover, li.socialit-scriptstyle, li.socialit-scriptstyle:hover, li.socialit-designfloat, li.socialit-designfloat:hover, li.socialit-mail, li.socialit-mail:hover, li.socialit-comfeed, li.socialit-comfeed:hover, li.socialit-newsvine, li.socialit-newsvine:hover, li.socialit-devmarks, li.socialit-devmarks:hover, li.socialit-linkedin, li.socialit-linkedin:hover, li.socialit-google, li.socialit-google:hover, li.socialit-misterwong, li.socialit-misterwong:hover, li.socialit-izeby, li.socialit-izeby:hover, li.socialit-twittley, li.socialit-twittley:hover, li.socialit-tipd, li.socialit-tipd:hover, li.socialit-pfbuzz, li.socialit-pfbuzz:hover, li.socialit-friendfeed, li.socialit-friendfeed:hover, li.socialit-blogmarks, li.socialit-blogmarks:hover, li.socialit-fwisp, li.socialit-fwisp:hover, li.socialit-designmoo, li.socialit-designmoo:hover, li.socialit-bobrdobr, li.socialit-bobrdobr:hover, li.socialit-yandex, li.socialit-yandex:hover, li.socialit-memoryru, li.socialit-memoryru:hover, li.socialit-100zakladok, li.socialit-100zakladok:hover, li.socialit-moemesto, li.socialit-moemesto:hover, li.socialit-ning, li.socialit-ning:hover, li.socialit-hackernews, li.socialit-hackernews:hover, li.socialit-identica, li.socialit-identica:hover, li.socialit-printfriendly, li.socialit-printfriendly:hover, li.socialit-designbump, li.socialit-designbump:hover, li.socialit-fleck, li.socialit-fleck:hover, li.socialit-netvibes, li.socialit-netvibes:hover, li.socialit-netvouz, li.socialit-netvouz:hover, li.socialit-nujij, li.socialit-nujij:hover, li.socialit-globalgrind, li.socialit-globalgrind:hover, li.socialit-wikio, li.socialit-wikio:hover, li.socialit-xerpi, li.socialit-xerpi:hover, li.socialit-sphinn, li.socialit-sphinn:hover, li.socialit-blogospherenews, li.socialit-blogospherenews:hover, li.socialit-posterous, li.socialit-posterous:hover, li.socialit-techmeme, li.socialit-techmeme:hover, li.socialit-ekudos, li.socialit-ekudos:hover, li.socialit-pingfm, li.socialit-pingfm:hover, li.socialit-tomuse, li.socialit-tomuse:hover, li.socialit-webblend, li.socialit-webblend:hover, li.socialit-wykop, li.socialit-wykop:hover, li.socialit-blogengage, li.socialit-blogengage:hover, li.socialit-hyves, li.socialit-hyves:hover, li.socialit-pusha, li.socialit-pusha:hover, li.socialit-hatena, li.socialit-hatena:hover, li.socialit-mylinkvault, li.socialit-mylinkvault:hover, li.socialit-slashdot, li.socialit-slashdot:hover, li.socialit-squidoo, li.socialit-squidoo:hover, li.socialit-propeller, li.socialit-propeller:hover, li.socialit-faqpal, li.socialit-faqpal:hover, li.socialit-evernote, li.socialit-evernote:hover, li.socialit-meneame, li.socialit-meneame:hover, li.socialit-bitacoras, li.socialit-bitacoras:hover, li.socialit-jumptags, li.socialit-jumptags:hover, li.socialit-bebo, li.socialit-bebo:hover, li.socialit-n4g, li.socialit-n4g:hover, li.socialit-strands, li.socialit-strands:hover, li.socialit-orkut, li.socialit-orkut:hover, li.socialit-tumblr, li.socialit-tumblr:hover, li.socialit-stumpedia, li.socialit-stumpedia:hover, li.socialit-current, li.socialit-current:hover, li.socialit-blogger, li.socialit-blogger:hover, li.socialit-plurk, li.socialit-plurk:hover { background:url('../images/socialit-sprite.png') no-repeat !important; }
 li.socialit-newsvine { background-position:left bottom !important; }
 li.socialit-newsvine:hover { background-position:left top !important; }
 li.socialit-linkedin { background-position:-70px bottom !important; }
 li.socialit-linkedin:hover { background-position:-70px top !important; }
-li.socialit-devmarks { background-position:-140px bottom !important; }
-li.socialit-devmarks:hover { background-position:-140px top !important; }
 li.socialit-google { background-position:-210px bottom !important; }
 li.socialit-google:hover { background-position:-210px top !important; }
 li.socialit-scriptstyle { background-position:-280px bottom !important; }
@@ -195,3 +193,11 @@ li.socialit-blogger { background-position:-5320px bottom !important; }
 li.socialit-blogger:hover { background-position:-5320px top !important; }
 li.socialit-plurk { background-position:-5390px bottom !important; }
 li.socialit-plurk:hover { background-position:-5390px top !important; }
+li.socialit-virb { background-position:-5460px bottom !important; }
+li.socialit-virb:hover { background-position:-5460px top !important; }
+li.socialit-dzone { background-position:-5530px bottom !important; }
+li.socialit-dzone:hover { background-position:-5530px top !important; }
+li.socialit-kaevur { background-position:-5600px bottom !important; }
+li.socialit-kaevur:hover { background-position:-5600px top !important; }
+li.socialit-boxnet { background-position:-5670px bottom !important; }
+li.socialit-boxnet:hover { background-position:-5670px top !important; }

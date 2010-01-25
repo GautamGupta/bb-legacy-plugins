@@ -39,14 +39,14 @@ ul#socialit-sortables div.padding h1, ul#socialit-sortables div.padding h2, ul#s
 /* End Custom Classes */
 /*------------------------------------------------------------------------------------------*/
 /* Background Images Section */
-.bgimg { background:url('../images/socialit-trans.png') no-repeat; display:block; float:left; margin:10px 0 0; padding:50px 0 0 11px; width:195px; }
-.share-care { background-position: 0 0; }
-.share-sexy { background-position: 0 -346px; }
-.share-care-old { background-position: 0 -746px; }
-.share-love { background-position: 0 -1146px; }
-.share-wealth { background-position: 0 -1535px; padding:50px 0 0 25px !important; }
-.share-enjoy { background-position: 0 -1895px; }
-.share-german {	background-position:0 -2240px; padding-left:25px; }
+.share-care, .share-sexy, .share-care-old, .share-love, .share-wealth, .share-enjoy, .share-german { display:block; float:left; margin:10px 0 0; padding:50px 0 0 11px; width:195px; }
+.share-care { background:url('../images/sharing-caring-hearts.png') no-repeat; }
+.share-sexy { background:url('../images/sharing-sexy.png') no-repeat; }
+.share-care-old { background:url('../images/sharing-caring.png') no-repeat; }
+.share-love { background:url('../images/share-love-hearts.png') no-repeat; }
+.share-wealth { background:url('../images/share-wealth.png') no-repeat; padding:50px 0 0 25px !important; }
+.share-enjoy { background:url('../images/share-enjoy.png') no-repeat; }
+.share-german { background:url('../images/share-german.png') no-repeat; padding-left:25px; }
 /* End Background Images Section */
 /*------------------------------------------------------------------------------------------*/
 /* Top Status Messages */
@@ -61,15 +61,15 @@ div.socialit-success, div.socialit-error, div.socialit-warning, div.socialit-inf
 	padding:3px 10px 0;
 	width:97%;
 }
-div.socialit-success { background:#B4EFAB; border-color: #8BE57E; color:#337129; }
-div.socialit-error {	 background:#FEB1B1; border-color: #FE9090; color:#820101; }
-div.socialit-information { background:#A3D0FF; border-color: #6AB3FF; color:#004185; }
-div.socialit-warning { background:#F0FEB1; border-color: #D5D458; color:#7F7200; }
+div.socialit-success { background:#b4efab; border-color: #8be57e; color:#337129; }
+div.socialit-error { background:#feb1b1; border-color: #fe9090; color:#820101; }
+div.socialit-information { background:#a3d0ff; border-color: #6ab3ff; color:#004185; }
+div.socialit-warning { background:#f0feb1; border-color: #d5d458; color:#7f7200; }
 .socialit-warning a, .socialit-information a, .socialit-error a, .socialit-success a { text-decoration:underline; }
-.socialit-warning a { color:#6F6300; }
-.socialit-error a { color:#CB0000; }
-.socialit-information a { color:#1B466F; }
-.socialit-success a { color:#1D5F12; }
+.socialit-warning a { color:#6f6300; }
+.socialit-error a { color:#cb0000; }
+.socialit-information a { color:#1b466f; }
+.socialit-success a { color:#1d5f12; }
 /* End Top Status Messages */
 /*------------------------------------------------------------------------------------------*/
 /* Individual Section Status Messages */
@@ -85,16 +85,16 @@ div.dialog-box-success, div.dialog-box-error, div.dialog-box-warning, div.dialog
 	padding:3px 10px 0;
 	width:97.5%;
 }
-div.dialog-box-succes { background:#B4EFAB; border-color:#8BE57E; color:#337129; }
-div.dialog-box-error { background:#FEB1B1; border-color: #FE9090; color:#820101; }
-div.dialog-box-warning { background:#F0FEB1; border-color: #D5D458; color:#7F7200; }
-div.dialog-box-information { background:#A3D0FF;	border-color: #6AB3FF;	color:#004185; }
+div.dialog-box-succes { background:#b4efab; border-color:#8be57e; color:#337129; }
+div.dialog-box-error { background:#feb1b1; border-color: #fe9090; color:#820101; }
+div.dialog-box-warning { background:#f0feb1; border-color: #d5d458; color:#7f7200; }
+div.dialog-box-information { background:#a3d0ff; border-color: #6ab3ff;	color:#004185; }
 div.dialog-left { float:left; line-height:16px; }
 div.dialog-left a { text-decoration:underline; }
 div.dialog-box-information a { color:#004185; }
-div.dialog-box-information a:hover { color:#21759B; }
-div.dialog-box-warning a { color:#AF9C00; }
-div.dialog-box-warning a:hover { color:#AF9C00; }
+div.dialog-box-information a:hover { color:#21759b; }
+div.dialog-box-warning a { color:#af9c00; }
+div.dialog-box-warning a:hover { color:#af9c00; }
 div.dialog-right { float:right; }
 img.del-x { cursor:pointer; margin-top:7px; }
 /* End Individual Section Status Messages */
@@ -113,7 +113,6 @@ img.del-x { cursor:pointer; margin-top:7px; }
 .iconator label input {margin-top:30px;}
 label.socialit-newsvine {background-position:left top;}
 label.socialit-linkedin {background-position:-70px top;}
-label.socialit-devmarks {background-position:-140px top;}
 label.socialit-google {background-position:-210px top;}
 label.socialit-scriptstyle {background-position:-280px top;}
 label.socialit-mail {background-position:-350px top;}
@@ -189,6 +188,10 @@ label.socialit-stumpedia { background-position:-5180px top !important; }
 label.socialit-current { background-position:-5250px top !important; }
 label.socialit-blogger { background-position:-5320px top !important; }
 label.socialit-plurk { background-position:-5390px top !important; }
+label.socialit-virb { background-position:-5460px top !important; }
+label.socialit-dzone { background-position:-5530px top !important; }
+label.socialit-kaevur { background-position:-5600px top !important; }
+label.socialit-boxnet { background-position:-5670px top !important; }
 
 ul.multi-selection {
 	list-style:none;

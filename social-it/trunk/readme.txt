@@ -88,6 +88,15 @@ Please report all bugs via the [Bug Report Form](http://gaut.am/contact/) for qu
 
 == Changelog ==
 
+= 1.6 (xx-xx-10) =
+* New Sprite Image is generated when you save options (If you have PHP 5 or above with PHPGD, and don't have Custom Mods Feature ON) 
+* Also reduced the size of the images with Smush It
+* Separated background images
+* Fixed some translation strings
+* Improved the way the plugin gets Short URLs
+* Added option to load javascript in blog's footer
+* Added DZone , Kaevur (Estonian), Virb, Box.net
+
 = 1.5 (28-12-09) =
 * Custom mods feature added to prevent mods from being lost during upgrade
 * Fixed JSON compatibility issue due to multiple instances of the JSON class
@@ -140,3 +149,7 @@ Please report all bugs via the [Bug Report Form](http://gaut.am/contact/) for qu
 
 = 1.0 (27-7-09) =
 * Initial Release
+
+== Upgrade Notice == 
+= 1.6 = 
+When you upgrade, and have PHP 5 or above with PHPGD and don't have the custom mods options on, then go to the settings page and click the 'Save Changes' button to generate a new sprite image which will be smaller in size.

@@ -1,9 +1,9 @@
 === Social It ===
 Contributors: Gautam Gupta
-Donate link: http://gaut.am/donate/
+Donate link: http://gaut.am/donate/SI/
 Tags: Social It, Social Bookmarking, Social, Bookmarks Menu, Twitter, Digg, Delicious, StumpleUpon, Reddit, YahooBuzz, Technorati, Facebook, Myspace, Friendfeed, Ping.fm, Short URL, Gautam
 Requires at least: 1.0
-Tested up to: 1.0.2
+Tested up to: 1.1
 Stable tag: 1.5
 
 Social It adds a (X)HTML compliant list of social bookmarking icons to topics, front page, tags, feeds etc. See configuration panel for more settings.
@@ -12,9 +12,9 @@ Social It adds a (X)HTML compliant list of social bookmarking icons to topics, f
 
 Social It adds a (X)HTML compliant list of social bookmarking icons to topics, front page, tags, feeds etc. See configuration panel for more settings.
 
-It can add the following social bookmarks: Twitter, Digg, Delicious, StumpleUpon, Reddit, Diigo, YahooBuzz, Technorati, Mixx, Facebook, Myspace, DesignFloat, GoogleBookmarks, Blinklist, Script & Style, LinkedIn, Newsvine, Devmarks, Mister Wrong, Izeby, Tipd, Friendfeed, BlogMarks, Twittley, Fwisp, DesignMoo, Ning, DesignBump, Hacker News, Identica, PrintFriendly, Sphinn, Fleck, Xerpi, Netvibes, Netvouz, GlobalGrind, Wikio, Blogosphere News, Posterous, Techmeme, Ping.fm, ToMuse, Plurk, Tumblr, Strands, Stumpedia, Current, Blogger, Orkut, TheWebBlend, Wykop, BlogEngage, Hyves, Pusha, Hatena Bookmarks, MyLinkVault, SlashDot, Squidoo, Propeller, FAQpal, Evernote, Meneame, Bitacoras, JumpTags, Bebo, N4G, E-Mail, some Dutch websites like NUjij, eKudos, BobrDobr, Yandex, Memory, 100 bookmarks, MyPlace. If you do not find your favourite bookmarking site here, please [contact me](http://gaut.am/contact/).
+It can add many social bookmarks like Twitter, Digg, Delicious, StumpleUpon, Reddit, Diigo, YahooBuzz, Technorati, Mixx, Facebook, Myspace, etc. If you do not find your favourite bookmarking site here, please [contact me](http://gaut.am/contact/).
 
-It can also display the feed URL of the current page you are on (If no feed URL is available, it uses the main feed URL).
+It can also display the feed URL of the current page you are on (if no feed URL is available, it uses the main feed URL).
 
 Social It can also shorten the Permalinks and offers a list of Short URL Services. You can choose any of those, and it will be used to shorten the URLs.
 
@@ -22,7 +22,7 @@ It automatically fetches description, title, content, etc. Still, on all pages i
 
 It has a variety of options which you can choose from, and displays the list of Social Bookmarks in Style!
 
-This plugin is inspired from the <a href="http://sexybookmarks.net/">SexyBookmarks plugin</a> for WordPress made by Josh, Jamie, Gautam (me) and Norman.
+This plugin is inspired from the <a href="http://sexybookmarks.net/">SexyBookmarks plugin</a> for WordPress made by Josh, Jamie and Gautam (me).
 
 == Installation ==
 
@@ -92,10 +92,11 @@ Please report all bugs via the [Bug Report Form](http://gaut.am/contact/) for qu
 * New Sprite Image is generated when you save options (If you have PHP 5 or above with PHPGD, and don't have Custom Mods Feature ON) 
 * Also reduced the size of the images with Smush It
 * Separated background images
+* Compressed Javascript
 * Fixed some translation strings
 * Improved the way the plugin gets Short URLs
 * Added option to load javascript in blog's footer
-* Added DZone , Kaevur (Estonian), Virb, Box.net
+* Added DZone, Kaevur (Estonian), Virb, Box.net
 
 = 1.5 (28-12-09) =
 * Custom mods feature added to prevent mods from being lost during upgrade

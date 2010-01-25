@@ -35,6 +35,9 @@ You can contribute by translating this plugin. Please refer to [this post](http:
 * Add the option to let the user select ignore types
 * AutoProofread if the user has forgotten to run the spellcheck
 
+= License =
+GNU General Public License, Version 3: http://www.gnu.org/licenses/gpl-3.0.txt
+
 = Not on bbPress? =
 You can get AtD elsewhere too! Here are the current platforms:
 

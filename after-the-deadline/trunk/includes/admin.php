@@ -6,12 +6,9 @@
  * (for bbPress) by www.gaut.am
  */
 
-/* Now uses WP_Http since v1.5
- * Also has cURL and file_get_contents for bb0.9 and below
- */
+/* Now uses WP_Http since v1.5 */
 function atd_http( $url, $method = 'GET', $data = array() ){
-	$request = new WP_Http;
-	return wp_remote_retrieve_body( $request->request( $url, array( 'method' => $method, 'body' => $data, 'user-agent' => 'AtD/bbPress v' . ATD_VER ) ) );
+	return wp_remote_retrieve_body( wp_remote_request( $url, array( 'method' => $method, 'body' => $data, 'user-agent' => 'AtD/bbPress v' . ATD_VER ) ) );
 }
 
 /* Check for updates

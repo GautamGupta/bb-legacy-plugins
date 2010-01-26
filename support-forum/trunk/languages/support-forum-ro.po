@@ -1,0 +1,144 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR <a href="http://www.adityanaik.com/">Aditya Naik</a>, <a href="http://unlettered.org/">Sam Bauers</a>
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Forum pentru asistență 3.0.3\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/support-forum\n"
+"POT-Creation-Date: 2008-05-08 23:54+1000\n"
+"PO-Revision-Date: 2010-01-14 22:32+0200\n"
+"Last-Translator: Stas SUȘCOV <stas@softwareliber.ro>\n"
+"Language-Team: Echipa de localizare WordPress în Română <wp@softwareliber.ro>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Romanian\n"
+"X-Poedit-Country: ROMANIA\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: support-forum.php:194
+msgid "This version of the <em>Support forum</em> plugin requires bbPress version 0.9"
+msgstr "Această versiune de <em>Forum pentru asistență</em> cere bbPress versiunea 0.9"
+
+#: support-forum.php:206
+#: support-forum.php:960
+#: support-forum.php:977
+msgid "resolved"
+msgstr "rezolvat"
+
+#: support-forum.php:207
+#: support-forum.php:961
+#: support-forum.php:979
+msgid "not resolved"
+msgstr "nerezolvat"
+
+#: support-forum.php:208
+#: support-forum.php:962
+#: support-forum.php:981
+msgid "not a support question"
+msgstr "nu cere asistență"
+
+#: support-forum.php:383
+#, php-format
+msgid "Support topics that are %s"
+msgstr "Subiecte pentru asistență care sunt %s"
+
+#: support-forum.php:387
+#, php-format
+msgid "Support topics that are %s and are more than 2 hours old"
+msgstr "Subiecte pentru asistență care sunt %s și au mai mult de 2 ore"
+
+#: support-forum.php:466
+msgid "Change"
+msgstr "Modifică"
+
+#: support-forum.php:504
+#: support-forum.php:510
+#: support-forum.php:515
+#: support-forum.php:730
+msgid "This topic is"
+msgstr "Acest subiect este"
+
+#: support-forum.php:504
+#: support-forum.php:672
+#: support-forum.php:1009
+msgid "sticky"
+msgstr "fixat"
+
+#: support-forum.php:510
+#: support-forum.php:649
+#: support-forum.php:1002
+msgid "closed"
+msgstr "închis"
+
+#: support-forum.php:821
+#: support-forum.php:918
+msgid "Support forum"
+msgstr "Forum pentru asistență"
+
+#: support-forum.php:870
+msgid "Update performed"
+msgstr "Actualizare executată"
+
+#: support-forum.php:872
+msgid "No update required"
+msgstr "Nu cere actualizare"
+
+#: support-forum.php:924
+msgid "Name"
+msgstr "Numele"
+
+#: support-forum.php:924
+msgid "Description"
+msgstr "Descrierea"
+
+#: support-forum.php:939
+msgid "Enable support forum"
+msgstr "Activează forumuri pentru asistență"
+
+#: support-forum.php:958
+msgid "Set the default status for topics:"
+msgstr "Setează statutul implicit pentru subiecte ca:"
+
+#: support-forum.php:967
+msgid "Allow the poster of the topic to set the status on topic creation"
+msgstr "Permite autorului să aleagă statutul subiectului la creare"
+
+#: support-forum.php:969
+msgid "Allow the poster of the topic to set the status at any time"
+msgstr "Permite autorului să aleagă statutul subiectului oricând"
+
+#: support-forum.php:974
+msgid "Choose which statuses will have a view:"
+msgstr "Alege ce statuturi vor avea afișare:"
+
+#: support-forum.php:986
+msgid "Use resolution status icons on topics"
+msgstr "Folosește iconițe pentru statuturi la subiecte"
+
+#: support-forum.php:999
+msgid "Use lock icon on closed topics (applies to all forums)"
+msgstr "Folosește iconița „blocat” pentru subiectele închise (se aplică la toate forumurile)"
+
+#: support-forum.php:1006
+msgid "Use sticky icon on sticky topics (applies to all forums)"
+msgstr "Folosește iconița „fixat” pentru subiectele fixat (se aplică la toate forumurile)"
+
+#: support-forum.php:1021
+msgid "If you used support forum plugin version 1.0, you will need to update existing topics to work with version 2.x"
+msgstr "Dacă a fost folosită versiunea 1.0 a modulului, subiectele existente necesită o actualizare pentru a fi compatibile cu versiunea 2.x"
+
+#: support-forum.php:1024
+msgid "Update topics to version 2.x"
+msgstr "Actualizează subiectele pentru versiunea 2.x"
+
+#: support-forum.php:1028
+msgid "Save support forum settings"
+msgstr "Păstrează setările pentru forumurile pentru asistență"
+
+#: support-forum.php:1084
+msgid "Settings saved"
+msgstr "Setările au fost salvate"
+

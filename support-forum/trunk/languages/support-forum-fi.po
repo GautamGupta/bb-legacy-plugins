@@ -1,0 +1,139 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: TukiFoorumi\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/support-forum\n"
+"POT-Creation-Date: 2008-05-08 23:54+1000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Daniel Koskinen <daniel.koskinen@gmail.com>\n"
+"Language-Team: Daniel Koskinen <daniel.koskinen@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Finnish\n"
+"X-Poedit-Country: Finland\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: support-forum.php:194
+msgid "This version of the <em>Support forum</em> plugin requires bbPress version 0.9"
+msgstr "Tämä <em>Support forum</em>-lisäosa vaatii bbPress-version 0.9"
+
+#: support-forum.php:206
+#: support-forum.php:960
+#: support-forum.php:977
+msgid "resolved"
+msgstr "ratkaistu"
+
+#: support-forum.php:207
+#: support-forum.php:961
+#: support-forum.php:979
+msgid "not resolved"
+msgstr "ei ratkaistu"
+
+#: support-forum.php:208
+#: support-forum.php:962
+#: support-forum.php:981
+msgid "not a support question"
+msgstr "ei ole tukikysymys"
+
+#: support-forum.php:383
+#, php-format
+msgid "Support topics that are %s"
+msgstr "Tukikysymykset jotka ovat %s"
+
+#: support-forum.php:387
+#, php-format
+msgid "Support topics that are %s and are more than 2 hours old"
+msgstr "Tukikysymykset jotka ovat %s ja ovat yli 2 tuntia vanhoja"
+
+#: support-forum.php:466
+msgid "Change"
+msgstr "Vaihda"
+
+#: support-forum.php:504
+#: support-forum.php:510
+#: support-forum.php:515
+#: support-forum.php:730
+msgid "This topic is"
+msgstr "Tämä keskustelu on"
+
+#: support-forum.php:504
+#: support-forum.php:672
+#: support-forum.php:1009
+msgid "sticky"
+msgstr "liimattu"
+
+#: support-forum.php:510
+#: support-forum.php:649
+#: support-forum.php:1002
+msgid "closed"
+msgstr "suljettu"
+
+#: support-forum.php:821
+#: support-forum.php:918
+msgid "Support forum"
+msgstr "Tukifoorumi"
+
+#: support-forum.php:870
+msgid "Update performed"
+msgstr "Päivitys suoritettu"
+
+#: support-forum.php:872
+msgid "No update required"
+msgstr "Päivitystä ei tarvita"
+
+#: support-forum.php:924
+msgid "Name"
+msgstr "Nimi"
+
+#: support-forum.php:924
+msgid "Description"
+msgstr "Kuvaus"
+
+#: support-forum.php:939
+msgid "Enable support forum"
+msgstr "Ota tukifoorumi käyttöön"
+
+#: support-forum.php:958
+msgid "Set the default status for topics:"
+msgstr "Aseta keskustelujen oletusstatus:"
+
+#: support-forum.php:967
+msgid "Allow the poster of the topic to set the status on topic creation"
+msgstr "Salli keskustelun aloittajan asettaa status keskustelun luontihetkellä"
+
+#: support-forum.php:969
+msgid "Allow the poster of the topic to set the status at any time"
+msgstr "Salli keskustelun luojan muuttaa statusta milloin tahansa"
+
+#: support-forum.php:974
+msgid "Choose which statuses will have a view:"
+msgstr "Valitse, millä statuksilla on näkymä:"
+
+#: support-forum.php:986
+msgid "Use resolution status icons on topics"
+msgstr "Käytä statusikoneja keskusteluissa"
+
+#: support-forum.php:999
+msgid "Use lock icon on closed topics (applies to all forums)"
+msgstr "Käytä lukkoikonia suljetuissa keskusteluissa (pätee kaikkiin foorumeihin)"
+
+#: support-forum.php:1006
+msgid "Use sticky icon on sticky topics (applies to all forums)"
+msgstr "Käytä liimattu-ikonia liimatuissa keskusteluissa (kaikissa foorumeissa)"
+
+#: support-forum.php:1021
+msgid "If you used support forum plugin version 1.0, you will need to update existing topics to work with version 2.x"
+msgstr "Jos käytit keskustelufoorumi-lisäosan versiota 1.0, sinun on päivitettävä olemassaolevat keskustelut toimimaan version 2.x kanssa"
+
+#: support-forum.php:1024
+msgid "Update topics to version 2.x"
+msgstr "Päivitä keskustelut versioon 2.x"
+
+#: support-forum.php:1028
+msgid "Save support forum settings"
+msgstr "Tallenna tukifoorumin asetukset"
+
+#: support-forum.php:1084
+msgid "Settings saved"
+msgstr "Asetukset on tallennettu"
+

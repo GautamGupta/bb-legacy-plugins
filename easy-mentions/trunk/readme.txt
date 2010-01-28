@@ -4,7 +4,7 @@ Donate link: http://gaut.am/donate/EM/
 Tags: easy, mention, username, link, reply, twitter, Gautam
 Requires at least: 1.0
 Tested up to: 1.1
-Stable tag: 0.1
+Stable tag: 0.1.1
 
 Easy Mentions allows the users to link to other users' profiles in posts by using @username (like Twitter).
 
@@ -57,10 +57,16 @@ Also note that the reply feature might not work on all themes (depends on how mu
 
 == Changelog ==
 
+= 0.1.1 (28-01-10) =
+* Important bug fix for Reply feature
+
 = 0.1 (28-01-10) =
 * Initial Release
 
 == Upgrade Notice ==
+
+= 0.1.1 (28-01-10) =
+Has important bug fix for Reply feature, please upgrade!
 
 = 0.1 (28-01-10) =
 Initial Release

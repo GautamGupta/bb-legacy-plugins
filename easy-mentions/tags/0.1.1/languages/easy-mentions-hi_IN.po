@@ -1,0 +1,88 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Easy Mentions 0.1\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/easy-mentions\n"
+"POT-Creation-Date: 2010-01-28 14:39+0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Gautam <gautam.2011@gmail.com>\n"
+"Language-Team: Gautam Gupta <admin@gaut.am>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Hindi\n"
+"X-Poedit-Country: INDIA\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: includes/admin.php:38
+msgid "The options were successfully saved!"
+msgstr "विकल्प सफलतापूर्वक दर्ज करलिए गए हैं|"
+
+#: includes/admin.php:44
+#, php-format
+msgid "New version (%1$s) of Easy Mentions is available! Please download the latest version from <a href=\"%2$s\">here</a>."
+msgstr "आसान मेंशन का नया संस्करण (%1$s) उपलब्ध है! कृप्या उसे <a href=\"%2$s\">यहाँ</a> से डाउनलोड करें|"
+
+#: includes/admin.php:49
+msgid "Link the user to profile or website?"
+msgstr "उपयोगकर्ता को प्रोफाइल से लिंक करें या वेबसाइट से?"
+
+#: includes/admin.php:53
+msgid "Profile"
+msgstr "प्रोफाइल"
+
+#: includes/admin.php:54
+msgid "Website"
+msgstr "वेबसाइट"
+
+#: includes/admin.php:56
+msgid "If you selected the website option and the user's website does not exist, then the user will be linked to his or her profile page."
+msgstr "अगर आप वेबसाइट का विकल्प चुनते हैं और उप्योगिकर्ता की वेबसाइट नहीं है, तो उप्योगिकर्ता उसकी प्रोफाइल से लिंक करदिया जायेगा|"
+
+#: includes/admin.php:59
+msgid "Add a reply link below each post?"
+msgstr "प्रत्येक पोस्ट के नीचे एक उत्तर के लिए लिंक डालें?"
+
+#: includes/admin.php:63
+msgid "Yes"
+msgstr "हाँ"
+
+#: includes/admin.php:65
+#, php-format
+msgid "Before checking this option, please verify that there is a post form below the topic on each page. (<a href=\"%s\">Help</a>)"
+msgstr "इस विकल्प को जाँचने से पहले, कृपया सत्यापित करें कि हर टॉपिक के हर पृष्ठ के नीचे एक पोस्ट फार्म है| (<a href=\"%s\">मदद</a>)"
+
+#: includes/admin.php:70
+msgid "Easy Mention Options"
+msgstr "आसान मेंशन के विकल्प"
+
+#: includes/admin.php:85
+#, php-format
+msgid "Happy with the plugin? Why not <a href=\"%1$s\">buy the author a cup of coffee or two</a> or get him something from his <a href=\"%2$s\">wishlist</a>?"
+msgstr "प्लगिन से खुश? लिखने वाले को कुछ <a href=\"%1$s\">दान</a> करें या फिर उसकी <a href=\"%2$s\">इच्छा सूची</a> देखें|"
+
+#. #-#-#-#-#  plugin.pot (Easy Mentions 0.1)  #-#-#-#-#
+#. Plugin Name of an extension
+#: includes/admin.php:96
+msgid "Easy Mentions"
+msgstr "आसान मेंशन"
+
+#: includes/public.php:71
+msgid "Reply"
+msgstr "उत्तर"
+
+#. Plugin URI of an extension
+msgid "http://gaut.am/bbpress/plugins/easy-mentions/"
+msgstr "http://gaut.am/bbpress/plugins/easy-mentions/"
+
+#. Description of an extension
+msgid "Easy Mentions allows the users to link to other users' profiles in posts by using @username (like Twitter)."
+msgstr "आसान मेंशन उपयोगकर्ता को किसी और उपयोगकर्ता के नाम को पदों में @उज़र्नाम प्रयोग करके उसकी प्रोफाइल से लिंक करने का विकल्प देते हैं| (ट्विट्टर की तरह)"
+
+#. Author of an extension
+msgid "Gautam Gupta"
+msgstr "गौतम गुप्ता "
+
+#. Author URI of an extension
+msgid "http://gaut.am/"
+msgstr "http://gaut.am/"
+

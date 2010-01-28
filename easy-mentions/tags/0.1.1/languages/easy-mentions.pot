@@ -1,0 +1,101 @@
+# Translation of the WordPress plugin Easy Mentions 0.1 by Gautam Gupta.
+# Copyright (C) 2010 Gautam Gupta
+# This file is distributed under the same license as the Easy Mentions package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Easy Mentions 0.1\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/easy-mentions\n"
+"POT-Creation-Date: 2010-01-28 14:39+0000\n"
+"PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: includes/admin.php:38
+msgid "The options were successfully saved!"
+msgstr ""
+
+#: includes/admin.php:44
+#, php-format
+msgid ""
+"New version (%1$s) of Easy Mentions is available! Please download the latest "
+"version from <a href=\"%2$s\">here</a>."
+msgstr ""
+
+#: includes/admin.php:49
+msgid "Link the user to profile or website?"
+msgstr ""
+
+#: includes/admin.php:53
+msgid "Profile"
+msgstr ""
+
+#: includes/admin.php:54
+msgid "Website"
+msgstr ""
+
+#: includes/admin.php:56
+msgid ""
+"If you selected the website option and the user's website does not exist, "
+"then the user will be linked to his or her profile page."
+msgstr ""
+
+#: includes/admin.php:59
+msgid "Add a reply link below each post?"
+msgstr ""
+
+#: includes/admin.php:63
+msgid "Yes"
+msgstr ""
+
+#: includes/admin.php:65
+#, php-format
+msgid ""
+"Before checking this option, please verify that there is a post form below "
+"the topic on each page. (<a href=\"%s\">Help</a>)"
+msgstr ""
+
+#: includes/admin.php:70
+msgid "Easy Mention Options"
+msgstr ""
+
+#: includes/admin.php:85
+#, php-format
+msgid ""
+"Happy with the plugin? Why not <a href=\"%1$s\">buy the author a cup of "
+"coffee or two</a> or get him something from his <a href=\"%2$s\">wishlist</"
+"a>?"
+msgstr ""
+
+#. #-#-#-#-#  plugin.pot (Easy Mentions 0.1)  #-#-#-#-#
+#. Plugin Name of an extension
+#: includes/admin.php:96
+msgid "Easy Mentions"
+msgstr ""
+
+#: includes/public.php:71
+msgid "Reply"
+msgstr ""
+
+#. Plugin URI of an extension
+msgid "http://gaut.am/bbpress/plugins/easy-mentions/"
+msgstr ""
+
+#. Description of an extension
+msgid ""
+"Easy Mentions allows the users to link to other users' profiles in posts by "
+"using @username (like Twitter)."
+msgstr ""
+
+#. Author of an extension
+msgid "Gautam Gupta"
+msgstr ""
+
+#. Author URI of an extension
+msgid "http://gaut.am/"
+msgstr ""

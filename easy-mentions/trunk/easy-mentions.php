@@ -28,14 +28,13 @@ if( !defined( 'EM_PLUGPATH' ) )  /* Define EM_PLUGPATH if value is not set - Ful
 define( 'EM_VER', '0.1' ); /* Version */
 define( 'EM_OPTIONS','Easy-Mentions' ); /* Option Name */
 
-$em_plugopts = bb_get_option( EM_OPTIONS ); /* Try Getting Options */
+$em_plugopts = bb_get_option( EM_OPTIONS );
 if( !is_array( $em_plugopts ) ){ /* Set the Options if they are not set */
-	/* Add defaults to an array */
 	$em_plugopts = array(
 		'link-to' => 'profile',
 		'reply-link' => '',
 	);
-	bb_update_option( EM_OPTIONS, $em_plugopts ); /* Update the options */
+	bb_update_option( EM_OPTIONS, $em_plugopts );
 }
 
 if( bb_is_admin() ) /* Load admin.php file if it is the admin area */

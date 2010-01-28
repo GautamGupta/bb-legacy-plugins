@@ -10,7 +10,7 @@
 /**
  * Links the users in the posts
  *
- * Taken from BuddyPress' bp_activity_at_name_filter function
+ * @see bp_activity_at_name_filter() BuddyPress Function
  * 
  * @param $content The content to be parsed
  */

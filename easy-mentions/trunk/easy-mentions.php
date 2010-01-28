@@ -3,7 +3,7 @@
 Plugin Name: Easy Mentions
 Plugin URI: http://gaut.am/bbpress/plugins/easy-mentions/
 Description: Easy Mentions allows the users to link to other users' profiles in posts by using @username (like Twitter).
-Version: 0.1
+Version: 0.1.1
 Author: Gautam Gupta
 Author URI: http://gaut.am/
 
@@ -25,7 +25,7 @@ bb_load_plugin_textdomain( 'easy-mentions', dirname( __FILE__ ) . '/languages' )
  */
 if( !defined( 'EM_PLUGPATH' ) )  /* Define EM_PLUGPATH if value is not set - Full URL path to the plugin */
 	define( 'EM_PLUGPATH', bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),"\\"),array("","/"),dirname(__FILE__)),' /\\').'/' );
-define( 'EM_VER', '0.1' ); /* Version */
+define( 'EM_VER', '0.1.1' ); /* Version */
 define( 'EM_OPTIONS','Easy-Mentions' ); /* Option Name */
 
 $em_plugopts = bb_get_option( EM_OPTIONS );

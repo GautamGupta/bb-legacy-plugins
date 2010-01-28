@@ -13,7 +13,7 @@ jQuery(document).ready(function() {
         if( original != ''){
             original = original + '\n\n';
         }
-        var text = original+'<em>@<a href="'+jQuery(this).parent().children('a').get(0)+'">'+jQuery(this).parent().parent().parent().children('.threadauthor').children('p').children('strong').children('a').text()+'</a></em>\n\n';
+        var text = original+'<em>@<a href="'+jQuery(this).parent().children('a').get(0)+'">'+jQuery(this).parent().parent().parent().children('.threadauthor').children('p').children('strong').text()+'</a></em>\n\n';
         jQuery("#post_content").val(text).focus();
         jQuery(document).scrollTop(jQuery('#postform').offset().top)
     });

@@ -16,9 +16,8 @@ jQuery(document).ready(function() {
     jQuery(".reply_link").click(function () {
         var original = jQuery("#post_content").val();
         if( original != ''){
-            original = original + '\n\n';
+            original += '\n\n';
         }
         jQuery("#post_content").val(original+'<em>@<a href="'+jQuery(this).siblings('a:first').get(0)+'">'+jQuery(this).parents('.threadpost').siblings().children('p').children('strong').text()+'</a></em>\n\n').focus();
-        jQuery(document).scrollTop(jQuery('#postform').offset().top)
     });
 });

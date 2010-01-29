@@ -21,7 +21,7 @@ bb_load_plugin_textdomain( 'easy-mentions', dirname( __FILE__ ) . '/languages' )
 
 /* Defines */
 /* If you have problems (the directory of the plugin could not be matched), then define EM_PLUGPATH in bb-config.php file to the full URL path to the plugin directory
- * Eg. - http://www.example-domain.tld/forums/my-plugins/easy-mentions/
+ * @example http://www.example-domain.tld/forums/my-plugins/easy-mentions/
  */
 if( !defined( 'EM_PLUGPATH' ) )  /* Define EM_PLUGPATH if value is not set - Full URL path to the plugin */
 	define( 'EM_PLUGPATH', bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),"\\"),array("","/"),dirname(__FILE__)),' /\\').'/' );

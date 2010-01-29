@@ -57,6 +57,9 @@ Also note that the reply feature might not work on all themes (depends on how mu
 
 == Changelog ==
 
+= 0.2 (xx-0x-10) =
+* Better Javascript
+
 = 0.1.1 (28-01-10) =
 * Important bug fix for Reply feature
 

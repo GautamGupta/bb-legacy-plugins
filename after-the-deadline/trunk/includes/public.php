@@ -1,17 +1,18 @@
 <?php
 
-/*
- * Public Section PHP File for
- * After the Deadline Plugin
- * (for bbPress) by www.gaut.am
+/**
+ * @package After the Deadline
+ * @subpackage Admin Section
+ * @author Gautam Gupta (www.gaut.am)
+ * @link http://gaut.am/bbpress/plugins/after-the-deadline/
  */
 
-/* Enqueues & Prints Script and Style (JS & CSS)
- * Also echoes some values needed by the Javascript (now uses wp_localize_script)
- * Compatibility with bbPress 0.9 & lower introduced in v1.2
- * Also checks if the necessary functions are there
- * CSS & JS have been compressed (v1.4) so that the user need not download a larger file
- * Compatibility with anonymous posting feature (bbPress 1.1) introduced in v1.4 (bb1.1 is not released till now, but I added it for future)
+/**
+ * Enqueue the Javascript and CSS
+ *
+ * @uses wp_enqueue_script()
+ * @uses wp_enqueue_style()
+ * @uses wp_localize_script()
  */
 function atd_css_js(){
 	global $atd_plugopts;
@@ -42,11 +43,10 @@ function atd_css_js(){
 			);
 		//wp_enqueue_style('after-the-deadline', ATD_PLUGPATH.'css/atd-uncompressed.css', false, ATD_VER, 'all');
 		//wp_enqueue_script('after-the-deadline', ATD_PLUGPATH."scripts/atd-uncompressed.js", array('jquery'), ATD_VER, true);
-		wp_enqueue_style('after-the-deadline', ATD_PLUGPATH.'css/atd.css', false, ATD_VER, 'all');
-		wp_enqueue_script('after-the-deadline', ATD_PLUGPATH."scripts/atd.js", array('jquery'), ATD_VER);
-		wp_localize_script('after-the-deadline', 'AtD', $i18n);
+		wp_enqueue_style( 'after-the-deadline', ATD_PLUGPATH.'css/atd.css', false, ATD_VER, 'all' );
+		wp_enqueue_script( 'after-the-deadline', ATD_PLUGPATH."scripts/atd.js", array('jquery'), ATD_VER );
+		wp_localize_script( 'after-the-deadline', 'AtD', $i18n );
 	}
 }
 
-/* Hook 'wp_print_scripts' to 'atd_css_js' - Enqueues Script and Style (JS & CSS) */
-add_action('wp_print_scripts', 'atd_css_js', 2);
+add_action('wp_print_scripts', 'atd_css_js', 2); /* Enqueues Script and Style */

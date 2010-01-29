@@ -1,14 +1,16 @@
-/*
- Please see atd.js
- This is the uncompressed version of that file.
- That file is compressed by http://closure-compiler.appspot.com/home
- Method - Go there, select jQuery in Add a URL and click add
- Paste this javascript in the big textbox
- Choose Whitespace, remove the jQuery part
- Copy that part and compress it with simple without adding jQuery in URL
- Done!
- (Advanced causes errors!)
-*/
+/**
+ * Javascript File (uncompressed)
+ *
+ * @package After the Deadline
+ * @author Gautam Gupta (www.gaut.am)
+ * @link http://gaut.am/bbpress/plugins/after-the-deadline/
+ * @see atd.js for compressed version
+ */
+
+/**
+ * That file is compressed by http://closure-compiler.appspot.com/home
+ * Method - Go there, paste this javascript there and compress with simple method (Advanced causes errors!)
+ */
 
 /*
  * atd.core.js - A building block to create a front-end for AtD

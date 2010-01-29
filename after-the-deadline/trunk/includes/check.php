@@ -1,11 +1,25 @@
 <?php
-/*
- * AtD Proxy Script for
- * After the Deadline Plugin
- * (for bbPress) by www.gaut.am
+/**
+ * @package Easy Mentions
+ * @subpackage Public Section
+ * @category Proxy Script
+ * @author Gautam Gupta (www.gaut.am)
+ * @link http://gaut.am/bbpress/plugins/easy-mentions/
  */
 
-/* Browsing Function */
+/**
+ * Browsing Function
+ * 
+ * @uses WP_Http
+ * @uses cURL
+ * @uses file_get_contents
+ * 
+ * @param $url The URL needed to be visited
+ * @param $method POST or GET (default POST)
+ * @param $data array The data needed to be sent (if POST)
+ *
+ * @return The source received
+ */
 function atd_http( $url, $method = 'POST', $data = array() ){
    if( class_exists( 'WP_Http' ) ){ //not necessarily as we avoid loading bb-load
       return wp_remote_retrieve_body( wp_remote_request( $url, array( 'method' => $method, 'body' => $data, 'user-agent' => 'AtD/bbPress v' . ATD_VER ) ) );
@@ -45,9 +59,8 @@ function atd_http( $url, $method = 'POST', $data = array() ){
 $url = ($_GET['url']) ? $_GET['url'] : '/checkDocument';
 $api_key = ($_POST['key']) ? $_POST['key'] : 'cssproxy';
 $postdata = ($_POST['data']) ? $_POST['data'] : '';
-if( !$postdata ){
+if( !$postdata )
    die();
-}
 
 /* Get the Data & echo */
 $data = trim( atd_http( 'http://service.afterthedeadline.com' . trim($url), 'POST', array( 'data' => trim( $postdata ), 'key' => trim( $api_key ) ) ) );

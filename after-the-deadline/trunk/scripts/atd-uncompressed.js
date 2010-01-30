@@ -16,7 +16,7 @@
  * atd.core.js - A building block to create a front-end for AtD
  * Author      : Raphael Mudge, Automattic
  * License     : LGPL
- * Project     : http://www.afterthedeadline.com/developers.slp
+ * Project     : http://www.afterthedeadline.com/development.slp
  * Contact     : raffi@automattic.com
  */
 
@@ -374,16 +374,13 @@ AtDCore.prototype.markMyWords = function(container_nodes, errors) {
 					curr = v.substr(prev.length, v.length);
 
 					var checkErrors = function(error) {
-						if (!done && error != undefined && !error.used && error.regexp.test(curr)) {
+						if (error != undefined && !error.used && error.regexp.test(curr)) {
 							var oldlen = curr.length;
 
 							doReplaces.push([error.regexp, '<span class="'+error.type+'" pre="'+previous+'">$&</span>']);
 
 							error.used = true;
 							done = true;
-
-							iterator.skip(error.tokens.length - 1, 0);
-							token = error.tokens[error.tokens.length - 1]; /* make sure the "previous" token is set to the right value at the end of the loop */
 						}
 					};
 
@@ -528,7 +525,7 @@ AtDCore.prototype.isIE = function() {
  * jquery.atd.js - jQuery powered writing check with After the Deadline
  * Author      : Raphael Mudge, Automattic Inc.
  * License     : LGPL or MIT License (take your pick)
- * Project     : http://www.afterthedeadline.com/developers.slp
+ * Project     : http://www.afterthedeadline.com/development.slp
  * Contact     : raffi@automattic.com
  *
  * Derived from: 
@@ -682,7 +679,7 @@ AtD.editSelection = function() {
 };
 
 AtD.ignoreSuggestion = function() {
-	AtD.errorElement.replaceWith(AtD.errorElement.html());
+	AtD.core.removeParent(AtD.errorElement);
 
 	AtD.counter --;
 	if (AtD.counter == 0 && AtD.callback_f != undefined && AtD.callback_f.success != undefined)
@@ -836,7 +833,11 @@ AtD.initCoreModule = function() {
 	};
 
 	core.removeParent = function(node) {
-		return jQuery(node).replaceWith(jQuery(node).html());
+		/* unwrap exists in jQuery 1.4+ only. Thankfully because replaceWith as-used here won't work in 1.4 */ 
+ 		if (jQuery(node).unwrap) 
+ 		        return jQuery(node).contents().unwrap(); 
+ 		else 
+		        return jQuery(node).replaceWith(jQuery(node).html());
 	};
 
 	core.getAttrib = function(node, name) {
@@ -1074,7 +1075,7 @@ AtD.core = AtD.initCoreModule();
  * jquery.atd.textarea.js - jQuery powered writing check for textarea elements with After the Deadline
  * Author      : Raphael Mudge, Automattic Inc.
  * License     : LGPL or MIT License (take your pick)
- * Project     : http://www.afterthedeadline.com/developers.slp
+ * Project     : http://www.afterthedeadline.com/development.slp
  * Contact     : raffi@automattic.com
  */
 
@@ -1271,13 +1272,11 @@ AtD._checkTextArea = function(id, commChannel, linkId, after) {
 			editSelection : function(element) {
 				var oldtext = element.text();
 				jPrompt(AtD.getLang('dialog_replace_selection', "Replace selection with")+':', element.text(), AtD.getLang('dialog_replace', 'Replace'), function(text) {
-				     if (text != null && oldtext != text)
-				     {
-					 element.replaceWith( text );
-					 AtD.counter --;
-					 if (AtD.counter == 0 && AtD.callback_f != undefined && AtD.callback_f.success != undefined)
-					     AtD.callback_f.success(AtD.count);
-				     }
+					if (text != null && oldtext != text)
+					{
+						jQuery(element).html(text);
+						AtD.core.removeParent(element);
+					}
 				});
 			}
 		});
@@ -1325,8 +1324,8 @@ jQuery.fn.addProofreader = function(options) {
 };
 
 jQuery.fn.addProofreader.defaults = {
-	edit_text_content: '<span class="atd_container"><a href="#postform" class="checkLink">'+AtD.getLang('button_edit_text', 'Edit Text')+'</a></span>',
-	proofread_content: '<span class="atd_container"><a href="#postform" class="checkLink">'+AtD.getLang('button_proofread', 'Proofread')+'</a></span>'
+	edit_text_content: '<span class="atd_container"><a class="checkLink">'+AtD.getLang('button_edit_text', 'Edit Text')+'</a></span>',
+	proofread_content: '<span class="atd_container"><a class="checkLink">'+AtD.getLang('button_proofread', 'Proofread')+'</a></span>'
 };
 
 jQuery(function() {

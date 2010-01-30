@@ -96,6 +96,8 @@ Please use version 1.4
 
 == Changelog ==
 = 1.5 (xx-xx-10) =
+* Added jQuery 1.4 compatibility
+* Fixed a highlighting issue
 * Removed compatibility with bbPress 0.9
 * Improved coding efficiency
 

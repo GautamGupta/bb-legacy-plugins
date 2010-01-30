@@ -41,8 +41,7 @@ function atd_css_js(){
 				'dialog_replace_selection' => __('Replace selection with', 'after-the-deadline'),
 				'dialog_replace' => __('Replace', 'after-the-deadline'),
 			);
-		//wp_enqueue_style('after-the-deadline', ATD_PLUGPATH.'css/atd-uncompressed.css', false, ATD_VER, 'all');
-		//wp_enqueue_script('after-the-deadline', ATD_PLUGPATH."scripts/atd-uncompressed.js", array('jquery'), ATD_VER, true);
+		//wp_enqueue_script('after-the-deadline', ATD_PLUGPATH."scripts/atd.dev.js", array('jquery'), ATD_VER, true);
 		wp_enqueue_style( 'after-the-deadline', ATD_PLUGPATH.'css/atd.css', false, ATD_VER, 'all' );
 		wp_enqueue_script( 'after-the-deadline', ATD_PLUGPATH."scripts/atd.js", array('jquery'), ATD_VER );
 		wp_localize_script( 'after-the-deadline', 'AtD', $i18n );

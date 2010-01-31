@@ -47,15 +47,32 @@ function em_do_linking( $content ){
 }
 
 /**
- * Enqueue the Reply Javascript
+ * Enqueue jQuery
  *
  * @uses wp_enqueue_script()
  */
 function em_js(){
 	global $em_plugopts;
-	//wp_enqueue_script( 'easy-mentions', EM_PLUGPATH . 'js/reply-uncompressed.js', array( 'jquery' ), EM_VER, true );
-	if( $em_plugopts['reply-link'] == 1 && bb_is_topic() && topic_is_open() && ( bb_is_user_logged_in() || ( function_exists( 'bb_is_login_required' ) && !bb_is_login_required() ) ) ) /* Check if script is needed */
-		wp_enqueue_script( 'easy-mentions', EM_PLUGPATH . 'js/reply.js', array( 'jquery' ), EM_VER, true );
+	
+	if ( $em_plugopts['reply-link'] == 1 && bb_is_topic() && topic_is_open() && ( bb_is_user_logged_in() || ( function_exists( 'bb_is_login_required' ) && !bb_is_login_required() ) ) ) /* Check if script is needed */
+		wp_enqueue_script( 'jquery' );
+}
+
+/**
+ * Parse the text and insert username and post link in place of %%USERNAME%% and %%POSTLINK%%
+ *
+ * @param $text The text to be parsed
+ * @param $username Username
+ * @param $post_link The link of the post
+ */
+function em_parse_text( $text, $username, $post_link ){
+	if ( !$text )
+		return;
+	
+	$text = str_replace( "%%USERNAME%%", $username, $text );
+	$text = str_replace( "%%POSTLINK%%", $post_link, $text );
+	
+	return $text;
 }
 
 /**
@@ -67,12 +84,15 @@ function em_js(){
 function em_reply_link( $post_links, $args ) {
 	global $em_plugopts;
 	
-	if( $em_plugopts['reply-link'] == 1 && bb_is_topic() && topic_is_open() && ( bb_is_user_logged_in() || ( function_exists( 'bb_is_login_required' ) && !bb_is_login_required() ) ) ) /* Check if link is needed */
-		$post_links[] = $args['before_each'].'<a class="reply_link" id="reply-' . $bb_post->post_id . '" style="cursor:pointer;">' . __( 'Reply', 'easy-mentions' ) . '</a>'.$args['after_each'];
+	if ( $em_plugopts['reply-link'] == 1 && bb_is_topic() && topic_is_open() && ( bb_is_user_logged_in() || ( function_exists( 'bb_is_login_required' ) && !bb_is_login_required() ) ) ){ /* Check if link is needed */
+		$text = em_parse_text( $em_plugopts['reply-text'], get_post_author(), get_post_link() );
+		$js = "var a=jQuery('#post_content').val();if(a!='')a+='\\n\\n';jQuery('#post_content').val(a+'" . $text . "\\n\\n');";
+		$post_links[] = $args['before_each'] . '<a class="reply_link" href="#postform" onclick="' . $js . '">' . __( 'Reply', 'easy-mentions' ) . '</a>' . $args['after_each'];
+	}
 	
         return $post_links;
 }
 
 add_action( 'post_text', 'em_do_linking', -999, 1 ); /* Do Linking */
-add_action( 'wp_print_scripts', 'em_js', 5, 0 ); /* Add JS for reply */
+add_action( 'wp_print_scripts', 'em_js', 5, 0 ); /* Add jQuery */
 add_filter( 'bb_post_admin', 'em_reply_link', 11, 2 ); /* Add reply link */

@@ -32,8 +32,9 @@ function em_options(){
 	if ( $_POST['em_opts_submit'] == 1 ) { /* Settings have been recieved, now save them! */
 		bb_check_admin_referer( 'em-save-chk' ); /* Security Check */
 		/* Checks on options, also saving them */
-		$em_plugopts['link-to'] = ( strval( $_POST['link-to'] ) == 'website') ? 'website' : 'profile';
+		$em_plugopts['link-to'] = ( $_POST['link-to'] == 'website' ) ? 'website' : 'profile';
 		$em_plugopts['reply-link'] = ( intval( $_POST['reply-link'] ) == 1) ? 1 : 0;
+		$em_plugopts['reply-text'] = esc_attr( $_POST['reply-text'] );
 		bb_update_option( EM_OPTIONS, $em_plugopts );
 		bb_admin_notice( __( 'The options were successfully saved!', 'easy-mentions' ) );
 	}
@@ -63,6 +64,12 @@ function em_options(){
 				'1' => __( 'Yes', 'easy-mentions' ),
 			),
 			'note' => sprintf( __( 'Before checking this option, please verify that there is a post form below the topic on each page. (<a href="%s">Help</a>)', 'easy-mentions' ), 'http://bbpress.org/plugins/topic/easy-mentions/faq/' )
+		),
+		'reply-text' => array(
+			'title' => __( 'Reply Text', 'easy-mentions' ),
+			'class' => array( 'long' ),
+			'value' => $em_plugopts['reply-text'] ? stripslashes( $em_plugopts['reply-text'] ) : '<em>Replying to @%%USERNAME%%\'s <a href="%%POSTLINK%%">post</a>:</em>',
+			'after' => '<div style="clear:both;"></div>' . sprintf( __( 'This applies when the reply feature is ON. Some HTML is allowed. The following keys can also be used:%1$s - Post\'s author\'s name%2$s - Post\'s link', 'after-the-deadline' ), '<br /><strong>%%USERNAME%%</strong>', '<br /><strong>%%POSTLINK%%</strong>' ) . '<br />'
 		)
 	);
 	?>

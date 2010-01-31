@@ -1,1 +1,0 @@
-jQuery(document).ready(function(){jQuery(".reply_link").click(function(){var a=jQuery("#post_content").val();if(a!="")a+="\n\n";jQuery("#post_content").val(a+'<em>@<a href="'+jQuery(this).siblings("a:first").get(0)+'">'+jQuery(this).parents(".threadpost").siblings().children("p").children("strong").text()+"</a></em>\n\n").focus()})});

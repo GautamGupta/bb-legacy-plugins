@@ -48,8 +48,6 @@ GNU General Public License, Version 3: http://www.gnu.org/licenses/gpl-3.0.txt
 * The resulting line should look like this - `<?php post_form( array( 'last_page_only' => false ) ); ?>`
 * Save and Upload!
 
-Also note that the reply feature might not work on all themes (depends on how much the theme's `post.php` differs from the default kakumei theme)
-
 == Screenshots ==
 
 1. Easy Mentions Plugin in Action
@@ -58,7 +56,8 @@ Also note that the reply feature might not work on all themes (depends on how mu
 == Changelog ==
 
 = 0.2 (xx-0x-10) =
-* Better Javascript
+* Added option to choose reply format
+* Removed Javascript, hard-coded the reply values
 
 = 0.1.1 (28-01-10) =
 * Important bug fix for Reply feature

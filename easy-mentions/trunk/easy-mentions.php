@@ -33,7 +33,7 @@ if( !is_array( $em_plugopts ) ){ /* Set the Options if they are not set */
 	$em_plugopts = array(
 		'link-to' => 'profile',
 		'reply-link' => '',
-		'reply-text' => '<em>Replying to @%%USERNAME%%\'s <a href="%%POSTLINK%%">post</a>:</em>'
+		'reply-text' => "<em>Replying to @%%USERNAME%%\'s <a href=\"%%POSTLINK%%\">post</a>:</em>"
 	);
 	bb_update_option( EM_OPTIONS, $em_plugopts );
 }

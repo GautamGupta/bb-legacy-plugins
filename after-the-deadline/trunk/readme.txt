@@ -95,11 +95,13 @@ Please use version 1.4
 2. A Screenshot of the Settings Page
 
 == Changelog ==
-= 1.5 (xx-xx-10) =
+
+= 1.5 (xx-0x-10) =
 * Added jQuery 1.4 compatibility
 * Fixed a highlighting issue
 * Removed compatibility with bbPress 0.9
 * Improved coding efficiency
+* Updated screenshot
 
 = 1.4 (17-01-10) =
 * Addded localization support! Please refer to [this post](http://gaut.am/translating-wordpress-or-bbpress-plugins/) to know how to contribute!
@@ -143,6 +145,9 @@ Upgraded AtD/jQuery - [Changelog](http://www.polishmywriting.com/atd_jquery/chan
 * Initial Release
 
 == Upgrade Notice ==
+
+= 1.5 (xx-0x-10) =
+Upgraded AtD/jQuery, added some more features and fixed bugs. Do not upgrade if you are using bbPress 0.9.
 
 = 1.4 (17-01-10) =
 Upgraded AtD/jQuery, added some more features and fixed bugs.

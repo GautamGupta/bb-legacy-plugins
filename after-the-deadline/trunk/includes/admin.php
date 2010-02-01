@@ -12,7 +12,7 @@
  * @uses WP_Http
  */
 function atd_http( $url, $method = 'GET', $data = array() ){
-	return wp_remote_retrieve_body( wp_remote_request( $url, array( 'method' => $method, 'body' => $data, 'user-agent' => 'AtD/bbPress v' . ATD_VER ) ) );
+	return trim( wp_remote_retrieve_body( wp_remote_request( $url, array( 'method' => $method, 'body' => $data, 'user-agent' => 'AtD/bbPress v' . ATD_VER ) ) ) );
 }
 
 /**
@@ -21,7 +21,7 @@ function atd_http( $url, $method = 'GET', $data = array() ){
  * @return string|bool Returns version if update is available, else false
  */
 function atd_update_check(){
-	$latest_ver = trim( atd_http( 'http://gaut.am/uploads/plugins/updater.php?pid=5&chk=ver&soft=bb&current=' . ATD_VER ) );
+	$latest_ver = atd_http( 'http://gaut.am/uploads/plugins/updater.php?pid=5&chk=ver&soft=bb&current=' . ATD_VER );
 	if( $latest_ver && version_compare( $latest_ver, ATD_VER, '>' ) )
 		return $latest_ver;
 	
@@ -32,7 +32,7 @@ function atd_update_check(){
  * Connect to the AtD service and verify the key the user entered
  */
 function atd_verify_key( $key ) {
-	return trim( atd_http( 'http://service.afterthedeadline.com/verify?key=' . urlencode( $key ) ) );
+	return atd_http( 'http://service.afterthedeadline.com/verify?key=' . urlencode( $key ) );
 }
 
 /**
@@ -42,28 +42,28 @@ function atd_verify_key( $key ) {
  */
 function atd_options(){
 	global $atd_plugopts;
-	if ( $_POST['atd_opts_submit'] == 1 ) { /* Settings have been recieved, now save them! */
+	if ( $_POST['atd_opts_submit'] == 1 ) { /* Settings have been received, now save them! */
+		
 		bb_check_admin_referer( 'atd-save-chk' ); /* Security Check */
-		/* Checks on the key, also saving it */
-		$key = trim( strip_tags( stripslashes( $_POST['key'] ) ) );
-		$key_status = trim( atd_verify_key( $key ) );
-		if ( $key && ( strcmp( $key_status, 'valid' ) == 0 || strcmp( $key_status, 'Got it!' ) == 0 ) ){
+		
+		$key = trim( strip_tags( stripslashes( $_POST['key'] ) ) ); /* Parse key */
+		$key_status = atd_verify_key( $key ); /* Verify key */
+		
+		if ( $key && ( strcmp( $key_status, 'valid' ) == 0 || strcmp( $key_status, 'Got it!' ) == 0 ) ){ /* Checks on the key */
 			$atd_plugopts['key'] = $key;
-			bb_update_option( ATD_OPTIONS, $atd_plugopts );
-			bb_admin_notice( __( 'The API key was successfully saved!', 'after-the-deadline' ) );
-		}elseif( !$key ){
-			$atd_plugopts['key'] = '';
-			bb_update_option( ATD_OPTIONS, $atd_plugopts );
-			bb_admin_notice( __( 'Please enter an API key.', 'after-the-deadline' ) );
+			$message = __( 'The API key was successfully saved!', 'after-the-deadline' );
 		}else{
 			$atd_plugopts['key'] = '';
-			bb_update_option( ATD_OPTIONS, $atd_plugopts );
-			bb_admin_notice( __( 'The API key you entered is invalid! Please enter the key again.', 'after-the-deadline' ) );
+			$message = __( 'The API key you entered is invalid! Please enter a valid key.', 'after-the-deadline' );
 		}
+		
+		/* Save key and notify user */
+		bb_update_option( ATD_OPTIONS, $atd_plugopts );
+		bb_admin_notice( __( $message ) );
 	}
 	
-	$ver = atd_update_check(); /* Check for Updates */
-	if( $ver ) /* If available, then notify */
+	/* Check for updates and if available, then notify */
+	if( $ver = atd_update_check() )
 		bb_admin_notice( sprintf( __( 'New version%1$s of After the Deadline is available! Please download the latest version from <a href="%2$s">here</a>.', 'after-the-deadline' ), ' (v'.$ver.')', 'http://bbpress.org/plugins/topic/after-the-deadline/' ) );
 	
 	/* Options in an array to be printed */
@@ -77,7 +77,7 @@ function atd_options(){
 	);
 	?>
 	
-	<h2><?php _e('After the Deadline Options', 'after-the-deadline'); ?></h2>
+	<h2><?php _e( 'After the Deadline Options', 'after-the-deadline' ); ?></h2>
 	<?php do_action( 'bb_admin_notices' ); ?>
 	<form method="post" class="settings options">
 		<fieldset>
@@ -106,4 +106,4 @@ function atd_menu_link() {
 	bb_admin_add_submenu( __( 'After the Deadline', 'after-the-deadline' ), 'administrate', 'atd_options', 'options-general.php' );
 }
 
-add_action('bb_admin_menu_generator', 'atd_menu_link', 3); /* Adds a menu link to setting's page */
+add_action( 'bb_admin_menu_generator', 'atd_menu_link', 3 ); /* Adds a menu link to setting's page */

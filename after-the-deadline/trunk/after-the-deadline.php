@@ -17,19 +17,18 @@ Author URI: http://gaut.am/
  * @link http://gaut.am/bbpress/plugins/after-the-deadline/
  */
 
-bb_load_plugin_textdomain( 'after-the-deadline', dirname(__FILE__) . '/languages' ); /* Create Text Domain For Translations */
+bb_load_plugin_textdomain( 'after-the-deadline', dirname( __FILE__ ) . '/languages' ); /* Create Text Domain For Translations */
 
 /* Defines */
 
 /**
  * If you have problems (the directory of the plugin could not be matched), then define ATD_PLUGPATH in bb-config.php file to the full URL path to the plugin directory
  * @example http://www.example-domain.tld/forums/my-plugins/after-the-deadline/
- * @since 1.3
  */
 if( !defined( 'ATD_PLUGPATH' ) ) /* Define ATD_PLUGPATH if value is not set - Full URL path to the plugin */
-	define( 'ATD_PLUGPATH', bb_get_option('uri').trim(str_replace(array(trim(BBPATH,"/\\"),"\\"),array("","/"),dirname(__FILE__)),' /\\').'/' );
-define( 'ATD_VER', '1.4.1-dev' ); /* Version */
-define( 'ATD_OPTIONS','After-the-Deadline' ); /* AtD Option Name */
+	define( 'ATD_PLUGPATH', bb_get_plugin_uri( bb_plugin_basename( __FILE__ ) ) );
+define( 'ATD_VER', '1.5-dev' ); /* Version */
+define( 'ATD_OPTIONS','After-the-Deadline' ); /* Option Name */
 
 $atd_plugopts = bb_get_option(ATD_OPTIONS);
 if( !is_array( $atd_plugopts ) ){ /* Set the Options if they are not set */

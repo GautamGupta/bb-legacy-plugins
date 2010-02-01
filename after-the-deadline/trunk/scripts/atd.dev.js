@@ -668,14 +668,10 @@ AtD.useSuggestion = function(word) {
 AtD.editSelection = function() {
 	var parent = AtD.errorElement.parent();
 
-	if (AtD.callback_f != undefined && AtD.callback_f.editSelection != undefined)
+	if (AtD.callback_f != undefined && AtD.callback_f.editSelection != undefined){
 		AtD.callback_f.editSelection(AtD.errorElement);
-
-	if (AtD.errorElement.parent() != parent) {
-		AtD.counter --;
-		if (AtD.counter == 0 && AtD.callback_f != undefined && AtD.callback_f.success != undefined)
-			AtD.callback_f.success(AtD.count);
 	}
+	
 };
 
 AtD.ignoreSuggestion = function() {
@@ -1276,6 +1272,9 @@ AtD._checkTextArea = function(id, commChannel, linkId, after) {
 					{
 						jQuery(element).html(text);
 						AtD.core.removeParent(element);
+						AtD.counter--;
+						if (AtD.counter == 0)
+							AtD.restoreTextArea( id );
 					}
 				});
 			}

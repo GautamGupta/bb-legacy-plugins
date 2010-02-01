@@ -18,7 +18,7 @@ function atd_css_js(){
 	global $atd_plugopts;
 	if( bb_is_user_logged_in() || ( function_exists( 'bb_is_login_required' ) && !bb_is_login_required() ) ){
 		$i18n = array(
-				'rpc' => ATD_PLUGPATH.'includes/check.php',
+				'rpc' => ATD_PLUGPATH . 'includes/check.php',
 				'api_key' => $atd_plugopts['key'],
 				'button_proofread' => __('Proofread', 'after-the-deadline'),
 				'button_edit_text' => __('Edit Text', 'after-the-deadline'),
@@ -41,11 +41,11 @@ function atd_css_js(){
 				'dialog_replace_selection' => __('Replace selection with', 'after-the-deadline'),
 				'dialog_replace' => __('Replace', 'after-the-deadline'),
 			);
-		//wp_enqueue_script('after-the-deadline', ATD_PLUGPATH."scripts/atd.dev.js", array('jquery'), ATD_VER, true);
-		wp_enqueue_style( 'after-the-deadline', ATD_PLUGPATH.'css/atd.css', false, ATD_VER, 'all' );
-		wp_enqueue_script( 'after-the-deadline', ATD_PLUGPATH."scripts/atd.js", array('jquery'), ATD_VER );
+		//wp_enqueue_script('after-the-deadline', ATD_PLUGPATH . 'scripts/atd.dev.js', array('jquery'), ATD_VER, true);
+		wp_enqueue_style( 'after-the-deadline', ATD_PLUGPATH . 'css/atd.css', false, ATD_VER, 'all' );
+		wp_enqueue_script( 'after-the-deadline', ATD_PLUGPATH . 'scripts/atd.js', array('jquery'), ATD_VER );
 		wp_localize_script( 'after-the-deadline', 'AtD', $i18n );
 	}
 }
 
-add_action('wp_print_scripts', 'atd_css_js', 2); /* Enqueues Script and Style */
+add_action( 'wp_print_scripts', 'atd_css_js', 2 ); /* Enqueues Script and Style */

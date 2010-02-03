@@ -15,6 +15,9 @@ $DEFAULTS = array(
 	"thanks_voting" => "Add your vote of thanks",
 	"thanks_success" => "Vote received, thanks.",
 	"thanks_position" => "after",
+	"thanks_voters" => "no",
+	"thanks_voters_prefix" => "(",
+	"thanks_voters_suffix" => ")",
 );
 
 require_once( "thanks-admin.php" );
@@ -53,15 +56,27 @@ function thanks_output() {
 
 	$logged_in = bb_is_user_logged_in();
 	$meta = bb_get_post_meta("thanks", $bb_post->post_id);
+	$report_length = 0;
 	echo "<div class=\"thanks-output\" id=\"thanks-".$bb_post->post_id."\">";
 	if (isset($meta)) {
 		$vote_count = count($meta);
 		$msg_type = ($vote_count == 0) ? "none" : (($vote_count == 1) ? "one" : "many");
-		$msg = thanks_get_voting_phrase("thanks_output_".$msg_type);	
+		$msg = thanks_get_voting_phrase("thanks_output_".$msg_type);
+		$report_length = strlen($msg);
 	  echo str_replace("#", "".$vote_count, $msg);
-		
-		if ($logged_in) {
-			echo "&nbsp;&nbsp;|&nbsp;&nbsp;";
+	  
+	  $should_show_voters = thanks_get_voting_phrase("thanks_voters");
+	  if ($should_show_voters == "yes") {
+		  echo ' '.thanks_get_voting_phrase("thanks_voters_prefix");
+		  for ($i=0; $i < count($meta); $i++) {
+				$link = get_user_profile_link($meta[$i]);
+				$voter = bb_get_user($meta[$i]);
+				if ($i > 0) {
+					echo ", ";
+				}
+				echo '<a href="'.$link.'">'.$voter->display_name.'</a>';
+		  }
+		  echo thanks_get_voting_phrase("thanks_voters_suffix");
 		}
 	}
 	
@@ -69,8 +84,13 @@ function thanks_output() {
 		$user = bb_get_current_user();
 		$uid = (int) $user->ID;
 
-		$msg = thanks_get_voting_phrase("thanks_voting");		
-		echo "<a class=\"thanks-vote\" user=\"".$uid."\" id=\"".$bb_post->post_id."\">".$msg."</a>";
+		if (!in_array($uid, $meta)) {
+			if (isset($meta) && $report_length > 0) {
+				echo "&nbsp;&nbsp;|&nbsp;&nbsp;";
+			}
+			$msg = thanks_get_voting_phrase("thanks_voting");		
+			echo "<a class=\"thanks-vote\" user=\"".$uid."\" id=\"".$bb_post->post_id."\">".$msg."</a>";
+		}
 	}
 	echo "</div>";
 }

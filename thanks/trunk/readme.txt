@@ -21,10 +21,6 @@ Oh, and don’t forget to Activate the plugin!
 
 == Frequently Asked Questions ==
 
-= I clicked the "voting" link multiple times but it still only registered one vote of thanks =
-
-Yes, that is how it's meant to work.  The plugin counts the number of people who add a vote of thanks, not the number of times the voting link is clicked, to keep things fair.  This means you can only vote for a given post once.
-
 = I dont like where the plugin puts its text =
 
 Take a look in the admin area of your forum - you can opt to have the plugin output its report of the number of votes of thanks and the voting link either before, or after, each post.  You can also edit the text that is used by the plugin.
@@ -33,7 +29,15 @@ Take a look in the admin area of your forum - you can opt to have the plugin out
 
 Have at it!  The plugin wraps its output in a `div` with a class of `thanks-output` - if you want to get into the code to really customize the output, look in `thanks.php` at the `thanks_output()` method.
 
+= Can I get a list of who said thanks for a post? =
+
+Yes - in the admin area, there is an option for listing all the "thanks" voters.  By default the option is set to "no".  If you want the plugin to list all the people, set that to "yes".
+
 == Change Log ==
+
+= Version 0.6 =
+
+Thanks to feedback and testing from `chandersbs` and `bingsterloot` the plugin was modified to remove the voting link, if you've already voted, and give the option to list out all the users who have said thanks.  Thanks also to `citizenkeith` for testing v0.9.0.6 compatibility (or rather, lack thereof).
 
 = Version 0.5 =
 

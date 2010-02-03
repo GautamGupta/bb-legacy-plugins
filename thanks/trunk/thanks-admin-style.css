@@ -2,7 +2,9 @@
  *   Admin page styling for the thanks plugin.
  */
 
-fieldset#thanks-voting, fieldset#thanks-reporting, fieldset#thanks-submit, fieldset#thanks-uninstall, fieldset#thanks-uninstall-message {
+fieldset#thanks-voting, fieldset#thanks-reporting, fieldset#thanks-submit, 
+fieldset#thanks-uninstall, fieldset#thanks-uninstall-message, 
+fieldset#thanks-voters {
 	padding: 1em;
 	width: 80%;
 }
@@ -14,7 +16,7 @@ fieldset#thanks-voting {
 	border-right: 1px solid #ccc;
 }
 
-fieldset#thanks-reporting {
+fieldset#thanks-reporting, fieldset#thanks-voters {
 	float: left;
 	border-top: 1px solid #ccc;
 	border-left: 1px solid #ccc;

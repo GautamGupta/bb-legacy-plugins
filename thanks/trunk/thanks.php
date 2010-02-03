@@ -5,7 +5,7 @@ Plugin URI: http://devt.caffeinatedbliss.com/bbpress/thanks
 Description: Empowers users to leave a vote of thanks for posts
 Author: Paul Hawke
 Author URI: http://paul.caffeinatedbliss.com/
-Version: 0.5
+Version: 0.6
 */
 
 $DEFAULTS = array(

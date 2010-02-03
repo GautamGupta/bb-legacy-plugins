@@ -30,6 +30,9 @@ function thanks_admin_page_process() {
 		bb_update_option('thanks_output_many', $_POST['thanks_output_many']);
 		bb_update_option('thanks_success', $_POST['thanks_success']);
 		bb_update_option('thanks_position', $_POST['thanks_position']);
+		bb_update_option('thanks_voters', $_POST['thanks_voters']);
+		bb_update_option('thanks_voters_prefix', $_POST['thanks_voters_prefix']);
+		bb_update_option('thanks_voters_suffix', $_POST['thanks_voters_suffix']);
 	}
 	
 	if (isset($_POST['thanks_option_reset'])) {
@@ -39,6 +42,9 @@ function thanks_admin_page_process() {
 		bb_delete_option('thanks_output_many');
 		bb_delete_option('thanks_success');
 		bb_delete_option('thanks_position');
+		bb_delete_option('thanks_voters');
+		bb_delete_option('thanks_voters_prefix');
+		bb_delete_option('thanks_voters_suffix');
 	}
 	
 	if (isset($_POST['thanks_remove_all'])) {
@@ -54,6 +60,9 @@ function thanks_admin_page_process() {
 		bb_delete_option('thanks_output_many');
 		bb_delete_option('thanks_success');
 		bb_delete_option('thanks_position');
+		bb_delete_option('thanks_voters');
+		bb_delete_option('thanks_voters_prefix');
+		bb_delete_option('thanks_voters_suffix');
 	}
 }
 

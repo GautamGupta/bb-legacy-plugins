@@ -1,12 +1,11 @@
 
 jQuery(document).ready(function() {
 	
-	// Voting link on each post
 	jQuery(".thanks-vote").click(function() {
 		var post_id = jQuery(this).attr("id");
 		var user_id = jQuery(this).attr("user");
 		jQuery.post(ajaxThanksUrl, { 'post_id': post_id, 'user_id': user_id  }, function(data) {
-			html(post_id, ajaxSuccess);
+			html(post_id, data);
 		}, "text"); // Ajax Post		
 	});
 	

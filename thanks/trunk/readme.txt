@@ -35,6 +35,10 @@ Yes - in the admin area, there is an option for listing all the "thanks" voters.
 
 == Change Log ==
 
+= Version 0.7 =
+
+As requested (by `bingsterloot`) the plugin now immediately refreshes the count of votes for a given post in response to a user clicking the voting link, rather than displaying a static "thanks" message.
+
 = Version 0.6 =
 
 Thanks to feedback and testing from `chandersbs` and `bingsterloot` the plugin was modified to remove the voting link, if you've already voted, and give the option to list out all the users who have said thanks.  Thanks also to `citizenkeith` for testing v0.9.0.6 compatibility (or rather, lack thereof).

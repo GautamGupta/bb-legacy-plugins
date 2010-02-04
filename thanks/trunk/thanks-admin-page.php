@@ -4,9 +4,6 @@
 <li><label for="thanks_voting">Voting phrase:</label>
 <input type="text" value="<?php echo thanks_get_voting_phrase("thanks_voting"); ?>" name="thanks_voting" id="thanks_voting" size="50"/></li>
 
-<li><label for="thanks_success">AJAX success message:</label>
-<input type="text" value="<?php echo thanks_get_voting_phrase("thanks_success"); ?>" name="thanks_success" id="thanks_success" size="50"/></li>
-
 <li><label for="thanks_position">Voting/report DIV position:</label>
 <select name="thanks_position" id="thanks_position"/>
 <option value="before"<?php if (thanks_get_voting_phrase("thanks_position") == "before") { echo " selected"; } ?>>Before the post</option>

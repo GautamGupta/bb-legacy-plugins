@@ -28,7 +28,6 @@ function thanks_admin_page_process() {
 		bb_update_option('thanks_output_none', $_POST['thanks_output_none']);
 		bb_update_option('thanks_output_one', $_POST['thanks_output_one']);
 		bb_update_option('thanks_output_many', $_POST['thanks_output_many']);
-		bb_update_option('thanks_success', $_POST['thanks_success']);
 		bb_update_option('thanks_position', $_POST['thanks_position']);
 		bb_update_option('thanks_voters', $_POST['thanks_voters']);
 		bb_update_option('thanks_voters_prefix', $_POST['thanks_voters_prefix']);

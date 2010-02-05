@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Mentions 0.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/easy-mentions\n"
-"POT-Creation-Date: 2010-01-28 14:39+0000\n"
+"POT-Creation-Date: 2010-02-05 14:25+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Gautam <gautam.2011@gmail.com>\n"
 "Language-Team: Gautam Gupta <admin@gaut.am>\n"
@@ -13,60 +13,69 @@ msgstr ""
 "X-Poedit-Country: INDIA\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: includes/admin.php:38
+#: includes/admin.php:39
 msgid "The options were successfully saved!"
 msgstr "विकल्प सफलतापूर्वक दर्ज करलिए गए हैं|"
 
-#: includes/admin.php:44
+#: includes/admin.php:45
 #, php-format
 msgid "New version (%1$s) of Easy Mentions is available! Please download the latest version from <a href=\"%2$s\">here</a>."
 msgstr "आसान मेंशन का नया संस्करण (%1$s) उपलब्ध है! कृप्या उसे <a href=\"%2$s\">यहाँ</a> से डाउनलोड करें|"
 
-#: includes/admin.php:49
+#: includes/admin.php:50
 msgid "Link the user to profile or website?"
 msgstr "उपयोगकर्ता को प्रोफाइल से लिंक करें या वेबसाइट से?"
 
-#: includes/admin.php:53
+#: includes/admin.php:54
 msgid "Profile"
 msgstr "प्रोफाइल"
 
-#: includes/admin.php:54
+#: includes/admin.php:55
 msgid "Website"
 msgstr "वेबसाइट"
 
-#: includes/admin.php:56
+#: includes/admin.php:57
 msgid "If you selected the website option and the user's website does not exist, then the user will be linked to his or her profile page."
 msgstr "अगर आप वेबसाइट का विकल्प चुनते हैं और उप्योगिकर्ता की वेबसाइट नहीं है, तो उप्योगिकर्ता उसकी प्रोफाइल से लिंक करदिया जायेगा|"
 
-#: includes/admin.php:59
+#: includes/admin.php:60
 msgid "Add a reply link below each post?"
 msgstr "प्रत्येक पोस्ट के नीचे एक उत्तर के लिए लिंक डालें?"
 
-#: includes/admin.php:63
+#: includes/admin.php:64
 msgid "Yes"
 msgstr "हाँ"
 
-#: includes/admin.php:65
+#: includes/admin.php:66
 #, php-format
 msgid "Before checking this option, please verify that there is a post form below the topic on each page. (<a href=\"%s\">Help</a>)"
 msgstr "इस विकल्प को जाँचने से पहले, कृपया सत्यापित करें कि हर टॉपिक के हर पृष्ठ के नीचे एक पोस्ट फार्म है| (<a href=\"%s\">मदद</a>)"
 
-#: includes/admin.php:70
+#: includes/admin.php:69
+msgid "Reply Text"
+msgstr "उत्तर के लिए टेक्स्ट"
+
+#: includes/admin.php:72
+#, php-format
+msgid "This applies when the reply feature is ON. Some HTML is allowed. The following keys can also be used:%1$s - Post's author's name%2$s - Post's link"
+msgstr "ये तब लागु होता है जब उत्तर सुविधा चालू हो| थोड़ी एच.टी.एम.एल. की अनुमति है| निम्नलिखित कुंजियाँ का भी उपयोग किया जा सकता है:%1$s - पोस्ट लिखने वाले का नाम%2$s - पोस्ट का लिंक"
+
+#: includes/admin.php:77
 msgid "Easy Mention Options"
 msgstr "आसान मेंशन के विकल्प"
 
-#: includes/admin.php:85
+#: includes/admin.php:92
 #, php-format
 msgid "Happy with the plugin? Why not <a href=\"%1$s\">buy the author a cup of coffee or two</a> or get him something from his <a href=\"%2$s\">wishlist</a>?"
 msgstr "प्लगिन से खुश? लिखने वाले को कुछ <a href=\"%1$s\">दान</a> करें या फिर उसकी <a href=\"%2$s\">इच्छा सूची</a> देखें|"
 
-#. #-#-#-#-#  plugin.pot (Easy Mentions 0.1)  #-#-#-#-#
+#. #-#-#-#-#  plugin.pot (Easy Mentions 0.1.1)  #-#-#-#-#
 #. Plugin Name of an extension
-#: includes/admin.php:96
+#: includes/admin.php:103
 msgid "Easy Mentions"
 msgstr "आसान मेंशन"
 
-#: includes/public.php:71
+#: includes/public.php:90
 msgid "Reply"
 msgstr "उत्तर"
 

@@ -32,10 +32,10 @@ function em_do_linking( $content ){
                 /*$new_mention_count = (int)bb_get_usermeta( $user_id, 'em_mention_count' );
                 bb_update_usermeta( $user_id, 'em_mention_count', $new_mention_count + 1 );*/
 		
-		if( 'website' == $em_plugopts['link-to'] ){
-			if( !$link = $user->user_url )
+		if ( 'website' == $em_plugopts['link-to'] ) {
+			if ( !$link = $user->user_url )
 				$link = get_user_profile_link( $user->ID );
-		}else{
+		} else {
 			$link = get_user_profile_link( $user->ID );
 		}
 		
@@ -44,18 +44,6 @@ function em_do_linking( $content ){
         }
 
         return $content;
-}
-
-/**
- * Enqueue jQuery
- *
- * @uses wp_enqueue_script()
- */
-function em_js(){
-	global $em_plugopts;
-	
-	if ( $em_plugopts['reply-link'] == 1 && bb_is_topic() && topic_is_open() && ( bb_is_user_logged_in() || ( function_exists( 'bb_is_login_required' ) && !bb_is_login_required() ) ) ) /* Check if script is needed */
-		wp_enqueue_script( 'jquery' );
 }
 
 /**
@@ -84,15 +72,14 @@ function em_parse_text( $text, $username, $post_link ){
 function em_reply_link( $post_links, $args ) {
 	global $em_plugopts;
 	
-	if ( $em_plugopts['reply-link'] == 1 && bb_is_topic() && topic_is_open() && ( bb_is_user_logged_in() || ( function_exists( 'bb_is_login_required' ) && !bb_is_login_required() ) ) ){ /* Check if link is needed */
-		$text = em_parse_text( $em_plugopts['reply-text'], get_post_author(), get_post_link() );
-		$js = "var a=jQuery('#post_content').val();if(a!='')a+='\\n\\n';jQuery('#post_content').val(a+'" . $text . "\\n\\n');";
-		$post_links[] = $args['before_each'] . '<a class="reply_link" href="#postform" onclick="' . $js . '">' . __( 'Reply', 'easy-mentions' ) . '</a>' . $args['after_each'];
+	if ( $em_plugopts['reply-link'] == 1 && $em_plugopts['reply-text'] && bb_is_topic() && topic_is_open() && ( bb_is_user_logged_in() || ( function_exists( 'bb_is_login_required' ) && !bb_is_login_required() ) ) ){ /* Check if link is needed */
+		$text		= em_parse_text( $em_plugopts['reply-text'], get_post_author(), get_post_link() );
+		$js		= "var ema=document.getElementById('post_content');var emb=ema.value;if(emb!='')emb+='\\n\\n';ema.value=emb+'" . $text . "\\n\\n';ema.focus();void(0);";
+		$post_links[]	= $args['before_each'] . '<a class="reply_link" style="cursor:pointer" onclick="' . $js . '">' . __( 'Reply', 'easy-mentions' ) . '</a>' . $args['after_each'];
 	}
 	
         return $post_links;
 }
 
-add_action( 'post_text', 'em_do_linking', -999, 1 ); /* Do Linking */
-add_action( 'wp_print_scripts', 'em_js', 5, 0 ); /* Add jQuery */
+add_filter( 'post_text', 'em_do_linking', -999, 1 ); /* Do Linking */
 add_filter( 'bb_post_admin', 'em_reply_link', 11, 2 ); /* Add reply link */

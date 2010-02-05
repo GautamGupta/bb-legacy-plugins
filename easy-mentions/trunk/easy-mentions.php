@@ -20,20 +20,20 @@ Author URI: http://gaut.am/
 bb_load_plugin_textdomain( 'easy-mentions', dirname( __FILE__ ) . '/languages' ); /* Create Text Domain For Translations */
 
 /* Defines */
-define( 'EM_VER', '0.1.1' ); /* Version */
+define( 'EM_VER', '0.2-beta' ); /* Version */
 define( 'EM_OPTIONS','Easy-Mentions' ); /* Option Name */
 
 $em_plugopts = bb_get_option( EM_OPTIONS );
-if( !is_array( $em_plugopts ) ){ /* Set the Options if they are not set */
+if ( !is_array( $em_plugopts ) ) { /* Set the Options if they are not set */
 	$em_plugopts = array(
-		'link-to' => 'profile',
-		'reply-link' => '',
-		'reply-text' => "<em>Replying to @%%USERNAME%%\'s <a href=\"%%POSTLINK%%\">post</a>:</em>"
+		'link-to'	=> 'profile',
+		'reply-link'	=> '',
+		'reply-text'	=> "<em>Replying to @%%USERNAME%%\'s <a href=\"%%POSTLINK%%\">post</a>:</em>"
 	);
 	bb_update_option( EM_OPTIONS, $em_plugopts );
 }
 
-if( bb_is_admin() ) /* Load admin.php file if it is the admin area */
+if ( bb_is_admin() ) /* Load admin.php file if it is the admin area */
 	require_once( 'includes/admin.php' );
 else /* Else load public.php file if it is the public area */
 	require_once( 'includes/public.php' );

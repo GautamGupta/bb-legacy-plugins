@@ -1,4 +1,4 @@
-# Translation of the WordPress plugin Easy Mentions 0.1 by Gautam Gupta.
+# Translation of the WordPress plugin Easy Mentions 0.1.1 by Gautam Gupta.
 # Copyright (C) 2010 Gautam Gupta
 # This file is distributed under the same license as the Easy Mentions package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Mentions 0.1\n"
+"Project-Id-Version: Easy Mentions 0.1.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/easy-mentions\n"
-"POT-Creation-Date: 2010-01-28 14:39+0000\n"
+"POT-Creation-Date: 2010-02-05 14:25+0000\n"
 "PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,55 +16,66 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: includes/admin.php:38
+#: includes/admin.php:39
 msgid "The options were successfully saved!"
 msgstr ""
 
-#: includes/admin.php:44
+#: includes/admin.php:45
 #, php-format
 msgid ""
 "New version (%1$s) of Easy Mentions is available! Please download the latest "
 "version from <a href=\"%2$s\">here</a>."
 msgstr ""
 
-#: includes/admin.php:49
+#: includes/admin.php:50
 msgid "Link the user to profile or website?"
 msgstr ""
 
-#: includes/admin.php:53
+#: includes/admin.php:54
 msgid "Profile"
 msgstr ""
 
-#: includes/admin.php:54
+#: includes/admin.php:55
 msgid "Website"
 msgstr ""
 
-#: includes/admin.php:56
+#: includes/admin.php:57
 msgid ""
 "If you selected the website option and the user's website does not exist, "
 "then the user will be linked to his or her profile page."
 msgstr ""
 
-#: includes/admin.php:59
+#: includes/admin.php:60
 msgid "Add a reply link below each post?"
 msgstr ""
 
-#: includes/admin.php:63
+#: includes/admin.php:64
 msgid "Yes"
 msgstr ""
 
-#: includes/admin.php:65
+#: includes/admin.php:66
 #, php-format
 msgid ""
 "Before checking this option, please verify that there is a post form below "
 "the topic on each page. (<a href=\"%s\">Help</a>)"
 msgstr ""
 
-#: includes/admin.php:70
+#: includes/admin.php:69
+msgid "Reply Text"
+msgstr ""
+
+#: includes/admin.php:72
+#, php-format
+msgid ""
+"This applies when the reply feature is ON. Some HTML is allowed. The "
+"following keys can also be used:%1$s - Post's author's name%2$s - Post's link"
+msgstr ""
+
+#: includes/admin.php:77
 msgid "Easy Mention Options"
 msgstr ""
 
-#: includes/admin.php:85
+#: includes/admin.php:92
 #, php-format
 msgid ""
 "Happy with the plugin? Why not <a href=\"%1$s\">buy the author a cup of "
@@ -72,13 +83,13 @@ msgid ""
 "a>?"
 msgstr ""
 
-#. #-#-#-#-#  plugin.pot (Easy Mentions 0.1)  #-#-#-#-#
+#. #-#-#-#-#  plugin.pot (Easy Mentions 0.1.1)  #-#-#-#-#
 #. Plugin Name of an extension
-#: includes/admin.php:96
+#: includes/admin.php:103
 msgid "Easy Mentions"
 msgstr ""
 
-#: includes/public.php:71
+#: includes/public.php:90
 msgid "Reply"
 msgstr ""
 

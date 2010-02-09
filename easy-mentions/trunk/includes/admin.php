@@ -44,7 +44,7 @@ function em_options(){
 	}
 	
 	if ( $ver = em_update_check() ) /* Check for Updates and if available, then notify */
-		bb_admin_notice( sprintf( __( 'New version (%1$s) of Easy Mentions is available! Please download the latest version from <a href="%2$s">here</a>.', 'easy-mentions' ), $ver, 'http://bbpress.org/plugins/topic/easy-mentions/' ) );
+		bb_admin_notice( sprintf( __( 'New version (%1$s) of Easy Mentions is available! Please download the latest version from <a href="%2$s">here</a>.', 'easy-mentions' ), $ver, 'http://bbpress.org/plugins/topic/easy-mentions/' ), 'error' );
 	
 	/* Options in an array to be printed */
 	$options = array(
@@ -87,7 +87,6 @@ function em_options(){
 		),
 		'reply-text' => array(
 			'title'		=> __( 'Reply Text', 'easy-mentions' ),
-			'class'		=> array( 'long' ),
 			'value'		=> $em_plugopts['reply-text'] ? stripslashes( $em_plugopts['reply-text'] ) : '<em>Replying to @%%USERNAME%%\'s <a href="%%POSTLINK%%">post</a>:</em>',
 			'after'		=> '<div style="clear:both;"></div>' . sprintf( __( 'Some HTML is allowed. The following keys can also be used:%1$s - Post\'s author\'s name%2$s - Post\'s link', 'after-the-deadline' ), '<br /><strong>%%USERNAME%%</strong>', '<br /><strong>%%POSTLINK%%</strong>' ) . '<br />'
 		)
@@ -126,9 +125,7 @@ function em_options(){
  * @uses wp_enqueue_script()
  */
 function em_admin_head() {
-	global $bb_admin_page;
-	if( $bb_admin_page == 'em_options' )
-		wp_enqueue_script( 'easy-mentions', EM_PLUGPATH.'js/admin.js', array('jquery'), EM_VER );
+	wp_enqueue_script( 'easy-mentions', EM_PLUGPATH . 'js/admin.js', array('jquery'), EM_VER );
 }
 
 /**
@@ -141,4 +138,4 @@ function em_menu_link() {
 }
 
 add_action( 'bb_admin_menu_generator', 'em_menu_link', 8, 0 ); /* Adds a menu link to setting's page */
-add_action( 'bb_admin_print_scripts', 'em_admin_head', 2 ); /* Enqueue the Javascript */
+add_action( 'em_options_pre_head', 'em_admin_head', 2 ); /* Enqueue the Javascript */

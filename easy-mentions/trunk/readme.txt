@@ -6,15 +6,16 @@ Requires at least: 1.0
 Tested up to: 1.1
 Stable tag: 0.1.1
 
-Easy Mentions allows the users to link to other users' profiles in posts by using @username (like Twitter).
+Easy Mentions allows the users to link to other users' profiles in posts (by using @username) and tags (by using #tag), basically like Twitter.
 
 == Description ==
 
-Easy Mentions allows the users to link to other users' profiles in posts by using `@username` (like Twitter).
+Easy Mentions allows the users to link to other users' profiles in posts (by using `@username`) and tags (by using `#tag`), basically like Twitter.
 
-Just make a new post, write the content with a `@username` (can be any username) in the text. When you submit the post, the plugin will automatically link the usernames (which exist) to their profile. Note that the plugin doesn't link the usernames with spaces.
+Just make a new post, write the content with a `@username` (can be any username) in the text. When you submit the post, the plugin will automatically link the usernames (which exist) to their profile. You can also link the tags in the same way by using `#tag`. Note that the plugin doesn't link the usernames or tags with spaces.
+You can also disable linking of users or tags by going to the settings page.
 
-The plugin can also add a Reply link below each post and when clicked, adds `@username` with the *post link* in the post textbox. This can be enabled via the settings page, but before that please see #1 question in the [FAQ](http://bbpress.org/plugins/topic/easy-mentions/faq/).
+The plugin can also add a Reply link below each post, which when clicked, adds the reply text (configurable) in the post textbox. This can be enabled via the settings page, but before that please see #1 question in the [FAQ](http://bbpress.org/plugins/topic/easy-mentions/faq/).
 
 == Other Notes ==
 
@@ -24,13 +25,13 @@ The plugin can also add a Reply link below each post and when clicked, adds `@us
 You can contribute by translating this plugin. Please refer to [this post](http://gaut.am/translating-wordpress-or-bbpress-plugins/) to know how to translate.
 
 = To Do =
-* Add the option to link `#tag` to a tag. (Scheduled for 0.3)
+Nothing for now.
 
 = License =
-GNU General Public License, Version 3: http://www.gnu.org/licenses/gpl-3.0.txt
+GNU General Public License version 3 (GPLv3): http://www.opensource.org/licenses/gpl-3.0.html
 
 = Donate =
-* You may donate by going [here](http://gaut.am/donate/EM/).
+You may donate by going [here](http://gaut.am/donate/EM/).
 
 == Installation ==
 
@@ -55,12 +56,14 @@ GNU General Public License, Version 3: http://www.gnu.org/licenses/gpl-3.0.txt
 
 == Changelog ==
 
-= 0.2 (xx-0x-10) =
+= 0.2 (09-02-10) =
+* Now the plugin can also link tags (use `#tag`)
+* Added option to let the user to choose whether to link tags/users or not
 * Added option to choose reply format
-* Removed Javascript, hard-coded the reply values
-* Removed the use of jQuery
+* Removed the Javascript file for public section, hard-coded the reply values
+* Removed the use of jQuery from public section
 * Updated Hindi Translation
-* Updated screenshot of settings page
+* Updated Screenshots
 
 = 0.1.1 (28-01-10) =
 * Important bug fix for Reply feature
@@ -70,8 +73,8 @@ GNU General Public License, Version 3: http://www.gnu.org/licenses/gpl-3.0.txt
 
 == Upgrade Notice ==
 
-= 0.2 (xx-0x-10) =
-If you are upgrading and also using the reply feature, then after upgrading, go to settings page and press "save changes" button.
+= 0.2 (09-02-10) =
+If you are upgrading and also using the reply feature, then after upgrading, go to settings page and press "Save Changes" button.
 
 = 0.1.1 (28-01-10) =
 Has important bug fix for Reply feature, please upgrade!

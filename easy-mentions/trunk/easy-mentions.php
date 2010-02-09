@@ -1,13 +1,11 @@
 <?php
 /*
-Plugin Name: Easy Mentions
-Plugin URI: http://gaut.am/bbpress/plugins/easy-mentions/
-Description: Easy Mentions allows the users to link to other users' profiles in posts by using @username (like Twitter).
-Version: 0.1.1
-Author: Gautam Gupta
-Author URI: http://gaut.am/
-
-@license http://www.gnu.org/licenses/gpl-3.0.txt GNU General Public License, Version 3
+ Plugin Name: Easy Mentions
+ Plugin URI: http://gaut.am/bbpress/plugins/easy-mentions/
+ Description: Easy Mentions allows the users to link to other users' profiles in posts by using @username (like Twitter).
+ Author: Gautam Gupta
+ Author URI: http://gaut.am/
+ Version: 0.1.1
 */
 
 /**
@@ -15,6 +13,7 @@ Author URI: http://gaut.am/
  * @subpackage Main Section
  * @author Gautam Gupta (www.gaut.am)
  * @link http://gaut.am/bbpress/plugins/easy-mentions/
+ * @license GNU General Public License version 3 (GPLv3): http://www.opensource.org/licenses/gpl-3.0.html
  */
 
 bb_load_plugin_textdomain( 'easy-mentions', dirname( __FILE__ ) . '/languages' ); /* Create Text Domain For Translations */
@@ -22,14 +21,26 @@ bb_load_plugin_textdomain( 'easy-mentions', dirname( __FILE__ ) . '/languages' )
 /* Defines */
 define( 'EM_VER', '0.2-beta' ); /* Version */
 define( 'EM_OPTIONS','Easy-Mentions' ); /* Option Name */
+define( 'EM_PLUGPATH', bb_get_plugin_uri( bb_plugin_basename( __FILE__ ) ) ); /* Plugin URL */
 
+/* Get the options, if not found then set them */
 $em_plugopts = bb_get_option( EM_OPTIONS );
-if ( !is_array( $em_plugopts ) ) { /* Set the Options if they are not set */
+if ( !is_array( $em_plugopts ) ) {
 	$em_plugopts = array(
-		'link-to'	=> 'profile',
-		'reply-link'	=> '',
-		'reply-text'	=> "<em>Replying to @%%USERNAME%%\'s <a href=\"%%POSTLINK%%\">post</a>:</em>"
+		'link-tags'	=> 1,
+		'link-users'	=> 1,
+		'link-user-to'	=> 'profile',
+		'reply-link'	=> 0,
+		'reply-text'	=> "<em>Replying to @%%USERNAME%%\'s <a href=\"%%POSTLINK%%\">post</a>:</em>",
 	);
+	bb_update_option( EM_OPTIONS, $em_plugopts );
+}
+
+if ( $em_plugopts['link-to'] ) { /* Update the old options, will be removed in v0.4 */
+	unset( $em_plugopts['link-to'] );
+	$em_plugopts['link-users']	= 1;
+	$em_plugopts['link-tags']	= 1;
+	$em_plugopts['link-user-to']	= ( $em_plugopts['link-to'] == 'website' ) ? 'website' : 'profile';
 	bb_update_option( EM_OPTIONS, $em_plugopts );
 }
 

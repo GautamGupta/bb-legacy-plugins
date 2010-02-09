@@ -14,7 +14,7 @@
  * @uses WP_Http
  */
 function em_update_check(){
-	$latest_ver = trim( wp_remote_retrieve_body( wp_remote_request( 'http://gaut.am/uploads/plugins/updater.php?pid=7&chk=ver&soft=bb&current=' . EM_VER ) ) );
+	$latest_ver = trim( wp_remote_retrieve_body( wp_remote_get( 'http://gaut.am/uploads/plugins/updater.php?pid=7&chk=ver&soft=bb&current=' . EM_VER, array( 'user-agent' => 'Easy Mentions bbPress Plugin v' . EM_VER ) ) ) );
 	if ( $latest_ver && version_compare( $latest_ver, EM_VER, '>' ) )
 		return strval( $latest_ver );
 	

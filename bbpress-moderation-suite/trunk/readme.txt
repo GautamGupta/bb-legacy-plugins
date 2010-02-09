@@ -118,6 +118,7 @@ In order to define a new type, you will have to add a filter to `bbmodsuite_modl
 * Default report reasons and resolve types added for new installs.
 * Some minor UI fixes
 * Move! moderation helper added.
+* Ban Plus IP banning fixed.
 
 = 0.1-rc1 =
 * Mod Log now tracks unbanning as well as banning

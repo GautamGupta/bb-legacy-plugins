@@ -29,29 +29,47 @@ function em_update_check(){
 function em_options(){
 	global $em_plugopts;
 	
-	if ( $_POST['em_opts_submit'] == 1 ) { /* Settings have been recieved, now save them! */
+	if ( $_POST['em_opts_submit'] == 1 ) { /* Settings have been received, now save them! */
 		bb_check_admin_referer( 'em-save-chk' ); /* Security Check */
 		
-		/* Checks on options, also saving them */
-		$em_plugopts['link-to']		= ( $_POST['link-to'] == 'website' ) ? 'website' : 'profile';
-		$em_plugopts['reply-link']	= ( intval( $_POST['reply-link'] ) == 1) ? 1 : 0;
+		/* Checks on options, and then save them */
+		$em_plugopts['link-tags']	= ( intval( $_POST['link-tags'] ) == 1 ) ? 1 : 0;
+		$em_plugopts['link-users']	= ( intval( $_POST['link-users'] ) == 1 ) ? 1 : 0;
+		$em_plugopts['link-user-to']	= ( $_POST['link-user-to'] == 'website' ) ? 'website' : 'profile';
+		$em_plugopts['reply-link']	= ( intval( $_POST['reply-link'] ) == 1 ) ? 1 : 0;
 		$em_plugopts['reply-text']	= esc_attr( $_POST['reply-text'] );
 		
 		bb_update_option( EM_OPTIONS, $em_plugopts );
 		bb_admin_notice( __( 'The options were successfully saved!', 'easy-mentions' ) );
 	}
 	
-	/* Check for Updates */
-	$ver = em_update_check();
-	if ( $ver ) /* If available, then notify */
+	if ( $ver = em_update_check() ) /* Check for Updates and if available, then notify */
 		bb_admin_notice( sprintf( __( 'New version (%1$s) of Easy Mentions is available! Please download the latest version from <a href="%2$s">here</a>.', 'easy-mentions' ), $ver, 'http://bbpress.org/plugins/topic/easy-mentions/' ) );
 	
 	/* Options in an array to be printed */
 	$options = array(
-		'link-to' => array(
+		'link-tags' => array(
+			'title'		=> __( 'Link the Tags?', 'easy-mentions' ),
+			'type'		=> 'checkbox',
+			'value'		=> ( $em_plugopts['link-tags'] == 1 ) ? '1' : '0',
+			'note'		=> __( 'Check this option if you want the tags to be linked (by using <code>#tag</code>) in the posts.', 'easy-mentions' ),
+			'options'	=> array(
+				'1'	=> __( 'Yes', 'easy-mentions' ),
+			)
+		),
+		'link-users' => array(
+			'title'		=> __( 'Link the Users?', 'easy-mentions' ),
+			'type'		=> 'checkbox',
+			'value'		=> ( $em_plugopts['link-users'] == 1 ) ? '1' : '0',
+			'note'		=> __( 'Check this option if you want the users to be linked (by using <code>@user</code>) in the posts.', 'easy-mentions' ),
+			'options'	=> array(
+				'1'	=> __( 'Yes', 'easy-mentions' ),
+			)
+		),
+		'link-user-to' => array(
 			'title'		=> __( 'Link the user to profile or website?', 'easy-mentions' ),
 			'type'		=> 'radio',
-			'value'		=> ( $em_plugopts['link-to'] == 'website' ) ? 'website' : 'profile',
+			'value'		=> ( $em_plugopts['link-user-to'] == 'website' ) ? 'website' : 'profile',
 			'note'		=> __( 'If you selected the website option and the user\'s website does not exist, then the user will be linked to his or her profile page.', 'easy-mentions' ),
 			'options'	=> array(
 				'profile' => __( 'Profile', 'easy-mentions' ),
@@ -61,7 +79,7 @@ function em_options(){
 		'reply-link' => array(
 			'title'		=> __( 'Add a reply link below each post?', 'easy-mentions' ),
 			'type'		=> 'checkbox',
-			'value'		=> ( intval( $em_plugopts['reply-link'] ) == 1) ? '1' : '0',
+			'value'		=> ( $em_plugopts['reply-link'] == 1 ) ? '1' : '0',
 			'note'		=> sprintf( __( 'Before checking this option, please verify that there is a post form below the topic on each page. (<a href="%s">Help</a>)', 'easy-mentions' ), 'http://bbpress.org/plugins/topic/easy-mentions/faq/' ),
 			'options'	=> array(
 				'1' => __( 'Yes', 'easy-mentions' ),
@@ -71,12 +89,18 @@ function em_options(){
 			'title'		=> __( 'Reply Text', 'easy-mentions' ),
 			'class'		=> array( 'long' ),
 			'value'		=> $em_plugopts['reply-text'] ? stripslashes( $em_plugopts['reply-text'] ) : '<em>Replying to @%%USERNAME%%\'s <a href="%%POSTLINK%%">post</a>:</em>',
-			'after'		=> '<div style="clear:both;"></div>' . sprintf( __( 'This applies when the reply feature is ON. Some HTML is allowed. The following keys can also be used:%1$s - Post\'s author\'s name%2$s - Post\'s link', 'after-the-deadline' ), '<br /><strong>%%USERNAME%%</strong>', '<br /><strong>%%POSTLINK%%</strong>' ) . '<br />'
+			'after'		=> '<div style="clear:both;"></div>' . sprintf( __( 'Some HTML is allowed. The following keys can also be used:%1$s - Post\'s author\'s name%2$s - Post\'s link', 'after-the-deadline' ), '<br /><strong>%%USERNAME%%</strong>', '<br /><strong>%%POSTLINK%%</strong>' ) . '<br />'
 		)
 	);
+	if ( $em_plugopts['link-users'] != 1 )
+		$options['link-user-to']['attributes'] = array( 'disabled' => 'disabled' );
+		
+	if ( $em_plugopts['reply-link'] != 1 )
+		$options['reply-text']['attributes'] = array( 'disabled' => 'disabled' );
+	
 	?>
 	
-	<h2><?php _e( 'Easy Mention Options', 'easy-mentions' ); ?></h2>
+	<h2><?php _e( 'Easy Mentions', 'easy-mentions' ); ?></h2>
 	<?php do_action( 'bb_admin_notices' ); ?>
 	<form method="post" class="settings options">
 		<fieldset>
@@ -97,6 +121,17 @@ function em_options(){
 }
 
 /**
+ * Enqueue the javascript in the admin head section
+ *
+ * @uses wp_enqueue_script()
+ */
+function em_admin_head() {
+	global $bb_admin_page;
+	if( $bb_admin_page == 'em_options' )
+		wp_enqueue_script( 'easy-mentions', EM_PLUGPATH.'js/admin.js', array('jquery'), EM_VER );
+}
+
+/**
  * Adds a menu link to the setting's page in the Settings section
  *
  * @uses bb_admin_add_submenu()
@@ -105,4 +140,5 @@ function em_menu_link() {
 	bb_admin_add_submenu( __( 'Easy Mentions', 'easy-mentions' ), 'administrate', 'em_options', 'options-general.php' );
 }
 
-add_action('bb_admin_menu_generator', 'em_menu_link', 8, 0); /* Adds a menu link to setting's page */
+add_action( 'bb_admin_menu_generator', 'em_menu_link', 8, 0 ); /* Adds a menu link to setting's page */
+add_action( 'bb_admin_print_scripts', 'em_admin_head', 2 ); /* Enqueue the Javascript */

@@ -52,7 +52,7 @@ function em_options(){
 			'title'		=> __( 'Link the Tags?', 'easy-mentions' ),
 			'type'		=> 'checkbox',
 			'value'		=> ( $em_plugopts['link-tags'] == 1 ) ? '1' : '0',
-			'note'		=> __( 'Check this option if you want the tags to be linked (by using <code>#tag</code>) in the posts.', 'easy-mentions' ),
+			'note'		=> sprintf( __( 'Check this option if you want the tags to be linked (by using %s) in the posts.', 'easy-mentions' ), '<code>#tag</code>' ),
 			'options'	=> array(
 				'1'	=> __( 'Yes', 'easy-mentions' ),
 			)
@@ -61,7 +61,7 @@ function em_options(){
 			'title'		=> __( 'Link the Users?', 'easy-mentions' ),
 			'type'		=> 'checkbox',
 			'value'		=> ( $em_plugopts['link-users'] == 1 ) ? '1' : '0',
-			'note'		=> __( 'Check this option if you want the users to be linked (by using <code>@user</code>) in the posts.', 'easy-mentions' ),
+			'note'		=> sprintf( __( 'Check this option if you want the users to be linked (by using %s) in the posts.', 'easy-mentions' ), '<code>@user</code>' ),
 			'options'	=> array(
 				'1'	=> __( 'Yes', 'easy-mentions' ),
 			)

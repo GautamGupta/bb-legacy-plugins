@@ -5,7 +5,7 @@
  Description: Easy Mentions allows the users to link to other users' profiles in posts by using @username (like Twitter).
  Author: Gautam Gupta
  Author URI: http://gaut.am/
- Version: 0.1.1
+ Version: 0.2
 */
 
 /**
@@ -19,7 +19,7 @@
 bb_load_plugin_textdomain( 'easy-mentions', dirname( __FILE__ ) . '/languages' ); /* Create Text Domain For Translations */
 
 /* Defines */
-define( 'EM_VER', '0.2-beta' ); /* Version */
+define( 'EM_VER', '0.2' ); /* Version */
 define( 'EM_OPTIONS','Easy-Mentions' ); /* Option Name */
 define( 'EM_PLUGPATH', bb_get_plugin_uri( bb_plugin_basename( __FILE__ ) ) ); /* Plugin URL */
 

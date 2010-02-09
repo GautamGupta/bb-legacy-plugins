@@ -124,7 +124,7 @@ function bbmodsuite_banplus_maybe_block_ip() {
 			if ( !$cidr )
 				$cidr = 32;
 			$ip = vsprintf( '%08b%08b%08b%08b', explode( '.', $ip ) );
-			if ( substr( $ip, 0, $cidr ) == substr( $ip, 0, $cidr ) ) {
+			if ( substr( $ip, 0, $cidr ) == substr( $cur_ip, 0, $cidr ) ) {
 				if ( bb_get_template( 'ban-plus-ip.php', false ) ) {
 					bb_load_template( 'ban-plus-ip.php', array( 'ban' => $ban, 'ban_ip' => substr( $id, 3 ) ), $ban );
 					exit;

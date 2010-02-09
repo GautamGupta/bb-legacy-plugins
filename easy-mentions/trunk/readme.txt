@@ -4,7 +4,7 @@ Donate link: http://gaut.am/donate/EM/
 Tags: easy, mention, username, link, reply, twitter, Gautam
 Requires at least: 1.0
 Tested up to: 1.1
-Stable tag: 0.1.1
+Stable tag: 0.2
 
 Easy Mentions allows the users to link to other users' profiles in posts (by using @username) and tags (by using #tag), basically like Twitter.
 

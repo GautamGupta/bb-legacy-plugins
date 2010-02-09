@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Mentions 0.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/easy-mentions\n"
-"POT-Creation-Date: 2010-02-09 13:28+0000\n"
+"POT-Creation-Date: 2010-02-09 13:38+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Gautam <gautam.2011@gmail.com>\n"
 "Language-Team: Gautam Gupta <admin@gaut.am>\n"
@@ -27,8 +27,9 @@ msgid "Link the Tags?"
 msgstr "टैगों को लिंक करें?"
 
 #: includes/admin.php:55
-msgid "Check this option if you want the tags to be linked (by using <code>#tag</code>) in the posts."
-msgstr ""
+#, php-format
+msgid "Check this option if you want the tags to be linked (by using %s) in the posts."
+msgstr "यदि आप चाहते हैं की पदों में टैग लिंक हों (%s का प्रयोग करके), तो इस विकल्प को चेक करें|"
 
 #: includes/admin.php:57
 #: includes/admin.php:66
@@ -41,8 +42,9 @@ msgid "Link the Users?"
 msgstr "लोगों को लिंक करें?"
 
 #: includes/admin.php:64
-msgid "Check this option if you want the users to be linked (by using <code>@user</code>) in the posts."
-msgstr ""
+#, php-format
+msgid "Check this option if you want the users to be linked (by using %s) in the posts."
+msgstr "यदि आप चाहते हैं की पदों में लोग लिंक हों (%s का प्रयोग करके), तो इस विकल्प को चेक करें|"
 
 #: includes/admin.php:70
 msgid "Link the user to profile or website?"
@@ -78,7 +80,7 @@ msgstr "उत्तर के लिए टेक्स्ट"
 msgid "Some HTML is allowed. The following keys can also be used:%1$s - Post's author's name%2$s - Post's link"
 msgstr "थोड़ी एच.टी.एम.एल. की अनुमति है| निम्नलिखित कुंजियाँ का भी उपयोग किया जा सकता है:%1$s - पोस्ट लिखने वाले का नाम%2$s - पोस्ट का लिंक"
 
-#. #-#-#-#-#  plugin.pot (Easy Mentions 0.1.1)  #-#-#-#-#
+#. #-#-#-#-#  plugin.pot (Easy Mentions 0.2)  #-#-#-#-#
 #. Plugin Name of an extension
 #: includes/admin.php:103
 #: includes/admin.php:140

@@ -40,10 +40,6 @@ function em_do_linking( $content ){
 				if ( !$user = bb_get_user( $username, array( 'by' => 'nicename' ) ) ) //check #2, by nicename
 					continue;
 			}
-	
-			/* Increase the number of new @ mentions for the user - maybe later */
-			/*$new_mention_count = (int)bb_get_usermeta( $user_id, 'em_mention_count' );
-			bb_update_usermeta( $user_id, 'em_mention_count', $new_mention_count + 1 );*/
 			
 			if ( 'website' == $em_plugopts['link-user-to'] ) {
 				if ( !$link = $user->user_url )

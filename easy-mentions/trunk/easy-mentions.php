@@ -31,7 +31,7 @@ if ( !is_array( $em_plugopts ) ) {
 		'link-users'	=> 1,
 		'link-user-to'	=> 'profile',
 		'reply-link'	=> 0,
-		'reply-text'	=> "<em>Replying to @%%USERNAME%%\'s <a href=\"%%POSTLINK%%\">post</a>:</em>",
+		'reply-text'	=> "<em>Replying to @%%USERNAME%%\'s <a href=\"%%POSTLINK%%\">post</a>:</em>"
 	);
 	bb_update_option( EM_OPTIONS, $em_plugopts );
 }

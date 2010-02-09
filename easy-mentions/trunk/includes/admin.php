@@ -54,7 +54,7 @@ function em_options(){
 			'value'		=> ( $em_plugopts['link-tags'] == 1 ) ? '1' : '0',
 			'note'		=> sprintf( __( 'Check this option if you want the tags to be linked (by using %s) in the posts.', 'easy-mentions' ), '<code>#tag</code>' ),
 			'options'	=> array(
-				'1'	=> __( 'Yes', 'easy-mentions' ),
+				'1'	=> __( 'Yes', 'easy-mentions' )
 			)
 		),
 		'link-users' => array(
@@ -63,7 +63,7 @@ function em_options(){
 			'value'		=> ( $em_plugopts['link-users'] == 1 ) ? '1' : '0',
 			'note'		=> sprintf( __( 'Check this option if you want the users to be linked (by using %s) in the posts.', 'easy-mentions' ), '<code>@user</code>' ),
 			'options'	=> array(
-				'1'	=> __( 'Yes', 'easy-mentions' ),
+				'1'	=> __( 'Yes', 'easy-mentions' )
 			)
 		),
 		'link-user-to' => array(
@@ -73,7 +73,7 @@ function em_options(){
 			'note'		=> __( 'If you selected the website option and the user\'s website does not exist, then the user will be linked to his or her profile page.', 'easy-mentions' ),
 			'options'	=> array(
 				'profile' => __( 'Profile', 'easy-mentions' ),
-				'website' => __( 'Website', 'easy-mentions' ),
+				'website' => __( 'Website', 'easy-mentions' )
 			)
 		),
 		'reply-link' => array(
@@ -82,7 +82,7 @@ function em_options(){
 			'value'		=> ( $em_plugopts['reply-link'] == 1 ) ? '1' : '0',
 			'note'		=> sprintf( __( 'Before checking this option, please verify that there is a post form below the topic on each page. (<a href="%s">Help</a>)', 'easy-mentions' ), 'http://bbpress.org/plugins/topic/easy-mentions/faq/' ),
 			'options'	=> array(
-				'1' => __( 'Yes', 'easy-mentions' ),
+				'1' => __( 'Yes', 'easy-mentions' )
 			)
 		),
 		'reply-text' => array(

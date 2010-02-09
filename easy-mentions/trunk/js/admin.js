@@ -30,4 +30,5 @@ jQuery(document).ready(function() {
 	if (jQuery('#reply-link-0').is(':not(:checked)')){
 		jQuery("#option-reply-text").addClass('disabled');
 	}
+	jQuery('#reply-text').width(575);
 });

@@ -25,7 +25,7 @@ The plugin can also add a Reply link below each post, which when clicked, adds t
 You can contribute by translating this plugin. Please refer to [this post](http://gaut.am/translating-wordpress-or-bbpress-plugins/) to know how to translate.
 
 = To Do =
-Nothing for now.
+* Add `target="_blank"` option
 
 = License =
 GNU General Public License version 3 (GPLv3): http://www.opensource.org/licenses/gpl-3.0.html
@@ -55,6 +55,9 @@ You may donate by going [here](http://gaut.am/donate/EM/).
 2. A Screenshot of the Settings Page
 
 == Changelog ==
+
+= 0.3 (xx-0x-10) =
+* Added option to add a `rel="nofollow"` attribute when website option is checked.
 
 = 0.2 (09-02-10) =
 * Now the plugin can also link tags (use `#tag`)

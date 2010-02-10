@@ -36,6 +36,7 @@ function em_options(){
 		$em_plugopts['link-tags']	= ( intval( $_POST['link-tags'] ) == 1 ) ? 1 : 0;
 		$em_plugopts['link-users']	= ( intval( $_POST['link-users'] ) == 1 ) ? 1 : 0;
 		$em_plugopts['link-user-to']	= ( $_POST['link-user-to'] == 'website' ) ? 'website' : 'profile';
+		$em_plugopts['add-nofollow']	= ( intval( $_POST['add-nofollow'] ) == 1 ) ? 1 : 0;
 		$em_plugopts['reply-link']	= ( intval( $_POST['reply-link'] ) == 1 ) ? 1 : 0;
 		$em_plugopts['reply-text']	= esc_attr( $_POST['reply-text'] );
 		
@@ -47,7 +48,7 @@ function em_options(){
 		bb_admin_notice( sprintf( __( 'New version (%1$s) of Easy Mentions is available! Please download the latest version from <a href="%2$s">here</a>.', 'easy-mentions' ), $ver, 'http://bbpress.org/plugins/topic/easy-mentions/' ), 'error' );
 	
 	/* Options in an array to be printed */
-	$options = array(
+	$em_options = array(
 		'link-tags' => array(
 			'title'		=> __( 'Link the Tags?', 'easy-mentions' ),
 			'type'		=> 'checkbox',
@@ -76,13 +77,22 @@ function em_options(){
 				'website' => __( 'Website', 'easy-mentions' )
 			)
 		),
+		'add-nofollow' => array(
+			'title'		=> __( 'Add nofollow attribute to external websites linked by the plugin?', 'easy-mentions' ),
+			'type'		=> 'checkbox',
+			'value'		=> ( $em_plugopts['add-nofollow'] == 1 ) ? '1' : '0',
+			'note'		=> sprintf( __( 'Check this option if you want the link of the website of the user to have a %s attribute.', 'easy-mentions' ), '<code>rel=\'nofollow\'</code>' ),
+			'options'	=> array(
+				'1'	=> __( 'Yes', 'easy-mentions' )
+			)
+		),
 		'reply-link' => array(
 			'title'		=> __( 'Add a reply link below each post?', 'easy-mentions' ),
 			'type'		=> 'checkbox',
 			'value'		=> ( $em_plugopts['reply-link'] == 1 ) ? '1' : '0',
 			'note'		=> sprintf( __( 'Before checking this option, please verify that there is a post form below the topic on each page. (<a href="%s">Help</a>)', 'easy-mentions' ), 'http://bbpress.org/plugins/topic/easy-mentions/faq/' ),
 			'options'	=> array(
-				'1' => __( 'Yes', 'easy-mentions' )
+				'1'	=> __( 'Yes', 'easy-mentions' )
 			)
 		),
 		'reply-text' => array(
@@ -92,11 +102,13 @@ function em_options(){
 		)
 	);
 	if ( $em_plugopts['link-users'] != 1 )
-		$options['link-user-to']['attributes'] = array( 'disabled' => 'disabled' );
-		
-	if ( $em_plugopts['reply-link'] != 1 )
-		$options['reply-text']['attributes'] = array( 'disabled' => 'disabled' );
+		$em_options['link-user-to']['attributes'] = array( 'disabled' => 'disabled' );
 	
+	if ( $em_plugopts['link-user-to'] != 'website' || $em_plugopts['link-users'] != 1 )
+		$em_options['add-nofollow']['attributes'] = array( 'disabled' => 'disabled' );
+	
+	if ( $em_plugopts['reply-link'] != 1 )
+		$em_options['reply-text']['attributes'] = array( 'disabled' => 'disabled' );
 	?>
 	
 	<h2><?php _e( 'Easy Mentions', 'easy-mentions' ); ?></h2>
@@ -104,7 +116,7 @@ function em_options(){
 	<form method="post" class="settings options">
 		<fieldset>
 			<?php
-			foreach ( $options as $option => $args ) {
+			foreach ( $em_options as $option => $args ) {
 				bb_option_form_element( $option, $args );
 			}
 			?>
@@ -112,7 +124,7 @@ function em_options(){
 		<fieldset class="submit">
 			<?php bb_nonce_field( 'em-save-chk' ); ?>
 			<input type="hidden" name="em_opts_submit" value="1"></input>
-			<input class="submit" type="submit" name="submit" value="Save Changes" />
+			<input class="submit" type="submit" name="submit" value="<?php _e( 'Save Changes', 'easy-mentions' ); ?>" />
 		</fieldset>
 		<p><?php printf( __( 'Happy with the plugin? Why not <a href="%1$s">buy the author a cup of coffee or two</a> or get him something from his <a href="%2$s">wishlist</a>?', 'easy-mentions' ), 'http://gaut.am/donate/EM/', 'http://gaut.am/wishlist/' ); ?></p>
 	</form>
@@ -125,7 +137,7 @@ function em_options(){
  * @uses wp_enqueue_script()
  */
 function em_admin_head() {
-	wp_enqueue_script( 'easy-mentions', EM_PLUGPATH . 'js/admin.js', array('jquery'), EM_VER );
+	wp_enqueue_script( 'easy-mentions', EM_PLUGPATH . 'js/admin.js', array( 'jquery' ), EM_VER );
 }
 
 /**
@@ -137,5 +149,5 @@ function em_menu_link() {
 	bb_admin_add_submenu( __( 'Easy Mentions', 'easy-mentions' ), 'administrate', 'em_options', 'options-general.php' );
 }
 
-add_action( 'bb_admin_menu_generator', 'em_menu_link', 8, 0 ); /* Adds a menu link to setting's page */
-add_action( 'em_options_pre_head', 'em_admin_head', 2 ); /* Enqueue the Javascript */
+add_action( 'bb_admin_menu_generator'	, 'em_menu_link'	, 8 ); /* Adds a menu link to setting's page */
+add_action( 'em_options_pre_head'	, 'em_admin_head'	, 2 ); /* Enqueue the Javascript */

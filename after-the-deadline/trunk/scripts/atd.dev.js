@@ -31,7 +31,7 @@ function AtDCore() {
 	this.ignore_strings = {};
 
 	/* Localized strings */
-	this.i18n = {};
+	this.i18n = AtD;
 };
 
 /*
@@ -542,7 +542,7 @@ var AtD = jQuery.extend( {
 	i18n : {},
 	rpc_css : 'http://www.polishmywriting.com/atd_jquery/server/proxycss.php?data=', // you may use this, but be nice!
 	listener : {}
-}, AtD || { api_key: '', rpc: '' } );
+}, AtD || { api_key: '', rpc: '', lang: 'en' } );
 
 /*AtD.getLang = function(key, defaultk) {
 	if (AtD.i18n[key] == undefined)
@@ -559,6 +559,7 @@ AtD.getLang = function(key, defaultk) {
 
 AtD.addI18n = function(localizations) {
 	AtD.i18n = localizations;
+	AtD.core.addI18n(localizations);
 };
 
 AtD.setIgnoreStrings = function(string) {
@@ -588,7 +589,7 @@ AtD.check = function(container_id, callback_f) {
 
 	jQuery.ajax({
 		type : "POST",
-		url : AtD.rpc + '?url=/checkDocument',
+		url : AtD.rpc + '?url=/checkDocument&lang='+AtD.lang,
 		data : 'key=' + AtD.api_key + '&data=' + text,
 		format : 'raw', 
 		dataType : (jQuery.browser.msie) ? "text" : "xml",

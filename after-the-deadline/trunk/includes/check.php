@@ -14,14 +14,14 @@
  * @uses cURL
  * @uses file_get_contents
  * 
- * @param $url The URL needed to be visited
- * @param $method POST or GET (default POST)
- * @param $data array The data needed to be sent (if POST)
+ * @param string $url The URL needed to be visited
+ * @param string $method POST or GET (default POST)
+ * @param array $data The data needed to be sent (if POST)
  *
- * @return The source received
+ * @return string|bool The source received if the call was successfull, otherwise false
  */
 function atd_http( $url, $method = 'POST', $data = array() ){
-   if( class_exists( 'WP_Http' ) ){ //not necessarily as we avoid loading bb-load
+   if ( class_exists( 'WP_Http' ) ) { //not necessarily as we avoid loading bb-load.php
       return wp_remote_retrieve_body( wp_remote_request( $url, array( 'method' => $method, 'body' => $data, 'user-agent' => 'AtD/bbPress v' . ATD_VER ) ) );
    } elseif ( function_exists( 'curl_init' ) ) { // Use cURL
       $ch = curl_init();
@@ -50,20 +50,21 @@ function atd_http( $url, $method = 'POST', $data = array() ){
       }else{
          return file_get_contents( $url );
       }
-   } else {
-      return false;
    }
+   
+   return false;
 }
 
 /* Collect the data to be sent */
-$url = ($_GET['url']) ? $_GET['url'] : '/checkDocument';
-$api_key = ($_POST['key']) ? $_POST['key'] : 'cssproxy';
-$postdata = ($_POST['data']) ? $_POST['data'] : '';
-if( !$postdata )
+$url = $_GET['url'] ? trim( $_GET['url'] ) : '/checkDocument';
+$api_key = $_POST['key'] ? trim( $_POST['key'] ) : 'bbPress';
+$lang = $_GET['lang'] ? trim( $_GET['lang'] ) : 'en';
+$service = ( in_array( $lang, array( 'pt', 'fr', 'de', 'es' ) ) ) ? $lang . '.service.afterthedeadline.com' : 'service.afterthedeadline.com';
+if( !$postdata = trim( $_POST['data'] ) )
    die();
 
 /* Get the Data & echo */
-$data = trim( atd_http( 'http://service.afterthedeadline.com' . trim($url), 'POST', array( 'data' => trim( $postdata ), 'key' => trim( $api_key ) ) ) );
-header( "Content-Type: text/xml" );
+$data = trim( atd_http( 'http://' . $service . $url, 'POST', array( 'data' => $postdata, 'key' => $api_key ) ) );
+header( 'Content-Type: text/xml' );
 echo $data;
 ?>

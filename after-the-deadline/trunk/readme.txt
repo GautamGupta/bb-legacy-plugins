@@ -14,7 +14,7 @@ After the Deadline helps you to write better by spending less time editing.
 
 When you activate the plugin and click the proofread link above a textbox, the plugin will check the content for spelling, style, and grammatical errors.
 
-There is also an option for the administrator to enter an [API key](http://www.afterthedeadline.com/profile.slp). Please see [FAQ](http://bbpress.org/plugins/topic/after-the-deadline/faq/) for more information.
+The proofreader supports English, French, German, Portuguese and Spanish. If your `BB_LANG` is one of these, then it becomes the default proofreading language. It can be configured via the settings page.
 
 == Other Notes ==
 
@@ -27,21 +27,19 @@ There is also an option for the administrator to enter an [API key](http://www.a
 
 You can contribute by translating this plugin. Please refer to [this post](http://gaut.am/translating-wordpress-or-bbpress-plugins/) to know how to translate.
 
-= Notes =
-* Only English language is supported for the time being.
-
 = To Do =
 * Add ignore always option
 * Add the option to let the user select ignore types
 * AutoProofread if the user has forgotten to run the spellcheck
 
 = License =
-GNU General Public License, Version 3: http://www.gnu.org/licenses/gpl-3.0.txt
+GNU General Public License version 3 (GPLv3): http://www.opensource.org/licenses/gpl-3.0.html
 
 = Not on bbPress? =
 You can get AtD elsewhere too! Here are the current platforms:
 
 * [Bookmarklet](http://www.afterthedeadline.com/download.slp?platform=Bookmarklet) - A utility to AtD to any web-page with one click
+* [Firefox](http://firefox.afterthedeadline.com/) - Web Browser
 * [Intense Debate](http://www.afterthedeadline.com/download.slp?platform=IntenseDebate) - Distributed Comment System for Blogs and Websites
 * [PHP List](http://www.afterthedeadline.com/download.slp?platform=PHPList) - Open Source Newsletter Manager
 * [RoundCube Webmail](http://www.afterthedeadline.com/download.slp?platform=RoundCube) - Browser-based IMAP Client
@@ -56,35 +54,14 @@ Please check [here](http://www.afterthedeadline.com/download.slp) for an updated
 
 1. Upload the extracted `after-the-deadline` folder to the `/my-plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in bbPress
-3. Optional (but recommended) - Enter an API key by going to `Settings -> After the Deadline`
-4. Enjoy and always write correct English!
+3. Enjoy!
 
 == Frequently Asked Questions ==
 
-= 1. Do I need an API key to run the plugin? =
-The plugin allows the administrator to enter an API key. It is suggested that you enter one, though it is optional.
-
-= 2. Where do I get an API key? =
-You can get one by logging in/signing up [here](http://www.afterthedeadline.com/profile.slp).
-
-= 3. What is the disadvantage of not entering an API key? =
-AtD allows one call at a time/key. This means if a lot of people are using the same (default) key then their & your performance will degrade as more people use it.
-
-= 4. The DIV is not looking like the textbox! =
-If you are using a kakumei based theme, then open the style.css file of the theme and follow these steps:
-
-1. Find `.postform textarea {`
-2. Replace it with `#post_content {`
-3. Save the file and upload it to the server
-
-= 5. The directory of the plugin is not being matched properly! =
-If the directory of the plugin could not be matched for some reason, then define `ATD_PLUGPATH` in `bb-config.php` file which is the full URL path to the plugin directory
-It should be set to something like `http://www.example-domain.tld/forums/my-plugins/after-the-deadline/`
-
-= 6. The dialog boxes aren't looking as they should! =
+= 1. The dialog boxes aren't looking as they should! =
 Please make sure that the plugin directory is chmodded to 755.
 
-= 7. This doesn't work with bbPress 0.9! =
+= 2. This doesn't work with bbPress 0.9! =
 Please use version 1.4
 
 *Please see [this FAQ](http://www.afterthedeadline.com/questions.slp) for more questions*
@@ -92,16 +69,17 @@ Please use version 1.4
 == Screenshots ==
 
 1. After the Deadline Plugin in Action
-2. A Screenshot of the Settings Page
+2. Screenshot of the settings page
 
 == Changelog ==
 
-= 1.5 (xx-0x-10) =
-* Added jQuery 1.4 compatibility
-* Fixed a highlighting issue
+= 1.5 (12-02-10) =
+* The proofreader now supports English, French, German, Portuguese and Spanish
+* Removed API key requirement
+* Updated AtD/jQuery - [Changelog](http://www.polishmywriting.com/atd_jquery/changelog.html)
 * Removed compatibility with bbPress 0.9
 * Improved coding efficiency
-* Updated screenshot
+* Updated translations & screenshots
 
 = 1.4 (17-01-10) =
 * Addded localization support! Please refer to [this post](http://gaut.am/translating-wordpress-or-bbpress-plugins/) to know how to contribute!
@@ -146,8 +124,8 @@ Upgraded AtD/jQuery - [Changelog](http://www.polishmywriting.com/atd_jquery/chan
 
 == Upgrade Notice ==
 
-= 1.5 (xx-0x-10) =
-Upgraded AtD/jQuery, added some more features and fixed bugs. Do not upgrade if you are using bbPress 0.9.
+= 1.5 (12-02-10) =
+Upgraded AtD/jQuery, added some more features and fixed bugs. Now no need of API key. Do not upgrade if you are using bbPress 0.9.
 
 = 1.4 (17-01-10) =
 Upgraded AtD/jQuery, added some more features and fixed bugs.

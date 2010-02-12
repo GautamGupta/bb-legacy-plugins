@@ -3,11 +3,9 @@
 Plugin Name: After the Deadline
 Plugin URI: http://gaut.am/bbpress/plugins/after-the-deadline/
 Description: After the Deadline plugin checks spelling, style, and grammar in your bbPress forum posts.
-Version: 1.4
+Version: 1.5
 Author: Gautam Gupta
 Author URI: http://gaut.am/
-
-@license http://www.gnu.org/licenses/gpl-3.0.txt GNU General Public License, Version 3
 */
 
 /**
@@ -15,30 +13,52 @@ Author URI: http://gaut.am/
  * @subpackage Main Section
  * @author Gautam Gupta (www.gaut.am)
  * @link http://gaut.am/bbpress/plugins/after-the-deadline/
+ * @license GNU General Public License version 3 (GPLv3): http://www.opensource.org/licenses/gpl-3.0.html
  */
 
-bb_load_plugin_textdomain( 'after-the-deadline', dirname( __FILE__ ) . '/languages' ); /* Create Text Domain For Translations */
-
-/* Defines */
+bb_load_plugin_textdomain( 'after-the-deadline', dirname( __FILE__ ) . '/languages' ); /** Create Text Domain For Translations */
 
 /**
- * If you have problems (the directory of the plugin could not be matched), then define ATD_PLUGPATH in bb-config.php file to the full URL path to the plugin directory
- * @example http://www.example-domain.tld/forums/my-plugins/after-the-deadline/
+ * Defines
  */
-if( !defined( 'ATD_PLUGPATH' ) ) /* Define ATD_PLUGPATH if value is not set - Full URL path to the plugin */
-	define( 'ATD_PLUGPATH', bb_get_plugin_uri( bb_plugin_basename( __FILE__ ) ) );
-define( 'ATD_VER', '1.5-dev' ); /* Version */
-define( 'ATD_OPTIONS','After-the-Deadline' ); /* Option Name */
+define( 'ATD_VER'	, '1.5'							); /** Version */
+define( 'ATD_PLUGPATH'	, bb_get_plugin_uri( bb_plugin_basename( __FILE__ ) )	); /** Plugin URL */
+define( 'ATD_OPTIONS'	, 'AftertheDeadline'					); /** Option Name */
 
-$atd_plugopts = bb_get_option(ATD_OPTIONS);
-if( !is_array( $atd_plugopts ) ){ /* Set the Options if they are not set */
+/**
+ * Options
+ */
+$atd_supported_langs = array(
+	'en' => __( 'English'	, 'after-the-deadline' ),
+	'pt' => __( 'Portuguese', 'after-the-deadline' ),
+	'fr' => __( 'French'	, 'after-the-deadline' ),
+	'de' => __( 'German'	, 'after-the-deadline' ),
+	'es' => __( 'Spanish'	, 'after-the-deadline' )
+);
+$atd_plugopts = bb_get_option( ATD_OPTIONS );
+if ( is_string( $atd_plugopts['key'] ) ) { /* Delete if there are old options, will be removed in v1.7 */
+	bb_delete_option( ATD_OPTIONS );
+	unset( $atd_plugopts );
+}
+if ( !is_array( $atd_plugopts ) ) { /* Set the Options if they are not set */
+	if ( defined( 'BB_LANG' ) ){
+		foreach( array_keys( $atd_supported_langs ) as $lang ){
+			if ( strpos( BB_LANG, $lang ) !== false ) {
+				$save_lang = $lang;
+				break;
+			}
+		}
+	}
 	$atd_plugopts = array(
-		'key' => ''
+		'lang' => $save_lang ? $save_lang : 'en'
 	);
 	bb_update_option( ATD_OPTIONS, $atd_plugopts );
 }
 
-if( bb_is_admin() ) /* Load admin.php file if it is the admin area */
+/**
+ * Require Admin/Public File
+ */
+if ( bb_is_admin() ) /* Load admin.php file if it is the admin area */
 	require_once( 'includes/admin.php' );
 else /* Else load public.php file if it is the public area */
 	require_once( 'includes/public.php' );

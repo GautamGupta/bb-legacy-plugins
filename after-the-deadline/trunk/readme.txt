@@ -1,10 +1,10 @@
 === After the Deadline ===
 Contributors: Gautam Gupta
 Donate link: http://gaut.am/donate/AtD/
-Tags: after the deadline, writing, spell, spelling, spellchecker, grammar, style, plugin, edit, proofreading, Gautam
+Tags: after the deadline, writing, spell, spelling, spellchecker, grammar, style, edit, proofreading, Gautam
 Requires at least: 1.0
 Tested up to: 1.1
-Stable tag: 1.4
+Stable tag: 1.5
 
 After the Deadline plugin checks for spelling, style, and grammatical errors in your bbPress forum posts.
 
@@ -48,7 +48,7 @@ You can get AtD elsewhere too! Here are the current platforms:
 Please check [here](http://www.afterthedeadline.com/download.slp) for an updated list.
 
 = Donate =
-* You may donate by going [here](http://gaut.am/donate/AtD/).
+You may donate by going [here](http://gaut.am/donate/AtD/).
 
 == Installation ==
 
@@ -69,7 +69,7 @@ Please use version 1.4
 == Screenshots ==
 
 1. After the Deadline Plugin in Action
-2. Screenshot of the settings page
+2. A Screenshot of the Settings Page
 
 == Changelog ==
 

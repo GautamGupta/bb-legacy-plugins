@@ -1,0 +1,175 @@
+# Translation of the WordPress plugin After the Deadline 1.5 by Gautam Gupta.
+# Copyright (C) 2010 Gautam Gupta
+# This file is distributed under the same license as the After the Deadline package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: After the Deadline 1.5\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/after-the-deadline\n"
+"POT-Creation-Date: 2010-02-12 07:20+0000\n"
+"PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: after-the-deadline.php:32
+msgid "English"
+msgstr ""
+
+#: after-the-deadline.php:33
+msgid "Portuguese"
+msgstr ""
+
+#: after-the-deadline.php:34
+msgid "French"
+msgstr ""
+
+#: after-the-deadline.php:35
+msgid "German"
+msgstr ""
+
+#: after-the-deadline.php:36
+msgid "Spanish"
+msgstr ""
+
+#: includes/admin.php:39
+msgid "The options have been successfully saved!"
+msgstr ""
+
+#: includes/admin.php:44
+#, php-format
+msgid ""
+"New version (v. %1$s) of After the Deadline is available! Please download "
+"the latest version from <a href=\"%2$s\">here</a>."
+msgstr ""
+
+#: includes/admin.php:49
+msgid "Language"
+msgstr ""
+
+#: includes/admin.php:53
+#, php-format
+msgid ""
+"Proofreading should be done for which language? The plugin currently "
+"supports the following languages - %s."
+msgstr ""
+
+#: includes/admin.php:58
+msgid "After the Deadline Options"
+msgstr ""
+
+#: includes/admin.php:72
+#, php-format
+msgid ""
+"Happy with the plugin? Why not <a href=\"%1$s\">buy the author a cup of "
+"coffee or two</a> or get him something from his <a href=\"%2$s\">wishlist</"
+"a>?"
+msgstr ""
+
+#. #-#-#-#-#  plugin.pot (After the Deadline 1.5)  #-#-#-#-#
+#. Plugin Name of an extension
+#: includes/admin.php:83
+msgid "After the Deadline"
+msgstr ""
+
+#: includes/public.php:24
+msgid "Proofread"
+msgstr ""
+
+#: includes/public.php:25
+msgid "Edit Text"
+msgstr ""
+
+#: includes/public.php:26
+msgid "OK"
+msgstr ""
+
+#: includes/public.php:27
+msgid "Cancel"
+msgstr ""
+
+#: includes/public.php:28
+msgid "Spelling"
+msgstr ""
+
+#: includes/public.php:29
+msgid "Repeated Word"
+msgstr ""
+
+#: includes/public.php:30
+msgid "No suggestions"
+msgstr ""
+
+#: includes/public.php:31
+msgid "Explain..."
+msgstr ""
+
+#: includes/public.php:32
+msgid "Ignore suggestion"
+msgstr ""
+
+#: includes/public.php:33
+msgid "Ignore all"
+msgstr ""
+
+#: includes/public.php:34
+msgid "Ignore always"
+msgstr ""
+
+#: includes/public.php:35
+msgid "Edit Selection..."
+msgstr ""
+
+#: includes/public.php:36
+msgid "No writing errors were found."
+msgstr ""
+
+#: includes/public.php:37
+msgid "Please enter some text in the post textbox to be checked!"
+msgstr ""
+
+#: includes/public.php:38
+msgid "Error!"
+msgstr ""
+
+#: includes/public.php:39
+msgid "No writing errors were found!"
+msgstr ""
+
+#: includes/public.php:40
+msgid "No errors!"
+msgstr ""
+
+#: includes/public.php:41
+msgid "There was a problem communicating with the After the Deadline service."
+msgstr ""
+
+#: includes/public.php:42
+msgid "Replace selection with"
+msgstr ""
+
+#: includes/public.php:43
+msgid "Replace"
+msgstr ""
+
+#. Plugin URI of an extension
+msgid "http://gaut.am/bbpress/plugins/after-the-deadline/"
+msgstr ""
+
+#. Description of an extension
+msgid ""
+"After the Deadline plugin checks spelling, style, and grammar in your "
+"bbPress forum posts."
+msgstr ""
+
+#. Author of an extension
+msgid "Gautam Gupta"
+msgstr ""
+
+#. Author URI of an extension
+msgid "http://gaut.am/"
+msgstr ""

@@ -74,6 +74,8 @@ function em_reply_link( $post_links = array(), $args = array() ) {
 	
 	if ( $em_plugopts['reply-link'] == 1 && $em_plugopts['reply-text'] && bb_is_topic() && topic_is_open() && ( bb_is_user_logged_in() || ( function_exists( 'bb_is_login_required' ) && !bb_is_login_required() ) ) ) { /* Check if link is needed */
 		$text		= str_replace( "%%USERNAME%%", get_post_author(), $em_plugopts['reply-text'] );
+		if ( strpos( $text, 'post_count_plus' ) !== false ) /* Post Count Plus fix */
+			$text = preg_replace( "/(.*?)<span class\='post\_count\_plus' style\='.*?'>(.*?)<\/span>(.*?)/i", "\${1}\${2}\${3}", $text );
 		$text		= str_replace( "%%POSTLINK%%", get_post_link()	, $text	);
 		$js		= "var ema=document.getElementById('post_content');var emb=ema.value;if(emb!='')emb+='\\n\\n';ema.value=emb+'" . $text . "\\n\\n';ema.focus();void(0);";
 		$post_links[]	= $args['before_each'] . '<a class="reply_link" style="cursor:pointer" onclick="' . $js . '">' . __( 'Reply', 'easy-mentions' ) . '</a>' . $args['after_each'];

@@ -5,7 +5,7 @@
  Description: Easy Mentions allows the users to link to other users' profiles in posts by using @username (like Twitter).
  Author: Gautam Gupta
  Author URI: http://gaut.am/
- Version: 0.2
+ Version: 0.3
 */
 
 /**

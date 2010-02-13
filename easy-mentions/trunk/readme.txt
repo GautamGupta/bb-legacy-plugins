@@ -58,6 +58,7 @@ You may donate by going [here](http://gaut.am/donate/EM/).
 
 = 0.3 (xx-0x-10) =
 * Added option to add a `rel="nofollow"` attribute when website option is checked.
+* Added compatibility with Post Count Plus plugin
 
 = 0.2 (09-02-10) =
 * Now the plugin can also link tags (use `#tag`)
@@ -75,6 +76,9 @@ You may donate by going [here](http://gaut.am/donate/EM/).
 * Initial Release
 
 == Upgrade Notice ==
+
+= 0.3 (xx-0x-10) =
+* Added some new features and compatibility with Post Count Plus plugin
 
 = 0.2 (09-02-10) =
 If you are upgrading and also using the reply feature, then after upgrading, go to settings page and press "Save Changes" button.

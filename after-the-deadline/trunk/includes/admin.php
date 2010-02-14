@@ -47,7 +47,7 @@ function atd_options() {
 	$atd_options = array(
 		'lang'	=> array(
 			'title'		=> __( 'Language', 'after-the-deadline' ),
-			'value' 	=> ( in_array( $atd_plugopts['lang'], array_keys( $atd_supported_langs ) ) ) ? $atd_plugopts['lang'] : 'en',
+			'value' 	=> $atd_plugopts['lang'] ? $atd_plugopts['lang'] : 'en',
 			'type'		=> 'select',
 			'options'	=> $atd_supported_langs,
 			'note'		=> sprintf( __( 'Proofreading should be done for which language? The plugin currently supports the following languages - %s.', 'after-the-deadline' ), implode( ', ', $atd_supported_langs ) )

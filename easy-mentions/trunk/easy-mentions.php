@@ -13,7 +13,8 @@
  * @subpackage Main Section
  * @author Gautam Gupta (www.gaut.am)
  * @link http://gaut.am/bbpress/plugins/easy-mentions/
- * @license GNU General Public License version 3 (GPLv3): http://www.opensource.org/licenses/gpl-3.0.html
+ * @license GNU General Public License version 3 (GPLv3):
+ * http://www.opensource.org/licenses/gpl-3.0.html
  */
 
 bb_load_plugin_textdomain( 'easy-mentions', dirname( __FILE__ ) . '/languages' ); /* Create Text Domain For Translations */

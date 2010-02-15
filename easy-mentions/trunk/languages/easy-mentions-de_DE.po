@@ -1,0 +1,114 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Easy Mentions (0.2)\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/easy-mentions\n"
+"POT-Creation-Date: 2010-02-09 13:38+0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Torsten Krüger <hallo@xtc-modified.org>\n"
+"Language-Team: Torsten Krüger <gismo19@gmx.de>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: includes/admin.php:43
+msgid "The options were successfully saved!"
+msgstr "Die Optionen wurden erfolgreich gespeichert!"
+
+#: includes/admin.php:47
+#, php-format
+msgid "New version (%1$s) of Easy Mentions is available! Please download the latest version from <a href=\"%2$s\">here</a>."
+msgstr "Neue Version (%1$s) von Easy Mentios ist verf&uuml;gbar! Bitte lade die neueste Version von <a href=\"%2$s\">hier</a>."
+
+#: includes/admin.php:52
+msgid "Link the Tags?"
+msgstr "Verlinke die Tags?"
+
+#: includes/admin.php:55
+#, php-format
+msgid "Check this option if you want the tags to be linked (by using %s) in the posts."
+msgstr "Aktiviere diese Option, wenn du die Tags in den Beitr&auml;gen (nach dem Schema %s) verlinkt haben m&ouml;test."
+
+#: includes/admin.php:57
+#: includes/admin.php:66
+#: includes/admin.php:85
+msgid "Yes"
+msgstr "Ja"
+
+#: includes/admin.php:61
+msgid "Link the Users?"
+msgstr "Verlinke die Benutzer?"
+
+#: includes/admin.php:64
+#, php-format
+msgid "Check this option if you want the users to be linked (by using %s) in the posts."
+msgstr "Aktiviere diese Option, wenn du die Benutzer in den Beitr&auml;gen (nach dem Schema %s) verlinkt haben m&ouml;test."
+
+#: includes/admin.php:70
+msgid "Link the user to profile or website?"
+msgstr "Verlinke zum Benutzer-Profil oder zur Webseite?"
+
+#: includes/admin.php:73
+msgid "If you selected the website option and the user's website does not exist, then the user will be linked to his or her profile page."
+msgstr "Wenn du die Webseiten-Option gew&auml;hlt hast, aber der Benutzer keine Webseite angegeben hat, dann wird zu seinem/ihrem Profil verlinkt."
+
+#: includes/admin.php:75
+msgid "Profile"
+msgstr "Profil"
+
+#: includes/admin.php:76
+msgid "Website"
+msgstr "Webseite"
+
+#: includes/admin.php:80
+msgid "Add a reply link below each post?"
+msgstr "F&uuml;ge einen Antwort Link unter jeden Beitrag hinzu?"
+
+#: includes/admin.php:83
+#, php-format
+msgid "Before checking this option, please verify that there is a post form below the topic on each page. (<a href=\"%s\">Help</a>)"
+msgstr "Bevor du diese Option aktivierst, &uuml;berpr&uuml;fe bitte, dass du ein \"Post Formular\" auf jeder Seite unter dem Thema hast. (<a href=\"%s\">Hilfe</a>)"
+
+#: includes/admin.php:89
+msgid "Reply Text"
+msgstr "Antwort Text"
+
+#: includes/admin.php:92
+#, php-format
+msgid "Some HTML is allowed. The following keys can also be used:%1$s - Post's author's name%2$s - Post's link"
+msgstr "Ein wenig HTML ist erlaubt. Die folgenden Schl&uuml;ssel k&ouml;nnen ebenfalls benutzt werden:%1$s - Name vom Autor des Beitrags%2$s - Link zum Beitrag"
+
+#. #-#-#-#-#  plugin.pot (Easy Mentions 0.2)  #-#-#-#-#
+#. Plugin Name of an extension
+#: includes/admin.php:103
+#: includes/admin.php:140
+msgid "Easy Mentions"
+msgstr "Easy Mentions"
+
+#: includes/admin.php:118
+#, php-format
+msgid "Happy with the plugin? Why not <a href=\"%1$s\">buy the author a cup of coffee or two</a> or get him something from his <a href=\"%2$s\">wishlist</a>?"
+msgstr "Zufrieden mit dem Plugin? Warum nicht <a href=\"%1$s\">dem Autor einen oder zei Kaffee spendieren</a> oder ihm etwas von seiner <a href=\"%2$s\">Wunschliste</a> schenken?"
+
+#: includes/public.php:75
+msgid "Reply"
+msgstr "Antworten"
+
+#. Plugin URI of an extension
+msgid "http://gaut.am/bbpress/plugins/easy-mentions/"
+msgstr "http://gaut.am/bbpress/plugins/easy-mentions/"
+
+#. Description of an extension
+msgid "Easy Mentions allows the users to link to other users' profiles in posts by using @username (like Twitter)."
+msgstr "Easy Mentions erlaubt dem Benutzer in Beitr&auml;gen andere Benutzer-Profile in der Form von @username zu verlinken (wie bei Twitter)."
+
+#. Author of an extension
+msgid "Gautam Gupta"
+msgstr "Gautam Gupta"
+
+#. Author URI of an extension
+msgid "http://gaut.am/"
+msgstr "http://gaut.am/"
+

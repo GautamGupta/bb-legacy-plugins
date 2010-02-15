@@ -20,6 +20,7 @@ The plugin can also add a Reply link below each post, which when clicked, adds t
 == Other Notes ==
 
 = Translations =
+* German Translation by [Tom](http://www.xtc-modified.org/)
 * Hindi Translation by [Gautam](http://gaut.am/) (me)
 
 You can contribute by translating this plugin. Please refer to [this post](http://gaut.am/translating-wordpress-or-bbpress-plugins/) to know how to translate.
@@ -59,6 +60,7 @@ You may donate by going [here](http://gaut.am/donate/EM/).
 = 0.3 (xx-0x-10) =
 * Added option to add a `rel="nofollow"` attribute when website option is checked.
 * Added compatibility with Post Count Plus plugin
+* Added German Translation by [Tom](http://www.xtc-modified.org/)
 
 = 0.2 (09-02-10) =
 * Now the plugin can also link tags (use `#tag`)

@@ -1,0 +1,217 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: bbPM 0.1-alpha6\n"
+"Report-Msgid-Bugs-To: http://bbpress.org/plugins/topic/bbpm\n"
+"POT-Creation-Date: 2009-08-05 15:26+0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Nightgunner5 <nightgunner5@llamaslayers.net>\n"
+"Language-Team: Francesco <francesco1148@interfree.it>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Italian\n"
+"X-Poedit-Country: ITALY\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=n != 1\n"
+
+#: bbpm.php:365
+msgid "You can't delete that message!"
+msgstr "Non puoi eliminare questo messaggio!"
+
+#: bbpm.php:411
+#: bbpm.php:419
+msgid "PM this user"
+msgstr "Invia un messaggio privato"
+
+#: bbpm.php:442
+#: bbpm.php:518
+#, php-format
+msgid "1 new Private Message!"
+msgid_plural "%s new Private Messages!"
+msgstr[0] "Hai un nuovo messaggio privato!"
+msgstr[1] "Hai %s nuovi messaggi privati!"
+
+#: bbpm.php:443
+#: bbpm.php:520
+#: privatemessages.php:26
+#: privatemessages.php:56
+#: privatemessages.php:112
+#: privatemessages.php:177
+msgid "Private Messages"
+msgstr "Messaggi privati"
+
+#. #-#-#-#-#  plugin.pot (PACKAGE VERSION)  #-#-#-#-#
+#. Plugin Name of an extension
+#: bbpm.php:448
+#: bbpm.php:468
+msgid "bbPM"
+msgstr "bbPM"
+
+#: bbpm.php:474
+msgid "Maximum inbox/outbox size"
+msgstr "Massimo numero di messaggi consentiti"
+
+#: bbpm.php:482
+msgid "Automatically add header link"
+msgstr "Añada el vínculo automáticamente"
+
+#: bbpm.php:486
+msgid "You will need to add <code>&lt;?php if ( function_exists( 'bbpm_messages_link' ) ) bbpm_messages_link(); ?&gt;</code> to your template if you disable this."
+msgstr "Tendrá que añadir <code>&lt;?php if ( function_exists( 'bbpm_messages_link' ) ) bbpm_messages_link(); ?&gt;</code>a la plantilla en el caso de deshabilitar este."
+
+#: bbpm.php:492
+msgid "Save settings"
+msgstr "Salva opzioni"
+
+#: bbpm.php:500
+#, php-format
+msgid "bbPM is installed in the \"<code>%s</code>\" directory. It should be installed in \"<code>my-plugins</code>\""
+msgstr "bbPM está instalado en la \"<code>%s</code>\" directorio. Debe ser instalado en \"<code>my-plugins</code>\""
+
+#: bbpm.php:503
+#, php-format
+msgid "The <code>my-plugins</code> directory has its permissions set to %s. This is not recommended. Please use 755 instead."
+msgstr "El <code>MYPLUGINS</code> directorio ha establecido sus permisos a %s. Esto no es recomendable. Por favor, use en lugar 755."
+
+#: pm.php:12
+#: pm.php:32
+msgid "You are not allowed to write private messages.  Are you logged in?"
+msgstr "Non puoi scrivere messaggi privati. Hai effettuato il login?"
+
+#: pm.php:14
+#: pm.php:34
+msgid "You need to actually submit some content!"
+msgstr "Devi scrivere qualcosa!"
+
+#: pm.php:16
+msgid "Please enter a private message title."
+msgstr "Inserisci un titolo per il messaggio"
+
+#: pm.php:19
+msgid "You need to choose a valid person to send the message to."
+msgstr "Scegli il destinatario del messaggio"
+
+#: pm.php:22
+#: pm.php:43
+msgid "Either your outbox or the recipient's inbox is full."
+msgstr "Hai la posta in arrivo o in uscita piena"
+
+#: pm.php:39
+msgid "There was an error sending your message."
+msgstr "Errore nell'invio del messaggio"
+
+#: pm.php:41
+msgid "Re: "
+msgstr "Re: "
+
+#: privatemessages.php:26
+msgid "New"
+msgstr "Nuovo"
+
+#: privatemessages.php:30
+msgid "PM title: (be brief and descriptive)"
+msgstr "Titolo:"
+
+#: privatemessages.php:34
+msgid "Send PM to:"
+msgstr "Invia a:"
+
+#: privatemessages.php:39
+#: privatemessages.php:160
+msgid "Message:"
+msgstr "Messaggio:"
+
+#: privatemessages.php:43
+#: privatemessages.php:164
+msgid "Send Message &raquo;"
+msgstr "Invia messaggio &raquo;"
+
+#: privatemessages.php:46
+#: privatemessages.php:167
+msgid "Allowed markup:"
+msgstr "Formattazioni consentite:"
+
+#: privatemessages.php:46
+#: privatemessages.php:167
+msgid "You can also put code in between backtick ( <code>`</code> ) characters."
+msgstr "También puede poner en el código entre backtick ( <code>`</ code> ) caracteres."
+
+#: privatemessages.php:58
+msgid "Inbox"
+msgstr "Posta in arrivo"
+
+#: privatemessages.php:61
+#: privatemessages.php:89
+msgid "Subject"
+msgstr "Oggetto"
+
+#: privatemessages.php:61
+msgid "New &raquo;"
+msgstr "Nuovo &raquo;"
+
+#: privatemessages.php:62
+msgid "From"
+msgstr "Da"
+
+#: privatemessages.php:63
+#: privatemessages.php:91
+msgid "Freshness"
+msgstr "Freschezza"
+
+#: privatemessages.php:64
+#: privatemessages.php:92
+msgid "Actions"
+msgstr "Azioni"
+
+#: privatemessages.php:81
+#: privatemessages.php:103
+#: privatemessages.php:150
+#: threadviewer.php:59
+msgid "Delete"
+msgstr "Elimina"
+
+#: privatemessages.php:86
+msgid "Outbox"
+msgstr "Posta in uscita"
+
+#: privatemessages.php:90
+msgid "To"
+msgstr "a"
+
+#: privatemessages.php:112
+#: privatemessages.php:177
+msgid "Read"
+msgstr "Leggi"
+
+#: privatemessages.php:150
+#: threadviewer.php:59
+#, php-format
+msgid "Sent %s ago"
+msgstr "Inviato %s fa."
+
+#: privatemessages.php:150
+#: threadviewer.php:59
+msgid "Reply"
+msgstr "Rispondi"
+
+#: threadviewer.php:72
+msgid "[Cancel]"
+msgstr "[Annulla]"
+
+#. Plugin URI of an extension
+msgid "http://nightgunner5.wordpress.com/tag/bbpm/"
+msgstr "http://nightgunner5.wordpress.com/tag/bbpm/"
+
+#. Description of an extension
+msgid "Adds the ability for users of a forum to send private messages to each other."
+msgstr "bbPM añade la posibilidad de que los usuarios de un foro para enviar mensajes privados entre sí."
+
+#. Author of an extension
+msgid "Nightgunner5"
+msgstr "Nightgunner5"
+
+#. Author URI of an extension
+msgid "http://llamaslayers.net/daily-llama/"
+msgstr "http://llamaslayers.net/daily-llama/"
+

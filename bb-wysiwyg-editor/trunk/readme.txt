@@ -3,7 +3,7 @@ Tags: quote, reply, post, ajax, wysiwyg, editor
 Contributors: Giovambattista Fazioli
 Requires at least: 1.0.2
 Tested up to: 1.0.2
-Stable Tag: trunk
+Stable Tag: 1.1.1
 
 Add Wysiwig Editor features and allows quoting of posts using the built-in jQuery. No template edits required.
 

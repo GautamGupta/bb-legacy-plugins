@@ -4,7 +4,7 @@ Plugin Name: BB Wysiwyg Editor
 Plugin URI: http://www.saidmade.com/
 Description: Add Wysiwyg Editor to Textarea
 Author: Giovambattista Fazioli
-Version: 1.1.0
+Version: 1.1.1
 Author URI: http://www.undolog.com/
 */
 

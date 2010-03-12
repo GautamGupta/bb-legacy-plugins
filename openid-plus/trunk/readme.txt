@@ -1,6 +1,6 @@
 === OpenID for bbPress ===
 Tags: shivanand sharma, OpenID
-Contributors: _ck_, Steve Love
+Contributors: Shivanand Sharma, _ck_, Steve Love
 Requires at least: 1
 Tested up to: 1.0.2
 Stable tag: trunk

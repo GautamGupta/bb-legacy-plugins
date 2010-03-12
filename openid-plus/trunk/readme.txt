@@ -1,4 +1,4 @@
-=== OpenID for bbPress ===
+=== OpenID Plus for bbPress ===
 Tags: shivanand sharma, OpenID
 Contributors: Shivanand Sharma, _ck_, Steve Love
 Requires at least: 1

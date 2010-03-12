@@ -1,6 +1,6 @@
 === BB Wysiwig Editor ===
 Tags: quote, reply, post, ajax, wysiwyg, editor
-Contributors: Detective
+Contributors: Giovambattista Fazioli
 Requires at least: 1.0.2
 Tested up to: 1.0.2
 Stable Tag: trunk

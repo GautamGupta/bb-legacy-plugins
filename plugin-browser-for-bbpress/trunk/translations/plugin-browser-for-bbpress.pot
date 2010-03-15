@@ -1,0 +1,143 @@
+# Translation of the WordPress plugin   by .
+# Copyright (C) 2010 
+# This file is distributed under the same license as the  package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version:  \n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/plugin-browser-for-bbpress\n"
+"POT-Creation-Date: 2010-03-15 12:19+0000\n"
+"PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: plugin-browser.php:409
+msgid "Plugin Browser"
+msgstr ""
+
+#: plugin-browser.php:423
+msgid ""
+"Your plugins directory is not writable by the web server. You will not be "
+"able to install plugins unless it is."
+msgstr ""
+
+#: plugin-browser.php:451
+#, php-format
+msgid "The plugin list has been updated from revision %1$s to revision %2$s."
+msgstr ""
+
+#: plugin-browser.php:468
+msgid "Invalid Request"
+msgstr ""
+
+#: plugin-browser.php:473
+#, php-format
+msgid "\"%s\" plugin was successfully installed."
+msgstr ""
+
+#: plugin-browser.php:475
+#, php-format
+msgid "\"%s\" plugin could not be installed. Please try again."
+msgstr ""
+
+#: plugin-browser.php:479
+#, php-format
+msgid "\"%s\" plugin was successfully uninstalled."
+msgstr ""
+
+#: plugin-browser.php:481
+#, php-format
+msgid "\"%s\" plugin could not be uninstalled. Please try again."
+msgstr ""
+
+#: plugin-browser.php:485
+#, php-format
+msgid "\"%s\" plugin was successfully upgraded."
+msgstr ""
+
+#: plugin-browser.php:487
+#, php-format
+msgid "\"%s\" plugin could not be upgraded. Please try again."
+msgstr ""
+
+#: plugin-browser.php:497
+msgid "Plugin Browser for bbPress"
+msgstr ""
+
+#: plugin-browser.php:501
+#, php-format
+msgid "This plugin allows you to browse the plugin repository at %s."
+msgstr ""
+
+#: plugin-browser.php:501
+msgid ""
+"You can install, uninstall, activate, deactivate and upgrade the plugins via "
+"the actions below the plugin name."
+msgstr ""
+
+#: plugin-browser.php:502
+msgid ""
+"Some plugins require additional configuration to work. If you are not "
+"getting the results you expect, then check the plugin's page."
+msgstr ""
+
+#: plugin-browser.php:508 plugin-browser.php:516
+msgid "Plugin"
+msgstr ""
+
+#: plugin-browser.php:509 plugin-browser.php:517
+msgid "Latest v."
+msgstr ""
+
+#: plugin-browser.php:510 plugin-browser.php:518
+msgid "Local v."
+msgstr ""
+
+#: plugin-browser.php:511 plugin-browser.php:519
+msgid "Description"
+msgstr ""
+
+#: plugin-browser.php:528
+msgid "Install"
+msgstr ""
+
+#: plugin-browser.php:530
+msgid "Plugin Page"
+msgstr ""
+
+#: plugin-browser.php:533
+msgid "None"
+msgstr ""
+
+#: plugin-browser.php:542
+msgid "Uninstall"
+msgstr ""
+
+#: plugin-browser.php:548
+msgid "Deactivate"
+msgstr ""
+
+#: plugin-browser.php:553
+msgid "Activate"
+msgstr ""
+
+#: plugin-browser.php:562
+msgid "Upgrade"
+msgstr ""
+
+#: plugin-browser.php:573
+msgid "Visit plugin site"
+msgstr ""
+
+#: plugin-browser.php:575
+msgid "By "
+msgstr ""
+
+#: plugin-browser.php:575
+msgid "Visit author homepage"
+msgstr ""

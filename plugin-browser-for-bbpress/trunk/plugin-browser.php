@@ -1,88 +1,31 @@
 <?php
 /*
-Plugin Name: Plugin browser for bbPress
-Plugin URI: http://bbpress.org/plugins/topic/57
-Description: Adds one-click installation and upgrade of plugins from the bbPress plugin repository.
-Author: Sam Bauers
-Author URI: 
-Version: 0.1.12
-
-Version History:
-0.1		: Initial Beta release
-0.1.1	: Trim whitespace from items in Plugin_Browser::getRemoteList()
-0.1.2	: Using CURL libraries as preference, then falling back to fopen wrappers
-0.1.3	: Removed stray fclose() call
-0.1.4	: Stop the truncating of files using \r\n line breaks being retrieved via CURL
-		  Added _wpnonce to check action validity
-0.1.5	: Support for plugins with sub-directories
-0.1.6	: Added link to view available readme.txt files on installed plugins
-0.1.7	: Stopped fopen() from redirecting and returning redirected content, fixes support for plugins with sub-directories
-		  Now only retrieving headers where desirable
-		  Replaced call to bb_get_plugin_data() with custom call that does not use file()
-0.1.8	: Cleaned up sloppy function call
-0.1.9	: Pass the contents index of plugin_file array instead of the whole array
-0.1.10	: 0.1.9 was all talk and no action, this time for sure
-0.1.11	: Clear readme.txt link properly on each loop through the plugin list items
-0.1.12	: Reinstate author link when there is no author uri
-
-To Do:
-- Glean revision number from plugin file rather than trunk directory on install
-- Better error messages on failure
-- Replace fopen() with full fsockopen() implementation
+ Plugin Name: Plugin Browser for bbPress
+ Plugin URI: http://gaut.am/bbpress/plugins/plugin-browser/
+ Description: Adds one-click installation and upgrade of plugins from the bbPress plugin repository.
+ Author: Sam Bauers, Gautam Gupta
+ Author URI: http://gaut.am/
+ Version: 0.2
 */
 
+/**
+ * @license GNU General Public License version 3 (GPLv3): http://www.opensource.org/licenses/gpl-3.0.html
+ */
+
+bb_load_plugin_textdomain( 'plugin-browser-for-bbpress', dirname( __FILE__ ) . '/translations' ); /* Create Text Domain For Translations */
 
 /**
- * Plugin browser for bbPress version 0.1.12
- * 
- * ----------------------------------------------------------------------------------
- * 
- * Copyright (C) 2007 Sam Bauers (sam@viveka.net.au)
- * 
- * ----------------------------------------------------------------------------------
- * 
- * LICENSE:
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
- * 
- * ----------------------------------------------------------------------------------
- * 
- * PHP version 4 and 5
- * 
- * ----------------------------------------------------------------------------------
- * 
- * @author    Sam Bauers <sam@viveka.net.au>
- * @copyright 2007 Sam Bauers
- * @license   http://www.gnu.org/licenses/gpl.txt GNU General Public License v2
- * @version   0.1.12
- **/
-
-
-/**
- * Wrapper class for the Plugin browser plugin
+ * Wrapper class for the Plugin Browser for bbPress plugin
  *
- * @author  Sam Bauers
- * @version 0.1.9
- **/
-class Plugin_Browser
-{
+ * @author Sam Bauers <sam@viveka.net.au>
+ * @author Gautam Gupta <admin@gaut.am>
+ */
+class Plugin_Browser {
 	/**
 	 * The URI of the plugin subversion repository
 	 *
 	 * @var string
-	 **/
+	 */
 	var $repositoryURI = 'http://plugins-svn.bbpress.org/';
 	
 	
@@ -90,7 +33,7 @@ class Plugin_Browser
 	 * An indexed array of values that report the current state of local versions
 	 *
 	 * @var array
-	 **/
+	 */
 	var $localRepositoryData = false;
 	
 	
@@ -98,10 +41,8 @@ class Plugin_Browser
 	 * Initialises the class
 	 *
 	 * @return void
-	 * @author Sam Bauers
-	 **/
-	function Plugin_Browser()
-	{
+	 */
+	function Plugin_Browser() {
 		// Nothing to inititalise
 	}
 	
@@ -109,20 +50,13 @@ class Plugin_Browser
 	/**
 	 * Retrieves the options for the plugin stored in the database
 	 *
-	 * @return boolean
-	 * @author Sam Bauers
-	 **/
-	function getLocalRepositoryData()
-	{
-		if (!$this->localRepositoryData) {
-			$this->localRepositoryData = bb_get_option('plugin_browser_local_data');
-		}
+	 * @return mixed The options
+	 */
+	function getLocalRepositoryData() {
+		if ( !$this->localRepositoryData )
+			$this->localRepositoryData = bb_get_option( 'plugin_browser_local_data' );
 		
-		if ($this->localRepositoryData) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->localRepositoryData;
 	}
 	
 	
@@ -130,119 +64,52 @@ class Plugin_Browser
 	 * Sets the options for the plugin stored in the database
 	 *
 	 * @return void
-	 * @author Sam Bauers
-	 **/
-	function setLocalRepositoryData($key, $value)
-	{
-		if (!$this->localRepositoryData) {
-			$this->localRepositoryData = bb_get_option('plugin_browser_local_data');
-		}
-		
-		if (!$this->localRepositoryData) {
-			$this->localRepositoryData = array();
-		}
+	 */
+	function setLocalRepositoryData( $key, $value ) {
+		if ( $this->localRepositoryData )
+			$this->localRepositoryData = (array) bb_get_option( 'plugin_browser_local_data' );
 		
 		$this->localRepositoryData[$key] = $value;
-		bb_update_option('plugin_browser_local_data', $this->localRepositoryData);
+		bb_update_option( 'plugin_browser_local_data', $this->localRepositoryData );
 	}
 	
-	
 	/**
-	 * Gets a remote file using curl or fopen
+	 * Gets a remote file
 	 *
-	 * @return array
-	 * @author Sam Bauers
+	 * @uses WP_Http
+	 *
+	 * @param string $URI The URL from which contents have to be fetched
+	 * @param bool|string $getContents To get the body or not. If set to 'array', then the body is returned in an array form (split by '\n')
+	 * @param string|bool $etag_match The ETag match to be done for revision. If set to false, then the match is not done, and revision is returned as 0.
+	 * 
+	 * @return array Array of headers, contents and revision
 	 **/
-	function getRemoteFile($URI, $getContents = false, $etag_match = '|^W/"([0-9]+)//"$|')
-	{
-		if (is_callable('curl_init')) {
-			$ch = curl_init($URI);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_HEADER, true);
-			if (!$getContents) {
-				curl_setopt($ch, CURLOPT_NOBODY, true);
-			}
-			$file = curl_exec($ch);
-			curl_close($ch);
-			
-			if ($getContents) {
-				list($header, $_contents) = split("\r\n\r\n", $file, 2);
-			} else {
-				$header = $file;
-			}
-			
-			$_headers = split("\r\n", $header);
-		} else {
-			$handle = fopen($URI, 'r');
-			$meta = stream_get_meta_data($handle);
-			if ($getContents) {
-				$_contents = '';
-				while (!feof($handle)) {
-					$_contents .= fread($handle, 8192);
-				}
-			}
-			fclose($handle);
-			
-			$_headers = $meta['wrapper_data'];
+	function getRemoteFile( $URI, $getContents = false, $etag_match = '|^W/"([0-9]+)//"$|' ) {
+		/* make args and get data */
+		$args = array( 'user_agent' => 'Plugin Browser for bbPress' );
+		if ( !$getContents )
+			$args['method'] = 'HEAD';
+		$file = wp_remote_request( $URI, $args );
+		
+		/* Process headers & content */
+		if ( $etag_match ) {
+			$headers	= wp_remote_retrieve_headers( $file );
+			$revision	= ( $headers['etag'] && preg_match( $etag_match, $headers['etag'], $matches ) ) ? (int) $matches[1] : 0;
 		}
+		$contents = trim( wp_remote_retrieve_body( $file ) );
+		if ( $getContents === 'array' ) $contents = split( "\n", $contents );
 		
-		$headers = array();
-		
-		// Flag for redirects
-		$redirect_flag = false;
-		
-		foreach ($_headers as $_header) {
-			if (substr($_header, 0, 4) == 'HTTP') {
-				list($http_equiv, $value) = split(' ', $_header);
-				
-				// If it is a redirect
-				if ((string) $value == '301') {
-					$redirect_flag = true;
-				}
-			} else {
-				list($http_equiv, $value) = split(':', $_header, 2);
-			}
-			$headers[$http_equiv] = trim($value);
-		}
-		
-		// Redirect if necesary
-		if ($redirect_flag) {
-			return $headers['Location'];
-		}
-		
-		$contents = null;
-		
-		if ($getContents) {
-			$_contents = trim($_contents);
-		
-			if ($getContents === 'array') {
-				$contents = split("\n", $_contents);
-			} else {
-				$contents = $_contents;
-			}
-		}
-		
-		$revision = null;
-		
-		if ($headers['ETag']) {
-			if (preg_match($etag_match, $headers['ETag'], $matches)) {
-				$revision = (integer) $matches[1];
-			}
-		}
-		
-		return array('headers' => $headers, 'contents' => $contents, 'revision' => $revision);
+		return array( 'headers' => $headers, 'contents' => $contents, 'revision' => $revision );
 	}
 	
 	
 	/**
 	 * Gets the current subversion revision from the remote repository
 	 *
-	 * @return integer
-	 * @author Sam Bauers
-	 **/
-	function getRemoteRepositoryRevision()
-	{
-		$file = $this->getRemoteFile($this->repositoryURI);
+	 * @return integer Remote Revision
+	 */
+	function getRemoteRepositoryRevision() {
+		$file = $this->getRemoteFile( $this->repositoryURI );
 		
 		return $file['revision'];
 	}
@@ -251,51 +118,41 @@ class Plugin_Browser
 	/**
 	 * Gets the current subversion revision that is stored locally
 	 *
-	 * @return integer
-	 * @author Sam Bauers
-	 **/
-	function getLocalRepositoryRevision()
-	{
-		if ($this->getLocalRepositoryData()) {
+	 * @return integer If there is local revision, then that else 0
+	 */
+	function getLocalRepositoryRevision() {
+		if ( $this->getLocalRepositoryData() )
 			return $this->localRepositoryData['revision'];
-		} else {
-			return 0;
-		}
+		
+		return 0;
 	}
 	
 	
 	/**
 	 * Returns an array of all locally cached plugin browser data
 	 *
-	 * @return array
-	 * @author Sam Bauers
-	 **/
-	function getLocalRepositoryList()
-	{
-		if (!$this->localRepositoryList) {
-			$this->localRepositoryList = bb_get_option('plugin_browser_local_list');
+	 * @return array Local Repository List
+	 */
+	function getLocalRepositoryList() {
+		if ( !$this->localRepositoryList ) {
+			if ( !$this->localRepositoryList = bb_get_option( 'plugin_browser_local_list' ) )
+				$this->localRepositoryList = array();
 		}
 		
-		if (!$this->localRepositoryList) {
-			$this->localRepositoryList = array();
-		}
-			
 		return $this->localRepositoryList;
 	}
 	
 	
 	/**
-	 * Retrieves a remote list from the subversion repository as a nice array
+	 * Formats the fetched remote list from the subversion repository as a nice array
 	 *
-	 * @return array
-	 * @author Sam Bauers
-	 **/
-	function getList($lines)
-	{
-		$lines = preg_grep('|^\s*<li>.*</li>\s*$|', $lines);
-		$lines = array_map(create_function('$input', '$output = str_replace(array("/", " "), "", strip_tags($input)); if ($output != "..") { return trim($output); }'), $lines);
-		$lines = array_filter($lines);
-		$lines = array_values($lines);
+	 * @return array Processed content
+	 */
+	function getList( $lines ) {
+		$lines = preg_grep( '|^\s*<li>.*</li>\s*$|', $lines );
+		$lines = array_map( create_function( '$input', '$output = str_replace(array("/", " "), "", strip_tags($input)); if ($output != "..") { return trim($output); }' ), $lines );
+		$lines = array_filter( $lines );
+		$lines = array_values( $lines );
 		
 		return $lines;
 	}
@@ -306,105 +163,88 @@ class Plugin_Browser
 	 *
 	 * Adapted from the bbPress native function
 	 *
-	 * @return mixed
-	 * @author Sam Bauers
-	 **/
-	function getPluginData($plugin_data) {
-		if (!preg_match("|Plugin Name:(.*)|i", $plugin_data, $plugin_name)) {
+	 * @param string $plugin_code The plugin code
+	 *
+	 * @return array Processed content
+	 */
+	function getPluginData( $plugin_code ) {
+		/* Grab just the first commented area from the file */
+		if ( !preg_match( '|/\*(.*?Plugin Name:.*?)\*/|ims', $plugin_code, $plugin_block ) )
 			return false;
-		}
+		$plugin_data = trim( $plugin_block[1] );
 		
-		preg_match("|Plugin URI:(.*)|i", $plugin_data, $plugin_uri);
-		preg_match("|Description:(.*)|i", $plugin_data, $description);
-		preg_match("|Author:(.*)|i", $plugin_data, $author_name);
-		preg_match("|Author URI:(.*)|i", $plugin_data, $author_uri);
+		preg_match( '|Plugin Name:(.*)$|mi',	$plugin_data, $name		);
+		preg_match( '|Plugin URI:(.*)$|mi',	$plugin_data, $uri		);
+		preg_match( '|Version:(.*)|i',		$plugin_data, $version		);
+		preg_match( '|Description:(.*)$|mi',	$plugin_data, $description	);
+		preg_match( '|Author:(.*)$|mi',		$plugin_data, $author		);
+		preg_match( '|Author URI:(.*)$|mi',	$plugin_data, $author_uri	);
 		
-		if (preg_match("|Version:(.*)|i", $plugin_data, $version)) {
-			$version = wp_specialchars(trim($version[1]));
-		} else {
-			$version = '';
-		}
-		
-		$plugin_name = wp_specialchars(trim($plugin_name[1]));
-		$plugin_uri = clean_url(trim($plugin_uri[1]));
-		$author_name = wp_specialchars( trim($author_name[1]) );
-		$author_uri = clean_url(trim($author_uri[1]));
-		
-		$description = trim($description[1]);
-		$description = bb_encode_bad($description);
-		$description = bb_code_trick($description);
-		$description = balanceTags($description);
-		$description = bb_filter_kses($description);
-		$description = bb_autop($description);
-		
-		$r = array(
-			'name' => $plugin_name,
-			'uri' => $plugin_uri,
-			'description' => $description,
-			'author' => $author_name,
-			'author_uri' => $author_uri,
-			'version' => $version
+		$fields = array(			
+			'name'		=> 'html',
+			'uri'		=> 'url',
+			'version'	=> 'text',
+			'description'	=> 'html',
+			'author'	=> 'html',
+			'author_uri'	=> 'url'
 		);
-		
-		if ($plugin_name) {
-			if ($plugin_uri) {
-				$r['plugin_link'] = '<a href="' . $plugin_uri . '" title="' . attribute_escape( __('Visit plugin homepage') ) . '">' . $plugin_name . '</a>';
+		foreach ( $fields as $field => $san ) {
+			if ( !empty( ${$field} ) ) {
+				${$field} = trim(${$field}[1]);
+				switch ( $san ) {
+				case 'html' :
+					${$field} = bb_filter_kses( ${$field} );
+					break;
+				case 'text' :
+					${$field} = esc_html(  ${$field} );
+					break;
+				case 'url' :
+					${$field} = esc_url( ${$field} );
+					break;
+				}
 			} else {
-				$r['plugin_link'] = $plugin_name;
+				${$field} = '';
 			}
 		}
 		
-		if ($author_name) {
-			if ($author_uri) {
-				$r['author_link'] = '<a href="' . $author_uri . '" title="' . attribute_escape( __('Visit author homepage') ) . '">' . $author_name . '</a>';
-			} else {
-				$r['author_link'] = $author_name;
-			}
-		}
+		$plugin_data = compact( array_keys( $fields ) );
+		$plugin_data['description'] = trim( $plugin_data['description'] );
 		
-		return $r;
+		return $plugin_data;
 	}
 	
 	
 	/**
 	 * Updates the local list of plugins
 	 *
-	 * @return void
-	 * @author Sam Bauers
-	 **/
-	function updateLocalRepositoryList()
-	{
-		$file = $this->getRemoteFile($this->repositoryURI, 'array');
-		$plugins = $this->getList($file['contents']);
+	 * @return integer The remote revision no.
+	 */
+	function updateLocalRepositoryList() {
+		$file		= $this->getRemoteFile( $this->repositoryURI, 'array' );
+		$remote_r	= $file['revision'];
+		$plugins	= $this->getList( $file['contents'] );
 		
-		$latest_list = array();
+		$latest_list	= array();
+		$current_list	= $this->getLocalRepositoryList();
 		
-		$current_list = $this->getLocalRepositoryList();
-		
-		foreach ($plugins as $plugin) {
+		foreach ( (array) $plugins as $plugin ) {
+			$plugin_trunk		= $this->getRemoteFile( $this->repositoryURI . $plugin . '/trunk/', 'array', '|^W/"([0-9]+)//.*"$|' );
+			$remote_revision	= $plugin_trunk['revision'];
+			$local_revision		= $current_list[$plugin]['revision'];
+			$local_version		= $current_list[$plugin]['version'];
 			
-			$plugin_trunk_header = $this->getRemoteFile($this->repositoryURI . $plugin . '/trunk/', false, '|^W/"([0-9]+)//.*"$|');
-			
-			$remote_revision = $plugin_trunk_header['revision'];
-			
-			$local_revision = $current_list[$plugin]['revision'];
-			
-			if ($local_revision < $remote_revision) {
-				$latest_list[$plugin]['id'] = $plugin;
-				$latest_list[$plugin]['revision'] = $remote_revision;
+			if ( !$local_revision || $local_revision < $remote_revision ) { /* Local revision and remote revision are always normal integers, so a normal php comparison would work on them (no need of version_compare) */
+				$files = $this->getList( $plugin_trunk['contents'] );
+				$files = preg_grep( '|.*\.php|', $files );
+				if( !$files || count( $files ) <= 0 )
+					continue;
 				
-				$plugin_trunk = $this->getRemoteFile($this->repositoryURI . $plugin . '/trunk/', 'array', '|^W/"([0-9]+)//.*"$|');
-				$files = $this->getList($plugin_trunk['contents']);
-				
-				$files = preg_grep('|.*\.php|', $files);
-				
-				foreach ($files as $file) {
-					$plugin_file = $this->getRemoteFile($this->repositoryURI . $plugin . '/trunk/' . $file, true);
-					if ($data = $this->getPluginData($plugin_file['contents'])) {
-						$latest_list[$plugin] = $data;
-						$latest_list[$plugin]['filename'] = $file;
-						$latest_list[$plugin]['id'] = $plugin;
-						$latest_list[$plugin]['revision'] = $remote_revision;
+				foreach ( $files as $file ) {
+					$plugin_file = $this->getRemoteFile( $this->repositoryURI . $plugin . '/trunk/' . $file, true, false );
+					if ( $data = $this->getPluginData( $plugin_file['contents'] ) ) {
+						$latest_list[$plugin]			= $data;
+						$latest_list[$plugin]['file']		= $file;
+						$latest_list[$plugin]['revision']	= $remote_revision;
 						break;
 					}
 				}
@@ -413,44 +253,56 @@ class Plugin_Browser
 			}
 		}
 		
-		bb_update_option('plugin_browser_local_list', $latest_list);
-		
+		bb_update_option( 'plugin_browser_local_list', $latest_list );
 		$this->localRepositoryList = $latest_list;
+		$this->setLocalRepositoryData( 'revision', $remote_r );
 		
-		$this->setLocalRepositoryData('revision', $this->getRemoteRepositoryRevision());
+		return $remote_r;
+	}
+	
+	/**
+	 * Nonce an URL
+	 *
+	 * @param string $key The unique key for nonce
+	 * @param array $values The values to be appended in the URL
+	 * @param string $page The main page whose nonce has to be made
+	 *
+	 * @uses bb_get_uri() To make the basic URL
+	 * @uses bb_nonce_url() To make nonce
+	 * @uses esc_attr() To escape the URL
+	 *
+	 * @return string The nonced URL
+	 */
+	function nonceUrl( $key, $values = array(), $page = 'bb-admin/admin-base.php' ) {
+		return esc_attr(
+			bb_nonce_url(
+				bb_get_uri(
+					$page,
+					$values,
+					BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN
+				),
+				$key
+			)
+		);
 	}
 	
 	
 	/**
 	 * Retrieves and installs a plugin
 	 *
-	 * @return boolean
-	 * @author Sam Bauers
-	 **/
-	function installPlugin($plugin_id)
-	{
-		if (!is_file(BBPLUGINDIR . 'pb--' . $plugin_id)) {
-			if (mkdir(BBPLUGINDIR . 'pb--' . $plugin_id)) {
-				$file = $this->getRemoteFile($this->repositoryURI . $plugin_id . '/trunk/', 'array', '|^W/"([0-9]+)//.*"$|');
+	 * @return boolean True if plugin is installed else false
+	 */
+	function installPlugin( $plugin_id ) {
+		if ( !is_file( BB_PLUGIN_DIR . $plugin_id ) ) {
+			if ( mkdir( BB_PLUGIN_DIR . $plugin_id ) ) {
+				$file = $this->getRemoteFile( $this->repositoryURI . $plugin_id . '/trunk/', 'array', '|^W/"([0-9]+)//.*"$|' );
+				$list = $this->getList( $file['contents'] );
 				
-				$remote_revision = $file['revision'];
-				
-				$contents = '<?php' . "\n" . '$plugin[\'revision_local\'] = ' . $remote_revision . ';' . "\n" . '?>';
-				
-				$handle = fopen(BBPLUGINDIR . 'pb--' . $plugin_id . '/pb--revision.php', 'w');
-				fwrite($handle, $contents);
-				fclose($handle);
-				
-				$list = $this->getList($file['contents']);
-				
-				foreach ($list as $item) {
-					$this->installRemoteFile($this->repositoryURI . $plugin_id . '/trunk/' . $item, BBPLUGINDIR . 'pb--' . $plugin_id . '/' . $item);
-				}
+				foreach ( $list as $item )
+					$this->installRemoteFile($this->repositoryURI . $plugin_id . '/trunk/' . $item, BB_PLUGIN_DIR . $plugin_id . '/' . $item);
 				
 				return true;
 			}
-			
-			return false;
 		}
 		
 		return false;
@@ -460,39 +312,23 @@ class Plugin_Browser
 	/**
 	 * Installs a file from a remote location, recurses through directories as necessary
 	 *
-	 * @return void
-	 * @author Sam Bauers
-	 **/
-	function installRemoteFile($URI, $path)
-	{
-		$file = $this->getRemoteFile($URI, true);
+	 * @return boolen true
+	 */
+	function installRemoteFile( $URI, $path ) {
+		$file = $this->getRemoteFile( $URI, true, false );
 		
-		if (is_string($file)) {
-			mkdir($path);
-			$new_file = $this->getRemoteFile($file, 'array', '|^W/"([0-9]+)//.*"$|');
-			$list = $this->getList($new_file['contents']);
+		if ( is_string( $file ) ) {
+			if ( !is_dir( $path ) )
+				mkdir( $path, 0755 );
+			$new_file	= $this->getRemoteFile( $file, 'array', '|^W/"([0-9]+)//.*"$|' );
+			$list		= $this->getList( $new_file['contents'] );
 			
-			foreach ($list as $item) {
-				$this->installRemoteFile($file . $item, $path . '/' . $item);
-			}
+			foreach ( $list as $item )
+				$this->installRemoteFile( $file . $item, $path . '/' . $item );
 		} else {
-			$handle = fopen($path, 'w');
-			fwrite($handle, $file['contents']);
-			fclose($handle);
-		}
-	}
-	
-	
-	/**
-	 * Removes a plugin
-	 *
-	 * @return boolean
-	 * @author Sam Bauers
-	 **/
-	function uninstallPlugin($plugin_id)
-	{
-		if (is_dir(BBPLUGINDIR . 'pb--' . $plugin_id)) {
-			$this->uninstallFile(BBPLUGINDIR . 'pb--' . $plugin_id);
+			$handle = fopen( $path, 'w' );
+			fwrite( $handle, $file['contents'] );
+			fclose( $handle );
 		}
 		
 		return true;
@@ -500,92 +336,77 @@ class Plugin_Browser
 	
 	
 	/**
+	 * Removes a plugin
+	 *
+	 * @return boolean true
+	 */
+	function uninstallPlugin( $plugin_id ) {
+		$this->uninstallFile( BB_PLUGIN_DIR . $plugin_id);
+		return true;
+	}
+	
+	
+	/**
 	 * Recursively removes files
 	 *
-	 * @return void
-	 * @author Sam Bauers
-	 **/
-	function uninstallFile($path)
-	{
-		if (is_dir($path)) {
-			foreach (glob($path . '/*') as $file) {
-				$this->uninstallFile($file);
-			}
-			rmdir($path);
+	 * @return boolen true
+	 */
+	function uninstallFile( $path ) {
+		if ( is_dir( $path ) ) {
+			foreach ( glob( $path . '/*' ) as $file )
+				$this->uninstallFile( $file );
+			rmdir( $path );
 		} else {
-			unlink($path);
+			unlink( $path );
 		}
+		return true;
 	}
 	
 	
 	/**
 	 * Removes the old plugin and installs an upgraded plugin
 	 *
-	 * @return boolean
-	 * @author Sam Bauers
+	 * @return boolean True if plugin upgraded else false
 	 **/
-	function upgradePlugin($plugin_id)
-	{
-		if ($this->uninstallPlugin($plugin_id)) {
+	function upgradePlugin( $plugin_id ) {
+		if ( $this->uninstallPlugin( $plugin_id ) )
 			return $this->installPlugin($plugin_id);
-		} else {
-			return false;
-		}
+		
+		return false;
 	}
 	
 	
 	/**
 	 * Tells us whether the plugins folder is writable
 	 *
-	 * @return boolean
-	 * @author Sam Bauers
-	 **/
-	function pluginsFolderWritable()
-	{
-		if (is_writable(BBPLUGINDIR)) {
+	 * @return boolean If writable then true else false
+	 */
+	function pluginsFolderWritable() {
+		if ( is_writable( BB_PLUGIN_DIR ) )
 			return true;
-		} else {
-			return false;
-		}
+		
+		return false;
 	}
-} // END class Plugin_Browser
+} /* End class Plugin_Browser */
 
-
-// Initialise the class
-$plugin_browser = new Plugin_Browser();
-
+$plugin_browser = new Plugin_Browser(); /* Initialise the class */
 
 /**
  * The admin pages below are handled outside of the class due to constraints
  * in the architecture of the admin menu generation routine in bbPress
  */
 
-
-// Add filters for the admin area
-add_action('bb_admin_menu_generator', 'plugin_browser_admin_page_add');
-add_action('bb_admin-header.php', 'plugin_browser_admin_page_process');
-add_action('bb_admin_head', 'plugin_browser_add_css');
-
+/* Add filters for the admin area */
+add_action( 'bb_admin_menu_generator', 'plugin_browser_admin_page_add' );
+add_action( 'bb_admin_head', 'plugin_browser_add_css' );
 
 /**
  * Adds in an item to the $bb_admin_submenu array
  *
  * @return void
- * @author Sam Bauers
- **/
-function plugin_browser_admin_page_add()
-{
-	if (function_exists('bb_admin_add_submenu')) { // Build 794+
-		bb_admin_add_submenu(__('Plugin browser'), 'use_keys', 'plugin_browser_admin_page');
-	} else {
-		global $bb_submenu;
-		$submenu = array(__('Plugin browser'), 'use_keys', 'plugin_browser_admin_page');
-		if (isset($bb_submenu['plugins.php'])) { // Build 740-793
-			$bb_submenu['plugins.php'][] = $submenu;
-		} else { // Build 277-739
-			$bb_submenu['site.php'][] = $submenu;
-		}
-	}
+ */
+function plugin_browser_admin_page_add() {
+	bb_admin_add_submenu( __( 'Plugin Browser', 'plugin-browser-for-bbpress' ), 'use_keys', 'plugin_browser_admin_page' );
 }
 
 
@@ -593,30 +414,20 @@ function plugin_browser_admin_page_add()
  * Adds some CSS for use in the list
  *
  * @return void
- * @author Sam Bauers
- **/
-function plugin_browser_add_css()
-{
+ */
+function plugin_browser_add_css() {
 	global $plugin_browser;
 	
-	if ($_GET['plugin'] == 'plugin_browser_admin_page') {
-		if (!$plugin_browser->getLocalRepositoryRevision()) {
-			bb_admin_notice(__('To get started, fetch the latest plugin list from server using the button below.'));
-		}
-		
-		if (!$plugin_browser->pluginsFolderWritable()) {
-			bb_admin_notice(__('Your plugins directory is not writable by the web server. You will not be able to install plugins unless it is.'), 'error');
-		}
-?>
+	if ( $_GET['plugin'] == 'plugin_browser_admin_page' ) {
+		if ( !$plugin_browser->pluginsFolderWritable() )
+			bb_admin_notice( __( 'Your plugins directory is not writable by the web server. You will not be able to install plugins unless it is.', 'plugin-browser-for-bbpress' ), 'error' );
+		?>
 <style type="text/css" media="screen">
 	/* <![CDATA[ */
-	table.widefat tr.alt.installed td { background-color: #88bb88; }
-	table.widefat tr.installed td { background-color: #aaddaa; }
-	table.widefat tr.alt.upgradable td { background-color: #ffcc66; }
-	table.widefat tr.upgradable td { background-color: #ffcc00; }
+	table.widefat tr.upgrade td { background-color: #DDDFFF; }
 	/* ]]> */
 </style>
-<?php
+		<?php
 	}
 }
 
@@ -624,180 +435,160 @@ function plugin_browser_add_css()
 /**
  * Writes an admin page for the plugin
  *
- * @return string
- * @author Sam Bauers
- **/
-function plugin_browser_admin_page()
-{
+ * @return void
+ */
+function plugin_browser_admin_page() {
 	global $plugin_browser;
-?>
-	<h2>Plugin browser</h2>
-	<p>
-		This plugin allows you to browse the plugin repository at <a href="http://bbpress.org/plugins/">http://bbpress.org/plugins/</a>.<br />You can install and upgrade the plugins via the actions on the right of the list.
-	</p>
-	<p>
-		Once installed, plugins still need to be activated in the <a href="plugins.php">Plugins</a> page.
-	</p>
-	<p>
-		Some plugins require additional configuration to work. If you are not getting the results you expect, then review the plugin's "read me" file.
-	</p>
-	<hr />
-<?php
-	$localList = $plugin_browser->getLocalRepositoryRevision();
-	$remoteList = $plugin_browser->getRemoteRepositoryRevision();
 	
-	if ($localList < $remoteList) {
-?>
-	<form method="post" class="submit" style="float:right;">
-		<input name="action" type="hidden" value="plugin_browser_post_fetch" />
-		<?php bb_nonce_field('plugin_browser_post_fetch', '_wpnonce', false); ?>
+	require_once( '../bb-admin/includes/functions.bb-plugin.php' );
+	
+	$localList	= $plugin_browser->getLocalRepositoryRevision();
+	$remoteList	= $plugin_browser->getRemoteRepositoryRevision();
 
-		<input name="plugin_browser_revision_local" type="hidden" value="<?php echo($localList); ?>" />
-		<input name="plugin_browser_revision_remote" type="hidden" value="<?php echo($remoteList); ?>" />
-		<input type="submit" value="Fetch latest plugin list from server" />
-	</form>
-<?php
+	if ( !$localList || $localList < $remoteList || ( isset( $_GET['force_update'] ) && $_GET['force_update'] == '1' ) ) {
+		$oldList	= $localList;
+		$localList	= $plugin_browser->updateLocalRepositoryList();
+		bb_admin_notice( sprintf( __( 'The plugin list has been updated from revision %1$s to revision %2$s.', 'plugin-browser-for-bbpress' ), $oldList, $remoteList ) );
 	}
-?>
-	<p class="submit">
-		Plugin list <em>r. <?php echo($localList); ?></em> - ( Latest <em>r. <?php echo($remoteList); ?></em> )&nbsp;
-	</p>
-	<table class="widefat">
+	
+	/* Load Plugin Arrays */
+	$plugins	= (array) $plugin_browser->getLocalRepositoryList(); /* Full plugin list from repository */
+	
+	/*
+	 * Abbreviations
+	 * iu	- install/uninstall
+	 * ad	- activate/deactivate
+	 * u	- upgrade
+	 * pb	- plugin browser
+	 */
+	
+	if ( isset( $_REQUEST['pb_action'] ) ) {
+		$pbaction = $_REQUEST['pb_action'];
+		$plugin_browser_plugin_id = $_REQUEST['pb_plugin_id'];
+		if ( !in_array( $plugin_browser_plugin_id, array_keys( $plugins ) ) ) bb_die( __( 'Invalid Request', 'plugin-browser-for-bbpress' ) );
+		bb_check_admin_referer( $pbaction . '-plugin_' . $plugin_browser_plugin_id );
+		switch ( $pbaction ) {
+			case 'install':
+				if ( $plugin_browser->installPlugin( $plugin_browser_plugin_id ) )
+					bb_admin_notice( sprintf( __( '"%s" plugin was successfully installed.', 'plugin-browser-for-bbpress' ), $plugins[$plugin_browser_plugin_id]['name'] ) );
+				else
+					bb_admin_notice( sprintf( __( '"%s" plugin could not be installed. Please try again.', 'plugin-browser-for-bbpress' ), $plugins[$plugin_browser_plugin_id]['name'] ), 'error' );
+				break;
+			case 'uninstall':
+				if ( $plugin_browser->uninstallPlugin( $plugin_browser_plugin_id ) )
+					bb_admin_notice( sprintf( __( '"%s" plugin was successfully uninstalled.', 'plugin-browser-for-bbpress' ), $plugins[$plugin_browser_plugin_id]['name'] ) );
+				else
+					bb_admin_notice( sprintf( __( '"%s" plugin could not be uninstalled. Please try again.', 'plugin-browser-for-bbpress' ), $plugins[$plugin_browser_plugin_id]['name'] ), 'error' );
+				break;
+			case 'upgrade':
+				if ( $plugin_browser->upgradePlugin( $plugin_browser_plugin_id ) )
+					bb_admin_notice( sprintf( __( '"%s" plugin was successfully upgraded.', 'plugin-browser-for-bbpress' ), $plugins[$plugin_browser_plugin_id]['name'] ) );
+				else
+					bb_admin_notice( sprintf( __( '"%s" plugin could not be upgraded. Please try again.', 'plugin-browser-for-bbpress' ), $plugins[$plugin_browser_plugin_id]['name'] ), 'error' );
+				break;
+		}
+	}
+	
+	/* Load Plugin Arrays */
+	$bb_plugins	= (array) bb_get_plugins(); /* Local plugin list, which are installed */
+	$active_plugins	= (array) bb_get_option( 'active_plugins' ); /* Local plugin list, which are installed and activated */
+	
+	?>
+	<h2><?php _e( 'Plugin Browser for bbPress', 'plugin-browser-for-bbpress' ); ?></h2>
+	
+	<?php do_action( 'bb_admin_notices' ); ?>
+	
+	<p><?php printf( __( 'This plugin allows you to browse the plugin repository at %s.', 'plugin-browser-for-bbpress' ), '<a href="http://bbpress.org/plugins/">http://bbpress.org/plugins/</a>' ); ?><br /><?php _e( 'You can install, uninstall, activate, deactivate and upgrade the plugins via the actions below the plugin name.', 'plugin-browser-for-bbpress' ); ?></p>
+	<p><?php _e( 'Some plugins require additional configuration to work. If you are not getting the results you expect, then check the plugin\'s page.', 'plugin-browser-for-bbpress' ); ?></p>
+	<hr />
+	
+	<table id="plugins-list" class="widefat">
 		<thead>
 			<tr>
-				<th>Plugin</th>
-				<th>Description</th>
-				<th class="action">Local version</th>
-				<th class="action">Latest version</th>
-				<th class="action">Upgrade</th>
-				<th class="action">Install</th>
+				<th><?php _e( 'Plugin',		'plugin-browser-for-bbpress' ); ?></th>
+				<th><?php _e( 'Latest v.',	'plugin-browser-for-bbpress' ); ?></th>
+				<th><?php _e( 'Local v.',	'plugin-browser-for-bbpress' ); ?></th>
+				<th><?php _e( 'Description',	'plugin-browser-for-bbpress' ); ?></th>
 			</tr>
 		</thead>
+		<tfoot>
+			<tr>
+				<th><?php _e( 'Plugin',		'plugin-browser-for-bbpress' ); ?></th>
+				<th><?php _e( 'Latest v.',	'plugin-browser-for-bbpress' ); ?></th>
+				<th><?php _e( 'Local v.',	'plugin-browser-for-bbpress' ); ?></th>
+				<th><?php _e( 'Description',	'plugin-browser-for-bbpress' ); ?></th>
+			</tr>
+		</tfoot>
 		<tbody>
-<?php
-	$plugins = $plugin_browser->getLocalRepositoryList();
+	<?php
 	
-	$bb_plugins = bb_get_plugins();
-	$bb_plugins_keys = array_map(create_function('$input', 'return preg_replace("|pb\-\-([^/]+)/.*|", "$1", $input);'), array_keys($bb_plugins));
-	
-	foreach ($plugins as $plugin) {
-		if ($plugin['version']) {
-			$upgradeText = null;
-			$action = 'install';
-			$actionText = __('Install');
-			$plugin['version_local'] = __('None');
-			$plugin['revision_local'] = null;
-			$class = null;
-			$readmeLink = null;
+	foreach ( $plugins as $plugin_folder => $plugin ) {
+		if ( $plugin['version'] ) {
+			$iuaction	= 'install';
+			$iuactionText	= __( 'Install', 'plugin-browser-for-bbpress' );
+			$class		= 'inactive';
+			$plugin_page	= '<a href="http://bbpress.org/plugins/topic/' . $plugin_folder . '/" target="_blank">' . __( 'Plugin Page', 'plugin-browser-for-bbpress' ) . '</a>';
+			$cpf		= 'user#' . $plugin_folder . '/' . $plugin['file'];
+			$cpf2		= 'user#pb--' . $plugin_folder . '/' . $plugin['file']; /* If the plugin had been installed earlier with this plugin */
+			$plugin['version_local']	= __( 'None', 'plugin-browser-for-bbpress' );
+			$plugin['revision_local']	= null;
 			
-			if (in_array($plugin['id'], $bb_plugins_keys)) {
-				$action = 'uninstall';
-				$actionText = __('Uninstall');
-				$class = 'installed';
+			if ( $bb_plugins[$cpf] || $bb_plugins[$cpf2] ) {
+				if ( $bb_plugins[$cpf2] ) {
+					$bb_plugins[$cpf]	= $bb_plugins[$cpf2];
+					$cpf			= $cpf2;
+				}
+				$iuaction	= 'uninstall';
+				$iuactionText	= __( 'Uninstall', 'plugin-browser-for-bbpress' );
 				
-				$plugin['version_local'] = $bb_plugins['pb--' . $plugin['id'] . '/' . $plugin['filename']]['version'];
-				
-				@include(BBPLUGINDIR . 'pb--' . $plugin['id'] . '/pb--revision.php');
-				
-				if (file_exists(BBPLUGINDIR . 'pb--' . $plugin['id'] . '/readme.txt')) {
-					$readmeLink = '<p><a href="' . BBPLUGINURL . 'pb--' . $plugin['id'] . '/readme.txt" target="_blank">View plugin "read me"</a></p>';
+				if ( in_array( $cpf, array_values( $active_plugins ) ) ) {
+					$class		=  'active';
+					$action		= 'deactivate';
+					$action_class	= 'delete';
+					$action_text	= __( 'Deactivate', 'plugin-browser-for-bbpress' );
+				} else {
+					$class		= '';
+					$action		= 'activate';
+					$action_class	= 'edit';
+					$action_text	= __( 'Activate', 'plugin-browser-for-bbpress' );
 				}
 				
-				if ($plugin['revision_local'] < $plugin['revision']) {
-					$upgradeText = __('Upgrade');
-					$class = 'upgradable';
+				$adhref = $plugin_browser->nonceUrl( $action . '-plugin_' . $cpf, array( 'plugin_request' => 'all', 'action' => $action, 'plugin' => urlencode( $cpf ) ), 'bb-admin/plugins.php' );
+				$adhtml = ' | <a class="' . $action_class . '" href="' . $adhref . '" target="_blank">' . $action_text . '</a>';
+				
+				if ( version_compare( $plugin['version'], $bb_plugins[$cpf]['version'], '>' ) ) {
+					$class = 'upgrade';
+					$uhref = $plugin_browser->nonceUrl( 'upgrade-plugin_' . $plugin_folder, array( 'plugin' => 'plugin_browser_admin_page', 'pb_action' => 'upgrade', 'pb_plugin_id' => urlencode( $plugin_folder ) ) );
+					$uhtml = ' | <a href="' . $uhref . '">' . __( 'Upgrade', 'plugin-browser-for-bbpress' ) . '</a>';
 				}
 			}
-?>
-			<tr<?php alt_class('plugin', $class); ?>>
-				<td><?php echo($plugin['plugin_link']); ?></td>
-				<td><?php echo($plugin['description'] . $readmeLink); ?><cite><?php printf( __('By %s.'), $plugin['author_link'] ); ?></cite></td>
-				<td class="action" style="white-space:nowrap;">
-					<?php echo($plugin['version_local']); ?>
-<?php
-		if ($plugin['revision_local']) {
-?>
-					<br /><br /><em>r. <?php echo($plugin['revision_local']); ?></em>
-<?php
-		}
-?>
+			
+			$iuhref = $plugin_browser->nonceUrl( $iuaction . '-plugin_' . $plugin_folder, array( 'plugin' => 'plugin_browser_admin_page', 'pb_action' => $iuaction, 'pb_plugin_id' => urlencode( $plugin_folder ) ) );
+			$iuhtml = '<a href="' . $iuhref . '">' . $iuactionText . '</a>';
+			?>
+			
+			<tr class="<?php echo $class; ?>">
+				<td class="plugin-name">
+					<span class="row-title">
+						<?php echo ( $plugin['uri'] ) ? "<a href='{$plugin['uri']}' title='" . esc_attr__( 'Visit plugin site', 'plugin-browser-for-bbpress' ) . "'>{$plugin['name']}</a>" : $plugin['name']; ?>
+						<br />
+						<small><?php _e( 'By ', 'plugin-browser-for-bbpress' ); echo ( $plugin['author'] && $plugin['author_uri'] ) ? "<a href='{$plugin['author_uri']}' title='" . esc_attr__( 'Visit author homepage', 'plugin-browser-for-bbpress' ) . "'>" . $plugin['author'] . "</a>" : $plugin['author']; ?> | <?php echo $plugin_page; ?></small>
+					</span>
+					<div><span class="row-actions"><?php echo $iuhtml . $adhtml . $uhtml; ?></span></div>
 				</td>
-				<td class="action" style="white-space:nowrap;"><?php echo($plugin['version']); ?><br /><br /><em>r. <?php echo($plugin['revision']); ?></em></td>
-				<td class="action" style="white-space:nowrap;"><a href="?plugin=plugin_browser_admin_page&amp;action=plugin_browser_plugin_upgrade&amp;plugin_browser_plugin_id=<?php echo(urlencode($plugin['id'])); ?>&amp;_wpnonce=<?php echo(bb_create_nonce('plugin_browser_plugin_upgrade_' . $plugin['id'])); ?>"><?php echo($upgradeText); ?></a></td>
-				<td class="action" style="white-space:nowrap;"><a href="?plugin=plugin_browser_admin_page&amp;action=plugin_browser_plugin_<?php echo($action); ?>&amp;plugin_browser_plugin_id=<?php echo(urlencode($plugin['id'])); ?>&amp;_wpnonce=<?php echo(bb_create_nonce('plugin_browser_plugin_' . $action . '_' . $plugin['id'])); ?>"><?php echo($actionText); ?></a></td>
+				<td class="latest-ver"><?php echo $plugin['version']; ?></td>
+				<td class="local-ver"><?php echo ( $bb_plugins[$cpf]['version'] ) ? $bb_plugins[$cpf]['version'] : '-'; ?></td>
+				<td class="plugin-description"><?php echo bb_autop( preg_replace( '/[\r\n]+/', "\n", $plugin['description'] ) ); ?></td>
 			</tr>
-<?php
+			
+			<?php
+			unset( $adhtml );
+			unset( $uhtml );
 		}
 	}
-?>
+	?>
 		</tbody>
 	</table>
 <?php
-}
-
-
-/**
- * Processes the admin page form
- *
- * @return void
- * @author Sam Bauers
- **/
-function plugin_browser_admin_page_process()
-{
-	global $plugin_browser;
-	
-	switch ($_REQUEST['action']) {
-		case 'plugin_browser_post_fetch':
-			bb_check_admin_referer('plugin_browser_post_fetch');
-			
-			if ($_POST['plugin_browser_revision_local'] < $_POST['plugin_browser_revision_remote']) {
-				$plugin_browser->updateLocalRepositoryList();
-				
-				bb_admin_notice(sprintf(
-					__('The plugin list was updated from revision %s to revision %s.'),
-					$_POST['plugin_browser_revision_local'],
-					$_POST['plugin_browser_revision_remote']
-				));
-			} else {
-				bb_admin_notice(__('You already have the latest plugin list.'), 'error');
-			}
-			break;
-		
-		case 'plugin_browser_plugin_install':
-			$plugin_browser_plugin_id = $_REQUEST['plugin_browser_plugin_id'];
-			
-			bb_check_admin_referer('plugin_browser_plugin_install_' . $plugin_browser_plugin_id);
-			
-			if ($plugin_browser->installPlugin($_REQUEST['plugin_browser_plugin_id'])) {
-				bb_admin_notice(__('Installation of plugin complete.'));
-			} else {
-				bb_admin_notice(__('Installation of plugin failed.'), 'error');
-			}
-			break;
-		
-		case 'plugin_browser_plugin_uninstall':
-			$plugin_browser_plugin_id = $_REQUEST['plugin_browser_plugin_id'];
-			
-			bb_check_admin_referer('plugin_browser_plugin_uninstall_' . $plugin_browser_plugin_id);
-			
-			if ($plugin_browser->uninstallPlugin($plugin_browser_plugin_id)) {
-				bb_admin_notice(__('Plugin was successfully uninstalled.'));
-			} else {
-				bb_admin_notice(__('Plugin could not be uninstalled.'), 'error');
-			}
-			break;
-		
-		case 'plugin_browser_plugin_upgrade':
-			$plugin_browser_plugin_id = $_REQUEST['plugin_browser_plugin_id'];
-			
-			bb_check_admin_referer('plugin_browser_plugin_upgrade_' . $plugin_browser_plugin_id);
-			
-			if ($plugin_browser->upgradePlugin($_REQUEST['plugin_browser_plugin_id'])) {
-				bb_admin_notice(__('Upgrade of plugin complete.'));
-			} else {
-				bb_admin_notice(__('Upgrade of plugin failed.'), 'error');
-			}
-			break;
-	}
 }
 ?>

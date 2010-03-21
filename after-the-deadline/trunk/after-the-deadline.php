@@ -13,17 +13,20 @@ Author URI: http://gaut.am/
  * @subpackage Main Section
  * @author Gautam Gupta (www.gaut.am)
  * @link http://gaut.am/bbpress/plugins/after-the-deadline/
- * @license GNU General Public License version 3 (GPLv3): http://www.opensource.org/licenses/gpl-3.0.html
+ * @license GNU General Public License version 3 (GPLv3):
+ * http://www.opensource.org/licenses/gpl-3.0.html
  */
 
-bb_load_plugin_textdomain( 'after-the-deadline', dirname( __FILE__ ) . '/languages' ); /** Create Text Domain For Translations */
+/** Create Text Domain For Translations */
+bb_load_plugin_textdomain( 'after-the-deadline', dirname( __FILE__ ) . '/languages' );
 
 /**
  * Defines
  */
-define( 'ATD_VER'	, '1.5'							); /** Version */
-define( 'ATD_PLUGPATH'	, bb_get_plugin_uri( bb_plugin_basename( __FILE__ ) )	); /** Plugin URL */
-define( 'ATD_OPTIONS'	, 'AftertheDeadline'					); /** Option Name */
+define( 'ATD_VER'		, '1.6-dev3'						); /** Version */
+define( 'ATD_OPTIONS'		, 'AftertheDeadline'					); /** Option Name */
+define( 'ATD_USER_OPTIONS'	, 'AtDuserOptions'					); /** User Option Name */
+define( 'ATD_PLUGPATH'		, bb_get_plugin_uri( bb_plugin_basename( __FILE__ ) )	); /** Plugin URL */
 
 /**
  * Options
@@ -41,8 +44,8 @@ if ( is_string( $atd_plugopts['key'] ) ) { /* Delete if there are old options, w
 	unset( $atd_plugopts );
 }
 if ( !is_array( $atd_plugopts ) ) { /* Set the Options if they are not set */
-	if ( defined( 'BB_LANG' ) ){
-		foreach( array_keys( $atd_supported_langs ) as $lang ){
+	if ( defined( 'BB_LANG' ) && BB_LANG ) { /* Language check */
+		foreach( array_keys( $atd_supported_langs ) as $lang ) {
 			if ( strpos( BB_LANG, $lang ) !== false ) {
 				$save_lang = $lang;
 				break;
@@ -50,15 +53,18 @@ if ( !is_array( $atd_plugopts ) ) { /* Set the Options if they are not set */
 		}
 	}
 	$atd_plugopts = array(
-		'lang' => $save_lang ? $save_lang : 'en'
+		'lang'		=> $save_lang ? $save_lang : 'en',
+		'enableuser'	=> array() /* autoproofread and/or ignorealways and/or ignoretypes */
 	);
 	bb_update_option( ATD_OPTIONS, $atd_plugopts );
 }
 
 /**
- * Require Admin/Public File
+ * Require Admin/Public/AJAX File
  */
-if ( bb_is_admin() ) /* Load admin.php file if it is the admin area */
+if ( defined( 'DOING_AJAX' ) && DOING_AJAX == true && in_array( 'ignorealways', (array) $atd_plugopts['enableuser'] ) ) /* Load Ignore Phrase file as we are doing AJAX */
+	require_once( 'includes/ajax-ignore.php' );
+elseif ( bb_is_admin() ) /* Load admin.php file if it is the admin area */
 	require_once( 'includes/admin.php' );
-else /* Else load public.php file if it is the public area */
+else /* Else load public.php file as it is the public area */
 	require_once( 'includes/public.php' );

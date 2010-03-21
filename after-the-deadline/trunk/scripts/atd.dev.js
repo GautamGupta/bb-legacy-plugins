@@ -1,8 +1,7 @@
 /**
  * Javascript File (uncompressed)
  *
- * @package After the Deadline
- * @author Gautam Gupta (www.gaut.am)
+ * @package After the Deadline bbPress Plugin
  * @link http://gaut.am/bbpress/plugins/after-the-deadline/
  * @see atd.js for compressed version
  */
@@ -38,11 +37,18 @@ function AtDCore() {
  * Internationalization Functions
  */
 
+/*
 AtDCore.prototype.getLang = function(key, defaultk) {
 	if (this.i18n[key] == undefined)
 		return defaultk;
 
 	return this.i18n[key];
+};*/
+AtDCore.prototype.getLang = function(key, defaultk) {
+	if (AtD[key] == undefined)
+		return defaultk;
+
+	return AtD[key];
 };
 
 AtDCore.prototype.addI18n = function(localizations) {
@@ -82,11 +88,15 @@ AtDCore.prototype.showTypes = function(string) {
 	types["Redundant Expression"] = 1;
 
         var ignore_types = [];
-
-	this.map(this.ignore_types, function(string) {
-		if (types[string] == undefined)
-			ignore_types.push(string);
-	});
+	
+	this.map(show_types, function(string) { 
+		types[string] = undefined; 
+ 	}); 
+ 	
+ 	this.map(this.ignore_types, function(string) { 
+		if (types[string] != undefined)  
+			ignore_types.push(string); 
+ 	});
 
 	this.ignore_types = ignore_types;
 };
@@ -539,6 +549,7 @@ AtDCore.prototype.isIE = function() {
 
 
 var AtD = jQuery.extend( {
+	proofread_click_count : 0,
 	i18n : {},
 	rpc_css : 'http://www.polishmywriting.com/atd_jquery/server/proxycss.php?data=', // you may use this, but be nice!
 	listener : {}
@@ -572,10 +583,9 @@ AtD.showTypes = function(string) {
 
 /* check a div for any incorrectly spelled words */
 AtD.check = function(container_id, callback_f) {
-
 	/* checks if a global var for click stats exists and increments it if it does... */
-	if (typeof AtD_proofread_click_count != "undefined")
-		AtD_proofread_click_count++; 
+	if (typeof AtD.proofread_click_count != "undefined")
+		AtD.proofread_click_count++; 
 
 	AtD.callback_f = callback_f; /* remember the callback for later */
 
@@ -1081,9 +1091,11 @@ AtD.textareas = {};
 
 /* convienence method to restore the text area from the preview div */
 AtD.restoreTextArea = function(id) {
+	jQuery('.atd-ajax-load').css('height','0');
+	
 	var options = AtD.textareas[id];
 
-	/* check if we're in the proofreading mode, if not... then retunr */
+	/* check if we're in the proofreading mode, if not... then return */
 	if (options == undefined || options['before'] == options['link'].html())
 		return;
 
@@ -1116,8 +1128,9 @@ AtD.checkTextArea = function(id, linkId, after) {
 
 /* where the magic happens, checks the spelling or restores the form */
 AtD._checkTextArea = function(id, commChannel, linkId, after) {
+	jQuery('.atd-ajax-load').css('height','16px');
+	
 	var container = jQuery('#' + id);
-
 	/* store options based on the unique ID of the textarea */
 	if (AtD.textareas[id] == undefined) {
 		var properties = {};
@@ -1237,6 +1250,7 @@ AtD._checkTextArea = function(id, commChannel, linkId, after) {
 				/* this function is called when the AtD async service request has finished.
 				   this is a good time to allow the user to click the spell check/edit text link again. */
 				options['link'].unbind('click', disableClick);
+				jQuery('.atd-ajax-load').css('height','0');
 			},
   
 			explain: function(url) {
@@ -1278,9 +1292,69 @@ AtD._checkTextArea = function(id, commChannel, linkId, after) {
 							AtD.restoreTextArea( id );
 					}
 				});
+			},
+			
+			ignore: function(word) {
+				jQuery('.atd-ajax-load').css('height','16px');
+				jQuery.ajax({
+					type : 'POST',
+					url : AtD.rpc_ignore + encodeURI( word ).replace( /&/g, '%26'),
+					data: "action=atd_ignore",
+					format : 'raw',
+					error : function(XHR, status, error) {
+						if (AtD.callback_f != undefined && AtD.callback_f.error != undefined)
+							AtD.callback_f.error(status + ": " + error);
+					},
+					success : function() {
+						jQuery('.atd-ajax-load').css('height','0');
+					}
+				});
 			}
 		});
 	}
+}
+
+/**
+ * Autoproofread
+ */
+
+function AtD_check(form_id, node, callback) {
+	AtD.check(form_id, {
+		success: function(errorCount) {
+			callback(0, form_id, node);
+		},
+		ready: function(errorCount) {
+			callback(errorCount, form_id, node);
+		},
+		error: function(reason) {
+			callback(-1, form_id, node);
+		}
+	});
+}
+
+/* This is the callback function that runs after the post button is pressed */
+function AtD_submit_check_callback(count, form_id, node) {
+	AtD.restoreTextArea(form_id);
+	if (count == 0 || AtD.proofread_click_count > 1) {
+		/* if no errors were found, submit form */
+		AtD_update_post();
+	} else {
+		/* Okay, the user has tried to publish/update already but there are still errors. Ask them what to do */
+		jConfirm(AtD.getLang('dialog_confirm_post', 'The proofreader has suggestions for your reply. Are you sure you want to post it?\n\nPress OK to post your reply, or Cancel to view the suggestions and edit your reply.'), '', function(r) {
+			if( r == true ){
+				AtD_update_post(form_id);
+			}else{
+				/* Do the real checking */
+				AtD.checkTextArea(form_id, node.attr('id'), jQuery.fn.addProofreader.defaults.edit_text_content);
+			}
+		});
+	}
+}
+
+/* a function to force the post to be submitted */
+function AtD_update_post( form_id ) {
+	AtD.proofread_click_count = 1; /* Just increase the count to prevent a loop */
+	jQuery('#'+form_id).parents('form').submit();
 }
 
 jQuery.fn.addProofreader = function(options) {
@@ -1313,10 +1387,15 @@ jQuery.fn.addProofreader = function(options) {
 			AtD.current_id = id;
 		});
 		$this.wrap('<div></div>');
-
+		$this.after('<div class="atd-ajax-load"></div>');
 		/* attach a submit listener to the parent form */
-		$this.parents('form').submit(function(event) {
+		$this.parents('form').submit(function(e) {
 			AtD.restoreTextArea(id);
+			if (AtD.autoproofread == 1 && AtD.proofread_click_count <= 0){
+				e.preventDefault();
+				jQuery('.atd-ajax-load').css('height','16px');
+				AtD_check( id, node, AtD_submit_check_callback );
+			}
 		});
 
 		$this.before(node);
@@ -1329,5 +1408,9 @@ jQuery.fn.addProofreader.defaults = {
 };
 
 jQuery(function() {
-    jQuery('textarea').addProofreader();
+	jQuery('textarea').addProofreader();
+	if (AtD.ignoreStrings != undefined)
+		AtD.setIgnoreStrings(AtD.ignoreStrings);
+	if (AtD.ignoreTypes != undefined)
+		AtD.showTypes(AtD.ignoreTypes);
 });

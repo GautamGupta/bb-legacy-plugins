@@ -41,11 +41,29 @@ function atd_css_js() {
 				'message_error_no_text'		=> __( 'Please enter some text in the post textbox to be checked!'		, 'after-the-deadline' ),
 				'message_server_error_short'	=> __( 'There was a problem communicating with the After the Deadline service.'	, 'after-the-deadline' )
 			);
-		//wp_enqueue_script('after-the-deadline', ATD_PLUGPATH . 'scripts/atd.dev.js', array('jquery'), ATD_VER, true);
-		wp_enqueue_script(	'after-the-deadline', ATD_PLUGPATH . 'scripts/atd.js'	, array( 'jquery' )	, ATD_VER	);
+		if( count( $atd_plugopts['enableuser'] ) >= 1 ) {
+			$user = bb_get_current_user();
+			if ( !$user || $user->ID == 0 )
+				return;
+			$user_options = bb_get_usermeta( $user->ID, ATD_USER_OPTIONS );
+			if ( in_array( 'ignoretypes', (array) $atd_plugopts['enableuser'] ) && !is_null( $user_options['ignoretypes'] ) )
+				$i18n['ignoreTypes'] = $user_options['ignoretypes'];
+			if ( in_array( 'ignorealways', (array) $atd_plugopts['enableuser'] ) ) {
+				$i18n['ignoreStrings'] = $user_options['ignorealways'];
+				$i18n['rpc_ignore'] = esc_url( bb_get_uri() . 'bb-admin/admin-ajax.php?phrase=' );
+			}
+			if ( in_array( 'autoproofread', (array) $atd_plugopts['enableuser'] ) ) /* Can be 0 too, so no is_null check, rather we do sanity check below */
+				$i18n['autoproofread'] = ( intval( $user_options['autoproofread'] ) == 1 ) ? 1 : 0;
+		}
+		//wp_enqueue_script(	'after-the-deadline-po', ATD_PLUGPATH . 'scripts/profile.dev.js', array( 'jquery' ), ATD_VER, true );
+		wp_enqueue_script(	'after-the-deadline', ATD_PLUGPATH . 'scripts/atd.dev.js', array( 'jquery' )	, ATD_VER, true	);
+		//wp_enqueue_script(	'after-the-deadline', ATD_PLUGPATH . 'scripts/atd.js'	, array( 'jquery' )	, ATD_VER	);
 		wp_localize_script(	'after-the-deadline', 'AtD'				, $i18n					);
 		wp_enqueue_style(	'after-the-deadline', ATD_PLUGPATH . 'css/atd.css'	, false			, ATD_VER, 'all');
 	}
 }
+
+if( bb_is_profile() && count( $atd_plugopts['enableuser'] ) >= 1 )
+	require_once( 'profile-options.php' );
 
 add_action( 'wp_print_scripts', 'atd_css_js', 2 ); /* Enqueues Script and Style */

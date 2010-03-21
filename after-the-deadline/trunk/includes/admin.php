@@ -32,8 +32,14 @@ function atd_options() {
 		
 		bb_check_admin_referer( 'atd-save-chk' ); /* Security Check */
 		
-		$atd_plugopts['lang'] = ( in_array( $_POST['lang'], array_keys( $atd_supported_langs ) ) ) ? $_POST['lang'] : 'en';
-
+		/* Sanity Checks */
+		$atd_plugopts['lang']		= ( in_array( $_POST['lang'], array_keys( $atd_supported_langs ) ) ) ? $_POST['lang'] : 'en';
+		$atd_plugopts['enableuser']	= array();
+		foreach ( (array) $_POST['enableuser'] as $option ) {
+			if ( in_array( $option, array( 'autoproofread', 'ignorealways', 'ignoretypes' ) ) )
+				$atd_plugopts['enableuser'][] = $option;
+		}
+		
 		/* Save the options and notify user */
 		bb_update_option( ATD_OPTIONS, $atd_plugopts );
 		bb_admin_notice( __( 'The options have been successfully saved!', 'after-the-deadline' ) );
@@ -45,12 +51,31 @@ function atd_options() {
 	
 	/* Options in an array to be printed */
 	$atd_options = array(
-		'lang'	=> array(
+		'lang' => array(
 			'title'		=> __( 'Language', 'after-the-deadline' ),
 			'value' 	=> $atd_plugopts['lang'] ? $atd_plugopts['lang'] : 'en',
 			'type'		=> 'select',
 			'options'	=> $atd_supported_langs,
 			'note'		=> sprintf( __( 'Proofreading should be done for which language? The plugin currently supports the following languages - %s.', 'after-the-deadline' ), implode( ', ', $atd_supported_langs ) )
+		),
+		'enableuser[]' => array(
+			'title'		=> __( 'Enable the user to select the option for:', 'after-the-deadline' ),
+			'type'		=> 'checkbox',
+			'note'		=> __( 'These options will be shown on the user\'s profile page. All of these options are disabled by default.', 'after-the-deadline' ),
+			'options'	=> array(
+				'autoproofread' => array(
+					'label' => __( 'Autoproofreading the content if it is not proofread once before posting', 'after-the-deadline' ),
+					'value' => in_array( 'autoproofread', (array) $atd_plugopts['enableuser'] ) ? 'autoproofread' : ''
+				),
+				'ignorealways' => array(
+					'label' => __( 'Ignoring a term forever (ignored terms can be removed from the profile page)', 'after-the-deadline' ),
+					'value' => in_array( 'ignorealways', (array) $atd_plugopts['enableuser'] ) ? 'ignorealways' : ''
+				),
+				'ignoretypes' => array(
+					'label' => __( 'Setting ignore types', 'after-the-deadline' ),
+					'value' => in_array( 'ignoretypes', (array) $atd_plugopts['enableuser'] ) ? 'ignoretypes' : ''
+				)
+			)
 		)
 	);
 	?>

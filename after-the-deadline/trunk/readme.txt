@@ -27,25 +27,14 @@ The proofreader supports English, French, German, Portuguese and Spanish. If you
 
 You can contribute by translating this plugin. Please refer to [this post](http://gaut.am/translating-wordpress-or-bbpress-plugins/) to know how to translate.
 
-= To Do =
-* Add ignore always option
-* Add the option to let the user select ignore types
-* AutoProofread if the user has forgotten to run the spellcheck
+= Todo =
+Nothing for now
 
 = License =
 GNU General Public License version 3 (GPLv3): http://www.opensource.org/licenses/gpl-3.0.html
 
 = Not on bbPress? =
-You can get AtD elsewhere too! Here are the current platforms:
-
-* [Bookmarklet](http://www.afterthedeadline.com/download.slp?platform=Bookmarklet) - A utility to AtD to any web-page with one click
-* [Firefox](http://firefox.afterthedeadline.com/) - Web Browser
-* [Intense Debate](http://www.afterthedeadline.com/download.slp?platform=IntenseDebate) - Distributed Comment System for Blogs and Websites
-* [PHP List](http://www.afterthedeadline.com/download.slp?platform=PHPList) - Open Source Newsletter Manager
-* [RoundCube Webmail](http://www.afterthedeadline.com/download.slp?platform=RoundCube) - Browser-based IMAP Client
-* [WordPress](http://www.afterthedeadline.com/download.slp?platform=Wordpress) - Blog Tool and Publishing Platform
-
-Please check [here](http://www.afterthedeadline.com/download.slp) for an updated list.
+You can get AtD elsewhere too! Please check [here](http://www.afterthedeadline.com/download.slp) for the list.
 
 = Donate =
 You may donate by going [here](http://gaut.am/donate/AtD/).
@@ -59,19 +48,29 @@ You may donate by going [here](http://gaut.am/donate/AtD/).
 == Frequently Asked Questions ==
 
 = 1. The dialog boxes aren't looking as they should! =
-Please make sure that the plugin directory is chmodded to 755.
+Please make sure that the plugin directory (and the sub-folders and files in it) are chmodded to 755.
 
 = 2. This doesn't work with bbPress 0.9! =
-Please use version 1.4
+Please use version AtD v1.4
 
 *Please see [this FAQ](http://www.afterthedeadline.com/questions.slp) for more questions*
 
 == Screenshots ==
 
-1. After the Deadline Plugin in Action
-2. A Screenshot of the Settings Page
+1. The Plugin in Action
+2. The Settings Page
+3. The Settings on User's Profile Page (When AutoProofread and Ignore Types Options are Checked)
 
 == Changelog ==
+
+= 1.6 (xx-03-10) =
+* The following options have been added for the user (can also be mass-disabled from the admin page):
+ * AutoProofread if the user has forgotten to run the spellcheck
+ * Ignore always option
+ * Ignore types
+* Updated AtD/jQuery - [Changelog](http://www.polishmywriting.com/atd_jquery/changelog.html)
+* Added screenshot of the profile page and updated screenshots
+* Updated hindi translation
 
 = 1.5 (12-02-10) =
 * The proofreader now supports English, French, German, Portuguese and Spanish
@@ -123,6 +122,9 @@ Upgraded AtD/jQuery - [Changelog](http://www.polishmywriting.com/atd_jquery/chan
 * Initial Release
 
 == Upgrade Notice ==
+
+= 1.6 (xx-03-10) =
+Upgraded AtD/jQuery, added some more features and fixed bugs.
 
 = 1.5 (12-02-10) =
 Upgraded AtD/jQuery, added some more features and fixed bugs. Now no need of API key. Do not upgrade if you are using bbPress 0.9.

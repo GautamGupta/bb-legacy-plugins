@@ -4,7 +4,7 @@
  * @subpackage Public Section
  * @category Proxy Script
  * @author Gautam Gupta (www.gaut.am)
- * @link http://gaut.am/bbpress/plugins/easy-mentions/
+ * @link http://gaut.am/bbpress/plugins/after-the-deadline/
  */
 
 /**
@@ -18,12 +18,12 @@
  * @param string $method POST or GET (default POST)
  * @param array $data The data needed to be sent (if POST)
  *
- * @return string|bool The source received if the call was successfull, otherwise false
+ * @return string|bool The source received otherwise false
  */
-function atd_http( $url, $method = 'POST', $data = array() ){
-   if ( class_exists( 'WP_Http' ) ) { //not necessarily as we avoid loading bb-load.php
+function atd_http( $url, $method = 'POST', $data = array() ) {
+   if ( class_exists( 'WP_Http' ) ) { /* Not necessarily as we avoid loading bb-load.php here */
       return wp_remote_retrieve_body( wp_remote_request( $url, array( 'method' => $method, 'body' => $data, 'user-agent' => 'AtD/bbPress v' . ATD_VER ) ) );
-   } elseif ( function_exists( 'curl_init' ) ) { // Use cURL
+   } elseif ( function_exists( 'curl_init' ) ) { /* Use cURL */
       $ch = curl_init();
       curl_setopt( $ch, CURLOPT_URL, $url );
       curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
@@ -36,7 +36,7 @@ function atd_http( $url, $method = 'POST', $data = array() ){
       $source = curl_exec( $ch );
       curl_close( $ch );
       return $source;
-   } elseif ( function_exists( 'file_get_contents' ) ) { // use file_get_contents()
+   } elseif ( function_exists( 'file_get_contents' ) ) { /* Use file_get_contents() */
       if( strtoupper( $method ) == 'POST' && function_exists( 'stream_context_create' ) ){
          $opts = array('http' =>
             array(
@@ -67,4 +67,6 @@ if( !$postdata = trim( $_POST['data'] ) )
 $data = trim( atd_http( 'http://' . $service . $url, 'POST', array( 'data' => $postdata, 'key' => $api_key ) ) );
 header( 'Content-Type: text/xml' );
 echo $data;
+
+exit;
 ?>

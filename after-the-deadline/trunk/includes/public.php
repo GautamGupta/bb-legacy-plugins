@@ -36,24 +36,31 @@ function atd_css_js() {
 				'message_error'			=> __( 'Error!'				, 'after-the-deadline' ),
 				'message_no_errors_found'	=> __( 'No writing errors were found!'	, 'after-the-deadline' ),
 				'message_no_errors'		=> __( 'No errors!'			, 'after-the-deadline' ),
-				'dialog_replace_selection'	=> __( 'Replace selection with'		, 'after-the-deadline' ),
+				'dialog_replace_selection'	=> __( 'Replace selection with:'	, 'after-the-deadline' ),
 				'dialog_replace'		=> __( 'Replace'			, 'after-the-deadline' ),
 				'message_error_no_text'		=> __( 'Please enter some text in the post textbox to be checked!'		, 'after-the-deadline' ),
 				'message_server_error_short'	=> __( 'There was a problem communicating with the After the Deadline service.'	, 'after-the-deadline' )
 			);
-		if( count( $atd_plugopts['enableuser'] ) >= 1 ) {
+		if ( bb_is_topic() ) { /* It is not "your reply" everywhere */
+			$i18n['dialog_confirm_post']	= __( 'The proofreader has suggestions for your reply. Are you sure you want to post it?'	, 'after-the-deadline' );
+			$i18n['dialog_confirm_post2']	= __( 'Press OK to post your reply, or Cancel to view the suggestions and edit your reply.'	, 'after-the-deadline' );
+		} else {
+			$i18n['dialog_confirm_post']	= __( 'The proofreader has suggestions for your post. Are you sure you want to submit it?'	, 'after-the-deadline' );
+			$i18n['dialog_confirm_post2']	= __( 'Press OK to submit your post, or Cancel to view the suggestions and edit your post.'	, 'after-the-deadline' );
+		}
+		if( count( $atd_plugopts['enableuser'] ) >= 1 && bb_is_user_logged_in() ) { /* Only for logged in users */
 			$user = bb_get_current_user();
-			if ( !$user || $user->ID == 0 )
-				return;
-			$user_options = bb_get_usermeta( $user->ID, ATD_USER_OPTIONS );
-			if ( in_array( 'ignoretypes', (array) $atd_plugopts['enableuser'] ) && !is_null( $user_options['ignoretypes'] ) )
-				$i18n['ignoreTypes'] = $user_options['ignoretypes'];
-			if ( in_array( 'ignorealways', (array) $atd_plugopts['enableuser'] ) ) {
-				$i18n['ignoreStrings'] = $user_options['ignorealways'];
-				$i18n['rpc_ignore'] = esc_url( bb_get_uri() . 'bb-admin/admin-ajax.php?phrase=' );
+			if ( $user && $user->ID != 0 ) {
+				$user_options = bb_get_usermeta( $user->ID, ATD_USER_OPTIONS );
+				if ( in_array( 'ignoretypes',	(array) $atd_plugopts['enableuser'] ) && !is_null( $user_options['ignoretypes'] ) )
+					$i18n['ignoreTypes']	= $user_options['ignoretypes'];
+				if ( in_array( 'ignorealways',	(array) $atd_plugopts['enableuser'] ) ) {
+					$i18n['ignoreStrings']	= $user_options['ignorealways'];
+					$i18n['rpc_ignore']	= esc_url( bb_get_uri() . 'bb-admin/admin-ajax.php?phrase=' );
+				}
+				if ( in_array( 'autoproofread',	(array) $atd_plugopts['enableuser'] ) ) /* Can be 0 too, so no is_null check, rather we do sanity check below */
+					$i18n['autoproofread']	= ( intval( $user_options['autoproofread'] ) == 1 ) ? 1 : 0;
 			}
-			if ( in_array( 'autoproofread', (array) $atd_plugopts['enableuser'] ) ) /* Can be 0 too, so no is_null check, rather we do sanity check below */
-				$i18n['autoproofread'] = ( intval( $user_options['autoproofread'] ) == 1 ) ? 1 : 0;
 		}
 		//wp_enqueue_script(	'after-the-deadline-po', ATD_PLUGPATH . 'scripts/profile.dev.js', array( 'jquery' ), ATD_VER, true );
 		wp_enqueue_script(	'after-the-deadline', ATD_PLUGPATH . 'scripts/atd.dev.js', array( 'jquery' )	, ATD_VER, true	);

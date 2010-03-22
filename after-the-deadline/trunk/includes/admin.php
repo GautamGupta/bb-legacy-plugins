@@ -8,17 +8,30 @@
  */
 
 /**
- * Check for Updates
+ * Check for Updates and if available, then notify
  *
  * @uses WP_Http
+ * @uses bb_admin_notice To generate a notice if new version is available
+ * @uses $plugin_browser If available, then generates an auto-upgrade link
+ *
  * @return string|bool Returns version if update is available, else false
  */
-function atd_update_check() {
-	$latest_ver = trim( wp_remote_retrieve_body( wp_remote_request( $url, array( 'user-agent' => 'AtD/bbPress v' . ATD_VER ) ) ) );
-	if( $latest_ver && version_compare( $latest_ver, ATD_VER, '>' ) )
-		return $latest_ver;
+function atd_update_check(){
+	$latest_ver = trim( wp_remote_retrieve_body( wp_remote_get( 'http://gaut.am/uploads/plugins/updater.php?pid=5&chk=ver&soft=bb&current=' . ATD_VER, array( 'user-agent' => 'AtD/bbPress v' . ATD_VER ) ) ) );
+	if ( !$latest_ver || version_compare( $latest_ver, ATD_VER, '<=' ) ) /* If call fails or plugin is upto date, then return */
+		return false;
 	
-	return false;
+	global $plugin_browser;
+	if ( class_exists( 'Plugin_Browser' ) && $plugin_browser && method_exists( $plugin_browser, 'nonce_url' ) ) { /* Can be automatically upgraded */
+		$uhref = $plugin_browser->nonceUrl( 'upgrade-plugin_after-the-deadline', array( 'plugin' => 'plugin_browser_admin_page', 'pb_action' => 'upgrade', 'pb_plugin_id' => urlencode( 'after-the-deadline' ) ) );
+		$message = sprintf( __( 'New version (%1$s) of After the Deadline Plugin is available! Please download the latest version from <a href="%2$s">here</a> or <a href="%3$s">upgrade automatically</a>.', 'after-the-deadline' ), $ver, 'http://bbpress.org/plugins/topic/after-the-deadline/', $uhref );
+	} else { /* Else just output the normal message with download link */
+		$message = sprintf( __( 'New version (%1$s) of After the Deadline Plugin is available! Please download the latest version from <a href="%2$s">here</a>.', 'after-the-deadline' ), $ver, 'http://bbpress.org/plugins/topic/after-the-deadline/' );
+	}
+	
+	bb_admin_notice( $message, 'error' );
+
+	return $latest_ver;
 }
 
 /**
@@ -46,8 +59,7 @@ function atd_options() {
 	}
 	
 	/* Check for updates and if available, then notify */
-	if( $ver = atd_update_check() )
-		bb_admin_notice( sprintf( __( 'New version (v. %1$s) of After the Deadline is available! Please download the latest version from <a href="%2$s">here</a>.', 'after-the-deadline' ), $ver, 'http://bbpress.org/plugins/topic/after-the-deadline/' ), 'error' );
+	atd_update_check();
 	
 	/* Options in an array to be printed */
 	$atd_options = array(

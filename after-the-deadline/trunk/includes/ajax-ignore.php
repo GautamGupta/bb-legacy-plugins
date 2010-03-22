@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Easy Mentions
+ * @package After the Deadline
  * @subpackage Public Section
  * @category Ignore Always (AJAX)
  * @author Gautam Gupta (www.gaut.am)

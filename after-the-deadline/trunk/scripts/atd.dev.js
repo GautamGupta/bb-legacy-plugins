@@ -603,7 +603,7 @@ AtD.check = function(container_id, callback_f) {
 		data : 'key=' + AtD.api_key + '&data=' + text,
 		format : 'raw', 
 		dataType : (jQuery.browser.msie) ? "text" : "xml",
-
+		timeout : 15000, /* I dont think a call would be more than 15 seconds... */
 		error : function(XHR, status, error) {
 			if (AtD.callback_f != undefined && AtD.callback_f.error != undefined)
  				AtD.callback_f.error(status + ": " + error);
@@ -702,7 +702,7 @@ AtD.ignoreAll = function(container_id) {
 	if (AtD.counter == 0 && AtD.callback_f != undefined && AtD.callback_f.success != undefined)
 		AtD.callback_f.success(AtD.count);
 
-	if (AtD.callback_f != undefined && AtD.callback_f.ignore != undefined) {
+	if (AtD.callback_f != undefined && AtD.callback_f.ignore != undefined && AtD.rpc_ignore != undefined) {
 		AtD.callback_f.ignore(target);
 		AtD.core.setIgnoreStrings(target);
 	}
@@ -765,7 +765,7 @@ AtD.suggest = function(element) {
 	/* add the edit in place and ignore always option */
 
 	if (AtD.callback_f != undefined && AtD.callback_f.editSelection != undefined) {
-		if (AtD.callback_f != undefined && AtD.callback_f.ignore != undefined)
+		if (AtD.callback_f != undefined && AtD.callback_f.ignore != undefined && AtD.rpc_ignore != undefined)
 			suggest.append('<a onclick="AtD.ignoreAll(\'' + AtD.container + '\');">' + AtD.getLang('menu_option_ignore_always', 'Ignore always') + '</a>');
 		else
 			suggest.append('<a onclick="AtD.ignoreAll(\'' + AtD.container + '\');">' + AtD.getLang('menu_option_ignore_all', 'Ignore all') + '</a>');
@@ -773,7 +773,7 @@ AtD.suggest = function(element) {
 		suggest.append('<a onclick="AtD.editSelection(\'' + AtD.container + '\');" class="spell_sep_bottom spell_sep_top">' + AtD.getLang('menu_option_edit_selection', 'Edit Selection...') + '</a>');
 	}
 	else {
-		if (AtD.callback_f != undefined && AtD.callback_f.ignore != undefined)
+		if (AtD.callback_f != undefined && AtD.callback_f.ignore != undefined && AtD.rpc_ignore != undefined)
 			suggest.append('<a onclick="AtD.ignoreAll(\'' + AtD.container + '\');" class="spell_sep_bottom">' + AtD.getLang('menu_option_ignore_always', 'Ignore always') + '</a>');
 		else
 			suggest.append('<a onclick="AtD.ignoreAll(\'' + AtD.container + '\');" class="spell_sep_bottom">' + AtD.getLang('menu_option_ignore_all', 'Ignore all') + '</a>');
@@ -1091,7 +1091,7 @@ AtD.textareas = {};
 
 /* convienence method to restore the text area from the preview div */
 AtD.restoreTextArea = function(id) {
-	jQuery('.atd-ajax-load').css('height','0');
+	AtD_ajax_load('hide');
 	
 	var options = AtD.textareas[id];
 
@@ -1128,7 +1128,6 @@ AtD.checkTextArea = function(id, linkId, after) {
 
 /* where the magic happens, checks the spelling or restores the form */
 AtD._checkTextArea = function(id, commChannel, linkId, after) {
-	jQuery('.atd-ajax-load').css('height','16px');
 	
 	var container = jQuery('#' + id);
 	/* store options based on the unique ID of the textarea */
@@ -1160,9 +1159,6 @@ AtD._checkTextArea = function(id, commChannel, linkId, after) {
 	/* If the text of the link says edit comment, then restore the textarea so the user can edit the text */
 	if (options['link'].html() != options['before']) {
 		AtD.restoreTextArea(id);
-	} else if(!container.val()) {
-		AtD.restoreTextArea(id);
-		jAlert( AtD.getLang('message_error_no_text', 'Please enter some text in the post textbox to be checked!' ), AtD.getLang('message_error', 'Error!' ) ); 
 	} else {
 		/* set the spell check link to a link that lets the user edit the text */
 		options['link'].html( options['after'] );
@@ -1170,7 +1166,7 @@ AtD._checkTextArea = function(id, commChannel, linkId, after) {
 		/* disable the spell check link while an asynchronous call is in progress. if a user tries to make a request while one is in progress
 		   they will lose their text. Not cool! */
 		var disableClick = function() { return false; };
-		options['link'] .click(disableClick);
+		options['link'].click(disableClick);
  
 		/* replace the textarea with a preview div, notice how the div has to have the same id/class/style attributes as the textarea */
        
@@ -1244,13 +1240,14 @@ AtD._checkTextArea = function(id, commChannel, linkId, after) {
 		div.css( options['style'] );
 		div.height( options['height'] );
 
+		AtD_ajax_load('show');
 		/* check the writing in the textarea */
 		commChannel(id, {
 			ready: function(errorCount) {
 				/* this function is called when the AtD async service request has finished.
 				   this is a good time to allow the user to click the spell check/edit text link again. */
 				options['link'].unbind('click', disableClick);
-				jQuery('.atd-ajax-load').css('height','0');
+				AtD_ajax_load('hide');
 			},
   
 			explain: function(url) {
@@ -1282,7 +1279,7 @@ AtD._checkTextArea = function(id, commChannel, linkId, after) {
 
 			editSelection : function(element) {
 				var oldtext = element.text();
-				jPrompt(AtD.getLang('dialog_replace_selection', "Replace selection with")+':', element.text(), AtD.getLang('dialog_replace', 'Replace'), function(text) {
+				jPrompt(AtD.getLang('dialog_replace_selection', "Replace selection with:"), element.text(), AtD.getLang('dialog_replace', 'Replace'), function(text) {
 					if (text != null && oldtext != text)
 					{
 						jQuery(element).html(text);
@@ -1295,7 +1292,7 @@ AtD._checkTextArea = function(id, commChannel, linkId, after) {
 			},
 			
 			ignore: function(word) {
-				jQuery('.atd-ajax-load').css('height','16px');
+				AtD_ajax_load('show');
 				jQuery.ajax({
 					type : 'POST',
 					url : AtD.rpc_ignore + encodeURI( word ).replace( /&/g, '%26'),
@@ -1306,7 +1303,7 @@ AtD._checkTextArea = function(id, commChannel, linkId, after) {
 							AtD.callback_f.error(status + ": " + error);
 					},
 					success : function() {
-						jQuery('.atd-ajax-load').css('height','0');
+						AtD_ajax_load('hide');
 					}
 				});
 			}
@@ -1318,15 +1315,17 @@ AtD._checkTextArea = function(id, commChannel, linkId, after) {
  * Autoproofread
  */
 
+/* Just a small function to check if errors exist or not */
 function AtD_check(form_id, node, callback) {
+	AtD_ajax_load('show');
 	AtD.check(form_id, {
-		success: function(errorCount) {
+		success: function() {
 			callback(0, form_id, node);
 		},
-		ready: function(errorCount) {
-			callback(errorCount, form_id, node);
+		ready: function(count) {
+			callback(count, form_id, node);
 		},
-		error: function(reason) {
+		error: function() {
 			callback(-1, form_id, node);
 		}
 	});
@@ -1335,19 +1334,18 @@ function AtD_check(form_id, node, callback) {
 /* This is the callback function that runs after the post button is pressed */
 function AtD_submit_check_callback(count, form_id, node) {
 	AtD.restoreTextArea(form_id);
-	if (count == 0 || AtD.proofread_click_count > 1) {
-		/* if no errors were found, submit form */
-		AtD_update_post();
-	} else {
+	if (count > 0) {
 		/* Okay, the user has tried to publish/update already but there are still errors. Ask them what to do */
-		jConfirm(AtD.getLang('dialog_confirm_post', 'The proofreader has suggestions for your reply. Are you sure you want to post it?\n\nPress OK to post your reply, or Cancel to view the suggestions and edit your reply.'), '', function(r) {
-			if( r == true ){
+		var message = AtD.getLang('dialog_confirm_post', 'The proofreader has suggestions for your reply. Are you sure you want to post it?')+"\n\n"+AtD.getLang('dialog_confirm_post2', 'Press OK to post your reply, or Cancel to view the suggestions and edit your reply.');
+		jConfirm(message, '', function(r) {
+			if ( r == true ) {
 				AtD_update_post(form_id);
-			}else{
-				/* Do the real checking */
+			} else { /* Do the real checking */
 				AtD.checkTextArea(form_id, node.attr('id'), jQuery.fn.addProofreader.defaults.edit_text_content);
 			}
 		});
+	} else { /* if class was not successful or no errors were found, submit form */
+		AtD_update_post(form_id);
 	}
 }
 
@@ -1355,6 +1353,19 @@ function AtD_submit_check_callback(count, form_id, node) {
 function AtD_update_post( form_id ) {
 	AtD.proofread_click_count = 1; /* Just increase the count to prevent a loop */
 	jQuery('#'+form_id).parents('form').submit();
+}
+
+function AtD_ajax_load( mode ){
+	if(mode == undefined){
+		if(jQuery('.atd-ajax-load').css('height') == '16px')
+			jQuery('.atd-ajax-load').css('height', '0');
+		else
+			jQuery('.atd-ajax-load').css('height', '16px');
+	}else if(mode == "show"){
+		jQuery('.atd-ajax-load').css('height', '16px');
+	}else{
+		jQuery('.atd-ajax-load').css('height', '0');
+	}
 }
 
 jQuery.fn.addProofreader = function(options) {
@@ -1381,19 +1392,20 @@ jQuery.fn.addProofreader = function(options) {
 			if (AtD.current_id != undefined && AtD.current_id != id) {
 				AtD.restoreTextArea(AtD.current_id);
 			}
-
-			AtD.checkTextArea(id, node.attr('id'), opts.edit_text_content);
-
-			AtD.current_id = id;
+			
+			if($this.val() != "") {
+				AtD.checkTextArea(id, node.attr('id'), opts.edit_text_content);
+				AtD.current_id = id;
+			}else{
+				jAlert( AtD.getLang('message_error_no_text', 'Please enter some text in the post textbox to be checked!' ), AtD.getLang('message_error', 'Error!' ) );
+			}
 		});
 		$this.wrap('<div></div>');
-		$this.after('<div class="atd-ajax-load"></div>');
 		/* attach a submit listener to the parent form */
 		$this.parents('form').submit(function(e) {
 			AtD.restoreTextArea(id);
-			if (AtD.autoproofread == 1 && AtD.proofread_click_count <= 0){
+			if (AtD.autoproofread == 1 && AtD.proofread_click_count == 0 && $this.val() != ""){
 				e.preventDefault();
-				jQuery('.atd-ajax-load').css('height','16px');
 				AtD_check( id, node, AtD_submit_check_callback );
 			}
 		});
@@ -1403,8 +1415,8 @@ jQuery.fn.addProofreader = function(options) {
 };
 
 jQuery.fn.addProofreader.defaults = {
-	edit_text_content: '<span class="atd_container"><a class="checkLink">'+AtD.getLang('button_edit_text', 'Edit Text')+'</a></span>',
-	proofread_content: '<span class="atd_container"><a class="checkLink">'+AtD.getLang('button_proofread', 'Proofread')+'</a></span>'
+	edit_text_content: '<div class="atd_container"><a class="checkLink">'+AtD.getLang('button_edit_text', 'Edit Text')+'</a><div class="atd-ajax-load"></div></div>',
+	proofread_content: '<div class="atd_container"><a class="checkLink">'+AtD.getLang('button_proofread', 'Proofread')+'</a><div class="atd-ajax-load"></div></div>'
 };
 
 jQuery(function() {

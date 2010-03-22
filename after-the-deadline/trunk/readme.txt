@@ -59,17 +59,17 @@ Please use version AtD v1.4
 
 1. The Plugin in Action
 2. The Settings Page
-3. The Settings on User's Profile Page (When AutoProofread and Ignore Types Options are Checked)
+3. The Settings on User's Profile Page (When AutoProofread, Ignore Types & Ignore Always Options are Checked)
 
 == Changelog ==
 
-= 1.6 (xx-03-10) =
+= 1.6 (22-03-10) =
 * The following options have been added for the user (can also be mass-disabled from the admin page):
  * AutoProofread if the user has forgotten to run the spellcheck
  * Ignore always option
  * Ignore types
 * Updated AtD/jQuery - [Changelog](http://www.polishmywriting.com/atd_jquery/changelog.html)
-* Added screenshot of the profile page and updated screenshots
+* Added screenshot of the profile edit page and updated screenshots
 * Updated hindi translation
 
 = 1.5 (12-02-10) =
@@ -123,7 +123,7 @@ Upgraded AtD/jQuery - [Changelog](http://www.polishmywriting.com/atd_jquery/chan
 
 == Upgrade Notice ==
 
-= 1.6 (xx-03-10) =
+= 1.6 (22-03-10) =
 Upgraded AtD/jQuery, added some more features and fixed bugs.
 
 = 1.5 (12-02-10) =

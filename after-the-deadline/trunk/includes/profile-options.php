@@ -30,11 +30,10 @@ function atd_print_option( $name, $value, $options ) {
  *
  * @return void
  */
-function atd_profile_update() {
+function atd_profile_update( $user_id ) {
 	global $atd_plugopts;
 	
-	$user = bb_get_current_user();
-	if ( !$user || $user->ID == 0 )
+	if ( !bb_current_user_can( 'edit_user', $user_id ) )
 		return;
 	
 	if ( in_array( 'ignoretypes', (array) $atd_plugopts['enableuser'] ) ) {
@@ -50,20 +49,16 @@ function atd_profile_update() {
 	if ( in_array( 'autoproofread', (array) $atd_plugopts['enableuser'] ) )
 		$options['autoproofread'] = ( intval( $_POST['atd_autoproofread'] ) == 1 ) ? 1 : 0;
 	
-	bb_update_usermeta( $user->ID, ATD_USER_OPTIONS, $options );
+	bb_update_usermeta( $user_id, ATD_USER_OPTIONS, $options );
 }
 
 /**
  * Display the various AtD options
  */
-function atd_profile_form() {
+function atd_profile_form( $user_id ) {
 	global $atd_plugopts;
 	
-	$user = bb_get_current_user();
-	if ( !$user || $user->ID == 0 )
-		return;
-	
-	$user_options = bb_get_usermeta( $user->ID, ATD_USER_OPTIONS );
+	$user_options = bb_get_usermeta( $user_id, ATD_USER_OPTIONS );
 	$options_show_types = array( 'name' => 'atd_ignoretypes' );
 	if ( $options_raw = $user_options['ignoretypes'] ) { foreach( explode( ',', $options_raw ) as $option ) $options_show_types[$option] = 1; }
 	$ignores	= $user_options['ignorealways'];

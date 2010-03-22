@@ -1,15 +1,19 @@
 === BB Wysiwig Editor ===
 Tags: quote, reply, post, ajax, wysiwyg, editor
-Contributors: Giovambattista Fazioli
+Contributors: Detective
 Requires at least: 1.0.2
 Tested up to: 1.0.2
-Stable Tag: 1.1.1
+Stable Tag: 1.2.0
 
 Add Wysiwig Editor features and allows quoting of posts using the built-in jQuery. No template edits required.
 
 == Description ==
 
 Add Wysiwig Editor features and allows quoting of posts when replying.
+
+**LAST IMPROVE**
+
+* Add Customizable css file `bb-wysiwyg-editor.css` for change font editor
 
 == Installation ==
 
@@ -20,13 +24,17 @@ Add Wysiwig Editor features and allows quoting of posts when replying.
 
 == Configuration ==
 
-None necessary.
+From 1.2.0 release, you can edit `bb-wysiwyg-editor.css` file to change editor font, color and more
+
 
 == Changelog ==
 
-=1.1.0=
+= 1.2.0 =
+* Add Customizable css file `bb-wysiwyg-editor.css` for change font editor
+
+= 1.1.0 =
 * Add Quote
 
-=1.0.0=
+= 1.0.0 =
 * First release
  

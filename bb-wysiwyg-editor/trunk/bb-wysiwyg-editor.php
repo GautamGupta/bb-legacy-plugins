@@ -4,7 +4,7 @@ Plugin Name: BB Wysiwyg Editor
 Plugin URI: http://www.saidmade.com/
 Description: Add Wysiwyg Editor to Textarea
 Author: Giovambattista Fazioli
-Version: 1.1.1
+Version: 1.2.0
 Author URI: http://www.undolog.com/
 */
 
@@ -14,6 +14,7 @@ function bbwe_head() { ?>
 <link rel='stylesheet' href='<?php echo bb_get_option('url') ?>my-plugins/bb-wysiwyg-editor/js/jwysiwyg/jquery.wysiwyg.css' type='text/css' media='all' />
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 <script type="text/javascript" src="<?php echo bb_get_option('url') ?>my-plugins/bb-wysiwyg-editor/js/jwysiwyg/jquery.wysiwyg.js"></script>
+<script type="text/javascript">var bb_wysiwyg_editor_url = "<?php echo bb_get_option('url') ?>my-plugins/bb-wysiwyg-editor/";</script>
 <script type="text/javascript" src="<?php echo bb_get_option('url') ?>my-plugins/bb-wysiwyg-editor/js/wysiwyg.js"></script>
 <!-- BB Wysiwyg Editor -->
 <?php }

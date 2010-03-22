@@ -1,6 +1,11 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * BB Wysiwyg Editor Javascript Main File
+ *
+ * @package         bb-wysiwyg-editor
+ * @subpackage      wysiwyg.js
+ * @author          =undo= <g.fazioli@saidmade.com>
+ * @copyright       Copyright (C) 2010 Saidmade Srl
+ *
  */
 $(function() {
     $('#post_content').wysiwyg({
@@ -10,7 +15,8 @@ $(function() {
             insertHorizontalRule : { visible : false },
             removeFormat : { visible : false },
             separator09 : { visible : false }
-        }
+        },
+        css : bb_wysiwyg_editor_url + "bb-wysiwyg-editor.css"
     });
 });
 

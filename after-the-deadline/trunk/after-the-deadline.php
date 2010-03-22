@@ -18,12 +18,12 @@ Author URI: http://gaut.am/
  */
 
 /** Create Text Domain For Translations */
-bb_load_plugin_textdomain( 'after-the-deadline', dirname( __FILE__ ) . '/languages' );
+bb_load_plugin_textdomain( 'after-the-deadline', dirname( __FILE__ ) . '/translations' );
 
 /**
  * Defines
  */
-define( 'ATD_VER'		, '1.6-dev3'						); /** Version */
+define( 'ATD_VER'		, '1.6-alpha'						); /** Version */
 define( 'ATD_OPTIONS'		, 'AftertheDeadline'					); /** Option Name */
 define( 'ATD_USER_OPTIONS'	, 'AtDuserOptions'					); /** User Option Name */
 define( 'ATD_PLUGPATH'		, bb_get_plugin_uri( bb_plugin_basename( __FILE__ ) )	); /** Plugin URL */

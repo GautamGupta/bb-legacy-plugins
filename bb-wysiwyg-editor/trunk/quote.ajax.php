@@ -1,4 +1,13 @@
 <?php
+/**
+ * BB Wysiwyg Editor Ajax Gateway
+ *
+ * @package         bb-wysiwyg-editor
+ * @subpackage      quote.ajax.php
+ * @author          =undo= <g.fazioli@saidmade.com>
+ * @copyright       Copyright (C) 2010 Saidmade Srl
+ *
+ */
 
 if ( !isset( $_GET['quoted'] ) ) {
     die('');

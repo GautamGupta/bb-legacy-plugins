@@ -1,0 +1,271 @@
+# Translation of After the Deadline in Hindi
+# This file is distributed under the same license as the After the Deadline package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2010-03-23 19:41+0530\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/0.1\n"
+"Project-Id-Version: After the Deadline\n"
+"POT-Creation-Date: \n"
+"Last-Translator: Gautam <gautam.2011@gmail.com>\n"
+"Language-Team: \n"
+
+#: includes/public.php:39
+msgid "Replace selection with:"
+msgstr "चुनी हुई वर्तनी बदलिए:"
+
+#: includes/public.php:45
+msgid "The proofreader has suggestions for your reply. Are you sure you want to post it?"
+msgstr "शुद्धिकारक के पास आपके उत्तर के लिए सुझाव हैं| क्या आप सुनिश्चित हैं कि आप यह पोस्ट करना चाहते हैं?"
+
+#: after-the-deadline.php:35
+msgid "English"
+msgstr "अंग्रेजी"
+
+#: after-the-deadline.php:36
+msgid "Portuguese"
+msgstr "पुर्तगाली"
+
+#: after-the-deadline.php:37
+msgid "French"
+msgstr "फ्रेंच"
+
+#: after-the-deadline.php:38
+msgid "German"
+msgstr "जर्मन"
+
+#: after-the-deadline.php:39
+msgid "Spanish"
+msgstr "स्पेनिश"
+
+#: includes/admin.php:27
+msgid "New version (%1$s) of After the Deadline Plugin is available! Please download the latest version from <a href=\"%2$s\">here</a> or <a href=\"%3$s\">upgrade automatically</a>."
+msgstr "आफ्टर दी डेडलाइन का नया संस्करण (%1$s) उपलब्ध है! कृप्या उसे <a href=\"%2$s\">यहाँ</a> से डाउनलोड करें या <a href=\"%3$s\">स्वतः उन्नत</a> करें|"
+
+#: includes/admin.php:29
+msgid "New version (%1$s) of After the Deadline Plugin is available! Please download the latest version from <a href=\"%2$s\">here</a>."
+msgstr "आफ्टर दी डेडलाइन का नया संस्करण (%1$s) उपलब्ध है! कृप्या उसे <a href=\"%2$s\">यहाँ</a> से डाउनलोड करें|"
+
+#: includes/admin.php:58
+msgid "The options have been successfully saved!"
+msgstr "विकल्प सफलतापूर्वक दर्ज करलिए गए हैं|"
+
+#: includes/admin.php:67
+msgid "Language"
+msgstr "भाषा"
+
+#: includes/admin.php:71
+msgid "Proofreading should be done for which language? The plugin currently supports the following languages - %s."
+msgstr "वर्तनी कौनसी भाषा के लिए जाँची जानी चाहिए? प्लगइन अभी निम्नलिखित भाषाओं का समर्थन करता है - %s|"
+
+#: includes/admin.php:74
+msgid "Enable the user to select the option for:"
+msgstr "उपयोगकर्ता को यह विकल्प चुनने की अनुमति है:"
+
+#: includes/admin.php:76
+msgid "These options will be shown on the user's profile page. All of these options are disabled by default."
+msgstr "यह विकल्प उपयोगकर्ता के प्रोफ़ाइल पृष्ठ पर दिखाए जाएगें| सारे विकल्प डिफ़ॉल्ट रूप से अक्षम हैं|"
+
+#: includes/admin.php:79
+msgid "Autoproofreading the content if it is not proofread once before posting"
+msgstr "पोस्ट को जमा करने से पहले जाँचना यदि वेह जाँची नहीं गयी है"
+
+#: includes/admin.php:83
+msgid "Ignoring a term forever (ignored terms can be removed from the profile page)"
+msgstr "हमेशा वर्तनी की उपेक्षा करना (इन्हें प्रोफ़ाइल पृष्ठ से भी हटाया जा सकता है)"
+
+#: includes/admin.php:87
+msgid "Setting ignore types"
+msgstr "निश्चित प्रकारों पर ध्यान न देने का विकल्प"
+
+#: includes/admin.php:109
+msgid "Happy with the plugin? Why not <a href=\"%1$s\">buy the author a cup of coffee or two</a> or get him something from his <a href=\"%2$s\">wishlist</a>?"
+msgstr "प्लगिन से खुश? लिखने वाले को कुछ <a href=\"%1$s\">दान</a> दीजिये या फिर उसकी <a href=\"%2$s\">इच्छा सूची</a> देखिये|"
+
+#: includes/profile-options.php:70
+msgid "Proofreading Options"
+msgstr "वर्तनी जाँचने के विकल्प"
+
+#: includes/profile-options.php:74
+msgid "Auto Proofread"
+msgstr "स्वत: वर्तनी ठीक करना"
+
+#: includes/profile-options.php:76
+msgid "Automatically proofread content when I forget to do a spellcheck"
+msgstr "पोस्ट को जमा करने से पहले जाँचिए यदि मैं वर्तनी जाँचना भूल जाता हूँ|"
+
+#: includes/profile-options.php:84
+msgid "Grammar and Styles"
+msgstr "व्याकरण और शैलियाँ"
+
+#: includes/profile-options.php:86
+msgid "Enable proofreading for the following grammar and style rules when writing posts and pages:"
+msgstr "निम्नलिखित व्याकरण और शैली को पोस्ट और पृष्ठ लिखने के समय सक्षम करें:"
+
+#: includes/profile-options.php:93
+msgid "Bias Language"
+msgstr "पूर्वाग्रह भाषा"
+
+#: includes/profile-options.php:94
+msgid "Clich&eacute;s"
+msgstr "क्लीशे"
+
+#: includes/profile-options.php:95
+msgid "Complex Phrases"
+msgstr "जटिल वाक्यांश"
+
+#: includes/profile-options.php:96
+msgid "Diacritical Marks"
+msgstr "विशेषक मार्क्स"
+
+#: includes/profile-options.php:97
+msgid "Double Negatives"
+msgstr "दो नकारात्मक"
+
+#: includes/profile-options.php:102
+msgid "Hidden Verbs"
+msgstr "छिपी क्रिया"
+
+#: includes/profile-options.php:103
+msgid "Jargon"
+msgstr "वर्ग-बोली"
+
+#: includes/profile-options.php:104
+msgid "Passive Voice"
+msgstr "कर्मवाच्य"
+
+#: includes/profile-options.php:105
+msgid "Phrases to Avoid"
+msgstr "जिन वाक्यांशों को अनदेखा करना है"
+
+#: includes/profile-options.php:106
+msgid "Redundant Phrases"
+msgstr "निरर्थक वाक्यांश"
+
+#: includes/profile-options.php:113
+msgid "<a href=\"%s\">Learn more</a> about these options."
+msgstr "इन विकलों के बारे मैं <a href=\"%s\">ज्यादा जानें</a>|"
+
+#: includes/profile-options.php:124
+msgid "Ignored Phrases"
+msgstr "उपेक्षित वाक्यांश"
+
+#: includes/profile-options.php:127
+msgid "Identify words and phrases to ignore while proofreading your posts and pages:"
+msgstr "वर्तनी जांचते समे, इन शब्दों और वाक्यांशों को नजरअंदाज करें:"
+
+#: includes/profile-options.php:128
+msgid "Add"
+msgstr "जमा करें"
+
+#: includes/profile-options.php:131
+msgid "Be sure to click \"Update Profile\" at the bottom of the screen to save your changes."
+msgstr "\"अपडेट प्रोफाइल\" बटन को कम होने के बाद दबाना न भूलें|"
+
+#: includes/public.php:46
+msgid "Press OK to post your reply, or Cancel to view the suggestions and edit your reply."
+msgstr "अपना उत्तर जमा करने के लिए \"ठीक है\" दबाएँ, या सुझाव देखने के लिए और अपनी पोस्ट को संपादित करने के लिए \"रद्द\" दबाएँ|"
+
+#: includes/public.php:48
+msgid "The proofreader has suggestions for your post. Are you sure you want to submit it?"
+msgstr "शुद्धिकारक के पास आपकी पोस्ट के लिए सुझाव हैं| क्या आप सुनिश्चित हैं कि आप यह पोस्ट करना चाहते हैं?"
+
+#: includes/public.php:49
+msgid "Press OK to submit your post, or Cancel to view the suggestions and edit your post."
+msgstr "अपनी पोस्ट को जमा करने के लिए \"ठीक है\" दबाएँ, या सुझाव देखने के लिए और अपनी पोस्ट को संपादित करने के लिए \"रद्द\" दबाएँ|"
+
+#: includes/public.php:24
+msgid "Proofread"
+msgstr "वर्तनी जाँचें"
+
+#: includes/public.php:25
+msgid "Edit Text"
+msgstr "पाठ संपादित करें"
+
+#: includes/public.php:26
+msgid "OK"
+msgstr "ठीक है"
+
+#: includes/public.php:27
+msgid "Cancel"
+msgstr "रद्द"
+
+#: includes/public.php:28
+msgid "Spelling"
+msgstr "वर्तनी"
+
+#: includes/public.php:29
+msgid "Repeated Word"
+msgstr "शब्द दोहराया गया है"
+
+#: includes/public.php:30
+msgid "No suggestions"
+msgstr "कोई सुझाव नहीं है"
+
+#: includes/public.php:31
+msgid "Explain..."
+msgstr "स्पष्ट कीजिये"
+
+#: includes/public.php:32
+msgid "Ignore suggestion"
+msgstr "सुझाव गलत है"
+
+#: includes/public.php:33
+msgid "Ignore all"
+msgstr "ऐसे सारे सुझाव हटाइए"
+
+#: includes/public.php:34
+msgid "Ignore always"
+msgstr "इस वर्तनी को कभी न जाचें"
+
+#: includes/public.php:35
+msgid "Edit Selection..."
+msgstr "इस वर्तनी को संपादित करें"
+
+#: includes/public.php:41
+msgid "Please enter some text in the post textbox to be checked!"
+msgstr "पोस्ट टेक्स्टबॉक्स मैं कुछ शब्द लिखिए ताकि वें जाचें जा सकें|"
+
+#: includes/public.php:36
+msgid "Error!"
+msgstr "ग़लती!"
+
+#: includes/public.php:37
+msgid "No writing errors were found!"
+msgstr "सारी वर्तनी सही हैं|"
+
+#: includes/public.php:38
+msgid "No errors!"
+msgstr "कोई भी गलती नहीं है!"
+
+#: includes/public.php:42
+msgid "There was a problem communicating with the After the Deadline service."
+msgstr "आफ्टर दी डेडलाइन सर्विस से बात नहीं हो पा रही है|"
+
+#: includes/public.php:40
+msgid "Replace"
+msgstr "बदलिए"
+
+#: includes/admin.php:95
+msgid "After the Deadline Options"
+msgstr "आफ्टर दी डेडलाइन के विकल्प"
+
+#: includes/admin.php:120
+msgid "After the Deadline"
+msgstr "आफ्टर दी डेडलाइन"
+
+msgid "http://gaut.am/bbpress/plugins/after-the-deadline/"
+msgstr "http://gaut.am/bbpress/plugins/after-the-deadline/"
+
+msgid "After the Deadline plugin checks spelling, style, and grammar in your bbPress forum posts."
+msgstr "आफ्टर दी डेडलाइन प्लगिन आपके ब्बीप्रेस फोरम मैं वर्तनी और व्याकरण जांचता है|"
+
+msgid "Gautam Gupta"
+msgstr "गौतम गुप्ता "
+
+msgid "http://gaut.am/"
+msgstr "http://gaut.am/"
+

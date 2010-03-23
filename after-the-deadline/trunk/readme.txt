@@ -51,7 +51,7 @@ You may donate by going [here](http://gaut.am/donate/AtD/).
 Please make sure that the plugin directory (and the sub-folders and files in it) are chmodded to 755.
 
 = 2. This doesn't work with bbPress 0.9! =
-Please use version AtD v1.4
+Please use AtD v1.4 or upgrade your bbPress install
 
 *Please see [this FAQ](http://www.afterthedeadline.com/questions.slp) for more questions*
 

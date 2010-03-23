@@ -603,7 +603,6 @@ AtD.check = function(container_id, callback_f) {
 		data : 'key=' + AtD.api_key + '&data=' + text,
 		format : 'raw', 
 		dataType : (jQuery.browser.msie) ? "text" : "xml",
-		timeout : 15000, /* I dont think a call would be more than 15 seconds... */
 		error : function(XHR, status, error) {
 			if (AtD.callback_f != undefined && AtD.callback_f.error != undefined)
  				AtD.callback_f.error(status + ": " + error);
@@ -1298,6 +1297,7 @@ AtD._checkTextArea = function(id, commChannel, linkId, after) {
 					url : AtD.rpc_ignore + encodeURI( word ).replace( /&/g, '%26'),
 					data: "action=atd_ignore",
 					format : 'raw',
+					timeout : 5000, /* I dont think a call would be more than 5 seconds... */
 					error : function(XHR, status, error) {
 						if (AtD.callback_f != undefined && AtD.callback_f.error != undefined)
 							AtD.callback_f.error(status + ": " + error);
@@ -1316,43 +1316,52 @@ AtD._checkTextArea = function(id, commChannel, linkId, after) {
  */
 
 /* Just a small function to check if errors exist or not */
-function AtD_check(form_id, node, callback) {
+function AtD_check(id, node, callback) {
 	AtD_ajax_load('show');
-	AtD.check(form_id, {
-		success: function() {
-			callback(0, form_id, node);
+	jQuery.ajax({
+		type : "POST",
+		url : AtD.rpc + '?url=/checkDocument&lang=' + AtD.lang,
+		data : 'key=' + AtD.api_key + '&data=' + jQuery('#'+id).val(),
+		format : 'raw', 
+		dataType : (jQuery.browser.msie) ? "text" : "xml",		
+		error : function(XHR, status, error) {
+			AtD_update_post(id);
 		},
-		ready: function(count) {
-			callback(count, form_id, node);
-		},
-		error: function() {
-			callback(-1, form_id, node);
+		success : function(data) {
+			var xml;
+			if (typeof data == "string") {
+				xml = new ActiveXObject("Microsoft.XMLDOM");
+				xml.async = false;
+				xml.loadXML(data);
+			} else {
+				xml = data;
+			}
+			AtD_ajax_load('hide');
+			if (AtD.core.hasErrorMessage(xml)) {
+				AtD_update_post(id);
+			}
+			var results = AtD.core.processXML(xml);
+			if (results.count > 0) {
+				/* Okay, the user has tried to publish/update already but there are still errors. Ask them what to do */
+				var message = AtD.getLang('dialog_confirm_post', 'The proofreader has suggestions for your reply. Are you sure you want to post it?')+"\n\n"+AtD.getLang('dialog_confirm_post2', 'Press OK to post your reply, or Cancel to view the suggestions and edit your reply.');
+				jConfirm(message, '', function(r) {
+					if ( r == true ) { /* User doesn't want the errors to be fixed */
+						AtD_update_post(id);
+					} else { /* Do the real checking */
+						AtD.checkTextArea(id, node.attr('id'), jQuery.fn.addProofreader.defaults.edit_text_content);
+					}
+				});
+			} else {
+				AtD_update_post(id);
+			}
 		}
 	});
 }
 
-/* This is the callback function that runs after the post button is pressed */
-function AtD_submit_check_callback(count, form_id, node) {
-	AtD.restoreTextArea(form_id);
-	if (count > 0) {
-		/* Okay, the user has tried to publish/update already but there are still errors. Ask them what to do */
-		var message = AtD.getLang('dialog_confirm_post', 'The proofreader has suggestions for your reply. Are you sure you want to post it?')+"\n\n"+AtD.getLang('dialog_confirm_post2', 'Press OK to post your reply, or Cancel to view the suggestions and edit your reply.');
-		jConfirm(message, '', function(r) {
-			if ( r == true ) {
-				AtD_update_post(form_id);
-			} else { /* Do the real checking */
-				AtD.checkTextArea(form_id, node.attr('id'), jQuery.fn.addProofreader.defaults.edit_text_content);
-			}
-		});
-	} else { /* if class was not successful or no errors were found, submit form */
-		AtD_update_post(form_id);
-	}
-}
-
 /* a function to force the post to be submitted */
-function AtD_update_post( form_id ) {
-	AtD.proofread_click_count = 1; /* Just increase the count to prevent a loop */
-	jQuery('#'+form_id).parents('form').submit();
+function AtD_update_post( id ) {
+	AtD.proofread_click_count = 2; /* Just increase the count to prevent a loop */
+	jQuery('#'+id).parents('form').submit();
 }
 
 function AtD_ajax_load( mode ){
@@ -1401,12 +1410,13 @@ jQuery.fn.addProofreader = function(options) {
 			}
 		});
 		$this.wrap('<div></div>');
+		$this.before('<span class="atd-ajax-load"></span>');
 		/* attach a submit listener to the parent form */
 		$this.parents('form').submit(function(e) {
 			AtD.restoreTextArea(id);
-			if (AtD.autoproofread == 1 && AtD.proofread_click_count == 0 && $this.val() != ""){
+			if (AtD.autoproofread != undefined && AtD.autoproofread == 1 && AtD.proofread_click_count <= 0 && $this.val() != ""){
 				e.preventDefault();
-				AtD_check( id, node, AtD_submit_check_callback );
+				AtD_check( id, node );
 			}
 		});
 
@@ -1415,8 +1425,8 @@ jQuery.fn.addProofreader = function(options) {
 };
 
 jQuery.fn.addProofreader.defaults = {
-	edit_text_content: '<div class="atd_container"><a class="checkLink">'+AtD.getLang('button_edit_text', 'Edit Text')+'</a><div class="atd-ajax-load"></div></div>',
-	proofread_content: '<div class="atd_container"><a class="checkLink">'+AtD.getLang('button_proofread', 'Proofread')+'</a><div class="atd-ajax-load"></div></div>'
+	edit_text_content: '<span class="atd_container"><a class="checkLink">'+AtD.getLang('button_edit_text', 'Edit Text')+'</a></span>',
+	proofread_content: '<span class="atd_container"><a class="checkLink">'+AtD.getLang('button_proofread', 'Proofread')+'</a></span>'
 };
 
 jQuery(function() {

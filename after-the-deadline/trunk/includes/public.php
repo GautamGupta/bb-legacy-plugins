@@ -41,7 +41,7 @@ function atd_css_js() {
 				'message_error_no_text'		=> __( 'Please enter some text in the post textbox to be checked!'		, 'after-the-deadline' ),
 				'message_server_error_short'	=> __( 'There was a problem communicating with the After the Deadline service.'	, 'after-the-deadline' )
 			);
-		if ( bb_is_topic() ) { /* It is not "your reply" everywhere */
+		if ( bb_is_topic() || bb_is_topic_edit() ) { /* It is not "your reply" everywhere */
 			$i18n['dialog_confirm_post']	= __( 'The proofreader has suggestions for your reply. Are you sure you want to post it?'	, 'after-the-deadline' );
 			$i18n['dialog_confirm_post2']	= __( 'Press OK to post your reply, or Cancel to view the suggestions and edit your reply.'	, 'after-the-deadline' );
 		} else {
@@ -63,8 +63,8 @@ function atd_css_js() {
 			}
 		}
 		//wp_enqueue_script(	'after-the-deadline-po', ATD_PLUGPATH . 'scripts/profile.dev.js', array( 'jquery' ), ATD_VER, true );
-		wp_enqueue_script(	'after-the-deadline', ATD_PLUGPATH . 'scripts/atd.dev.js', array( 'jquery' )	, ATD_VER, true	);
-		//wp_enqueue_script(	'after-the-deadline', ATD_PLUGPATH . 'scripts/atd.js'	, array( 'jquery' )	, ATD_VER	);
+		//wp_enqueue_script(	'after-the-deadline', ATD_PLUGPATH . 'scripts/atd.dev.js', array( 'jquery' )	, ATD_VER, true	);
+		wp_enqueue_script(	'after-the-deadline', ATD_PLUGPATH . 'scripts/atd.js'	, array( 'jquery' )	, ATD_VER	);
 		wp_localize_script(	'after-the-deadline', 'AtD'				, $i18n					);
 		wp_enqueue_style(	'after-the-deadline', ATD_PLUGPATH . 'css/atd.css'	, false			, ATD_VER, 'all');
 	}

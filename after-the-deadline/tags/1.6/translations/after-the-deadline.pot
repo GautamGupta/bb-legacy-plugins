@@ -1,0 +1,312 @@
+# Translation of the WordPress plugin After the Deadline 1.5 by Gautam Gupta.
+# Copyright (C) 2010 Gautam Gupta
+# This file is distributed under the same license as the After the Deadline package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: After the Deadline 1.5\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/after-the-deadline\n"
+"POT-Creation-Date: 2010-03-23 13:33+0000\n"
+"PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: after-the-deadline.php:35
+msgid "English"
+msgstr ""
+
+#: after-the-deadline.php:36
+msgid "Portuguese"
+msgstr ""
+
+#: after-the-deadline.php:37
+msgid "French"
+msgstr ""
+
+#: after-the-deadline.php:38
+msgid "German"
+msgstr ""
+
+#: after-the-deadline.php:39
+msgid "Spanish"
+msgstr ""
+
+#: includes/admin.php:27
+#, php-format
+msgid ""
+"New version (%1$s) of After the Deadline Plugin is available! Please "
+"download the latest version from <a href=\"%2$s\">here</a> or <a href=\"%3$s"
+"\">upgrade automatically</a>."
+msgstr ""
+
+#: includes/admin.php:29
+#, php-format
+msgid ""
+"New version (%1$s) of After the Deadline Plugin is available! Please "
+"download the latest version from <a href=\"%2$s\">here</a>."
+msgstr ""
+
+#: includes/admin.php:58
+msgid "The options have been successfully saved!"
+msgstr ""
+
+#: includes/admin.php:67
+msgid "Language"
+msgstr ""
+
+#: includes/admin.php:71
+#, php-format
+msgid ""
+"Proofreading should be done for which language? The plugin currently "
+"supports the following languages - %s."
+msgstr ""
+
+#: includes/admin.php:74
+msgid "Enable the user to select the option for:"
+msgstr ""
+
+#: includes/admin.php:76
+msgid ""
+"These options will be shown on the user's profile page. All of these options "
+"are disabled by default."
+msgstr ""
+
+#: includes/admin.php:79
+msgid "Autoproofreading the content if it is not proofread once before posting"
+msgstr ""
+
+#: includes/admin.php:83
+msgid ""
+"Ignoring a term forever (ignored terms can be removed from the profile page)"
+msgstr ""
+
+#: includes/admin.php:87
+msgid "Setting ignore types"
+msgstr ""
+
+#: includes/admin.php:95
+msgid "After the Deadline Options"
+msgstr ""
+
+#: includes/admin.php:109
+#, php-format
+msgid ""
+"Happy with the plugin? Why not <a href=\"%1$s\">buy the author a cup of "
+"coffee or two</a> or get him something from his <a href=\"%2$s\">wishlist</"
+"a>?"
+msgstr ""
+
+#. #-#-#-#-#  plugin.pot (After the Deadline 1.5)  #-#-#-#-#
+#. Plugin Name of an extension
+#: includes/admin.php:120
+msgid "After the Deadline"
+msgstr ""
+
+#: includes/profile-options.php:70
+msgid "Proofreading Options"
+msgstr ""
+
+#: includes/profile-options.php:74
+msgid "Auto Proofread"
+msgstr ""
+
+#: includes/profile-options.php:76
+msgid "Automatically proofread content when I forget to do a spellcheck"
+msgstr ""
+
+#: includes/profile-options.php:84
+msgid "Grammar and Styles"
+msgstr ""
+
+#: includes/profile-options.php:86
+msgid ""
+"Enable proofreading for the following grammar and style rules when writing "
+"posts and pages:"
+msgstr ""
+
+#: includes/profile-options.php:93
+msgid "Bias Language"
+msgstr ""
+
+#: includes/profile-options.php:94
+msgid "Clich&eacute;s"
+msgstr ""
+
+#: includes/profile-options.php:95
+msgid "Complex Phrases"
+msgstr ""
+
+#: includes/profile-options.php:96
+msgid "Diacritical Marks"
+msgstr ""
+
+#: includes/profile-options.php:97
+msgid "Double Negatives"
+msgstr ""
+
+#: includes/profile-options.php:102
+msgid "Hidden Verbs"
+msgstr ""
+
+#: includes/profile-options.php:103
+msgid "Jargon"
+msgstr ""
+
+#: includes/profile-options.php:104
+msgid "Passive Voice"
+msgstr ""
+
+#: includes/profile-options.php:105
+msgid "Phrases to Avoid"
+msgstr ""
+
+#: includes/profile-options.php:106
+msgid "Redundant Phrases"
+msgstr ""
+
+#: includes/profile-options.php:113
+#, php-format
+msgid "<a href=\"%s\">Learn more</a> about these options."
+msgstr ""
+
+#: includes/profile-options.php:124
+msgid "Ignored Phrases"
+msgstr ""
+
+#: includes/profile-options.php:127
+msgid ""
+"Identify words and phrases to ignore while proofreading your posts and pages:"
+msgstr ""
+
+#: includes/profile-options.php:128
+msgid "Add"
+msgstr ""
+
+#: includes/profile-options.php:131
+msgid ""
+"Be sure to click \"Update Profile\" at the bottom of the screen to save your "
+"changes."
+msgstr ""
+
+#: includes/public.php:24
+msgid "Proofread"
+msgstr ""
+
+#: includes/public.php:25
+msgid "Edit Text"
+msgstr ""
+
+#: includes/public.php:26
+msgid "OK"
+msgstr ""
+
+#: includes/public.php:27
+msgid "Cancel"
+msgstr ""
+
+#: includes/public.php:28
+msgid "Spelling"
+msgstr ""
+
+#: includes/public.php:29
+msgid "Repeated Word"
+msgstr ""
+
+#: includes/public.php:30
+msgid "No suggestions"
+msgstr ""
+
+#: includes/public.php:31
+msgid "Explain..."
+msgstr ""
+
+#: includes/public.php:32
+msgid "Ignore suggestion"
+msgstr ""
+
+#: includes/public.php:33
+msgid "Ignore all"
+msgstr ""
+
+#: includes/public.php:34
+msgid "Ignore always"
+msgstr ""
+
+#: includes/public.php:35
+msgid "Edit Selection..."
+msgstr ""
+
+#: includes/public.php:36
+msgid "Error!"
+msgstr ""
+
+#: includes/public.php:37
+msgid "No writing errors were found!"
+msgstr ""
+
+#: includes/public.php:38
+msgid "No errors!"
+msgstr ""
+
+#: includes/public.php:39
+msgid "Replace selection with:"
+msgstr ""
+
+#: includes/public.php:40
+msgid "Replace"
+msgstr ""
+
+#: includes/public.php:41
+msgid "Please enter some text in the post textbox to be checked!"
+msgstr ""
+
+#: includes/public.php:42
+msgid "There was a problem communicating with the After the Deadline service."
+msgstr ""
+
+#: includes/public.php:45
+msgid ""
+"The proofreader has suggestions for your reply. Are you sure you want to "
+"post it?"
+msgstr ""
+
+#: includes/public.php:46
+msgid ""
+"Press OK to post your reply, or Cancel to view the suggestions and edit your "
+"reply."
+msgstr ""
+
+#: includes/public.php:48
+msgid ""
+"The proofreader has suggestions for your post. Are you sure you want to "
+"submit it?"
+msgstr ""
+
+#: includes/public.php:49
+msgid ""
+"Press OK to submit your post, or Cancel to view the suggestions and edit "
+"your post."
+msgstr ""
+
+#. Plugin URI of an extension
+msgid "http://gaut.am/bbpress/plugins/after-the-deadline/"
+msgstr ""
+
+#. Description of an extension
+msgid ""
+"After the Deadline plugin checks spelling, style, and grammar in your "
+"bbPress forum posts."
+msgstr ""
+
+#. Author of an extension
+msgid "Gautam Gupta"
+msgstr ""
+
+#. Author URI of an extension
+msgid "http://gaut.am/"
+msgstr ""

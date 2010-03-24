@@ -111,13 +111,20 @@ AtDCore.prototype.makeError = function(error_s, tokens, type, seps, pre) {
 	struct.string = error_s;
 	struct.tokens = tokens;
 
-	if (new RegExp(error_s + "\\b").test(error_s)) {
+	if (new RegExp("\\b" + error_s + "\\b").test(error_s)) {
+ 	        struct.regexp = new RegExp("(?!"+error_s+"<)\\b" + error_s.replace(/\s+/g, seps) + "\\b");
+	}
+ 	else if (new RegExp(error_s + "\\b").test(error_s)) {
 		struct.regexp = new RegExp("(?!"+error_s+"<)" + error_s.replace(/\s+/g, seps) + "\\b");
-	} else {
+	} 
+ 	else if (new RegExp("\\b" + error_s).test(error_s)) { 
+ 	        struct.regexp = new RegExp("(?!"+error_s+"<)\\b" + error_s.replace(/\s+/g, seps)); 
+ 	} 
+ 	else {
 		struct.regexp = new RegExp("(?!"+error_s+"<)" + error_s.replace(/\s+/g, seps));
 	}
 
-	struct.used   = false; /* flag whether we've used this rule or not */
+	struct.used = false; /* flag whether we've used this rule or not */
 
 	return struct;
 };
@@ -188,7 +195,7 @@ AtDCore.prototype.processXML = function(responseXML) {
 	var spellingErrors   = [];
 	var enrichment       = [];
 
-	for (i = 0; i < errors.length; i++) {
+	for (var i = 0; i < errors.length; i++) {
 		if (errors[i].getElementsByTagName('string').item(0).firstChild != null) {
 			var errorString      = errors[i].getElementsByTagName('string').item(0).firstChild.data;
 			var errorType        = errors[i].getElementsByTagName('type').item(0).firstChild.data;
@@ -220,7 +227,7 @@ AtDCore.prototype.processXML = function(responseXML) {
 
 				if (errors[i].getElementsByTagName('suggestions').item(0) != undefined) {
 					var suggestions = errors[i].getElementsByTagName('suggestions').item(0).getElementsByTagName('option');
-					for (j = 0; j < suggestions.length; j++)
+					for (var j = 0; j < suggestions.length; j++)
 						suggestion["suggestions"].push(suggestions[j].firstChild.data);
 				}
 
@@ -249,6 +256,9 @@ AtDCore.prototype.processXML = function(responseXML) {
 
 				if (errorDescription == "Repeated Word")
 					suggestion["description"] = this.getLang('menu_title_repeated_word', 'Repeated Word');
+				
+				if (errorDescription == "Did you mean...") 
+ 	                                suggestion["description"] = this.getLang('menu_title_confused_word', 'Did you mean...');
 			} // end if ignore[errorString] == undefined
 		} // end if 
 	} // end for loop
@@ -303,6 +313,16 @@ TokenIterator.prototype.next = function() {
 	this.count = this.last;
 	this.last += current.length + 1;
 	this.index++;
+	
+	/* strip single quotes from token, AtD does this when presenting errors */
+ 	if (current != "") {
+		if (current[0] == "'")
+			current = current.substring(1, current.length);
+		
+		if (current[current.length - 1] == "'")
+			current = current.substring(0, current.length - 1);
+	}
+	
 	return current;
 };
 
@@ -384,15 +404,18 @@ AtDCore.prototype.markMyWords = function(container_nodes, errors) {
 					curr = v.substr(prev.length, v.length);
 
 					var checkErrors = function(error) {
-						if (error != undefined && !error.used && error.regexp.test(curr)) {
+						if (error != undefined && !error.used && foundStrings['__' + error.string] == undefined && error.regexp.test(curr)) {
 							var oldlen = curr.length;
 
+							foundStrings['__' + error.string] = 1;
 							doReplaces.push([error.regexp, '<span class="'+error.type+'" pre="'+previous+'">$&</span>']);
 
 							error.used = true;
 							done = true;
 						}
 					};
+					
+					var foundStrings = {};
 
 					if (current != undefined) {
 						previous = previous + ' ';
@@ -1386,7 +1409,7 @@ jQuery.fn.addProofreader = function(options) {
 	return this.each(function() {
 		$this = jQuery(this);
 
-		if ($this.css('display') == 'none' || $this.attr('spellcheck') == false)
+		if ($this.css('display') == 'none')
 			return;
 
 		if ($this.attr('id').length == 0) {

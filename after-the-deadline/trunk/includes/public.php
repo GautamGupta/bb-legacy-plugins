@@ -28,6 +28,7 @@ function atd_css_js() {
 				'menu_title_spelling'		=> __( 'Spelling'			, 'after-the-deadline' ),
 				'menu_title_repeated_word'	=> __( 'Repeated Word'			, 'after-the-deadline' ),
 				'menu_title_no_suggestions'	=> __( 'No suggestions'			, 'after-the-deadline' ),
+				'menu_title_confused_word'	=> __( 'Did you mean...'		, 'after-the-deadline' ),
 				'menu_option_explain'		=> __( 'Explain...'			, 'after-the-deadline' ),
 				'menu_option_ignore_once'	=> __( 'Ignore suggestion'		, 'after-the-deadline' ),
 				'menu_option_ignore_all'	=> __( 'Ignore all'			, 'after-the-deadline' ),

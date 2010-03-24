@@ -63,7 +63,10 @@ Please use AtD v1.4 or upgrade your bbPress install
 
 == Changelog ==
 
-= 1.6 (22-03-10) =
+= 1.6.1 (24-03-10) =
+* Updated AtD/jQuery - [Changelog](http://www.polishmywriting.com/atd_jquery/changelog.html)
+
+= 1.6 (23-03-10) =
 * The following options have been added for the user (can also be mass-disabled from the admin page):
  * AutoProofread if the user has forgotten to run the spellcheck
  * Ignore always option
@@ -124,7 +127,10 @@ Upgraded AtD/jQuery - [Changelog](http://www.polishmywriting.com/atd_jquery/chan
 
 == Upgrade Notice ==
 
-= 1.6 (22-03-10) =
+= 1.6.1 (24-03-10) =
+Upgraded AtD/jQuery
+
+= 1.6 (23-03-10) =
 Upgraded AtD/jQuery, added some more features and fixed bugs.
 
 = 1.5 (12-02-10) =

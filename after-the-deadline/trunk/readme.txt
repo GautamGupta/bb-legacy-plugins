@@ -65,6 +65,7 @@ Please use AtD v1.4 or upgrade your bbPress install
 
 = 1.6.1 (26-03-10) =
 * Updated AtD/jQuery - [Changelog](http://www.polishmywriting.com/atd_jquery/changelog.html)
+* Fixed some upgrade notice issues
 
 = 1.6 (23-03-10) =
 * The following options have been added for the user (can also be mass-disabled from the admin page):

@@ -1,10 +1,10 @@
 === After the Deadline ===
 Contributors: Gautam Gupta
 Donate link: http://gaut.am/donate/AtD/
-Tags: after the deadline, writing, spell, spelling, spellchecker, grammar, style, edit, proofreading, Gautam
+Tags: after the deadline, atd, writing, spell, spelling, spellchecker, grammar, style, edit, proofread, Gautam
 Requires at least: 1.0
 Tested up to: 1.1
-Stable tag: 1.6
+Stable tag: 1.6.1
 
 After the Deadline plugin checks for spelling, style, and grammatical errors in your bbPress forum posts.
 
@@ -63,7 +63,7 @@ Please use AtD v1.4 or upgrade your bbPress install
 
 == Changelog ==
 
-= 1.6.1 (24-03-10) =
+= 1.6.1 (26-03-10) =
 * Updated AtD/jQuery - [Changelog](http://www.polishmywriting.com/atd_jquery/changelog.html)
 
 = 1.6 (23-03-10) =
@@ -71,7 +71,6 @@ Please use AtD v1.4 or upgrade your bbPress install
  * AutoProofread if the user has forgotten to run the spellcheck
  * Ignore always option
  * Ignore types
-* Updated AtD/jQuery - [Changelog](http://www.polishmywriting.com/atd_jquery/changelog.html)
 * Added an AJAX loader image
 * Added screenshot of the profile edit page and updated admin page screenshot
 * Updated hindi translation
@@ -127,14 +126,14 @@ Upgraded AtD/jQuery - [Changelog](http://www.polishmywriting.com/atd_jquery/chan
 
 == Upgrade Notice ==
 
-= 1.6.1 (24-03-10) =
+= 1.6.1 =
 Upgraded AtD/jQuery
 
-= 1.6 (23-03-10) =
-Upgraded AtD/jQuery, added some more features and fixed bugs.
+= 1.6 =
+Added some more features and fixed bugs.
 
-= 1.5 (12-02-10) =
+= 1.5 =
 Upgraded AtD/jQuery, added some more features and fixed bugs. Now no need of API key. Do not upgrade if you are using bbPress 0.9.
 
-= 1.4 (17-01-10) =
+= 1.4 =
 Upgraded AtD/jQuery, added some more features and fixed bugs.

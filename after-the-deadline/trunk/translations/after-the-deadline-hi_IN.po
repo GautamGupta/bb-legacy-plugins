@@ -2,24 +2,17 @@
 # This file is distributed under the same license as the After the Deadline package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2010-03-23 20:53+0530\n"
+"Project-Id-Version: After the Deadline\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/after-the-deadline\n"
+"POT-Creation-Date: 2010-03-24 08:03+0000\n"
+"PO-Revision-Date: 2010-03-24 13:36+0530\n"
+"Last-Translator: Gautam <gautam.2011@gmail.com>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: GlotPress/0.1\n"
-"Project-Id-Version: After the Deadline\n"
-"POT-Creation-Date: \n"
-"Last-Translator: Gautam <gautam.2011@gmail.com>\n"
-"Language-Team: \n"
-
-#: includes/public.php:39
-msgid "Replace selection with:"
-msgstr "चुनी हुई वर्तनी बदलिए:"
-
-#: includes/public.php:45
-msgid "The proofreader has suggestions for your reply. Are you sure you want to post it?"
-msgstr "शुद्धिकारक के पास आपके उत्तर के लिए सुझाव हैं| क्या आप सुनिश्चित हैं कि आप यह पोस्ट करना चाहते हैं?"
 
 #: after-the-deadline.php:35
 msgid "English"
@@ -42,10 +35,12 @@ msgid "Spanish"
 msgstr "स्पेनिश"
 
 #: includes/admin.php:27
+#, php-format
 msgid "New version (%1$s) of After the Deadline Plugin is available! Please download the latest version from <a href=\"%2$s\">here</a> or <a href=\"%3$s\">upgrade automatically</a>."
 msgstr "आफ्टर दी डेडलाइन का नया संस्करण (%1$s) उपलब्ध है! कृप्या उसे <a href=\"%2$s\">यहाँ</a> से डाउनलोड करें या <a href=\"%3$s\">स्वतः उन्नत</a> करें|"
 
 #: includes/admin.php:29
+#, php-format
 msgid "New version (%1$s) of After the Deadline Plugin is available! Please download the latest version from <a href=\"%2$s\">here</a>."
 msgstr "आफ्टर दी डेडलाइन का नया संस्करण (%1$s) उपलब्ध है! कृप्या उसे <a href=\"%2$s\">यहाँ</a> से डाउनलोड करें|"
 
@@ -58,6 +53,7 @@ msgid "Language"
 msgstr "भाषा"
 
 #: includes/admin.php:71
+#, php-format
 msgid "Proofreading should be done for which language? The plugin currently supports the following languages - %s."
 msgstr "वर्तनी कौनसी भाषा के लिए जाँची जानी चाहिए? प्लगइन अभी निम्नलिखित भाषाओं का समर्थन करता है - %s|"
 
@@ -81,9 +77,20 @@ msgstr "हमेशा वर्तनी की उपेक्षा कर�
 msgid "Setting ignore types"
 msgstr "निश्चित प्रकारों पर ध्यान न देने का विकल्प"
 
+#: includes/admin.php:95
+msgid "After the Deadline Options"
+msgstr "आफ्टर दी डेडलाइन के विकल्प"
+
 #: includes/admin.php:109
+#, php-format
 msgid "Happy with the plugin? Why not <a href=\"%1$s\">buy the author a cup of coffee or two</a> or get him something from his <a href=\"%2$s\">wishlist</a>?"
 msgstr "प्लगिन से खुश? लिखने वाले को कुछ <a href=\"%1$s\">दान</a> दीजिये या फिर उसकी <a href=\"%2$s\">इच्छा सूची</a> देखिये|"
+
+#. #-#-#-#-#  plugin.pot (After the Deadline 1.6)  #-#-#-#-#
+#. Plugin Name of an extension
+#: includes/admin.php:120
+msgid "After the Deadline"
+msgstr "आफ्टर दी डेडलाइन"
 
 #: includes/profile-options.php:70
 msgid "Proofreading Options"
@@ -146,6 +153,7 @@ msgid "Redundant Phrases"
 msgstr "निरर्थक वाक्यांश"
 
 #: includes/profile-options.php:113
+#, php-format
 msgid "<a href=\"%s\">Learn more</a> about these options."
 msgstr "इन विकलों के बारे मैं <a href=\"%s\">ज्यादा जानें</a>|"
 
@@ -164,18 +172,6 @@ msgstr "जमा करें"
 #: includes/profile-options.php:131
 msgid "Be sure to click \"Update Profile\" at the bottom of the screen to save your changes."
 msgstr "\"अपडेट प्रोफाइल\" बटन को कम होने के बाद दबाना न भूलें|"
-
-#: includes/public.php:46
-msgid "Press OK to post your reply, or Cancel to view the suggestions and edit your reply."
-msgstr "अपना उत्तर जमा करने के लिए \"ठीक है\" दबाएँ, या सुझाव देखने के लिए और अपनी पोस्ट को संपादित करने के लिए \"रद्द\" दबाएँ|"
-
-#: includes/public.php:48
-msgid "The proofreader has suggestions for your post. Are you sure you want to submit it?"
-msgstr "शुद्धिकारक के पास आपकी पोस्ट के लिए सुझाव हैं| क्या आप सुनिश्चित हैं कि आप यह पोस्ट करना चाहते हैं?"
-
-#: includes/public.php:49
-msgid "Press OK to submit your post, or Cancel to view the suggestions and edit your post."
-msgstr "अपनी पोस्ट को जमा करने के लिए \"ठीक है\" दबाएँ, या सुझाव देखने के लिए और अपनी पोस्ट को संपादित करने के लिए \"रद्द\" दबाएँ|"
 
 #: includes/public.php:24
 msgid "Proofread"
@@ -206,66 +202,86 @@ msgid "No suggestions"
 msgstr "कोई सुझाव नहीं है"
 
 #: includes/public.php:31
+msgid "Did you mean..."
+msgstr "क्या तुम यह कहना चाहते हो..."
+
+#: includes/public.php:32
 msgid "Explain..."
 msgstr "स्पष्ट कीजिये"
 
-#: includes/public.php:32
+#: includes/public.php:33
 msgid "Ignore suggestion"
 msgstr "सुझाव गलत है"
 
-#: includes/public.php:33
+#: includes/public.php:34
 msgid "Ignore all"
 msgstr "ऐसे सारे सुझाव हटाइए"
 
-#: includes/public.php:34
+#: includes/public.php:35
 msgid "Ignore always"
 msgstr "इस वर्तनी को कभी न जाचें"
 
-#: includes/public.php:35
+#: includes/public.php:36
 msgid "Edit Selection..."
 msgstr "इस वर्तनी को संपादित करें"
 
-#: includes/public.php:41
-msgid "Please enter some text in the post textbox to be checked!"
-msgstr "पोस्ट टेक्स्टबॉक्स मैं कुछ शब्द लिखिए ताकि वें जाचें जा सकें|"
-
-#: includes/public.php:36
+#: includes/public.php:37
 msgid "Error!"
 msgstr "ग़लती!"
 
-#: includes/public.php:37
+#: includes/public.php:38
 msgid "No writing errors were found!"
 msgstr "सारी वर्तनी सही हैं|"
 
-#: includes/public.php:38
+#: includes/public.php:39
 msgid "No errors!"
 msgstr "कोई भी गलती नहीं है!"
 
-#: includes/public.php:42
-msgid "There was a problem communicating with the After the Deadline service."
-msgstr "आफ्टर दी डेडलाइन सर्विस से बात नहीं हो पा रही है|"
-
 #: includes/public.php:40
+msgid "Replace selection with:"
+msgstr "चुनी हुई वर्तनी बदलिए:"
+
+#: includes/public.php:41
 msgid "Replace"
 msgstr "बदलिए"
 
-#: includes/admin.php:95
-msgid "After the Deadline Options"
-msgstr "आफ्टर दी डेडलाइन के विकल्प"
+#: includes/public.php:42
+msgid "Please enter some text in the post textbox to be checked!"
+msgstr "पोस्ट टेक्स्टबॉक्स मैं कुछ शब्द लिखिए ताकि वें जाचें जा सकें|"
 
-#: includes/admin.php:120
-msgid "After the Deadline"
-msgstr "आफ्टर दी डेडलाइन"
+#: includes/public.php:43
+msgid "There was a problem communicating with the After the Deadline service."
+msgstr "आफ्टर दी डेडलाइन सर्विस से बात नहीं हो पा रही है|"
 
+#: includes/public.php:46
+msgid "The proofreader has suggestions for your reply. Are you sure you want to post it?"
+msgstr "शुद्धिकारक के पास आपके उत्तर के लिए सुझाव हैं| क्या आप सुनिश्चित हैं कि आप यह पोस्ट करना चाहते हैं?"
+
+#: includes/public.php:47
+msgid "Press OK to post your reply, or Cancel to view the suggestions and edit your reply."
+msgstr "अपना उत्तर जमा करने के लिए \"ठीक है\" दबाएँ, या सुझाव देखने के लिए और अपनी पोस्ट को संपादित करने के लिए \"रद्द\" दबाएँ|"
+
+#: includes/public.php:49
+msgid "The proofreader has suggestions for your post. Are you sure you want to submit it?"
+msgstr "शुद्धिकारक के पास आपकी पोस्ट के लिए सुझाव हैं| क्या आप सुनिश्चित हैं कि आप यह पोस्ट करना चाहते हैं?"
+
+#: includes/public.php:50
+msgid "Press OK to submit your post, or Cancel to view the suggestions and edit your post."
+msgstr "अपनी पोस्ट को जमा करने के लिए \"ठीक है\" दबाएँ, या सुझाव देखने के लिए और अपनी पोस्ट को संपादित करने के लिए \"रद्द\" दबाएँ|"
+
+#. Plugin URI of an extension
 msgid "http://gaut.am/bbpress/plugins/after-the-deadline/"
 msgstr "http://gaut.am/bbpress/plugins/after-the-deadline/"
 
+#. Description of an extension
 msgid "After the Deadline plugin checks spelling, style, and grammar in your bbPress forum posts."
 msgstr "आफ्टर दी डेडलाइन प्लगिन आपके ब्बीप्रेस फोरम मैं वर्तनी और व्याकरण जांचता है|"
 
+#. Author of an extension
 msgid "Gautam Gupta"
 msgstr "गौतम गुप्ता "
 
+#. Author URI of an extension
 msgid "http://gaut.am/"
 msgstr "http://gaut.am/"
 

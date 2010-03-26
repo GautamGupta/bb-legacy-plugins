@@ -3,7 +3,7 @@
 Plugin Name: After the Deadline
 Plugin URI: http://gaut.am/bbpress/plugins/after-the-deadline/
 Description: After the Deadline plugin checks spelling, style, and grammar in your bbPress forum posts.
-Version: 1.6
+Version: 1.6.1
 Author: Gautam Gupta
 Author URI: http://gaut.am/
 */

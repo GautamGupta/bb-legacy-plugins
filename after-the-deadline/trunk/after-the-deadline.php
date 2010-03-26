@@ -23,7 +23,7 @@ bb_load_plugin_textdomain( 'after-the-deadline', dirname( __FILE__ ) . '/transla
 /**
  * Defines
  */
-define( 'ATD_VER'		, '1.6.1-dev'						); /** Version */
+define( 'ATD_VER'		, '1.6.1'						); /** Version */
 define( 'ATD_OPTIONS'		, 'AftertheDeadline'					); /** Option Name */
 define( 'ATD_USER_OPTIONS'	, 'AtDuserOptions'					); /** User Option Name */
 define( 'ATD_PLUGPATH'		, bb_get_plugin_uri( bb_plugin_basename( __FILE__ ) )	); /** Plugin URL */

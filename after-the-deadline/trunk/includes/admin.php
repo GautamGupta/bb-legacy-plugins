@@ -22,11 +22,11 @@ function atd_update_check(){
 		return false;
 	
 	global $plugin_browser;
-	if ( class_exists( 'Plugin_Browser' ) && $plugin_browser && method_exists( $plugin_browser, 'nonce_url' ) ) { /* Can be automatically upgraded */
+	if ( class_exists( 'Plugin_Browser' ) && $plugin_browser && method_exists( $plugin_browser, 'nonceUrl' ) ) { /* Can be automatically upgraded */
 		$uhref = $plugin_browser->nonceUrl( 'upgrade-plugin_after-the-deadline', array( 'plugin' => 'plugin_browser_admin_page', 'pb_action' => 'upgrade', 'pb_plugin_id' => urlencode( 'after-the-deadline' ) ) );
-		$message = sprintf( __( 'New version (%1$s) of After the Deadline Plugin is available! Please download the latest version from <a href="%2$s">here</a> or <a href="%3$s">upgrade automatically</a>.', 'after-the-deadline' ), $ver, 'http://bbpress.org/plugins/topic/after-the-deadline/', $uhref );
+		$message = sprintf( __( 'New version (%1$s) of After the Deadline Plugin is available! Please download the latest version from <a href="%2$s">here</a> or <a href="%3$s">upgrade automatically</a>.', 'after-the-deadline' ), $latest_ver, 'http://bbpress.org/plugins/topic/after-the-deadline/', $uhref );
 	} else { /* Else just output the normal message with download link */
-		$message = sprintf( __( 'New version (%1$s) of After the Deadline Plugin is available! Please download the latest version from <a href="%2$s">here</a>.', 'after-the-deadline' ), $ver, 'http://bbpress.org/plugins/topic/after-the-deadline/' );
+		$message = sprintf( __( 'New version (%1$s) of After the Deadline Plugin is available! Please download the latest version from <a href="%2$s">here</a>.', 'after-the-deadline' ), $latest_ver, 'http://bbpress.org/plugins/topic/after-the-deadline/' );
 	}
 	
 	bb_admin_notice( $message, 'error' );

@@ -1,4 +1,4 @@
-=== Scr.im Email Saver ===
+=== Scrim Email Saver ===
 Contributors: Gautam Gupta
 Donate link: http://gaut.am/donate/bb/SES/
 Tags: scrim, scr.im, mail, email, saver, Gautam

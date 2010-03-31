@@ -1,4 +1,4 @@
-=== Scrim Email Saver ===
+=== Scr.im Email Saver ===
 Contributors: Gautam Gupta
 Donate link: http://gaut.am/donate/bb/SES/
 Tags: scrim, scr.im, mail, email, saver, Gautam
@@ -6,7 +6,7 @@ Requires at least: 1.0
 Tested up to: 1.1
 Stable tag: 0.1
 
-The plugin filters your forum's posts for email IDs and converts them into [Scr.im](http://scr.im) links so that there IDs are not picked up by bots and they receive less (if not zero) spam.
+The plugin filters your forum's posts for email IDs and converts them into [Scr.im](http://scr.im) links so that there IDs are not picked up by bots.
 
 == Description ==
 

@@ -20,6 +20,13 @@ Once installed, it adds a "Report" link atuomatically with each post on the topi
 4. A 'Report' link will be automatically added with each post on the topic page
 
 
+== Screenshots ==
+
+Screenshot 01.jpg:
+
+Report post configuration settings
+
+
 == License ==
 
 * GPLv3
@@ -41,8 +48,3 @@ Workflow:
 - Admin gets notified by email with link to the post
 - Reported posts are listed in the admin panel with reporter's comment
 - Admin can manage reports from backend.
-
-
-
-== Frequently Asked Questions ==
-

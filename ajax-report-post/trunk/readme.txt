@@ -22,9 +22,7 @@ Once installed, it adds a "Report" link atuomatically with each post on the topi
 
 == Screenshots ==
 
-Screenshot 01.jpg:
-
-Report post configuration settings
+01. Report post configuration settings
 
 
 == License ==

@@ -40,7 +40,7 @@ Notes:
 
 Workflow:
 
-- User clicks on the “Report” link below a post.
+- User clicks on the "Report" link below a post.
 - Submit report
 - Data and user ip gets stored into database
 - Admin gets notified by email with link to the post

@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Swirl Unknowns
-Plugin URI: http://tinyurl.com/swirl-unknowns
+Plugin URI: http://bbpress.org/plugins/topic/swirl-unknowns/
 Description: Non-logged-in users get redirected to a page of your choice. Based on <a href="http://blogwaffe.com/">Michael D Adams</a>' <a href="http://bbpress.org/forums/topic/117">Force Login</a> plugin plus the <a href="http://bbpress.org/forums/topic/force-login-for-bbpress-101">*voodoo code from Trent Adams and Sam Bauers*</a>.
 Author: mr_pelle
 Author URI: 
@@ -35,6 +35,7 @@ Version History:
 0.4.2	little URI edit to make plugin work without name-based permalinks activated (damn, I should have checked this earlier!)
 		updated admin page with more examples
 		edited CSS URI to be retrieved from plugin filename
+		added official bbPress Plugin Browser URI
 
 To do:
 	- option to add a list of allowed pages?

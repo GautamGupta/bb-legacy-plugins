@@ -2,7 +2,7 @@
 Tags: force, redirect, non-logged, users, visitors, Michael, Adams, Bauers, mr_pelle
 Contributors: mr_pelle
 Plugin Name: Swirl Unknowns
-Plugin URI: http://tinyurl.com/swirl-unknowns
+Plugin URI: http://bbpress.org/plugins/topic/swirl-unknowns/
 Version: 0.4.2
 Requires at least: 1.0.2
 Tested up to: 1.0.2
@@ -13,7 +13,7 @@ Non-logged-in users get redirected to a page of your choice.
 
 Non-logged-in users get redirected to a page of your choice.
 
-Based on Michael D Adams' "Force Login" plugin plus the *voodoo code from Trent Adams and Sam Bauers*.
+Based on <a href="http://blogwaffe.com/">Michael D Adams</a>' <a href="http://bbpress.org/forums/topic/117">Force Login</a> plugin plus the <a href="http://bbpress.org/forums/topic/force-login-for-bbpress-101">*voodoo code from Trent Adams and Sam Bauers*</a>.
 
 == Useful Links ==
 
@@ -38,6 +38,10 @@ Based on Michael D Adams' "Force Login" plugin plus the *voodoo code from Trent 
 = Can I add more than one allowed page? =
 
 * Not at the moment. If anyone will request this feature, I'll try to add it.
+
+== To Do ==
+
+* option to add a list of allowed pages?
 
 == License ==
 
@@ -101,6 +105,4 @@ Based on Michael D Adams' "Force Login" plugin plus the *voodoo code from Trent 
 
 * edited CSS URI to be retrieved from plugin filename
 
-== To Do ==
-
-* option to add a list of allowed pages?
+* added official bbPress Plugin Browser URI

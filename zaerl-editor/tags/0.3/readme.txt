@@ -3,7 +3,7 @@ Contributors: zaerl
 Tags: editor, quicktas, textarea
 Requires at least: 1.0.2
 Tested up to: 1.0.2
-Stable tag: 0.2
+Stable tag: 0.3
 
 a better editor for bbPress
 

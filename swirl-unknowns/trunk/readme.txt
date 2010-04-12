@@ -25,7 +25,7 @@ Based on <a href="http://blogwaffe.com/">Michael D Adams</a>' <a href="http://bb
 
 == Installation ==
 
-* Add the `swirl-unknowns/` folder to bbPress' `my-plugins/` directory.
+* Copy plugin folder into `my-plugins` folder.
 
 * Activate plugin and check under "Plugins" admin submenu for "Swirl Unknowns".
 

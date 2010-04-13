@@ -65,11 +65,11 @@ Based on <a href="http://blogwaffe.com/">Michael D Adams</a>' <a href="http://bb
 
 * created admin page
 
-* added 'disable plugin' input to admin page
+* added disable plugin input to admin page
 
-* added $default_swirl_page
+* added `$default_swirl_page`
 
-* added $another_allowed_page
+* added `$another_allowed_page`
 
 * created standalone CSS
 
@@ -79,11 +79,11 @@ Based on <a href="http://blogwaffe.com/">Michael D Adams</a>' <a href="http://bb
 
 * imported CSS the way it has to be done
 
-* added 'bb-admin/' to allowed pages
+* added `bb-admin/` to allowed pages
 
 * added visual confirmations to admin page
 
-* added 'another allowed page' input to admin page
+* added "another allowed page" input to admin page
 
 * changed paths to global ones: now the plugin can be exported!
 

@@ -1,4 +1,4 @@
-=== zaerl Editor ===
+=== zaerl Random Description ===
 Contributors: zaerl 
 Tags: description
 Requires at least: 1.0.2

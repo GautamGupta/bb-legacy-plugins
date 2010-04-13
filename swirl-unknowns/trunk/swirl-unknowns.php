@@ -2,7 +2,7 @@
 /*
 Plugin Name: Swirl Unknowns
 Plugin URI: http://bbpress.org/plugins/topic/swirl-unknowns/
-Description: Non-logged-in users get redirected to a page of your choice. Based on <a href="http://blogwaffe.com/">Michael D Adams</a>' <a href="http://bbpress.org/forums/topic/117">Force Login</a> plugin plus the <a href="http://bbpress.org/forums/topic/force-login-for-bbpress-101">*voodoo code from Trent Adams and Sam Bauers*</a>.
+Description: Non-logged-in users get redirected to a page of your choice. Based on <a href="http://blogwaffe.com/">Michael D Adams</a>' <a href="http://bbpress.org/forums/topic/117">Force Login</a> plugin plus the <a href="http://bbpress.org/forums/topic/force-login-for-bbpress-101">voodoo code from Trent Adams and Sam Bauers</a>.
 Author: mr_pelle
 Author URI: 
 Version: 0.4.2
@@ -14,19 +14,19 @@ License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
 Version History:
 0.1		first (non?-)working version
-0.2		corrected redirection thanks to *voodoo code from Trent Adams and Sam Bauers*
+0.2		corrected redirection thanks to voodoo code from Trent Adams and Sam Bauers
 		minor fixes
 0.3		created version history
 		created admin page
-		added 'disable plugin' input to admin page
-		added $default_swirl_page
-		added $another_allowed_page
+		added disable plugin input to admin page
+		added `$default_swirl_page`
+		added `$another_allowed_page`
 		created standalone CSS
 0.4		plugin renamed to fit bbPress standards
 		imported CSS the way it has to be done
-		added 'bb-admin/' to allowed pages
+		added `bb-admin/` to allowed pages
 		added visual confirmations to admin page
-		added 'another allowed page' input to admin page
+		added "another allowed page" input to admin page
 		changed paths to global ones: now the plugin can be exported!
 		added licence
 0.4.1	minor CSS corrections
@@ -117,7 +117,7 @@ function swirl_unknowns_admin_page() {
 function swirl_unknowns_admin_page_process() {
 	if ($_POST)
 	{
-		if ($_POST['action'] == 'swirl') // request coming from 'page address' form
+		if ($_POST['action'] == 'swirl') // request coming from "page address" form
 		{
 			global $swirl_confirmation;
 
@@ -138,7 +138,7 @@ function swirl_unknowns_admin_page_process() {
 				$swirl_confirmation = "Page updated";
 			}
 		}
-		elseif ($_POST['action'] == 'allow_page') // request coming from 'allow page' form
+		elseif ($_POST['action'] == 'allow_page') // request coming from "allow page" form
 		{
 			global $aap_confirmation;
 
@@ -158,7 +158,7 @@ function swirl_unknowns_admin_page_process() {
 
 
 /**
- * Redirect non-logged-in users to 'swirl_page', if the option is defined
+ * Redirect non-logged-in users to "swirl page", if the option is defined
  **/
 function swirl_unknowns() {
 	if ($swirl_page = bb_get_option('swirl_page')) // var is assigned while the option is checked
@@ -173,7 +173,7 @@ function swirl_unknowns() {
 			&& strcasecmp($server_uri, $path.'xmlrpc.php') != 0
 			&& strcasecmp($server_uri, $path.'bb-admin/') != 0
 			&& strcasecmp($server_uri, $path."bb-login.php?re=".$path."bb-admin/") != 0
-			&& strcasecmp($server_uri, bb_get_option('another_allowed_page')) != 0 // no problem even if the option is not defined, as '$server_uri' will never be NULL
+			&& strcasecmp($server_uri, bb_get_option('another_allowed_page')) != 0 // no problem even if the option is not defined, as `$server_uri` will never be NULL
 			&& strcasecmp($server_uri, $swirl_page) != 0 // user is on swirl page
 			)
 		{

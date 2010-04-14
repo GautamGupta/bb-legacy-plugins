@@ -1,11 +1,11 @@
 === zaerl Editor ===
 Contributors: zaerl 
-Tags: quicktags, textarea, zaerl
+Tags: quicktags, textarea
 Requires at least: 1.0.2
 Tested up to: 1.0.2
 Stable tag: 0.3
 
-a better editor for bbPress
+a better Editor for bbPress
 
 == Description ==
 
@@ -16,3 +16,7 @@ jQuery is used in order to generate the HTML code needed and the code is loaded 
 == Installation ==
 
 Extract the zip file and just drop the contents in the my-plugins/ directory of your bbPress installation and then activate the Plugin from Plugins page.
+
+== Screenshots ==
+
+1. The toolbar

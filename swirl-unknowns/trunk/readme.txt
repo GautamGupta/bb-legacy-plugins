@@ -1,6 +1,6 @@
 === Swirl Unknowns ===
-Tags: force, redirect, non-logged, users, visitors, Michael, Adams, Bauers, mr_pelle
 Contributors: mr_pelle
+Tags: force, redirect, non-logged, users, visitors, Adams, Bauers
 Plugin Name: Swirl Unknowns
 Plugin URI: http://bbpress.org/plugins/topic/swirl-unknowns/
 Version: 0.4.2
@@ -15,14 +15,6 @@ Non-logged-in users get redirected to a page of your choice.
 
 Based on <a href="http://blogwaffe.com/">Michael D Adams</a>' <a href="http://bbpress.org/forums/topic/117">Force Login</a> plugin plus the <a href="http://bbpress.org/forums/topic/force-login-for-bbpress-101">*voodoo code from Trent Adams and Sam Bauers*</a>.
 
-== Useful Links ==
-
-* Michael D Adams: http://blogwaffe.com/
-
-* Force Plugin: http://bbpress.org/forums/topic/117
-
-* *voodoo code from Trent Adams and Sam Bauers*: http://bbpress.org/forums/topic/force-login-for-bbpress-101
-
 == Installation ==
 
 * Copy plugin folder into `my-plugins` folder.
@@ -31,17 +23,17 @@ Based on <a href="http://blogwaffe.com/">Michael D Adams</a>' <a href="http://bb
 
 * Add the redirection page.
 
-* You may also add another "allowed page" to the list. Visiting an allowed page doesn't get a user to be redirected.
+* You may also add another <em>allowed page</em> to the list. Visiting an allowed page doesn't get a user to be redirected.
 
 == Frequently Asked Questions ==
 
-= Can I add more than one allowed page? =
+= Can I add more than one <em>allowed page</em>? =
 
 * Not at the moment. If anyone will request this feature, I'll try to add it.
 
 == To Do ==
 
-* option to add a list of allowed pages?
+* option to add a list of <em>allowed pages</em>?
 
 == License ==
 
@@ -83,7 +75,7 @@ Based on <a href="http://blogwaffe.com/">Michael D Adams</a>' <a href="http://bb
 
 * added visual confirmations to admin page
 
-* added "another allowed page" input to admin page
+* added another <em>allowed page</em> input to admin page
 
 * changed paths to global ones: now the plugin can be exported!
 

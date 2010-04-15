@@ -8,37 +8,6 @@ Author URI:
 Version: 0.4.2
 Requires at least: 1.0.2
 Tested up to: 1.0.2
-Tags: force, redirect, non-logged, users, visitors, Michael, Adams, Bauers, mr_pelle
-
-License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
-
-Version History:
-0.1		first (non?-)working version
-0.2		corrected redirection thanks to voodoo code from Trent Adams and Sam Bauers
-		minor fixes
-0.3		created version history
-		created admin page
-		added disable plugin input to admin page
-		added `$default_swirl_page`
-		added `$another_allowed_page`
-		created standalone CSS
-0.4		plugin renamed to fit bbPress standards
-		imported CSS the way it has to be done
-		added `bb-admin/` to allowed pages
-		added visual confirmations to admin page
-		added "another allowed page" input to admin page
-		changed paths to global ones: now the plugin can be exported!
-		added licence
-0.4.1	minor CSS corrections
-		several changes in how var are accessed to speed-up plugin
-		added plugin URI on MediaFire via TinyURL
-0.4.2	little URI edit to make plugin work without name-based permalinks activated (damn, I should have checked this earlier!)
-		updated admin page with more examples
-		edited CSS URI to be retrieved from plugin filename
-		added official bbPress Plugin Browser URI
-
-To do:
-	- option to add a list of allowed pages?
 */
 
 
@@ -168,6 +137,7 @@ function swirl_unknowns() {
 
 		if (!bb_is_user_logged_in()
 			&& strcasecmp($server_uri, $path.'bb-login.php') != 0
+			&& strcasecmp($server_uri, $path.'bb-login.php') != 0
 			&& strcasecmp($server_uri, $path.'bb-reset-password.php') != 0
 			&& strcasecmp($server_uri, $path.'register.php') != 0
 			&& strcasecmp($server_uri, $path.'xmlrpc.php') != 0
@@ -175,6 +145,8 @@ function swirl_unknowns() {
 			&& strcasecmp($server_uri, $path."bb-login.php?re=".$path."bb-admin/") != 0
 			&& strcasecmp($server_uri, bb_get_option('another_allowed_page')) != 0 // no problem even if the option is not defined, as `$server_uri` will never be NULL
 			&& strcasecmp($server_uri, $swirl_page) != 0 // user is on swirl page
+
+			&& strpos($server_uri, "/support/") === false // (require/include) request coming from `/support/` or subpages
 			)
 		{
 			nocache_headers();

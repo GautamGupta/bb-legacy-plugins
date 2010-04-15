@@ -137,7 +137,6 @@ function swirl_unknowns() {
 
 		if (!bb_is_user_logged_in()
 			&& strcasecmp($server_uri, $path.'bb-login.php') != 0
-			&& strcasecmp($server_uri, $path.'bb-login.php') != 0
 			&& strcasecmp($server_uri, $path.'bb-reset-password.php') != 0
 			&& strcasecmp($server_uri, $path.'register.php') != 0
 			&& strcasecmp($server_uri, $path.'xmlrpc.php') != 0
@@ -145,8 +144,6 @@ function swirl_unknowns() {
 			&& strcasecmp($server_uri, $path."bb-login.php?re=".$path."bb-admin/") != 0
 			&& strcasecmp($server_uri, bb_get_option('another_allowed_page')) != 0 // no problem even if the option is not defined, as `$server_uri` will never be NULL
 			&& strcasecmp($server_uri, $swirl_page) != 0 // user is on swirl page
-
-			&& strpos($server_uri, "/support/") === false // (require/include) request coming from `/support/` or subpages
 			)
 		{
 			nocache_headers();

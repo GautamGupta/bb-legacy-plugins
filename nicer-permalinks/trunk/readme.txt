@@ -13,7 +13,7 @@ Rewrites every bbPress URI removing the words "forum" and "topic" and emphasizes
 
 Rewrites every bbPress URI removing the words "forum" and "topic" and emphasizes forum hierarchy.
 
-Based on <a href="http://www.technospot.net/blogs/">Ashish Mohta</a> and <a href="http://markroberthenderson.com/">Mark Robert Henderson</a>'s <a href="http://blog.markroberthenderson.com/getting-rid-of-forums-and-topic-from-bbpress-permalinks-updated-plugin/">Remove Topic Forum</a> plugin.
+Based on <a href="http://www.technospot.net/blogs/">Ashish Mohta</a> and <a href="http://markroberthenderson.com/">Mark Robert Henderson</a>'s <a href="http://blog.markroberthenderson.com/getting-rid-of-forums-and-topic-from-bbpress-permalinks-updated-plugin/">Remove Forum Topic</a> plugin.
 
 Automatically updates and backups `.htaccess` on activation and restores it on deactivation (if files permissions are correctly set).
 

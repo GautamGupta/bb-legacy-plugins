@@ -3,7 +3,7 @@ Contributors: mr_pelle, Ashish Mohta, Mark Robert Henderson
 Tags: permalinks, mod_rewrite, htaccess, slug, topic, forum, Mohta, Henderson
 Plugin Name: Nicer Permalinks
 Plugin URI: http://bbpress.org/plugins/topic/nicer-permalinks/
-Version: 3.3
+Version: 3.2
 Requires at least: 1.0.2
 Tested up to: 1.0.2
 
@@ -100,9 +100,3 @@ Note: you <strong>must</strong> turn name based permalinks on <strong>before</st
 * simplified all filters removing redundant code
 
 * added official bbPress Plugin Browser URI
-
-= Version 3.3 (2010-04-16) =
-
-* enhanced nicer `get_topic_link` filter: now it also handles requests coming from views
-
-* slightly changed nicer `bb_get_forum_bread_crumb` filter because was messing up some views by <a href="http://bbpress.org/plugins/topic/my-views">"My Views" plugin</a>

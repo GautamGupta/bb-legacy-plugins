@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/nicer-permalinks/
 Description: Rewrites every bbPress URI removing the words "forum" and "topic" and emphasizes hierarchy. Based on <a href="http://www.technospot.net/blogs/">Ashish Mohta</a> and <a href="http://markroberthenderson.com/">Mark Robert Henderson</a>'s <a href="http://blog.markroberthenderson.com/getting-rid-of-forums-and-topic-from-bbpress-permalinks-updated-plugin/">Remove Topic Forum</a> plugin.
 Author: mr_pelle, Ashish Mohta, Mark Robert Henderson
 Author URI: 
-Version: 3.3
+Version: 3.2
 Requires at least: 1.0.2
 Tested up to: 1.0.2
 */
@@ -41,8 +41,8 @@ function nicer_bb_get_forum_bread_crumb_filter ($trail = '', $forum_id = 0) {
  * Nicer get_topic_link filter
  **/
 function nicer_get_topic_link_filter ($link, $id = 0) {
-	// request coming from main forum, from an admin page or from a view?
-	// The first passes a topic id, the second a post id and the third a view id.
+	// request coming from main forum or from an admin page?
+	// The former passes a topic id, the latter a post id.
 	if ($topic_id = get_topic_id($id)) // request coming from main forum
 		$topic = get_topic($topic_id); // retrieve topic object
 	elseif ($post_id = get_post_id($id)) // request coming from an admin page
@@ -51,9 +51,6 @@ function nicer_get_topic_link_filter ($link, $id = 0) {
 
 		$topic = get_topic(get_topic_id($bb_post->topic_id)); // retrieve topic object that contains post
 	}
-	elseif (get_view_name($id) != '') // request coming from a view
-		$topic = bb_get_topic_from_uri($link); // retrieve topic object from its URI
-
 	$forum = get_forum(get_forum_id($topic->forum_id)); // retrieve forum object that contains topic
 
 	// replace "topic" with "$forum->forum_slug" to emphasize hierarchy.
@@ -95,9 +92,8 @@ function nicer_get_post_link_filter ($link, $post_id = 0, $topic_id = 0) {
  * Nicer bb_blug_sanitize filter
  **/
 function nicer_bb_slug_sanitize_filter ($text_slug, $text_original = '', $length = 0) {
-	// prepend "r-" if string begins with "bb-" or is a reserved word.
-	// "view" word is changed only if not preceded by `-`. Mandatory to preserve some views by "My Views" plugin!
-	return preg_replace('/(bb-.*|rss|tags|[^-]+view|admin|profiles)/', 'r-$1', $text_slug);
+	// prepend "r-" if string begins with "bb-" or "my-" or is a reserved word
+	return preg_replace('/(my-.*|bb-.*|rss|tags|view|admin|profiles)/', 'r-$1', $text_slug);
 }
 
 

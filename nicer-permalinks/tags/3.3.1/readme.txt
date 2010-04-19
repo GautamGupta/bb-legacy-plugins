@@ -25,6 +25,8 @@ Note: you <strong>must</strong> turn name based permalinks on <strong>before</st
 
 * Copy plugin folder into `my-plugins` folder.
 
+* Open `nicer-htaccess` and change the forum path used by <em>RewriteBase</em> into your forum path, if different.
+
 * Choose one of the following:
 
 = Option #1: automatic update =

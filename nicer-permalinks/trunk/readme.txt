@@ -1,9 +1,9 @@
 === Nicer Permalinks ===
-Contributors: mr_pelle, Ashish Mohta, Mark Robert Henderson
+Contributors: mr_pelle
 Tags: permalinks, mod_rewrite, htaccess, slug, topic, forum, Mohta, Henderson
 Plugin Name: Nicer Permalinks
 Plugin URI: http://bbpress.org/plugins/topic/nicer-permalinks/
-Version: 3.3.1
+Version: 3.3.2
 Requires at least: 1.0.2
 Tested up to: 1.0.2
 
@@ -109,4 +109,8 @@ Note: you <strong>must</strong> turn name based permalinks on <strong>before</st
 
 = Version 3.3.1 (2010-04-19) =
 
-* corrected an error on nicer `get_post_link` filter which made multi-page anchors not to work
+* corrected an error on nicer `get_post_link` filter because multi-page anchors were not working correctly
+
+= Version 3.3.2 (2010-04-19) =
+
+* inverted order of a check on nicer `get_post_link` filter because multi-page anchors were not working correctly in admin "Topics" page

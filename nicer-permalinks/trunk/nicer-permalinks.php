@@ -3,9 +3,9 @@
 Plugin Name: Nicer Permalinks
 Plugin URI: http://bbpress.org/plugins/topic/nicer-permalinks/
 Description: Rewrites every bbPress URI removing the words "forum" and "topic" and emphasizes hierarchy. Based on <a href="http://www.technospot.net/blogs/">Ashish Mohta</a> and <a href="http://markroberthenderson.com/">Mark Robert Henderson</a>'s <a href="http://blog.markroberthenderson.com/getting-rid-of-forums-and-topic-from-bbpress-permalinks-updated-plugin/">Remove Forum Topic</a> plugin.
-Author: mr_pelle, Ashish Mohta, Mark Robert Henderson
+Author: mr_pelle
 Author URI: 
-Version: 3.3.1
+Version: 3.3.2
 Requires at least: 1.0.2
 Tested up to: 1.0.2
 */
@@ -67,18 +67,18 @@ function nicer_get_topic_link_filter ($link, $id = 0) {
  **/
 function nicer_get_post_link_filter ($link, $post_id = 0, $topic_id = 0) {
 	// get_post_link or get_topic_last_post_link request?
-	// The former uses `$post_id`, the latter `$topic_id`.
-	if ($id = get_post_id($post_id)) // get_post_link request
-	{
-		$bb_post = bb_get_post($id); // retrieve post object
-
-		$topic = get_topic(get_topic_id($bb_post->topic_id)); // retrieve topic object that contains post
-	}
-	elseif ($id = get_topic_id($topic_id)) // get_topic_last_post_link request
+	// The former uses `$post_id`, the latter both `$post_id` and `$topic_id`.
+	if ($id = get_topic_id($topic_id)) // get_topic_last_post_link request
 	{
 		$topic = get_topic($id); // retrieve topic object
 
 		$post_id = $topic->topic_last_post_id; // retrieve topic last post id from topic object
+	}
+	elseif ($id = get_post_id($post_id)) // get_post_link request
+	{
+		$bb_post = bb_get_post($id); // retrieve post object
+
+		$topic = get_topic(get_topic_id($bb_post->topic_id)); // retrieve topic object that contains post
 	}
 	$forum = get_forum(get_forum_id($topic->forum_id)); // retrieve forum object that contains topic
 

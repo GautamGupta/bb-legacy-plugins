@@ -43,7 +43,7 @@ Note: you <strong>must</strong> turn name based permalinks on <strong>before</st
 
 * Activate plugin.
 
-* Optional: restore original files permissions. Remember to set them back to "666" before deactivating the plugin, though.
+* Restore original files permissions (usually "644"). Remember to set them back to "666" before deactivating the plugin, though.
 
 == Frequently Asked Questions ==
 

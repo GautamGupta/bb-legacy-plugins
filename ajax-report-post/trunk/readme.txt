@@ -42,7 +42,7 @@ Workflow:
 
 - User clicks on the "Report" link below a post.
 - Submit report
-- Data and user ip gets stored into database
+- Data gets stored into database (On installation of the plugin, a table "bb_custom_reports" gets created in the database.)
 - Admin gets notified by email with link to the post
 - Reported posts are listed in the admin panel with reporter's comment
 - Admin can manage reports from backend.

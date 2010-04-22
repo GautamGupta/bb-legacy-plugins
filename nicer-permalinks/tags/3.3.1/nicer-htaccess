@@ -7,10 +7,10 @@ Options -MultiViews
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 
-	Options +FollowSymlinks
-
 	# change this to match your forum path
 	RewriteBase /forum/
+
+	Options +FollowSymlinks
 
 	# admin stuff, not processed
 	RewriteRule ^bb-admin/.*$ - [L,QSA]

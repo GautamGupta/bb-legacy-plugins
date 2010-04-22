@@ -2,9 +2,9 @@
 /*
 Plugin Name: Nicer Permalinks
 Plugin URI: http://bbpress.org/plugins/topic/nicer-permalinks/
-Description: Rewrites every bbPress URI removing the words "forum" and "topic" and emphasizes hierarchy. Based on <a href="http://www.technospot.net/blogs/">Ashish Mohta</a> and <a href="http://markroberthenderson.com/">Mark Robert Henderson</a>'s <a href="http://blog.markroberthenderson.com/getting-rid-of-forums-and-topic-from-bbpress-permalinks-updated-plugin/">Remove Forum Topic</a> plugin.
+Description: Rewrites every bbPress URI removing the words "forum" and "topic" and emphasizes hierarchy. Based on <a href="http://www.technospot.net/blogs/">Ashish Mohta</a> and <a href="http://markroberthenderson.com/">Mark R. Henderson</a>'s <a href="http://blog.markroberthenderson.com/getting-rid-of-forums-and-topic-from-bbpress-permalinks-updated-plugin/">Remove Forum Topic</a> plugin.
 Author: mr_pelle
-Author URI: 
+Author URI:
 Version: 3.4
 Requires at least: 1.0.2
 Tested up to: 1.0.2
@@ -34,7 +34,7 @@ if (file_get_contents($htaccess, NULL, NULL, 0, 2) != '##') // try to update `.h
 		// load files content
 		$content = file_get_contents($htaccess);
 		$nicer_content = file_get_contents($nicer_htaccess);
-	
+
 		// swap files content
 		file_put_contents($htaccess, $nicer_content);
 		file_put_contents($nicer_htaccess, $content);
@@ -74,7 +74,7 @@ function nicer_bb_get_forum_bread_crumb_filter ($trail = '', $forum_id = 0) {
 	// remove redundant "forum" word from each forum URI.
 	// str_replace looks for bb_get_option('path')."forum/" instead of just "forum/" to avoid misreplacements
 	$trail = str_replace(bb_get_option('path')."forum/", bb_get_option('path'), $trail);
-	
+
 	// append `/` to each forum URI, if missing. Mandatory! Props: Mohta
 	return preg_replace('/([^\/])(">)/', '$1/$2', $trail);
 }

@@ -1,4 +1,4 @@
-=== WebPurify Profanity Filter ===
+=== WebPurify&#0153; Profanity Filter ===
 Contributors: webpurify
 Requires at least: 1.0
 	
@@ -6,9 +6,12 @@ Uses the powerful WebPurify Profanity Filter Web Service to replaces profane wor
 	
 == Description ==
 	
-Uses the powerful WebPurify Profanity Filter Web Service to replaces profane words in user comments with '*' character.
+Uses the powerful WebPurify Profanity Filter Web Service to replace profane words in user comments with '*' character.
 
-You must purchase a WP BBPress Plugin license key (or get a 7 day trial key) by visiting <a href="http://www.webpurify.com/bbpress-plugin.php">WebPurify</a>
+Although WebPurify already contains an extensive list of profane words, we also provide custom whitelists and blacklists for each license.
+
+
+You must purchase a WP BBPress Plugin license key (or get a 7 day trial key) by visiting <a href="ttp://www.webpurify.com/bbpress-plugin.php?utm_source=bbpress_admin&utm_medium=bbpress&utm_campaign=bbpress">WebPurify</a>
 	
 == Installation ==
 	

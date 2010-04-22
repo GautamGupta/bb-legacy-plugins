@@ -13,7 +13,7 @@ Rewrites every bbPress URI removing the words "forum" and "topic" and emphasizes
 
 Rewrites every bbPress URI removing the words "forum" and "topic" and emphasizes forum hierarchy.
 
-Based on <a href="http://www.technospot.net/blogs/">Ashish Mohta</a> and <a href="http://markroberthenderson.com/">Mark Robert Henderson</a>'s <a href="http://blog.markroberthenderson.com/getting-rid-of-forums-and-topic-from-bbpress-permalinks-updated-plugin/">Remove Forum Topic</a> plugin.
+Based on <a href="http://www.technospot.net/blogs/">Ashish Mohta</a> and <a href="http://markroberthenderson.com/">Mark R. Henderson</a>'s <a href="http://blog.markroberthenderson.com/getting-rid-of-forums-and-topic-from-bbpress-permalinks-updated-plugin/">Remove Forum Topic</a> plugin.
 
 Automatically updates and backups `.htaccess` on activation and restores it on deactivation (if files permissions are correctly set).
 
@@ -71,7 +71,7 @@ Note: you <strong>must</strong> turn name based permalinks on <strong>before</st
 
 = Version 1.1 (2009-09-19) =
 
-* <a href="http://blog.markroberthenderson.com/getting-rid-of-forums-and-topic-from-bbpress-permalinks-updated-plugin/">original Ashish Mohta and Mark Robert Henderson's version</a>
+* <a href="http://blog.markroberthenderson.com/getting-rid-of-forums-and-topic-from-bbpress-permalinks-updated-plugin/">original Ashish Mohta and Mark R. Henderson's version</a>
 
 = Version 2.0 (2010-04-12) =
 

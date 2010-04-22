@@ -13,7 +13,7 @@ Non-logged-in users get redirected to a page of your choice.
 
 Non-logged-in users get redirected to a page of your choice.
 
-Based on <a href="http://blogwaffe.com/">Michael D Adams</a>' <a href="http://bbpress.org/forums/topic/117">Force Login</a> plugin plus the <a href="http://bbpress.org/forums/topic/force-login-for-bbpress-101">*voodoo code from Trent Adams and Sam Bauers*</a>.
+Based on <a href="http://blogwaffe.com/">Michael D. Adams</a>' <a href="http://bbpress.org/forums/topic/117">Force Login</a> plugin plus the <a href="http://bbpress.org/forums/topic/force-login-for-bbpress-101">*voodoo code from Trent Adams and Sam Bauers*</a>.
 
 == Installation ==
 

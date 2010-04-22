@@ -34,7 +34,7 @@ function bb_wp_configuration_page()
 
 <?php
 	$after = '';
-	if ( false !== $key = bb_get_option( 'akismet_key' ) ) {
+	if ( false !== $key = bb_get_option( 'webpurify_key' ) ) {
 		if ( bb_webpurify_verify_key( $key ) ) {
 			$after = __( 'This key is valid' );
 		} else {

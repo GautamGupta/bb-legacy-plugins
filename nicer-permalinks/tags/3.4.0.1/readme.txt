@@ -3,7 +3,7 @@ Contributors: mr_pelle
 Tags: permalinks, mod_rewrite, htaccess, slug, topic, forum, Mohta, Henderson
 Plugin Name: Nicer Permalinks
 Plugin URI: http://bbpress.org/plugins/topic/nicer-permalinks/
-Version: 3.4.1
+Version: 3.4.0.1
 Requires at least: 1.0.2
 Tested up to: 1.0.2
 
@@ -125,6 +125,6 @@ Note: you <strong>must</strong> turn name based permalinks on <strong>before</st
 
 * removed update function: now bbPress simply executes the "update" code when activating the plugin (more correct)
 
-= Version 3.4.1 (2010-04-23) =
+= Version 3.4.0.1 (2010-04-23) =
 
 * added `sprintf` to each output

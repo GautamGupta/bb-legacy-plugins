@@ -1,5 +1,5 @@
 === Ajax Report Post ===
-Tags: alert moderator, moderation, alert, report, report post, bbpress report post, ajax, ajax report post, jomontvm
+Tags: alert moderator, moderation, alert, report, report post, bbpress report post, ajax, ajax report post, abuse, report abuse, bbpress report abuse, jomontvm
 Contributors: jomontvm
 Tested up to: 1.0.2
 Stable tag: trunk

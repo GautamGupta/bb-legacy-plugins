@@ -1,0 +1,111 @@
+# Translation of zaEditor 1.0
+# Copyright (C) 2010 Francesco Bigiarini
+# This file is distributed under the same license as the WordPress package.
+# Francesco Bigiarini z@zaerl.com, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: zaEditor 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-04-06 16:25+0100\n"
+"PO-Revision-Date: 2010-04-06 16:28+0100\n"
+"Last-Translator: Francesco Bigiarini <z@zaerl.com>\n"
+"Language-Team: zaerl <za@zaerl.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-Language: Italian\n"
+"X-Poedit-Country: ITALY\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#. Translators: bold (text)
+#: za-editor.php:137
+msgid "Bold"
+msgstr "Negrita"
+
+#. Translators: italic (text)
+#: za-editor.php:144
+msgid "Italic"
+msgstr "Cursiva"
+
+#: za-editor.php:150
+msgid "Hyperlink"
+msgstr "Hiperenlace"
+
+#. Translators: "image" refers to jpg/png or such files
+#: za-editor.php:157
+msgid "Image"
+msgstr "Imagen"
+
+#. Translators: the HTML list tag ul
+#: za-editor.php:164
+msgid "Unordered list"
+msgstr "Lista no ordenada"
+
+#. Translators: the HTML list tag ol
+#: za-editor.php:171
+msgid "Ordered list"
+msgstr "Lista ordenada"
+
+#. Translators: the HTML list tag li
+#: za-editor.php:178
+#, fuzzy
+msgid "List item"
+msgstr "Objeto de Lista"
+
+#. Translators: verb, mention or refer to someone article
+#: za-editor.php:185
+msgid "Quote"
+msgstr "Citar"
+
+#. Translators: noun, like in "software source code".
+#: za-editor.php:192
+msgid "Code"
+msgstr "Código"
+
+#: za-editor.php:232
+msgid "Insert the URL"
+msgstr "Insertar URL"
+
+#: za-editor.php:238
+msgid "Insert the image URL"
+msgstr "Insertar URL de la imagen"
+
+#. Translators: %s is replaced by the program name
+#: za-editor.php:283
+#, php-format
+msgid "%s Settings"
+msgstr "%s Configuración"
+
+#. Translators: see http://www.w3.org/TR/CSS2/selector.html for the meaning of `CSS selector'. Usually this is not translated
+#: za-editor.php:293
+msgid "CSS selector"
+msgstr "Selector de CSS"
+
+#. Translators: %s is replaced by the program name. See http://www.w3.org/TR/CSS2/selector.html for the meaning of `selector'
+#: za-editor.php:296
+#, php-format
+msgid "%s inject the toolbar before elements that match a CSS selector. You can modify the default selector but do change this value only if you know what you are doing."
+msgstr "%s introducir la barra de herramientas antes los elementos que coinciden con un selector de CSS. Aunque se pueda modificar el selector predeterminado, no lo haga si no es consciente de lo que está haciendo"
+
+#. Translators: acronym of Cascading Style Sheet
+#: za-editor.php:300
+msgid "Custom CSS"
+msgstr "CSS Personalizado"
+
+#: za-editor.php:303
+msgid "Custom style for the editor toolbar"
+msgstr "Estilo personalizado para la barra de herramientas del editor"
+
+#: za-editor.php:310
+msgid "Save Changes"
+msgstr "Guardar Cambios"
+
+#: za-editor.php:382
+msgid "<strong>Settings saved.</strong>"
+msgstr "<strong>Cambios Guardados.</strong>"
+

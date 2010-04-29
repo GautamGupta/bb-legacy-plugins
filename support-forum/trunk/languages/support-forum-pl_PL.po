@@ -1,14 +1,14 @@
 # Polish (pl_PL) translation for "Support forum".
-# Copyright (C) YEAR <a href="http://www.adityanaik.com/">Aditya Naik</a>, <a href="http://unlettered.org/">Sam Bauers</a>
+# Copyright (C) 2010 WordPress contributors.
 # This file is distributed under the same license as the WordPress package.
-# Wacław Jacek <mail@waclawjacek.com>, 2009.
+# Wacław Jacek <mail@waclawjacek.com>, 2010.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Support forum 3.0.3\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/support-forum\n"
 "POT-Creation-Date: 2008-05-08 23:54+1000\n"
-"PO-Revision-Date: 2009-07-09 23:57+0100\n"
+"PO-Revision-Date: 2010-04-29 10:01+0100\n"
 "Last-Translator: Wacław Jacek <mail@waclawjacek.com>\n"
 "Language-Team: Wacław Jacek <mail@waclawjacek.com>\n"
 "MIME-Version: 1.0\n"
@@ -25,29 +25,29 @@ msgstr "Ta wersja wtyczki <em>Support forum</em> wymaga bbPressa w wersji 0.9"
 #: support-forum.php:960
 #: support-forum.php:977
 msgid "resolved"
-msgstr "są rozwiązane"
+msgstr "rozwiązany"
 
 #: support-forum.php:207
 #: support-forum.php:961
 #: support-forum.php:979
 msgid "not resolved"
-msgstr "nie są rozwiązane"
+msgstr "nie jest rozwiązany"
 
 #: support-forum.php:208
 #: support-forum.php:962
 #: support-forum.php:981
 msgid "not a support question"
-msgstr "nie są prośbami o pomoc"
+msgstr "nie jest prośbą o pomoc"
 
 #: support-forum.php:383
 #, php-format
 msgid "Support topics that are %s"
-msgstr "Tematy pomocy, które %s"
+msgstr "Tematy pomocy, które mają stan \"%s\""
 
 #: support-forum.php:387
 #, php-format
 msgid "Support topics that are %s and are more than 2 hours old"
-msgstr "Tematy pomocy, które %s i zostały napisane wcześniej, niż 2 godziny temu"
+msgstr "Tematy pomocy, które mają stan \"%s\" i zostały napisane wcześniej niż 2 godziny temu"
 
 #: support-forum.php:466
 msgid "Change"
@@ -75,7 +75,7 @@ msgstr "zamknięty"
 #: support-forum.php:821
 #: support-forum.php:918
 msgid "Support forum"
-msgstr "Forum pomocy"
+msgstr "Fora pomocy"
 
 #: support-forum.php:870
 msgid "Update performed"
@@ -95,7 +95,7 @@ msgstr "Opis"
 
 #: support-forum.php:939
 msgid "Enable support forum"
-msgstr "Włącz forum pomocy"
+msgstr "Uczyń forum pomocy"
 
 #: support-forum.php:958
 msgid "Set the default status for topics:"
@@ -111,7 +111,7 @@ msgstr "Zezwól autorom tematów na ustawienie stanu tematu w dowolnym czasie"
 
 #: support-forum.php:974
 msgid "Choose which statuses will have a view:"
-msgstr "Wybierz stany, dla których dostępny będzie widok:"
+msgstr "Wybierz stany, dla których dostępne będą listy tematów:"
 
 #: support-forum.php:986
 msgid "Use resolution status icons on topics"
@@ -127,7 +127,7 @@ msgstr "Wyświetlaj ikonę przyklejenia przy przyklejonych tematach (ma wpływ n
 
 #: support-forum.php:1021
 msgid "If you used support forum plugin version 1.0, you will need to update existing topics to work with version 2.x"
-msgstr "Jeżeli dotychczas używana była wersja 1.0 wtyczki \"Support forum\" wymagana będzie aktualizacja istniejących tematów, aby działały one na wersji 2.x"
+msgstr "Jeżeli dotychczas używana była wersja 1.0 wtyczki \"Support forum\", wymagana będzie aktualizacja istniejących tematów, aby działały one z wersją 2.x"
 
 #: support-forum.php:1024
 msgid "Update topics to version 2.x"

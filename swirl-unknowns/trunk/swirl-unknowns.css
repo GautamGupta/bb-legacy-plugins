@@ -1,3 +1,7 @@
+/*-----------------------------------------
+   main
+------------------------------------------*/
+
 #container {
 	margin-bottom: 10px;
 	padding: 0;
@@ -38,13 +42,13 @@ strong {
    confirmations
 ------------------------------------------*/
 
-#aap_confirmation {
+#allow_confirmation {
 	color: #090;
 	display: inline;
 	margin-left: 2px;
 }
 
-#swirl_confirmation {
+#redir_confirmation {
 	color: #090;
 	float: right;
 	margin-right: 5px;
@@ -54,24 +58,24 @@ strong {
    forms
 ------------------------------------------*/
 
-#aap_form {
+#allow_form {
 	display: inline;
 }
 
-#another_allowed_page {
+#allowed_page {
 	font-family: monospace;
 	width: 20%;
 }
 
-#swirl_form fieldset {
+#redir_form fieldset {
 	width: 50%;
 }
 
-#swirl_form #submit {
+#redir_form #submit {
 	float: right;
 }
 
-#swirl_page {
+#redir_page {
 	font-family: monospace;
 	font-size: 1.2em;
 	width: 83%;

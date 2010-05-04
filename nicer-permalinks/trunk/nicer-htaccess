@@ -42,13 +42,13 @@ Options -MultiViews
 
 	# forums
 	RewriteRule ^([^/]+)/page/([0-9]+)$ forum.php?id=$1&page=$2 [L,QSA]
-	RewriteRule ^([^/]+)/$ forum.php?id=$1 [L,QSA] # tailed `/` is mandatory for forum URIs! Props: Mohta
+	RewriteRule ^([^/]+)/$ forum.php?id=$1 [L,QSA] # tailed '/' is mandatory for forum URIs! Props: Mohta
 
 	# topics
-	RewriteRule ^([^/]+)/([^/]+)/page/([0-9]+.*)$ topic.php?id=$2&page=$3 [L,QSA] # `.*` is needed for passing args (i.e. `&view=all`)
+	RewriteRule ^([^/]+)/([^/]+)/page/([0-9]+.*)$ topic.php?id=$2&page=$3 [L,QSA] # '.*' is needed for args
 	RewriteRule ^([^/]+)/([^/]+)$ topic.php?id=$2 [L,QSA]
 
-	# missing pages (needed for custom template `404.php`)
+	# other pages
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteRule ^.*$ index.php [L]

@@ -3,7 +3,7 @@ Tags: notification, bbpress, email
 Contributors: dev.xiligroup.com
 Requires at least: 1.0.1
 Tested up to: 1.0.2
-Stable tag: trunk
+Stable tag: 0.9.2
 Donate link: http://dev.xiligroup.com
 
 A very light plugin to send a short notification to a choosen email address when a new post is created.
@@ -23,6 +23,7 @@ Simple plugin to send short notification to a choosen email address when a new p
 
 [WordCamp Paris May 8th] BBPress seems resurrect. I will start again devs and answer soon to users and contributors questions…
 
+
 = Why this plugin ? =
 
 * to solve a lack of feature when installing [dev.xiligroup support forum](http://forum.dev.xiligroup.com/).
@@ -39,13 +40,15 @@ Simple plugin to send short notification to a choosen email address when a new p
 
 == Changelog ==
 
-= Version 0.9 (2009-10-27) =
-
+= Version 0.9.2 (2010-05_09) =
+* Add option to insert content of post in notification email
+= Version 0.9.1 (2009-10-29) =
 * first public release
 
 == To Do ==
 
 * improve choices of to: address...
+* save options in array
 
-© 2009 - MS - dev.xiligroup.com
+© 2009-10 - MS - dev.xiligroup.com
 

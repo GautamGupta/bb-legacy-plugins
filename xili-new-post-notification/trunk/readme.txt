@@ -19,7 +19,7 @@ Simple plugin to send short notification to a choosen email address when a new p
 
 == Frequently Asked Questions ==
 
-= What about future ?
+= What about future ? =
 
 [WordCamp Paris May 8th] BBPress seems resurrect. I will start again devs and answer soon to users and contributors questions…
 

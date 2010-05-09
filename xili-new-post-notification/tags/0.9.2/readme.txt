@@ -40,13 +40,15 @@ Simple plugin to send short notification to a choosen email address when a new p
 
 == Changelog ==
 
+= Version 0.9.2 (2010-05_09) =
+* Add option to insert content of post in notification email
 = Version 0.9.1 (2009-10-29) =
-
 * first public release
 
 == To Do ==
 
 * improve choices of to: address...
+* save options in array
 
-© 2009 - MS - dev.xiligroup.com
+© 2009-10 - MS - dev.xiligroup.com
 

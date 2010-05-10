@@ -1,82 +1,30 @@
-/*-----------------------------------------
-   main
-------------------------------------------*/
-
-#container {
-	margin-bottom: 10px;
-	padding: 0;
-}
-
 code {
-	background: #ddd;
-	color: #000;
-	font-size: 1.2em;
+	font-size: 12px;
 }
 
 h3 {
 	border-bottom: 1px solid;
 	font-size: 110%;
 	margin-bottom: 7px;
-	padding-bottom: 2px;
-	width: 50%;
-}
-
-.allowed_pages li {
-	font-family: monospace;
-	font-size: 1.2em;
-	list-style: circle;
-	margin-left: 15px;
-}
-
-.notes li {
-	list-style: square;
-	margin-left: 15px;
+	padding-bottom: 4px;
 }
 
 strong {
-	font-variant: small-caps;
 	font-weight: bold;
-}
-
-/*-----------------------------------------
-   confirmations
-------------------------------------------*/
-
-#allow_confirmation {
-	color: #090;
-	display: inline;
-	margin-left: 2px;
-}
-
-#redir_confirmation {
-	color: #090;
-	float: right;
-	margin-right: 5px;
-}
-
-/*-----------------------------------------
-   forms
-------------------------------------------*/
-
-#allow_form {
-	display: inline;
-}
-
-#allowed_page {
-	font-family: monospace;
-	width: 20%;
-}
-
-#redir_form fieldset {
-	width: 50%;
-}
-
-#redir_form #submit {
-	float: right;
 }
 
 #redir_page {
 	font-family: monospace;
 	font-size: 1.2em;
-	width: 83%;
+	width: 50%;
+}
+
+.allowed_pages li {
+	list-style: circle;
+	margin-left: 15px;
+}
+
+#confirmation {
+	color: #090;
+	margin-left: 10px;
 }

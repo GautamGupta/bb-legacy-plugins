@@ -3,7 +3,7 @@ Contributors: mr_pelle
 Tags: redirect, hidden, forum, login
 Plugin Name: Swirl Unknowns
 Plugin URI: http://bbpress.org/plugins/topic/swirl-unknowns/
-Version: 0.5
+Version: 0.6
 Requires at least: 1.0.2
 Tested up to: 1.0.2
 
@@ -23,14 +23,6 @@ Based on <a href="http://blogwaffe.com/">Michael D. Adams</a>' <a href="http://b
 
 * Add the redirection page.
 
-* You may also add an allowed page to the list. Visiting an allowed page doesn't get a user to be redirected.
-
-== Frequently Asked Questions ==
-
-= Can I add more than one allowed page? =
-
-* Not at the moment. If anyone will request this feature, I'll try to add it.
-
 == License ==
 
 * CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
@@ -40,3 +32,11 @@ Based on <a href="http://blogwaffe.com/">Michael D. Adams</a>' <a href="http://b
 = Version 0.5 (2010-05-03) =
 
 * new version released
+
+= Version 0.6 (2010-05-10) =
+
+* uninstall function added
+
+* allowed page removed
+
+* source code cleaned

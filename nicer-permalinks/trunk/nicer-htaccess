@@ -15,37 +15,37 @@ Options -MultiViews
 	# admin stuff, not processed
 	RewriteRule ^bb-admin/.*$ - [L,QSA]
 
-	RewriteRule ^page/([0-9]+)$ ?page=$1 [L,QSA]
+	RewriteRule ^page/([0-9]+)/?$ ?page=$1 [L,QSA]
 
-	RewriteRule ^profile/([^/]+)/page/([0-9]+)$ profile.php?id=$1&page=$2 [L,QSA]
+	RewriteRule ^profile/([^/]+)/([^/]+)/page/([0-9]+)/?$ profile.php?id=$1&tab=$2&page=$3 [L,QSA]
+	RewriteRule ^profile/([^/]+)/page/([0-9]+)/?$ profile.php?id=$1&page=$2 [L,QSA]
 	RewriteRule ^profile/([^/]+)/([^/]+)$ profile.php?id=$1&tab=$2 [L,QSA]
-	RewriteRule ^profile/([^/]+)/([^/]+)/page/([0-9]+)$ profile.php?id=$1&tab=$2&page=$3 [L,QSA]
 	RewriteRule ^profile/([^/]+)$ profile.php?id=$1 [L,QSA]
 	RewriteRule ^profile/$ profile.php [L,QSA]
 
-	RewriteRule ^rss/$ rss.php [L,QSA]
-	RewriteRule ^rss/topics/?$ rss.php?topics=1 [L,QSA]
-	RewriteRule ^rss/forum/([^/]+)$ rss.php?forum=$1 [L,QSA]
 	RewriteRule ^rss/forum/([^/]+)/topics/?$ rss.php?forum=$1&topics=1 [L,QSA]
-	RewriteRule ^rss/topic/([^/]+)$ rss.php?topic=$1 [L,QSA]
-	RewriteRule ^rss/tags/([^/]+)$ rss.php?tag=$1 [L,QSA]
-	RewriteRule ^rss/tags/([^/]+)/topics/?$ rss.php?tag=$1&topics=1 [L,QSA]
+	RewriteRule ^rss/forum/([^/]+)/?$ rss.php?forum=$1 [L,QSA]
 	RewriteRule ^rss/profile/([^/]+)$ rss.php?profile=$1 [L,QSA]
+	RewriteRule ^rss/tags/([^/]+)/topics/?$ rss.php?tag=$1&topics=1 [L,QSA]
+	RewriteRule ^rss/tags/([^/]+)$ rss.php?tag=$1 [L,QSA]
+	RewriteRule ^rss/topic/([^/]+)$ rss.php?topic=$1 [L,QSA]
 	RewriteRule ^rss/view/([^/]+)$ rss.php?view=$1 [L,QSA]
+	RewriteRule ^rss/topics/?$ rss.php?topics=1 [L,QSA]
+	RewriteRule ^rss/?$ rss.php [L,QSA]
 
-	RewriteRule ^tags/([^/]+)/page/([0-9]+)$ tags.php?tag=$1&page=$2 [L,QSA]
+	RewriteRule ^tags/([^/]+)/page/([0-9]+)/?$ tags.php?tag=$1&page=$2 [L,QSA]
 	RewriteRule ^tags/([^/]+)$ tags.php?tag=$1 [L,QSA]
-	RewriteRule ^tags/$ tags.php [L,QSA]
+	RewriteRule ^tags/?$ tags.php [L,QSA]
 
-	RewriteRule ^view/([^/]+)/page/([0-9]+)$ view.php?view=$1&page=$2 [L,QSA]
+	RewriteRule ^view/([^/]+)/page/([0-9]+)/?$ view.php?view=$1&page=$2 [L,QSA]
 	RewriteRule ^view/([^/]+)$ view.php?view=$1 [L,QSA]
 
 	# forums
-	RewriteRule ^([^/]+)/page/([0-9]+)$ forum.php?id=$1&page=$2 [L,QSA]
+	RewriteRule ^([^/]+)/page/([0-9]+)/?$ forum.php?id=$1&page=$2 [L,QSA]
 	RewriteRule ^([^/]+)/$ forum.php?id=$1 [L,QSA] # tailed '/' is mandatory for forum URIs! Props: Mohta
 
 	# topics
-	RewriteRule ^([^/]+)/([^/]+)/page/([0-9]+.*)$ topic.php?id=$2&page=$3 [L,QSA] # '.*' is needed for args
+	RewriteRule ^([^/]+)/([^/]+)/page/([0-9]+)/?$ topic.php?id=$2&page=$3 [L,QSA]
 	RewriteRule ^([^/]+)/([^/]+)$ topic.php?id=$2 [L,QSA]
 
 	# other pages

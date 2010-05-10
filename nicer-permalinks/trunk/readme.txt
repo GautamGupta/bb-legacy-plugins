@@ -3,7 +3,7 @@ Contributors: mr_pelle
 Tags: permalinks, mod_rewrite, htaccess, slug, forum, topic
 Plugin Name: Nicer Permalinks
 Plugin URI: http://bbpress.org/plugins/topic/nicer-permalinks/
-Version: 3.4.1 beta
+Version: 3.5
 Requires at least: 1.0.2
 Tested up to: 1.0.2
 
@@ -64,3 +64,11 @@ Automatically updates and backups `.htaccess` on activation and restores it on d
 = Version 3.4.1 beta (2010-05-04) =
 
 * PHP 4 compatibility added
+
+= Version 3.5 (2010-05-10) =
+
+* nicer_bb_slug_sanitize_filter removed
+
+* nicer-htaccess code revisited
+
+* source code cleaned

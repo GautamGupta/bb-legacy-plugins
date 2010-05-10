@@ -3,7 +3,7 @@
 Plugin Name: Nicer Permalinks
 Plugin URI: http://bbpress.org/plugins/topic/nicer-permalinks/
 Description: Rewrites every bbPress URI removing the words "forum" and "topic" and emphasizes hierarchy. Based on <a href="http://www.technospot.net/blogs/">Ashish Mohta</a> and <a href="http://markroberthenderson.com/">Mark R. Henderson</a>'s <a href="http://blog.markroberthenderson.com/getting-rid-of-forums-and-topic-from-bbpress-permalinks-updated-plugin/">Remove Forum Topic</a> plugin.
-Version: 3.4.1 beta
+Version: 3.5
 Author: mr_pelle
 Author URI: mailto:francesco.pelle@gmail.com
 */
@@ -12,25 +12,23 @@ Author URI: mailto:francesco.pelle@gmail.com
 /**
  * PHP 4 backward compatibility
  *
- *	Note: this custom functions are NOT solid, they are intented to be used in this plugin ONLY!
+ * Note: this custom functions are NOT solid, they are intented to be used in this plugin ONLY!
  * Please do NOT re-use this functions anywhere else!
  **/
-if (!function_exists('file_put_contents'))
+if ( !function_exists('file_put_contents') )
 {
-	function file_put_contents ($filename, $contents)
-	{
+	function file_put_contents( $filename, $contents ) {
 		$stream = fopen($filename, 'w');
 		fwrite($stream, $contents);
 		fclose($stream);
 	}
 }
 
-if (!function_exists('file_get_contents'))
+if ( !function_exists('file_get_contents') )
 {
-	function file_get_contents ($filename, $flags = 0, $context, $offset = 0, $maxlen)
-	{
+	function file_get_contents( $filename, $flags=0, $context, $offset=0, $maxlen ) {
 		$stream = fopen($filename, 'r');
-		if (!$maxlen) $maxlen = filesize($filename);
+		if ( !$maxlen ) $maxlen = filesize($filename);
 		$contents = fread($stream, $maxlen);
 		fclose($stream);
 		return $contents;
@@ -43,21 +41,21 @@ if (!function_exists('file_get_contents'))
  *
  * Note: the following code won't mess up files if manual update was performed
  **/
-$htaccess = BB_PATH.".htaccess";
-$nicer_htaccess = bb_get_plugin_directory(bb_plugin_basename(__FILE__))."nicer-htaccess";
+$htaccess = BB_PATH .'.htaccess';
+$nicer_htaccess = bb_get_plugin_directory( bb_plugin_basename(__FILE__) ) .'nicer-htaccess';
 
 // first of all, check if file has already been updated
 
 // look for control sequence
-if (file_get_contents($htaccess, NULL, NULL, 0, 2) != '##') // try to update .htaccess
+if ( file_get_contents($htaccess, NULL, NULL, 0, 2)!='##' )
 {
 	// check files permissions
-	if (!is_writable($htaccess) || !is_writable($nicer_htaccess)) // cannot update automatically
+	if ( !is_writable($htaccess) || !is_writable($nicer_htaccess) ) // cannot update automatically
 	{
-		bb_die(sprintf('Files not writable. Please see %s', bb_get_plugin_directory(bb_plugin_basename(__FILE__))."readme.txt"));
+		bb_die( sprintf("Files not writable. Please see %s", bb_get_plugin_directory( bb_plugin_basename(__FILE__) ) .'readme.txt') );
 		exit;
 	}
-	else // update .htaccess
+	else // update files
 	{
 		// load files content
 		$content = file_get_contents($htaccess);
@@ -68,40 +66,38 @@ if (file_get_contents($htaccess, NULL, NULL, 0, 2) != '##') // try to update .ht
 		file_put_contents($nicer_htaccess, $content);
 	}
 }
+else ; // files already updated
 
 
 /**
  * Add bbPress filters
  *
- * Note: the following code is executed whether .htaccess was updated manually or automatically
+ * Note: the following code is executed whether manual or automatic update was performed
  **/
 add_filter('get_forum_link', 'nicer_get_forum_link_filter');
 add_filter('bb_get_forum_bread_crumb', 'nicer_bb_get_forum_bread_crumb_filter');
 add_filter('get_topic_link', 'nicer_get_topic_link_filter');
 add_filter('get_post_link', 'nicer_get_post_link_filter');
-add_filter('bb_slug_sanitize', 'nicer_bb_slug_sanitize_filter');
 
 
 /**
  * Nicer get_forum_link filter
  **/
-function nicer_get_forum_link_filter ($link, $forum_id = 0) {
-	// remove redundant "forum" word from URI.
-	// look for bb_get_option('path')."forum/" instead of just "forum" to avoid misreplacements
-	$link = str_replace(bb_get_option('path')."forum/", bb_get_option('path'), $link);
+function nicer_get_forum_link_filter( $link, $forum_id=0 ) {
+	// remove redundant "forum" word from URI
+	$link = str_replace(bb_get_option('uri') .'forum/', bb_get_option('uri'), $link);
 
 	// append '/' to forum URI. Mandatory! Props: Mohta
-	return $link."/";
+	return $link .'/';
 }
 
 
 /**
  * Nicer bb_get_forum_bread_crumb filter
  **/
-function nicer_bb_get_forum_bread_crumb_filter ($trail = '', $forum_id = 0) {
-	// remove redundant "forum" word from each forum URI.
-	// look for bb_get_option('path')."forum/" instead of just "forum/" to avoid misreplacements
-	$trail = str_replace(bb_get_option('path')."forum/", bb_get_option('path'), $trail);
+function nicer_bb_get_forum_bread_crumb_filter( $trail='', $forum_id=0 ) {
+	// remove redundant "forum" word from each forum URI
+	$trail = str_replace(bb_get_option('uri') .'forum/', bb_get_option('uri'), $trail);
 
 	// append '/' to each forum URI, if missing. Mandatory! Props: Mohta
 	return preg_replace('/([^\/])(">)/', '$1/$2', $trail);
@@ -111,66 +107,56 @@ function nicer_bb_get_forum_bread_crumb_filter ($trail = '', $forum_id = 0) {
 /**
  * Nicer get_topic_link filter
  **/
-function nicer_get_topic_link_filter ($link, $id = 0) {
+function nicer_get_topic_link_filter( $link, $id=0 ) {
 	// request coming from main forum, from an admin page or from a view?
-	// The first passes a topic id, the second a post id and the third a view id.
-	if ($topic_id = get_topic_id($id)) // request coming from main forum
+	// The first passes a topic id, the second a post id and the third a view id
+	if ( $topic_id = get_topic_id($id) ) // request coming from main forum
 		$topic = get_topic($topic_id); // retrieve topic object
-	elseif ($post_id = get_post_id($id)) // request coming from an admin page
+	elseif ( $post_id = get_post_id($id) ) // request coming from an admin page
 	{
 		$bb_post = bb_get_post($post_id); // retrieve post object
 
-		$topic = get_topic(get_topic_id($bb_post->topic_id)); // retrieve topic object that contains post
+		$topic = get_topic( get_topic_id($bb_post->topic_id) ); // retrieve topic object that contains post
 	}
-	elseif (get_view_name($id) != '') // request coming from a view
+	elseif ( get_view_name($id)!='' ) // request coming from a view
 		$topic = bb_get_topic_from_uri($link); // retrieve topic object from its URI
 
-	$forum = get_forum(get_forum_id($topic->forum_id)); // retrieve forum object that contains topic
+	$forum = get_forum( get_forum_id($topic->forum_id) ); // retrieve forum object that contains topic
 
-	// replace "topic" with "$forum->forum_slug" to emphasize hierarchy.
-	// look for bb_get_option('path')."topic/" instead of just "topic/" to avoid misreplacements
-	return str_replace(bb_get_option('path')."topic/", bb_get_option('path')."$forum->forum_slug/", $link);
+	// replace "topic" with forum container to emphasize hierarchy
+	return str_replace(bb_get_option('uri') .'topic/', bb_get_option('uri') ."$forum->forum_slug/", $link);
 }
 
 
 /**
  * Nicer get_post_link filter
  **/
-function nicer_get_post_link_filter ($link, $post_id = 0, $topic_id = 0) {
+function nicer_get_post_link_filter( $link, $post_id=0, $topic_id=0 ) {
 	// get_post_link or get_topic_last_post_link request?
 	// The former uses $post_id, the latter both $post_id and $topic_id
-	if ($id = get_topic_id($topic_id)) // get_topic_last_post_link request
+	if ( $id = get_topic_id($topic_id) ) // get_topic_last_post_link request
 	{
 		$topic = get_topic($id); // retrieve topic object
 
 		$post_id = $topic->topic_last_post_id; // retrieve topic last post id from topic object
 	}
-	elseif ($id = get_post_id($post_id)) // get_post_link request
+	elseif ( $id = get_post_id($post_id) ) // get_post_link request
 	{
 		$bb_post = bb_get_post($id); // retrieve post object
 
-		$topic = get_topic(get_topic_id($bb_post->topic_id)); // retrieve topic object that contains post
+		$topic = get_topic( get_topic_id($bb_post->topic_id) ); // retrieve topic object that contains post
 	}
-	$forum = get_forum(get_forum_id($topic->forum_id)); // retrieve forum object that contains topic
+	$forum = get_forum( get_forum_id($topic->forum_id) ); // retrieve forum object that contains topic
 
 	$post_page = bb_get_page_number(get_post_position($post_id)); // retrieve page where post is located
 
-	// append page to topic URI, if needed
-	if ($post_page>1) $page = "/page/$post_page";
-	else $page = '';
+	// append page number to URI, if needed
+	$page = ( $post_page>1 ) ?
+			"/page/$post_page" :
+			'';
 
 	// build nicer post URI emphasizing hierarchy
-	return bb_get_option('uri')."$forum->forum_slug/$topic->topic_slug$page#post-".get_post_id($post_id);
-}
-
-
-/**
- * Nicer bb_blug_sanitize filter
- **/
-function nicer_bb_slug_sanitize_filter ($text_slug, $text_original = '', $length = 0) {
-	// prepend "r-" if string begins with "bb-" or is a reserved word.
-	// "view" word is changed only if not preceded by '-'. Mandatory to preserve some views by "My Views" plugin!
-	return preg_replace('/(bb-.*|rss|tags|[^-]+view|admin|profiles)/', 'r-$1', $text_slug);
+	return bb_get_option('uri') ."$forum->forum_slug/$topic->topic_slug$page#post-". get_post_id($post_id);
 }
 
 
@@ -178,22 +164,21 @@ function nicer_bb_slug_sanitize_filter ($text_slug, $text_original = '', $length
  * Restore .htaccess
  **/
 function restore_htaccess() {
-	$htaccess = BB_PATH.".htaccess";
-	$nicer_htaccess = bb_get_plugin_directory(bb_plugin_basename(__FILE__))."nicer-htaccess";
+	$htaccess = BB_PATH .'.htaccess';
+	$nicer_htaccess = bb_get_plugin_directory( bb_plugin_basename(__FILE__) ) .'nicer-htaccess';
 
 	// first of all, check if file has already been restored.
 
 	// look for control sequence
-	if (file_get_contents($htaccess, NULL, NULL, 0, 2) != '##') return; // no need to do anything more
-	else // try to restore .htaccess
+	if ( file_get_contents($htaccess, NULL, NULL, 0, 2)=='##' )
 	{
 		// check files permissions
-		if (!is_writable($htaccess) || !is_writable($nicer_htaccess))
+		if ( !is_writable($htaccess) || !is_writable($nicer_htaccess) )
 		{
-			bb_die(sprintf('Files not writable. Please see %s', bb_get_plugin_directory(bb_plugin_basename(__FILE__))."readme.txt"));
+			bb_die( sprintf("Files not writable. Please see %s", bb_get_plugin_directory( bb_plugin_basename(__FILE__) ) .'readme.txt') );
 			exit;
 		}
-		else // restore .htaccess
+		else // restore files
 		{
 			// load files content
 			$content = file_get_contents($htaccess);
@@ -204,6 +189,7 @@ function restore_htaccess() {
 			file_put_contents($nicer_htaccess, $content);
 		}
 	}
+	else ; // files already restored
 }
 
 

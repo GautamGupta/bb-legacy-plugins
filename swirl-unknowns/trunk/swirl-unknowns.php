@@ -11,7 +11,7 @@ Author URI: mailto:francesco.pelle@gmail.com
 
 /**
  * Global settings
- */
+ **/
 $redir_confirmation = '';
 $su_default_redir_page = bb_get_option('uri') .'bb-login.php';
 if ( !bb_get_option('su_redir_page') ) bb_update_option('su_redir_page', $su_default_redir_page);
@@ -98,7 +98,7 @@ function swirl_unknowns() {
 
 /**
  * Remove plugin traces
- */
+ **/
 function su_uninstall() {
 	bb_delete_option('su_redir_page');
 }

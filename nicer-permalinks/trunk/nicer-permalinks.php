@@ -123,7 +123,7 @@ function nicer_get_topic_link_filter( $link, $id=0 ) {
 
 	$forum = get_forum( get_forum_id($topic->forum_id) ); // retrieve forum object that contains topic
 
-	// replace "topic" with forum container to emphasize hierarchy
+	// replace "topic" word with container forum slug to emphasize hierarchy
 	return str_replace(bb_get_option('uri') .'topic/', bb_get_option('uri') ."$forum->forum_slug/", $link);
 }
 

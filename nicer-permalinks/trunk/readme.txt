@@ -25,9 +25,13 @@ Automatically updates and backups `.htaccess` on activation and restores it on d
 
 * If name based permalinks aren't activated yet, turn them on (check under "Settings" admin submenu for "Permalinks").
 
-* Open `bb-post.php` and switch lines 46 and 48. This looks odd, but is actually <strong>mandatory</strong> in order for the plugin to work!
+* Open `bb-post.php` and switch lines 46 and 48 (<a href="http://trac.bbpress.org/browser/trunk/bb-post.php">bbPress 1.0.3 will fix this</a>). They must look like this:
 
-* Then choose one of the following:
+<blockquote>`$topic = get_topic( $topic_id, false );
+$link = get_post_link($post_id);`
+</blockquote>
+
+* Choose one of the following:
 
 = Option #1: automatic update =
 

@@ -3,7 +3,7 @@ Contributors: mr_pelle
 Tags: permalinks, mod_rewrite, htaccess, slug, forum, topic
 Plugin Name: Nicer Permalinks
 Plugin URI: http://bbpress.org/plugins/topic/nicer-permalinks/
-Version: 3.5
+Version: 3.6
 Requires at least: 1.0.2
 Tested up to: 1.0.2
 
@@ -76,3 +76,9 @@ $link = get_post_link($post_id);`
 * nicer-htaccess code revisited
 
 * source code cleaned
+
+= Version 3.6 (2010-05-13) =
+
+* nicer_get_post_link_filter enhanced
+
+* fixed bug with <a href="http://bbpress.org/plugins/topic/ajaxed-quote/">Ajaxed Quote</a> plugin

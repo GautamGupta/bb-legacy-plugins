@@ -134,7 +134,7 @@ function nicer_get_topic_link_filter( $link, $id=0 ) {
 function nicer_get_post_link_filter( $link, $post_id=0, $topic_id=0 ) {
 	// get_post_link or get_topic_last_post_link request?
 	// The former uses $post_id, the latter both $post_id and $topic_id
-	if ( get_post_id($post_id) && get_topic_id($topic_id) ) // get_topic_last_post_link request
+	if ( get_topic_id($topic_id) ) // get_topic_last_post_link request
 		return $link;
 	elseif ( $id = get_post_id($post_id) ) // get_post_link request
 	{
@@ -142,7 +142,15 @@ function nicer_get_post_link_filter( $link, $post_id=0, $topic_id=0 ) {
 
 		$topic = get_topic( get_topic_id($bb_post->topic_id) ); // retrieve topic object that contains post
 	}
-	else return $link; // link already filtered. Fixes bug with Ajaxed Quote plugin
+	else // other "anchor-style" post request
+	{
+		$post_id = substr($link, -1); // horrible but I've not found any other way to do this yet...
+		$id = get_post_id($post_id);
+
+		$bb_post = bb_get_post($id); // retrieve post object
+
+		$topic = get_topic( get_topic_id($bb_post->topic_id) ); // retrieve topic object that contains post
+	}
 
 	$forum = get_forum( get_forum_id($topic->forum_id) ); // retrieve forum object that contains topic
 

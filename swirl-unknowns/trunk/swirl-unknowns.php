@@ -14,14 +14,15 @@ Author URI: mailto:francesco.pelle@gmail.com
  **/
 $redir_confirmation = '';
 $su_default_redir_page = bb_get_option('uri') .'bb-login.php';
-if ( !bb_get_option('su_redir_page') ) bb_update_option('su_redir_page', $su_default_redir_page);
+if ( !bb_get_option('su_redir_page') )
+	bb_update_option('su_redir_page', $su_default_redir_page);
 
 
 /**
  * Add admin panel
  **/
 function su_add_admin_panel() {
-	bb_admin_add_submenu(__('Swirl Unknowns'), 'use_keys', 'su_admin_panel');
+	bb_admin_add_submenu( __('Swirl Unknowns'), 'use_keys', 'su_admin_panel' );
 }
 
 
@@ -43,15 +44,15 @@ function su_admin_panel() {
 	</fieldset>
 	</form>
 	<br />
-	<?php printf("<strong>Note</strong>: if no address is entered, default page ( <code>%s</code> ) will be used.", $su_default_redir_page); ?>
+	<?php printf( '<strong>Note</strong>: if no address is entered, default page ( <code>%s</code> ) will be used.', $su_default_redir_page ); ?>
 	<br /><br />
 	<h3><?php _e('Allowed pages'); ?></h3>
 	<ul class="allowed_pages">
-		<li><?php printf("<code>%sbb-login.php</code>", bb_get_option('uri')); ?></li>
-		<li><?php printf("<code>%sbb-reset-password.php</code>", bb_get_option('uri')); ?></li>
-		<li><?php printf("<code>%sregister.php</code>", bb_get_option('uri')); ?></li>
-		<li><?php printf("<code>%sxmlrpc.php</code>", bb_get_option('uri')); ?></li>
-		<li><?php printf("<code>%sbb-admin/</code>", bb_get_option('uri')); ?></li>
+		<li><?php printf( '<code>%sbb-login.php</code>', bb_get_option('uri') ); ?></li>
+		<li><?php printf( '<code>%sbb-reset-password.php</code>', bb_get_option('uri') ); ?></li>
+		<li><?php printf( '<code>%sregister.php</code>', bb_get_option('uri') ); ?></li>
+		<li><?php printf( '<code>%sxmlrpc.php</code>', bb_get_option('uri') ); ?></li>
+		<li><?php printf( '<code>%sbb-admin/</code>', bb_get_option('uri') ); ?></li>
 	</ul>
 <?php
 }
@@ -61,17 +62,13 @@ function su_admin_panel() {
  * Process admin panel forms
  **/
 function su_admin_panel_forms_process() {
-	if ( $_POST )
-	{
+	if ( $_POST ) {
 		global $redir_confirmation;
 
-		if ( $_POST['redir_page'] )
-		{
+		if ( $_POST['redir_page'] ) {
 			bb_update_option('su_redir_page', $_POST['redir_page']);
 			$redir_confirmation = 'Page updated';
-		}
-		else
-		{
+		} else {
 			global $su_default_redir_page;
 
 			bb_update_option('su_redir_page', $su_default_redir_page);
@@ -90,9 +87,10 @@ function swirl_unknowns() {
 
 	if (
 		!bb_is_user_logged_in()
-		&& !preg_match("/((bb\-login|bb\-reset\-password|register|xmlrpc)\.php|\/bb\-admin\/)/i", $server_uri)
-		&& strcasecmp($server_uri, $redir_page)
-	) bb_safe_redirect($redir_page);
+		&& !preg_match( '/((bb\-login|bb\-reset\-password|register|xmlrpc)\.php|\/bb\-admin\/)/i', $server_uri )
+		&& strcasecmp( $server_uri, $redir_page )
+	)
+		bb_safe_redirect( $redir_page );
 }
 
 
@@ -107,13 +105,13 @@ function su_uninstall() {
 /**
  * Add bbPress actions
  **/
-add_action('bb_admin_menu_generator', 'su_add_admin_panel');
-add_action('bb_admin-header.php', 'su_admin_panel_forms_process');
-add_action('bb_init', 'swirl_unknowns');
+add_action( 'bb_admin_menu_generator', 'su_add_admin_panel' );
+add_action( 'bb_admin-header.php', 'su_admin_panel_forms_process' );
+add_action( 'bb_init', 'swirl_unknowns' );
 
 
 /**
  * Grab bbPress plugin deactivated hook
  **/
-bb_register_plugin_deactivation_hook(__FILE__, 'su_uninstall');
+bb_register_plugin_deactivation_hook( __FILE__, 'su_uninstall' );
 ?>

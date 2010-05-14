@@ -118,7 +118,9 @@ function nicer_get_topic_link_filter( $link, $id=0 ) {
 
 		$topic = get_topic( get_topic_id($bb_post->topic_id) ); // retrieve topic object that contains post
 	}
-	elseif ( get_view_name($id)!='' ) // request coming from a view
+	else /* if ( get_view_name($id)!='' ) // request coming from a view */
+		// I found out this branch is used by other kind of requests too,
+		// so I removed the "get_view_name" check.
 		$topic = bb_get_topic_from_uri($link); // retrieve topic object from its URI
 
 	$forum = get_forum( get_forum_id($topic->forum_id) ); // retrieve forum object that contains topic
@@ -142,16 +144,8 @@ function nicer_get_post_link_filter( $link, $post_id=0, $topic_id=0 ) {
 
 		$topic = get_topic( get_topic_id($bb_post->topic_id) ); // retrieve topic object that contains post
 	}
-	else // other "anchor-like" post request
-	{
-		$post_id = preg_replace('/.*#post-([0-9]+)/', '$1', $link); // still not so good as I would
-
-		$id = get_post_id($post_id);
-
-		$bb_post = bb_get_post($id); // retrieve post object
-
-		$topic = get_topic( get_topic_id($bb_post->topic_id) ); // retrieve topic object that contains post
-	}
+	else // other "anchor-like" post request, already filtered by nicer_get_topic_link_filter
+		return $link;
 
 	$forum = get_forum( get_forum_id($topic->forum_id) ); // retrieve forum object that contains topic
 

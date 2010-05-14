@@ -53,11 +53,11 @@ $link = get_post_link($post_id);`
 
 = Search links are broken. =
 
-* I know; <a href="http://trac.bbpress.org/ticket/1212">bbPress 1.0.3 will fix this</a>, meanwhile you may edit lines 942-943 of `/bb-includes/class.bb-query.php` changing every `forum-id` in `forum_id` <a href="http://bbpress.org/forums/topic/broken-forum-search-forum-id-vs-forum_id#post-61715">as described here</a>.
+* I know; <a href="http://trac.bbpress.org/ticket/1212">bbPress 1.0.3 will fix this</a>, meanwhile you may edit lines 942-943 of `/bb-includes/class.bb-query.php` turning every `forum-id` into `forum_id` <a href="http://bbpress.org/forums/topic/broken-forum-search-forum-id-vs-forum_id#post-61715">as described here</a>.
 
 = "Relevant posts" search links are still broken. =
 
-* I know; <a href="http://trac.bbpress.org/ticket/1222">bbPress 1.0.3 will fix even this</a>, meanwhile you may remove related code from your custom `search.php` since it's not vital.
+* I know; <a href="http://trac.bbpress.org/ticket/1222">bbPress 1.0.3 will fix even this</a>, meanwhile you may edit `search.php` in your bbPress root directory turning the first `topic` word at line 15 into `post`.
 
 == License ==
 

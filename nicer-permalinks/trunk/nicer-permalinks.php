@@ -142,9 +142,10 @@ function nicer_get_post_link_filter( $link, $post_id=0, $topic_id=0 ) {
 
 		$topic = get_topic( get_topic_id($bb_post->topic_id) ); // retrieve topic object that contains post
 	}
-	else // other "anchor-style" post request
+	else // other "anchor-like" post request
 	{
-		$post_id = substr($link, -1); // horrible but I've not found any other way to do this yet...
+		$post_id = preg_replace('/.*#post-([0-9]+)/', '$1', $link); // still not so good as I would
+
 		$id = get_post_id($post_id);
 
 		$bb_post = bb_get_post($id); // retrieve post object

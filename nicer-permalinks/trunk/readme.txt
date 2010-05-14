@@ -81,4 +81,4 @@ $link = get_post_link($post_id);`
 
 * nicer_get_post_link_filter enhanced
 
-* fixed bug with <a href="http://bbpress.org/plugins/topic/ajaxed-quote/">Ajaxed Quote</a> plugin
+* bug with <a href="http://bbpress.org/plugins/topic/ajaxed-quote/">Ajaxed Quote</a> plugin fixed

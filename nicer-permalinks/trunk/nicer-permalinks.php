@@ -14,7 +14,7 @@ Author URI: mailto:francesco.pelle@gmail.com
  *
  * Note: this custom functions are NOT solid, they are intented to be used in this plugin ONLY!
  * Please do NOT re-use this functions anywhere else!
- **/
+ */
 if ( !function_exists( 'file_put_contents' ) ) {
 	function file_put_contents( $filename, $contents ) {
 		$stream = fopen( $filename, 'w' );
@@ -42,7 +42,7 @@ if ( !function_exists( 'file_get_contents' ) ) {
  * Update .htaccess
  *
  * Note: the following code won't mess up files if manual update was performed
- **/
+ */
 $htaccess = BB_PATH .'.htaccess';
 $nicer_htaccess = bb_get_plugin_directory( bb_plugin_basename( __FILE__ ) ) .'nicer-htaccess';
 
@@ -52,7 +52,7 @@ $nicer_htaccess = bb_get_plugin_directory( bb_plugin_basename( __FILE__ ) ) .'ni
 if ( '##' != file_get_contents( $htaccess, NULL, NULL, 0, 2 ) ) {
 	// check files permissions
 	if ( !is_writable( $htaccess ) || !is_writable( $nicer_htaccess ) ) { // cannot update automatically
-		bb_die( sprintf( 'Files not writable. Please see %s', bb_get_plugin_directory( bb_plugin_basename( __FILE__ ) ) .'readme.txt' ) );
+		bb_die( sprintf( __('Files not writable. Please see %s'), bb_get_plugin_directory( bb_plugin_basename( __FILE__ ) ) .'readme.txt' ) );
 		exit();
 	} else { // update files
 		// load files content
@@ -70,16 +70,16 @@ if ( '##' != file_get_contents( $htaccess, NULL, NULL, 0, 2 ) ) {
  * Add bbPress filters
  *
  * Note: the following code is executed whether manual or automatic update was performed
- **/
-add_filter( 'get_forum_link', 'nicer_get_forum_link_filter' );
-add_filter( 'bb_get_forum_bread_crumb', 'nicer_bb_get_forum_bread_crumb_filter' );
-add_filter( 'get_topic_link', 'nicer_get_topic_link_filter' );
-add_filter( 'get_post_link', 'nicer_get_post_link_filter' );
+ */
+add_filter( 'get_forum_link', 'nicer_get_forum_link_filter', 10, 2 );
+add_filter( 'bb_get_forum_bread_crumb', 'nicer_bb_get_forum_bread_crumb_filter', 10, 2 );
+add_filter( 'get_topic_link', 'nicer_get_topic_link_filter', 10, 2 );
+add_filter( 'get_post_link', 'nicer_get_post_link_filter', 10, 3 );
 
 
 /**
  * Nicer get_forum_link filter
- **/
+ */
 function nicer_get_forum_link_filter( $link, $forum_id = 0 ) {
 	// remove redundant "forum" word from URI
 	$link = str_replace( bb_get_option('uri') .'forum/', bb_get_option('uri'), $link );
@@ -91,7 +91,7 @@ function nicer_get_forum_link_filter( $link, $forum_id = 0 ) {
 
 /**
  * Nicer bb_get_forum_bread_crumb filter
- **/
+ */
 function nicer_bb_get_forum_bread_crumb_filter( $trail = '', $forum_id = 0 ) {
 	// remove redundant "forum" word from each forum URI
 	$trail = str_replace( bb_get_option('uri') .'forum/', bb_get_option('uri'), $trail );
@@ -103,7 +103,7 @@ function nicer_bb_get_forum_bread_crumb_filter( $trail = '', $forum_id = 0 ) {
 
 /**
  * Nicer get_topic_link filter
- **/
+ */
 function nicer_get_topic_link_filter( $link, $id = 0 ) {
 	// request coming from main forum, from an admin page or from a view?
 	// The first passes a topic id, the second a post id and the third a view id
@@ -127,7 +127,7 @@ function nicer_get_topic_link_filter( $link, $id = 0 ) {
 
 /**
  * Nicer get_post_link filter
- **/
+ */
 function nicer_get_post_link_filter( $link, $post_id = 0, $topic_id = 0 ) {
 	// get_post_link or get_topic_last_post_link request?
 	// The former uses $post_id, the latter both $post_id and $topic_id
@@ -154,7 +154,7 @@ function nicer_get_post_link_filter( $link, $post_id = 0, $topic_id = 0 ) {
 
 /**
  * Restore .htaccess
- **/
+ */
 function restore_htaccess() {
 	$htaccess = BB_PATH .'.htaccess';
 	$nicer_htaccess = bb_get_plugin_directory( bb_plugin_basename( __FILE__ ) ) .'nicer-htaccess';
@@ -165,7 +165,7 @@ function restore_htaccess() {
 	if ( '##' == file_get_contents( $htaccess, NULL, NULL, 0, 2 ) ) {
 		// check files permissions
 		if ( !is_writable( $htaccess ) || !is_writable( $nicer_htaccess ) ) {
-			bb_die( sprintf( 'Files not writable. Please see %s', bb_get_plugin_directory( bb_plugin_basename( __FILE__ ) ) .'readme.txt' ) );
+			bb_die( sprintf( __('Files not writable. Please see %s'), bb_get_plugin_directory( bb_plugin_basename( __FILE__ ) ) .'readme.txt' ) );
 			exit();
 		} else { // restore files
 			// load files content
@@ -182,5 +182,5 @@ function restore_htaccess() {
 
 /**
  * Grab bbPress plugin deactivated hook
- **/
+ */
 bb_register_plugin_deactivation_hook( __FILE__, 'restore_htaccess' );

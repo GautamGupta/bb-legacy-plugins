@@ -2,7 +2,7 @@
 /*
 Plugin Name: Swirl Unknowns
 Plugin URI: http://bbpress.org/plugins/topic/swirl-unknowns/
-Description: Non-logged-in users get redirected to a page of your choice. Based on <a href="http://blogwaffe.com/">Michael D. Adams</a>' <a href="http://bbpress.org/forums/topic/117">Force Login</a> plugin plus the <a href="http://bbpress.org/forums/topic/force-login-for-bbpress-101">voodoo code from Trent Adams and Sam Bauers</a>.
+Description: Redirects non-logged-in users to a page of your choice. Based on <a href="http://blogwaffe.com/">Michael D. Adams</a>' <a href="http://bbpress.org/forums/topic/117">Force Login</a> plugin plus the <a href="http://bbpress.org/forums/topic/force-login-for-bbpress-101">voodoo code from Trent Adams and Sam Bauers</a>.
 Version: 0.6
 Author: mr_pelle
 Author URI: mailto:francesco.pelle@gmail.com
@@ -41,6 +41,7 @@ function su_admin_panel() {
 		<label for="redir_page"><?php _e('Page URI: '); ?></label>
 		<input type="text" name="redir_page" id="redir_page" value="<?php echo bb_get_option('su_redir_page') ?>" />
 		<input type="submit" name="submit" id="submit" value="Update" /><span id="confirmation"><?php echo $redir_confirmation ?></span>
+		<input type="hidden" name="action" id="action" value="swirl_unknowns" />
 	</fieldset>
 	</form>
 	<br />
@@ -62,7 +63,7 @@ function su_admin_panel() {
  * Process admin panel forms
  */
 function su_admin_panel_forms_process() {
-	if ( $_POST ) {
+	if ( 'swirl_unknowns' == $_POST['action'] ) {
 		global $redir_confirmation;
 
 		if ( $_POST['redir_page'] ) {

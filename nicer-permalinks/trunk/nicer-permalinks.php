@@ -3,7 +3,7 @@
 Plugin Name: Nicer Permalinks
 Plugin URI: http://bbpress.org/plugins/topic/nicer-permalinks/
 Description: Rewrites every bbPress URI removing the words "forum" and "topic" and emphasizes hierarchy. Based on <a href="http://www.technospot.net/blogs/">Ashish Mohta</a> and <a href="http://markroberthenderson.com/">Mark R. Henderson</a>'s <a href="http://blog.markroberthenderson.com/getting-rid-of-forums-and-topic-from-bbpress-permalinks-updated-plugin/">Remove Forum Topic</a> plugin.
-Version: 3.6
+Version: 3.6.1
 Author: mr_pelle
 Author URI: mailto:francesco.pelle@gmail.com
 */
@@ -74,7 +74,7 @@ if ( '##' != file_get_contents( $htaccess, NULL, NULL, 0, 2 ) ) {
 add_filter( 'get_forum_link', 'nicer_get_forum_link_filter', 10, 2 );
 add_filter( 'bb_get_forum_bread_crumb', 'nicer_bb_get_forum_bread_crumb_filter', 10, 2 );
 add_filter( 'get_topic_link', 'nicer_get_topic_link_filter', 10, 2 );
-add_filter( 'get_post_link', 'nicer_get_post_link_filter', 10, 3 );
+add_filter( 'get_post_link', 'nicer_get_post_link_filter', 10, 2 );
 
 
 /**
@@ -117,6 +117,9 @@ function nicer_get_topic_link_filter( $link, $id = 0 ) {
 		// I found out this branch is used by other kind of requests too,
 		// so I removed the "get_view_name" check.
 		$topic = bb_get_topic_from_uri( $link ); // retrieve topic object from its URI
+
+	if ( !$topic ) // deleted topic redirection link request
+		return bb_get_option('uri'); // redirect to main page because no topic info can be retrieved
 
 	$forum = get_forum( get_forum_id( $topic->forum_id ) ); // retrieve forum object that contains topic
 

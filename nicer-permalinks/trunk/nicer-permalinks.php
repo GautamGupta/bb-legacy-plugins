@@ -74,7 +74,7 @@ if ( '##' != file_get_contents( $htaccess, NULL, NULL, 0, 2 ) ) {
 add_filter( 'get_forum_link', 'nicer_get_forum_link_filter', 10, 2 );
 add_filter( 'bb_get_forum_bread_crumb', 'nicer_bb_get_forum_bread_crumb_filter', 10, 2 );
 add_filter( 'get_topic_link', 'nicer_get_topic_link_filter', 10, 2 );
-add_filter( 'get_post_link', 'nicer_get_post_link_filter', 10, 2 );
+add_filter( 'get_post_link', 'nicer_get_post_link_filter', 10, 3 );
 
 
 /**

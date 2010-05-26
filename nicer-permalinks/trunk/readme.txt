@@ -3,7 +3,7 @@ Contributors: mr_pelle
 Tags: permalinks, mod_rewrite, htaccess, slug, forum, topic
 Plugin Name: Nicer Permalinks
 Plugin URI: http://bbpress.org/plugins/topic/nicer-permalinks/
-Version: 3.6
+Version: 3.6.1
 Requires at least: 1.0.2
 Tested up to: 1.0.2
 
@@ -15,7 +15,7 @@ Rewrites every bbPress URI removing the words "forum" and "topic" and emphasizes
 
 Based on <a href="http://www.technospot.net/blogs/">Ashish Mohta</a> and <a href="http://markroberthenderson.com/">Mark R. Henderson</a>'s <a href="http://blog.markroberthenderson.com/getting-rid-of-forums-and-topic-from-bbpress-permalinks-updated-plugin/">Remove Forum Topic</a> plugin.
 
-Automatically updates and backups `.htaccess` on activation and restores it on deactivation (if files permissions are correctly set).
+Automatically updates and backups `.htaccess` and restores it when deactivating (if files permissions are correctly set).
 
 == Installation ==
 
@@ -35,29 +35,31 @@ $link = get_post_link($post_id);`
 
 = Option #1: automatic update =
 
-* Open terminal, go into bbPress root folder and change `.htaccess` permissions: `sudo chmod -v 666 .htaccess`
+* Change `.htaccess` permissions to read+write.
 
-* Go to plugin folder and change `nicer-htaccess` permissions: `sudo chmod -v 666 nicer-htaccess`
+* Change `nicer-htaccess` permissions the same way.
 
 * Activate plugin.
 
-* Restore original files permissions (usually "644"). Remember to set them back to "666" before deactivating the plugin, though.
+* Restore original permissions (usually read only). Remember to set them back to read+write before deactivating the plugin!
 
 = Option #2: manual update =
 
-* Open `.htaccess`, replace all its content with `nicer-htaccess` content and save.
+* Backup your `.htaccess`.
+
+* Copy `nicer-htaccess` into your bbPress root directory.
+
+* Rename it `.htaccess`.
 
 * Activate plugin.
 
 == Frequently Asked Questions ==
 
-= Search links are broken. =
+= Error on deactivation =
 
-* I know; <a href="http://trac.bbpress.org/ticket/1212">bbPress 1.0.3 will fix this</a>, meanwhile you may edit lines 942-943 of `/bb-includes/class.bb-query.php` turning every `forum-id` into `forum_id` <a href="http://bbpress.org/forums/topic/broken-forum-search-forum-id-vs-forum_id#post-61715">as described here</a>.
+* If you performed manual update: first restore your original `.htaccess` and then deactivate the plugin.
 
-= "Relevant posts" search links are still broken. =
-
-* I know; <a href="http://trac.bbpress.org/ticket/1222">bbPress 1.0.3 will fix even this</a>, meanwhile you may edit `search.php` in your bbPress root directory turning the first `topic` word at line 15 into `post`.
+* If you performed automatic update: did you set both `.htaccess` and `nicer-htaccess` permissions to read+write before plugin deactivation?
 
 == License ==
 
@@ -82,3 +84,7 @@ $link = get_post_link($post_id);`
 * nicer_get_post_link_filter enhanced
 
 * bug with <a href="http://bbpress.org/plugins/topic/ajaxed-quote/">Ajaxed Quote</a> plugin fixed
+
+= Version 3.6.1 (2010-05-26) =
+
+* fixed redirection link when deleting a topic from its page

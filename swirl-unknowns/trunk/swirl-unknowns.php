@@ -34,6 +34,7 @@ function su_admin_panel() {
 	global $redir_confirmation;
 ?>
 	<link rel="stylesheet" href="<?php echo bb_get_plugin_uri(bb_plugin_basename(__FILE__)) ?>swirl-unknowns.css" type="text/css" />
+	<div id="su_container">
 	<h2><?php _e('Swirl Unknowns'); ?></h2>
 	<h3><?php _e('Define the page non-logged-in users will be redirected to'); ?></h3>
 	<form method="post" id="redir_form">
@@ -48,13 +49,14 @@ function su_admin_panel() {
 	<?php printf( __('<strong>Note</strong>: if no address is entered, default page ( <code>%s</code> ) will be used.'), $su_default_redir_page ); ?>
 	<br /><br />
 	<h3><?php _e('Allowed pages'); ?></h3>
-	<ul class="allowed_pages">
+	<ul>
 		<li><code><?php printf( '%sbb-login.php', bb_get_option('uri') ); ?></code></li>
 		<li><code><?php printf( '%sbb-reset-password.php', bb_get_option('uri') ); ?></code></li>
 		<li><code><?php printf( '%sregister.php', bb_get_option('uri') ); ?></code></li>
 		<li><code><?php printf( '%sxmlrpc.php', bb_get_option('uri') ); ?></code></li>
 		<li><code><?php printf( '%sbb-admin/', bb_get_option('uri') ); ?></code></li>
 	</ul>
+	</div>
 <?php
 }
 

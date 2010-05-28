@@ -1,15 +1,15 @@
-code {
+#su_container code {
 	font-size: 12px;
 }
 
-h3 {
+#su_container h3 {
 	border-bottom: 1px solid;
 	font-size: 110%;
 	margin-bottom: 7px;
 	padding-bottom: 4px;
 }
 
-strong {
+#su_container strong {
 	font-weight: bold;
 }
 
@@ -19,7 +19,7 @@ strong {
 	width: 50%;
 }
 
-.allowed_pages li {
+#su_container ul li {
 	list-style: circle;
 	margin-left: 15px;
 }

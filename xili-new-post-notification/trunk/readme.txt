@@ -1,10 +1,11 @@
 === xili New Post Notification ===
-Tags: notification, bbpress, email
 Contributors: dev.xiligroup.com
+Donate link: http://dev.xiligroup.com
+Tags: notification, bbpress, email
 Requires at least: 1.0.1
 Tested up to: 1.0.2
 Stable tag: 0.9.2
-Donate link: http://dev.xiligroup.com
+
 
 A very light plugin to send a short notification to a choosen email address when a new post is created.
 

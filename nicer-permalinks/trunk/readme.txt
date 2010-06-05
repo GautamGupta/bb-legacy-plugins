@@ -3,9 +3,9 @@ Contributors: mr_pelle
 Tags: permalinks, mod_rewrite, htaccess, slug, forum, topic
 Plugin Name: Nicer Permalinks
 Plugin URI: http://bbpress.org/plugins/topic/nicer-permalinks/
-Version: 3.6.1
-Requires at least: 1.0.2
-Tested up to: 1.0.2
+Version: 3.6.2
+Requires at least: 1.0
+Tested up to: 1.1-alpha
 
 Rewrites every bbPress URI removing the words "forum" and "topic" and emphasizes forum hierarchy.
 
@@ -25,9 +25,11 @@ Automatically updates and backups `.htaccess` and restores it when deactivating 
 
 * If name based permalinks aren't activated yet, turn them on (check under "Settings" admin submenu for "Permalinks").
 
-* Open `bb-post.php` and switch lines 46 and 48 (<a href="http://trac.bbpress.org/browser/trunk/bb-post.php">bbPress 1.0.3 will fix this</a>). They must look like this:
+* Open `bb-post.php` and switch lines 46 and 48 (bug fixed in bbPress 1.1-alpha). They must look like this:
 
-<blockquote>`$topic = get_topic( $topic_id, false );
+<blockquote>
+`$topic = get_topic( $topic_id, false );
+
 $link = get_post_link($post_id);`
 </blockquote>
 
@@ -41,15 +43,13 @@ $link = get_post_link($post_id);`
 
 * Activate plugin.
 
-* Restore original permissions (usually read only). Remember to set them back to read+write before deactivating the plugin!
+* Restore `.htaccess` original permissions (usually read only). Remember to set them back to read+write before deactivating the plugin!
 
 = Option #2: manual update =
 
 * Backup your `.htaccess`.
 
-* Copy `nicer-htaccess` into your bbPress root directory.
-
-* Rename it `.htaccess`.
+* Replace `.htaccess` content with `nicer-htaccess`'s.
 
 * Activate plugin.
 
@@ -87,4 +87,8 @@ $link = get_post_link($post_id);`
 
 = Version 3.6.1 (2010-05-26) =
 
-* fixed redirection link when deleting a topic from its page
+* redirection link when deleting a topic from its own page fixed (bug fixed in bbPress 1.1-alpha)
+
+= Version 3.6.2 (2010-06-05) =
+
+* minor changes

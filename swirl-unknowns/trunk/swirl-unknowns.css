@@ -1,27 +1,28 @@
-#su_container code {
+#swirl_unknowns_container code {
 	font-size: 12px;
 }
 
-#su_container h3 {
+#swirl_unknowns_container h3 {
 	border-bottom: 1px solid;
 	font-size: 110%;
 	margin-bottom: 7px;
 	padding-bottom: 4px;
 }
 
-#su_container strong {
+#swirl_unknowns_container strong {
 	font-weight: bold;
 }
 
-#redir_page {
+#swirl_page {
 	font-family: monospace;
 	font-size: 1.2em;
+	margin-bottom: 5px;
 	width: 50%;
 }
 
-#su_container ul li {
+#swirl_unknowns_container ul li {
 	list-style: circle;
-	margin-left: 15px;
+	margin-left: 20px;
 }
 
 #confirmation {

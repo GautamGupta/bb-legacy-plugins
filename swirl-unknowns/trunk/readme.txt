@@ -1,11 +1,11 @@
 === Swirl Unknowns ===
 Contributors: mr_pelle
-Tags: redirect, hidden, forum, login
+Tags: redirect, hidden, private, forum, login
 Plugin Name: Swirl Unknowns
 Plugin URI: http://bbpress.org/plugins/topic/swirl-unknowns/
-Version: 0.6
-Requires at least: 1.0.2
-Tested up to: 1.0.2
+Version: 0.7
+Requires at least: 1.0
+Tested up to: 1.1-alpha
 
 Redirects non-logged-in users to a page of your choice.
 
@@ -21,7 +21,7 @@ Based on <a href="http://blogwaffe.com/">Michael D. Adams</a>' <a href="http://b
 
 * Activate the plugin and check under "Plugins" admin submenu for "Swirl Unknowns".
 
-* Enter redirection page.
+* Enter the swirl page.
 
 == License ==
 
@@ -40,3 +40,9 @@ Based on <a href="http://blogwaffe.com/">Michael D. Adams</a>' <a href="http://b
 * allowed page removed
 
 * source code cleaned
+
+= Version 0.7 (2010-06-05) =
+
+* percent-substitution tags added
+
+* minor changes

@@ -27,11 +27,9 @@ Automatically updates and backups `.htaccess` and restores it when deactivating 
 
 * Open `bb-post.php` and switch lines 46 and 48 (bug fixed in bbPress 1.1-alpha). They must look like this:
 
-<blockquote>
 `$topic = get_topic( $topic_id, false );
 
 $link = get_post_link($post_id);`
-</blockquote>
 
 * Choose one of the following:
 

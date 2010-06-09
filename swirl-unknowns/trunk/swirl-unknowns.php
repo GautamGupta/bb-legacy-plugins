@@ -132,7 +132,7 @@ function swirl_unknowns() {
 
 		// process percent-substitution tags
 		foreach ( $tags as $tag )
-			$redir_page = str_replace( $tag['code'], $tag['value'], $redir_page );
+			$swirl_page = str_replace( $tag['code'], $tag['value'], $swirl_page );
 
 		if (
 			!bb_is_user_logged_in()

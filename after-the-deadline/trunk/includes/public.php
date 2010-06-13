@@ -17,12 +17,12 @@
 function atd_css_js() {
 	if ( bb_is_user_logged_in() || ( function_exists( 'bb_is_login_required' ) && !bb_is_login_required() ) ) {
 		global $atd_plugopts, $atd_supported_langs;
-		$i18n = array(
+		
+		$i18n		= array(
 				'rpc'				=> ATD_PLUGPATH . 'includes/check.php'				,
-				'api_key'			=> 'BB-' . md5( bb_get_uri() )					,
-				'lang'				=> $atd_plugopts['lang'] ? $atd_plugopts['lang'] : 'en'		,
 				'button_proofread'		=> __( 'Proofread'			, 'after-the-deadline' ),
 				'button_edit_text'		=> __( 'Edit Text'			, 'after-the-deadline' ),
+				'button_accept_all'		=> __( 'Accept All'			, 'after-the-deadline' ),
 				'button_ok'			=> __( 'OK'				, 'after-the-deadline' ),
 				'button_cancel'			=> __( 'Cancel'				, 'after-the-deadline' ),
 				'menu_title_spelling'		=> __( 'Spelling'			, 'after-the-deadline' ),
@@ -63,8 +63,8 @@ function atd_css_js() {
 					$i18n['autoproofread']	= ( intval( $user_options['autoproofread'] ) == 1 ) ? 1 : 0;
 			}
 		}
-		//wp_enqueue_script(	'after-the-deadline-po', ATD_PLUGPATH . 'scripts/profile.dev.js', array( 'jquery' ), ATD_VER, true );
-		//wp_enqueue_script(	'after-the-deadline', ATD_PLUGPATH . 'scripts/atd.dev.js', array( 'jquery' )	, ATD_VER, true	);
+		//wp_enqueue_script(	'after-the-deadline-po', ATD_PLUGPATH . 'scripts/profile.dev.js', array( 'jquery' ), ATD_VER	); //Compressed js is echoed on the profile edit page itself
+		//wp_enqueue_script(	'after-the-deadline', ATD_PLUGPATH . 'scripts/atd.dev.js', array( 'jquery' )	, ATD_VER	);
 		wp_enqueue_script(	'after-the-deadline', ATD_PLUGPATH . 'scripts/atd.js'	, array( 'jquery' )	, ATD_VER	);
 		wp_localize_script(	'after-the-deadline', 'AtD'				, $i18n					);
 		wp_enqueue_style(	'after-the-deadline', ATD_PLUGPATH . 'css/atd.css'	, false			, ATD_VER, 'all');

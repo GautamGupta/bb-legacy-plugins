@@ -1,6 +1,6 @@
 === After the Deadline ===
 Contributors: Gautam Gupta
-Donate link: http://gaut.am/donate/AtD/
+Donate link: http://gaut.am/donate/bb/atd/
 Tags: after the deadline, atd, writing, spell, spelling, spellchecker, grammar, style, edit, proofread, Gautam
 Requires at least: 1.0
 Tested up to: 1.1
@@ -37,7 +37,7 @@ GNU General Public License version 3 (GPLv3): http://www.opensource.org/licenses
 You can get AtD elsewhere too! Please check [here](http://www.afterthedeadline.com/download.slp) for the list.
 
 = Donate =
-You may donate by going [here](http://gaut.am/donate/AtD/).
+You may donate by going [here](http://gaut.am/donate/bb/atd/).
 
 == Installation ==
 
@@ -62,6 +62,11 @@ Please use AtD v1.4 or upgrade your bbPress install
 3. The Settings on User's Profile Page (When AutoProofread, Ignore Types & Ignore Always Options are Checked)
 
 == Changelog ==
+
+= 1.7 (13-06-10) =
+* Fixed a bug in which the API key sent to the server should be different for each user - [Check here](http://www.afterthedeadline.com/api.slp)
+* The proxy script now makes use of `WP_Http` which is much more reliable
+* Added an option for Accepting All Suggestions
 
 = 1.6.1 (26-03-10) =
 * Updated AtD/jQuery - [Changelog](http://www.polishmywriting.com/atd_jquery/changelog.html)
@@ -126,6 +131,9 @@ Upgraded AtD/jQuery - [Changelog](http://www.polishmywriting.com/atd_jquery/chan
 * Initial Release
 
 == Upgrade Notice ==
+
+= 1.7 =
+Added some new features and fixed bugs.
 
 = 1.6.1 =
 Upgraded AtD/jQuery

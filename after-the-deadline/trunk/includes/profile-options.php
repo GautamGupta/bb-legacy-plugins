@@ -36,12 +36,11 @@ function atd_profile_update( $user_id ) {
 	if ( !bb_current_user_can( 'edit_user', $user_id ) )
 		return;
 	
-	if ( in_array( 'ignoretypes', (array) $atd_plugopts['enableuser'] ) ) {
+	if ( in_array( 'ignoretypes', (array) $atd_plugopts['enableuser'] ) )
 		if ( is_array( $_POST['atd_ignoretypes'] ) )
 			$options['ignoretypes'] = esc_attr( implode( ',', array_keys( $_POST['atd_ignoretypes'] ) ) );
 		else
 			unset( $options['ignoretypes'] );
-	}
 	
 	if ( in_array( 'ignorealways', (array) $atd_plugopts['enableuser'] ) )
 		$options['ignorealways'] = esc_attr( $_POST['atd_ignored_phrases'] );

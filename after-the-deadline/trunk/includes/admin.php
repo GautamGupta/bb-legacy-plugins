@@ -16,7 +16,7 @@
  *
  * @return string|bool Returns version if update is available, else false
  */
-function atd_update_check(){
+function atd_update_check() {
 	$latest_ver = trim( wp_remote_retrieve_body( wp_remote_get( 'http://gaut.am/uploads/plugins/updater.php?pid=5&chk=ver&soft=bb&current=' . ATD_VER, array( 'user-agent' => 'AtD/bbPress v' . ATD_VER ) ) ) );
 	if ( !$latest_ver || version_compare( $latest_ver, ATD_VER, '<=' ) ) /* If call fails or plugin is upto date, then return */
 		return false;
@@ -48,14 +48,13 @@ function atd_options() {
 		/* Sanity Checks */
 		$atd_plugopts['lang']		= ( in_array( $_POST['lang'], array_keys( $atd_supported_langs ) ) ) ? $_POST['lang'] : 'en';
 		$atd_plugopts['enableuser']	= array();
-		foreach ( (array) $_POST['enableuser'] as $option ) {
+		foreach ( (array) $_POST['enableuser'] as $option )
 			if ( in_array( $option, array( 'autoproofread', 'ignorealways', 'ignoretypes' ) ) )
 				$atd_plugopts['enableuser'][] = $option;
-		}
 		
 		/* Save the options and notify user */
 		bb_update_option( ATD_OPTIONS, $atd_plugopts );
-		bb_admin_notice( __( 'The options have been successfully saved!', 'after-the-deadline' ) );
+		bb_admin_notice( sprintf( __( 'The options have been successfully saved! Maybe you would consider <a href="%s">donating</a>.', 'after-the-deadline' ), 'http://gaut.am/donate/bb/atd/' ) );
 	}
 	
 	/* Check for updates and if available, then notify */
@@ -104,9 +103,9 @@ function atd_options() {
 		<fieldset class="submit">
 			<?php bb_nonce_field( 'atd-save-chk' ); ?>
 			<input type="hidden" name="atd_opts_submit" value="1"></input>
-			<input class="submit" type="submit" name="submit" value="Save Changes" />
+			<p><?php printf( __( 'Happy with the plugin? Why not <a href="%1$s">buy the author a cup of coffee or two</a> or <a href="%2$s">follow him on twitter</a> (or even visit his <a href="%3$s">website</a>).', 'after-the-deadline' ), 'http://gaut.am/donate/bb/atd/', 'http://twitter.com/Gaut_am', 'http://www.cyberfundu.com/' ); ?></p>
+			<input class="submit" type="submit" name="submit" value="<?php _e( 'Save Changes', 'ajaxed-chat' ); ?>" />
 		</fieldset>
-		<p><?php printf( __( 'Happy with the plugin? Why not <a href="%1$s">buy the author a cup of coffee or two</a> or get him something from his <a href="%2$s">wishlist</a>?', 'after-the-deadline' ), 'http://gaut.am/donate/AtD/', 'http://gaut.am/wishlist/' ); ?></p>
 	</form>
 <?php
 }

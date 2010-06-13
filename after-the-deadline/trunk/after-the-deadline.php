@@ -23,7 +23,7 @@ bb_load_plugin_textdomain( 'after-the-deadline', dirname( __FILE__ ) . '/transla
 /**
  * Defines
  */
-define( 'ATD_VER'		, '1.7-dev'						); /** Version */
+define( 'ATD_VER'		, '1.7'							); /** Version */
 define( 'ATD_OPTIONS'		, 'AftertheDeadline'					); /** Option Name */
 define( 'ATD_USER_OPTIONS'	, 'AtDuserOptions'					); /** User Option Name */
 define( 'ATD_PLUGPATH'		, bb_get_plugin_uri( bb_plugin_basename( __FILE__ ) )	); /** Plugin URL */
@@ -33,9 +33,9 @@ define( 'ATD_PLUGPATH'		, bb_get_plugin_uri( bb_plugin_basename( __FILE__ ) )	);
  */
 $atd_supported_langs = array(
 	'en' => __( 'English'	, 'after-the-deadline' ),
-	'pt' => __( 'Portuguese', 'after-the-deadline' ),
 	'fr' => __( 'French'	, 'after-the-deadline' ),
 	'de' => __( 'German'	, 'after-the-deadline' ),
+	'pt' => __( 'Portuguese', 'after-the-deadline' ),
 	'es' => __( 'Spanish'	, 'after-the-deadline' )
 );
 $atd_plugopts = bb_get_option( ATD_OPTIONS );

@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: After the Deadline\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/after-the-deadline\n"
-"POT-Creation-Date: 2010-03-24 08:03+0000\n"
-"PO-Revision-Date: 2010-03-24 13:36+0530\n"
+"POT-Creation-Date: 2010-06-13 11:10+0000\n"
+"PO-Revision-Date: 2010-06-13 16:50+0530\n"
 "Last-Translator: Gautam <gautam.2011@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -44,142 +44,151 @@ msgstr "आफ्टर दी डेडलाइन का नया संस�
 msgid "New version (%1$s) of After the Deadline Plugin is available! Please download the latest version from <a href=\"%2$s\">here</a>."
 msgstr "आफ्टर दी डेडलाइन का नया संस्करण (%1$s) उपलब्ध है! कृप्या उसे <a href=\"%2$s\">यहाँ</a> से डाउनलोड करें|"
 
-#: includes/admin.php:58
-msgid "The options have been successfully saved!"
-msgstr "विकल्प सफलतापूर्वक दर्ज करलिए गए हैं|"
+#: includes/admin.php:57
+#, php-format
+msgid "The options have been successfully saved! Maybe you would consider <a href=\"%s\">donating</a>."
+msgstr "विकल्प सफलतापूर्वक दर्ज करलिए गए हैं| शायद आप <a href=\"%s\">कुछ दान</a> करना चाहेंगे|"
 
-#: includes/admin.php:67
+#: includes/admin.php:66
 msgid "Language"
 msgstr "भाषा"
 
-#: includes/admin.php:71
+#: includes/admin.php:70
 #, php-format
 msgid "Proofreading should be done for which language? The plugin currently supports the following languages - %s."
 msgstr "वर्तनी कौनसी भाषा के लिए जाँची जानी चाहिए? प्लगइन अभी निम्नलिखित भाषाओं का समर्थन करता है - %s|"
 
-#: includes/admin.php:74
+#: includes/admin.php:73
 msgid "Enable the user to select the option for:"
 msgstr "उपयोगकर्ता को यह विकल्प चुनने की अनुमति है:"
 
-#: includes/admin.php:76
+#: includes/admin.php:75
 msgid "These options will be shown on the user's profile page. All of these options are disabled by default."
 msgstr "यह विकल्प उपयोगकर्ता के प्रोफ़ाइल पृष्ठ पर दिखाए जाएगें| सारे विकल्प डिफ़ॉल्ट रूप से अक्षम हैं|"
 
-#: includes/admin.php:79
+#: includes/admin.php:78
 msgid "Autoproofreading the content if it is not proofread once before posting"
 msgstr "पोस्ट को जमा करने से पहले जाँचना यदि वेह जाँची नहीं गयी है"
 
-#: includes/admin.php:83
+#: includes/admin.php:82
 msgid "Ignoring a term forever (ignored terms can be removed from the profile page)"
 msgstr "हमेशा वर्तनी की उपेक्षा करना (इन्हें प्रोफ़ाइल पृष्ठ से भी हटाया जा सकता है)"
 
-#: includes/admin.php:87
+#: includes/admin.php:86
 msgid "Setting ignore types"
 msgstr "निश्चित प्रकारों पर ध्यान न देने का विकल्प"
 
-#: includes/admin.php:95
+#: includes/admin.php:94
 msgid "After the Deadline Options"
 msgstr "आफ्टर दी डेडलाइन के विकल्प"
 
-#: includes/admin.php:109
+#: includes/admin.php:106
 #, php-format
-msgid "Happy with the plugin? Why not <a href=\"%1$s\">buy the author a cup of coffee or two</a> or get him something from his <a href=\"%2$s\">wishlist</a>?"
-msgstr "प्लगिन से खुश? लिखने वाले को कुछ <a href=\"%1$s\">दान</a> दीजिये या फिर उसकी <a href=\"%2$s\">इच्छा सूची</a> देखिये|"
+msgid "Happy with the plugin? Why not <a href=\"%1$s\">buy the author a cup of coffee or two</a> or <a href=\"%2$s\">follow him on twitter</a> (or even visit his <a href=\"%3$s\">website</a>)."
+msgstr "प्लगिन से खुश? लिखने वाले को कुछ <a href=\"%1$s\">दान</a> दीजिये या फिर उसको <a href=\"%2$s\">ट्विट्टर पर फोलो</a> करें (या उसकी <a href=\"%3$s\">वेबसाइट</a> देखें)|"
 
-#. #-#-#-#-#  plugin.pot (After the Deadline 1.6)  #-#-#-#-#
-#. Plugin Name of an extension
-#: includes/admin.php:120
+#: includes/admin.php:107
+msgid "Save Changes"
+msgstr "विकल्प जमा करें"
+
+#. #-#-#-#-#  plugin.pot (After the Deadline 1.7)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: includes/admin.php:119
 msgid "After the Deadline"
 msgstr "आफ्टर दी डेडलाइन"
 
-#: includes/profile-options.php:70
+#: includes/profile-options.php:69
 msgid "Proofreading Options"
 msgstr "वर्तनी जाँचने के विकल्प"
 
-#: includes/profile-options.php:74
+#: includes/profile-options.php:73
 msgid "Auto Proofread"
 msgstr "स्वत: वर्तनी ठीक करना"
 
-#: includes/profile-options.php:76
+#: includes/profile-options.php:75
 msgid "Automatically proofread content when I forget to do a spellcheck"
 msgstr "पोस्ट को जमा करने से पहले जाँचिए यदि मैं वर्तनी जाँचना भूल जाता हूँ|"
 
-#: includes/profile-options.php:84
+#: includes/profile-options.php:83
 msgid "Grammar and Styles"
 msgstr "व्याकरण और शैलियाँ"
 
-#: includes/profile-options.php:86
+#: includes/profile-options.php:85
 msgid "Enable proofreading for the following grammar and style rules when writing posts and pages:"
 msgstr "निम्नलिखित व्याकरण और शैली को पोस्ट और पृष्ठ लिखने के समय सक्षम करें:"
 
-#: includes/profile-options.php:93
+#: includes/profile-options.php:92
 msgid "Bias Language"
 msgstr "पूर्वाग्रह भाषा"
 
-#: includes/profile-options.php:94
+#: includes/profile-options.php:93
 msgid "Clich&eacute;s"
 msgstr "क्लीशे"
 
-#: includes/profile-options.php:95
+#: includes/profile-options.php:94
 msgid "Complex Phrases"
 msgstr "जटिल वाक्यांश"
 
-#: includes/profile-options.php:96
+#: includes/profile-options.php:95
 msgid "Diacritical Marks"
 msgstr "विशेषक मार्क्स"
 
-#: includes/profile-options.php:97
+#: includes/profile-options.php:96
 msgid "Double Negatives"
 msgstr "दो नकारात्मक"
 
-#: includes/profile-options.php:102
+#: includes/profile-options.php:101
 msgid "Hidden Verbs"
 msgstr "छिपी क्रिया"
 
-#: includes/profile-options.php:103
+#: includes/profile-options.php:102
 msgid "Jargon"
 msgstr "वर्ग-बोली"
 
-#: includes/profile-options.php:104
+#: includes/profile-options.php:103
 msgid "Passive Voice"
 msgstr "कर्मवाच्य"
 
-#: includes/profile-options.php:105
+#: includes/profile-options.php:104
 msgid "Phrases to Avoid"
 msgstr "जिन वाक्यांशों को अनदेखा करना है"
 
-#: includes/profile-options.php:106
+#: includes/profile-options.php:105
 msgid "Redundant Phrases"
 msgstr "निरर्थक वाक्यांश"
 
-#: includes/profile-options.php:113
+#: includes/profile-options.php:112
 #, php-format
 msgid "<a href=\"%s\">Learn more</a> about these options."
 msgstr "इन विकलों के बारे मैं <a href=\"%s\">ज्यादा जानें</a>|"
 
-#: includes/profile-options.php:124
+#: includes/profile-options.php:123
 msgid "Ignored Phrases"
 msgstr "उपेक्षित वाक्यांश"
 
-#: includes/profile-options.php:127
+#: includes/profile-options.php:126
 msgid "Identify words and phrases to ignore while proofreading your posts and pages:"
 msgstr "वर्तनी जांचते समे, इन शब्दों और वाक्यांशों को नजरअंदाज करें:"
 
-#: includes/profile-options.php:128
+#: includes/profile-options.php:127
 msgid "Add"
 msgstr "जमा करें"
 
-#: includes/profile-options.php:131
+#: includes/profile-options.php:130
 msgid "Be sure to click \"Update Profile\" at the bottom of the screen to save your changes."
 msgstr "\"अपडेट प्रोफाइल\" बटन को कम होने के बाद दबाना न भूलें|"
 
-#: includes/public.php:24
+#: includes/public.php:23
 msgid "Proofread"
 msgstr "वर्तनी जाँचें"
 
-#: includes/public.php:25
+#: includes/public.php:24
 msgid "Edit Text"
 msgstr "पाठ संपादित करें"
+
+#: includes/public.php:25
+msgid "Accept All"
+msgstr "सभी स्वीकारें"
 
 #: includes/public.php:26
 msgid "OK"
@@ -269,19 +278,22 @@ msgstr "शुद्धिकारक के पास आपकी पोस�
 msgid "Press OK to submit your post, or Cancel to view the suggestions and edit your post."
 msgstr "अपनी पोस्ट को जमा करने के लिए \"ठीक है\" दबाएँ, या सुझाव देखने के लिए और अपनी पोस्ट को संपादित करने के लिए \"रद्द\" दबाएँ|"
 
-#. Plugin URI of an extension
+#. Plugin URI of the plugin/theme
 msgid "http://gaut.am/bbpress/plugins/after-the-deadline/"
 msgstr "http://gaut.am/bbpress/plugins/after-the-deadline/"
 
-#. Description of an extension
+#. Description of the plugin/theme
 msgid "After the Deadline plugin checks spelling, style, and grammar in your bbPress forum posts."
 msgstr "आफ्टर दी डेडलाइन प्लगिन आपके ब्बीप्रेस फोरम मैं वर्तनी और व्याकरण जांचता है|"
 
-#. Author of an extension
+#. Author of the plugin/theme
 msgid "Gautam Gupta"
 msgstr "गौतम गुप्ता "
 
-#. Author URI of an extension
-msgid "http://gaut.am/"
-msgstr "http://gaut.am/"
+#. Author URI of the plugin/theme
+msgid "http://www.cyberfundu.com/"
+msgstr "http://www.cyberfundu.com/"
+
+#~ msgid "http://gaut.am/"
+#~ msgstr "http://gaut.am/"
 

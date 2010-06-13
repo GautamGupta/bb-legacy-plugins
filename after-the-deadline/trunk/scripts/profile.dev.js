@@ -47,7 +47,8 @@ function atd_ignore () {
 
 function atd_ignore_init() {
 	jQuery( '#atd_message' ).hide();
-	atd_show_phrases( jQuery( '#atd_ignored_phrases' ).val().split( /,/g ) );
+	if(jQuery( '#atd_ignored_phrases' ).val())
+		atd_show_phrases( jQuery( '#atd_ignored_phrases' ).val().split( /,/g ) );
 }
 
 /* document.ready() does not execute in IE6 unless it's at the bottom of the page. oi! */

@@ -3,9 +3,9 @@
 Plugin Name: After the Deadline
 Plugin URI: http://gaut.am/bbpress/plugins/after-the-deadline/
 Description: After the Deadline plugin checks spelling, style, and grammar in your bbPress forum posts.
-Version: 1.6.1
+Version: 1.7
 Author: Gautam Gupta
-Author URI: http://gaut.am/
+Author URI: http://www.cyberfundu.com/
 */
 
 /**
@@ -23,7 +23,7 @@ bb_load_plugin_textdomain( 'after-the-deadline', dirname( __FILE__ ) . '/transla
 /**
  * Defines
  */
-define( 'ATD_VER'		, '1.6.1'						); /** Version */
+define( 'ATD_VER'		, '1.7-dev'						); /** Version */
 define( 'ATD_OPTIONS'		, 'AftertheDeadline'					); /** Option Name */
 define( 'ATD_USER_OPTIONS'	, 'AtDuserOptions'					); /** User Option Name */
 define( 'ATD_PLUGPATH'		, bb_get_plugin_uri( bb_plugin_basename( __FILE__ ) )	); /** Plugin URL */
@@ -44,7 +44,7 @@ if ( is_string( $atd_plugopts['key'] ) ) { /* Delete if there are old options, w
 	unset( $atd_plugopts );
 }
 if ( !is_array( $atd_plugopts ) ) { /* Set the Options if they are not set */
-	if ( defined( 'BB_LANG' ) && BB_LANG ) { /* Language check */
+	if ( defined( 'BB_LANG' ) && BB_LANG != '' ) { /* Language check */
 		foreach( array_keys( $atd_supported_langs ) as $lang ) {
 			if ( strpos( BB_LANG, $lang ) !== false ) {
 				$save_lang = $lang;

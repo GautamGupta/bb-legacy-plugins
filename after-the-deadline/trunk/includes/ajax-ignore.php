@@ -8,7 +8,7 @@
  */
 
 /* 
- *  Called when Ignore Always is clicked (setup as an action through admin-ajax.php)
+ * Called when Ignore Always is clicked (setup as an action through admin-ajax.php)
  */
 function atd_ignore_call() {
 	$user = bb_get_current_user();

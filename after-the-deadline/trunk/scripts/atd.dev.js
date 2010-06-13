@@ -574,9 +574,8 @@ AtDCore.prototype.isIE = function() {
 var AtD = jQuery.extend( {
 	proofread_click_count : 0,
 	i18n : {},
-	rpc_css : 'http://www.polishmywriting.com/atd_jquery/server/proxycss.php?data=', // you may use this, but be nice!
 	listener : {}
-}, AtD || { api_key: '', rpc: '', lang: 'en' } );
+}, AtD || { rpc: '' } );
 
 /*AtD.getLang = function(key, defaultk) {
 	if (AtD.i18n[key] == undefined)
@@ -622,8 +621,8 @@ AtD.check = function(container_id, callback_f) {
 
 	jQuery.ajax({
 		type : "POST",
-		url : AtD.rpc + '?url=/checkDocument&lang='+AtD.lang,
-		data : 'key=' + AtD.api_key + '&data=' + text,
+		url : AtD.rpc,
+		data : 'data=' + text,
 		format : 'raw', 
 		dataType : (jQuery.browser.msie) ? "text" : "xml",
 		error : function(XHR, status, error) {
@@ -1184,7 +1183,7 @@ AtD._checkTextArea = function(id, commChannel, linkId, after) {
 	} else {
 		/* set the spell check link to a link that lets the user edit the text */
 		options['link'].html( options['after'] );
-          
+		
 		/* disable the spell check link while an asynchronous call is in progress. if a user tries to make a request while one is in progress
 		   they will lose their text. Not cool! */
 		var disableClick = function() { return false; };
@@ -1335,6 +1334,22 @@ AtD._checkTextArea = function(id, commChannel, linkId, after) {
 }
 
 /**
+ * Accept All Suggestions
+ */
+function AtD_acceptAllChanges() {
+	var parent = AtD.core;
+	
+	AtD.core.map( AtD.core.findSpans( jQuery('#' + AtD.current_id) ).reverse(), 
+	function(n) {
+		if (parent.isMarkedNode(n)) {
+			var suggestions = parent.findSuggestion(n);
+			if (suggestions != undefined && suggestions.suggestions != undefined && suggestions.suggestions.length > 0)
+				parent.applySuggestion(n, suggestions.suggestions[0]);
+		}
+	});
+}
+
+/**
  * Autoproofread
  */
 
@@ -1343,8 +1358,8 @@ function AtD_check(id, node, callback) {
 	AtD_ajax_load('show');
 	jQuery.ajax({
 		type : "POST",
-		url : AtD.rpc + '?url=/checkDocument&lang=' + AtD.lang,
-		data : 'key=' + AtD.api_key + '&data=' + jQuery('#'+id).val(),
+		url : AtD.rpc,
+		data : 'data=' + jQuery('#'+id).val(),
 		format : 'raw', 
 		dataType : (jQuery.browser.msie) ? "text" : "xml",		
 		error : function(XHR, status, error) {
@@ -1371,7 +1386,7 @@ function AtD_check(id, node, callback) {
 					if ( r == true ) { /* User doesn't want the errors to be fixed */
 						AtD_update_post(id);
 					} else { /* Do the real checking */
-						AtD.checkTextArea(id, node.attr('id'), jQuery.fn.addProofreader.defaults.edit_text_content);
+						node.click();
 					}
 				});
 			} else {
@@ -1448,7 +1463,7 @@ jQuery.fn.addProofreader = function(options) {
 };
 
 jQuery.fn.addProofreader.defaults = {
-	edit_text_content: '<span class="atd_container"><a class="checkLink">'+AtD.getLang('button_edit_text', 'Edit Text')+'</a></span>',
+	edit_text_content: '<span class="atd_container"><a class="checkLink">'+AtD.getLang('button_edit_text', 'Edit Text')+'</a> | <a class="acceptAllLink" onclick="AtD_acceptAllChanges();">'+AtD.getLang('button_accept_all', 'Accept All')+'</a></span>',
 	proofread_content: '<span class="atd_container"><a class="checkLink">'+AtD.getLang('button_proofread', 'Proofread')+'</a></span>'
 };
 

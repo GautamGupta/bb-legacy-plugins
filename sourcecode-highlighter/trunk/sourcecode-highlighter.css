@@ -1,0 +1,13 @@
+/* Source-Code HighLighter CSS 
+URL http://www.victorcuervo.com/mis-proyectos/sourcecode-highlighter/
+*/
+
+.post pre{
+	font-family : monospace;
+	font-size : 1.1em;
+	display : block;
+	padding : 10px;
+	background : #fff;
+	border : 1px dashed #ccc;
+	white-space : pre-wrap;
+}

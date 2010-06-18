@@ -18,8 +18,9 @@ if ( !class_exists( 'WP_Http' ) ) /* Should never happen, but still (for future)
 $user		= bb_get_current_user();
 $api_key	= 'BB-' . md5( bb_get_uri() ) . '-'; /* Forum's starting key */
 $api_key	.= $user->ID ? $user->ID : mt_rand(); /* User specific */
-$lang		= in_array( $atd_plugopts['lang'], array( 'pt', 'fr', 'de', 'es' ) ) ? $atd_plugopts['lang'] . '.' : '';
-$go		= 'http://' . $lang . 'service.afterthedeadline.com/checkDocument';
+$lang		= in_array( $atd_plugopts['lang'], array( 'pt', 'fr', 'de', 'es', 'en' ) ) ? $atd_plugopts['lang'] : 'en';
+$scheme		= $atd_plugopts['use_ssl'] == true ? 'https' : 'http';
+$go		= $scheme . '://' . $lang . '.service.afterthedeadline.com/checkDocument';
 if( !$postdata = trim( $_POST['data'] ) ) /* Should never happen */
 	die();
 

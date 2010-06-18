@@ -63,6 +63,10 @@ Please use AtD v1.4 or upgrade your bbPress install
 
 == Changelog ==
 
+= 1.8 (xx-xx-10) =
+* Added an option to send the data over SSL
+* Updated screenshots
+
 = 1.7 (13-06-10) =
 * Fixed a bug in which the API key sent to the server should be different for each user - [Check here](http://www.afterthedeadline.com/api.slp)
 * The proxy script now makes use of `WP_Http` which is much more reliable
@@ -128,17 +132,8 @@ Upgraded AtD/jQuery - [Changelog](http://www.polishmywriting.com/atd_jquery/chan
 
 == Upgrade Notice ==
 
-= 1.7 =
+= 1.8 =
 Added some new features and fixed bugs.
-
-= 1.6.1 =
-Upgraded AtD/jQuery
-
-= 1.6 =
-Added some more features and fixed bugs.
 
 = 1.5 =
 Upgraded AtD/jQuery, added some more features and fixed bugs. Now no need of API key. Do not upgrade if you are using bbPress 0.9.
-
-= 1.4 =
-Upgraded AtD/jQuery, added some more features and fixed bugs.

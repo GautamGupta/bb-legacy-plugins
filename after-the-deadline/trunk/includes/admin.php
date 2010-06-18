@@ -46,7 +46,8 @@ function atd_options() {
 		bb_check_admin_referer( 'atd-save-chk' ); /* Security Check */
 		
 		/* Sanity Checks */
-		$atd_plugopts['lang']		= ( in_array( $_POST['lang'], array_keys( $atd_supported_langs ) ) ) ? $_POST['lang'] : 'en';
+		$atd_plugopts['lang']		= in_array( $_POST['lang'], array_keys( $atd_supported_langs ) ) ? $_POST['lang'] : 'en';
+		$atd_plugopts['use_ssl']	= $_POST['use_ssl'] == '1' ? true : false;
 		$atd_plugopts['enableuser']	= array();
 		foreach ( (array) $_POST['enableuser'] as $option )
 			if ( in_array( $option, array( 'autoproofread', 'ignorealways', 'ignoretypes' ) ) )
@@ -69,20 +70,29 @@ function atd_options() {
 			'options'	=> $atd_supported_langs,
 			'note'		=> sprintf( __( 'Proofreading should be done for which language? The plugin currently supports the following languages - %s.', 'after-the-deadline' ), implode( ', ', $atd_supported_langs ) )
 		),
+		'use_ssl' => array(
+			'title'		=> __( 'Use SSL?', 'after-the-deadline' ),
+			'value' 	=> $atd_plugopts['use_ssl'] == true ? '1' : '0',
+			'type'		=> 'checkbox',
+			'options'	=> array(
+				'1'	=> __( 'Yes', 'after-the-deadline' )
+			),
+			'note'		=> __( 'If you enable this, the data would be encrypted before sending it to the AtD service for proofreading.', 'after-the-deadline' )
+		),
 		'enableuser[]' => array(
 			'title'		=> __( 'Enable the user to select the option for:', 'after-the-deadline' ),
 			'type'		=> 'checkbox',
 			'note'		=> __( 'These options will be shown on the user\'s profile page. All of these options are disabled by default.', 'after-the-deadline' ),
 			'options'	=> array(
-				'autoproofread' => array(
+				'autoproofread'	=> array(
 					'label' => __( 'Autoproofreading the content if it is not proofread once before posting', 'after-the-deadline' ),
 					'value' => in_array( 'autoproofread', (array) $atd_plugopts['enableuser'] ) ? 'autoproofread' : ''
 				),
-				'ignorealways' => array(
+				'ignorealways'	=> array(
 					'label' => __( 'Ignoring a term forever (ignored terms can be removed from the profile page)', 'after-the-deadline' ),
 					'value' => in_array( 'ignorealways', (array) $atd_plugopts['enableuser'] ) ? 'ignorealways' : ''
 				),
-				'ignoretypes' => array(
+				'ignoretypes'	=> array(
 					'label' => __( 'Setting ignore types', 'after-the-deadline' ),
 					'value' => in_array( 'ignoretypes', (array) $atd_plugopts['enableuser'] ) ? 'ignoretypes' : ''
 				)

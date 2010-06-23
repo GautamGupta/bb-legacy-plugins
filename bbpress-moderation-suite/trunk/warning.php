@@ -204,7 +204,7 @@ function bbpress_moderation_suite_warning() {
 					global $bbpm;
 
 					$user_id = bb_get_current_user_info( 'ID' );
-					bb_set_current_user( $_POST['user'] );
+					bb_set_current_user( $_GET['user'] );
 
 					if ( !$bbpm->send_message( $_GET['user'], __( 'Warning', 'bbpress-moderation-suite' ), __( '<strong>You have been warned. This message was automatically sent with your username.</strong>', 'bbpress-moderation-suite' ) . "\n\n" . esc_html( bbmodsuite_stripslashes( $_POST['warn_content'] ) ) ) )
 						bb_mail( bb_get_user_email( $_GET['user'] ), __( 'Warning', 'bbpress-moderation-suite' ), trim( bbmodsuite_stripslashes( $_POST['warn_content'] ) ) );

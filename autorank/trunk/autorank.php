@@ -14,6 +14,7 @@ $autorank = array(
 	'show_score'          => true,
 	'show_stats'          => true,
 	'show_rank'           => true,
+	'show_rank_page'      => false,
 	'rank_replaces_title' => false,
 	'post_default_score'  => 0.1,
 	'post_modifier_first' => 0.1,
@@ -131,6 +132,45 @@ function autorank_stats_right() {
 <?php }
 add_action( 'bb_stats_right', 'autorank_stats_right' );
 
+function autorank_profile_menu() {
+	$autorank = autorank_get_settings();
+
+	// This is almost a hack. not_play_nice is a capability that prevents
+	// the user from logging in, so only the correct user can see their
+	// rank info.
+	if ( $autorank['show_rank_page'] )
+		bb_add_profile_tab( __( 'Ranks', 'autorank' ), '', 'not_play_nice', 'autorank_profile_page' );
+}
+add_action( 'bb_profile_menu', 'autorank_profile_menu' );
+
+function autorank_profile_page() {
+	global $bb_current_user; ?>
+
+<table id="latest" style="margin: 0;">
+	<thead>
+	<tr>
+		<th><?php _e( 'Rank', 'autorank' ); ?></th>
+		<th><?php _e( 'Required Score', 'autorank' ); ?></th>
+		<th><?php _e( 'Estimated Posts Remaining', 'autorank' ); ?></th>
+	</tr>
+	</thead>
+
+	<tbody>
+<?php $average_post_score = autorank_get_average_post_score( $bb_current_user->ID );
+
+$autorank = autorank_get_settings();
+
+foreach ( $autorank['ranks'] as $score => $rank ) { ?>
+	<tr<?php if ( $bb_current_user->autorank_score >= $score ) echo ' class="sticky"'; ?>>
+		<td<?php if ( is_array( $rank ) ) echo ' style="color: ' . esc_attr( $rank[1] ) . ';"'; ?>><?php if ( is_array( $rank ) ) echo esc_html( $rank[0] ); else echo esc_html( $rank ); ?></td>
+		<td><?php echo round( $score, 6 ); ?></td>
+		<td><?php echo max( ceil( round( $score - $bb_current_user->autorank_score, 6 ) / $average_post_score ), 0 ); ?></td>
+	</tr>
+<?php } ?>
+	</tbody>
+</table>
+<?php }
+
 /* Scoring */
 function autorank_recount() {
 	global $bbdb;
@@ -207,7 +247,7 @@ function autorank_update_score_bbmovetopic( $topic_id, $new_forum, $old_forum ) 
 		return;
 
 	$score_modifiers = array();
-	$posts = get_thread( $topic_id );
+	$posts = get_thread( $topic_id, array( 'per_page' => -1 ) );
 	foreach ( $posts as $post ) {
 		$score = autorank_get_post_score( $post->post_id, false );
 
@@ -260,6 +300,29 @@ function autorank_update_score_bbupdatepost_prepost( $text, $id ) {
 }
 add_filter( 'pre_post', 'autorank_update_score_bbupdatepost_prepost', 10, 2 );
 
+/**
+ * Catch topic deletion and update scores as required.
+ *
+ * Unfortunately, there's no effective way to catch the
+ * deletion before it hits the posts, so we need to do a
+ * semi-recount.
+ */
+function autorank_update_score_bbdeletetopic( $topic_id ) {
+	$users = bb_post_author_cache( get_thread( $topic_id, array( 'per_page' => -1 ) ) );
+
+	foreach ( $users as $user ) {
+		$user_score = 0;
+		$posts = bb_cache_posts( $bbdb->prepare( "SELECT `post_id` FROM `$bbdb->posts` WHERE `poster_id` = %d AND `post_status` = 0", $user->ID ), true );
+
+		foreach ( $posts as $post ) {
+			$user_score += autorank_get_post_score( $post );
+		}
+
+		bb_update_usermeta( $user->ID, 'autorank_score', $user_score );
+	}
+}
+add_action( 'bb_delete_topic', 'autorank_update_score_bbdeletetopic' );
+
 /* Ranking */
 function autorank_get_rank( $user_id ) {
 	$user_rank = '';
@@ -300,6 +363,29 @@ function &autorank_get_settings() {
 
 	return $autorank;
 }
+
+/**
+ * Get the average post score by selecting up to 100 random posts
+ * from the database, computing their scores, and averaging them.
+ *
+ * @param $user_id int The user ID to limit the search to, or 0 for any posts in the database.
+ */
+function autorank_get_average_post_score( $user_id = 0 ) {
+	global $bbdb;
+
+	if ( $user_id = bb_get_user_id( $user_id ) )
+		$posts = bb_cache_posts( $bbdb->prepare( "SELECT `post_id` FROM `$bbdb->posts` WHERE `post_status` = 0 AND `poster_id` = %d ORDER BY RAND() LIMIT 100", $user_id ), true );
+	else
+		$posts = bb_cache_posts( "SELECT `post_id` FROM `$bbdb->posts` WHERE `post_status` = 0 ORDER BY RAND() LIMIT 100", true );
+
+	$total = 0;
+	foreach ( $posts as $post ) {
+		$total += autorank_get_post_score( $post );
+	}
+
+	return $total / count( $posts );
+}
+
 
 /* Admin */
 if ( bb_is_admin() ) {

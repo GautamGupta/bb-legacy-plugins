@@ -87,7 +87,7 @@ if ( bb_forums() ) {
 			</tfoot>
 
 			<tbody>
-<?php $average_post_score = autorank_admin_get_average_post_score();
+<?php $average_post_score = autorank_get_average_post_score();
 
 foreach ( $autorank['ranks'] as $score => $rank ) { ?>
 			<tr>
@@ -146,8 +146,7 @@ jQuery(function($) {
 				$(e.target).parent().parent().children(':last').text(isNaN(estPosts) ? '?' : Math.ceil(estPosts));
 		}
 		if (e.target.name == 'autorank_rank_colors[]') {
-			e.target.style.color = ''; // Default color if the color entered isn't real
-			e.target.style.color = e.target.value;
+			e.target.setAttribute('style', 'color: ' + e.target.value);
 		}
 
 		switch (unusedRows.length) {
@@ -217,7 +216,7 @@ function autorank_admin_parse() {
 			if ( !$autorank['use_db'] )
 				return;
 
-			foreach ( array( 'show_score', 'show_stats', 'show_rank', 'rank_replaces_title' ) as $option ) {
+			foreach ( array( 'show_score', 'show_stats', 'show_rank', 'rank_replaces_title', 'show_rank_page' ) as $option ) {
 				if ( isset( $_POST['autorank_' . $option] ) ) {
 					$autorank[$option] = !!$_POST['autorank_' . $option];
 				}
@@ -261,6 +260,8 @@ function autorank_admin_parse() {
 				}
 			}
 
+			$GLOBALS['autorank'] = $autorank;
+
 			bb_update_option( 'autorank', $autorank );
 
 			autorank_recount();
@@ -284,6 +285,8 @@ function autorank_admin_parse() {
 			$autorank['post_count_plus_imported'] = true;
 
 			bb_update_option( 'autorank', $autorank );
+
+			$GLOBALS['autorank'] = $autorank;
 
 			autorank_recount();
 
@@ -341,6 +344,16 @@ function autorank_admin_get_options( $autorank ) {
 			)
 		),
 
+		'show_rank_page' => array(
+			'title' => __( 'Show users the list of ranks', 'autorank' ),
+			'type'  => 'select',
+			'value' => $autorank['show_rank_page'],
+			'options' => array(
+				true  => __( 'Yes', 'autorank' ),
+				false => __( 'No', 'autorank' )
+			)
+		),
+
 		'post_default_score' => array(
 			'title' => __( 'Base score', 'autorank' ),
 			'value' => $autorank['post_default_score'],
@@ -384,7 +397,7 @@ function autorank_admin_get_options( $autorank ) {
 function autorank_admin_import_post_count_plus() {
 	$autorank = autorank_get_settings();
 	$post_count_plus = bb_get_option( 'post_count_plus' );
-	$average_post_score = autorank_admin_get_average_post_score();
+	$average_post_score = autorank_get_average_post_score();
 
 	$ranks = array();
 
@@ -472,23 +485,3 @@ if ( $rank[1] ) {
 
 </div>
 <?php }
-
-/**
- * Get the average post score by selecting up to 100 random posts
- * from the database, computing their scores, and averaging them.
- *
- * This function is used to suggest per-rank scores when converting
- * from Post Count Plus.
- */
-function autorank_admin_get_average_post_score() {
-	global $bbdb;
-
-	$posts = bb_cache_posts( "SELECT `post_id` FROM `$bbdb->posts` WHERE `post_status` = 0 ORDER BY RAND() LIMIT 100", true );
-
-	$total = 0;
-	foreach ( $posts as $post ) {
-		$total += autorank_get_post_score( $post );
-	}
-
-	return $total / count( $posts );
-}

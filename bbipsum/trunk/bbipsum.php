@@ -202,6 +202,9 @@ function bbipsum_admin_parse() {
 				flush();
 			}
 
+			// We don't need no Akismets... (on this pageload)
+			remove_filter( 'pre_post_status', 'bb_ksd_pre_post_status' );
+
 			// Okay, everything's ready... Let's do this!
 			for ( $i = 0; $i < $allowed_topics; $i++ ) {
 				$topic = false;
@@ -524,7 +527,7 @@ function bbipsum_filter( $_ipsum, $full_html = false ) {
 					for ( $j = min( $l, $i + mt_rand( 1, 5 ) ); $i < $j; $i++ ) {
 						$ret .= $sentences[$i] . bbipsum_rand_punctuation() . ' ';
 					}
-					$ret = rtrim( $ret );
+					$ret .= "\n\n";
 					break;
 
 				case 4:
@@ -539,7 +542,7 @@ function bbipsum_filter( $_ipsum, $full_html = false ) {
 			}
 		}
 
-		return trim( $ret );
+		return $ret;
 	}
 
 	if ( strpos( $_ipsum, "\n" !== false ) ) {

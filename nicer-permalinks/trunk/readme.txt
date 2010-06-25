@@ -3,7 +3,7 @@ Contributors: mr_pelle
 Tags: permalinks, mod_rewrite, htaccess, slug, forum, topic
 Plugin Name: Nicer Permalinks
 Plugin URI: http://bbpress.org/plugins/topic/nicer-permalinks/
-Version: 3.6.2
+Version: 4.0
 Requires at least: 1.0
 Tested up to: 1.1-alpha
 
@@ -15,49 +15,21 @@ Rewrites every bbPress URI removing the words "forum" and "topic" and emphasizes
 
 Based on <a href="http://www.technospot.net/blogs/">Ashish Mohta</a> and <a href="http://markroberthenderson.com/">Mark R. Henderson</a>'s <a href="http://blog.markroberthenderson.com/getting-rid-of-forums-and-topic-from-bbpress-permalinks-updated-plugin/">Remove Forum Topic</a> plugin.
 
-Automatically updates and backups `.htaccess` and restores it when deactivating (if files permissions are correctly set).
-
 == Installation ==
+
+* If your bbPress version is <strong>1.0.2 or lower</strong>, open `bb-post.php` and switch lines 46 and 48. They must look like this:
+
+<code>
+$topic = get_topic( $topic_id, false );
+
+$link = get_post_link( $post_id );
+</code>
 
 * Copy plugin folder into `my-plugins` folder.
 
-* Open `nicer-htaccess` and change the forum path used by <em>RewriteBase</em> into your forum path, if different.
+* Activate the plugin and go to plugin configuration page at Plugins > Nicer Permalinks.
 
-* If name based permalinks aren't activated yet, turn them on (check under "Settings" admin submenu for "Permalinks").
-
-* Open `bb-post.php` and switch lines 46 and 48 (bug fixed in bbPress 1.1-alpha). They must look like this:
-
-`$topic = get_topic( $topic_id, false );
-
-$link = get_post_link($post_id);`
-
-* Choose one of the following:
-
-= Option #1: automatic update =
-
-* Change `.htaccess` permissions to read+write.
-
-* Change `nicer-htaccess` permissions the same way.
-
-* Activate plugin.
-
-* Restore `.htaccess` original permissions (usually read only). Remember to set them back to read+write before deactivating the plugin!
-
-= Option #2: manual update =
-
-* Backup your `.htaccess`.
-
-* Replace `.htaccess` content with `nicer-htaccess`'s.
-
-* Activate plugin.
-
-== Frequently Asked Questions ==
-
-= Error on deactivation =
-
-* If you performed manual update: first restore your original `.htaccess` and then deactivate the plugin.
-
-* If you performed automatic update: did you set both `.htaccess` and `nicer-htaccess` permissions to read+write before plugin deactivation?
+* Check prerequisites and enable the plugin.
 
 == License ==
 
@@ -90,3 +62,17 @@ $link = get_post_link($post_id);`
 = Version 3.6.2 (2010-06-05) =
 
 * minor changes
+
+= Version 3.6.3 (2010-06-11) =
+
+* minor changes
+
+= Version 4.0 (2010-06-25) =
+
+* plugin files structure revised
+
+* configuration page added
+
+* load of new control functions added
+
+* functions are now more documented

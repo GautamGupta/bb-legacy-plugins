@@ -21,5 +21,9 @@ If you decide later that you want to remove the gibberish from your forum, this 
 Initial release
 
 == Changelog ==
+= 0.1.1 =
+* Some HTML generation logic was changed
+* Progress dialog added for people with JavaScript enabled
+
 = 0.1 =
 * Initial release

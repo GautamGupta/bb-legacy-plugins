@@ -98,6 +98,10 @@ function bbipsum() {
 	<fieldset class="submit">
 		<?php bb_nonce_field( 'bbipsum' ); ?>
 		<input type="hidden" name="action" value="post" />
+		<span id="show_progress_holder"></span>
+		<script type="text/javascript">
+			document.getElementById( 'show_progress_holder' ).innerHTML = unescape( '%3Cinput%20type%3D%22hidden%22%20name%3D%22show_progress%22%20value%3D%22true%22%20/%3E' );
+		</script>
 		<input class="submit" type="submit" name="submit" value="<?php _e( 'Ipsum-ify my forum!', 'bbipsum' ); ?>" />
 	</fieldset>
 
@@ -135,6 +139,7 @@ function bbipsum_admin_parse() {
 			bb_check_admin_referer( 'bbipsum' );
 
 			set_time_limit( 0 );
+			ignore_user_abort( true );
 
 			$ipsum_type = min( max( (int) $_POST['type'], 0 ), 3 );
 
@@ -170,10 +175,37 @@ function bbipsum_admin_parse() {
 			global $wp_users_object;
 			$_user = bb_get_current_user_info( 'ID' );
 
+			$show_progress = false;
+
+			if ( !empty( $_POST['show_progress'] ) ) {
+				$show_progress = true;
+
+				wp_enqueue_script( 'jquery' );
+
+				bb_install_header( __( 'bbIpsum is working...', 'bbipsum' ), __( 'bbIpsum is working...', 'bbipsum' ) );
+
+				wp_print_scripts(); ?>
+	<script type="text/javascript" src="<?php echo BB_PLUGIN_URL; ?>/bbipsum/jquery-ui/jquery-ui-1.8.2.custom.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="<?php echo BB_PLUGIN_URL; ?>/bbipsum/jquery-ui/jquery-ui-1.8.2.custom.css" />
+	<strong><?php _e( 'Topics', 'bbipsum' ); ?></strong><br/>
+	<div id="totalprogress"></div>
+	<br/><br/>
+	<strong><?php _e( 'Posts', 'bbipsum' ); ?></strong><br/>
+	<div id="partprogress"></div>
+	<script type="text/javascript">
+		jQuery('#totalprogress, #partprogress').progressbar({
+			value: 0
+		});
+	</script>
+<?php
+				ob_flush();
+				flush();
+			}
+
 			// Okay, everything's ready... Let's do this!
 			for ( $i = 0; $i < $allowed_topics; $i++ ) {
 				$topic = false;
-				for ( $j = mt_rand( 1, $allowed_posts ); $j > 0; $j-- ) {
+				for ( $j = 0, $posts_wanted = mt_rand( 1, $allowed_posts ); $j < $posts_wanted; $j++ ) {
 					if ( -1 == $accounts[$cur_user = mt_rand( 0, count( $accounts ) - 1 )] ) {
 						do {
 							$user_login = bbipsum_get_gibberish_name( $ipsum_type );
@@ -213,11 +245,27 @@ function bbipsum_admin_parse() {
 					);
 					$post = bb_insert_post( $post_data );
 					bb_update_postmeta( $post, 'bbipsum', $ipsum_type );
+
+					if ( $show_progress ) {
+						echo '<script type="text/javascript">jQuery("#partprogress").progressbar({value:' . ( ( $j + 1 ) / $posts_wanted * 100 ) . '})</script>';
+						ob_flush();
+						flush();
+					}
+				}
+
+				if ( $show_progress ) {
+					echo '<script type="text/javascript">jQuery("#totalprogress").progressbar({value:' . ( ( $i + 1 ) / $allowed_topics * 100 ) . '})</script>';
+					ob_flush();
+					flush();
 				}
 			}
 
 			$goback = add_query_arg( 'updated', 'true', remove_query_arg( 'deleted', wp_get_referer() ) );
-			bb_safe_redirect( $goback );
+			if ( $show_progress ) {
+				echo '<script type="text/javascript">location="' . addslashes( $goback ) . '"</script><p><a href="' . esc_url( $goback ) . '">' . __( 'Go back', 'bbipsum' ) . '</a></p>';
+			} else {
+				bb_safe_redirect( $goback );
+			}
 			exit;
 		}
 

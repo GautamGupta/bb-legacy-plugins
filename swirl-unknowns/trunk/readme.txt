@@ -53,7 +53,7 @@ Based on <a href="http://blogwaffe.com/">Michael D. Adams</a>' <a href="http://b
 
 * minor changes
 
-= Version 1.0 (2010-06-23) =
+= Version 1.0 (2010-06-25) =
 
 * plugin files structure revised
 

@@ -216,7 +216,7 @@ function bbipsum_admin_parse() {
 				}
 			}
 
-			$goback = add_query_arg( 'updated', 'true', wp_get_referer() );
+			$goback = add_query_arg( 'updated', 'true', remove_query_arg( 'deleted', wp_get_referer() ) );
 			bb_safe_redirect( $goback );
 			exit;
 		}
@@ -239,7 +239,7 @@ function bbipsum_admin_parse() {
 			$bbdb->query( "DELETE FROM `$bbdb->posts` WHERE `post_id` IN ( SELECT `t`.* FROM ( SELECT `object_id` FROM `$bbdb->meta` WHERE `meta_key` = 'bbipsum' AND `object_type` = 'bb_post' ) AS `t` )" );
 			$bbdb->query( "DELETE FROM `$bbdb->meta` WHERE `object_id` IN ( SELECT `t`.* FROM ( SELECT `object_id` FROM `$bbdb->meta` WHERE `meta_key` = 'bbipsum' AND `object_type` = 'bb_post' ) AS `t` ) AND `object_type` = 'bb_post'" );
 
-			$goback = add_query_arg( 'deleted', 'true', wp_get_referer() );
+			$goback = add_query_arg( 'deleted', 'true', remove_query_arg( 'updated', wp_get_referer() ) );
 			bb_safe_redirect( $goback );
 			exit;
 		}
@@ -450,28 +450,28 @@ function bbipsum_filter( $_ipsum, $full_html = false ) {
 		$sentences = array_map( 'bbipsum_rand_formatting', $sentences );
 
 		$ret = '';
-		$quoted = false;
 		for ( $i = 0, $l = count( $sentences ); $i < $l; $i++ ) {
 			$list_type = 'o';
 
-			switch ( mt_rand( 0, 4 ) ) {
+			switch ( mt_rand( 0, 5 ) ) {
 				case 0:
-					if ( !$quoted ) {
-						$ret .= '<blockquote>';
-						$quoted = '</blockquote>';
-						$i--;
-						continue;
-					}
+					$ret .= '<blockquote>';
+					$_i = mt_rand( 1, min( $l - $i, 5 ) );
+					$ret .= bbipsum_filter( strip_tags( implode( '. ', array_slice( $sentences, $i, $_i ) ) ), true );
+					$i += $_i;
+					$ret .= '</blockquote>';
+					break;
 
 				case 1:
-					if ( !$quoted ) {
-						$res .= "\n`\n";
-						$quoted = "\n`\n";
-						$i--;
-						continue;
-					}
+					$ret .= "\n\n`\n";
+					$ret .= $sentences[$i] . "\n";
+					$ret .= $sentences[$i + 1];
+					$ret .= "\n`\n\n";
+					$i++;
+					break;
 
 				case 2:
+				case 3:
 					$ret .= "\n\n";
 					for ( $j = min( $l, $i + mt_rand( 1, 5 ) ); $i < $j; $i++ ) {
 						$ret .= $sentences[$i] . bbipsum_rand_punctuation() . ' ';
@@ -479,9 +479,9 @@ function bbipsum_filter( $_ipsum, $full_html = false ) {
 					$ret = rtrim( $ret );
 					break;
 
-				case 3:
-					$list_type = 'u';
 				case 4:
+					$list_type = 'u';
+				case 5:
 					$ret .= '<' . $list_type . 'l>';
 					for ( $j = min( $l, $i + mt_rand( 1, 5 ) ); $i < $j; $i++ ) {
 						$ret .= '<li>' . $sentences[$i] . bbipsum_rand_punctuation( true ) . '</li>';
@@ -489,19 +489,9 @@ function bbipsum_filter( $_ipsum, $full_html = false ) {
 					$ret .= '</' . $list_type . 'l>';
 					break;
 			}
-
-			if ( $quoted ) {
-				$ret .= $quoted;
-				$quoted = false;
-			}
 		}
 
-		if ( $quoted ) {
-			$ret .= $quoted;
-			$quoted = false;
-		}
-
-		return $ret;
+		return trim( $ret );
 	}
 
 	if ( strpos( $_ipsum, "\n" !== false ) ) {

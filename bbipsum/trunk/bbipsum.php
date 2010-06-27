@@ -320,7 +320,7 @@ add_action( 'bb_admin_menu_generator', 'bbipsum_admin_add' );
  * The same as WP_Pass::rand() except that this one allows a constant seed.
  */
 function bbipsum_rand( $min = 0, $max = 4294967295 ) {
-	global $bbipsum_seed, $bbipsum_rand;
+	global $bbipsum_seed, $bbipsum_rand, $_bbipsum_rand;
 
 	if ( !isset( $bbipsum_seed ) ) {
 		$bbipsum_seed = bb_generate_password();
@@ -329,10 +329,11 @@ function bbipsum_rand( $min = 0, $max = 4294967295 ) {
 	// Reset $bbipsum_rand after 14 uses
 	// 16(md5) + 20(sha1) + 20(sha1) / 4 = 14 random numbers from $bbipsum_rand
 	if ( empty( $bbipsum_rand ) || strlen( $bbipsum_rand ) < 8 ) {
-		$bbipsum_rand = md5( $bbipsum_seed, true );
+		$bbipsum_rand = md5( $_bbipsum_rand . $bbipsum_seed, true );
 		$bbipsum_rand .= sha1( $bbipsum_rand, true );
 		$bbipsum_rand .= sha1( $bbipsum_rand . $bbipsum_seed, true );
 		$bbipsum_seed = md5( $bbipsum_seed . $bbipsum_rand );
+		$_bbipsum_rand = $bbipsum_rand;
 	}
 
 	// Take the first 4 digits for our value

@@ -24,6 +24,7 @@ Initial release
 = 0.1.1 =
 * Some HTML generation logic was changed
 * Progress dialog added for people with JavaScript enabled
+* The random number generator can now be seeded with a constant value for testing purposes ([props _ck\_](http://bbpress.org/plugins/topic/bbipsum/#post-5923))
 
 = 0.1 =
 * Initial release

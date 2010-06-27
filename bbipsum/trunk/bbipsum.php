@@ -2,7 +2,7 @@
 /*
 Plugin Name: bbIpsum
 Plugin URI: http://nightgunner5.wordpress.com/tag/bbipsum/
-Version: 0.1
+Version: 0.1.1
 Description: When you're developing the next big thing, sometimes you need a forum full of gibberish. That's why you installed this plugin in the first place.
 Author: Ben L.
 Author URI: http://nightgunner5.wordpress.com/
@@ -90,6 +90,15 @@ function bbipsum() {
 			</div>
 		</div>
 
+		<div id="option-seed">
+			<label for="seed"><?php _e( 'Random seed', 'bbipsum' ); ?></label>
+
+			<div class="inputs">
+				<input class="text short" id="seed" name="seed" value="<?php echo esc_attr( bb_generate_password() ); ?>" />
+				<p><?php _e( 'This will be used to seed the random number generator. Only change this if you know what seeding a random number generator is.', 'bbipsum' ); ?></p>
+			</div>
+		</div>
+
 		<div>
 			<div class="inputs"><?php _e( 'It is suggested that you deactivate all other plugins before clicking the following button to reduce database usage.', 'bbipsum' ); ?></div>
 		</div>
@@ -116,7 +125,7 @@ function bbipsum() {
 			<div class="inputs">
 				<input type="checkbox" class="checkbox" id="delete" name="delete" />
 				<?php _e( 'I\'m sure', 'bbipsum' ); ?>
-				<p><?php printf( __( 'Sometimes, you don\'t want your forum to say "%s" anymore. If you regret filling your forum with gibberish, check this box and push the button below.', 'bbipsum' ), bbipsum_get_gibberish_name( mt_rand( 0, 3 ) ) ); ?></p>
+				<p><?php printf( __( 'Sometimes, you don\'t want your forum to say "%s" anymore. If you regret filling your forum with gibberish, check this box and push the button below.', 'bbipsum' ), bbipsum_get_gibberish_name( bbipsum_rand( 0, 3 ) ) ); ?></p>
 			</div>
 		</div>
 	</fieldset>
@@ -141,6 +150,10 @@ function bbipsum_admin_parse() {
 			set_time_limit( 0 );
 			ignore_user_abort( true );
 
+			// Allow the random number generator to be seeded with a constant value (props _ck_)
+			global $bbipsum_seed;
+			$bbipsum_seed = $_POST['seed'];
+
 			$ipsum_type = min( max( (int) $_POST['type'], 0 ), 3 );
 
 			$accounts = array( bb_get_current_user_info( 'ID' ) );
@@ -149,9 +162,9 @@ function bbipsum_admin_parse() {
 			if ( 0 < $allowed_accounts = (int) $_POST['users'] ) {
 				$accounts = array();
 
-				if ( $_accounts = $bbdb->get_col( $bbdb->prepare( "SELECT `user_id` FROM `$bbdb->usermeta` WHERE `meta_key` = 'bbipsum' AND `meta_value` = %d ORDER BY RAND() LIMIT %d", $ipsum_type, $allowed_accounts ) ) ) {
+				if ( $_accounts = $bbdb->get_col( $bbdb->prepare( "SELECT `user_id` FROM `$bbdb->usermeta` WHERE `meta_key` = 'bbipsum' AND `meta_value` = %d ORDER BY RAND( %d ) LIMIT %d", $ipsum_type, bbipsum_rand(), $allowed_accounts ) ) ) {
 					bb_cache_users( $_accounts );
-					$accounts = $_accounts;
+					$accounts = array_map( 'intval', $_accounts );
 				}
 
 				for ( $i = count( $accounts ); $i < $allowed_accounts; $i++ ) {
@@ -208,8 +221,8 @@ function bbipsum_admin_parse() {
 			// Okay, everything's ready... Let's do this!
 			for ( $i = 0; $i < $allowed_topics; $i++ ) {
 				$topic = false;
-				for ( $j = 0, $posts_wanted = mt_rand( 1, $allowed_posts ); $j < $posts_wanted; $j++ ) {
-					if ( -1 == $accounts[$cur_user = mt_rand( 0, count( $accounts ) - 1 )] ) {
+				for ( $j = 0, $posts_wanted = bbipsum_rand( 1, $allowed_posts ); $j < $posts_wanted; $j++ ) {
+					if ( -1 == $accounts[$cur_user = bbipsum_rand( 0, count( $accounts ) - 1 )] ) {
 						do {
 							$user_login = bbipsum_get_gibberish_name( $ipsum_type );
 							$user_nicename = $_user_nicename = bb_user_nicename_sanitize( $user_login );
@@ -237,14 +250,14 @@ function bbipsum_admin_parse() {
 
 					bb_set_current_user( $cur_user );
 					if ( !$topic ) {
-						$topic = bb_new_topic( bbipsum_get_gibberish( $ipsum_type ), $forums[mt_rand( 0, $f )]->forum_id );
+						$topic = bb_new_topic( bbipsum_get_gibberish( $ipsum_type ), $forums[bbipsum_rand( 0, $f )]->forum_id );
 						bb_update_topicmeta( $topic, 'bbipsum', $ipsum_type );
 					}
 
 					$post_data = array(
 						'post_text' => bbipsum_get_gibberish_html( $ipsum_type, $allow_html ),
 						'topic_id' => $topic,
-						'poster_ip' => '127.' . mt_rand( 0, 255 ) . '.' . mt_rand( 0, 255 ) . '.' . mt_rand( 0, 255 )
+						'poster_ip' => '127.' . bbipsum_rand( 0, 255 ) . '.' . bbipsum_rand( 0, 255 ) . '.' . bbipsum_rand( 0, 255 )
 					);
 					$post = bb_insert_post( $post_data );
 					bb_update_postmeta( $post, 'bbipsum', $ipsum_type );
@@ -303,63 +316,98 @@ function bbipsum_admin_add() {
 }
 add_action( 'bb_admin_menu_generator', 'bbipsum_admin_add' );
 
+/**
+ * The same as WP_Pass::rand() except that this one allows a constant seed.
+ */
+function bbipsum_rand( $min = 0, $max = 4294967295 ) {
+	global $bbipsum_seed, $bbipsum_rand;
+
+	if ( !isset( $bbipsum_seed ) ) {
+		$bbipsum_seed = bb_generate_password();
+	}
+
+	// Reset $bbipsum_rand after 14 uses
+	// 16(md5) + 20(sha1) + 20(sha1) / 4 = 14 random numbers from $bbipsum_rand
+	if ( empty( $bbipsum_rand ) || strlen( $bbipsum_rand ) < 8 ) {
+		$bbipsum_rand = md5( $bbipsum_seed, true );
+		$bbipsum_rand .= sha1( $bbipsum_rand, true );
+		$bbipsum_rand .= sha1( $bbipsum_rand . $bbipsum_seed, true );
+		$bbipsum_seed = md5( $bbipsum_seed . $bbipsum_rand );
+	}
+
+	// Take the first 4 digits for our value
+	$value = substr( $bbipsum_rand, 0, 4 );
+
+	// Strip the first eight, leaving the remainder for the next call to wp_rand().
+	$bbipsum_rand = substr( $bbipsum_rand, 4 );
+
+	$value = current( unpack( 'Nvalue', $value ) );
+
+	// Reduce the value to be within the min - max range
+	// 4294967295 = 0xffffffff = max random number
+	if ( $max != 4294967295 )
+		$value = $min + ( ( $max - $min + 1 ) * ( $value / ( 4294967295 + 1 ) ) );
+
+	return absint( $value );
+}
+
 function bbipsum_get_gibberish_name( $ipsum_type ) {
 	switch ( $ipsum_type ) {
 		case 1:
-			return bbipsum_asdfjkl_generate( mt_rand( 5, 20 ) );
+			return bbipsum_asdfjkl_generate( bbipsum_rand( 5, 20 ) );
 
 		case 2:
-			return bbipsum_aroodles_generate( mt_rand( 10, 30 ) );
+			return bbipsum_aroodles_generate( bbipsum_rand( 10, 30 ) );
 
 		case 3:
-			return bbipsum_pikachu_generate( mt_rand( 10, 30 ) );
+			return bbipsum_pikachu_generate( bbipsum_rand( 10, 30 ) );
 
 		case 0:
 		default:
 			require_once dirname( __FILE__ ) . '/LoremIpsum.class.php';
 			$lipsum = new LoremIpsumGenerator();
 
-			return ucfirst( str_replace( ',', '', trim( $lipsum->getContent( mt_rand( 2, 4 ), 'plain', false ), " \t\n\r." ) ) );
+			return ucfirst( str_replace( ',', '', trim( $lipsum->getContent( bbipsum_rand( 2, 4 ), 'plain', false ), " \t\n\r." ) ) );
 	}
 }
 
 function bbipsum_get_gibberish( $ipsum_type ) {
 	switch ( $ipsum_type ) {
 		case 1:
-			return bbipsum_asdfjkl_generate( mt_rand( 5, 40 ) );
+			return bbipsum_asdfjkl_generate( bbipsum_rand( 5, 40 ) );
 
 		case 2:
-			return bbipsum_aroodles_generate( mt_rand( 10, 60 ) );
+			return bbipsum_aroodles_generate( bbipsum_rand( 10, 60 ) );
 
 		case 3:
-			return bbipsum_pikachu_generate( mt_rand( 10, 60 ) );
+			return bbipsum_pikachu_generate( bbipsum_rand( 10, 60 ) );
 
 		case 0:
 		default:
 			require_once dirname( __FILE__ ) . '/LoremIpsum.class.php';
 			$lipsum = new LoremIpsumGenerator();
 
-			return ucfirst( str_replace( ',', '', trim( $lipsum->getContent( mt_rand( 2, 8 ), 'plain', false ), " \t\n\r." ) ) );
+			return ucfirst( str_replace( ',', '', trim( $lipsum->getContent( bbipsum_rand( 2, 8 ), 'plain', false ), " \t\n\r." ) ) );
 	}
 }
 
 function bbipsum_get_gibberish_html( $ipsum_type, $html = true ) {
 	switch ( $ipsum_type ) {
 		case 1:
-			return bbipsum_filter( bbipsum_asdfjkl_generate( mt_rand( 500, 5000 ) ), $html );
+			return bbipsum_filter( bbipsum_asdfjkl_generate( bbipsum_rand( 500, 5000 ) ), $html );
 
 		case 2:
-			return bbipsum_filter( bbipsum_aroodles_generate( mt_rand( 500, 5000 ), true ), $html );
+			return bbipsum_filter( bbipsum_aroodles_generate( bbipsum_rand( 500, 5000 ), true ), $html );
 
 		case 3:
-			return bbipsum_filter( bbipsum_pikachu_generate( mt_rand( 500, 5000 ), true ), $html );
+			return bbipsum_filter( bbipsum_pikachu_generate( bbipsum_rand( 500, 5000 ), true ), $html );
 
 		case 0:
 		default:
 			require_once dirname( __FILE__ ) . '/LoremIpsum.class.php';
 			$lipsum = new LoremIpsumGenerator();
 
-			return bbipsum_filter( $lipsum->getContent( mt_rand( 100, 1000 ), 'txt' ), $html );
+			return bbipsum_filter( $lipsum->getContent( bbipsum_rand( 100, 1000 ), 'txt' ), $html );
 	}
 }
 
@@ -378,7 +426,7 @@ function bbipsum_asdfjkl_generate( $len ) {
 
 	$ret = '';
 	for ( $i = 0; $i < $len; $i++ ) {
-		$ret .= $asdfjkl[mt_rand( 0, count( $asdfjkl ) - 1 )];
+		$ret .= $asdfjkl[bbipsum_rand( 0, count( $asdfjkl ) - 1 )];
 	}
 
 	return $ret;
@@ -389,7 +437,7 @@ function bbipsum_pikachu_expand( $word ) {
 		$word = $word[1];
 
 	$ret = '';
-	$i = mt_rand( 1, 3 );
+	$i = bbipsum_rand( 1, 3 );
 
 	while ( $i-- ) {
 		$ret .= $word;
@@ -408,11 +456,11 @@ function bbipsum_pikachu_generate( $len, $punctuate = false ) {
 	$ret = '';
 
 	while ( strlen( $ret ) < $len ) {
-		$word = $words[mt_rand( 0, $w )];
+		$word = $words[bbipsum_rand( 0, $w )];
 		if ( $word == 'kachu' && !$ret )
 			continue;
 
-		$ret .= $separators[mt_rand( 0, $s )] . preg_replace_callback( '/\(([^\)]*)\)/', 'bbipsum_pikachu_expand', $word );
+		$ret .= $separators[bbipsum_rand( 0, $s )] . preg_replace_callback( '/\(([^\)]*)\)/', 'bbipsum_pikachu_expand', $word );
 	}
 
 	return trim( $ret, implode( '', $separators ) );
@@ -431,29 +479,29 @@ function bbipsum_aroodles_generate( $len, $punctuate = false ) {
 	$ret = '';
 
 	while ( strlen( $ret ) < $len ) {
-		$ret .= $separators[mt_rand( 0, $s )];
+		$ret .= $separators[bbipsum_rand( 0, $s )];
 
 		// Two consonants
-		$ret .= mt_rand( 0, 1 ) ? $consonants[mt_rand( 0, $c )] : strtoupper( $consonants[mt_rand( 0, $c )] );
-		$ret .= $consonants[mt_rand( 0, $c )];
+		$ret .= bbipsum_rand( 0, 1 ) ? $consonants[bbipsum_rand( 0, $c )] : strtoupper( $consonants[bbipsum_rand( 0, $c )] );
+		$ret .= $consonants[bbipsum_rand( 0, $c )];
 
 		// Two to ten vowel [sic]
-		$ret .= str_repeat( $vowels[mt_rand( 0, $v )], mt_rand( 2, 10 ) );
+		$ret .= str_repeat( $vowels[bbipsum_rand( 0, $v )], bbipsum_rand( 2, 10 ) );
 
 		// One consonant
-		$ret .= $consonants[mt_rand( 0, $c )];
+		$ret .= $consonants[bbipsum_rand( 0, $c )];
 	}
 
 	return ucfirst( ltrim( $ret, implode( '', $separators ) ) );
 }
 
 function bbipsum_rand_punctuation( $allow_none = false ) {
-	if ( $allow_none && !mt_rand( 0, 2 ) )
+	if ( $allow_none && !bbipsum_rand( 0, 2 ) )
 		return '';
 
-	if ( mt_rand( 0, 3 ) )
+	if ( bbipsum_rand( 0, 3 ) )
 		return '.';
-	if ( mt_rand( 0, 1 ) )
+	if ( bbipsum_rand( 0, 1 ) )
 		return '?';
 	return '!';
 }
@@ -465,19 +513,19 @@ function bbipsum_rand_formatting( $sentence ) {
 	$ret = '';
 
 	for ( $i = 0, $l = count( $words ); $i < $l; $i++ ) {
-		switch ( mt_rand( 0, 10 ) ) {
+		switch ( bbipsum_rand( 0, 10 ) ) {
 			case 0:
 				if ( $opened ) {
 					$ret .= ' ' . $words[$i] . '</' . array_pop( $opened ) . '>';
 					break;
 				}
 			case 1:
-				$tag = $tags[mt_rand( 0, count( $tags ) - 1 )];
+				$tag = $tags[bbipsum_rand( 0, count( $tags ) - 1 )];
 
 				$ret .= ' <' . $tag . '>' . $words[$i] . '</' . reset( explode( ' ', $tag ) ) . '>';
 				break;
 			case 2:
-				$tag = $tags[mt_rand( 0, count( $tags ) - 1 )];
+				$tag = $tags[bbipsum_rand( 0, count( $tags ) - 1 )];
 
 				$ret .= ' <' . $tag . '>' . $words[$i];
 				$opened[] = reset( explode( ' ', $tag ) );
@@ -504,10 +552,10 @@ function bbipsum_filter( $_ipsum, $full_html = false ) {
 		for ( $i = 0, $l = count( $sentences ); $i < $l; $i++ ) {
 			$list_type = 'o';
 
-			switch ( mt_rand( 0, 5 ) ) {
+			switch ( bbipsum_rand( 0, 5 ) ) {
 				case 0:
 					$ret .= '<blockquote>';
-					$_i = mt_rand( 1, min( $l - $i, 5 ) );
+					$_i = bbipsum_rand( 1, min( $l - $i, 5 ) );
 					$ret .= bbipsum_filter( strip_tags( implode( '. ', array_slice( $sentences, $i, $_i ) ) ), true );
 					$i += $_i;
 					$ret .= '</blockquote>';
@@ -524,7 +572,7 @@ function bbipsum_filter( $_ipsum, $full_html = false ) {
 				case 2:
 				case 3:
 					$ret .= "\n\n";
-					for ( $j = min( $l, $i + mt_rand( 1, 5 ) ); $i < $j; $i++ ) {
+					for ( $j = min( $l, $i + bbipsum_rand( 1, 5 ) ); $i < $j; $i++ ) {
 						$ret .= $sentences[$i] . bbipsum_rand_punctuation() . ' ';
 					}
 					$ret .= "\n\n";
@@ -534,7 +582,7 @@ function bbipsum_filter( $_ipsum, $full_html = false ) {
 					$list_type = 'u';
 				case 5:
 					$ret .= '<' . $list_type . 'l>';
-					for ( $j = min( $l, $i + mt_rand( 1, 5 ) ); $i < $j; $i++ ) {
+					for ( $j = min( $l, $i + bbipsum_rand( 1, 5 ) ); $i < $j; $i++ ) {
 						$ret .= '<li>' . $sentences[$i] . bbipsum_rand_punctuation( true ) . '</li>';
 					}
 					$ret .= '</' . $list_type . 'l>';

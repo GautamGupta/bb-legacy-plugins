@@ -244,7 +244,8 @@ class LoremIpsumGenerator {
 		
 		for($i; $i < $count; $i++)
 		{
-			$index = array_rand($this->words);
+			// Changed by Ben L. to use bbipsum_rand.
+			$index = bbipsum_rand( 0, count( $this->words ) - 1 );
 			$word = $this->words[$index];
 			//echo $index . '=>' . $word . '<br />';
 			
@@ -453,9 +454,10 @@ class LoremIpsumGenerator {
 		return $this->gauss()*$s+$m;
 	}
 
+	// Changed by Ben L. to use bbipsum_rand.
 	private function random_0_1()
 	{
-		return (float)rand()/(float)getrandmax();
+		return bbipsum_rand() / 4294967295;
 	}
 
 }

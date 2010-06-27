@@ -152,7 +152,7 @@ function bbmodsuite_warning_types() {
 function bbmodsuite_warning_parse_types( $raw ) {
 	$parsed = array();
 
-	$raw = array_map( 'trim', explode( "\n", bbmodsuite_stripslashes( $raw ) ) );
+	$raw = array_map( 'trim', explode( "\n", stripslashes( $raw ) ) );
 
 	foreach ( $raw as $type ) {
 		if ( strlen( $type ) ) {
@@ -194,7 +194,7 @@ function bbpress_moderation_suite_warning() {
 					'from'  => bb_get_current_user_info( 'ID' ),
 					'type'  => $warn_type,
 					'date'  => time(),
-					'notes' => bb_autop( htmlspecialchars( trim( bbmodsuite_stripslashes( $_POST['warn_content'] ) ) ) ),
+					'notes' => bb_autop( htmlspecialchars( trim( stripslashes( $_POST['warn_content'] ) ) ) ),
 					'post'  => $_GET['post'],
 				);
 
@@ -206,12 +206,12 @@ function bbpress_moderation_suite_warning() {
 					$user_id = bb_get_current_user_info( 'ID' );
 					bb_set_current_user( $_GET['user'] );
 
-					if ( !$bbpm->send_message( $_GET['user'], __( 'Warning', 'bbpress-moderation-suite' ), __( '<strong>You have been warned. This message was automatically sent with your username.</strong>', 'bbpress-moderation-suite' ) . "\n\n" . esc_html( bbmodsuite_stripslashes( $_POST['warn_content'] ) ) ) )
-						bb_mail( bb_get_user_email( $_GET['user'] ), __( 'Warning', 'bbpress-moderation-suite' ), trim( bbmodsuite_stripslashes( $_POST['warn_content'] ) ) );
+					if ( !$bbpm->send_message( $_GET['user'], __( 'Warning', 'bbpress-moderation-suite' ), __( '<strong>You have been warned. This message was automatically sent with your username.</strong>', 'bbpress-moderation-suite' ) . "\n\n" . esc_html( stripslashes( $_POST['warn_content'] ) ) ) )
+						bb_mail( bb_get_user_email( $_GET['user'] ), __( 'Warning', 'bbpress-moderation-suite' ), trim( stripslashes( $_POST['warn_content'] ) ) );
 
 					bb_set_current_user( $user_id );
 				} else
-					bb_mail( bb_get_user_email( $_GET['user'] ), __( 'Warning', 'bbpress-moderation-suite' ), trim( bbmodsuite_stripslashes( $_POST['warn_content'] ) ) );
+					bb_mail( bb_get_user_email( $_GET['user'] ), __( 'Warning', 'bbpress-moderation-suite' ), trim( stripslashes( $_POST['warn_content'] ) ) );
 
 				bb_update_usermeta( $_GET['user'], 'bbmodsuite_warnings', $warnings );
 				bb_update_usermeta( $_GET['user'], 'bbmodsuite_warnings_count', count( $warnings ) ); ?>

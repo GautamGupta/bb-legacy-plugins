@@ -119,7 +119,7 @@ if ( !function_exists( 'add_action' ) && isset( $_GET['report'] ) ) {
 			bb_die( __( 'Invalid report', 'bbpress-moderation-suite' ) );
 
 		$report_reason  = $_POST['report_reason'];
-		$report_content = htmlspecialchars( bbmodsuite_stripslashes( $_POST['report_content'] ) );
+		$report_content = htmlspecialchars( stripslashes( $_POST['report_content'] ) );
 		$reported_post  = $_GET['report'];
 		$report_from    = bb_get_current_user_info( 'ID' );
 		$reported_at    = bb_current_time( 'mysql' );
@@ -151,7 +151,7 @@ function bbpress_moderation_suite_report() { ?>
 <?php		} else {
 				if ( $bbdb->update( $bbdb->prefix . 'bbmodsuite_reports', array(
 					'report_type' => 'resolved',
-					'resolve_content' => htmlspecialchars( trim( bbmodsuite_stripslashes( $_POST['resolve_content'] ) ) ),
+					'resolve_content' => htmlspecialchars( trim( stripslashes( $_POST['resolve_content'] ) ) ),
 					'resolved_at' => bb_current_time( 'mysql' ),
 					'resolved_by' => bb_get_current_user_info( 'ID' ),
 					'resolve_type' => $_POST['resolve_type']
@@ -393,7 +393,7 @@ add_action( 'bb_admin_menu_generator', 'bbmodsuite_report_admin_add' );
 function bbmodsuite_report_parse_types( $raw ) {
 	$parsed = array();
 
-	$raw = array_map( 'trim', explode( "\n", bbmodsuite_stripslashes( $raw ) ) );
+	$raw = array_map( 'trim', explode( "\n", stripslashes( $raw ) ) );
 
 	foreach ( $raw as $type ) {
 		if ( strlen( $type ) ) {

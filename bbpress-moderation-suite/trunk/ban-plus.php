@@ -172,7 +172,7 @@ function bbmodsuite_banplus_admin_newbanajax() {
 	if ( !bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite-banplus-new-ajax' ) )
 		exit;
 
-	$name = bbmodsuite_stripslashes( $_POST['text'] );
+	$name = stripslashes( $_POST['text'] );
 	$name = str_replace( array( '%', '?' ), array( '\\%', '\\?' ), substr( $_POST['text'], 0, $_POST['pos'] ) ) . '%' . str_replace( array( '%', '?' ), array( '\\%', '\\?' ), substr( $_POST['text'], $_POST['pos'] ) );
 
 	global $bbdb;
@@ -250,7 +250,7 @@ function bbpress_moderation_suite_ban_plus() { ?>
 			$time       = (int)$_POST['time'];
 			$multiplier = (int)$_POST['time_multiplier'];
 			$length     = $time * $multiplier;
-			$notes      = bbmodsuite_stripslashes( $_POST['notes'] );
+			$notes      = stripslashes( $_POST['notes'] );
 			if ( bbmodsuite_banplus_set_ban( 'ip_' . $_POST['ip'], 'temp', $length, $notes ) ) {
 ?>
 <div class="updated"><p><?php printf( __( 'The IP "%s" has been successfully banned.', 'bbpress-moderation-suite' ), $_POST['ip'] ); ?></p></div>
@@ -383,7 +383,7 @@ jQuery(function($){
 			$time       = (int)$_POST['time'];
 			$multiplier = (int)$_POST['time_multiplier'];
 			$length     = $time * $multiplier;
-			$notes      = bbmodsuite_stripslashes( $_POST['notes'] );
+			$notes      = stripslashes( $_POST['notes'] );
 			if ( bbmodsuite_banplus_set_ban( $user_id, 'temp', $length, $notes ) ) {
 ?>
 <div class="updated"><p><?php printf( __( 'The user "%s" has been successfully banned.', 'bbpress-moderation-suite' ), $username ); ?></p></div>

@@ -5,7 +5,7 @@ Description: A set of tools to help moderate your forums.
 Plugin URI: http://nightgunner5.wordpress.com/tag/bbpress-moderation-suite/
 Author: Nightgunner5
 Author URI: http://nightgunner5.wordpress.com/
-Version: 0.1-rc2
+Version: 0.1-rc3
 Requires at least: 1.0
 Tested up to: trunk
 Text Domain: bbpress-moderation-suite
@@ -231,10 +231,4 @@ function bbpress_moderation_suite() {
 	</tbody>
 </table>
 <?php
-}
-
-function bbmodsuite_stripslashes( $string ) {
-	if ( function_exists( 'get_magic_quotes_gpc' ) && get_magic_quotes_gpc() )
-		return stripslashes( $string );
-	return $string;
 }

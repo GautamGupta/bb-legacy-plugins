@@ -110,6 +110,9 @@ To log other actions - for example, those caused by an unrelated plugin - use `b
 In order to define a new type, you will have to add a filter to `bbmodsuite_modlog_get_type_description` and return the user friendly version if the non-user friendly version is given. For example, you could return `Topic deletion` if the argument to the function is `topic_delete`, and otherwise just return the argument.
 
 == Changelog ==
+= 0.1-rc3 =
+* Backslashes should no longer appear in messages.
+
 = 0.1-rc2 =
 * Moderators can now view the main Moderation page with a list of active moderation helpers.
 * IP ban message order fixed.

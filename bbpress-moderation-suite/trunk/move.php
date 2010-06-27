@@ -508,7 +508,7 @@ function bbmodsuite_move_pre_header() {
 			if ( !bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite_move-gettopic_ajax' ) )
 				exit;
 
-			$name = bbmodsuite_stripslashes( $_POST['text'] );
+			$name = stripslashes( $_POST['text'] );
 			$name = str_replace( array( '%', '?' ), array( '\\%', '\\?' ), substr( $_POST['text'], 0, $_POST['pos'] ) ) . '%' . str_replace( array( '%', '?' ), array( '\\%', '\\?' ), substr( $_POST['text'], $_POST['pos'] ) );
 
 			global $bbdb;

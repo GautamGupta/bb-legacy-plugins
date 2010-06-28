@@ -21,17 +21,16 @@ define( 'BAVATARS_MAX_SIZE', 50 * 1024 ); // 50KB - less than 5% of a megabyte
 */
 
 function bavatars_install() {
-	mkdir( BB_PATH . 'avatars', 0777 );
+	@mkdir( BB_PATH . 'avatars', 0777 );
 
-	for ( $a = 0; $a < 16; $a++ ) {
-		mkdir( BB_PATH . 'avatars/' . dechex( $a ), 0777 );
-		for ( $b = 0; $b < 16; $b++ ) {
-			mkdir( BB_PATH . 'avatars/' . dechex( $a ) . '/' . dechex( $a ) . dechex( $b ), 0777 );
-			for ( $c = 0; $c < 16; $c++ ) {
-				mkdir( BB_PATH . 'avatars/' . dechex( $a ) . '/' . dechex( $a ) . dechex( $b ) . '/' . dechex( $a ) . dechex( $b ) . dechex( $c ), 0777 );
-			}
-		}
-	}
+	file_put_contents( BB_PATH . 'avatars/.htaccess', str_replace( '%%PATH%%', bb_get_option( 'path' ), '
+Options -Indexes -ExecCGI
+Deny from All
+<Files "*.png">
+	Allow from All
+</Files>
+ErrorDocument 403 %%PATH%%index.php
+' ) );
 }
 bb_register_plugin_activation_hook( __FILE__, 'bavatars_install' );
 
@@ -71,6 +70,10 @@ function bavatars_profile() {
 			$id = md5( $user_id );
 
 			$folder = BB_PATH . 'avatars/' . substr( $id, 0, 1 ) . '/' . substr( $id, 0, 2 ) . '/' . substr( $id, 0, 3 ) . '/';
+
+			@mkdir( BB_PATH . 'avatars/' . substr( $id, 0, 1 ), 0777 );
+			@mkdir( BB_PATH . 'avatars/' . substr( $id, 0, 1 ) . '/' . substr( $id, 0, 2 ), 0777 );
+			@mkdir( BB_PATH . 'avatars/' . substr( $id, 0, 1 ) . '/' . substr( $id, 0, 2 ) . '/' . substr( $id, 0, 3 ), 0777 );
 
 			@unlink( $folder . $id . '.png' );
 
@@ -182,7 +185,8 @@ if ( bb_is_admin() ) {
 	function bavatars_fix_permissions() {}
 
 	function bavatars_admin_init() {
-		if ( !file_exists( BB_PATH . 'avatars' ) || !is_dir( BB_PATH . 'avatars' ) || !is_writable( BB_PATH . 'avatars' ) )
+		if ( !file_exists( BB_PATH . 'avatars' ) || !is_dir( BB_PATH . 'avatars' ) || !is_writable( BB_PATH . 'avatars' ) ||
+			!file_exists( BB_PATH . 'avatars/.htaccess' ) )
 			bavatars_install();
 
 		if ( !file_exists( BB_PATH . 'avatars' ) || !is_dir( BB_PATH . 'avatars' ) || !is_writable( BB_PATH . 'avatars' ) ) {

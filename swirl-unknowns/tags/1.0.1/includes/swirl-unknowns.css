@@ -1,0 +1,9 @@
+#swirl-unknowns-container span.tag-code {
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+#swirl-unknowns-container abbr {
+	border-bottom: 1px dashed;
+	cursor: help;
+}

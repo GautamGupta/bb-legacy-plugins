@@ -66,10 +66,10 @@ function profanity_filter_replace( $found ) {
 }
 
 function profanity_filter_on_whitelist( $whitelist, $word ) {
-	$word = preg_replace( '/[^\p{L}]/', '', strtolower( $word ) );
+	$word = preg_replace( '/[^\p{L}]+/S', '', strtolower( $word ) );
 
 	foreach ( $whitelist as $entry ) {
-		$entry = preg_replace( '/[^\p{L}]/', '', strtolower( $entry ) );
+		$entry = preg_replace( '/[^\p{L}]+/S', '', strtolower( $entry ) );
 
 		if ( strpos( $entry, $word ) !== false )
 			return true;
@@ -80,6 +80,27 @@ function profanity_filter_on_whitelist( $whitelist, $word ) {
 	return false;
 }
 
+function profanity_filter_double_metaphone( $str ) {
+	if ( !function_exists( 'double_metaphone' ) )
+		require_once dirname( __FILE__ ) . '/doublemetaphone.php';
+
+	if ( !$str )
+		return '';
+
+	// Double Metaphone only uses letters, so let's filter everything else out so the cache works better.
+	$str = preg_replace( '/[^\p{L}]+/S', '', strtoupper( $str ) );
+
+	if ( !$str )
+		return '';
+
+	if ( false === $result = wp_cache_get( $str, 'profanity_filter_double_metaphone' ) ) {
+		$result = double_metaphone( $str );
+		wp_cache_add( $str, $result, 'profanity_filter_double_metaphone' );
+	}
+
+	return $result;
+}
+
 function profanity_filter_censor( $text, $args = '' ) {
 	$options = profanity_filter_parse_args( $args );
 
@@ -88,16 +109,14 @@ function profanity_filter_censor( $text, $args = '' ) {
 	if ( !$_profanity )
 		return $text;
 
-	require_once dirname( __FILE__ ) . '/doublemetaphone.php';
-
 	$sentence = $text;
 	$_sentence = strip_tags( $sentence );
 	$len = strlen( $_sentence );
 
-	$profanity = array_map( 'double_metaphone', $_profanity );
+	$profanity = array_map( 'profanity_filter_double_metaphone', $_profanity );
 	$profanity = array_combine( $_profanity, $profanity );
 	$profanity2 = array_map( 'reset', $profanity );
-	$profanity3 = array_map( 'double_metaphone', $options['secondary_words'] );
+	$profanity3 = array_map( 'profanity_filter_double_metaphone', $options['secondary_words'] );
 	$profanity3 = array_combine( $options['secondary_words'], $profanity3 );
 
 	$whitelist = $options['whitelist'];
@@ -107,7 +126,7 @@ function profanity_filter_censor( $text, $args = '' ) {
 
 	for ( $i = 0; $i < $len; $i++ ) {
 		for ( $j = 1; $j < 30 && $i + $j <= $len; $j++ ) { // Max. word length of 30 chars
-			$phone = double_metaphone( substr( $_sentence, $i, $j ) );
+			$phone = profanity_filter_double_metaphone( substr( $_sentence, $i, $j ) );
 
 			if ( false !== $pos = array_search( $phone, $profanity ) ) {
 				$badWord = preg_replace( '/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/', '', strtolower( substr( $_sentence, $i, $j ) ) );

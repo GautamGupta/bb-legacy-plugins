@@ -65,6 +65,21 @@ function profanity_filter_replace( $found ) {
 	return $ret;
 }
 
+function profanity_filter_on_whitelist( $whitelist, $word ) {
+	$word = preg_replace( '/[^\p{L}]/', '', strtolower( $word ) );
+
+	foreach ( $whitelist as $entry ) {
+		$entry = preg_replace( '/[^\p{L}]/', '', strtolower( $entry ) );
+
+		if ( strpos( $entry, $word ) !== false )
+			return true;
+		if ( strpos( $word, $entry ) !== false )
+			return true;
+	}
+
+	return false;
+}
+
 function profanity_filter_censor( $text, $args = '' ) {
 	$options = profanity_filter_parse_args( $args );
 
@@ -85,30 +100,31 @@ function profanity_filter_censor( $text, $args = '' ) {
 	$profanity3 = array_map( 'double_metaphone', $options['secondary_words'] );
 	$profanity3 = array_combine( $options['secondary_words'], $profanity3 );
 
-	$whitelist = strtolower( implode( "\n", $options['whitelist'] ) );
+	$whitelist = $options['whitelist'];
 
 	$foundWords = array();
 	$foundSecondary = array();
 
 	for ( $i = 0; $i < $len; $i++ ) {
-		for ( $j = $i; $j <= $len; $j++ ) {
-			$phone = double_metaphone( substr( $_sentence, $i, $j - $i ) );
-			if ( false !== $pos = array_search( $phone, $profanity ) ) {
-				$badWord = preg_replace( '/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/', '', strtolower( substr( $_sentence, $i, $j - $i ) ) );
+		for ( $j = 1; $j < 30 && $i + $j <= $len; $j++ ) { // Max. word length of 30 chars
+			$phone = double_metaphone( substr( $_sentence, $i, $j ) );
 
-				if ( strpos( $whitelist, $badWord ) === false )
+			if ( false !== $pos = array_search( $phone, $profanity ) ) {
+				$badWord = preg_replace( '/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/', '', strtolower( substr( $_sentence, $i, $j ) ) );
+
+				if ( !profanity_filter_on_whitelist( $whitelist, $badWord ) )
 					$foundWords[$badWord] += 2;
 			} elseif ( false !== $pos = array_search( $phone['primary'], $profanity2 ) ) {
-				$badWord = preg_replace( '/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/', '', strtolower( substr( $_sentence, $i, $j - $i ) ) );
+				$badWord = preg_replace( '/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/', '', strtolower( substr( $_sentence, $i, $j ) ) );
 
-				if ( strpos( $whitelist, $badWord ) === false )
+				if ( !profanity_filter_on_whitelist( $whitelist, $badWord ) )
 					$foundWords[$badWord]++;
 			}
 
 			if ( false !== $pos = array_search( $phone, $profanity3 ) ) {
-				$badWord = preg_replace( '/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/', '', strtolower( substr( $_sentence, $i, $j - $i ) ) );
+				$badWord = preg_replace( '/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/', '', strtolower( substr( $_sentence, $i, $j ) ) );
 
-				if ( strpos( $whitelist, $badWord ) === false )
+				if ( !profanity_filter_on_whitelist( $whitelist, $badWord ) )
 					$foundSecondary[$badWord]++;
 			}
 		}

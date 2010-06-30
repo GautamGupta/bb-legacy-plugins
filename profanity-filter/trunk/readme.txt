@@ -8,7 +8,7 @@ Stable tag: 0.1
 Changes profanity to stars, cartoon swears, or an administrator-specified word using the Double Metaphone algorithm.
 
 == Description ==
-Changes profanity to stars, cartoon swears, or an administrator-specified word using the [Double Metaphone](http://en.wikipedia.org/wiki/Double_Metaphone) algorithm.
+Changes profanity to stars, cartoon swears, or an administrator-specified word using a modified version of the [Double Metaphone](http://en.wikipedia.org/wiki/Double_Metaphone) algorithm.
 
 With the default settings of "cabbage" and "soup", a post such as:
 >I really like **this** cubbage soop!  
@@ -17,10 +17,10 @@ With the default settings of "cabbage" and "soup", a post such as:
 >I ate evrycabb4ge!
 
 Would be shown as:
->I really like **this** #&&\*&!^ #&$@!  
->It has *so much %^%#&\** in its !^^$%^# goodness.
+>I really like **this** #%$\*@!^ #%$@!  
+>It has *so much %^%#!\** in its !^^$%^# goodness.
 >
->I ate evry%@@$&^^!
+>I ate evry%@@$@^^!
 
 Profanity Filter filters post contents, topic titles, and user names as they are displayed, but keeps the filtered and unfiltered forms, as well as the time it filtered the content, to reduce load on your server and produce updated content as soon as needed.
 
@@ -32,9 +32,15 @@ Profanity Filter filters post contents, topic titles, and user names as they are
 1. The default settings for Profanity Filter protect you from cabbage soup, but not liquid soap.
 
 == Changelog ==
+= 0.2 =
+* Now over 300x faster!
+
 = 0.1 =
 * Initial release
 
 == Upgrade Notice ==
+= 0.2 =
+Now over 300x faster!
+
 = 0.1 =
 Initial release

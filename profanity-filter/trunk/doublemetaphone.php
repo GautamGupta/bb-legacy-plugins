@@ -45,12 +45,12 @@
   
 
    */
- 
 
-function double_metaphone( $string )
+function double_metaphone_2( $string )
 {
    $primary   = "";
    $secondary = "";
+   $positions = array();
    $current   =  0;
   	
     $current  = 0;
@@ -62,8 +62,7 @@ function double_metaphone( $string )
 
     // skip this at beginning of word
     
-    if (doublemetaphone_string_at($original, 0, 2, 
-                        array('GN', 'KN', 'PN', 'WR', 'PS')))
+    if (doublemetaphone_string_at($original, 0, 2, 'GN,KN,PN,WR,PS'))
       $current++;
 
     // Initial 'X' is pronounced 'Z' e.g. 'Xavier'
@@ -71,15 +70,13 @@ function double_metaphone( $string )
     if (substr($original, 0, 1) == 'X') {
       $primary   .= "S";   // 'Z' maps to 'S'
       $secondary .= "S";
+	  $positions[] = $current;
       $current++;
     }
 
     // main loop
 
-    while (strlen($primary) < 4 || strlen($secondary) < 4) {
-      if ($current >= $length)
-        break;
-
+    while ($current < $length) {
       switch (substr($original, $current, 1)) {
         case 'A':
         case 'E':
@@ -87,11 +84,12 @@ function double_metaphone( $string )
         case 'O':
         case 'U':
         case 'Y':
-          if ($current == 0) {
+          //if ($current == 0) {
             // all init vowels now map to 'A'
             $primary   .= 'A';
             $secondary .= 'A';
-          }
+			$positions[] = $current;
+          //}
           $current += 1;
           break;
 
@@ -99,6 +97,7 @@ function double_metaphone( $string )
           // '-mb', e.g. "dumb", already skipped over ...
           $primary   .= 'P';
           $secondary .= 'P';
+			$positions[] = $current;
 
           if (substr($original, $current + 1, 1) == 'B')
             $current += 2;
@@ -109,6 +108,7 @@ function double_metaphone( $string )
         case 'Ç':
           $primary   .= 'S';
           $secondary .= 'S';
+	  $positions[] = $current;
           $current += 1;
           break;
 
@@ -116,15 +116,15 @@ function double_metaphone( $string )
           // various gremanic
           if (($current > 1) 
               && !doublemetaphone_is_vowel($original, $current - 2)
-              && doublemetaphone_string_at($original, $current - 1, 3, 
-                        array("ACH"))
+              && doublemetaphone_string_at($original, $current - 1, 3, 'ACH')
               && ((substr($original, $current + 2, 1) != 'I')
                   && ((substr($original, $current + 2, 1) != 'E')
                       || doublemetaphone_string_at($original, $current - 2, 6, 
-                                array("BACHER", "MACHER"))))) {
+                                'BACHER,MACHER')))) {
 
             $primary   .= 'K';
             $secondary .= 'K';
+	  $positions[] = $current;
             $current += 2;
             break;
           }
@@ -132,31 +132,34 @@ function double_metaphone( $string )
           // special case 'caesar'
           if (($current == 0) 
               && doublemetaphone_string_at($original, $current, 6, 
-                         array("CAESAR"))) {
+                         'CAESAR')) {
             $primary   .= 'S';
             $secondary .= 'S';
+	  $positions[] = $current;
             $current += 2;
             break;
           }
 
           // italian 'chianti'
           if (doublemetaphone_string_at($original, $current, 4, 
-                         array("CHIA"))) {
+                         'CHIA')) {
             $primary   .= 'K';
             $secondary .= 'K';
+	  $positions[] = $current;
             $current += 2;
             break;
           }
 
           if (doublemetaphone_string_at($original, $current, 2, 
-                         array("CH"))) {
+                         'CH')) {
 
             // find 'michael'
             if (($current > 0)
                 && doublemetaphone_string_at($original, $current, 4, 
-                         array("CHAE"))) {
+                         'CHAE')) {
               $primary   .= 'K';
               $secondary .= 'X';
+	  $positions[] = $current;
               $current += 2;
               break;
             }
@@ -164,45 +167,50 @@ function double_metaphone( $string )
             // greek roots e.g. 'chemistry', 'chorus'
             if (($current == 0)
                 && (doublemetaphone_string_at($original, $current + 1, 5, 
-                         array("HARAC", "HARIS"))
+                         'HARAC,HARIS')
                     || doublemetaphone_string_at($original, $current + 1, 3, 
-                              array("HOR", "HYM", "HIA", "HEM")))
-                && !doublemetaphone_string_at($original, 0, 5, array("CHORE"))) {
+                              'HOR,HYM,HIA,HEM')
+                && !doublemetaphone_string_at($original, 0, 5, 'CHORE'))) {
               $primary   .= 'K';
               $secondary .= 'K';
+	  $positions[] = $current;
               $current += 2;
               break;
             }
 
             // germanic, greek, or otherwise 'ch' for 'kh' sound
-            if ((doublemetaphone_string_at($original, 0, 4, array("VAN ", "VON "))
-                 || doublemetaphone_string_at($original, 0, 3, array("SCH")))
+            if ((doublemetaphone_string_at($original, 0, 4, 'VAN ,VON ')
+                 || doublemetaphone_string_at($original, 0, 3, 'SCH'))
                 // 'architect' but not 'arch', orchestra', 'orchid'
                 || doublemetaphone_string_at($original, $current - 2, 6, 
-                         array("ORCHES", "ARCHIT", "ORCHID"))
+                         'ORCHES,ARCHIT,ORCHID')
                 || doublemetaphone_string_at($original, $current + 2, 1, 
-                         array("T", "S"))
+                         'T,S')
                 || ((doublemetaphone_string_at($original, $current - 1, 1, 
-                         array("A","O","U","E"))
+                         'A,O,U,E')
                      || ($current == 0))
                     // e.g. 'wachtler', 'weschsler', but not 'tichner'
                     && doublemetaphone_string_at($original, $current + 2, 1, 
-                         array("L","R","N","M","B","H","F","V","W"," ")))) {
+                         'L,R,N,M,B,H,F,V,W, '))) {
               $primary   .= 'K';
               $secondary .= 'K';
+	  $positions[] = $current;
             } else {
               if ($current > 0) {
-                if (doublemetaphone_string_at($original, 0, 2, array("MC"))) {
+                if (doublemetaphone_string_at($original, 0, 2, 'MC')) {
                   // e.g. 'McHugh'
                   $primary   .= 'K';
                   $secondary .= 'K';
+	  $positions[] = $current;
                 } else {
                   $primary   .= 'X';
                   $secondary .= 'K';
+	  $positions[] = $current;
                 }
               } else {
                 $primary   .= 'X';
                 $secondary .= 'X';
+	  $positions[] = $current;
               }
             }
             $current += 2;
@@ -210,44 +218,49 @@ function double_metaphone( $string )
           }
 
           // e.g. 'czerny'
-          if (doublemetaphone_string_at($original, $current, 2, array("CZ"))
+          if (doublemetaphone_string_at($original, $current, 2, 'CZ')
               && !doublemetaphone_string_at($original, $current -2, 4, 
-                         array("WICZ"))) {
+                         'WICZ')) {
             $primary   .= 'S';
             $secondary .= 'X';
+	  $positions[] = $current;
             $current += 2;
             break;
           }
 
           // e.g. 'focaccia'
           if (doublemetaphone_string_at($original, $current + 1, 3, 
-                     array("CIA"))) {
+                     'CIA')) {
             $primary   .= 'X';
             $secondary .= 'X';
+	  $positions[] = $current;
             $current += 3;
             break;
           }
 
           // double 'C', but not McClellan'
-          if (doublemetaphone_string_at($original, $current, 2, array("CC"))
+          if (doublemetaphone_string_at($original, $current, 2, 'CC')
               && !(($current == 1) 
                    && (substr($original, 0, 1) == 'M'))) {
             // 'bellocchio' but not 'bacchus'
             if (doublemetaphone_string_at($original, $current + 2, 1,
-                       array("I","E","H"))
+                       'I,E,H')
                 && !doublemetaphone_string_at($original, $current + 2, 2,
-                          array("HU"))) {
+                          'HU')) {
               // 'accident', 'accede', 'succeed'
               if ((($current == 1)
                    && (substr($original, $current - 1, 1) == 'A'))
                   || doublemetaphone_string_at($original, $current - 1, 5,
-                            array("UCCEE", "UCCES"))) {
+                            'UCCEE,UCCES')) {
                 $primary   .= "KS";
                 $secondary .= "KS";
+	  $positions[] = $current;
+	  $positions[] = $current;
                 // 'bacci', 'bertucci', other italian
               } else {
                 $primary   .= "X";
                 $secondary .= "X";
+	  $positions[] = $current;
               }
               $current += 3;
               break;
@@ -255,29 +268,33 @@ function double_metaphone( $string )
               // Pierce's rule
               $primary   .= "K";
               $secondary .= "K";
+	  $positions[] = $current;
               $current += 2;
               break;
             }
           }
 
           if (doublemetaphone_string_at($original, $current, 2,
-                     array("CK","CG","CQ"))) {
+                     'CK,CG,CQ')) {
             $primary   .= "K";
             $secondary .= "K";
+	  $positions[] = $current;
             $current += 2;
             break;
           }
 
           if (doublemetaphone_string_at($original, $current, 2,
-                     array("CI","CE","CY"))) {
+                      'CI,CE,CY')) {
             // italian vs. english
             if (doublemetaphone_string_at($original, $current, 3,
-                       array("CIO","CIE","CIA"))) {
+                       'CIO,CIE,CIA')) {
               $primary   .= "S";
               $secondary .= "X";
+	  $positions[] = $current;
             } else {
               $primary   .= "S";
               $secondary .= "S";
+	  $positions[] = $current;
             }
             $current += 2;
             break;
@@ -286,16 +303,17 @@ function double_metaphone( $string )
           // else
           $primary   .= "K";
           $secondary .= "K";
+	  $positions[] = $current;
 
           // name sent in 'mac caffrey', 'mac gregor'
           if (doublemetaphone_string_at($original, $current + 1, 2,
-                     array(" C"," Q"," G"))) {
+                     ' C, Q, G')) {
             $current += 3;
           } else {
             if (doublemetaphone_string_at($original, $current + 1, 1,
-                       array("C","K","Q"))
+                       'C,K,Q')
                 && !doublemetaphone_string_at($original, $current + 1, 2,
-                           array("CE","CI"))) {
+                           'CE,CI')) {
               $current += 2;
             } else {
               $current += 1;
@@ -305,27 +323,31 @@ function double_metaphone( $string )
 
         case 'D':
           if (doublemetaphone_string_at($original, $current, 2,
-                     array("DG"))) {
+                     'DG')) {
             if (doublemetaphone_string_at($original, $current + 2, 1,
-                       array("I","E","Y"))) {
+                       'I,E,Y')) {
               // e.g. 'edge'
               $primary   .= "J";
               $secondary .= "J";
+	  $positions[] = $current;
               $current += 3;
               break;
             } else {
               // e.g. 'edgar'
               $primary   .= "TK";
               $secondary .= "TK";
+	  $positions[] = $current;
+	  $positions[] = $current;
               $current += 2;
               break;
             }
           }
 
           if (doublemetaphone_string_at($original, $current, 2,
-                     array("DT","DD"))) {
+                     'DT,DD')) {
             $primary   .= "T";
             $secondary .= "T";
+	  $positions[] = $current;
             $current += 2;
             break;
           }
@@ -333,10 +355,12 @@ function double_metaphone( $string )
           // else
           $primary   .= "T";
           $secondary .= "T";
+	  $positions[] = $current;
           $current += 1;
           break;
 
         case 'F':
+	  $positions[] = $current;
           if (substr($original, $current + 1, 1) == 'F')
             $current += 2;
           else
@@ -351,6 +375,7 @@ function double_metaphone( $string )
                 && !doublemetaphone_is_vowel($original, $current - 1)) {
               $primary   .= "K";
               $secondary .= "K";
+	  $positions[] = $current;
               $current += 2;
               break;
             }
@@ -365,6 +390,7 @@ function double_metaphone( $string )
                   $primary   .= "K";
                   $secondary .= "K";
                 }
+	  $positions[] = $current;
                 $current += 2;
                 break;
               }
@@ -373,15 +399,15 @@ function double_metaphone( $string )
             // Parker's rule (with some further refinements) - e.g. 'hugh'
             if ((($current > 1)
                  && doublemetaphone_string_at($original, $current - 2, 1,
-                           array("B","H","D")))
+                           'B,H,D'))
                 // e.g. 'bough'
                 || (($current > 2)
                     &&  doublemetaphone_string_at($original, $current - 3, 1,
-                               array("B","H","D")))
+                               'B,H,D'))
                 // e.g. 'broughton'
                 || (($current > 3)
                     && doublemetaphone_string_at($original, $current - 4, 1,
-                               array("B","H")))) {
+                               'B,H'))) {
               $current += 2;
               break;
             } else {
@@ -389,7 +415,7 @@ function double_metaphone( $string )
               if (($current > 2)
                   && (substr($original, $current - 1, 1) == 'U')
                   && doublemetaphone_string_at($original, $current - 3, 1,
-                            array("C","G","L","R","T"))) {
+                            'C,G,L,R,T')) {
                 $primary   .= "F";
                 $secondary .= "F";
               } elseif (($current > 0)
@@ -397,6 +423,7 @@ function double_metaphone( $string )
                 $primary   .= "K";
                 $secondary .= "K";
               }
+	  $positions[] = $current;
               $current += 2;
               break;
             }
@@ -405,17 +432,23 @@ function double_metaphone( $string )
           if (substr($original, $current + 1, 1) == 'N') {
             if (($current == 1) && doublemetaphone_is_vowel($original, 0)
                 && !doublemetaphone_Slavo_Germanic($original)) {
+	  $positions[] = $current;
+	  $positions[] = $current;
               $primary   .= "KN";
-              $secondary .= "N";
+              $secondary .= "N ";
             } else {
               // not e.g. 'cagney'
               if (!doublemetaphone_string_at($original, $current + 2, 2,
-                          array("EY"))
+                          'EY')
                   && (substr($original, $current + 1) != "Y")
                   && !doublemetaphone_Slavo_Germanic($original)) {
-                 $primary   .= "N";
+	  $positions[] = $current;
+	  $positions[] = $current;
+                 $primary   .= "N ";
                  $secondary .= "KN";
               } else {
+	  $positions[] = $current;
+	  $positions[] = $current;
                  $primary   .= "KN";
                  $secondary .= "KN";
               }
@@ -426,10 +459,12 @@ function double_metaphone( $string )
 
           // 'tagliaro'
           if (doublemetaphone_string_at($original, $current + 1, 2,
-                     array("LI"))
+                     'LI')
               && !doublemetaphone_Slavo_Germanic($original)) {
+	  $positions[] = $current;
+	  $positions[] = $current;
             $primary   .= "KL";
-            $secondary .= "L";
+            $secondary .= "L ";
             $current += 2;
             break;
           }
@@ -438,8 +473,8 @@ function double_metaphone( $string )
           if (($current == 0)
               && ((substr($original, $current + 1, 1) == 'Y')
                   || doublemetaphone_string_at($original, $current + 1, 2,
-                            array("ES","EP","EB","EL","EY","IB","IL","IN","IE",
-                                  "EI","ER")))) {
+                            'ES,EP,EB,EL,EY,IB,IL,IN,IE,EI,ER'))) {
+	  $positions[] = $current;
             $primary   .= "K";
             $secondary .= "J";
             $current += 2;
@@ -448,14 +483,15 @@ function double_metaphone( $string )
 
           // -ger-, -gy-
           if ((doublemetaphone_string_at($original, $current + 1, 2,
-                      array("ER"))
+                      'ER')
                || (substr($original, $current + 1, 1) == 'Y'))
               && !doublemetaphone_string_at($original, 0, 6,
-                         array("DANGER","RANGER","MANGER"))
+                         'DANGER,RANGER,MANGER')
               && !doublemetaphone_string_at($original, $current -1, 1,
-                         array("E", "I"))
+                         'E,I')
               && !doublemetaphone_string_at($original, $current -1, 3,
-                         array("RGY","OGY"))) {
+                         'RGY,OGY')) {
+	  $positions[] = $current;
             $primary   .= "K";
             $secondary .= "J";
             $current += 2;
@@ -464,23 +500,26 @@ function double_metaphone( $string )
 
           // italian e.g. 'biaggi'
           if (doublemetaphone_string_at($original, $current + 1, 1,
-                     array("E","I","Y"))
+                     'E,I,Y')
               || doublemetaphone_string_at($original, $current -1, 4,
-                        array("AGGI","OGGI"))) {
+                        'AGGI,OGGI')) {
             // obvious germanic
-            if ((doublemetaphone_string_at($original, 0, 4, array("VAN ", "VON "))
-                 || doublemetaphone_string_at($original, 0, 3, array("SCH")))
+            if ((doublemetaphone_string_at($original, 0, 4, 'VAN ,VON ')
+                 || doublemetaphone_string_at($original, 0, 3, 'SCH'))
                 || doublemetaphone_string_at($original, $current + 1, 2,
-                          array("ET"))) {
+                          'ET')) {
+	  $positions[] = $current;
               $primary   .= "K";
               $secondary .= "K";
             } else {
               // always soft if french ending
               if (doublemetaphone_string_at($original, $current + 1, 4,
-                         array("IER "))) {
+                         'IER ')) {
+	  $positions[] = $current;
                 $primary   .= "J";
                 $secondary .= "J";
               } else {
+	  $positions[] = $current;
                 $primary   .= "J";
                 $secondary .= "K";
               }
@@ -489,6 +528,7 @@ function double_metaphone( $string )
             break;
           }
 
+	  $positions[] = $current;
           if (substr($original, $current +1, 1) == 'G')
             $current += 2;
           else
@@ -505,6 +545,7 @@ function double_metaphone( $string )
               && doublemetaphone_is_vowel($original, $current + 1)) {
             $primary   .= 'H';
             $secondary .= 'H';
+	  $positions[] = $current;
             $current += 2;
           } else
             $current += 1;
@@ -513,26 +554,28 @@ function double_metaphone( $string )
         case 'J':
           // obvious spanish, 'jose', 'san jacinto'
           if (doublemetaphone_string_at($original, $current, 4,
-                     array("JOSE"))
-              || doublemetaphone_string_at($original, 0, 4, array("SAN "))) {
+                     'JOSE')
+              || doublemetaphone_string_at($original, 0, 4, 'SAN ')) {
             if ((($current == 0)
                  && (substr($original, $current + 4, 1) == ' '))
-                || doublemetaphone_string_at($original, 0, 4, array("SAN "))) {
+                || doublemetaphone_string_at($original, 0, 4, 'SAN ')) {
               $primary   .= 'H';
               $secondary .= 'H';
             } else {
               $primary   .= "J";
               $secondary .= 'H';
             }
+	  $positions[] = $current;
             $current += 1;
             break;
           }
 
           if (($current == 0)
               && !doublemetaphone_string_at($original, $current, 4,
-                     array("JOSE"))) {
+                     'JOSE')) {
             $primary   .= 'J';  // Yankelovich/Jankelowicz
             $secondary .= 'A';
+	  $positions[] = $current;
           } else {
             // spanish pron. of .e.g. 'bajador'
             if (doublemetaphone_is_vowel($original, $current - 1)
@@ -541,17 +584,20 @@ function double_metaphone( $string )
                     || (substr($original, $current + 1, 1) == 'O'))) {
               $primary   .= "J";
               $secondary .= "H";
+	  $positions[] = $current;
             } else {
               if ($current == $last) {
                 $primary   .= "J";
-                $secondary .= "";
+                $secondary .= " ";
+	  $positions[] = $current;
               } else {
                 if (!doublemetaphone_string_at($original, $current + 1, 1,
-                            array("L","T","K","S","N","M","B","Z"))
+                            'L,T,K,S,N,M,B,Z')
                     && !doublemetaphone_string_at($original, $current - 1, 1,
-                               array("S","K","L"))) {
+                               'S,K,L')) {
                   $primary   .= "J";
                   $secondary .= "J";
+	  $positions[] = $current;
                 }
               }
             }
@@ -564,6 +610,7 @@ function double_metaphone( $string )
           break;
 
         case 'K':
+	  $positions[] = $current;
           if (substr($original, $current + 1, 1) == 'K')
             $current += 2;
           else
@@ -573,19 +620,20 @@ function double_metaphone( $string )
           break;
 
         case 'L':
+	  $positions[] = $current;
           if (substr($original, $current + 1, 1) == 'L') {
             // spanish e.g. 'cabrillo', 'gallegos'
             if ((($current == ($length - 3))
                  && doublemetaphone_string_at($original, $current - 1, 4,
-                           array("ILLO","ILLA","ALLE")))
+                           'ILLO,ILLA,ALLE'))
                 || ((doublemetaphone_string_at($original, $last-1, 2,
-                            array("AS","OS"))
+                            'AS,OS')
                   || doublemetaphone_string_at($original, $last, 1,
-                            array("A","O")))
+                            'A,O'))
                  && doublemetaphone_string_at($original, $current - 1, 4,
-                           array("ALLE")))) {
+                           'ALLE'))) {
               $primary   .= "L";
-              $secondary .= "";
+              $secondary .= " ";
               $current += 2;
               break;
             }
@@ -597,11 +645,12 @@ function double_metaphone( $string )
           break;
 
         case 'M':
+	  $positions[] = $current;
           if ((doublemetaphone_string_at($original, $current - 1, 3,
-                     array("UMB"))
+                     'UMB')
                && ((($current + 1) == $last)
                    || doublemetaphone_string_at($original, $current + 2, 2,
-                            array("ER"))))
+                            'ER')))
               // 'dumb', 'thumb'
               || (substr($original, $current + 1, 1) == 'M')) {
               $current += 2;
@@ -613,6 +662,7 @@ function double_metaphone( $string )
           break;
 
         case 'N':
+	  $positions[] = $current;
           if (substr($original, $current + 1, 1) == 'N') 
             $current += 2;
           else
@@ -622,6 +672,7 @@ function double_metaphone( $string )
           break;
 
         case 'Ñ':
+	  $positions[] = $current;
           $current += 1;
           $primary   .= "N";
           $secondary .= "N";
@@ -629,15 +680,17 @@ function double_metaphone( $string )
 
         case 'P':
           if (substr($original, $current + 1, 1) == 'H') {
+	  $positions[] = $current;
             $current += 2;
             $primary   .= "F";
             $secondary .= "F";
             break;
           }
 
+	  $positions[] = $current;
           // also account for "campbell" and "raspberry"
           if (doublemetaphone_string_at($original, $current + 1, 1,
-                     array("P","B")))
+                     'P,B'))
             $current += 2;
           else
             $current += 1;
@@ -646,6 +699,7 @@ function double_metaphone( $string )
           break;
 
         case 'Q':
+	  $positions[] = $current;
           if (substr($original, $current + 1, 1) == 'Q') 
             $current += 2;
           else 
@@ -659,15 +713,16 @@ function double_metaphone( $string )
           if (($current == $last)
               && !doublemetaphone_Slavo_Germanic($original)
               && doublemetaphone_string_at($original, $current - 2, 2,
-                        array("IE"))
+                        'IE')
               && !doublemetaphone_string_at($original, $current - 4, 2,
-                         array("ME","MA"))) {
-            $primary   .= "";
+                         'ME,MA')) {
+            $primary   .= " ";
             $secondary .= "R";
           } else {
             $primary   .= "R";
             $secondary .= "R";
           }
+	  $positions[] = $current;
           if (substr($original, $current + 1, 1) == 'R') 
             $current += 2;
           else
@@ -677,7 +732,7 @@ function double_metaphone( $string )
         case 'S':
           // special cases 'island', 'isle', 'carlisle', 'carlysle'
           if (doublemetaphone_string_at($original, $current - 1, 3,
-                     array("ISL","YSL"))) {
+                     'ISL,YSL')) {
             $current += 1;
             break;
           }
@@ -685,33 +740,35 @@ function double_metaphone( $string )
           // special case 'sugar-'
           if (($current == 0)
               && doublemetaphone_string_at($original, $current, 5,
-                        array("SUGAR"))) {
+                        'SUGAR')) {
             $primary   .= "X";
             $secondary .= "S";
+	  $positions[] = $current;
             $current += 1;
             break;
           }
 
           if (doublemetaphone_string_at($original, $current, 2,
-                     array("SH"))) {
+                     'SH')) {
             // germanic
             if (doublemetaphone_string_at($original, $current + 1, 4,
-                       array("HEIM","HOEK","HOLM","HOLZ"))) {
+                       'HEIM,HOEK,HOLM,HOLZ')) {
               $primary   .= "S";
               $secondary .= "S";
             } else {
               $primary   .= "X";
               $secondary .= "X";
             }
+	  $positions[] = $current;
             $current += 2;
             break;
           }
 
           // italian & armenian 
           if (doublemetaphone_string_at($original, $current, 3,
-                     array("SIO","SIA"))
+                     'SIO,SIA')
               || doublemetaphone_string_at($original, $current, 4,
-                        array("SIAN"))) {
+                        'SIAN')) {
             if (!doublemetaphone_Slavo_Germanic($original)) {
               $primary   .= "S";
               $secondary .= "X";
@@ -719,6 +776,7 @@ function double_metaphone( $string )
               $primary   .= "S";
               $secondary .= "S";
             }
+	  $positions[] = $current;
             $current += 3;
             break;
           }
@@ -727,13 +785,14 @@ function double_metaphone( $string )
           // also, -sz- in slavic language altho in hungarian it is pronounced 's'
           if ((($current == 0)
                && doublemetaphone_string_at($original, $current + 1, 1,
-                         array("M","N","L","W")))
+                         'M,N,L,W'))
               || doublemetaphone_string_at($original, $current + 1, 1,
-                        array("Z"))) {
+                        'Z')) {
             $primary   .= "S";
             $secondary .= "X";
+	  $positions[] = $current;
             if (doublemetaphone_string_at($original, $current + 1, 1,
-                        array("Z")))
+                        'Z'))
               $current += 2;
             else
               $current += 1;
@@ -741,20 +800,22 @@ function double_metaphone( $string )
           }
 
           if (doublemetaphone_string_at($original, $current, 2,
-                     array("SC"))) {
+                     'SC')) {
             // Schlesinger's rule 
             if (substr($original, $current + 2, 1) == 'H')
               // dutch origin, e.g. 'school', 'schooner'
               if (doublemetaphone_string_at($original, $current + 3, 2,
-                         array("OO","ER","EN","UY","ED","EM"))) {
+                         'OO,ER,EN,UY,ED,EM')) {
                 // 'schermerhorn', 'schenker' 
                 if (doublemetaphone_string_at($original, $current + 3, 2,
-                           array("ER","EN"))) {
-                  $primary   .= "X";
+                           'ER,EN')) {
+                  $primary   .= "X ";
                   $secondary .= "SK";
                 } else {
                   $primary   .= "SK";
                   $secondary .= "SK";
+	  $positions[] = $current;
+	  $positions[] = $current;
                 }
                 $current += 3;
                 break;
@@ -768,14 +829,16 @@ function double_metaphone( $string )
                   $primary   .= "X";
                   $secondary .= "X";
                 }
+	  $positions[] = $current;
                 $current += 3;
                 break;
               }
 
               if (doublemetaphone_string_at($original, $current + 2, 1,
-                         array("I","E","Y"))) {
+                         'I,E,Y')) {
                 $primary   .= "S";
                 $secondary .= "S";
+	  $positions[] = $current;
                 $current += 3;
                 break;
               }
@@ -783,6 +846,8 @@ function double_metaphone( $string )
             // else
             $primary   .= "SK";
             $secondary .= "SK";
+	  $positions[] = $current;
+	  $positions[] = $current;
             $current += 3;
             break;
           }
@@ -790,16 +855,17 @@ function double_metaphone( $string )
           // french e.g. 'resnais', 'artois'
           if (($current == $last)
               && doublemetaphone_string_at($original, $current - 2, 2,
-                        array("AI","OI"))) {
-            $primary   .= "";
+                        'AI,OI')) {
+            $primary   .= " ";
             $secondary .= "S";
           } else {
             $primary   .= "S";
             $secondary .= "S";
           }
+	  $positions[] = $current;
 
           if (doublemetaphone_string_at($original, $current + 1, 1,
-                     array("S","Z")))
+                     'S,Z'))
             $current += 2;
           else 
             $current += 1;
@@ -807,42 +873,46 @@ function double_metaphone( $string )
 
         case 'T':
           if (doublemetaphone_string_at($original, $current, 4,
-                     array("TION"))) {
+                     'TION')) {
             $primary   .= "X";
             $secondary .= "X";
+	  $positions[] = $current;
             $current += 3;
             break;
           }
 
           if (doublemetaphone_string_at($original, $current, 3,
-                     array("TIA","TCH"))) {
+                     'TIA,TCH')) {
             $primary   .= "X";
             $secondary .= "X";
+	  $positions[] = $current;
             $current += 3;
             break;
           }
 
           if (doublemetaphone_string_at($original, $current, 2,
-                     array("TH"))
+                     'TH')
               || doublemetaphone_string_at($original, $current, 3,
-                            array("TTH"))) {
+                            'TTH')) {
             // special case 'thomas', 'thames' or germanic
             if (doublemetaphone_string_at($original, $current + 2, 2,
-                       array("OM","AM"))
-                || doublemetaphone_string_at($original, 0, 4, array("VAN ","VON "))
-                || doublemetaphone_string_at($original, 0, 3, array("SCH"))) {
+                       'OM,AM')
+                || doublemetaphone_string_at($original, 0, 4, 'VAN ,VON ')
+                || doublemetaphone_string_at($original, 0, 3, 'SCH')) {
               $primary   .= "T";
               $secondary .= "T";
             } else {
               $primary   .= "0";
               $secondary .= "T";
             }
+	  $positions[] = $current;
             $current += 2;
             break;
           }
 
+	  $positions[] = $current;
           if (doublemetaphone_string_at($original, $current + 1, 1,
-                     array("T","D")))
+                     'T,D'))
             $current += 2;
           else
             $current += 1;
@@ -851,6 +921,7 @@ function double_metaphone( $string )
           break;
 
         case 'V':
+	  $positions[] = $current;
           if (substr($original, $current + 1, 1) == 'V')
             $current += 2;
           else
@@ -861,9 +932,10 @@ function double_metaphone( $string )
 
         case 'W':
           // can also be in middle of word
-          if (doublemetaphone_string_at($original, $current, 2, array("WR"))) {
+          if (doublemetaphone_string_at($original, $current, 2, 'WR')) {
             $primary   .= "R";
             $secondary .= "R";
+	  $positions[] = $current;
             $current += 2;
             break;
           }
@@ -871,7 +943,7 @@ function double_metaphone( $string )
           if (($current == 0)
               && (doublemetaphone_is_vowel($original, $current + 1)
                   || doublemetaphone_string_at($original, $current, 2, 
-                            array("WH")))) {
+                            'WH'))) {
             // Wasserman should match Vasserman 
             if (doublemetaphone_is_vowel($original, $current + 1)) {
               $primary   .= "A";
@@ -881,25 +953,29 @@ function double_metaphone( $string )
               $primary   .= "A";
               $secondary .= "A";
             }
+	  $positions[] = $current;
           }
 
           // Arnow should match Arnoff
           if ((($current == $last) 
                 && doublemetaphone_is_vowel($original, $current - 1))
               || doublemetaphone_string_at($original, $current - 1, 5,
-                        array("EWSKI","EWSKY","OWSKI","OWSKY"))
-              || doublemetaphone_string_at($original, 0, 3, array("SCH"))) {
-            $primary   .= "";
+                        'EWSKI,EWSKY,OWSKI,OWSKY')
+              || doublemetaphone_string_at($original, 0, 3, 'SCH')) {
+            $primary   .= " ";
             $secondary .= "F";
+	  $positions[] = $current;
             $current += 1;
             break;
           }
 
           // polish e.g. 'filipowicz'
           if (doublemetaphone_string_at($original, $current, 4,
-                     array("WICZ","WITZ"))) {
+                     'WICZ,WITZ')) {
             $primary   .= "TS";
             $secondary .= "FX";
+	  $positions[] = $current;
+	  $positions[] = $current;
             $current += 4;
             break;
           }
@@ -912,15 +988,17 @@ function double_metaphone( $string )
           // french e.g. breaux 
           if (!(($current == $last)
                 && (doublemetaphone_string_at($original, $current - 3, 3,
-                           array("IAU", "EAU"))
+                           'IAU,EAU')
                  || doublemetaphone_string_at($original, $current - 2, 2,
-                           array("AU", "OU"))))) {
+                           'AU,OU')))) {
             $primary   .= "KS";
             $secondary .= "KS";
+	  $positions[] = $current;
+	  $positions[] = $current;
           }
 
           if (doublemetaphone_string_at($original, $current + 1, 1,
-                     array("C","X")))
+                     'C,X'))
             $current += 2;
           else
             $current += 1;
@@ -934,15 +1012,18 @@ function double_metaphone( $string )
             $current += 2;
             break;
           } elseif (doublemetaphone_string_at($original, $current + 1, 2,
-                           array("ZO", "ZI", "ZA"))
+                           'ZO,ZI,ZA')
                     || (doublemetaphone_Slavo_Germanic($original)
                         && (($current > 0)
                             && substr($original, $current - 1, 1) != 'T'))) {
-            $primary   .= "S";
+            $primary   .= "S ";
             $secondary .= "TS";
+	  $positions[] = $current;
+	  $positions[] = $current;
           } else {
             $primary   .= "S";
             $secondary .= "S";
+	  $positions[] = $current;
           }
 
           if (substr($original, $current + 1, 1) == 'Z')
@@ -956,24 +1037,26 @@ function double_metaphone( $string )
 
       } // end switch
 
-    // printf("<br>ORIGINAL:    '%s'\n", $original);
-    // printf("<br>current:    '%s'\n", $current);
-    // printf("<br>  PRIMARY:   '%s'\n", $primary);
-    // printf("<br>  SECONDARY: '%s'\n", $secondary);
+  //   printf("<br>ORIGINAL:    '%s'\n", $original);
+  //   printf("<br>current:     '%s'\n", $current);
+  //   printf("<br>last:        '%s'\n", end($positions));
+  //   printf("<br>  PRIMARY:   '%s'\n", $primary);
+  //   printf("<br>  SECONDARY: '%s'\n", $secondary);
 
     } // end while
 
-    $primary   = substr($primary,   0, 4);
+    /*$primary   = substr($primary,   0, 4);
     $secondary = substr($secondary, 0, 4);
     
     if( $primary == $secondary )
     {
     	$secondary = NULL ;	
-    }
+    }*/
     
     $result["primary"] = $primary ;
     $result["secondary"] = $secondary ;
-    
+	$result['positions'] = $positions;
+
     return $result ;
 
   } // end of function MetaPhone
@@ -995,7 +1078,10 @@ function doublemetaphone_string_at($string, $start, $length, $list)
         return 1;
     }
     return 0;*/
-	return in_array( substr( $string, $start, $length ), $list );
+	if ( strpos( $list, ',' ) === false )
+		return substr( $string, $start, $length ) == $list;
+
+	return strpos( ',' . $list . ',', ',' . substr( $string, $start, $length ) . ',' ) !== false;
   }
 
 
@@ -1005,8 +1091,7 @@ function doublemetaphone_string_at($string, $start, $length, $list)
   # Return:		Bool
 \*=================================================================*/
 
-function doublemetaphone_is_vowel($string, $pos)
-{
+function doublemetaphone_is_vowel($string, $pos) {
 //    return ereg("[AEIOUY]", substr($string, $pos, 1));
 	return strpos( 'AEIOUY', substr( $string, $pos, 1 ) ) !== false;
 }
@@ -1018,7 +1103,6 @@ function doublemetaphone_is_vowel($string, $pos)
   # Return:		Bool
 \*=================================================================*/
 
-function doublemetaphone_Slavo_Germanic($string) 
-{
-    return ereg("W|K|CZ|WITZ", $string);
+function doublemetaphone_Slavo_Germanic($string) {
+	return preg_match( '/W|K|CZ|WITZ/S', $string );
 }

@@ -114,16 +114,37 @@ function bbmodsuite_banplus_init() {
 }
 bbmodsuite_banplus_init();
 
+function bbmodsuite_banplus_convert_ip( $ip ) {
+	if ( strpos( $ip, ':' ) !== false ) { // IPv6
+		if ( strpos( $ip, '::' ) !== false ) {
+			$ip = str_replace( '::', str_repeat( ':0000', 8 - substr_count( $ip, ':' ) ) . ':', $ip );
+		}
+
+		$ip = explode( ':', $ip );
+
+		$cur_ip = '' ;
+		foreach ( $ip as $v ) {
+			$cur_ip .= str_pad( base_convert( $v, 16, 2 ), 16, 0, STR_PAD_LEFT );
+		}
+	} else { // IPv4
+		$cur_ip = vsprintf( '%08b%08b%08b%08b', explode( '.', $ip ) );
+	}
+
+	return $cur_ip;
+}
+
 function bbmodsuite_banplus_maybe_block_ip() {
-	$cur_ip = vsprintf( '%08b%08b%08b%08b', explode( '.', $_SERVER['REMOTE_ADDR'] ) );
+	$cur_ip = bbmodsuite_banplus_convert_ip( $_SERVER['REMOTE_ADDR'] );
 	global $bbmodsuite_cache;
 	$current_bans = $bbmodsuite_cache['banplus']['bans'];
 	foreach ( $current_bans as $id => $ban ) {
 		if ( strpos( $id, 'ip_' ) !== false ) {
 			list( $ip, $cidr ) = explode( '/', substr( $id, 3 ) );
 			if ( !$cidr )
-				$cidr = 32;
-			$ip = vsprintf( '%08b%08b%08b%08b', explode( '.', $ip ) );
+				$cidr = strlen( $cur_ip );
+			$ip = bbmodsuite_banplus_convert_ip( $ip );
+			if ( strlen( $ip ) != strlen( $cur_ip ) )
+				continue; // IPv4 can't test an IPv6 address, etc.
 			if ( substr( $ip, 0, $cidr ) == substr( $cur_ip, 0, $cidr ) ) {
 				if ( bb_get_template( 'ban-plus-ip.php', false ) ) {
 					bb_load_template( 'ban-plus-ip.php', array( 'ban' => $ban, 'ban_ip' => substr( $id, 3 ) ), $ban );
@@ -242,8 +263,10 @@ function bbpress_moderation_suite_ban_plus() { ?>
 </fieldset>
 </form>
 <?php	} elseif ( strtoupper( $_SERVER['REQUEST_METHOD'] ) == 'POST' && bb_verify_nonce( $_POST['_wpnonce'], 'bbmodsuite-banplus-new-ip-submit' ) ) {
-			if ( !preg_match( '#^[12]?[0-9]{1,2}(\.[12]?[0-9]{1,2}){3}(/1[6-9]|/2[0-9]|/3[0-2])?$#', $_POST['ip'] ) ) { ?>
-<div class="error"><p><?php _e( 'Invalid IP. IP addresses must be <a href="http://en.wikipedia.org/wiki/IPv4">IPv4</a> with optional <a href="http://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing">CIDR</a>.', 'bbpress-moderation-suite' ); ?></p></div>
+			if ( !preg_match( '#^[12]?[0-9]{1,2}(\.[12]?[0-9]{1,2}){3}(/1[6-9]|/2[0-9]|/3[0-2])?$|' .
+				'^((((?=(?>.*?::)(?!.*::)))(::)?(([0-9A-F]{1,4})::?){0,5}|((?5):){6})(\2((?5)(::?|$)){0,2}' .
+				'|((25[0-5]|(2[0-4]|1[0-9]|[1-9])?[0-9])(\.|$)){4}|(?5):(?5))(?<![^:]:|\.))(/1[6-9]|/2[0-9]|/3[0-2])?$#', $_POST['ip'] ) ) { ?>
+<div class="error"><p><?php _e( 'Invalid IP. IP addresses must be <a href="http://en.wikipedia.org/wiki/IPv4">IPv4</a> or <a href="http://en.wikipedia.org/wiki/IPv6">IPv6</a> with optional <a href="http://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing">CIDR</a>.', 'bbpress-moderation-suite' ); ?></p></div>
 <?php			return;
 			}
 

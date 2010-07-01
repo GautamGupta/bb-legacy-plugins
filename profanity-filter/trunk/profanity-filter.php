@@ -56,7 +56,7 @@ function profanity_filter_prepare_secondary( $string ) {
 function profanity_filter_replace( $found ) {
 	global $profanity_filter_settings;
 
-	$len = strlen( strip_tags( array_shift( $found ) ) );
+	$len = strlen( $word = strip_tags( array_shift( $found ) ) );
 
 	switch ( $profanity_filter_settings['type'] ) {
 		case 'cartoon':
@@ -67,7 +67,12 @@ function profanity_filter_replace( $found ) {
 			break;
 		case 'replace':
 		default:
-			$string = $profanity_filter_settings['replacement'];
+			if ( is_array( $profanity_filter_settings['replacement'] ) ) {
+				global $profanity_filter_words;
+				$string = $profanity_filter_settings['replacement'][$profanity_filter_words[$word]];
+			} else {
+				$string = $profanity_filter_settings['replacement'];
+			}
 	}
 
 	$ret = array_shift( $found );
@@ -101,6 +106,8 @@ function profanity_filter_censor( $text, $args = '' ) {
 	if ( !function_exists( 'double_metaphone_2' ) )
 		require_once dirname( __FILE__ ) . '/doublemetaphone.php';
 
+	global $profanity_filter_words;
+
 	$options = profanity_filter_parse_args( $args );
 
 	$_sentence = strip_tags( $text );
@@ -109,7 +116,10 @@ function profanity_filter_censor( $text, $args = '' ) {
 	$sentence['positions'][] = strlen( $_sentence );
 
 	$cabbageFound = array();
-	foreach ( array_map( 'double_metaphone_2', $options['words'] ) as $word ) {
+	foreach ( array_map( 'double_metaphone_2', $options['words'] ) as $pos => $word ) {
+		if ( !$word['primary'] )
+			continue;
+
 		while ( true ) {
 			$_cabbageStart = -1;
 			//do {
@@ -126,19 +136,24 @@ function profanity_filter_censor( $text, $args = '' ) {
 			$cabbageStart = $sentence['positions'][$_cabbageStart];
 			$cabbageLen = $sentence['positions'][$_cabbageStart + strlen( $word['primary'] )] - $cabbageStart;
 
-			while ( $cabbageLen > $sentence['positions'][$_cabbageStart + strlen( $word['primary'] ) - 1] - $cabbageStart && ( substr( $_sentence, $cabbageStart + $cabbageLen - 2, 1 ) == ' ' || !preg_match( '/^\p{L}$/S', substr( $_sentence, $cabbageStart + $cabbageLen - 1, 1 ) ) ) ) {
+			while ( $cabbageLen > $sentence['positions'][$_cabbageStart + strlen( $word['primary'] ) - 1] - $cabbageStart && ( !trim( substr( $_sentence, $cabbageStart + $cabbageLen - 2, 1 ) ) || !preg_match( '/^\p{L}$/S', substr( $_sentence, $cabbageStart + $cabbageLen - 1, 1 ) ) ) ) {
 				$cabbageLen--;
 			}
 
 			$cabbage = substr( $_sentence, $cabbageStart, $cabbageLen );
-			if ( !profanity_filter_on_whitelist( $options['whitelist'], $cabbage ) )
+			if ( !profanity_filter_on_whitelist( $options['whitelist'], $cabbage ) ) {
 				$cabbageFound[] = $cabbage;
+				$profanity_filter_words[$cabbage] = $pos;
+			}
 		}
 	}
 	$cabbageFound = array_unique( $cabbageFound );
 
 	$soupFound = array();
-	foreach ( array_map( 'double_metaphone_2', $options['secondary_words'] ) as $word ) {
+	foreach ( array_map( 'double_metaphone_2', $options['secondary_words'] ) as $pos => $word ) {
+		if ( !$word['primary'] )
+			continue;
+	
 		while ( true ) {
 			$_soupStart = -1;
 			//do {
@@ -155,13 +170,15 @@ function profanity_filter_censor( $text, $args = '' ) {
 			$soupStart = $sentence['positions'][$_soupStart];
 			$soupLen = $sentence['positions'][$_soupStart + strlen( $word['primary'] )] - $soupStart;
 
-			while ( $soupLen && !preg_match( '/^\p{L}$/S', substr( $_sentence, $soupStart + $soupLen - 1, 1 ) ) ) {
+			while ( $soupLen > $sentence['positions'][$_soupStart + strlen( $word['primary'] ) - 1] - $soupStart && ( !trim( substr( $_sentence, $soupStart + $soupLen - 2, 1 ) ) || !preg_match( '/^\p{L}$/S', substr( $_sentence, $soupStart + $soupLen - 1, 1 ) ) ) ) {
 				$soupLen--;
 			}
 
 			$soup = substr( $_sentence, $soupStart, $soupLen );
-			if ( !profanity_filter_on_whitelist( $options['whitelist'], $soup ) )
+			if ( !profanity_filter_on_whitelist( $options['whitelist'], $soup ) ) {
 				$soupFound[] = $soup;
+				$profanity_filter_words[$soup] = $pos;
+			}
 		}
 	}
 	$soupFound = array_unique( $soupFound );
@@ -179,33 +196,41 @@ function profanity_filter_filter( $text, $id = 0, $args = '' ) {
 	$profanity_filter_options = profanity_filter_parse_args( $args );
 
 	switch ( current_filter() ) {
+		case 'bb_xmlrpc_prepare_topic':
 		case 'get_topic_title':
-			if ( $text == bb_get_topicmeta( get_topic_id( $id ), 'profanity_filter_unfiltered' ) )
+			if ( md5( $text ) == bb_get_topicmeta( get_topic_id( $id ), 'profanity_filter_unfiltered' ) )
 				if ( bb_get_topicmeta( get_topic_id( $id ), 'profanity_filter_date' ) > $profanity_filter_options['last_update'] )
 					if ( $clean_text = bb_get_topicmeta( get_topic_id( $id ), 'profanity_filter_filtered' ) )
 						return $clean_text;
 			break;
+		case 'bb_xmlrpc_prepare_post':
 		case 'get_post_text':
-			if ( $text == bb_get_postmeta( get_post_id( $id ), 'profanity_filter_unfiltered' ) )
+			if ( md5( $text ) == bb_get_postmeta( get_post_id( $id ), 'profanity_filter_unfiltered' ) )
 				if ( bb_get_postmeta( get_post_id( $id ), 'profanity_filter_date' ) > $profanity_filter_options['last_update'] )
 					if ( $clean_text = bb_get_postmeta( get_post_id( $id ), 'profanity_filter_filtered' ) )
 						return $clean_text;
 			break;
+		case 'bb_xmlrpc_prepare_topic_tag':
+		case 'wp_get_object_terms':
 	}
 
 	$clean_text = profanity_filter_censor( $text, $args );
 
 	switch ( current_filter() ) {
+		case 'bb_xmlrpc_prepare_topic':
 		case 'get_topic_title':
 			bb_update_topicmeta( get_topic_id( $id ), 'profanity_filter_date', current_time( 'timestamp' ) );
-			bb_update_topicmeta( get_topic_id( $id ), 'profanity_filter_unfiltered', $text );
+			bb_update_topicmeta( get_topic_id( $id ), 'profanity_filter_unfiltered', md5( $text ) );
 			bb_update_topicmeta( get_topic_id( $id ), 'profanity_filter_filtered', $clean_text );
 			break;
+		case 'bb_xmlrpc_prepare_post':
 		case 'get_post_text':
 			bb_update_postmeta( get_post_id( $id ), 'profanity_filter_date', current_time( 'timestamp' ) );
-			bb_update_postmeta( get_post_id( $id ), 'profanity_filter_unfiltered', $text );
+			bb_update_postmeta( get_post_id( $id ), 'profanity_filter_unfiltered', md5( $text ) );
 			bb_update_postmeta( get_post_id( $id ), 'profanity_filter_filtered', $clean_text );
 			break;
+		case 'bb_xmlrpc_prepare_topic_tag':
+		case 'wp_get_object_terms':
 	}
 
 	return $clean_text;
@@ -216,18 +241,48 @@ function profanity_filter_user( $name, $id, $args = '' ) {
 
 	$keyprefix = 'profanity_filter_' . current_filter() . '_';
 
-	if ( bb_get_usermeta( $id, $keyprefix . 'unfiltered' ) == $name &&
+	if ( bb_get_usermeta( $id, $keyprefix . 'unfiltered' ) == md5( $name ) &&
 		bb_get_usermeta( $id, $keyprefix . 'date' ) > $profanity_filter_options['last_update'] &&
 		( $clean_text = bb_get_usermeta( $id, $keyprefix . 'filtered' ) ) )
 		return $clean_text;
 
 	$clean_text = profanity_filter_censor( $name, $args );
 
-	bb_update_usermeta( $id, $keyprefix . 'unfiltered', $name );
+	bb_update_usermeta( $id, $keyprefix . 'unfiltered', md5( $name ) );
 	bb_update_usermeta( $id, $keyprefix . 'date', current_time( 'timestamp' ) );
 	bb_update_usermeta( $id, $keyprefix . 'filtered', $clean_text );
 
 	return $clean_text;
+}
+
+function profanity_filter_xmlrpc( $data, $_data ) {
+	switch ( current_filter() ) {
+		case 'bb_xmlrpc_prepare_post':
+			$data['post_text'] = profanity_filter_filter( $data['post_text'], $_data['post_id'] );
+			break;
+		case 'bb_xmlrpc_prepare_topic':
+			$data['topic_title'] = profanity_filter_filter( $data['topic_title'], $_data['topic_id'] );
+			break;
+		case 'bb_xmlrpc_prepare_topic_tag':
+			$data['topic_tag_name'] = profanity_filter_filter( $data['topic_tag_name'], $_data['tag_id'] );
+			break;
+	}
+	unset( $data['profanity_filter_date'], $data['profanity_filter_unfiltered'], $data['profanity_filter_filtered'] );
+
+	return $data;
+}
+
+function profanity_filter_tags( $terms ) {
+	global $bb_log;
+
+	foreach ( $terms as &$term ) {
+		if ( $term->taxonomy != 'bb_topic_tag' )
+			continue;
+
+		$term->name = profanity_filter_filter( $term->name, $term->term_id );
+	}
+
+	return $terms;
 }
 
 function profanity_filter_activate() {
@@ -235,6 +290,10 @@ function profanity_filter_activate() {
 	add_filter( 'get_post_text', 'profanity_filter_filter', 9, 2 );
 	add_filter( 'get_user_name', 'profanity_filter_user', 9, 2 );
 	add_filter( 'get_user_display_name', 'profanity_filter_user', 9, 2 );
+	add_filter( 'wp_get_object_terms', 'profanity_filter_tags', 9 );
+	add_filter( 'bb_xmlrpc_prepare_post', 'profanity_filter_xmlrpc', 9, 2 );
+	add_filter( 'bb_xmlrpc_prepare_topic', 'profanity_filter_xmlrpc', 9, 2 );
+	add_filter( 'bb_xmlrpc_prepare_topic_tag', 'profanity_filter_xmlrpc', 9, 2 );
 }
 
 function profanity_filter_deactivate() {
@@ -242,6 +301,10 @@ function profanity_filter_deactivate() {
 	remove_filter( 'get_post_text', 'profanity_filter_filter', 9, 2 );
 	remove_filter( 'get_user_name', 'profanity_filter_filter', 9, 2 );
 	remove_filter( 'get_user_display_name', 'profanity_filter_filter', 9, 2 );
+	remove_filter( 'wp_get_object_terms', 'profanity_filter_tags', 9 );
+	remove_filter( 'bb_xmlrpc_prepare_post', 'profanity_filter_xmlrpc', 9, 2 );
+	remove_filter( 'bb_xmlrpc_prepare_topic', 'profanity_filter_xmlrpc', 9, 2 );
+	remove_filter( 'bb_xmlrpc_prepare_topic_tag', 'profanity_filter_xmlrpc', 9, 2 );
 }
 
 if ( !defined( 'DOING_CRON' ) )

@@ -84,14 +84,13 @@ function double_metaphone_2( $string )
         case 'O':
         case 'U':
         case 'Y':
-          //if ($current == 0) {
-            // all init vowels now map to 'A'
-            $primary   .= 'A';
-            $secondary .= 'A';
-			$positions[] = $current;
-          //}
-          $current += 1;
-          break;
+			/*$primary   .= 'A';
+			$secondary .= 'A';
+			$positions[] = $current;*/
+			while ( doublemetaphone_is_vowel( $original, $current ) ) {
+				$current++;
+			}
+			break;
 
         case 'B':
           // '-mb', e.g. "dumb", already skipped over ...

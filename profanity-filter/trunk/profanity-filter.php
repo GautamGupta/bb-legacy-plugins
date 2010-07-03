@@ -2,14 +2,14 @@
 /*
 Plugin Name: Profanity Filter
 Plugin URI: http://nightgunner5.wordpress.com/tag/profanity-filter/
-Version: 0.2.1-dev
+Version: 0.2.1-dev-2
 Description: Why the $&$% did I make this @&#$ing profanity filter?
 Author: Ben L.
 Author URI: http://nightgunner5.wordpress.com/
 */
 
 // The last version of Profanity filter in which the API changed
-define( 'PROFANITY_FILTER_API_VERSION', '0.2.1-dev' );
+define( 'PROFANITY_FILTER_API_VERSION', '0.2.1-dev-2' );
 
 function profanity_filter_parse_args( $args = '' ) {
 	$args = wp_parse_args( $args, wp_parse_args( bb_get_option( 'profanity_filter' ), array(
@@ -20,6 +20,9 @@ function profanity_filter_parse_args( $args = '' ) {
 		'replacement'         => __( '!@#$%^&*', 'profanity-filter' ),
 		'last_update'         => 0,
 		'allow_subscriptions' => false,
+		'send_data_words'     => false,
+		'send_data_secondary' => false,
+		'send_data_whitelist' => false,
 		'subscriptions'       => array() // url => array( subscribed, secret, last_seen, data => array( words, secondary_words, whitelist ) )
 	) ) );
 
@@ -111,6 +114,18 @@ function profanity_filter_censor( $text, $args = '' ) {
 	global $profanity_filter_words;
 
 	$options = profanity_filter_parse_args( $args );
+	$words = array_unique( $options['words'] );
+	$secondary_words = array_unique( $options['secondary_words'] );
+	$whitelist = array_unique( $options['whitelist'] );
+
+	foreach ( $options['subscriptions'] as $data ) {
+		if ( $data['subscribed'] ) {
+			foreach ( array( 'words', 'secondary_words', 'whitelist' ) as $key ) {
+				if ( !empty( $data['data'][$key] ) && is_array( $data['data'][$key] ) )
+					$$key = array_merge( $$key, $data['data'][$key] );
+			}
+		}
+	}
 
 	$_sentence = strip_tags( $text );
 	$sentence = double_metaphone_2( $_sentence );
@@ -118,20 +133,14 @@ function profanity_filter_censor( $text, $args = '' ) {
 	$sentence['positions'][] = strlen( $_sentence );
 
 	$cabbageFound = array();
-	foreach ( array_map( 'double_metaphone_2', $options['words'] ) as $pos => $word ) {
+	foreach ( array_map( 'double_metaphone_2', $words ) as $pos => $word ) {
 		if ( !$word['primary'] )
 			continue;
 
 		while ( true ) {
-			$_cabbageStart = -1;
-			//do {
-				$_cabbageStart = strpos( $sentence['primary'], $word['primary'], $_cabbageStart + 1 );
-				if ( $_cabbageStart === false )
-					break;
-			//} while ( substr( $sentence['secondary'], $_cabbageStart, strlen( $word['primary'] ) ) != $word['secondary'] );
-
-			//if ( $_cabbageStart === false )
-			//	break;
+			$_cabbageStart = strpos( $sentence['primary'], $word['primary'] );
+			if ( $_cabbageStart === false )
+				break;
 
 			$sentence['primary'] = substr( $sentence['primary'], 0, $_cabbageStart ) . str_repeat( ' ', strlen( $word['primary'] ) ) . substr( $sentence['primary'], $_cabbageStart + strlen( $word['primary'] ) );
 
@@ -148,7 +157,7 @@ function profanity_filter_censor( $text, $args = '' ) {
 			}
 
 			$cabbage = substr( $_sentence, $cabbageStart, $cabbageLen );
-			if ( !profanity_filter_on_whitelist( $options['whitelist'], $cabbage ) ) {
+			if ( !profanity_filter_on_whitelist( $whitelist, $cabbage ) ) {
 				$cabbageFound[] = $cabbage;
 				$profanity_filter_words[$cabbage] = $pos;
 			}
@@ -157,20 +166,14 @@ function profanity_filter_censor( $text, $args = '' ) {
 	$cabbageFound = array_unique( $cabbageFound );
 
 	$soupFound = array();
-	foreach ( array_map( 'double_metaphone_2', $options['secondary_words'] ) as $pos => $word ) {
+	foreach ( array_map( 'double_metaphone_2', $secondary_words ) as $pos => $word ) {
 		if ( !$word['primary'] )
 			continue;
 	
 		while ( true ) {
-			$_soupStart = -1;
-			//do {
-				$_soupStart = strpos( $sentence['primary'], $word['primary'], $_soupStart + 1 );
-				if ( $_soupStart === false )
-					break;
-			//} while ( substr( $sentence['secondary'], $_soupStart, strlen( $word['primary'] ) ) != $word['secondary'] );
-
-			//if ( $_soupStart === false )
-			//	break;
+			$_soupStart = strpos( $sentence['primary'], $word['primary'] );
+			if ( $_soupStart === false )
+				break;
 
 			$sentence['primary'] = substr( $sentence['primary'], 0, $_soupStart ) . str_repeat( ' ', strlen( $word['primary'] ) ) . substr( $sentence['primary'], $_soupStart + strlen( $word['primary'] ) );
 
@@ -187,7 +190,7 @@ function profanity_filter_censor( $text, $args = '' ) {
 			}
 
 			$soup = substr( $_sentence, $soupStart, $soupLen );
-			if ( !profanity_filter_on_whitelist( $options['whitelist'], $soup ) ) {
+			if ( !profanity_filter_on_whitelist( $whitelist, $soup ) ) {
 				$soupFound[] = $soup;
 				$profanity_filter_words[$soup] = $pos;
 			}
@@ -196,7 +199,7 @@ function profanity_filter_censor( $text, $args = '' ) {
 	$soupFound = array_unique( $soupFound );
 
 	global $profanity_filter_settings;
-	$profanity_filter_settings = $options;
+	$profanity_filter_settings = $options + compact( 'words', 'secondary_words', 'whitelist' );
 
 	$censored = preg_replace_callback( array_map( 'profanity_filter_prepare', $cabbageFound ), 'profanity_filter_replace', $text );
 	$censored = preg_replace_callback( array_map( 'profanity_filter_prepare_secondary', $soupFound ), 'profanity_filter_replace', $censored );
@@ -409,6 +412,20 @@ function profanity_filter_admin() {
 					<strong><?php _e( 'Cartoon', 'profanity-filter' ); ?></strong> &ndash; <?php _e( 'Replace profane words with characters randomly selected from the replacement value.', 'profanity-filter' ); ?></p>
 			</div>
 		</div>
+
+		<div id="option-allow-subscriptions">
+			<label for="type"><?php _e( 'Allow subscribers', 'profanity-filter' ); ?></label>
+			<div class="inputs">
+				<select id="allow-subscriptions" name="allow_subscriptions">
+					<option value="1"<?php if ( $options['allow_subscriptions'] ) echo ' selected="selected"'; ?>><?php _e( 'Yes', 'profanity-filter' ); ?></option>
+					<option value="0"<?php if ( !$options['allow_subscriptions'] ) echo ' selected="selected"'; ?>><?php _e( 'No', 'profanity-filter' ); ?></option>
+				</select>
+				<br/><input type="checkbox" class="checkbox" id="send_data_words" name="send_data_words"<?php if ( $options['send_data_words'] ) echo ' checked="checked"'; ?> /> <?php _e( 'Share words', 'profanity-filter' ); ?>
+				<br/><input type="checkbox" class="checkbox" id="send_data_secondary" name="send_data_secondary"<?php if ( $options['send_data_secondary'] ) echo ' checked="checked"'; ?> /> <?php _e( 'Share secondary words', 'profanity-filter' ); ?>
+				<br/><input type="checkbox" class="checkbox" id="send_data_whitelist" name="send_data_whitelist"<?php if ( $options['send_data_whitelist'] ) echo ' checked="checked"'; ?> /> <?php _e( 'Share whitelist', 'profanity-filter' ); ?>
+				<p><?php _e( 'Starting with Profanity Filter 0.2.1, you can share your words, secondary words, and whitelist with others.', 'profanity-filter' ); ?></p>
+			</div>
+		</div>
 	</fieldset>
 
 	<fieldset class="submit">
@@ -418,9 +435,17 @@ function profanity_filter_admin() {
 	</fieldset>
 </form>
 
+<div class="settings">
+	<h3><?php _e( 'Subscriptions', 'profanity-filter' ); ?></h3>
+	<p><?php _e( 'Highlighted rows are subscribed to you. You are not subscribed to rows highlighted in red.', 'profanity-filter' ); ?></p>
+
+	<?php profanity_filter_subscription_info(); ?>
+</div>
+
 <form class="settings" method="post" action="<?php bb_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'profanity_filter_admin' ), BB_URI_CONTEXT_FORM_ACTION + BB_URI_CONTEXT_BB_ADMIN ); ?>">
 	<fieldset>
-		<legend><?php _e( 'Subscriptions', 'profanity-filter' ); ?></legend>
+		<legend><?php _e( 'Add a subscription', 'profanity-filter' ); ?></legend>
+
 		<div id="option-url">
 			<label for="url"><?php _e( 'URL', 'profanity-filter' ); ?></label>
 			<div class="inputs">
@@ -458,7 +483,13 @@ function profanity_filter_admin_parse() {
 				$options['type'] = $_POST['type'];
 			$options['replacement'] = stripslashes( $_POST['replacement'] );
 
+			foreach ( array( 'allow_subscriptions', 'send_data_words', 'send_data_secondary', 'send_data_whitelist' ) as $key )
+				$options[$key] = !empty( $_POST[$key] );
+
 			$options['last_update'] = time();
+
+			if ( $options['allow_subscriptions'] )
+				wp_schedule_single_event( time(), 'profanity_filter_update' );
 
 			bb_update_option( 'profanity_filter', $options );
 
@@ -471,7 +502,7 @@ function profanity_filter_admin_parse() {
 			$options = profanity_filter_parse_args();
 
 			$exists = isset( $options['subscriptions'][$_POST['url']] );
-			$secret = $exists ? $options['subscriptions'][$_POST['url']]['secret'] : bb_generate_password( 32, true );
+			$secret = $exists ? $options['subscriptions'][$_POST['url']]['secret'] : bb_generate_password( 32, false );
 
 			if ( !$exists )
 				$options['subscriptions'][$_POST['url']]['secret'] = $secret;
@@ -482,8 +513,9 @@ function profanity_filter_admin_parse() {
 			$response = profanity_filter_request( $_POST['url'], 'subscribe', array( 'secret' => $secret ) );
 
 			if ( is_array( $response ) ) {
-				$options['subscriptions'][$_POST['url']]['data']       = $response;
-				$options['subscriptions'][$_POST['url']]['last_seen']  = time();
+				$options['subscriptions'][$_POST['url']]['data']      = $response;
+				$options['subscriptions'][$_POST['url']]['last_seen'] = time();
+				$options['last_update'] = time();
 				bb_update_option( 'profanity_filter', $options );
 
 				$goback = add_query_arg( 'updated', 'true', wp_get_referer() );
@@ -502,14 +534,138 @@ function profanity_filter_admin_parse() {
 
 			bb_die( __( 'There was an error parsing the endpoint\'s response. Make sure you entered the URL correctly.', 'profanity-filter' ) );
 		}
+	} else {
+		if ( $_GET['action'] == 'unsubscribe' ) {
+			$url = $_GET['unsubscribe'];
+			bb_check_admin_referer( 'profanity-filter-unsubscribe-' . $url );
+
+			$options = profanity_filter_parse_args();
+			if ( !empty( $options['subscriptions'][$url]['subscriber'] ) )
+				$options['subscriptions'][$url]['subscribed'] = false;
+			else
+				unset( $options['subscriptions'][$url] );
+			$options['last_update'] = time();
+			bb_update_option( 'profanity_filter', $options );
+
+			profanity_filter_request( $url, 'unsubscribe' );
+
+			$goback = bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'profanity_filter_admin', 'updated' => 'true' ), BB_URI_CONTEXT_HEADER + BB_URI_CONTEXT_BB_ADMIN );
+			bb_safe_redirect( $goback );
+			exit;
+		}
 	}
 }
 add_action( 'profanity_filter_admin_pre_head', 'profanity_filter_admin_parse' );
+
+function profanity_filter_subscription_info() {
+	$options = profanity_filter_parse_args(); ?>
+<style type="text/css">
+table.widefat tr.subscribed-both td { background-color: #ec7; }
+table.widefat tr.subscribed-both.alt td { background-color: #fd8; }
+</style>
+<table class="widefat">
+<thead>
+<tr>
+	<th><?php _e( 'Endpoint', 'profanity-filter' ); ?></th>
+	<th><?php _e( 'Words', 'profanity-filter' ); ?></th>
+	<th><?php _e( 'Secondary words', 'profanity-filter' ); ?></th>
+	<th><?php _e( 'Whitelist', 'profanity-filter' ); ?></th>
+</tr>
+</thead>
+<tfoot>
+<tr>
+	<th><?php _e( 'Endpoint', 'profanity-filter' ); ?></th>
+	<th><?php _e( 'Words', 'profanity-filter' ); ?></th>
+	<th><?php _e( 'Secondary words', 'profanity-filter' ); ?></th>
+	<th><?php _e( 'Whitelist', 'profanity-filter' ); ?></th>
+</tr>
+</tfoot>
+<tbody>
+<?php
+	foreach ( $options['subscriptions'] as $url => $subscription ) { ?>
+<tr<?php alt_class( 'profanity-filter-subscriptions', $subscription['subscribed'] ? $subscription['subscriber'] ? 'subscribed-both' : '' : 'deleted' ); ?>>
+	<td class="user">
+		<span class="row-title"><a href="<?php echo esc_html( $url ); ?>"><?php echo esc_html( $url ); ?></a></span>
+		<div><span class="row-actions"><?php printf( __( 'Last seen <span title="%1$s">%2$s ago</span>.', 'profanity-filter' ), str_replace( '+00:00', 'Z', gmdate( DATE_ATOM, $subscription['last_seen'] ) ), bb_since( $subscription['last_seen'] ) ); ?></span>&nbsp;</div>
+		<?php if ( $subscription['subscribed'] ) { ?><div><span class="row-actions"><a href="<?php
+		echo esc_attr( bb_nonce_url( bb_get_uri( 'bb-admin/admin-base.php', array( 'plugin' => 'profanity_filter_admin', 'action' => 'unsubscribe', 'unsubscribe' => $url ), BB_URI_CONTEXT_A_HREF + BB_URI_CONTEXT_BB_ADMIN ), 'profanity-filter-unsubscribe-' . $url ) );
+		?>"><?php _e( 'Unsubscribe', 'profanity-filter' ); ?></a></span>&nbsp;</div><?php } ?>
+	</td>
+<?php if ( $subscription['subscribed'] ) { ?>
+	<td><?php
+if ( isset( $subscription['data']['words'] ) && is_array( $subscription['data']['words'] ) ) {
+	echo implode( '<br/>', array_map( 'esc_html', $subscription['data']['words'] ) );
+} else {
+	_e( '<em>Not shared.</em>', 'profanity-filter' );
+}
+	?></td>
+	<td><?php
+if ( isset( $subscription['data']['secondary_words'] ) && is_array( $subscription['data']['secondary_words'] ) ) {
+	echo implode( '<br/>', array_map( 'esc_html', $subscription['data']['secondary_words'] ) );
+} else {
+	_e( '<em>Not shared.</em>', 'profanity-filter' );
+}
+	?></td>
+	<td><?php
+if ( isset( $subscription['data']['whitelist'] ) && is_array( $subscription['data']['whitelist'] ) ) {
+	echo implode( '<br/>', array_map( 'esc_html', $subscription['data']['whitelist'] ) );
+} else {
+	_e( '<em>Not shared.</em>', 'profanity-filter' );
+}
+	?></td>
+<?php } else { ?><td></td><td></td><td></td><?php } ?>
+</tr>
+
+<?php
+	} ?>
+</tbody>
+</table>
+<?php
+}
 
 /** @todo */
 function profanity_filter_get_shared_data() {
 	return array( 'words' => false, 'secondary_words' => false, 'whitelist' => false );
 }
+
+function profanity_filter_update() {
+	if ( function_exists( 'ini_get' ) && function_exists( 'set_time_limit' ) && !ini_get( 'safe_mode' ) )
+		set_time_limit( 0 );
+
+	$options = profanity_filter_parse_args();
+
+	$data = serialize( profanity_filter_get_shared_data() );
+
+	foreach ( $options['subscriptions'] as $url => $subscription ) {
+		if ( !$subscription['subscriber'] )
+			continue;
+
+		$response = profanity_filter_request( $url, 'update', array( 'profanity_filter_data' => $data ) );
+
+		if ( $response === true )
+			continue;
+
+		if ( $response === false ) {
+			if ( !$options['subscriptions'][$url]['subscribed'] )
+				unset( $options['subscriptions'][$url] );
+			else
+				$options['subscriptions'][$url]['subscriber'] = false;
+			continue;
+		}
+
+		// invalid can mean they changed the secret somehow or that they deleted us without telling.
+		if ( is_wp_error( $response ) && $response->get_error_code() == 'invalid' ) { // They (sob) forgot about me! (sob)
+			if ( !$options['subscriptions'][$url]['subscribed'] )
+				unset( $options['subscriptions'][$url] );
+			else
+				$options['subscriptions'][$url]['subscriber'] = false;
+			continue;
+		}
+	}
+
+	bb_update_option( 'profanity_filter', $options );
+}
+add_action( 'profanity_filter_update', 'profanity_filter_update' );
 
 function profanity_filter_request( $url, $mode, $params = null, $secret = null ) {
 	$args = array(
@@ -536,13 +692,13 @@ function profanity_filter_request( $url, $mode, $params = null, $secret = null )
 
 	$time = time();
 
-	$url = add_query_arg( $_params + array(
+	$url = add_query_arg( array(
 		'profanity_filter_key'       => sha1( $secret . ':' . $time ),
 		'profanity_filter_timestamp' => $time,
 		'profanity_filter_url'       => bb_get_uri(),
 		'profanity_filter_subscribe' => $mode,
 		'profanity_filter_version'   => PROFANITY_FILTER_API_VERSION
-	), $url );
+	) + $_params, $url );
 
 	$request = wp_remote_get( $url );
 	if ( is_wp_error( $request ) )
@@ -617,13 +773,14 @@ function profanity_filter_parse_subscribe() {
 
 			if ( $_GET['profanity_filter_url'] != bb_get_uri() && profanity_filter_request( $_GET['profanity_filter_url'], 'verify', array( 'requested' => $_SERVER['REMOTE_ADDR'] ), $_GET['profanity_filter_secret'] ) === true ) {
 				$options['subscriptions'][$_GET['profanity_filter_url']]['secret'] = $_GET['profanity_filter_secret'];
+				$options['subscriptions'][$_GET['profanity_filter_url']]['subscriber'] = true;
 				bb_update_option( 'profanity_filter', $options );
 				exit( serialize( profanity_filter_get_shared_data() ) );
 			}
 			exit( serialize( new WP_Error( 'invalid', sprintf( __( 'Invalid URL: %s', 'profanity-filter' ), $_GET['profanity_filter_url'] ), 'profanity_filter_url' ) ) );
 
 		case 'verify': // We already verified the request.
-			exit( serialize( true ) );
+			exit( serialize( (boolean) $options['subscriptions'][$_GET['profanity_filter_url']]['subscribed'] ) );
 
 		case 'update':
 			if ( !$options['subscriptions'][$_GET['profanity_filter_url']]['subscribed'] )
@@ -633,9 +790,23 @@ function profanity_filter_parse_subscribe() {
 				exit( serialize( new WP_Error( 'invalid', __( 'Could not unserialize data', 'profanity-filter' ), 'profanity_filter_data' ) ) );
 
 			$options['subscriptions'][$_GET['profanity_filter_url']]['data'] = $data;
+			$options['last_update'] = time();
 			bb_update_option( 'profanity_filter', $options );
 
 			exit( serialize( true ) );
+
+		case 'unsubscribe':
+			if ( !$options['subscriptions'][$_GET['profanity_filter_url']]['subscribed'] ) {
+				unset( $options['subscriptions'][$_GET['profanity_filter_url']] );
+			} else {
+				$options['subscriptions'][$_GET['profanity_filter_url']]['subscriber'] = false;
+			}
+			bb_update_option( 'profanity_filter', $options );
+
+			exit( serialize( true ) );
+
+		default:
+			exit( serialize( new WP_Error( 'invalid', sprintf( __( 'Unknown request type: %s', 'profanity-filter' ), $_GET['profanity_filter_subscribe'] ), 'profanity_filter_subscribe' ) ) );
 	}
 }
 

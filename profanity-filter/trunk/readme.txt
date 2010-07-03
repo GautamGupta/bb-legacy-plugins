@@ -49,7 +49,7 @@ Profanity Filter filters post contents, topic titles, and user names as they are
 
 == Upgrade Notice ==
 = 0.2.1 =
-Sharing, 
+Sharing, tag censoring, better matching, and more!
 
 = 0.2 =
 Now over 300x faster!

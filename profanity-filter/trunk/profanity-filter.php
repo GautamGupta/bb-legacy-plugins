@@ -105,6 +105,9 @@ function profanity_filter_replace( $found ) {
 function profanity_filter_on_whitelist( $whitelist, $word ) {
 	$word = preg_replace( '/[^\p{L}]+/S', '', strtolower( $word ) );
 
+	if ( !$word )
+		return false;
+
 	foreach ( $whitelist as $entry ) {
 		$entry = preg_replace( '/[^\p{L}]+/S', '', strtolower( $entry ) );
 
@@ -318,6 +321,7 @@ function profanity_filter_activate() {
 	add_filter( 'bb_xmlrpc_prepare_post', 'profanity_filter_xmlrpc', 9, 2 );
 	add_filter( 'bb_xmlrpc_prepare_topic', 'profanity_filter_xmlrpc', 9, 2 );
 	add_filter( 'bb_xmlrpc_prepare_topic_tag', 'profanity_filter_xmlrpc', 9, 2 );
+	add_filter( 'tag_heat_map', 'profanity_filter_censor', 9 );
 }
 
 function profanity_filter_deactivate() {
@@ -329,6 +333,7 @@ function profanity_filter_deactivate() {
 	remove_filter( 'bb_xmlrpc_prepare_post', 'profanity_filter_xmlrpc', 9, 2 );
 	remove_filter( 'bb_xmlrpc_prepare_topic', 'profanity_filter_xmlrpc', 9, 2 );
 	remove_filter( 'bb_xmlrpc_prepare_topic_tag', 'profanity_filter_xmlrpc', 9, 2 );
+	remove_filter( 'tag_heat_map', 'profanity_filter_censor', 9 );
 }
 
 if ( !defined( 'DOING_CRON' ) )

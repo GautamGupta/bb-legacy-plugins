@@ -3,7 +3,7 @@
 Plugin Name: Profanity Filter
 Plugin URI: http://nightgunner5.wordpress.com/tag/profanity-filter/
 Version: 0.2.1-dev-2
-Description: Why the $&$% did I make this @&#$ing profanity filter?
+Description: Changes profanity to stars, cartoon swears, or an administrator-specified word using the Double Metaphone algorithm.
 Author: Ben L.
 Author URI: http://nightgunner5.wordpress.com/
 */
@@ -40,17 +40,25 @@ function profanity_filter_parse_args( $args = '' ) {
 
 function profanity_filter_prepare( $string, $wordOnly = false ) {
 	$ret = '/';
+
 	if ( $wordOnly )
 		$ret .= '(?<!\p{L})';
-	$ret .= '(<[^>]+>)?';
+	else
+		$ret .= '\p{L}*';
+
+	$ret .= '((<[^>]+>)?';
 	foreach ( str_split( $string ) as $notfirst => $char ) {
 		if ( $notfirst )
 			$ret .= '(<[^>]+>)?';
 		$ret .= preg_quote( $char, '/' );
 	}
-	$ret .= '(<[^>]+>)?';
+	$ret .= '(<[^>]+>)?)';
+
 	if ( $wordOnly )
 		$ret .= '(?!\p{L})';
+	else
+		$ret .= '\p{L}*';
+
 	return $ret . '/i';
 }
 
@@ -60,6 +68,10 @@ function profanity_filter_prepare_secondary( $string ) {
 
 function profanity_filter_replace( $found ) {
 	global $profanity_filter_settings;
+
+	$fullword = strip_tags( $fullhtmlword = array_shift( $found ) );
+	if ( profanity_filter_on_whitelist( $profanity_filter_settings['whitelist'], $fullword ) )
+		return $fullhtmlword;
 
 	$len = strlen( $word = strip_tags( array_shift( $found ) ) );
 
@@ -81,6 +93,7 @@ function profanity_filter_replace( $found ) {
 	}
 
 	$ret = array_shift( $found );
+	$ret .= array_shift( $found );
 
 	$ret .= esc_html( $string );
 
@@ -147,7 +160,7 @@ function profanity_filter_censor( $text, $args = '' ) {
 			$cabbageStart = $sentence['positions'][$_cabbageStart];
 			$cabbageLen = $sentence['positions'][$_cabbageStart + strlen( $word['primary'] )] - $cabbageStart;
 
-			while ( $cabbageLen > $sentence['positions'][$_cabbageStart + strlen( $word['primary'] ) - 1] - $cabbageStart && ( !trim( substr( $_sentence, $cabbageStart + $cabbageLen - 2, 1 ) ) || !preg_match( '/^\p{L}$/S', substr( $_sentence, $cabbageStart + $cabbageLen - 1, 1 ) ) ) ) {
+			while ( $cabbageLen > $sentence['positions'][$_cabbageStart + strlen( $word['primary'] ) - 1] - $cabbageStart && ( !trim( substr( $_sentence, $cabbageStart + $cabbageLen - 2, 1 ) ) || !preg_match( '/^\p{L}$/S', substr( $_sentence, $cabbageStart + $cabbageLen - 1, 1 ) ) || strpos( substr( $_sentence, $cabbageStart, $cabbageLen ), "\n" ) !== false ) ) {
 				$cabbageLen--;
 			}
 
@@ -157,10 +170,8 @@ function profanity_filter_censor( $text, $args = '' ) {
 			}
 
 			$cabbage = substr( $_sentence, $cabbageStart, $cabbageLen );
-			if ( !profanity_filter_on_whitelist( $whitelist, $cabbage ) ) {
-				$cabbageFound[] = $cabbage;
-				$profanity_filter_words[$cabbage] = $pos;
-			}
+			$cabbageFound[] = $cabbage;
+			$profanity_filter_words[$cabbage] = $pos;
 		}
 	}
 	$cabbageFound = array_unique( $cabbageFound );
@@ -180,7 +191,7 @@ function profanity_filter_censor( $text, $args = '' ) {
 			$soupStart = $sentence['positions'][$_soupStart];
 			$soupLen = $sentence['positions'][$_soupStart + strlen( $word['primary'] )] - $soupStart;
 
-			while ( $soupLen > $sentence['positions'][$_soupStart + strlen( $word['primary'] ) - 1] - $soupStart && ( !trim( substr( $_sentence, $soupStart + $soupLen - 2, 1 ) ) || !preg_match( '/^\p{L}$/S', substr( $_sentence, $soupStart + $soupLen - 1, 1 ) ) ) ) {
+			while ( $soupLen > $sentence['positions'][$_soupStart + strlen( $word['primary'] ) - 1] - $soupStart && ( !trim( substr( $_sentence, $soupStart + $soupLen - 2, 1 ) ) || !preg_match( '/^\p{L}$/S', substr( $_sentence, $soupStart + $soupLen - 1, 1 ) ) || strpos( substr( $_sentence, $soupStart, $soupLen ), "\n" ) !== false ) ) {
 				$soupLen--;
 			}
 
@@ -190,10 +201,8 @@ function profanity_filter_censor( $text, $args = '' ) {
 			}
 
 			$soup = substr( $_sentence, $soupStart, $soupLen );
-			if ( !profanity_filter_on_whitelist( $whitelist, $soup ) ) {
-				$soupFound[] = $soup;
-				$profanity_filter_words[$soup] = $pos;
-			}
+			$soupFound[] = $soup;
+			$profanity_filter_words[$soup] = $pos;
 		}
 	}
 	$soupFound = array_unique( $soupFound );
@@ -345,16 +354,41 @@ function profanity_filter_filter_slug( $slug ) {
 function profanity_filter_slug_activate() {
 	add_filter( 'bb_slug_sanitize', 'profanity_filter_filter_slug', 9 );
 	add_filter( 'bb_user_nicename_sanitize', 'profanity_filter_filter_slug', 9 );
+	add_filter( 'pre_bb_topic_tag_slug', 'profanity_filter_filter_slug', 9 );
 }
 
 function profanity_filter_slug_deactivate() {
 	remove_filter( 'bb_slug_sanitize', 'profanity_filter_filter_slug', 9 );
 	remove_filter( 'bb_user_nicename_sanitize', 'profanity_filter_filter_slug', 9 );
+	remove_filter( 'pre_bb_topic_tag_slug', 'profanity_filter_filter_slug', 9 );
 }
 
 profanity_filter_slug_activate();
 add_action( 'pre_permalink', 'profanity_filter_slug_deactivate' );
 add_action( 'post_permalink', 'profanity_filter_slug_activate' );
+
+function profanity_filter_filter_tags() {
+	if ( bb_is_tag() ) {
+		global $tag, $profanity_filter_tag_name;
+		$profanity_filter_tag_name = $tag->name;
+		$tag->name = profanity_filter_filter( $tag->name, $tag->term_id );
+
+		add_action( 'pre_post_form', 'profanity_filter_uncensor_tags' );
+		add_action( 'post_post_form', 'profanity_filter_recensor_tags' );
+	}
+}
+
+function profanity_filter_uncensor_tags() {
+	global $tag, $profanity_filter_tag_name;
+	$tag->name = $profanity_filter_tag_name;
+}
+
+function profanity_filter_recensor_tags() {
+	global $tag;
+	$tag->name = profanity_filter_filter( $tag->name, $tag->term_id );
+}
+
+add_action( 'post_permalink', 'profanity_filter_filter_tags' );
 
 function profanity_filter_admin() {
 	if ( !empty( $_GET['updated'] ) ) {
@@ -791,7 +825,7 @@ function profanity_filter_parse_subscribe() {
 			if ( !$options['subscriptions'][$_GET['profanity_filter_url']]['subscribed'] )
 				exit( serialize( false ) );
 
-			if ( $_GET['profanity_filter_data'] != serialize( false ) && false === $data = unserialize( $_GET['profanity_filter_data'] ) )
+			if ( $_GET['profanity_filter_data'] != serialize( false ) && false === ( $data = unserialize( $_GET['profanity_filter_data'] ) ) && false === ( $data = unserialize( stripslashes( $_GET['profanity_filter_data'] ) ) ) )
 				exit( serialize( new WP_Error( 'invalid', __( 'Could not unserialize data', 'profanity-filter' ), 'profanity_filter_data' ) ) );
 
 			$options['subscriptions'][$_GET['profanity_filter_url']]['data'] = $data;

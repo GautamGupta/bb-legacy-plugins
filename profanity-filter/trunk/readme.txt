@@ -30,8 +30,17 @@ Profanity Filter filters post contents, topic titles, and user names as they are
 
 == Screenshots ==
 1. The default settings for Profanity Filter protect you from cabbage soup, but not liquid soap.
+2. Starting in Profanity Filter 0.2.1, you can share your settings with other installations of Profanity Filter.
 
 == Changelog ==
+= 0.2.1 =
+* Profanity Filter can share settings using the new [Profanity Filter Communication API](http://nightgunner5.wordpress.com/profanity-filter-communication-api/).
+* XMLRPC requests are now censored correctly.
+* Tags are now censored.
+* Minor changes in the phonetic matching algorithm:
+  * Vowels are completely ignored.
+  * The whitelist only matches whole words.
+
 = 0.2 =
 * Now over 300x faster!
 
@@ -39,6 +48,9 @@ Profanity Filter filters post contents, topic titles, and user names as they are
 * Initial release
 
 == Upgrade Notice ==
+= 0.2.1 =
+Sharing, 
+
 = 0.2 =
 Now over 300x faster!
 

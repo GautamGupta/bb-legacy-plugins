@@ -560,8 +560,8 @@ add_action( 'profanity_filter_admin_pre_head', 'profanity_filter_admin_parse' );
 function profanity_filter_subscription_info() {
 	$options = profanity_filter_parse_args(); ?>
 <style type="text/css">
-table.widefat tr.subscribed-both td { background-color: #ec7; }
-table.widefat tr.subscribed-both.alt td { background-color: #fd8; }
+table.widefat tr.subscribed-both td { background-color: #ed8; }
+table.widefat tr.subscribed-both.alt td { background-color: #fe9; }
 </style>
 <table class="widefat">
 <thead>
@@ -623,9 +623,14 @@ if ( isset( $subscription['data']['whitelist'] ) && is_array( $subscription['dat
 <?php
 }
 
-/** @todo */
 function profanity_filter_get_shared_data() {
-	return array( 'words' => false, 'secondary_words' => false, 'whitelist' => false );
+	$options = profanity_filter_parse_args();
+
+	return array(
+		'words'           => $options['send_data_words'] ? $options['words'] : false,
+		'secondary_words' => $options['send_data_secondary'] ? $options['secondary_words'] : false,
+		'whitelist'       => $options['send_data_whitelist'] ? $options['whitelist'] : false
+	);
 }
 
 function profanity_filter_update() {

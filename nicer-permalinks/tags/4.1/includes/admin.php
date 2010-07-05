@@ -351,7 +351,7 @@ function restore_htaccess() {
  *
  * @return void
  */
-function deactivate_nicer_permalinks() {
+function nicer_permalinks_deactivate() {
 	if ( !$status = nicer_permalinks_enabled() ) // Return if plugin is not enabled
 		return;
 

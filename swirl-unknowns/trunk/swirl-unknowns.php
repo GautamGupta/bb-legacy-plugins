@@ -3,7 +3,7 @@
 Plugin Name: Swirl Unknowns
 Plugin URI: http://bbpress.org/plugins/topic/swirl-unknowns/
 Description: Redirects non-logged-in users to a page of your choice. Based on <a href="http://blogwaffe.com/">Michael D. Adams</a>' <a href="http://bbpress.org/forums/topic/117">Force Login</a> plugin plus the <a href="http://bbpress.org/forums/topic/force-login-for-bbpress-101">voodoo code from Trent Adams and Sam Bauers</a>.
-Version: 1.0.2-Reactable
+Version: 1.0.2
 Author: mr_pelle
 Author URI: mailto:francesco.pelle@gmail.com
 */
@@ -53,8 +53,7 @@ $immunes = array(
 				'register.php',
 				'xmlrpc.php',
 				'bb-admin/',
-				'rss/',
-				'support/' // Reactable custom code!
+				'rss/'
 			);
 
 $default_swirl_page = $tags[0]['code'] . $immunes[0];
@@ -115,6 +114,6 @@ function swirl_unknowns() {
 			&& !preg_match( '/('. $pattern .')/i', $_SERVER['REQUEST_URI'] )
 			&& strcasecmp( $_SERVER['REQUEST_URI'], $swirl_page ) // Do not redirect swirl page to itself
 		)
-			bb_safe_redirect( $swirl_page . '?re=' . $tags[1]['value'] . $_SERVER['REQUEST_URI'] ); // Reactable custom code!
+			bb_safe_redirect( $swirl_page );
 	}
 }

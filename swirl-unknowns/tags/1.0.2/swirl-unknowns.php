@@ -19,7 +19,7 @@ define( 'SWIRL_UNKNOWNS_ID',   'swirl-unknowns' );
 define( 'SWIRL_UNKNOWNS_NAME', 'Swirl Unknowns' );
 
 // Create text domain for translations
-bb_load_plugin_textdomain( SWIRL_UNKNOWNS_ID, dirname( __FILE__ ) . '/translations' );
+bb_load_plugin_textdomain( SWIRL_UNKNOWNS_ID, dirname( __FILE__ ) . '/languages' );
 
 /**
  * Global vars

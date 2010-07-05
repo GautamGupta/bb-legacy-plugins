@@ -19,7 +19,7 @@ define( 'NICER_PERMALINKS_ID',   'nicer-permalinks' );
 define( 'NICER_PERMALINKS_NAME', 'Nicer Permalinks' );
 
 // Create text domain for translations
-bb_load_plugin_textdomain( NICER_PERMALINKS_ID, dirname( __FILE__ ) . '/translations' );
+bb_load_plugin_textdomain( NICER_PERMALINKS_ID, dirname( __FILE__ ) . '/languages' );
 
 /**
  * Global vars
@@ -44,7 +44,6 @@ if ( bb_is_admin() ) // Load admin.php if on admin area
 	require_once( 'includes/admin.php' );
 
 if ( nicer_permalinks_enabled() ) { // Load plugin core if plugin is on
-	// Load admin.php if on admin area
 	require_once( 'includes/nicer-filters.php' );
 
 	// Add plugin filters

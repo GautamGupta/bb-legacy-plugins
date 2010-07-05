@@ -191,7 +191,7 @@ function nicer_permalinks_config_errors( $status ) {
 		if ( !is_writable( BB_PATH . '.htaccess' ) ) // Generate error if .htaccess is not writable
 			$errors[] = sprintf( __( '<code>%s</code> is not writable.', NICER_PERMALINKS_ID ), '.htaccess' );
 	} else { // Check if plugin can be enabled
-		if ( !php_version_check() ) // Generate error if PHP version if lower than 5
+		if ( version_compare( '5.0.0', PHP_VERSION, '>' ) ) // Generate error if PHP version if lower than 5
 			$errors[] = sprintf( __( 'Your Webserver is running PHP version %1$s, which is <a href="%2$s">no longer receiving security updates</a>. Please contact your host and have them upgrade PHP to its latest stable branch as soon as possible.', NICER_PERMALINKS_ID ), PHP_VERSION, 'http://www.php.net/archive/2007.php#2007-07-13-1' );
 		if ( !name_based_permalinks_enabled() ) // Generate error if name based permalinks are disabled
 			$errors[] = sprintf( __( '<a href="%s">Name based permalinks</a> are not enabled.', NICER_PERMALINKS_ID ), bb_get_uri( 'bb-admin/options-permalinks.php' ) );
@@ -209,19 +209,6 @@ function nicer_permalinks_config_errors( $status ) {
 	// Return array of errors or false if no error occurred
 	return ( count( $errors ) ) ? $errors : false;
 }
-
-/**
- * Check that we are running at least PHP 5
- * 
- * @author Peter Westwood, Denis de Bernardy
- * @link http://plugins.svn.wordpress.org/health-check/branches/alpha/hc-tests/php-configuration.php
- *
- * @return boolean
- */
-function php_version_check() {
-	return version_compare( '5.0.0', PHP_VERSION, '<' );
-}
-
 
 /**
  * Check if name based permalinks are enabled
@@ -319,6 +306,7 @@ function backup_htaccess() {
 
 	// Load .htaccess content and save it in htaccess.bak
 	$htaccess_content = file_get_contents( $htaccess_path );
+
 	return file_put_contents( $htaccess_bak_path, $htaccess_content );
 }
 
@@ -334,6 +322,7 @@ function restore_htaccess() {
 
 	// Load htaccess.bak content and save it in .htaccess
 	$htaccess_bak_content = file_get_contents( $htaccess_bak_path );
+
 	return file_put_contents( $htaccess_path, $htaccess_bak_content );
 }
 

@@ -91,4 +91,4 @@ $link = get_post_link( $post_id );
 
 * support for PHP 4 quitted
 
-* PHP version check (by <a href="http://plugins.svn.wordpress.org/health-check/branches/alpha/hc-tests/php-configuration.php">P. Westwood and D. de Bernardy</a>) added
+* PHP version check added

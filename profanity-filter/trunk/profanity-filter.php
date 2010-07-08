@@ -105,18 +105,10 @@ function profanity_filter_replace( $found ) {
 function profanity_filter_on_whitelist( $whitelist, $word ) {
 	$word = preg_replace( '/[^\p{L}]+/S', '', strtolower( $word ) );
 
-	if ( !$word )
-		return false;
-
 	foreach ( $whitelist as $entry ) {
 		$entry = preg_replace( '/[^\p{L}]+/S', '', strtolower( $entry ) );
 
-		if ( !$entry )
-			continue;
-
-		if ( strpos( $entry, $word ) !== false )
-			return true;
-		if ( strpos( $word, $entry ) !== false )
+		if ( $word == $entry ) // DEMOMAN'S SAPPIN MAH SENTRY
 			return true;
 	}
 

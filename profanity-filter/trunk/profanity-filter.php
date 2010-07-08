@@ -153,16 +153,15 @@ function profanity_filter_censor( $text, $args = '' ) {
 			$sentence['primary'] = substr( $sentence['primary'], 0, $_cabbageStart ) . str_repeat( ' ', strlen( $word['primary'] ) ) . substr( $sentence['primary'], $_cabbageStart + strlen( $word['primary'] ) );
 
 			$cabbageStart = $sentence['positions'][$_cabbageStart];
+			$cabbageMinStart = $sentence['positions'][$_cabbageStart - 1];
 			$cabbageLen = $sentence['positions'][$_cabbageStart + strlen( $word['primary'] )] - $cabbageStart;
+			$cabbageMinLen = $sentence['positions'][$_cabbageStart + strlen( $word['primary'] ) - 1] - $cabbageStart;
 
-			while ( $cabbageLen > $sentence['positions'][$_cabbageStart + strlen( $word['primary'] ) - 1] - $cabbageStart && ( !trim( substr( $_sentence, $cabbageStart + $cabbageLen - 2, 1 ) ) || !preg_match( '/^\p{L}$/S', substr( $_sentence, $cabbageStart + $cabbageLen - 1, 1 ) ) || strpos( substr( $_sentence, $cabbageStart, $cabbageLen ), "\n" ) !== false ) ) {
-				$cabbageLen--;
-			}
+			if ( false !== $cabbageLenAdjust = strpos( substr( $_sentence, $cabbageStart + $cabbageMinLen, $cabbageLen - $cabbageMinLen ), ' ' ) )
+				$cabbageLen = $cabbageMinLen + $cabbageLenAdjust;
 
-			while ( $cabbageStart > $sentence['positions'][$_cabbageStart - 1] + 1 && ( !trim( substr( $_sentence, $cabbageStart - 2, 1 ) ) || doublemetaphone_is_vowel( strtoupper( $_sentence ), $cabbageStart - 1 ) ) ) {
-				$cabbageStart--;
-				$cabbageLen++;
-			}
+			if ( false !== $cabbageStartAdjust = strpos( substr( $_sentence, 0, $cabbageStart ), ' ', $cabbageMinStart ) )
+				$cabbageStart = $cabbageStartAdjust + 1;
 
 			$cabbage = substr( $_sentence, $cabbageStart, $cabbageLen );
 			$cabbageFound[] = $cabbage;
@@ -184,16 +183,15 @@ function profanity_filter_censor( $text, $args = '' ) {
 			$sentence['primary'] = substr( $sentence['primary'], 0, $_soupStart ) . str_repeat( ' ', strlen( $word['primary'] ) ) . substr( $sentence['primary'], $_soupStart + strlen( $word['primary'] ) );
 
 			$soupStart = $sentence['positions'][$_soupStart];
+			$soupMinStart = $sentence['positions'][$_soupStart - 1];
 			$soupLen = $sentence['positions'][$_soupStart + strlen( $word['primary'] )] - $soupStart;
+			$soupMinLen = $sentence['positions'][$_soupStart + strlen( $word['primary'] ) - 1] - $soupStart;
 
-			while ( $soupLen > $sentence['positions'][$_soupStart + strlen( $word['primary'] ) - 1] - $soupStart && ( !trim( substr( $_sentence, $soupStart + $soupLen - 2, 1 ) ) || !preg_match( '/^\p{L}$/S', substr( $_sentence, $soupStart + $soupLen - 1, 1 ) ) || strpos( substr( $_sentence, $soupStart, $soupLen ), "\n" ) !== false ) ) {
-				$soupLen--;
-			}
+			if ( false !== $soupLenAdjust = strpos( substr( $_sentence, $soupStart + $soupMinLen, $soupLen - $soupMinLen ), ' ' ) )
+				$soupLen = $soupMinLen + $soupLenAdjust;
 
-			while ( $soupStart > $sentence['positions'][$_soupStart - 1] + 1 && ( !trim( substr( $_sentence, $soupStart - 2, 1 ) ) || doublemetaphone_is_vowel( strtoupper( $_sentence ), $soupStart - 1 ) ) ) {
-				$soupStart--;
-				$soupLen++;
-			}
+			if ( false !== $soupStartAdjust = strpos( substr( $_sentence, 0, $soupStart ), ' ', $soupMinStart ) )
+				$soupStart = $soupStartAdjust + 1;
 
 			$soup = substr( $_sentence, $soupStart, $soupLen );
 			$soupFound[] = $soup;

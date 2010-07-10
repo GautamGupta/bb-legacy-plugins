@@ -198,9 +198,13 @@ class bbPM {
 
 		// Put two slashes before the next line if you do not want a "PM this user" link in every profile.
 		add_action( 'bb_profile.php', array( &$this, 'profile_filter_action' ) );
-		// Put two slashes before each of the next two lines if you do not want a "PM this user" link under the author name of every post.
-		add_filter( 'post_author_title_link', array( &$this, 'post_title_filter' ), 11, 2 );
-		add_filter( 'post_author_title', array( &$this, 'post_title_filter' ), 11, 2 );
+		if ( function_exists( 'bb_post_author_layout' ) ) {
+			add_filter( 'bb_post_author_layout_sections', array( &$this, 'post_author_sections_add' ) );
+		} else {
+			// Put two slashes before each of the next two lines if you do not want a "PM this user" link under the author name of every post.
+			add_filter( 'post_author_title_link', array( &$this, 'post_title_filter' ), 11, 2 );
+			add_filter( 'post_author_title', array( &$this, 'post_title_filter' ), 11, 2 );
+		}
 
 		add_filter( 'get_profile_info_keys', array( &$this, 'profile_edit_filter' ), 9, 2 );
 
@@ -214,7 +218,7 @@ class bbPM {
 		$this->settings = bb_get_option( 'bbpm_settings' );
 		$this->version = $this->settings ? $this->settings['version'] : false;
 
-		if ( !$this->version || $this->version != '1.0' )
+		if ( !$this->version || $this->version != '1.0.1' )
 			$this->update();
 
 		if ( $this->settings['auto_add_link'] )
@@ -345,12 +349,17 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 
 			case '0.1-alpha7':
 			case '1.0-beta1':
-				// At the end of all of the updates:
-				$this->settings['version'] = '1.0';
-				$this->version             = '1.0';
-				bb_update_option( 'bbpm_settings', $this->settings );
+				// No database changes in these versions.
 
 			case '1.0':
+				$this->settings['users_per_thread'] = 0;
+
+				// At the end of all of the updates:
+				$this->settings['version'] = '1.0.1';
+				$this->version             = '1.0.1';
+				bb_update_option( 'bbpm_settings', $this->settings );
+
+			case '1.0.1':
 				// Do nothing, this is the newest version.
 		}
 	}
@@ -830,7 +839,8 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 	 * @since 0.1-alpha6
 	 * @param int $ID The ID of the thread
 	 * @param int $user The ID of the user
-	 * @return bool|void True if the user was added, false if the user has reached their message limit, and null if the PM thread doesn't exist
+	 * @return bool|void True if the user was added, false if the user has reached their message limit,
+	 *                   and null if the PM thread doesn't exist or has reached its limit for members.
 	 * @uses bbPM::count_pm() Count the messages a user has, make sure the limit is not exceeded
 	 */
 	function add_member( $ID, $user ) {
@@ -840,6 +850,11 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		global $bbdb;
 
 		if ( $members = $this->get_thread_meta( $ID, 'to' ) ) {
+			if ( $this->settings['users_per_thread'] != 0 ) {
+				if ( substr_count( $members, ',' ) > $this->settings['users_per_thread'] )
+					return;
+			}
+
 			if ( strpos( $members, ',' . $user . ',' ) === false ) {
 				$members .= $user . ',';
 				bb_update_meta( $ID, 'to', $members, 'bbpm_thread' );
@@ -937,6 +952,14 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 			$text .= '<a href="' . $this->get_send_link( $user_id ) . '">' . __( 'PM this user', 'bbpm' ) . '</a>';
 		}
 		return $text;
+	}
+
+	/**
+	 * @access private
+	 */
+	function post_author_sections_add( $sections ) {
+		$sections[] = 'bbpm_pm_user';
+		return $sections;
 	}
 
 	/**
@@ -1200,21 +1223,27 @@ function bbpm_admin_page() {
 	global $bbpm;
 
 	if ( bb_verify_nonce( $_POST['_wpnonce'], 'bbpm-admin' ) ) {
-		$bbpm->settings['max_inbox'] = max( (int)$_POST['max_inbox'], 1 );
-		$bbpm->settings['auto_add_link'] = !empty( $_POST['auto_add_link'] );
-		$bbpm->settings['static_reply'] = !empty( $_POST['static_reply'] );
-		$bbpm->settings['email_new'] = !empty( $_POST['email_new'] );
-		$bbpm->settings['email_reply'] = !empty( $_POST['email_reply'] );
-		$bbpm->settings['email_add'] = !empty( $_POST['email_add'] );
-		$bbpm->settings['email_message'] = !empty( $_POST['email_message'] );
-		$bbpm->settings['threads_per_page'] = max( (int)$_POST['threads_per_page'], 0 );
+		$bbpm->settings['max_inbox']        = max( (int)$_POST['max_inbox'], 1 );
+		$bbpm->settings['auto_add_link']    = !empty( $_POST['auto_add_link'] );
+		$bbpm->settings['static_reply']     = !empty( $_POST['static_reply'] );
+		$bbpm->settings['email_new']        = !empty( $_POST['email_new'] );
+		$bbpm->settings['email_reply']      = !empty( $_POST['email_reply'] );
+		$bbpm->settings['email_add']        = !empty( $_POST['email_add'] );
+		$bbpm->settings['email_message']    = !empty( $_POST['email_message'] );
+		$bbpm->settings['threads_per_page'] = max( (int) $_POST['threads_per_page'], 0 );
+		$bbpm->settings['users_per_thread'] = max( (int) $_POST['users_per_thread'], 0 );
+		if ( $bbpm->settings['users_per_thread'] == 1 )
+			$bbpm->settings['users_per_thread'] = 0;
 
 		bb_update_option( 'bbpm_settings', $bbpm->settings );
+
+		bb_admin_notice( __( 'Settings updated.', 'bbpm' ) );
 	}
 
 ?>
 <h2><?php _e( 'bbPM', 'bbpm' ); ?></h2>
 <?php do_action( 'bb_admin_notices' ); ?>
+
 <form class="settings" action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
 <fieldset>
 	<div id="option-max_inbox">
@@ -1225,6 +1254,7 @@ function bbpm_admin_page() {
 			<input type="text" class="text short" id="max_inbox" name="max_inbox" value="<?php echo $bbpm->settings['max_inbox']; ?>" />
 		</div>
 	</div>
+
 	<div id="option-auto_add_link">
 		<label for="auto_add_link">
 			<?php _e( 'Automatically add header link', 'bbpm' ); ?>
@@ -1234,6 +1264,7 @@ function bbpm_admin_page() {
 			<p><?php _e( 'You will need to add <code>&lt;?php if ( function_exists( \'bbpm_messages_link\' ) ) bbpm_messages_link(); ?&gt;</code> to your template if you disable this.', 'bbpm' ); ?></p>
 		</div>
 	</div>
+
 	<div id="option-static_reply">
 		<label for="static_reply">
 			<?php _e( 'Add static reply form', 'bbpm' ); ?>
@@ -1243,6 +1274,7 @@ function bbpm_admin_page() {
 			<p><?php _e( 'If checked, bbPM will add a static reply form that replies to the last message at the end of each PM thread page.', 'bbpm' ); ?></p>
 		</div>
 	</div>
+
 	<div id="option-email_settings">
 		<div class="label">
 			<?php _e( 'Email options', 'bbpm' ); ?>
@@ -1254,6 +1286,7 @@ function bbpm_admin_page() {
 			<input type="checkbox" id="email_message" name="email_message"<?php if ( $bbpm->settings['email_message'] ) echo ' checked="checked"'; ?> /> <?php _e( 'Include contents of message', 'bbpm' ); ?>
 		</div>
 	</div>
+
 	<div id="option-threads_per_page">
 		<label for="threads_per_page">
 			<?php _e( 'Maximum PM threads per page', 'bbpm' ); ?>
@@ -1261,6 +1294,16 @@ function bbpm_admin_page() {
 		<div class="inputs">
 			<input type="text" class="text short" id="threads_per_page" name="threads_per_page" value="<?php echo $bbpm->settings['threads_per_page']; ?>" />
 			<p><?php _e( 'Enter 0 or leave this blank to use your forum\'s default setting.', 'bbpm' ); ?></p>
+		</div>
+	</div>
+
+	<div id="option-users_per_thread">
+		<label for="users_per_thread">
+			<?php _e( 'Maximum users in a PM thread', 'bbpm' ); ?>
+		</label>
+		<div class="inputs">
+			<input type="text" class="text short" id="users_per_thread" name="users_per_thread" value="<?php echo $bbpm->settings['users_per_thread']; ?>" />
+			<p><?php _e( '0 means unlimited. 2 will disable the "add users" form.', 'bbpm' ); ?></p>
 		</div>
 	</div>
 </fieldset>
@@ -1314,6 +1357,15 @@ function bbpm_messages_link() {
 		echo '<a class="pm-new-messages-link" href="' . $bbpm->get_link() . '">' . sprintf( _n( '1 new Private Message!', '%s new Private Messages!', $count, 'bbpm' ), bb_number_format_i18n( $count ) ) . '</a>';
 	else
 		echo '<a class="pm-no-new-messages-link" href="' . $bbpm->get_link() . '">' . __( 'Private Messages', 'bbpm' ) . '</a>';
+}
+
+function bbpm_pm_user() {
+	if ( ( $user_id = get_post_author_id() ) && ( $user_id != bb_get_current_user_info( 'ID' ) || bb_is_admin() ) && bb_current_user_can( 'write_posts' ) ) {
+		global $bbpm;
+		echo '<a href="' . $bbpm->get_send_link( $user_id ) . '">' . __( 'PM this user', 'bbpm' ) . '</a>';
+		return true;
+	}
+	return false;
 }
 
 // Emulate an actual page if pretty permalinks is off.

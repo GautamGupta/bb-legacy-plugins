@@ -11,8 +11,6 @@ bbPM - The new way to private message.
 
 Users can send private messages to each other. Replies are threaded, and more than two users can participate in a single conversation.
 
-[Developer documentation can be found here.](http://nightgunner5.is-a-geek.net:1337/phpdoc/bbpm/)
-
 == Installation ==
 
 1. Upload the entire `bbpm` plugin to the `my-plugins` directory of your bbPress installation. If you don't have one, create it!
@@ -32,6 +30,7 @@ Users can send private messages to each other. Replies are threaded, and more th
 * The username dropdown is slightly easier to click on.
 * Static reply form suggested by [rbat](http://bbpress.org/plugins/topic/bbpm/page/16/#post-5263) added as an option
 * Fixed a bug with adding members to a thread on forums with pretty permalinks turned off
+* Added the ability to limit the number of members in any given thread. (Suggested by [pagal](http://bbpress.org/forums/topic/questions-about-bbpm-plugin#post-70834))
 
 = 1.0 =
 * Danish translation from Daniel Juhl

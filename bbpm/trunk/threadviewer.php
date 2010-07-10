@@ -10,7 +10,7 @@ global $bbpm, $the_pm, $bb_post;
 
 $bb_post = true; // Hax
 
-$get = (int)$get;
+$get = (int) $get;
 
 $messagechain = $bbpm->get_thread( $get );
 $members = $bbpm->get_thread_members( $get );
@@ -54,6 +54,7 @@ foreach ( $members as $member ) {
 ?>
 </ul>
 
+<?php if ( $bbpm->settings['users_per_thread'] == 0 || $bbpm->settings['users_per_thread'] > count( $members ) ) { ?>
 <form id="tag-form" action="<?php echo BB_PLUGIN_URL . basename( dirname( __FILE__ ) ) . '/pm.php'; ?>" method="post">
 <p>
 <input type="text" id="tag" name="tag"/>
@@ -138,6 +139,7 @@ jQuery(function($){
 });
 //]]></script>
 </form>
+<?php } ?>
 </div>
 
 <div style="clear:both;"></div>

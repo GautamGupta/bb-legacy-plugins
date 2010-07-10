@@ -126,5 +126,3 @@ if ( isset( $_GET['unsubscribe'] ) && bb_verify_nonce( $_GET['_wpnonce'], 'bbpm-
 
 	wp_redirect( $bbpm->get_link() );
 }
-
-?>

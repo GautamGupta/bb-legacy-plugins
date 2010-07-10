@@ -266,4 +266,4 @@ echo apply_filters( 'post_author_title_link', apply_filters( 'get_post_author_ti
 	}
 } ?>
 
-<?php bb_get_footer();?>
+<?php bb_get_footer(); ?>

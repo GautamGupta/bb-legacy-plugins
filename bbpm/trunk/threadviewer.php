@@ -27,8 +27,8 @@ add_filter( 'get_post_author_id', array( &$bbpm, 'post_author_id_filter' ) );
 <div id="topic-info">
 <span id="topic_labels"></span>
 <h2 class="topictitle"><?php echo esc_html( $bbpm->get_thread_title( $get ) ); ?></h2>
-<span id="topic_posts">(<?php printf( _n( '%s post', '%s posts', count( $messagechain ) ), bb_number_format_i18n( count( $messagechain ) ) ); ?>)</span>
-<span id="topic_voices">(<?php printf( _n( '%s voice', '%s voices', count( $voices ) ), bb_number_format_i18n( count( $voices ) ) ); ?>)</span>
+<span id="topic_posts">(<?php printf( _n( 'One post', '%s posts', count( $messagechain ) ), bb_number_format_i18n( count( $messagechain ) ) ); ?>)</span>
+<span id="topic_voices">(<?php printf( _n( 'One voice', '%s voices', count( $voices ) ), bb_number_format_i18n( count( $voices ) ) ); ?>)</span>
 
 <ul class="topicmeta">
 	<li><?php printf( __( 'Started %1$s ago by %2$s' ), bb_since( $messagechain[0]->date ), '<a href="' . get_user_profile_link( $messagechain[0]->from->ID ) . '">' . get_user_display_name( $messagechain[0]->from->ID ) . '</a>' ); ?></li>

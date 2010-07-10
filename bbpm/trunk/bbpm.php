@@ -546,12 +546,12 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		if ( $this->settings['email_new'] && !bb_get_usermeta( $id_reciever, 'bbpm_emailme' ) && bb_get_current_user_info( 'ID' ) != $id_reciever )
 			bb_mail( bb_get_user_email( $id_reciever ),
 				sprintf(
-					__( '%s has sent you a private message on %s: "%s"', 'bbpm' ),
+					__( '%1$s has sent you a private message on %2$s: "%3$s"', 'bbpm' ),
 					get_user_display_name( bb_get_current_user_info( 'ID' ) ),
 					bb_get_option( 'name' ),
 					$title
 				), $this->settings['email_message'] ? sprintf(
-					__( "Hello, %s!\n\n%s has sent you a private message entitled \"%s\" on %s!\n\nTo read it now, go to the following address:\n\n%s\n\nDo NOT reply to this message.\n\nThe contents of the message are:\n\n%s", 'bbpm' ),
+					__( "Hello, %1\$s!\n\n%2\$s has sent you a private message entitled \"%3\$s\" on %4\$s!\n\nTo read it now, go to the following address:\n\n%5\$s\n\nDo NOT reply to this message.\n\nThe contents of the message are:\n\n%6\$s", 'bbpm' ),
 					get_user_display_name( $id_reciever ),
 					get_user_display_name( bb_get_current_user_info( 'ID' ) ),
 					$title,
@@ -559,7 +559,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 					$msg->read_link,
 					strip_tags( $msg->text )
 				) : sprintf(
-					__( "Hello, %s!\n\n%s has sent you a private message entitled \"%s\" on %s!\n\nTo read it now, go to the following address:\n\n%s", 'bbpm' ),
+					__( "Hello, %1\$s!\n\n%s has sent you a private message entitled \"%2\$s\" on %3\$s!\n\nTo read it now, go to the following address:\n\n%4\$s", 'bbpm' ),
 					get_user_display_name( $id_reciever ),
 					get_user_display_name( bb_get_current_user_info( 'ID' ) ),
 					$title,
@@ -613,12 +613,12 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 				if ( $recipient != bb_get_current_user_info( 'ID' ) && !bb_get_usermeta( $recipient, 'bbpm_emailme' ) )
 					bb_mail( bb_get_user_email( $recipient ),
 						sprintf(
-							__( '%s has sent you a private message on %s: "%s"', 'bbpm' ),
+							__( '%1$s has sent you a private message on %2$s: "%3$s"', 'bbpm' ),
 							get_user_display_name( bb_get_current_user_info( 'ID' ) ),
 							bb_get_option( 'name' ),
 							$this->get_thread_title( $msg->thread )
 						), $this->settings['email_message'] ? sprintf(
-							__( "Hello, %s!\n\n%s has sent you a private message entitled \"%s\" on %s!\n\nTo read it now, go to the following address:\n\n%s\n\nDo NOT reply to this message.\n\nThe contents of the message are:\n\n%s", 'bbpm' ),
+							__( "Hello, %1\$s!\n\n%2\$s has sent you a private message entitled \"%3\$s\" on %4\$s!\n\nTo read it now, go to the following address:\n\n%5\$s\n\nDo NOT reply to this message.\n\nThe contents of the message are:\n\n%6\$s", 'bbpm' ),
 							get_user_display_name( $recipient ),
 							get_user_display_name( bb_get_current_user_info( 'ID' ) ),
 							$this->get_thread_title( $msg->thread ),
@@ -626,7 +626,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 							$msg->read_link,
 							strip_tags( $msg->text )
 						) : sprintf(
-							__( "Hello, %s!\n\n%s has sent you a private message entitled \"%s\" on %s!\n\nTo read it now, go to the following address:\n\n%s", 'bbpm' ),
+							__( "Hello, %1\$s!\n\n%s has sent you a private message entitled \"%2\$s\" on %3\$s!\n\nTo read it now, go to the following address:\n\n%4\$s", 'bbpm' ),
 							get_user_display_name( $recipient ),
 							get_user_display_name( bb_get_current_user_info( 'ID' ) ),
 							$this->get_thread_title( $msg->thread ),
@@ -869,12 +869,12 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 				if ( $this->settings['email_add'] && !bb_get_usermeta( $user, 'bbpm_emailme' ) ) {
 					bb_mail( bb_get_user_email( $user ),
 						sprintf(
-							__( '%s has added you to a conversation on %s: "%s"', 'bbpm' ),
+							__( '%1$s has added you to a conversation on %2$s: "%3$s"', 'bbpm' ),
 							get_user_display_name( bb_get_current_user_info( 'ID' ) ),
 							bb_get_option( 'name' ),
 							$this->get_thread_title( $ID )
 						), sprintf(
-							__( "Hello, %s!\n\n%s has added you to a private message conversation titled \"%s\" on %s!\n\nTo read it now, go to the following address:\n\n%s", 'bbpm' ),
+							__( "Hello, %1\$s!\n\n%s has added you to a private message conversation titled \"%2\$s\" on %3\$s!\n\nTo read it now, go to the following address:\n\n%4\$s", 'bbpm' ),
 							get_user_display_name( $user ),
 							get_user_display_name( bb_get_current_user_info( 'ID' ) ),
 							$this->get_thread_title( $ID ),
@@ -998,7 +998,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 		$count = $this->count_pm( bb_get_current_user_info( 'ID' ), true );
 
 		if ( $count )
-			return $link . ' | <a href="' . $this->get_link() . '">' . sprintf( _n( '%s new private message!', '%s new private messages!', $count, 'bbpm' ), bb_number_format_i18n( $count ) ) . '</a>';
+			return $link . ' | <a href="' . $this->get_link() . '">' . sprintf( _n( 'One new private message!', '%s new private messages!', $count, 'bbpm' ), bb_number_format_i18n( $count ) ) . '</a>';
 		return $link . ' | <a href="' . $this->get_link() . '">' . __( 'Private Messages', 'bbpm' ) . '</a>';
 	}
 
@@ -1179,7 +1179,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 				}
 			}
 
-			$result .= sprintf( _n( 'Removed %s nonexistant user from bbPM threads.', 'Removed %s nonexistant users from bbPM threads.', count( $users_noexist ), 'bbpm' ), bb_number_format_i18n( count( $users_noexist ) ) );
+			$result .= sprintf( _n( 'Removed one nonexistant user from bbPM threads.', 'Removed %s nonexistant users from bbPM threads.', count( $users_noexist ), 'bbpm' ), bb_number_format_i18n( count( $users_noexist ) ) );
 		}
 
 		if ( count( $threads_delete ) ) {
@@ -1190,7 +1190,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 			$bbdb->query( 'DELETE FROM `' . $bbdb->bbpm . '` WHERE `pm_thread` IN (' . implode( ',', $threads_delete ) . ')' );
 			$bbdb->query( 'DELETE FROM `' . $bbdb->meta . '` WHERE `object_type` = \'bbpm_thread\' AND `object_id`  IN (' . implode( ',', $threads_delete ) . ')' );
 
-			$result .= sprintf( _n( 'Deleted %s thread. ', 'Deleted %s threads. ', count( $threads_delete ), 'bbpm' ), bb_number_format_i18n( count( $threads_delete ) ) );
+			$result .= sprintf( _n( 'Deleted one thread. ', 'Deleted %s threads. ', count( $threads_delete ), 'bbpm' ), bb_number_format_i18n( count( $threads_delete ) ) );
 		}
 
 		return $result;

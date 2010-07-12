@@ -3,7 +3,7 @@ Contributors: mr_pelle
 Tags: permalinks, mod_rewrite, htaccess, slug, forum, topic
 Plugin Name: Nicer Permalinks
 Plugin URI: http://bbpress.org/plugins/topic/nicer-permalinks/
-Version: 4.1
+Version: 4.2
 Requires at least: 1.0
 Tested up to: 1.1-alpha
 
@@ -39,35 +39,25 @@ $link = get_post_link( $post_id );
 
 == Changelog ==
 
-= Version 3.4.1 beta (2010-05-04) =
+= Version 4.2 (2010-07-11) =
 
-* PHP 4 compatibility added
+* non-bbPress rules do not get removed anymore by `.htaccess` update
 
-= Version 3.5 (2010-05-10) =
+* configuration page and data processing finally do follow bbPress standards
 
-* nicer_bb_slug_sanitize_filter removed
+= Version 4.1 (2010-07-05) =
 
-* nicer-htaccess code revisited
+* load of typos fixed
 
-* source code cleaned
+* support for PHP 4 quitted
 
-= Version 3.6 (2010-05-13) =
+* PHP version check added
 
-* nicer_get_post_link_filter enhanced
+= Version 4.0.1 (2010-06-30) =
 
-* bug with <a href="http://bbpress.org/plugins/topic/ajaxed-quote/">Ajaxed Quote</a> plugin fixed
+* bug with name based permalinks status check fixed
 
-= Version 3.6.1 (2010-05-26) =
-
-* redirection link when deleting a topic from its own page fixed (bug fixed in bbPress 1.1-alpha)
-
-= Version 3.6.2 (2010-06-05) =
-
-* minor changes
-
-= Version 3.6.3 (2010-06-11) =
-
-* minor changes
+* plugin configuration page now looks for requested status to decide if activate or deactivate the plugin
 
 = Version 4.0 (2010-06-25) =
 
@@ -79,16 +69,32 @@ $link = get_post_link( $post_id );
 
 * functions are now more documented
 
-= Version 4.0.1 (2010-06-30) =
+= Version 3.6.3 (2010-06-11) =
 
-* bug with name based permalinks status check fixed
+* minor changes
 
-* plugin configuration page now looks for requested status to decide if activate or deactivate the plugin
+= Version 3.6.2 (2010-06-05) =
 
-= Version 4.1 (2010-07-05) =
+* minor changes
 
-* load of typos fixed
+= Version 3.6.1 (2010-05-26) =
 
-* support for PHP 4 quitted
+* redirection link when deleting a topic from its own page fixed (bug fixed in bbPress 1.1-alpha)
 
-* PHP version check added
+= Version 3.6 (2010-05-13) =
+
+* nicer_get_post_link_filter enhanced
+
+* bug with <a href="http://bbpress.org/plugins/topic/ajaxed-quote/">Ajaxed Quote</a> plugin fixed
+
+= Version 3.5 (2010-05-10) =
+
+* nicer_bb_slug_sanitize_filter removed
+
+* nicer-htaccess code revisited
+
+* source code cleaned
+
+= Version 3.4.1 beta (2010-05-04) =
+
+* PHP 4 compatibility added

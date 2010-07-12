@@ -3,8 +3,6 @@
  * @package Nicer Permalinks
  */
 
-// Load very often used options
-$bb_uri = bb_get_option( 'uri' );
 
 /**
  * Functions
@@ -16,15 +14,15 @@ $bb_uri = bb_get_option( 'uri' );
  * @param string $link     Forum link
  * @param int    $forum_id Forum id
  *
- * @uses $bb_uri
+ * @global $bb
  *
  * @return string
  */
-function get_nicer_forum_link_filter( $link, $forum_id = 0 ) {
-	global $bb_uri;
+function get_forum_link_nicer_filter( $link, $forum_id = 0 ) {
+	global $bb;
 
 	// Remove redundant "forum" word from forum link and append '/'. Mandatory! Props: Mohta
-	return str_replace( $bb_uri . 'forum/', $bb_uri, $link ) . '/';
+	return str_replace( $bb->uri . 'forum/', $bb->uri, $link ) . '/';
 }
 
 /**
@@ -33,15 +31,15 @@ function get_nicer_forum_link_filter( $link, $forum_id = 0 ) {
  * @param string $trail    Forum bread crumb
  * @param int    $forum_id Forum id
  *
- * @uses $bb_uri
+ * @global $bb
  *
  * @return string
  */
-function bb_get_nicer_forum_bread_crumb_filter( $trail, $forum_id = 0 ) {
-	global $bb_uri;
+function bb_get_forum_bread_crumb_nicer_filter( $trail, $forum_id = 0 ) {
+	global $bb;
 
 	// Remove redundant "forum" word from every forum link
-	$trail = str_replace( $bb_uri . 'forum/', $bb_uri, $trail );
+	$trail = str_replace( $bb->uri . 'forum/', $bb->uri, $trail );
 
 	// Append '/' to each forum link, if missing. Mandatory! Props: Mohta
 	return preg_replace( '/([^\/])(">)/', '$1/$2', $trail );
@@ -53,19 +51,20 @@ function bb_get_nicer_forum_bread_crumb_filter( $trail, $forum_id = 0 ) {
  * @param string $link Topic link
  * @param int    $id   Topic id
  *
- * @uses $bb_uri
+ * @global $bb
+ *
  * @uses get_topic_id()
  * @uses get_topic()
  * @uses get_post_id()
  * @uses bb_get_post()
  * @uses bb_get_topic_from_uri()
- * @uses get_forum()
  * @uses get_forum_id()
+ * @uses get_forum()
  *
  * @return string
  */
-function get_nicer_topic_link_filter( $link, $id = 0 ) {
-	global $bb_uri;
+function get_topic_link_nicer_filter( $link, $id = 0 ) {
+	global $bb;
 
 	if ( $topic_id = get_topic_id( $id ) ) { // Request is coming from main forum if $id is a topic id
 		$topic = get_topic( $topic_id );
@@ -76,15 +75,16 @@ function get_nicer_topic_link_filter( $link, $id = 0 ) {
 		$topic = bb_get_topic_from_uri( $link );
 	}
 
-	// The following is automatically skipped on bbPress 1.1-alpha or higher
+	// The following check is automatically skipped on bbPress 1.1-alpha or higher
 	if ( !$topic ) // Request is a deleted topic redirection link request, which lacks callback info
-		return $bb_uri; // Return forum index link because no topic info can be retrieved
+		// Return forum index link because no topic info can be retrieved
+		return $bb->uri;
 
 	// Retrieve topic parent forum
 	$forum = get_forum( get_forum_id( $topic->forum_id ) );
 
 	// Replace "topic" word with parent forum slug to emphasize hierarchy
-	return str_replace( $bb_uri . 'topic/', $bb_uri . "{$forum->forum_slug}/", $link );
+	return str_replace( $bb->uri . 'topic/', $bb->uri . "{$forum->forum_slug}/", $link );
 }
 
 
@@ -95,31 +95,34 @@ function get_nicer_topic_link_filter( $link, $id = 0 ) {
  * @param int    $post_id   Post id
  * @param int    $topic_id  Post parent topic id
  *
- * @uses $bb_uri
+ * @global $bb
+ *
  * @uses get_topic_id()
  * @uses get_post_id()
  * @uses bb_get_post()
- * @uses get_topic()
  * @uses get_topic_id()
- * @uses get_forum()
+ * @uses get_topic()
  * @uses get_forum_id()
- * @uses bb_get_page_number()
+ * @uses get_forum()
  * @uses get_post_position()
+ * @uses bb_get_page_number()
  *
  * @return string
  */
-function get_nicer_post_link_filter( $link, $post_id = 0, $topic_id = 0 ) {
-	global $bb_uri;
+function get_post_link_nicer_filter( $link, $post_id = 0, $topic_id = 0 ) {
+	global $bb;
 
 	if ( get_topic_id( $topic_id ) ) { // Request is a get_topic_last_post_link() if $topic_id is used
-		return $link; // Return unfiltered link because it was already filtered by get_nicer_topic_link_filter()
+		// Return unfiltered link because it was already filtered by get_nicer_topic_link_filter()
+		return $link;
 	} elseif ( $id = get_post_id( $post_id ) ) { // Request is a get_post_link() if $post_id id used
 		$bb_post = bb_get_post( $id );
 
 		// Retrieve post parent topic
 		$topic = get_topic( get_topic_id( $bb_post->topic_id ) );
 	} else { // Request is an other "anchor-like" post request if it does not match previous cases
-		return $link; // Return unfiltered link because it was already filtered by get_nicer_topic_link_filter()
+		// Return unfiltered link because it was already filtered by get_nicer_topic_link_filter()
+		return $link;
 	}
 
 	// Retrieve topic parent forum
@@ -132,5 +135,5 @@ function get_nicer_post_link_filter( $link, $post_id = 0, $topic_id = 0 ) {
 	$post_page = ( 1 < $post_page_number ) ? "/page/$post_page_number" : '';
 
 	// Generate nicer post link emphasizing hierarchy
-	return $bb_uri . "{$forum->forum_slug}/{$topic->topic_slug}$post_page#post-" . get_post_id( $post_id );
+	return $bb->uri . "{$forum->forum_slug}/{$topic->topic_slug}$post_page#post-" . get_post_id( $post_id );
 }

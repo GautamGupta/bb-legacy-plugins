@@ -118,7 +118,6 @@ add_action( 'bb_init', 'swirl_unknowns', 2 ); // Very high action priority
  * @global $swirl_unknowns_settings
  *
  * @uses bb_is_user_logged_in()
- * @uses add_query_arg()
  * @uses wp_redirect()
  * 
  * @return void

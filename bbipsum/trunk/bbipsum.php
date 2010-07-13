@@ -142,6 +142,10 @@ function bbipsum() {
 
 <?php }
 
+function bbipsum_forum_filter( $forum_id ) {
+	return !bb_get_forum_is_category( $forum_id );
+}
+
 function bbipsum_admin_parse() {
 	if ( 'post' == strtolower( $_SERVER['REQUEST_METHOD'] ) ) {
 		if ( $_POST['action'] == 'post' ) {
@@ -182,7 +186,7 @@ function bbipsum_admin_parse() {
 
 			$allow_html = (boolean) (int) $_POST['html'];
 
-			$forums = bb_get_forums();
+			$forums = bb_get_forums( array( 'callback' => 'bbipsum_forum_filter' ) );
 			$f = count( $forums );
 
 			global $wp_users_object;

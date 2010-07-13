@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/nicer-permalinks/
 Description: Rewrites every bbPress URI removing the words "forum" and "topic" and emphasizes hierarchy. Based on <a href="http://www.technospot.net/blogs/">Ashish Mohta</a> and <a href="http://markroberthenderson.com/">Mark R. Henderson</a>'s <a href="http://blog.markroberthenderson.com/getting-rid-of-forums-and-topic-from-bbpress-permalinks-updated-plugin/">Remove Forum Topic</a> plugin.
 Version: 4.2
 Author: mr_pelle
-Author URI: mailto:francesco.pelle@gmail.com
+Author URI: http://scr.im/mrpelle
 */
 
 /**

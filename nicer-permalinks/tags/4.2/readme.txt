@@ -39,7 +39,7 @@ $link = get_post_link( $post_id );
 
 == Changelog ==
 
-= Version 4.2 (2010-07-11) =
+= Version 4.2 (2010-07-12) =
 
 * non-bbPress rules do not get removed anymore by `.htaccess` update
 

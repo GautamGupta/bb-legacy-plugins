@@ -39,6 +39,6 @@ Based of <a href="http://www.adityanaik.com/">so1o</a>, <a href="http://blogwaff
 
 == Changelog ==
 
-= Version 0.1 (2010-07-15) =
+= Version 0.1 (2010-07-16) =
 
 * first version released

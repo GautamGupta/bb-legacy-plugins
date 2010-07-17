@@ -26,15 +26,20 @@ It's very accurate in my testing, within 100ms typically.
 
 Basically it works by using a sort of "round trip" timer.
 
-You can add a geo-location database and it will tell you what country the visitor is in, 
-which helps to understand why a time may be so high/low. 
+You can optionally add a free geo-location database and it will tell you what country the visitor is in, 
+which  helps to understand why a time may be so high/low. 
 
 == Installation ==
 
 1. Edit the top of the plugin to adjust the four settings as desired, see the FAQ for more details
+
 2. Add the "browser-time.php" file to bbPress "my-plugins/browser-timer/" directory 
+
 3. Optionally upload the two IP2C files for geo-location into the same directory
+
 4. Activate in admin control panel
+
+5. Once properly configured and running, administrators see the log by just adding `?browsertimer` to the forum url.
 
 == License ==
 
@@ -55,14 +60,23 @@ $browsertimer['log']='/browsertimer/browsertimer.log';
 That is where the log is kept. 
 Obviously the directory must be chmod 777 on your server.
 For that reason I STRONGLY recommend you put it ABOVE the web root.
-The default setting will do that:
-` dirname($_SERVER['DOCUMENT_ROOT']).'/browsertimer/browsertimer.log' `  
+
+The default setting will keep it safely above the web root:
+` 
+$browsertimer['log']=dirname($_SERVER['DOCUMENT_ROOT']).'/browsertimer/browsertimer.log'; 
+`
 but since it may confuse people, adjust it as you will.
 
-ie.   `/home/username/public_html/`  
+Further explaination:
+ie.   
+`
+/home/username/public_html/
+`  
 is the webroot on many servers but not all by any means
 you could in theory make
-`/home/username/browsertimer/`
+`
+/home/username/browsertimer/
+`
 and chmod 777 that directory, and it will work with the default setting.
 
 * filter out bad times
@@ -98,7 +112,7 @@ extract these two files and put them in the same directory:
 ip2c.php  
 ip-to-country.bin
 `
-(note ip-to-country.bin is very large, it's one big database)
+(note ip-to-country.bin is large, it's one big database)
 
 == Screenshots ==
 

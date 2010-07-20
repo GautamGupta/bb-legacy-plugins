@@ -6,11 +6,11 @@ Tested up to: 0.9
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 
-Allows bbPress 0.9 to use WordPress 2.6, 2.7 or 2.8 cookies during stand-alone (simple) integration.
+Allows bbPress 0.9 to use WordPress 2.6, 2.7 or 2.8, 2.9, 3.0 cookies during stand-alone (simple) integration.
 
 == Description ==
 
-Allows bbPress 0.9 to use WordPress 2.6, 2.7 or 2.8 cookies during stand-alone (simple) integration.
+Allows bbPress 0.9 to use WordPress 2.6, 2.7 or 2.8, 2.9, 3.0 cookies during stand-alone (simple) integration.
 
 This plugin  only been tested on a very basic setup, however it should be safe to try as it doesn't change any data and others report success when using it.
 
@@ -66,7 +66,7 @@ http://bbpress.org/forums/topic/wordpress-and-bbpress-integration-101
 
 * more complete WP cookie emulation with auth + logged_in cookies - props Txanny
 
-= Version 0.0.5 (2009-07-14) =
+= Version 0.0.4 (2009-07-14) =
 
 * updated to support additional cookie changes in WordPress 2.8
 

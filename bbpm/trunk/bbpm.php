@@ -626,7 +626,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 							$msg->read_link,
 							strip_tags( $msg->text )
 						) : sprintf(
-							__( "Hello, %1\$s!\n\n%s has sent you a private message entitled \"%2\$s\" on %3\$s!\n\nTo read it now, go to the following address:\n\n%4\$s", 'bbpm' ),
+							__( "Hello, %1\$s!\n\n%2\$s has sent you a private message entitled \"%3\$s\" on %4\$s!\n\nTo read it now, go to the following address:\n\n%5\$s", 'bbpm' ),
 							get_user_display_name( $recipient ),
 							get_user_display_name( bb_get_current_user_info( 'ID' ) ),
 							$this->get_thread_title( $msg->thread ),
@@ -874,7 +874,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 							bb_get_option( 'name' ),
 							$this->get_thread_title( $ID )
 						), sprintf(
-							__( "Hello, %1\$s!\n\n%s has added you to a private message conversation titled \"%2\$s\" on %3\$s!\n\nTo read it now, go to the following address:\n\n%4\$s", 'bbpm' ),
+							__( "Hello, %1\$s!\n\n%2\$s has added you to a private message conversation titled \"%3\$s\" on %4\$s!\n\nTo read it now, go to the following address:\n\n%5\$s", 'bbpm' ),
 							get_user_display_name( $user ),
 							get_user_display_name( bb_get_current_user_info( 'ID' ) ),
 							$this->get_thread_title( $ID ),

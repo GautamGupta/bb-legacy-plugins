@@ -42,4 +42,4 @@ Posts MANUALLY marked as spam will not trigger emails.
 
 = Version 0.0.1 (2010-07-01) =
 
-* first public release
+* first public release 

@@ -121,7 +121,8 @@ ip-to-country.bin
 == To Do ==
 
 * admin menu ?
+* optionally return page load time into visitor's browser (ie. in footer)
 
 == Changelog ==
 
-* 0.0.2 2010-07-17 first public beta release
+* 0.0.2 2010-07-17 first public beta release 

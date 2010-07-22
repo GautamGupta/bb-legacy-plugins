@@ -40,5 +40,5 @@ Blocks posts via your own list of words or IP addresses (like the WordPress feat
 
 = Version 0.0.1 (2010-06-06) =
 
-* first public release
+* first public release 
 

@@ -1,0 +1,341 @@
+# Translation of bbPM in Hindi
+# This file is distributed under the same license as the bbPM package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2010-07-22 22:10:29+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/0.1\n"
+"Project-Id-Version: bbPM\n"
+
+#: bbpm.php:877
+msgid ""
+"Hello, %1$s!\n"
+"\n"
+"%2$s has added you to a private message conversation titled \"%3$s\" on %4$s!\n"
+"\n"
+"To read it now, go to the following address:\n"
+"\n"
+"%5$s"
+msgstr ""
+"%1$s, नमस्ते!\n"
+"\n"
+"%2$s ने आपको %4$s पर एक निजी विषय में बुलाया है जिसका शीर्षक है \"%3$s\"\n"
+"\n"
+"इससे पढ़ने के लिए इधर जाएँ:\n"
+"\n"
+"%5$s "
+
+#: bbpm.php:562 bbpm.php:629
+msgid ""
+"Hello, %1$s!\n"
+"\n"
+"%2$s has sent you a private message entitled \"%3$s\" on %4$s!\n"
+"\n"
+"To read it now, go to the following address:\n"
+"\n"
+"%5$s"
+msgstr ""
+"%1$s, नमस्ते!\n"
+"\n"
+"%2$s ने आपको %4$s पर एक निजी संदेश भेजा है जिसका शीर्षक है \"%3$s\"\n"
+"\n"
+"इससे पढ़ने के लिए इधर जाएँ:\n"
+"\n"
+"%5$s "
+
+#: bbpm.php:549 bbpm.php:616
+msgid "%1$s has sent you a private message on %2$s: \"%3$s\""
+msgstr "%1$s ने आपको %2$s पर एक निजी संदेश भेजा है: \"%3$s\""
+
+#: threadviewer.php:30
+msgid "One post"
+msgid_plural "%s posts"
+msgstr[0] "एक पद"
+msgstr[1] "%s पद"
+
+#: threadviewer.php:31
+msgid "One voice"
+msgid_plural "%s voices"
+msgstr[0] "एक आवाज़"
+msgstr[1] "%s आवाजें"
+
+#: bbpm.php:1182
+msgid "Removed one nonexistant user from bbPM threads."
+msgid_plural "Removed %s nonexistant users from bbPM threads."
+msgstr[0] "एक अस्तित्वहीन उपयोगकर्ता को हटा दिया गया है|"
+msgstr[1] "%s अस्तित्वहीन उपयोगकर्ताओं को हटा दिया गया है|"
+
+#: bbpm.php:1001
+msgid "One new private message!"
+msgid_plural "%s new private messages!"
+msgstr[0] "एक नया निजी संदेश!"
+msgstr[1] "%s नए निजी संदेश!"
+
+#: bbpm.php:554 bbpm.php:621
+msgid ""
+"Hello, %1$s!\n"
+"\n"
+"%2$s has sent you a private message entitled \"%3$s\" on %4$s!\n"
+"\n"
+"To read it now, go to the following address:\n"
+"\n"
+"%5$s\n"
+"\n"
+"Do NOT reply to this message.\n"
+"\n"
+"The contents of the message are:\n"
+"\n"
+"%6$s"
+msgstr ""
+"%1$s, नमस्ते!\n"
+"\n"
+"%2$s ने आपको %4$s पर एक निजी संदेश भेजा है जिसका शीर्षक है \"%3$s\"\n"
+"\n"
+"इससे पढ़ने के लिए इधर जाएँ:\n"
+"\n"
+"%5$s \n"
+"\n"
+"कृपया इस ईमेल का जवाब ना दें|\n"
+"\n"
+"संदेश में यह लिखा हुआ है:\n"
+"\n"
+"%6$s"
+
+#: bbpm.php:872
+msgid "%1$s has added you to a conversation on %2$s: \"%3$s\""
+msgstr "%1$s ने आपको %2$s पर बातचीत करने के लिए बुलाया है: \"%3$s\""
+
+#: bbpm.php:1193
+msgid "Deleted one thread. "
+msgid_plural "Deleted %s threads. "
+msgstr[0] "एक विषय हटा दिया गया है|"
+msgstr[1] "%s विषय हटा दिए गए हैं|"
+
+msgid "Ben L."
+msgstr "बेन एल."
+
+#: bbpm.php:928 bbpm.php:952 bbpm.php:1365
+msgid "PM this user"
+msgstr "इस उपयोगकर्ता को पी.एम. करें"
+
+#: bbpm.php:941
+msgid "Don't email me when I get a PM"
+msgstr "मुझे ईमेल ना भेजें जब मुझे एक पी.एम. आता है"
+
+#: bbpm.php:1002 bbpm.php:1359 privatemessages.php:38 privatemessages.php:144
+#: privatemessages.php:146 privatemessages.php:187 privatemessages.php:254
+msgid "Private Messages"
+msgstr "निजी संदेश"
+
+#: bbpm.php:1009 bbpm.php:1244
+msgid "bbPM"
+msgstr "बीबीपीएम"
+
+#: bbpm.php:1087
+msgid "New:"
+msgstr "नई"
+
+#: bbpm.php:1122
+msgid "Remove deleted users from bbPM threads"
+msgstr "निकाले गए उपयोगकर्ताओं को बीबीपीएम के संदेशो से भी निकालें|"
+
+#: bbpm.php:1141
+msgid "Cleaning up bbPM messages&hellip; "
+msgstr "बीबीपीएम संदेशो की सफाई हो रही है&hellip; "
+
+#: bbpm.php:1240
+msgid "Settings updated."
+msgstr "सेटिंग्स जमा करली गयी हैं|"
+
+#: bbpm.php:1251
+msgid "Maximum PM threads per user"
+msgstr "अधिकतम पीएम प्रति उपयोगकर्ता"
+
+#: bbpm.php:1260
+msgid "Automatically add header link"
+msgstr "स्वचालित रूप से शीर्ष लिंक लगाएं"
+
+#: bbpm.php:1264
+msgid "You will need to add <code>&lt;?php if ( function_exists( 'bbpm_messages_link' ) ) bbpm_messages_link(); ?&gt;</code> to your template if you disable this."
+msgstr "आपको यह कोड <code>&lt;?php if ( function_exists( 'bbpm_messages_link' ) ) bbpm_messages_link(); ?&gt;</code> अपने थीम में डालना पड़ेगा यदि आप इसे निष्क्रिय कर देते हैं|"
+
+#: bbpm.php:1270
+msgid "Add static reply form"
+msgstr "स्टेटिक उत्तर फॉर्म लगाएं"
+
+#: bbpm.php:1274
+msgid "If checked, bbPM will add a static reply form that replies to the last message at the end of each PM thread page."
+msgstr "यदि यह चालू है, तो बीबीपीएम एक स्टेटिक उत्तर फॉर्म लगा देगा जो प्रत्येक विषय के अंतिम संदेश को उत्तर देता है|"
+
+#: bbpm.php:1280
+msgid "Email options"
+msgstr "ईमेल विकल्प"
+
+#: bbpm.php:1283
+msgid "When a new message is recieved"
+msgstr "जब एक नया संदेश प्राप्त होता है"
+
+#: bbpm.php:1284
+msgid "When a new reply is recieved"
+msgstr "जब एक नया उत्तर प्राप्त होता है"
+
+#: bbpm.php:1285
+msgid "When a user is added to a conversation"
+msgstr "जब एक उपयोगकर्ता बातचीत करने के लिए बुलाया जाता है"
+
+#: bbpm.php:1286
+msgid "Include contents of message"
+msgstr "ईमेल में संदेश भी शामिल करें"
+
+#: bbpm.php:1292
+msgid "Maximum PM threads per page"
+msgstr "प्रति पृष्ठ पर अधिकतम पी.एम. विषय"
+
+#: bbpm.php:1296
+msgid "Enter 0 or leave this blank to use your forum's default setting."
+msgstr "० दर्ज करें या इसे खाली छोड़ दें यदि आपको अपने मंच की डिफ़ॉल्ट सेटिंग का उपयोग करना है|"
+
+#: bbpm.php:1302
+msgid "Maximum users in a PM thread"
+msgstr "एक पी.एम. विषय में अधिकतम उपयोगकर्ता"
+
+#: bbpm.php:1306
+msgid "0 means unlimited. 2 will disable the \"add users\" form."
+msgstr "0 का मतलब है असीमित| 2 \"उपयोगकर्ताओं को बुलाने\" का फॉर्म निष्क्रिय कर देगा|"
+
+#: bbpm.php:1312
+msgid "Save settings"
+msgstr "सेटिंग्स जमा करें"
+
+#: bbpm.php:1320
+msgid "bbPM is installed in the \"<code>%s</code>\" directory. It should be installed in \"<code>my-plugins</code>\""
+msgstr "बीबीपीएम \"<code>%s</code>\" में स्थापित है| निर्देशों के अनुसार यह \"<code>my-plugins</code>\" में स्थापित किया जाना चाहिए|"
+
+#: bbpm.php:1323
+msgid "The <code>my-plugins</code> directory has its permissions set to %s. This is not recommended. Please use 755 instead."
+msgstr "<code>my-plugins</code> की अनुमतियाँ %s हैं| यह अनुशंसित नहीं है| कृपया ७५५ का उपयोग करें."
+
+#: pm.php:53
+msgid "Slow down; you move too fast."
+msgstr "धीरे, तुम इतनी तेज चलते हो|"
+
+#: pm.php:62 pm.php:84 pm.php:87
+msgid "You need to choose a valid person to send the message to."
+msgstr "आप संदेश भेजने के लिए एक वैध व्यक्ति को चुनना चाहिए|"
+
+#: pm.php:75 pm.php:104
+msgid "You are not allowed to write private messages.  Are you logged in?"
+msgstr "आपको निजी संदेश लिखने की अनुमति नहीं है| क्या आप लोग्डइन हैं?"
+
+#: pm.php:77 pm.php:106
+msgid "You need to actually submit some content!"
+msgstr "आपको संदेश में कुछ लिखना है!"
+
+#: pm.php:79
+msgid "Please enter a private message title."
+msgstr "कृपया एक निजी संदेश का शीर्षक दर्ज करें|"
+
+#: pm.php:94 pm.php:118
+msgid "Either your outbox or the recipient's inbox is full."
+msgstr "या तो आपका आउटबॉक्स या प्राप्तकर्ता के इनबॉक्स भरा हुआ है|"
+
+#: pm.php:111
+msgid "There was an error sending your message."
+msgstr "संदेश भेजने में त्रुटि थी|"
+
+#: privatemessages.php:38
+msgid "New"
+msgstr "नया"
+
+#: privatemessages.php:42
+msgid "PM title: (be brief and descriptive)"
+msgstr "पी.एम. का शीर्षक: (संक्षिप्त और वर्णनात्मक रहें)"
+
+#: privatemessages.php:46
+msgid "Send PM to:"
+msgstr "इनको पी.एम. भेजें:"
+
+#: privatemessages.php:126 privatemessages.php:235 threadviewer.php:235
+msgid "Message:"
+msgstr "संदेश:"
+
+#: privatemessages.php:130 privatemessages.php:239 threadviewer.php:239
+msgid "Send Message &raquo;"
+msgstr "संदेश भेजें &raquo;"
+
+#: privatemessages.php:133 privatemessages.php:242 threadviewer.php:242
+msgid "Allowed markup:"
+msgstr "इस मार्कअप की अनुमति है:"
+
+#: privatemessages.php:133 privatemessages.php:242 threadviewer.php:242
+msgid "You can also put code in between backtick ( <code>`</code> ) characters."
+msgstr "आप कोड को बैकटिक्स (<code>`</code>) के बीच में भी डाल सकते हैं|"
+
+#: privatemessages.php:146
+msgid "(Page %s)"
+msgstr "(पृष्ठ %s)"
+
+#: privatemessages.php:149
+msgid "Subject"
+msgstr "विषय"
+
+#: privatemessages.php:149
+msgid "New &raquo;"
+msgstr "नया &raquo;"
+
+#: privatemessages.php:150 threadviewer.php:42
+msgid "Members"
+msgstr "सदस्य"
+
+#: privatemessages.php:151
+msgid "Freshness"
+msgstr "ताज़गी"
+
+#: privatemessages.php:152
+msgid "Actions"
+msgstr "क्रियाएँ"
+
+#: privatemessages.php:178
+msgid "Unsubscribe"
+msgstr "सदस्यता रद्द करें"
+
+#: privatemessages.php:187 privatemessages.php:254
+msgid "Read"
+msgstr "पढ़ें"
+
+#: privatemessages.php:225 threadviewer.php:192
+msgid "Sent %s ago"
+msgstr "%s पहले भेजा गया था"
+
+#: privatemessages.php:225 privatemessages.php:230 threadviewer.php:192
+#: threadviewer.php:230
+msgid "Reply"
+msgstr "उत्तर"
+
+#: threadviewer.php:34
+msgid "Started %1$s ago by %2$s"
+msgstr "%1$s पहले %1$s ने प्रारंभ किया था"
+
+#: threadviewer.php:36
+msgid "<a href=\"%1$s\">Latest reply</a> from %2$s"
+msgstr "<a href=\"%1$s\">नवीनतम उत्तर</a> %2$s से है"
+
+#: threadviewer.php:63
+msgid "Add &raquo;"
+msgstr "जमा करें &raquo;"
+
+#: threadviewer.php:209
+msgid "[Cancel]"
+msgstr "[रद्द]"
+
+msgid "http://nightgunner5.wordpress.com/tag/bbpm/"
+msgstr "http://nightgunner5.wordpress.com/tag/bbpm/"
+
+msgid "Adds the ability for users of a forum to send private messages to each other."
+msgstr "यह प्लगिन उपयोगकर्ताओं को एक दूसरे को नीजी संदेश भेजने में मदद करता है|"
+
+msgid "http://nightgunner5.wordpress.com/"
+msgstr "http://nightgunner5.wordpress.com/"

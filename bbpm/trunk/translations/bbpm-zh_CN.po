@@ -1,0 +1,323 @@
+# Translation of bbPM in Chinese (China)
+# This file is distributed under the same license as the bbPM package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2010-07-22 22:14:42+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: GlotPress/0.1\n"
+"Project-Id-Version: bbPM\n"
+
+#: bbpm.php:877
+#, fuzzy
+msgid ""
+"Hello, %1$s!\n"
+"\n"
+"%2$s has added you to a private message conversation titled \"%3$s\" on %4$s!\n"
+"\n"
+"To read it now, go to the following address:\n"
+"\n"
+"%5$s"
+msgstr "您好，％1 $ s的！％2 $ s已经加入你的私人信息的谈话标题为“％3 $ s的”关于％4 $ s的！要阅读，请至以下地址：％5 $ s的"
+
+#: bbpm.php:562 bbpm.php:629
+msgid ""
+"Hello, %1$s!\n"
+"\n"
+"%2$s has sent you a private message entitled \"%3$s\" on %4$s!\n"
+"\n"
+"To read it now, go to the following address:\n"
+"\n"
+"%5$s"
+msgstr ""
+"您好，%1$s！\n"
+"\n"
+"%2$s 已经在%4$s向您发送私人讯息，题为“\"%3$s”！\n"
+"要阅读，请至以下地址：\n"
+"%5$s"
+
+#: bbpm.php:549 bbpm.php:616
+msgid "%1$s has sent you a private message on %2$s: \"%3$s\""
+msgstr "%1$s 已经在%2$s 向你发送了私人讯息：“%3$s”"
+
+#: threadviewer.php:30
+msgid "One post"
+msgid_plural "%s posts"
+msgstr[0] ""
+
+#: threadviewer.php:31
+msgid "One voice"
+msgid_plural "%s voices"
+msgstr[0] ""
+
+#: bbpm.php:1182
+msgid "Removed one nonexistant user from bbPM threads."
+msgid_plural "Removed %s nonexistant users from bbPM threads."
+msgstr[0] ""
+
+#: bbpm.php:1001
+msgid "One new private message!"
+msgid_plural "%s new private messages!"
+msgstr[0] ""
+
+#: bbpm.php:554 bbpm.php:621
+msgid ""
+"Hello, %1$s!\n"
+"\n"
+"%2$s has sent you a private message entitled \"%3$s\" on %4$s!\n"
+"\n"
+"To read it now, go to the following address:\n"
+"\n"
+"%5$s\n"
+"\n"
+"Do NOT reply to this message.\n"
+"\n"
+"The contents of the message are:\n"
+"\n"
+"%6$s"
+msgstr ""
+"您好，%1$s！\n"
+"\n"
+"%2$s 已经在%4$s向您发送私人讯息，题为“\"%3$s”！\n"
+"要阅读，请至以下地址：\n"
+"%5$s\n"
+"不要回复此消息。\n"
+"消息的内容是：\n"
+"%6$s"
+
+#: bbpm.php:872
+msgid "%1$s has added you to a conversation on %2$s: \"%3$s\""
+msgstr "%1$s 已在%2$s添加您到会话：“%3$s”"
+
+#: bbpm.php:1193
+msgid "Deleted one thread. "
+msgid_plural "Deleted %s threads. "
+msgstr[0] ""
+
+msgid "Ben L."
+msgstr "Ben L."
+
+#: bbpm.php:928 bbpm.php:952 bbpm.php:1365
+msgid "PM this user"
+msgstr "给他发消息"
+
+#: bbpm.php:941
+msgid "Don't email me when I get a PM"
+msgstr "收到消息不要给我发Email"
+
+#: bbpm.php:1002 bbpm.php:1359 privatemessages.php:38 privatemessages.php:144
+#: privatemessages.php:146 privatemessages.php:187 privatemessages.php:254
+msgid "Private Messages"
+msgstr "短消息"
+
+#: bbpm.php:1009 bbpm.php:1244
+msgid "bbPM"
+msgstr "站内信"
+
+#: bbpm.php:1087
+msgid "New:"
+msgstr "新："
+
+#: bbpm.php:1122
+msgid "Remove deleted users from bbPM threads"
+msgstr "把已删除的用户移除出站内信箱"
+
+#: bbpm.php:1141
+msgid "Cleaning up bbPM messages&hellip; "
+msgstr "清除消息&hellip;中 "
+
+#: bbpm.php:1240
+msgid "Settings updated."
+msgstr "设置已更新。"
+
+#: bbpm.php:1251
+msgid "Maximum PM threads per user"
+msgstr "每用户最大信件数量"
+
+#: bbpm.php:1260
+msgid "Automatically add header link"
+msgstr "自动增加头部连接"
+
+#: bbpm.php:1264
+msgid "You will need to add <code>&lt;?php if ( function_exists( 'bbpm_messages_link' ) ) bbpm_messages_link(); ?&gt;</code> to your template if you disable this."
+msgstr "如果删除它，你需要自行增加 <code>&lt;?php if ( function_exists( 'bbpm_messages_link' ) ) bbpm_messages_link(); ?&gt;</code> 到你的模板中。"
+
+#: bbpm.php:1270
+msgid "Add static reply form"
+msgstr "添加静态答复表单"
+
+#: bbpm.php:1274
+msgid "If checked, bbPM will add a static reply form that replies to the last message at the end of each PM thread page."
+msgstr "如果选中本项，bbPM将在每个私人讯息页后增加一个回复上条消息的静态回复框。"
+
+#: bbpm.php:1280
+msgid "Email options"
+msgstr "邮件选项"
+
+#: bbpm.php:1283
+msgid "When a new message is recieved"
+msgstr "收到新短消息时"
+
+#: bbpm.php:1284
+msgid "When a new reply is recieved"
+msgstr "收到新回复时"
+
+#: bbpm.php:1285
+msgid "When a user is added to a conversation"
+msgstr "当一个用户被加入讨论组时"
+
+#: bbpm.php:1286
+msgid "Include contents of message"
+msgstr "消息内容"
+
+#: bbpm.php:1292
+msgid "Maximum PM threads per page"
+msgstr "每页最大消息数"
+
+#: bbpm.php:1296
+msgid "Enter 0 or leave this blank to use your forum's default setting."
+msgstr "输入 0 或留空使用默认设置。"
+
+#: bbpm.php:1302
+msgid "Maximum users in a PM thread"
+msgstr "每条短信息内最大用户"
+
+#: bbpm.php:1306
+msgid "0 means unlimited. 2 will disable the \"add users\" form."
+msgstr "0表示无限制。 2将禁用“添加用户”的表单。"
+
+#: bbpm.php:1312
+msgid "Save settings"
+msgstr "保存设定"
+
+#: bbpm.php:1320
+msgid "bbPM is installed in the \"<code>%s</code>\" directory. It should be installed in \"<code>my-plugins</code>\""
+msgstr "站内信插件被安装在 \"<code>%s</code>\" 目录。应该安装在 \"<code>my-plugins</code>\"里"
+
+#: bbpm.php:1323
+msgid "The <code>my-plugins</code> directory has its permissions set to %s. This is not recommended. Please use 755 instead."
+msgstr " <code>my-plugins</code>目录权限为 %s。推荐修改为755。"
+
+#: pm.php:53
+msgid "Slow down; you move too fast."
+msgstr "慢点；你太犀利了。"
+
+#: pm.php:62 pm.php:84 pm.php:87
+msgid "You need to choose a valid person to send the message to."
+msgstr "你发信也得看看有这人没啊。"
+
+#: pm.php:75 pm.php:104
+msgid "You are not allowed to write private messages.  Are you logged in?"
+msgstr "你无权写站内信。登陆了没？"
+
+#: pm.php:77 pm.php:106
+msgid "You need to actually submit some content!"
+msgstr "提交内容不能为空！"
+
+#: pm.php:79
+msgid "Please enter a private message title."
+msgstr "请输入消息标题。"
+
+#: pm.php:94 pm.php:118
+msgid "Either your outbox or the recipient's inbox is full."
+msgstr "你的信箱已满。"
+
+#: pm.php:111
+msgid "There was an error sending your message."
+msgstr "发送信息失败。"
+
+#: privatemessages.php:38
+msgid "New"
+msgstr "新"
+
+#: privatemessages.php:42
+msgid "PM title: (be brief and descriptive)"
+msgstr "消息标题: (简单明了)"
+
+#: privatemessages.php:46
+msgid "Send PM to:"
+msgstr "发消息给："
+
+#: privatemessages.php:126 privatemessages.php:235 threadviewer.php:235
+msgid "Message:"
+msgstr "消息："
+
+#: privatemessages.php:130 privatemessages.php:239 threadviewer.php:239
+msgid "Send Message &raquo;"
+msgstr "发送消息 &raquo;"
+
+#: privatemessages.php:133 privatemessages.php:242 threadviewer.php:242
+msgid "Allowed markup:"
+msgstr "允许的标记："
+
+#: privatemessages.php:133 privatemessages.php:242 threadviewer.php:242
+msgid "You can also put code in between backtick ( <code>`</code> ) characters."
+msgstr "你也可以把代码放在 ( <code>`</code> )之间。"
+
+#: privatemessages.php:146
+msgid "(Page %s)"
+msgstr "(第 %s 页)"
+
+#: privatemessages.php:149
+msgid "Subject"
+msgstr "内容"
+
+#: privatemessages.php:149
+msgid "New &raquo;"
+msgstr "写新消息 &raquo;"
+
+#: privatemessages.php:150 threadviewer.php:42
+msgid "Members"
+msgstr "成员"
+
+#: privatemessages.php:151
+msgid "Freshness"
+msgstr "刷新"
+
+#: privatemessages.php:152
+msgid "Actions"
+msgstr "动作"
+
+#: privatemessages.php:178
+msgid "Unsubscribe"
+msgstr "取消关注"
+
+#: privatemessages.php:187 privatemessages.php:254
+msgid "Read"
+msgstr "查看"
+
+#: privatemessages.php:225 threadviewer.php:192
+msgid "Sent %s ago"
+msgstr "%s 发送"
+
+#: privatemessages.php:225 privatemessages.php:230 threadviewer.php:192
+#: threadviewer.php:230
+msgid "Reply"
+msgstr "回复"
+
+#: threadviewer.php:34
+msgid "Started %1$s ago by %2$s"
+msgstr "由 %2$s 在 %1$s 发起"
+
+#: threadviewer.php:36
+msgid "<a href=\"%1$s\">Latest reply</a> from %2$s"
+msgstr "%2$s  <a href=\"%1$s\">刚刚回复</a>"
+
+#: threadviewer.php:63
+msgid "Add &raquo;"
+msgstr "增加 &raquo;"
+
+#: threadviewer.php:209
+msgid "[Cancel]"
+msgstr "[取消]"
+
+msgid "http://nightgunner5.wordpress.com/tag/bbpm/"
+msgstr "http://nightgunner5.wordpress.com/tag/bbpm/"
+
+msgid "Adds the ability for users of a forum to send private messages to each other."
+msgstr "增加论坛站内信功能。"
+
+msgid "http://nightgunner5.wordpress.com/"
+msgstr "http://nightgunner5.wordpress.com/"

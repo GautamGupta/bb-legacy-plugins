@@ -334,7 +334,7 @@ class Support_Forum
 	{
 		$this->posterChangeable = false;
 		if (is_topic()) {
-			if (bb_current_user_can('edit_others_topics', $topic->topic_id)) {
+			if (bb_current_user_can('edit_others_topics', $topic_id)) {
 				$this->posterChangeable = true;
 			} else if (bb_get_option('support_forum_poster_changeable')) {
 				if (!$topic_id) {

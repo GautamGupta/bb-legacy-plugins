@@ -56,6 +56,10 @@ http://bbpress.org/forums/topic/wordpress-and-bbpress-integration-101
 
 * http://bbshowcase.org/donate/
 
+== To Do ==
+
+* admin menu
+
 == Changelog ==
 
 = Version 0.0.1 (2009-02-26) =
@@ -70,6 +74,3 @@ http://bbpress.org/forums/topic/wordpress-and-bbpress-integration-101
 
 * updated to support additional cookie changes in WordPress 2.8
 
-== To Do ==
-
-* admin menu

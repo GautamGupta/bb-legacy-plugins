@@ -27,8 +27,8 @@ Users can send private messages to each other. Replies are threaded, and more th
 * bbPM no longer thinks that replies are new to the person who sent them
 * An attempt at making other plugins work normally (eg. Post Count Plus)
 * bbPress Smilies now works with bbPM.
-* The username dropdown is slightly easier to click on.
-* Static reply form suggested by [rbat](http://bbpress.org/plugins/topic/bbpm/page/16/#post-5263) added as an option
+* The username dropdown is slightly easier to click on. (Suggested by [nutsmuggler](http://bbpress.org/plugins/topic/bbpm/page/18/#post-5990))
+* Static reply form added as an option (Suggested by [rbat](http://bbpress.org/plugins/topic/bbpm/page/16/#post-5263))
 * Fixed a bug with adding members to a thread on forums with pretty permalinks turned off
 * Added the ability to limit the number of members in any given thread. (Suggested by [pagal](http://bbpress.org/forums/topic/questions-about-bbpm-plugin#post-70834))
 

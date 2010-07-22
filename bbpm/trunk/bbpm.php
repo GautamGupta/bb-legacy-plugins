@@ -559,7 +559,7 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 					$msg->read_link,
 					strip_tags( $msg->text )
 				) : sprintf(
-					__( "Hello, %1\$s!\n\n%2\$s has sent you a private message entitled \"%3\$s\" on %3\$s!\n\nTo read it now, go to the following address:\n\n%4\$s", 'bbpm' ),
+					__( "Hello, %1\$s!\n\n%2\$s has sent you a private message entitled \"%3\$s\" on %4\$s!\n\nTo read it now, go to the following address:\n\n%5\$s", 'bbpm' ),
 					get_user_display_name( $id_reciever ),
 					get_user_display_name( bb_get_current_user_info( 'ID' ) ),
 					$title,

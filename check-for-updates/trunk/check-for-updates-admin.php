@@ -8,16 +8,16 @@ check_for_updates_pluginslist();
 check_for_updates_masterlist();
 ?>
 <h2><?php _e('Check for Updates'); ?></h2>  
-<div style="margin-top:-3em;float:right;"><?php $age=reset($plugins['all']); $version=key($plugins['all']); echo __('using revision')." $version (".bb_since($age)." ".__('old').") "; ?></div>
+<div style="font-size:12px;margin-top:-3em;float:right;"><?php if (empty($plugins['all'])) {echo "<font color='red'>connection error!</font></div>"; return;} $age=reset($plugins['all']); $version=key($plugins['all']); echo __('using revision')." $version (".bb_since($age)." ".__('old').") "; ?></div>
 
 <table class="widefat">
 <thead>
 	<tr>
-		<th>Plugin</th>
+		<th style="text-align:left;">Plugin</th>
 		<th>Author</th>		
 		<th>Status</th>
-		<th>Version (local)</th>
-		<th>Version (newest)</th>
+		<th>Version&nbsp;(installed)</th>
+		<th>Version&nbsp;(newest)</th>
 	</tr>
 </thead>
 <?php $count=0; $authors=array();
@@ -37,11 +37,11 @@ foreach ($plugins as $status=>$data) {
 		} else {$version=__("unknown");}	
 	?>
 	<tr<?php alt_class( 'plugin', $thisclass ); ?>>
-		<td><?php echo $plugin['plugin_link']; ?></td>
-		<td align=center><?php echo $plugin['author_link']; @$authors[trim(strip_tags($plugin['author']))]++; ?></td>				
-		<td class="action" align=center nowrap><?php echo $status; ?></td>
-		<td class="vers" align=center><?php echo $plugin['version']; ?></td>
-		<td class="vers" align=center id="cfu<?php echo $count.'">'.$version; ?></td>
+		<td style="text-align:left;"><?php echo $plugin['plugin_link']; ?></td>
+		<td><?php echo $plugin['author_link']; @$authors[trim(strip_tags($plugin['author']))]++; ?></td>				
+		<td class="action" nowrap><?php echo $status; ?></td>
+		<td class="vers" ><?php echo $plugin['version']; ?></td>
+		<td class="vers" id="cfu<?php echo $count.'">'.$version; ?></td>
 	</tr>
 <?php 
 	$count++; 
@@ -50,7 +50,7 @@ foreach ($plugins as $status=>$data) {
 
 ?>
 <tr class=sortbottom>
-	<th nowrap>Total Plugins: <?php echo $count; ?></th><th nowrap>Authors: <?php echo count($authors); ?></th><th><a href="http://bbshowcase.org/donate/">Donate</a></th><th>&nbsp;</th><th>&nbsp;</th>
+	<th nowrap>Total Plugins: <?php echo $count; ?></th><th nowrap>Authors: <?php echo count($authors); ?></th><th colspan="3">[<a href="http://bbshowcase.org/donate/">Donate</a>]</th>
 </tr>
 </table>
 
@@ -193,6 +193,7 @@ function check_for_updates_fsockfetch($addr="127.0.0.1", $port="80", $path="/", 
 function check_for_updates_header() {
 ?>
 <style type="text/css">
+table.widefat th, table.widefat td {text-align:center;}
 tr.alt.new td, tr.new td  {background-color: #ee8888; font-weight: bold;}
 tr.alt.new td a, tr.new td a, #bbBody tr.new td a {color:#000; text-decoration:none; border-bottom:1px dashed #000;}
 tr.autoload td {background-color: #ddd;}

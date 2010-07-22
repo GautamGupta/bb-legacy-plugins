@@ -327,22 +327,16 @@ class Support_Forum
 	/**
 	 * Determines if the current user can change the status of a topic
 	 *
-	 * @return void
+	 * @return boolean
 	 * @author Sam Bauers
 	 **/
 	function getChangeableStatus($topic_id = 0)
 	{
-		if (isset($this->posterChangeable)) {
-			return $this->posterChangeable;
-		}
-		
+		$this->posterChangeable = false;
 		if (is_topic()) {
 			if (bb_current_user_can('edit_others_topics', $topic->topic_id)) {
-				$this->posterChangeable = TRUE;
-				return TRUE;
-			}
-			
-			if (bb_get_option('support_forum_poster_changeable')) {
+				$this->posterChangeable = true;
+			} else if (bb_get_option('support_forum_poster_changeable')) {
 				if (!$topic_id) {
 					global $topic;
 				} else {
@@ -350,14 +344,13 @@ class Support_Forum
 				}
 				
 				if ($topic->topic_poster == bb_get_current_user_info('id')) {
-					$this->posterChangeable = TRUE;
-					return TRUE;
+					$this->posterChangeable = true;
 				}
 			}
 		}
 		
-		$this->posterChangeable = FALSE;
-		return FALSE;
+		$this->posterChangeable = apply_filters( 'poster_changeable', $this->posterChangeable, $topic_id );
+		return $this->posterChangeable;
 	}
 	
 	

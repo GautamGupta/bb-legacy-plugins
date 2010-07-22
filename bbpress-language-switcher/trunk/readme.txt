@@ -76,3 +76,7 @@ note the space between the quotes
 = Version 0.0.5 (2009-05-09) =
 
 *   attempt to fix bug for supporting English option on non-english defaults  (will need to rebuild via  ?bb_language_switcher_update )
+
+= Version 0.0.6 (2010-07-22) =
+
+*   workaround for bbPress 1.1 bug where textdomains are loaded and cached before plugins are loaded

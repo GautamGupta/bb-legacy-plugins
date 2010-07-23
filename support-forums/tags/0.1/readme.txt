@@ -3,7 +3,7 @@ Contributors: so1o, mdawaffe, SamBauers, mr_pelle
 Tags: support, forums, resolved, question
 Plugin Name: Support Forums
 Plugin URI: http://bbpress.org/plugins/topic/support-forums/
-Version: 0.1.1
+Version: 0.1
 Requires at least: 1.0
 Tested up to: 1.1-alpha
 
@@ -38,12 +38,6 @@ Based of <a href="http://www.adityanaik.com/">so1o</a>, <a href="http://blogwaff
 * Copyright (C) 2007 Sam Bauers (http://unlettered.org/)
 
 == Changelog ==
-
-= Version 0.1.1 (2010-07-23) =
-
-* added a filter to `poster_changeable` check
-
-* configuration page script is now loaded via `wp_enqueue_script()`
 
 = Version 0.1 (2010-07-16) =
 

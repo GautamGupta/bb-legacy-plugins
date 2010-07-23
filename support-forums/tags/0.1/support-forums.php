@@ -3,7 +3,7 @@
 Plugin Name: Support Forums
 Plugin URI: http://bbpress.org/plugins/topic/support-forums/
 Description: Turns any number of forums into support forums, where users can mark topics as resolved, not resolved or not a support question. Based on <a href="http://www.adityanaik.com/">so1o</a>, <a href="http://blogwaffe.com/">mdawaffe</a> and <a href="http://profiles.wordpress.org/users/sambauers">SamBauers</a>' <a href="http://bbpress.org/plugins/topic/support-forum/">Support Forum</a> plugin.
-Version: 0.1.1
+Version: 0.1
 Author: so1o, mdawaffe, SamBauers, mr_pelle
 Author URI: http://scr.im/mrpelle
 */
@@ -194,7 +194,7 @@ class Support_Forums_Settings {
 		if ( false === (bool) $this->isStatusSetable() ) // We did not want users to set topic support status on creation, neither do we want them to change it afterwards
 			return false;
 
-		return (bool) apply_filters( 'poster_changeable', $this->posterChangeable, $topic->topic_id );
+		return (bool) $this->posterChangeable;
 	}
 
 	/**

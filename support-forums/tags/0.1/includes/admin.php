@@ -11,7 +11,7 @@ add_action( 'bb_admin_menu_generator', 'support_forums_configuration_page_add' )
 
 if ( isset( $_GET['plugin'] ) && 'support_forums_configuration_page' == $_GET['plugin'] ) { // Add plugin configuration page head if on plugin configuration page
 	add_action( 'support_forums_configuration_page_pre_head', 'support_forums_configuration_page_process' );
-	add_action( 'bb_admin-header.php',                        'support_forums_configuration_page_head' );
+	add_action( 'bb_admin_head',                              'support_forums_configuration_page_head' );
 }
 
 
@@ -35,12 +35,20 @@ function support_forums_configuration_page_add() {
  *
  * @uses bb_plugin_basename()
  * @uses bb_get_plugin_uri()
- * @uses wp_enqueue_script()
  *
  * @return void
  */
 function support_forums_configuration_page_head() {
-	wp_enqueue_script( SUPPORT_FORUMS_ID . '-configuration-page', bb_get_plugin_uri( bb_plugin_basename( __FILE__ ) ) . SUPPORT_FORUMS_ID . '-configuration-page.js', NULL, NULL );
+	printf(
+		'<!-- %1$s configuration page jQuery -->%2$s',
+		SUPPORT_FORUMS_NAME,
+		"\n"
+	);
+	printf(
+		'<script type="text/javascript" src="%1$s"></script>%2$s',
+		bb_get_plugin_uri( bb_plugin_basename( __FILE__ ) ) . SUPPORT_FORUMS_ID . '-configuration-page.js', // Here __FILE__ refers to 'includes/admin.php'
+		"\n"
+	);
 }
 
 /**
@@ -347,7 +355,7 @@ function support_forums_configuration_page_process() {
 			bb_delete_option( 'support_forums_settings' );
 
 			// Remove plugin inserted topic meta
-			$goback = ( true === (bool) $bbdb->query( $bbdb->prepare( "DELETE FROM $bbdb->meta WHERE meta_key = %s", 'topic_support_status' ) ) ) ?
+			$goback = ( true === (bool) $bbdb->query( $bbdb->prepare( "DELETE FROM `$bbdb->meta` WHERE `meta_key` = %s", 'topic_support_status' ) ) ) ?
 				add_query_arg( 'support-forums-uninstalled', 'true', $goback ) :
 				add_query_arg( 'support-forums-uninstall-error', 'true', $goback ); // Should never happen
 

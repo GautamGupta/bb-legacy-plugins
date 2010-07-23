@@ -20,7 +20,7 @@ function php4bb_block() {
 		wp_redirect( $settings['httpbl-redirect'] );
 		exit;
 	}
-	bb_die( __( 'You have been blocked from this forum because your IP is <a href="http://www.projecthoneypot.org/ip_' . $_SERVER['REMOTE_ADDR'] . '">listed on Project Honey Pot</a>.', 'php4bb' ) );
+	bb_die( sprintf( __( 'You have been blocked from this forum because your IP is <a href="http://www.projecthoneypot.org/ip_%s">listed on Project Honey Pot</a>.', 'php4bb' ), $_SERVER['REMOTE_ADDR'] ) );
 }
 
 function php4bb_maybe_block() {

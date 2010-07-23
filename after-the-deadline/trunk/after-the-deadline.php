@@ -39,7 +39,7 @@ $atd_supported_langs = array(
 	'es' => __( 'Spanish'	, 'after-the-deadline' )
 );
 $atd_plugopts = bb_get_option( ATD_OPTIONS );
-if ( is_string( $atd_plugopts['key'] ) ) { /* Delete if there are old options, will be removed in v1.7 */
+if ( is_string( $atd_plugopts['key'] ) ) { /* Delete if there are old options, will be removed in v1.9 */
 	bb_delete_option( ATD_OPTIONS );
 	unset( $atd_plugopts );
 }

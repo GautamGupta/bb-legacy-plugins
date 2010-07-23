@@ -1,11 +1,14 @@
 <?php
 /*
 Plugin Name: bb-ga
-Plugin URI: http://bbpcn.net/forum/14
+Plugin URI: http://bbpress.org/plugins/topic/bb-ga/
 Description: add latest Google Analytics code to your bbpress head。
 Author: yexingzhe
-Author URI: http://zouyi.rayyn.net
-Version: 0.1
+Author URI: http://bbpcn.net
+Version: 0.1.5
+Installation:
+1.change the line $ga_web_id="UA-xxxxxx-xx"; to your Google Analytics  Web Property ID .
+2. Add entire folder `bb-ga` to bbPress' `my-plugins/` directory and activate.
 */
 
 add_filter('bb_head', 'google_analytics_for_bbpress');

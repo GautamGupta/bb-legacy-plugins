@@ -1,19 +1,18 @@
-******     bb-ga     ******
+== bb ga ==
 Tags: Google Analytics, yexingzhe,bb-ga
 Author: yexingzhe
-Tested only in: 1.02
-Version: 0.1
-my-site: http://bbpcn.net/forum/14
-my-blog:http://zouyi.rayyn.net
+Requires at least: 1.02
+Tested up to: 1.02
+Stable tag: trunk
+Plugin URI: http://bbpress.org/plugins/topic/bb-ga/
 
 == Description ==
 
 add latest Google Analytics code to your bbpress head¡£
 
-
 == Installation ==
-1.change the line $ga_web_id="UA-xxxxxx-xx"; to your Google Analytics  Web Property ID .
-2. Add entire folder `bb-ga` to bbPress' `my-plugins/` directory and activate.
+* Change the line $ga_web_id="UA-xxxxxx-xx"; to your Google Analytics  Web Property ID .
+* Add entire folder `bb-ga` to bbPress' `my-plugins/` directory and activate.
 
 == Frequently Asked Questions ==
 nothing now

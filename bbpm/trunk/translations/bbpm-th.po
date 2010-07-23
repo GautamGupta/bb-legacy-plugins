@@ -1,14 +1,14 @@
-# Translation of bbPM in Italian
+# Translation of bbPM in Thai
 # This file is distributed under the same license as the bbPM package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2010-07-23 22:59:47+0000\n"
+"PO-Revision-Date: 2010-07-23 22:59:50+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: GlotPress/0.1\n"
-"Language-Team: http://nightgunner5.is-a-geek.net:1337/glotpress/projects/bbpm/it/default\n"
+"Language-Team: http://nightgunner5.is-a-geek.net:1337/glotpress/projects/bbpm/th/default\n"
 "Project-Id-Version: bbPM\n"
 
 #: bbpm.php:877
@@ -21,7 +21,7 @@ msgid ""
 "To read it now, go to the following address:\n"
 "\n"
 "%5$s"
-msgstr "Ciao,%1$s!%2$s ha aggiunto di una conversazione messaggio privato dal titolo \"%3$s\" a%4$s! Per leggere adesso, andare al seguente indirizzo:%5$s"
+msgstr "Hello,%1$s!%2$s ได้เพิ่มคุณข้อความสนทนาเรื่อง\"%3$s\"บน%4$s! อ่านตอนนี้ไปต่อไปนี้ที่อยู่ : 5% $ s"
 
 #: bbpm.php:562 bbpm.php:629
 #, fuzzy
@@ -33,36 +33,32 @@ msgid ""
 "To read it now, go to the following address:\n"
 "\n"
 "%5$s"
-msgstr "Ciao,%1$s!%2$s ti ha inviato un messaggio privato dal titolo \"%3$s\" a%4$s! Per leggere adesso, andare al seguente indirizzo:%5$s"
+msgstr "Hello,%1$s!%2$s ได้ส่งข้อความส่วนตัวสิทธิ\"%3$s\"บน%4$s! อ่านตอนนี้ไปต่อไปนี้ที่อยู่ : 5% $ s"
 
 #: bbpm.php:549 bbpm.php:616
 #, fuzzy
 msgid "%1$s has sent you a private message on %2$s: \"%3$s\""
-msgstr "%1$s ti ha inviato un messaggio privato a%2$s: &quot;%3$s&quot;"
+msgstr "%1$s ได้ส่งข้อความส่วนตัวบน%2$s :&quot;%3$s&quot;"
 
 #: threadviewer.php:30
 msgid "One post"
 msgid_plural "%s posts"
 msgstr[0] ""
-msgstr[1] ""
 
 #: threadviewer.php:31
 msgid "One voice"
 msgid_plural "%s voices"
 msgstr[0] ""
-msgstr[1] ""
 
 #: bbpm.php:1182
 msgid "Removed one nonexistant user from bbPM threads."
 msgid_plural "Removed %s nonexistant users from bbPM threads."
 msgstr[0] ""
-msgstr[1] ""
 
 #: bbpm.php:1001 bbpm.php:1357
 msgid "One new private message!"
 msgid_plural "%s new private messages!"
 msgstr[0] ""
-msgstr[1] ""
 
 #: bbpm.php:554 bbpm.php:621
 #, fuzzy
@@ -80,197 +76,217 @@ msgid ""
 "The contents of the message are:\n"
 "\n"
 "%6$s"
-msgstr "Ciao,%1$s!%2$s ti ha inviato un messaggio privato dal titolo &quot;%3$s&quot; a%4$s! Per leggere adesso, andare al seguente indirizzo:%5$s non rispondere a questa messaggio. I contenuti del messaggio sono:%6$s"
+msgstr "Hello,%1$s!%2$s ได้ส่งข้อความส่วนตัวสิทธิ&quot;%3$s&quot;บน%4$s! อ่านตอนนี้ไปต่อไปนี้ที่อยู่ :%5$s อย่าตอบกลับนี้ ข . เนื้อหาของข้อความที่ : 6% $ s"
 
 #: bbpm.php:872
 #, fuzzy
 msgid "%1$s has added you to a conversation on %2$s: \"%3$s\""
-msgstr "%1$s ti ha aggiunto a una conversazione su%2$s: &quot;%3$s&quot;"
+msgstr "%1$s ได้เพิ่มคุณสนทนาบน%2$s&quot;%3$s&quot;"
 
 #: bbpm.php:1193
 msgid "Deleted one thread. "
 msgid_plural "Deleted %s threads. "
 msgstr[0] ""
-msgstr[1] ""
 
 #, fuzzy
 msgid "Ben L."
-msgstr "Ben L."
+msgstr "L. Ben"
 
 #: bbpm.php:928 bbpm.php:952 bbpm.php:1365
+#, fuzzy
 msgid "PM this user"
-msgstr "Invia un messaggio privato"
+msgstr "PM ผู้ใช้นี้"
 
 #: bbpm.php:941
 #, fuzzy
 msgid "Don't email me when I get a PM"
-msgstr "Non mi e-mail quando avrò un PM"
+msgstr "ไม่ email ฉันเมื่อฉันได้รับ PM"
 
 #: bbpm.php:1002 bbpm.php:1359 privatemessages.php:38 privatemessages.php:144
 #: privatemessages.php:146 privatemessages.php:187 privatemessages.php:254
+#, fuzzy
 msgid "Private Messages"
-msgstr "Messaggi privati"
+msgstr "ข้อความส่วนตัว"
 
 #: bbpm.php:1009 bbpm.php:1244
+#, fuzzy
 msgid "bbPM"
 msgstr "bbPM"
 
 #: bbpm.php:1087
 #, fuzzy
 msgid "New:"
-msgstr "Novità:"
+msgstr "New :"
 
 #: bbpm.php:1122
 #, fuzzy
 msgid "Remove deleted users from bbPM threads"
-msgstr "Rimuovere cancellato gli utenti da messaggi bbPM"
+msgstr "ลบลบผู้ใช้จากกระทู้ bbPM"
 
 #: bbpm.php:1141
 #, fuzzy
 msgid "Cleaning up bbPM messages&hellip; "
-msgstr "Pulizia dei messaggi bbPM ..."
+msgstr "ทำความสะอาดข้อความ bbPM ..."
 
 #: bbpm.php:1240
 #, fuzzy
 msgid "Settings updated."
-msgstr "Impostazioni aggiornato."
+msgstr "การตั้งค่าการปรับปรุง"
 
 #: bbpm.php:1251
 #, fuzzy
 msgid "Maximum PM threads per user"
-msgstr "Massimo discussioni PM per utente"
+msgstr "หัวข้อ PM สูงสุดต่อผู้ใช้"
 
 #: bbpm.php:1260
+#, fuzzy
 msgid "Automatically add header link"
-msgstr "Añada el vínculo automáticamente"
+msgstr "โดยอัตโนมัติเพิ่มลิงค์หัว"
 
 #: bbpm.php:1264
+#, fuzzy
 msgid "You will need to add <code>&lt;?php if ( function_exists( 'bbpm_messages_link' ) ) bbpm_messages_link(); ?&gt;</code> to your template if you disable this."
-msgstr "Tendrá que añadir <code>&lt;?php if ( function_exists( 'bbpm_messages_link' ) ) bbpm_messages_link(); ?&gt;</code>a la plantilla en el caso de deshabilitar este."
+msgstr "คุณจะต้องเพิ่ม <code>&lt;?php if ( function_exists( &#39;bbpm_messages_link&#39; ) ) bbpm_messages_link(); ?&gt;</code> นี้แม่แบบของคุณหากคุณปิดการใช้งาน"
 
 #: bbpm.php:1270
 #, fuzzy
 msgid "Add static reply form"
-msgstr "Aggiungere forma statica risposta"
+msgstr "เพิ่มแบบตอบคงที่"
 
 #: bbpm.php:1274
 #, fuzzy
 msgid "If checked, bbPM will add a static reply form that replies to the last message at the end of each PM thread page."
-msgstr "Se selezionato, bbPM aggiungerà una forma statica risposta che le risposte al messaggio ultimo, alla fine di ogni pagina del thread PM."
+msgstr "หากตรวจสอบ, bbPM จะเพิ่มแบบตอบแบบคงที่ที่ตอบกลับไปที่ข้อความล่าสุด ณ สิ้นแต่ละหัวข้อหน้า PM"
 
 #: bbpm.php:1280
 #, fuzzy
 msgid "Email options"
-msgstr "Opzioni e-mail"
+msgstr "ตัวเลือกอีเมล์"
 
 #: bbpm.php:1283
 #, fuzzy
 msgid "When a new message is recieved"
-msgstr "Quando un nuovo messaggio è ricevuto"
+msgstr "เมื่อมีจดหมายใหม่ได้รับ"
 
 #: bbpm.php:1284
 #, fuzzy
 msgid "When a new reply is recieved"
-msgstr "Quando una nuova risposta viene ricevuta"
+msgstr "เมื่อมีการตอบใหม่ได้รับ"
 
 #: bbpm.php:1285
 #, fuzzy
 msgid "When a user is added to a conversation"
-msgstr "Quando un utente viene aggiunto ad una conversazione"
+msgstr "เมื่อผู้ใช้จะถูกเพิ่มในการสนทนา"
 
 #: bbpm.php:1286
 #, fuzzy
 msgid "Include contents of message"
-msgstr "Include i contenuti del messaggio"
+msgstr "รวมเนื้อหาของข้อความ"
 
 #: bbpm.php:1292
 #, fuzzy
 msgid "Maximum PM threads per page"
-msgstr "Massimo discussioni PM per pagina"
+msgstr "กระทู้สูงสุด PM ต่อหน้า"
 
 #: bbpm.php:1296
 #, fuzzy
 msgid "Enter 0 or leave this blank to use your forum's default setting."
-msgstr "Inserisci 0 o lasciare vuoto per utilizzare l&#39;impostazione predefinita del tuo forum."
+msgstr "ใส่ 0 หรือปล่อยว่างนี้ให้ใช้ค่าเริ่มต้นของการตั้งค่าบอร์ด"
 
 #: bbpm.php:1302
 #, fuzzy
 msgid "Maximum users in a PM thread"
-msgstr "massimo di utenti in un thread PM"
+msgstr "ผู้ใช้สูงสุดในหัวข้อ PM"
 
 #: bbpm.php:1306
 #, fuzzy
 msgid "0 means unlimited. 2 will disable the \"add users\" form."
-msgstr "0 significa illimitato. 2 si disattiva la funzione &quot;Aggiungi&quot; forma utenti."
+msgstr "0 หมายถึงไม่จำกัด 2 จะปิดการใช้งาน&quot;เพิ่มผู้ใช้&quot;แบบฟอร์ม"
 
 #: bbpm.php:1312
+#, fuzzy
 msgid "Save settings"
-msgstr "Salva opzioni"
+msgstr "บันทึกการตั้งค่า"
 
 #: bbpm.php:1320
+#, fuzzy
 msgid "bbPM is installed in the \"<code>%s</code>\" directory. It should be installed in \"<code>my-plugins</code>\""
-msgstr "bbPM está instalado en la \"<code>%s</code>\" directorio. Debe ser instalado en \"<code>my-plugins</code>\""
+msgstr "bbPM ติดตั้งใน&quot; <code>%s</code> directory&quot; ควรติดตั้ง&quot; <code>my-plugins</code> &quot;"
 
 #: bbpm.php:1323
+#, fuzzy
 msgid "The <code>my-plugins</code> directory has its permissions set to %s. This is not recommended. Please use 755 instead."
-msgstr "El <code>MYPLUGINS</code> directorio ha establecido sus permisos a %s. Esto no es recomendable. Por favor, use en lugar 755."
+msgstr "<code>my-plugins</code> directory มี s. ที่กำหนดสิทธิให้% นี้ไม่แนะนำ โปรดใช้ 755 แทน"
 
 #: pm.php:53
 #, fuzzy
 msgid "Slow down; you move too fast."
-msgstr "Rallenta, si sposta troppo velocemente."
+msgstr "ชะลอ; คุณไปเร็วเกินไป"
 
 #: pm.php:62 pm.php:84 pm.php:87
+#, fuzzy
 msgid "You need to choose a valid person to send the message to."
-msgstr "Scegli il destinatario del messaggio"
+msgstr "คุณต้องเลือกบุคคลที่ถูกต้องเพื่อส่งข้อความไปยัง"
 
 #: pm.php:75 pm.php:104
+#, fuzzy
 msgid "You are not allowed to write private messages.  Are you logged in?"
-msgstr "Non puoi scrivere messaggi privati. Hai effettuato il login?"
+msgstr "คุณยังไม่ได้เขียนข้อความส่วนตัว คุณเข้าสู่ระบบ?"
 
 #: pm.php:77 pm.php:106
+#, fuzzy
 msgid "You need to actually submit some content!"
-msgstr "Devi scrivere qualcosa!"
+msgstr "คุณจะต้องส่งเนื้อหาบางจริง!"
 
 #: pm.php:79
+#, fuzzy
 msgid "Please enter a private message title."
-msgstr "Inserisci un titolo per il messaggio"
+msgstr "กรุณากรอกชื่อข้อความส่วนตัว"
 
 #: pm.php:94 pm.php:118
+#, fuzzy
 msgid "Either your outbox or the recipient's inbox is full."
-msgstr "Hai la posta in arrivo o in uscita piena"
+msgstr "ทั้งขาออกหรือกล่องจดหมายของผู้รับของคุณเต็ม"
 
 #: pm.php:111
+#, fuzzy
 msgid "There was an error sending your message."
-msgstr "Errore nell'invio del messaggio"
+msgstr "มีข้อผิดพลาดส่งข้อความของคุณได้"
 
 #: privatemessages.php:38
+#, fuzzy
 msgid "New"
-msgstr "Nuovo"
+msgstr "ใหม่"
 
 #: privatemessages.php:42
+#, fuzzy
 msgid "PM title: (be brief and descriptive)"
-msgstr "Titolo:"
+msgstr "title PM : (จะสรุปและอธิบาย)"
 
 #: privatemessages.php:46
+#, fuzzy
 msgid "Send PM to:"
-msgstr "Invia a:"
+msgstr "PM ส่ง :"
 
 #: privatemessages.php:126 privatemessages.php:235 threadviewer.php:235
+#, fuzzy
 msgid "Message:"
-msgstr "Messaggio:"
+msgstr "ข้อความ :"
 
 #: privatemessages.php:130 privatemessages.php:239 threadviewer.php:239
+#, fuzzy
 msgid "Send Message &raquo;"
-msgstr "Invia messaggio &raquo;"
+msgstr "» ส่งข้อความ"
 
 #: privatemessages.php:133 privatemessages.php:242 threadviewer.php:242
+#, fuzzy
 msgid "Allowed markup:"
-msgstr "Formattazioni consentite:"
+msgstr "Allowed markup :"
 
 #: privatemessages.php:133 privatemessages.php:242 threadviewer.php:242
+#, fuzzy
 msgid "You can also put code in between backtick ( <code>`</code> ) characters."
-msgstr "También puede poner en el código entre backtick ( <code>`</ code> ) caracteres."
+msgstr "คุณยังสามารถใส่รหัสในระหว่าง backtick ( <code>`</code> ตัวอักษร)"
 
 #: privatemessages.php:146
 #, fuzzy
@@ -278,69 +294,77 @@ msgid "(Page %s)"
 msgstr "(%s Page)"
 
 #: privatemessages.php:149
+#, fuzzy
 msgid "Subject"
-msgstr "Oggetto"
+msgstr "เรื่อง"
 
 #: privatemessages.php:149
+#, fuzzy
 msgid "New &raquo;"
-msgstr "Nuovo &raquo;"
+msgstr "» ใหม่"
 
 #: privatemessages.php:150 threadviewer.php:42
 #, fuzzy
 msgid "Members"
-msgstr "Membri"
+msgstr "Members"
 
 #: privatemessages.php:151
+#, fuzzy
 msgid "Freshness"
-msgstr "Freschezza"
+msgstr "ความสด"
 
 #: privatemessages.php:152
+#, fuzzy
 msgid "Actions"
-msgstr "Azioni"
+msgstr "การกระทำ"
 
 #: privatemessages.php:178
 #, fuzzy
 msgid "Unsubscribe"
-msgstr "Cancellati"
+msgstr "Unsubscribe"
 
 #: privatemessages.php:187 privatemessages.php:254
+#, fuzzy
 msgid "Read"
-msgstr "Leggi"
+msgstr "อ่าน"
 
 #: privatemessages.php:225 threadviewer.php:192
+#, fuzzy
 msgid "Sent %s ago"
-msgstr "Inviato %s fa."
+msgstr "%s แล้วส่ง"
 
 #: privatemessages.php:225 privatemessages.php:230 threadviewer.php:192
 #: threadviewer.php:230
+#, fuzzy
 msgid "Reply"
-msgstr "Rispondi"
+msgstr "ตอบ"
 
 #: threadviewer.php:34
 #, fuzzy
 msgid "Started %1$s ago by %2$s"
-msgstr "Iniziato%1$s fa da%2$s"
+msgstr "เริ่ม%1$s ago by%2$s"
 
 #: threadviewer.php:36
 #, fuzzy
 msgid "<a href=\"%1$s\">Latest reply</a> from %2$s"
-msgstr "<a href=\"%1$s\">Ultima risposta</a> da%2$s"
+msgstr "<a href=\"%1$s\">ตอบล่าสุด</a> จาก%2$s"
 
 #: threadviewer.php:63
 #, fuzzy
 msgid "Add &raquo;"
-msgstr "Aggiungi »"
+msgstr "เพิ่ม »"
 
 #: threadviewer.php:209
+#, fuzzy
 msgid "[Cancel]"
-msgstr "[Annulla]"
+msgstr "[ยกเลิก]"
 
 msgid "http://nightgunner5.wordpress.com/tag/bbpm/"
 msgstr "http://nightgunner5.wordpress.com/tag/bbpm/"
 
-msgid "Adds the ability for users of a forum to send private messages to each other."
-msgstr "bbPM añade la posibilidad de que los usuarios de un foro para enviar mensajes privados entre sí."
-
 #, fuzzy
+msgid "Adds the ability for users of a forum to send private messages to each other."
+msgstr "เพิ่มความสามารถสำหรับผู้ใช้กระดานส่งข้อความส่วนตัวกัน"
+
 msgid "http://nightgunner5.wordpress.com/"
 msgstr "http://nightgunner5.wordpress.com/"

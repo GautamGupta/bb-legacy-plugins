@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the bbPM package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2010-07-22 22:10:29+0000\n"
+"PO-Revision-Date: 2010-07-23 15:24:00+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -68,7 +68,7 @@ msgid_plural "Removed %s nonexistant users from bbPM threads."
 msgstr[0] "एक अस्तित्वहीन उपयोगकर्ता को हटा दिया गया है|"
 msgstr[1] "%s अस्तित्वहीन उपयोगकर्ताओं को हटा दिया गया है|"
 
-#: bbpm.php:1001
+#: bbpm.php:1001 bbpm.php:1357
 msgid "One new private message!"
 msgid_plural "%s new private messages!"
 msgstr[0] "एक नया निजी संदेश!"

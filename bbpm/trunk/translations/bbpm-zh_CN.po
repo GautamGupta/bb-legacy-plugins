@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the bbPM package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2010-07-22 22:14:42+0000\n"
+"PO-Revision-Date: 2010-07-23 15:24:10+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -11,7 +11,6 @@ msgstr ""
 "Project-Id-Version: bbPM\n"
 
 #: bbpm.php:877
-#, fuzzy
 msgid ""
 "Hello, %1$s!\n"
 "\n"
@@ -20,7 +19,14 @@ msgid ""
 "To read it now, go to the following address:\n"
 "\n"
 "%5$s"
-msgstr "您好，％1 $ s的！％2 $ s已经加入你的私人信息的谈话标题为“％3 $ s的”关于％4 $ s的！要阅读，请至以下地址：％5 $ s的"
+msgstr ""
+"您好，%1$s！\n"
+"\n"
+"%2$s 已经在%4$s把你加入私人信息标题为“%3$s”的谈话！\n"
+"\n"
+"要阅读，请至以下地址：\n"
+"\n"
+"%5$s"
 
 #: bbpm.php:562 bbpm.php:629
 msgid ""
@@ -45,22 +51,22 @@ msgstr "%1$s 已经在%2$s 向你发送了私人讯息：“%3$s”"
 #: threadviewer.php:30
 msgid "One post"
 msgid_plural "%s posts"
-msgstr[0] ""
+msgstr[0] "%s 个回复 "
 
 #: threadviewer.php:31
 msgid "One voice"
 msgid_plural "%s voices"
-msgstr[0] ""
+msgstr[0] "%s 个声音 "
 
 #: bbpm.php:1182
 msgid "Removed one nonexistant user from bbPM threads."
 msgid_plural "Removed %s nonexistant users from bbPM threads."
-msgstr[0] ""
+msgstr[0] "已从bbPM线程中移除 %s 个不存在用户。"
 
-#: bbpm.php:1001
+#: bbpm.php:1001 bbpm.php:1357
 msgid "One new private message!"
 msgid_plural "%s new private messages!"
-msgstr[0] ""
+msgstr[0] "%s 条新私人信息！"
 
 #: bbpm.php:554 bbpm.php:621
 msgid ""
@@ -94,7 +100,7 @@ msgstr "%1$s 已在%2$s添加您到会话：“%3$s”"
 #: bbpm.php:1193
 msgid "Deleted one thread. "
 msgid_plural "Deleted %s threads. "
-msgstr[0] ""
+msgstr[0] "已删除 %s 个线程。"
 
 msgid "Ben L."
 msgstr "Ben L."

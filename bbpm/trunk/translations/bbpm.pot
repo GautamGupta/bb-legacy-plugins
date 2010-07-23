@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bbPM 1.0.1\n"
 "Report-Msgid-Bugs-To: http://bbpress.org/plugins/topic/bbpm/\n"
-"POT-Creation-Date: 2010-07-22 13:03-0500\n"
+"POT-Creation-Date: 2010-07-23 09:34-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -101,7 +101,7 @@ msgstr ""
 msgid "Don't email me when I get a PM"
 msgstr ""
 
-#: bbpm.php:1001
+#: bbpm.php:1001 bbpm.php:1357
 #, php-format
 msgid "One new private message!"
 msgid_plural "%s new private messages!"
@@ -221,13 +221,6 @@ msgid ""
 "The <code>my-plugins</code> directory has its permissions set to %s. This is "
 "not recommended. Please use 755 instead."
 msgstr ""
-
-#: bbpm.php:1357
-#, php-format
-msgid "1 new Private Message!"
-msgid_plural "%s new Private Messages!"
-msgstr[0] ""
-msgstr[1] ""
 
 #: pm.php:53
 msgid "Slow down; you move too fast."

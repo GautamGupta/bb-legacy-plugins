@@ -1,0 +1,78 @@
+# Translation of Update Translations in Japanese
+# This file is distributed under the same license as the Update Translations package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2010-07-23 23:00:17+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: GlotPress/0.1\n"
+"Language-Team: http://nightgunner5.is-a-geek.net:1337/glotpress/projects/update-translations/ja/default\n"
+"Project-Id-Version: Update Translations\n"
+
+#: update-translations.php:138
+#, fuzzy
+msgid "%s was updated successfully."
+msgstr "％sは正常に更新されました。"
+
+#: update-translations.php:134
+#, fuzzy
+msgid "%s could not be updated."
+msgstr "％sを更新できませんでした。"
+
+#: update-translations.php:126
+#, fuzzy
+msgid "%s was not found in your language on the translation site."
+msgstr "％sは翻訳サイトでお客様の言語で見つかりませんでした。"
+
+#: update-translations.php:98 update-translations.php:123
+#, fuzzy
+msgid "%s was not found on the translation site."
+msgstr "％sは翻訳サイトで見つかりませんでした。"
+
+#: update-translations.php:56
+#, fuzzy
+msgid "Update now"
+msgstr "今すぐアップデート"
+
+#: update-translations.php:52
+#, fuzzy
+msgid "<strong>For plugin developers:</strong> Download all languages and POT."
+msgstr "<strong>開発者向けプラグイン：</strong>ダウンロードのすべての言語とポット。"
+
+#: update-translations.php:44
+#, fuzzy
+msgid "With your permission, Update Translations will attempt to download fresh translations for the following plugins:"
+msgstr "あなたの許可を得て、更新情報の翻訳は、次のプラグインの新鮮な翻訳をダウンロードしようとします："
+
+#: update-translations.php:38
+#, fuzzy
+msgid "You have not defined a language in your <code>bb-config.php</code> file."
+msgstr "あなたの言語を定義していないbbの<code>bb-config.php</code> 。"
+
+#: update-translations.php:40 update-translations.php:62
+#, fuzzy
+msgid "Update Translations"
+msgstr "更新情報の翻訳"
+
+#, fuzzy
+msgid "http://nightgunner5.wordpress.com/tag/update-translations/"
+msgstr "http://nightgunner5.wordpress.com/tag/update-translations/"
+
+#, fuzzy
+msgid "Download up-to-date plugin translations from Nightgunner5's Translation Station with the push of a button."
+msgstr "ボタンを押すだけでNightgunner5の翻訳駅からダウンロードアップ最新のプラグインの翻訳。"
+
+#, fuzzy
+msgid "Ben L."
+msgstr "ベンlの"
+
+#, fuzzy
+msgid "http://nightgunner5.wordpress.com/"
+msgstr "http://nightgunner5.wordpress.com/"
+
+#: update-translations.php:35
+#, fuzzy
+msgid "You are using an unsupported language. See <code>locales.php</code> in this plugin's source code for a list of languages supported by this plugin."
+msgstr "あなたはしていない言語を使用している。参照してください<code>locales.php</code>プラグインの言語サポートにより、このリストのコードのソースのこのプラグイン。"

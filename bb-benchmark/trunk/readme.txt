@@ -1,25 +1,34 @@
 === bbPress Benchmark ===
 Tags: _ck_, performance, speed, benchmark, mysql, queries, cache, caching, faster
 Contributors: _ck_
-Requires at least: 0.8
-Tested up to: 0.9
+Requires at least: 0.9
+Tested up to: 1.1
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 
-Prints simple benchmarks and mysql diagnostics, hidden in page footers for administrators. Based on Jerome Lavigne's Query Diagnostics for WordPress.
+Prints simple benchmarks and mysql diagnostics, hidden in page footers for administrators. Inspired by Jerome Lavigne's Query Diagnostics for WordPress.
 
 == Description ==
 
-Now you can find out a bit more detail than just "11 Queries, 0.500 seconds" at the bottom of your bbPress pages.
-bb-Benchmark prints simple benchmarks and mysql diagnostics, hidden in page footers for administrators.
-Simply do a "view source" on any bbpress page to see hidden results at bottom (visible to administrators only).
-Output includes current server load, page render vs mysql query time, slowest query and a list of all queries used.
+Now you can find out much more detail than just "11 Queries, 0.500 seconds" at the bottom of your bbPress pages.
+
+bb-Benchmark shows various statistics and mysql diagnostics, hidden at the bottom of the page for administrators.
+
+Simply do a "view source" on any bbpress page to see the results at bottom (visible to administrators only).
+
+Analysis includes current server load, page render vs mysql query time, slowest query and a list of all queries & files used.
 
 == Installation ==
 
 1. put  `define('SAVEQUERIES', true);`  into your `bb-config.php`
-2. install & activate plugin   (no template editing required)
-3. do a "view source" on any bbpress page to see hidden results at bottom (visible to logged-in administrators only)
+2. copy `_bb-benchmark.php` to the `my-plugins/` directory (no template editing required)
+3. no activation need, plugin automatically runs
+4. do a "view source" in your browser on any bbpress page to see hidden results at bottom (visible to administrators only)
+5. optional: when finished analyzing, simply delete the `_bb-benchmark.php` file to eliminate any overhead
+
+== Screenshots ==
+
+1. bb-Benchmark output at bottom of "view source" in browser - administrator's view
 
 == License ==
 
@@ -74,3 +83,9 @@ Output includes current server load, page render vs mysql query time, slowest qu
 = Version 0.2.2 (2008-09-05) =
 
 * 0.2.2	: adds function trace available in bbPress 1.0 - would like to replace with enhanced/deeper trace someday
+
+= Version 0.2.4 (2010-07-24) =
+
+* 0.2.4	: easier to read formatting with many more details in grid form
+	: lighter impact on non-admin users 
+	: experimental resource analysis for linux based servers

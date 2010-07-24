@@ -806,8 +806,7 @@ if (!BB_IS_ADMIN) {
 
 // Add filters for the admin area
 add_action('bb_admin_menu_generator', 'support_forum_admin_page_add');
-add_action('bb_admin_head', 'support_forum_admin_page_head');
-add_action('bb_admin-header.php', 'support_forum_admin_page_process');
+add_action( 'support_forum_admin_page_pre_head', 'support_forum_admin_page_pre_head' );
 
 
 /**
@@ -821,6 +820,12 @@ function support_forum_admin_page_add() {
 }
 
 
+function support_forum_admin_page_pre_head() {
+	add_action('bb_admin_head', 'support_forum_admin_page_head');
+	add_action('bb_admin-header.php', 'support_forum_admin_page_process');
+}
+
+
 /**
  * Adds some cute javascript to the admin head that controls the enabling and disabling of one of the checkboxes
  *
@@ -829,26 +834,23 @@ function support_forum_admin_page_add() {
  **/
 function support_forum_admin_page_head()
 {
-	global $bb_current_submenu;
-	if ($bb_current_submenu[2] == 'support_forum_admin_page') {
-		$j = '<script type="text/javascript">' . "\n";
-		$j .= '	window.onload = function()' . "\n";
-		$j .= '	{' . "\n";
-		$j .= '		var watched = document.getElementById(\'support-forum-poster-setable\');' . "\n";
-		$j .= '		var affected = document.getElementById(\'support-forum-poster-changeable\');' . "\n";
-		$j .= '		watched.onchange = function()' . "\n";
-		$j .= '		{' . "\n";
-		$j .= '			if (watched.checked) {' . "\n";
-		$j .= '				affected.disabled = false;' . "\n";
-		$j .= '			} else {' . "\n";
-		$j .= '				affected.disabled = \'disabled\';' . "\n";
-		$j .= '			}' . "\n";
-		$j .= '		}' . "\n";
-		$j .= '	}' . "\n";
-		$j .= '</script>' . "\n";
-		
-		echo $j;
-	}
+	$j = '<script type="text/javascript">' . "\n";
+	$j .= '	window.onload = function()' . "\n";
+	$j .= '	{' . "\n";
+	$j .= '		var watched = document.getElementById(\'support-forum-poster-setable\');' . "\n";
+	$j .= '		var affected = document.getElementById(\'support-forum-poster-changeable\');' . "\n";
+	$j .= '		watched.onchange = function()' . "\n";
+	$j .= '		{' . "\n";
+	$j .= '			if (watched.checked) {' . "\n";
+	$j .= '				affected.disabled = false;' . "\n";
+	$j .= '			} else {' . "\n";
+	$j .= '				affected.disabled = \'disabled\';' . "\n";
+	$j .= '			}' . "\n";
+	$j .= '		}' . "\n";
+	$j .= '	}' . "\n";
+	$j .= '</script>' . "\n";
+
+	echo $j;
 }
 
 

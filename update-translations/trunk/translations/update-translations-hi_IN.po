@@ -1,0 +1,78 @@
+# Translation of Update Translations in Hindi
+# This file is distributed under the same license as the Update Translations package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2010-07-23 23:00:17+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/0.1\n"
+"Language-Team: http://nightgunner5.is-a-geek.net:1337/glotpress/projects/update-translations/hi/default\n"
+"Project-Id-Version: Update Translations\n"
+
+#: update-translations.php:138
+#, fuzzy
+msgid "%s was updated successfully."
+msgstr "%s सफलतापूर्वक नवीनीकृत हो गया."
+
+#: update-translations.php:134
+#, fuzzy
+msgid "%s could not be updated."
+msgstr "% अद्यतन नहीं किया जा सकता है."
+
+#: update-translations.php:126
+#, fuzzy
+msgid "%s was not found in your language on the translation site."
+msgstr "%s अनुवाद साइट पर अपनी भाषा में नहीं मिला था."
+
+#: update-translations.php:98 update-translations.php:123
+#, fuzzy
+msgid "%s was not found on the translation site."
+msgstr "%s अनुवाद साइट पर नहीं मिला था."
+
+#: update-translations.php:56
+#, fuzzy
+msgid "Update now"
+msgstr "अब अद्यतन"
+
+#: update-translations.php:52
+#, fuzzy
+msgid "<strong>For plugin developers:</strong> Download all languages and POT."
+msgstr "<strong>डेवलपर्स के लिए प्लगइन:</strong> डाउनलोड सभी भाषाओं और पॉट."
+
+#: update-translations.php:44
+#, fuzzy
+msgid "With your permission, Update Translations will attempt to download fresh translations for the following plugins:"
+msgstr "आपकी अनुमति के साथ, अद्यतन अनुवाद करने के लिए निम्नलिखित plugins के लिए ताजा अनुवाद डाउनलोड करने का प्रयास करेंगे:"
+
+#: update-translations.php:38
+#, fuzzy
+msgid "You have not defined a language in your <code>bb-config.php</code> file."
+msgstr "आप अपनी भाषा में परिभाषित नहीं है एक <code>bb-config.php</code> फाइल."
+
+#: update-translations.php:40 update-translations.php:62
+#, fuzzy
+msgid "Update Translations"
+msgstr "अद्यतन अनुवाद"
+
+#, fuzzy
+msgid "http://nightgunner5.wordpress.com/tag/update-translations/"
+msgstr "http://nightgunner5.wordpress.com/tag/update-translations/"
+
+#, fuzzy
+msgid "Download up-to-date plugin translations from Nightgunner5's Translation Station with the push of a button."
+msgstr "एक बटन की धक्का के साथ डाउनलोड अप करने की तारीख है Nightgunner5 अनुवाद स्टेशन से प्लगइन अनुवाद."
+
+#, fuzzy
+msgid "Ben L."
+msgstr "बेन एल"
+
+#, fuzzy
+msgid "http://nightgunner5.wordpress.com/"
+msgstr "http://nightgunner5.wordpress.com/"
+
+#: update-translations.php:35
+#, fuzzy
+msgid "You are using an unsupported language. See <code>locales.php</code> in this plugin's source code for a list of languages supported by this plugin."
+msgstr "आप किसी असमर्थित भाषा का प्रयोग कर रहे हैं. देखने <code>locales.php</code> प्लगइन का यह द्वारा समर्थित भाषाओं की सूची के लिए एक कोड स्रोत में इस प्लगइन."

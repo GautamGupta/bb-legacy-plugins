@@ -11,9 +11,9 @@ Plugin URI: http://bbpress.org/plugins/topic/bb-ga/
 add latest Google Analytics code to your bbpress head¡£
 
 == Installation ==
-* Change the line $ga_web_id="UA-xxxxxx-xx"; to your Google Analytics  Web Property ID .
-* Add entire folder `bb-ga` to bbPress' `my-plugins/` directory and activate.
 
+* Add entire folder `bb-ga` to bbPress' `my-plugins/` directory and activate.
+* Go to background ,find the menu and fill the blank with your Google Analytics  Web Property ID like "UA-xxxxxx-xx" .
 == Frequently Asked Questions ==
 nothing now
 
@@ -27,12 +27,17 @@ nothing now
 
 == Changelog ==
 
-= Version 0.0.1 (2010-07-23) =
+= Version 0.2 (2010-07-24) =
+
+* using most code of the plugin:Google Analitycs by jfisbein and change core code to google's offical one.
+* add code to head to get user on site time.
+
+= Version 0.1 (2010-07-23) =
 
 * first public release
 
 
-== To Do ==
-get a background pannel to change your code.
-for more you may give  advices to me.
+== To Do Now ==
+make the background pannel full.
+for more you may give advices to me.
 

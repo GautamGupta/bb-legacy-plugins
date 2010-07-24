@@ -134,7 +134,7 @@ function bb_benchmark_output() {
 
 function bb_benchmark_template_timer($template='',$file='') {
 	global $bb_current_user; static $can_administrate;
-	if (isset($can_administrate)) {if (!$can_administrate) {return;}} 
+	if (isset($can_administrate)) {if (!$can_administrate) {return $template;}} 
 	elseif (isset($bb_current_user->ID)) {$can_administrate=bb_current_user_can('administrate');}
 	
 	global $bb_benchmark_time, $bb_benchmark_queries, $bb_benchmark_files, $bb_timestart,  $bbdb, $wp_actions,$wp_current_filter;

@@ -4,12 +4,12 @@ Plugin Name: bb-NoSpamUser
 Version: 0.8.1
 Plugin URI: http://nightgunner5.wordpress.com/tag/bb-nospamuser/
 Description: Prevents known spam users from registering on your forum.
-Author: Nightgunner5
-Author URI: http://llamaslayers.net/
+Author: Ben L.
+Author URI: http://nightgunner5.wordpress.com/
 Requires at least: 1.0
 Tested up to: trunk
 Text Domain: nospamuser
-Domain Path: translations/
+Domain Path: /translations
 */
 
 define( 'NOSPAMUSER_AGENT', ' | NoSpamUser/0.8.1' );
@@ -130,7 +130,7 @@ function nospamuser_admin() {
 		),
 		'min_occur' => array(
 			'title' => __( 'Minimum frequency', 'nospamuser' ),
-			'note' => __( 'Any possible spammer that do not have at least this many reports will be allowed through.', 'nospamuser' ),
+			'note' => __( 'Any possible spammer that does not have at least this many reports will be allowed through.', 'nospamuser' ),
 			'class' => 'short',
 			'value' => $settings['min_occur']
 		),
@@ -347,3 +347,5 @@ function nospamuser_stats_display() {
 			'</strong></dd>';
 }
 add_action( 'bb_stats_left', 'nospamuser_stats_display' );
+
+load_plugin_textdomain( 'nospamuser', dirname( __FILE__ ) . '/translations' );

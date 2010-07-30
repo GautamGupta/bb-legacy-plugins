@@ -73,8 +73,8 @@ class Swirl_Unknowns_Settings {
 			'bb-reset-password.php',
 			'register.php',
 			'xmlrpc.php',
-			'bb-admin/',
-			'rss/'
+			'/bb-admin/',
+			'/rss/'
 		);
 
 		$this->default_swirl_page = $this->tags['%bb_uri%'] . 'bb-login.php';

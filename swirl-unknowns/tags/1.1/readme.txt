@@ -29,7 +29,7 @@ Based on <a href="http://blogwaffe.com/">Michael D. Adams</a>' <a href="http://b
 
 == Changelog ==
 
-= Version 1.1 (2010-07-11) =
+= Version 1.1 (2010-07-12) =
 
 * wrapper class for plugin settings created
 

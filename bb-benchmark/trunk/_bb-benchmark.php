@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/65
 Description: Prints simple benchmarks and mysql diagnostics, hidden in page footers for administrators. Inspired by Jerome Lavigne's Query Diagnostics for WordPress.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.2.4
+Version: 0.2.5
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -20,14 +20,15 @@ Instructions:
 bb_benchmark_template_timer('bb-settings.php','bb-settings.php');
 $hooks=array('bb_template','bb_underscore_plugins_loaded','bb_plugins_loaded','bb_init','bb_send_headers','bb_index.php_pre_db','bb_index.php','bb_head','bb_foot','bb_admin_footer','bb_shutdown');
 foreach ($hooks as $hook) {add_action($hook,'bb_benchmark_template_timer',1,2);}
-add_action('bb_shutdown', 'bb_benchmark_output',999);
+add_action('bb_foot','bb_benchmark_output_hook');	// only attach to shutdown on pages with bb_foot
+function bb_benchmark_output_hook() {add_action('bb_shutdown', 'bb_benchmark_output',999);}
 
 function bb_benchmark_output() {
 	if (!bb_current_user_can('administrate')) {return;}
 
 	$timer_stop=bb_timer_stop(0);	
-	global $bb_benchmark_time, $bb_benchmark_queries, $bb_benchmark_files, $bbdb;	 
-	$totalsize=$previous_time=$previous_queries=$previous_files=0;
+	global $bb_benchmark, $bbdb;	 
+	$totalsize=$previous_time=$previous_queries=$previous_files=$previous_memory=$previous_peak=0;
 	
 	if (defined('BB_IS_ADMIN') && BB_IS_ADMIN) {echo '<div style="margin-top:-0.9em;text-align:center;">'.$bbdb->num_queries." queries </div>";}
         	
@@ -38,34 +39,45 @@ function bb_benchmark_output() {
 	$test=sys_getloadavg(); if (is_array($test)) {foreach (array_keys($test) as $key) {$test[$key]=round($test[$key],2);} echo "load average: ".implode(", ",$test)."\n";}}  
         	
 	if (function_exists('memory_get_peak_usage') && function_exists('memory_get_usage')) {
-		$peak=round((memory_get_peak_usage()/1024)/1024,3);
-		$current=round((memory_get_usage()/1024)/1024,3);	
+		$memory_usage=true;
+		$peak=memory_get_peak_usage()/1024;
+		$current=memory_get_usage()/1024;	
 		echo " == memory usage == \n\n";
-		if (!empty($peak)) {echo str_pad("peak:",9).sprintf('%1.3f ',$peak)."MB\n";}
-		if (!empty($current)) {echo str_pad("current:",9).sprintf('%1.3f ',$current)."MB\n";}	
+		if (!empty($peak)) {echo str_pad("peak:",9).sprintf('%1.3f ',$peak/1024).'MB'.str_pad('('.round($peak).'k)',9,' ',STR_PAD_LEFT)."\n";}
+		if (!empty($current)) {echo str_pad("current:",9).sprintf('%1.3f ',$current/1024).'MB'.str_pad('('.round($current).'k)',9,' ',STR_PAD_LEFT)."\n";}
 		echo "\n";
 	} else {
-	/*  for windows - to do
-    	$output = array(); exec('tasklist /FI "PID eq '.getmypid().'" /FO LIST', $output ); $peak=preg_replace( '/[^0-9]/', '', $output[5] ) * 1024;
-    	*/
+		$memory_usage=false;
+		/*  for windows - to do
+    		$output = array(); exec('tasklist /FI "PID eq '.getmypid().'" /FO LIST', $output ); $peak=preg_replace( '/[^0-9]/', '', $output[5] ) * 1024;
+    		*/
     	}
         	
 	echo " == execution time == \n\n";
         	echo "total page time: ".sprintf('%1.3f ',round($timer_stop,4))."seconds\n\n";        
         	
-	echo "time to reach each section in seconds | difference | queries | files\n"
-		."--------------------------------------------------------------------\n";
-	foreach ($bb_benchmark_time as $bb_btime=>$ignore) {
+	$legend="time to reach each section in seconds | difference | queries |  files  |  memory  |  peak";
+	echo $legend."\n".str_repeat('-',strlen($legend))."\n";
+	foreach ($bb_benchmark->time as $bb_btime=>$ignore) {
 		echo str_pad(' '.$bb_btime,30)
-		.$bb_benchmark_time[$bb_btime]
-		.str_pad(intval($bb_benchmark_time[$bb_btime]*1000-$previous_time*1000),9,' ',STR_PAD_LEFT)." ms"
-		.str_pad(($bb_benchmark_queries[$bb_btime]-$previous_queries ? $bb_benchmark_queries[$bb_btime] : '.'),9,' ',STR_PAD_LEFT)
-		.str_pad(($bb_benchmark_files[$bb_btime]-$previous_files ? $bb_benchmark_files[$bb_btime] : '.'),9,' ',STR_PAD_LEFT)
-		.($previous_files && $bb_benchmark_files[$bb_btime]-$previous_files ? ' ('.($bb_benchmark_files[$bb_btime]-$previous_files).')' : '')
-		."\n";
-		$previous_time=$bb_benchmark_time[$bb_btime];
-		$previous_queries=$bb_benchmark_queries[$bb_btime];
-		$previous_files=$bb_benchmark_files[$bb_btime];
+		.$bb_benchmark->time[$bb_btime]
+		.str_pad(intval($bb_benchmark->time[$bb_btime]*1000-$previous_time*1000),9,' ',STR_PAD_LEFT)." ms"
+		.str_pad(($bb_benchmark->queries[$bb_btime]-$previous_queries ? $bb_benchmark->queries[$bb_btime] : '.'),8,' ',STR_PAD_LEFT)
+		.str_pad($previous_queries && $bb_benchmark->queries[$bb_btime]-$previous_queries ? ' ('.($bb_benchmark->queries[$bb_btime]-$previous_queries).')' : '',6)
+		.str_pad(($bb_benchmark->files[$bb_btime]-$previous_files ? $bb_benchmark->files[$bb_btime] : '.'),5,' ',STR_PAD_LEFT)
+		.str_pad($previous_files && $bb_benchmark->files[$bb_btime]-$previous_files ? ' ('.($bb_benchmark->files[$bb_btime]-$previous_files).')' : '',6);
+		if ($memory_usage) {
+		echo ''
+		.str_pad($bb_benchmark->memory_usage[$bb_btime]-$previous_memory>5120 ? round($bb_benchmark->memory_usage[$bb_btime]/1024).'k' : ' . ',7,' ',STR_PAD_LEFT)
+		.str_pad($bb_benchmark->memory_peak[$bb_btime]-$previous_peak>5120 ? round($bb_benchmark->memory_peak[$bb_btime]/1024).'k' : ' . ',9,' ',STR_PAD_LEFT);
+		$previous_memory=$bb_benchmark->memory_usage[$bb_btime];
+		$previous_peak=$bb_benchmark->memory_peak[$bb_btime];
+		}
+		echo "\n";
+		$previous_time=$bb_benchmark->time[$bb_btime];
+		$previous_queries=$bb_benchmark->queries[$bb_btime];
+		$previous_files=$bb_benchmark->files[$bb_btime];		
+
 	}   echo "\n";
       	      	
 	if (!SAVEQUERIES) :
@@ -133,47 +145,44 @@ function bb_benchmark_output() {
 // global $bb_current_user,$bbdb;  $capabilities=$bbdb->prefix."capabilities"; if ($bb_current_user->data->$capabilities['keymaster']) :
 
 function bb_benchmark_template_timer($template='',$file='') {
-	global $bb_current_user; static $can_administrate;
-	if (isset($can_administrate)) {if (!$can_administrate) {return $template;}} 
-	elseif (isset($bb_current_user->ID)) {$can_administrate=bb_current_user_can('administrate');}
+	static $can_administrate, $memory_usage;
 	
-	global $bb_benchmark_time, $bb_benchmark_queries, $bb_benchmark_files, $bb_timestart,  $bbdb, $wp_actions,$wp_current_filter;
+	if (isset($can_administrate)) {if (!$can_administrate) {return $template;}} 
+	else {global $bb_current_user; if (isset($bb_current_user->ID)) {$can_administrate=bb_current_user_can('administrate');}}
+	
+	if (!isset($memory_usage)) {$memory_usage=function_exists('memory_get_peak_usage') && function_exists('memory_get_usage') ? true : false;}
+	
+	global $bb_benchmark, $bb_timestart,  $bbdb, $wp_actions,$wp_current_filter;
 	if (empty($file) || is_array($file) || strpos($file,'.php')===false) {
 		$file = empty($wp_current_filter) ? end($wp_actions) : current($wp_current_filter);
 	}
-	// $bb_benchmark_time[$file] = // bb_timer_stop(0);  // array_sum(explode(" ",microtime()));
-	
-	$mtime = explode(' ', microtime(1)); (double)$mtime = (double)$mtime[0] + (isset($mtime[1]) ? (double)$mtime[1] : 0);
-	$bb_benchmark_time[$file] = sprintf ("%6.3f",$mtime - $bb_timestart);  //  ." | ". $time;
-	$bb_benchmark_queries[$file]=$bbdb->num_queries;
-	$bb_benchmark_files[$file]=count(get_included_files());
+		
+	$bb_benchmark->time[$file] = sprintf ("%6.3f",array_sum(explode(' ',microtime())) - $bb_timestart);
+	$bb_benchmark->queries[$file]=$bbdb->num_queries;
+	$bb_benchmark->files[$file]=count(get_included_files());
+	if ($memory_usage) {
+		$bb_benchmark->memory_usage[$file]=memory_get_usage();
+		$bb_benchmark->memory_peak[$file]=memory_get_peak_usage();
+	}
 	
 	return $template;
 }
 
 function bb_benchmark_get_caller() {		// not used here yet - just for reminder/storage
-	if ( !is_callable('debug_backtrace') ) {return '';}		// requires PHP 4.3+			
+	if ( !is_callable('debug_backtrace') ) { return ''; }	// requires PHP 4.3+
 
-	$bt = debug_backtrace(); $caller = ''; $tail= '';
-
+	$bt = debug_backtrace(); 
+	$caller = $tail= ''; $count=0; static $continue;
+	if (!isset($continue)) {$continue=array('call_user_func_array','apply_filters','do_action','include','require','require_once','bb_load_template');}
 	foreach ( $bt as $trace ) {
-		if ( @$trace['class'] == __CLASS__ )
-			continue;
-		elseif ( strtolower(@$trace['function']) == 'call_user_func_array' )
-			continue;
-		elseif ( strtolower(@$trace['function']) == 'apply_filters' )
-			continue;
-		elseif ( strtolower(@$trace['function']) == 'do_action' )
-			continue;
-		elseif ( strtolower(@$trace['function']) == 'query' ) {$tail=" (query) ".$tail; continue;}
-		elseif ( strtolower(@$trace['function']) == 'bb_query' ) {$tail=" (bb_query) ".$tail; continue;}
-		elseif ( strtolower(@$trace['function']) == 'bb_append_meta' )  {$tail=" (bb_append_meta) ".$tail; continue;}
-
-		$caller = $trace['function'].$tail;
-		break;
+		$function=strtolower(@$trace['function']);
+		if ( @$trace['class'] == __CLASS__ ) {	continue; }
+		elseif ( in_array($function, $continue) ) { continue; }
+		elseif ( in_array($function, array('query','bb_query','bb_append_meta')) ) {$tail=" ($function)".$tail; continue;}
+		$caller.= $function.$tail;
+		if (++$count>7) {break;} else {$caller.=' <- ';}
 	}
-		return $caller;
+		return rtrim($caller,'<- ');
 }
-
 
 ?>

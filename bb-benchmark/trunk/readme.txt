@@ -29,6 +29,7 @@ Analysis includes current server load, page render vs mysql query time, slowest 
 == Screenshots ==
 
 1. bb-Benchmark output at bottom of "view source" in browser - administrator's view
+2. memory tracking improvements starting with version 0.2.5
 
 == License ==
 
@@ -89,3 +90,8 @@ Analysis includes current server load, page render vs mysql query time, slowest 
 * 0.2.4	: easier to read formatting with many more details in grid form
 	: lighter impact on non-admin users 
 	: experimental resource analysis for linux based servers
+	
+= Version 0.2.5 (2010-07-31) =
+
+* 0.2.5 : now tracks memory use at specified hooks
+	: outputs on bb_shutdown but only if bb_foot present on page

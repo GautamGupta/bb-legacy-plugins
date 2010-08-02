@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the bbPM package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2010-07-23 22:59:48+0000\n"
+"PO-Revision-Date: 2010-08-02 02:33:34+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,35 +10,6 @@ msgstr ""
 "X-Generator: GlotPress/0.1\n"
 "Language-Team: http://nightgunner5.is-a-geek.net:1337/glotpress/projects/bbpm/sr/default\n"
 "Project-Id-Version: bbPM\n"
-
-#: bbpm.php:877
-#, fuzzy
-msgid ""
-"Hello, %1$s!\n"
-"\n"
-"%2$s has added you to a private message conversation titled \"%3$s\" on %4$s!\n"
-"\n"
-"To read it now, go to the following address:\n"
-"\n"
-"%5$s"
-msgstr "Здраво,% 1 $ с!% 2 $ с је додао да поруку приватни разговор под називом \"% 3 $ с\" на% 4 $ с бисте прочитали сада, идите на следећу адресу:% 5 $ с"
-
-#: bbpm.php:562 bbpm.php:629
-#, fuzzy
-msgid ""
-"Hello, %1$s!\n"
-"\n"
-"%2$s has sent you a private message entitled \"%3$s\" on %4$s!\n"
-"\n"
-"To read it now, go to the following address:\n"
-"\n"
-"%5$s"
-msgstr "Здраво,% 1 $ с н!% 2 $ с посла вам је приватну поруку под називом \"% 3 $ с\" на% 4 $ $ а! Бисте прочитали сада, идите на следећу адресу:% 5"
-
-#: bbpm.php:549 bbpm.php:616
-#, fuzzy
-msgid "%1$s has sent you a private message on %2$s: \"%3$s\""
-msgstr "% 1 $ с је послао приватну поруку на% 2 $ с: &quot;% 3 $ с&quot;"
 
 #: threadviewer.php:30
 msgid "One post"
@@ -68,39 +39,12 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: bbpm.php:554 bbpm.php:621
-#, fuzzy
-msgid ""
-"Hello, %1$s!\n"
-"\n"
-"%2$s has sent you a private message entitled \"%3$s\" on %4$s!\n"
-"\n"
-"To read it now, go to the following address:\n"
-"\n"
-"%5$s\n"
-"\n"
-"Do NOT reply to this message.\n"
-"\n"
-"The contents of the message are:\n"
-"\n"
-"%6$s"
-msgstr "Здраво,% 1 $ с!% 2 $ с посла вам је приватну поруку под називом &quot;% 3 $ с&quot; на% 4 $ с бисте прочитали сада, идите на следећу адресу:% 5 $ а да не одговарате на ову поруке порука. садржај су:% 6 $ с"
-
-#: bbpm.php:872
-#, fuzzy
-msgid "%1$s has added you to a conversation on %2$s: \"%3$s\""
-msgstr "% 1 $ с те је додао да разговор на% 2 $ с: &quot;% 3 $ с&quot;"
-
 #: bbpm.php:1193
 msgid "Deleted one thread. "
 msgid_plural "Deleted %s threads. "
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-
-#, fuzzy
-msgid "Ben L."
-msgstr "Бен Л."
 
 #: bbpm.php:928 bbpm.php:952 bbpm.php:1365
 msgid "PM this user"
@@ -131,11 +75,6 @@ msgstr "Уклони обрисане кориснике из bbPM-ових ни
 msgid "Cleaning up bbPM messages&hellip; "
 msgstr "Чишћење bbPM-ових порука&hellip; "
 
-#: bbpm.php:1240
-#, fuzzy
-msgid "Settings updated."
-msgstr "Подешавања ажуриран."
-
 #: bbpm.php:1251
 msgid "Maximum PM threads per user"
 msgstr "Највећи дозвољени број нити приватних порука по кориснику"
@@ -147,16 +86,6 @@ msgstr "Аутоматски додај везу у заглављу"
 #: bbpm.php:1264
 msgid "You will need to add <code>&lt;?php if ( function_exists( 'bbpm_messages_link' ) ) bbpm_messages_link(); ?&gt;</code> to your template if you disable this."
 msgstr "Мораћете да додате <code>&lt;?php if ( function_exists( 'bbpm_messages_link' ) ) bbpm_messages_link(); ?&gt;</code> у свој шаблон ако онемогућите ово."
-
-#: bbpm.php:1270
-#, fuzzy
-msgid "Add static reply form"
-msgstr "Додај статички облик одговор"
-
-#: bbpm.php:1274
-#, fuzzy
-msgid "If checked, bbPM will add a static reply form that replies to the last message at the end of each PM thread page."
-msgstr "Ако је проверен, ббПМ ће додати статичку форму одговор да одговори на последњу поруку на крају сваке АМ нит странице."
 
 #: bbpm.php:1280
 msgid "Email options"
@@ -185,16 +114,6 @@ msgstr "Највећи дозвољени број нити приватних �
 #: bbpm.php:1296
 msgid "Enter 0 or leave this blank to use your forum's default setting."
 msgstr "Унесите 0 или оставите ово празно да бисте користили подразумевано подешавање свог форума."
-
-#: bbpm.php:1302
-#, fuzzy
-msgid "Maximum users in a PM thread"
-msgstr "Максимални корисника у АМ нит"
-
-#: bbpm.php:1306
-#, fuzzy
-msgid "0 means unlimited. 2 will disable the \"add users\" form."
-msgstr "0 значи неограничен. 2 ће онемогућити &quot;Додај корисника&quot; облику."
 
 #: bbpm.php:1312
 msgid "Save settings"

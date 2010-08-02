@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the bbPM package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2010-07-23 22:59:45+0000\n"
+"PO-Revision-Date: 2010-08-02 02:33:37+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,35 +10,6 @@ msgstr ""
 "X-Generator: GlotPress/0.1\n"
 "Language-Team: http://nightgunner5.is-a-geek.net:1337/glotpress/projects/bbpm/fi/default\n"
 "Project-Id-Version: bbPM\n"
-
-#: bbpm.php:877
-#, fuzzy
-msgid ""
-"Hello, %1$s!\n"
-"\n"
-"%2$s has added you to a private message conversation titled \"%3$s\" on %4$s!\n"
-"\n"
-"To read it now, go to the following address:\n"
-"\n"
-"%5$s"
-msgstr "Hei,%1$s!%2$s on lisännyt sinut yksityinen viesti keskustelu otsikolla \"%3$s\" on%4$s! Voit lukea sen nyt, mene seuraavaan osoitteeseen:%5$s"
-
-#: bbpm.php:562 bbpm.php:629
-#, fuzzy
-msgid ""
-"Hello, %1$s!\n"
-"\n"
-"%2$s has sent you a private message entitled \"%3$s\" on %4$s!\n"
-"\n"
-"To read it now, go to the following address:\n"
-"\n"
-"%5$s"
-msgstr "Hei,%1$s!%2$s on lähettänyt sinulle henkilökohtaisen viestin otsikkona \"%3$s\" on%4$s! Voit lukea sen nyt, mene seuraavaan osoitteeseen:%5$s"
-
-#: bbpm.php:549 bbpm.php:616
-#, fuzzy
-msgid "%1$s has sent you a private message on %2$s: \"%3$s\""
-msgstr "%1$s on lähettänyt sinulle yksityisviestin%2$s: &quot;%3$s&quot;"
 
 #: threadviewer.php:30
 msgid "One post"
@@ -64,47 +35,15 @@ msgid_plural "%s new private messages!"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bbpm.php:554 bbpm.php:621
-#, fuzzy
-msgid ""
-"Hello, %1$s!\n"
-"\n"
-"%2$s has sent you a private message entitled \"%3$s\" on %4$s!\n"
-"\n"
-"To read it now, go to the following address:\n"
-"\n"
-"%5$s\n"
-"\n"
-"Do NOT reply to this message.\n"
-"\n"
-"The contents of the message are:\n"
-"\n"
-"%6$s"
-msgstr "Hei,%1$s!%2$s on lähettänyt sinulle henkilökohtaisen viestin otsikkona &quot;%3$s&quot; on%4$s! Voit lukea sen nyt, mene seuraavaan osoitteeseen:%5$s Älä vastaa tähän viesti. viestin sisältö on seuraava:%6$s"
-
-#: bbpm.php:872
-#, fuzzy
-msgid "%1$s has added you to a conversation on %2$s: \"%3$s\""
-msgstr "%1$s on lisännyt sinut keskustelun%2$s: &quot;%3$s&quot;"
-
 #: bbpm.php:1193
 msgid "Deleted one thread. "
 msgid_plural "Deleted %s threads. "
 msgstr[0] ""
 msgstr[1] ""
 
-#, fuzzy
-msgid "Ben L."
-msgstr "Ben L."
-
 #: bbpm.php:928 bbpm.php:952 bbpm.php:1365
 msgid "PM this user"
 msgstr "Lähetä YV tälle käyttäjälle"
-
-#: bbpm.php:941
-#, fuzzy
-msgid "Don't email me when I get a PM"
-msgstr "Älä sähköpostia minulle, kun saan PM"
 
 #: bbpm.php:1002 bbpm.php:1359 privatemessages.php:38 privatemessages.php:144
 #: privatemessages.php:146 privatemessages.php:187 privatemessages.php:254
@@ -115,114 +54,9 @@ msgstr "Yksityisviestit"
 msgid "bbPM"
 msgstr "bbPM"
 
-#: bbpm.php:1087
-#, fuzzy
-msgid "New:"
-msgstr "Uusi:"
-
-#: bbpm.php:1122
-#, fuzzy
-msgid "Remove deleted users from bbPM threads"
-msgstr "Poista poistaa käyttäjiä bbPM viestiketjut"
-
-#: bbpm.php:1141
-#, fuzzy
-msgid "Cleaning up bbPM messages&hellip; "
-msgstr "Siivotaan bbPM viestejä ..."
-
-#: bbpm.php:1240
-#, fuzzy
-msgid "Settings updated."
-msgstr "Asetukset päivitetty."
-
-#: bbpm.php:1251
-#, fuzzy
-msgid "Maximum PM threads per user"
-msgstr "Suurin PM viestiketjut per käyttäjä"
-
-#: bbpm.php:1260
-#, fuzzy
-msgid "Automatically add header link"
-msgstr "Lisätä automaattisesti otsikon linkki"
-
-#: bbpm.php:1264
-#, fuzzy
-msgid "You will need to add <code>&lt;?php if ( function_exists( 'bbpm_messages_link' ) ) bbpm_messages_link(); ?&gt;</code> to your template if you disable this."
-msgstr "Sinun tulee lisätä <code>&lt;?php if ( function_exists( &#39;bbpm_messages_link&#39; ) ) bbpm_messages_link(); ?&gt;</code> malliin, jos poistat tämän."
-
-#: bbpm.php:1270
-#, fuzzy
-msgid "Add static reply form"
-msgstr "Lisää staattinen vastauslomake"
-
-#: bbpm.php:1274
-#, fuzzy
-msgid "If checked, bbPM will add a static reply form that replies to the last message at the end of each PM thread page."
-msgstr "Jos valittuna, bbPM lisää staattisen vastauksen muodossa, että vastaukset viimeinen viesti lopussa kunkin PM säiettä sivulle."
-
-#: bbpm.php:1280
-#, fuzzy
-msgid "Email options"
-msgstr "Sähköposti vaihtoehtoja"
-
-#: bbpm.php:1283
-#, fuzzy
-msgid "When a new message is recieved"
-msgstr "Kun uusi viesti saapuu"
-
-#: bbpm.php:1284
-#, fuzzy
-msgid "When a new reply is recieved"
-msgstr "Kun uusi vastausta ei ole saatu"
-
-#: bbpm.php:1285
-#, fuzzy
-msgid "When a user is added to a conversation"
-msgstr "Kun käyttäjä lisätään keskusteluun"
-
-#: bbpm.php:1286
-#, fuzzy
-msgid "Include contents of message"
-msgstr "Sisällytä sisältö viestin"
-
-#: bbpm.php:1292
-#, fuzzy
-msgid "Maximum PM threads per page"
-msgstr "Suurin PM viestiketjut per sivu"
-
-#: bbpm.php:1296
-#, fuzzy
-msgid "Enter 0 or leave this blank to use your forum's default setting."
-msgstr "Anna 0 tai jätä tyhjäksi käyttämään foorumin oletusasetuksia."
-
-#: bbpm.php:1302
-#, fuzzy
-msgid "Maximum users in a PM thread"
-msgstr "Suurin käyttäjien PM säikeen"
-
-#: bbpm.php:1306
-#, fuzzy
-msgid "0 means unlimited. 2 will disable the \"add users\" form."
-msgstr "0 tarkoittaa rajoittamatonta. 2 tulee poistaa &quot;add käyttäjiä&quot; muodossa."
-
 #: bbpm.php:1312
 msgid "Save settings"
 msgstr "Tallenna asetukset"
-
-#: bbpm.php:1320
-#, fuzzy
-msgid "bbPM is installed in the \"<code>%s</code>\" directory. It should be installed in \"<code>my-plugins</code>\""
-msgstr "bbPM on asennettu &quot; <code>%s</code> &quot;hakemistoon. Se on asennettava &quot; <code>my-plugins</code> &quot;"
-
-#: bbpm.php:1323
-#, fuzzy
-msgid "The <code>my-plugins</code> directory has its permissions set to %s. This is not recommended. Please use 755 instead."
-msgstr "<code>my-plugins</code> hakemiston on sen käyttöoikeudet on%s Tämä ei ole suositeltavaa. Käyttäkää 755 sijaan."
-
-#: pm.php:53
-#, fuzzy
-msgid "Slow down; you move too fast."
-msgstr "Hidasta, liikut liian nopeasti."
 
 #: pm.php:62 pm.php:84 pm.php:87
 msgid "You need to choose a valid person to send the message to."
@@ -276,11 +110,6 @@ msgstr "Sallitut merkinnät:"
 msgid "You can also put code in between backtick ( <code>`</code> ) characters."
 msgstr "Voit lisätä koodia laittamalla sen ( <code>`</ code> ) merkkien sisään."
 
-#: privatemessages.php:146
-#, fuzzy
-msgid "(Page %s)"
-msgstr "(Sivu%s)"
-
 #: privatemessages.php:149
 msgid "Subject"
 msgstr "Aihe"
@@ -289,11 +118,6 @@ msgstr "Aihe"
 msgid "New &raquo;"
 msgstr "Uusi &raquo;"
 
-#: privatemessages.php:150 threadviewer.php:42
-#, fuzzy
-msgid "Members"
-msgstr "Jäsenet"
-
 #: privatemessages.php:151
 msgid "Freshness"
 msgstr "Tuoreus"
@@ -301,11 +125,6 @@ msgstr "Tuoreus"
 #: privatemessages.php:152
 msgid "Actions"
 msgstr "Toiminnot"
-
-#: privatemessages.php:178
-#, fuzzy
-msgid "Unsubscribe"
-msgstr "Peruuta"
 
 #: privatemessages.php:187 privatemessages.php:254
 msgid "Read"
@@ -320,21 +139,6 @@ msgstr "Lähetetty %s sitten"
 msgid "Reply"
 msgstr "Vastaa"
 
-#: threadviewer.php:34
-#, fuzzy
-msgid "Started %1$s ago by %2$s"
-msgstr "Aloitettu%1$s sitten%2$s"
-
-#: threadviewer.php:36
-#, fuzzy
-msgid "<a href=\"%1$s\">Latest reply</a> from %2$s"
-msgstr "<a href=\"%1$s\">Viimeisin vastaus</a> kohteesta%2$s"
-
-#: threadviewer.php:63
-#, fuzzy
-msgid "Add &raquo;"
-msgstr "Lisää »"
-
 #: threadviewer.php:209
 msgid "[Cancel]"
 msgstr "[Peruuta]"
@@ -344,7 +148,3 @@ msgstr "http://nightgunner5.wordpress.com/tag/bbpm/"
 
 msgid "Adds the ability for users of a forum to send private messages to each other."
 msgstr "Ajout de la possibilité pour les utilisateurs d'un forum pour envoyer des messages privés les uns aux autres."
-
-#, fuzzy
-msgid "http://nightgunner5.wordpress.com/"
-msgstr "http://nightgunner5.wordpress.com/"

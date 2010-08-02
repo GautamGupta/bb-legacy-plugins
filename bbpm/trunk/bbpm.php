@@ -3,7 +3,7 @@
 Plugin Name: bbPM
 Plugin URI: http://nightgunner5.wordpress.com/tag/bbpm/
 Description: Adds the ability for users of a forum to send private messages to each other.
-Version: 1.0.1
+Version: 1.0.2
 Author: Ben L.
 Author URI: http://nightgunner5.wordpress.com/
 Text Domain: bbpm
@@ -12,7 +12,7 @@ Domain Path: /translations
 
 /**
  * @package bbPM
- * @version 1.0.1
+ * @version 1.0.2
  * @author Nightgunner5
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU General Public License, Version 3 or higher
  */
@@ -218,7 +218,7 @@ class bbPM {
 		$this->settings = bb_get_option( 'bbpm_settings' );
 		$this->version = $this->settings ? $this->settings['version'] : false;
 
-		if ( !$this->version || $this->version != '1.0.1' )
+		if ( !$this->version || $this->version != '1.0.2' )
 			$this->update();
 
 		if ( $this->settings['auto_add_link'] )
@@ -354,12 +354,13 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 			case '1.0':
 				$this->settings['users_per_thread'] = 0;
 
+			case '1.0.1':
 				// At the end of all of the updates:
-				$this->settings['version'] = '1.0.1';
-				$this->version             = '1.0.1';
+				$this->settings['version'] = '1.0.2';
+				$this->version             = '1.0.2';
 				bb_update_option( 'bbpm_settings', $this->settings );
 
-			case '1.0.1':
+			case '1.0.2':
 				// Do nothing, this is the newest version.
 		}
 	}
@@ -516,10 +517,11 @@ INDEX ( `pm_to` , `pm_from`, `reply_to` )
 	 * @param int $id_reciever
 	 * @param string $title
 	 * @param string $message
+	 * @param bool $force
 	 * @return string|bool The URL of the new message or false if any of the message boxes is full.
 	 */
-	function send_message( $id_reciever, $title, $message ) {
-		if ( $this->count_pm() > $this->max_inbox || $this->count_pm( $id_reciever ) > $this->max_inbox )
+	function send_message( $id_reciever, $title, $message, $force = false ) {
+		if ( !$force && ( $this->count_pm() > $this->max_inbox || $this->count_pm( $id_reciever ) > $this->max_inbox ) )
 			return false;
 
 		global $bbdb;
@@ -1220,9 +1222,9 @@ function is_pm() {
 }
 
 function bbpm_admin_page() {
-	global $bbpm;
+	global $bbpm, $bbdb;
 
-	if ( bb_verify_nonce( $_POST['_wpnonce'], 'bbpm-admin' ) ) {
+	if ( $_POST['action'] == 'bbpm-admin' && bb_verify_nonce( $_POST['_wpnonce'], 'bbpm-admin' ) ) {
 		$bbpm->settings['max_inbox']        = max( (int)$_POST['max_inbox'], 1 );
 		$bbpm->settings['auto_add_link']    = !empty( $_POST['auto_add_link'] );
 		$bbpm->settings['static_reply']     = !empty( $_POST['static_reply'] );
@@ -1239,12 +1241,32 @@ function bbpm_admin_page() {
 
 		bb_admin_notice( __( 'Settings updated.', 'bbpm' ) );
 	}
+	if ( $_POST['action'] == 'bbpm-mass-pm' && bb_verify_nonce( $_POST['_wpnonce'], 'bbpm-mass-pm' ) ) {
+		if ( !trim( $_POST['message'] ) ) {
+			bb_admin_notice( __( 'You need to actually submit some content!' ), 'error' );
+		} elseif ( !trim( $_POST['title'] ) ) {
+			bb_admin_notice( __( 'Please enter a private message title.', 'bbpm' ), 'error' );
+		} else {
+			$send_to = $bbdb->get_col( 'SELECT `ID` FROM `' . $bbdb->users . '`' );
+
+			$title = trim( stripslashes( $_POST['title'] ) );
+			$message = stripslashes( $_POST['message'] );
+
+			foreach ( $send_to as $to ) {
+				$msg = $bbpm->send_message( $to, $title, $message, true );
+				if ( $to != bb_get_current_user_info( 'ID' ) )
+					$bbpm->unsubscribe( preg_replace( '/^.*=|^.*\/|#.*$/', '', $msg ) );
+			}
+
+			bb_admin_notice( __( 'Global message sent.', 'bbpm' ) );
+		}
+	}
 
 ?>
 <h2><?php _e( 'bbPM', 'bbpm' ); ?></h2>
 <?php do_action( 'bb_admin_notices' ); ?>
 
-<form class="settings" action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
+<form class="settings" action="" method="post">
 <fieldset>
 	<div id="option-max_inbox">
 		<label for="max_inbox">
@@ -1309,7 +1331,35 @@ function bbpm_admin_page() {
 </fieldset>
 <fieldset class="submit">
 	<?php bb_nonce_field( 'bbpm-admin' ); ?>
+	<input type="hidden" name="action" value="bbpm-admin"/>
 	<input type="submit" class="submit" value="<?php _e( 'Save settings', 'bbpm' ); ?>" />
+</fieldset>
+</form>
+
+<form class="settings" action="" method="post">
+<fieldset>
+	<div id="option-title">
+		<label for="title">
+			<?php _e( 'PM title: (be brief and descriptive)', 'bbpm' ); ?>
+		</label>
+		<div class="inputs">
+			<input name="title" type="text" id="title" class="text" size="50" maxlength="250" />
+		</div>
+	</div>
+
+	<div id="option-message">
+		<label for="message">
+			<?php _e( 'Message:', 'bbpm' ); ?>
+		</label>
+		<div class="inputs">
+			<textarea name="message" cols="50" rows="8" id="message"></textarea>
+		</div>
+	</div>
+</fieldset>
+<fieldset class="submit">
+	<?php bb_nonce_field( 'bbpm-mass-pm' ); ?>
+	<input type="hidden" name="action" value="bbpm-mass-pm"/>
+	<input type="submit" class="submit" value="<?php _e( 'Send global message', 'bbpm' ); ?>" />
 </fieldset>
 </form>
 <?php

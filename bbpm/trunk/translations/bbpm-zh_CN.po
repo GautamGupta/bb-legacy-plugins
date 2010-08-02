@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the bbPM package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2010-07-23 22:59:44+0000\n"
+"PO-Revision-Date: 2010-08-02 02:33:34+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -121,7 +121,7 @@ msgstr "短消息"
 
 #: bbpm.php:1009 bbpm.php:1244
 msgid "bbPM"
-msgstr "站内信"
+msgstr "bbPM"
 
 #: bbpm.php:1087
 msgid "New:"

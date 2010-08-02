@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the bbPM package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2010-07-23 22:59:46+0000\n"
+"PO-Revision-Date: 2010-08-02 02:33:36+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -11,40 +11,11 @@ msgstr ""
 "Language-Team: http://nightgunner5.is-a-geek.net:1337/glotpress/projects/bbpm/fr/default\n"
 "Project-Id-Version: bbPM\n"
 
-#: bbpm.php:877
-#, fuzzy
-msgid ""
-"Hello, %1$s!\n"
-"\n"
-"%2$s has added you to a private message conversation titled \"%3$s\" on %4$s!\n"
-"\n"
-"To read it now, go to the following address:\n"
-"\n"
-"%5$s"
-msgstr "Bonjour,%1$s!%2$s vous a ajouté à une conversation un message privé intitulé «%3$s\" sur%4$s! Pour le lire maintenant, allez à l'adresse suivante: 5% $ s"
-
-#: bbpm.php:562 bbpm.php:629
-#, fuzzy
-msgid ""
-"Hello, %1$s!\n"
-"\n"
-"%2$s has sent you a private message entitled \"%3$s\" on %4$s!\n"
-"\n"
-"To read it now, go to the following address:\n"
-"\n"
-"%5$s"
-msgstr "Bonjour,%1$s!%2$s vous a envoyé un message privé intitulé «%3$s\" sur%4$s! Pour le lire maintenant, allez à l'adresse suivante: 5% $ s"
-
-#: bbpm.php:549 bbpm.php:616
-#, fuzzy
-msgid "%1$s has sent you a private message on %2$s: \"%3$s\""
-msgstr "%1$s vous a envoyé un message privé sur le%2$s: &quot;%3$s&quot;"
-
 #: threadviewer.php:30
 msgid "One post"
 msgid_plural "%s posts"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s poste"
+msgstr[1] "%s postes"
 
 #: threadviewer.php:31
 msgid "One voice"
@@ -64,47 +35,15 @@ msgid_plural "%s new private messages!"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bbpm.php:554 bbpm.php:621
-#, fuzzy
-msgid ""
-"Hello, %1$s!\n"
-"\n"
-"%2$s has sent you a private message entitled \"%3$s\" on %4$s!\n"
-"\n"
-"To read it now, go to the following address:\n"
-"\n"
-"%5$s\n"
-"\n"
-"Do NOT reply to this message.\n"
-"\n"
-"The contents of the message are:\n"
-"\n"
-"%6$s"
-msgstr "Bonjour,%1$s!%2$s vous a envoyé un message privé intitulé «%3$s&quot; sur%4$s! Pour le lire maintenant, allez à l&#39;adresse suivante: 5% $ s Ne pas répondre à ce message. Le contenu du message sont les suivants: 6% $ s"
-
-#: bbpm.php:872
-#, fuzzy
-msgid "%1$s has added you to a conversation on %2$s: \"%3$s\""
-msgstr "%1$s vous a ajouté à une conversation sur le%2$s: &quot;%3$s&quot;"
-
 #: bbpm.php:1193
 msgid "Deleted one thread. "
 msgid_plural "Deleted %s threads. "
 msgstr[0] ""
 msgstr[1] ""
 
-#, fuzzy
-msgid "Ben L."
-msgstr "Ben L."
-
 #: bbpm.php:928 bbpm.php:952 bbpm.php:1365
 msgid "PM this user"
 msgstr "PM cet utilisateur"
-
-#: bbpm.php:941
-#, fuzzy
-msgid "Don't email me when I get a PM"
-msgstr "Ne pas m&#39;envoyer un email lorsque je reçois un PM"
 
 #: bbpm.php:1002 bbpm.php:1359 privatemessages.php:38 privatemessages.php:144
 #: privatemessages.php:146 privatemessages.php:187 privatemessages.php:254
@@ -115,31 +54,6 @@ msgstr "Messages Privés"
 msgid "bbPM"
 msgstr "bbPM"
 
-#: bbpm.php:1087
-#, fuzzy
-msgid "New:"
-msgstr "Nouveau:"
-
-#: bbpm.php:1122
-#, fuzzy
-msgid "Remove deleted users from bbPM threads"
-msgstr "Supprimer les utilisateurs supprimés à partir de threads bbPM"
-
-#: bbpm.php:1141
-#, fuzzy
-msgid "Cleaning up bbPM messages&hellip; "
-msgstr "Nettoyage des messages bbPM ..."
-
-#: bbpm.php:1240
-#, fuzzy
-msgid "Settings updated."
-msgstr "Paramètres mis à jour."
-
-#: bbpm.php:1251
-#, fuzzy
-msgid "Maximum PM threads per user"
-msgstr "Maximum fils PM par utilisateur"
-
 #: bbpm.php:1260
 msgid "Automatically add header link"
 msgstr "Ajouter le lien automatiquement"
@@ -147,61 +61,6 @@ msgstr "Ajouter le lien automatiquement"
 #: bbpm.php:1264
 msgid "You will need to add <code>&lt;?php if ( function_exists( 'bbpm_messages_link' ) ) bbpm_messages_link(); ?&gt;</code> to your template if you disable this."
 msgstr "Vous aurez besoin d'ajouter <code>&lt;?php if ( function_exists( 'bbpm_messages_link' ) ) bbpm_messages_link(); ?&gt;</code> à votre modèle, si vous désactivez ce."
-
-#: bbpm.php:1270
-#, fuzzy
-msgid "Add static reply form"
-msgstr "Ajouter formulaire de réponse statique"
-
-#: bbpm.php:1274
-#, fuzzy
-msgid "If checked, bbPM will add a static reply form that replies to the last message at the end of each PM thread page."
-msgstr "Si elle est cochée, bbPM va ajouter un formulaire de réponse statique que les réponses au dernier message à la fin de chaque page du fil PM."
-
-#: bbpm.php:1280
-#, fuzzy
-msgid "Email options"
-msgstr "options de courrier électronique"
-
-#: bbpm.php:1283
-#, fuzzy
-msgid "When a new message is recieved"
-msgstr "Lorsqu&#39;un nouveau message est reçu"
-
-#: bbpm.php:1284
-#, fuzzy
-msgid "When a new reply is recieved"
-msgstr "Quand une nouvelle réponse est reçue"
-
-#: bbpm.php:1285
-#, fuzzy
-msgid "When a user is added to a conversation"
-msgstr "Quand un utilisateur est ajouté à une conversation"
-
-#: bbpm.php:1286
-#, fuzzy
-msgid "Include contents of message"
-msgstr "Inclure le contenu du message"
-
-#: bbpm.php:1292
-#, fuzzy
-msgid "Maximum PM threads per page"
-msgstr "Maximum fils PM par page"
-
-#: bbpm.php:1296
-#, fuzzy
-msgid "Enter 0 or leave this blank to use your forum's default setting."
-msgstr "Entrez 0 ou laissez ce champ vide pour utiliser le réglage par défaut de votre forum."
-
-#: bbpm.php:1302
-#, fuzzy
-msgid "Maximum users in a PM thread"
-msgstr "utilisateurs maximum dans un thread PM"
-
-#: bbpm.php:1306
-#, fuzzy
-msgid "0 means unlimited. 2 will disable the \"add users\" form."
-msgstr "0 signifie illimité. 2 va désactiver la fonction &quot;ajouter les utilisateurs&quot; formulaire."
 
 #: bbpm.php:1312
 msgid "Save settings"
@@ -214,11 +73,6 @@ msgstr "bbPM est installé dans le \"<code>%s</code>\" dossier. Il devrait être
 #: bbpm.php:1323
 msgid "The <code>my-plugins</code> directory has its permissions set to %s. This is not recommended. Please use 755 instead."
 msgstr "Le dossier <code>my-plugins</code> a des permissions incorrectes. S'il vous plaît utiliser 755 au lieu de %s."
-
-#: pm.php:53
-#, fuzzy
-msgid "Slow down; you move too fast."
-msgstr "Ralentissez, vous aller trop vite."
 
 #: pm.php:62 pm.php:84 pm.php:87
 msgid "You need to choose a valid person to send the message to."
@@ -272,11 +126,6 @@ msgstr "Permis de marquage:"
 msgid "You can also put code in between backtick ( <code>`</code> ) characters."
 msgstr "Vous pouvez aussi mettre le code entre backtick ( <code>`</ code> ) caractères."
 
-#: privatemessages.php:146
-#, fuzzy
-msgid "(Page %s)"
-msgstr "(Page%s)"
-
 #: privatemessages.php:149
 msgid "Subject"
 msgstr "Sujet"
@@ -285,11 +134,6 @@ msgstr "Sujet"
 msgid "New &raquo;"
 msgstr "Nouveau &raquo;"
 
-#: privatemessages.php:150 threadviewer.php:42
-#, fuzzy
-msgid "Members"
-msgstr "Membres"
-
 #: privatemessages.php:151
 msgid "Freshness"
 msgstr "Fraîcheur"
@@ -297,11 +141,6 @@ msgstr "Fraîcheur"
 #: privatemessages.php:152
 msgid "Actions"
 msgstr "Actions"
-
-#: privatemessages.php:178
-#, fuzzy
-msgid "Unsubscribe"
-msgstr "Se désabonner"
 
 #: privatemessages.php:187 privatemessages.php:254
 msgid "Read"
@@ -316,21 +155,6 @@ msgstr "Envoyée il ya %s"
 msgid "Reply"
 msgstr "Répondre"
 
-#: threadviewer.php:34
-#, fuzzy
-msgid "Started %1$s ago by %2$s"
-msgstr "Date d&#39;%1$s il ya%2$s"
-
-#: threadviewer.php:36
-#, fuzzy
-msgid "<a href=\"%1$s\">Latest reply</a> from %2$s"
-msgstr "<a href=\"%1$s\">Dernière réponse</a> de%2$s"
-
-#: threadviewer.php:63
-#, fuzzy
-msgid "Add &raquo;"
-msgstr "Ajouter »"
-
 #: threadviewer.php:209
 msgid "[Cancel]"
 msgstr "[Annuler]"
@@ -340,7 +164,3 @@ msgstr "http://nightgunner5.wordpress.com/tag/bbpm/"
 
 msgid "Adds the ability for users of a forum to send private messages to each other."
 msgstr "Ajout de la possibilité pour les utilisateurs d'un forum pour envoyer des messages privés les uns aux autres."
-
-#, fuzzy
-msgid "http://nightgunner5.wordpress.com/"
-msgstr "http://nightgunner5.wordpress.com/"

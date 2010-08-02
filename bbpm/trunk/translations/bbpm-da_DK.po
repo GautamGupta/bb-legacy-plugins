@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the bbPM package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2010-07-23 22:59:45+0000\n"
+"PO-Revision-Date: 2010-08-02 02:33:35+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,35 +10,6 @@ msgstr ""
 "X-Generator: GlotPress/0.1\n"
 "Language-Team: http://nightgunner5.is-a-geek.net:1337/glotpress/projects/bbpm/da/default\n"
 "Project-Id-Version: bbPM\n"
-
-#: bbpm.php:877
-#, fuzzy
-msgid ""
-"Hello, %1$s!\n"
-"\n"
-"%2$s has added you to a private message conversation titled \"%3$s\" on %4$s!\n"
-"\n"
-"To read it now, go to the following address:\n"
-"\n"
-"%5$s"
-msgstr "Hej,%1$s!%2$s har tilføjet dig til en privat meddelelse samtale med titlen \"%3$s\" på%4$s! Du kan læse det nu, gå til følgende adresse:%5$s"
-
-#: bbpm.php:562 bbpm.php:629
-#, fuzzy
-msgid ""
-"Hello, %1$s!\n"
-"\n"
-"%2$s has sent you a private message entitled \"%3$s\" on %4$s!\n"
-"\n"
-"To read it now, go to the following address:\n"
-"\n"
-"%5$s"
-msgstr "Hej,%1$s!%2$s har sendt dig en privat besked med titlen \"%3$s\" på%4$s! Du kan læse det nu, gå til følgende adresse:%5$s"
-
-#: bbpm.php:549 bbpm.php:616
-#, fuzzy
-msgid "%1$s has sent you a private message on %2$s: \"%3$s\""
-msgstr "%1$s har sendt dig en privat besked på%2$s: &quot;%3$s&quot;"
 
 #: threadviewer.php:30
 msgid "One post"
@@ -64,38 +35,11 @@ msgid_plural "%s new private messages!"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bbpm.php:554 bbpm.php:621
-#, fuzzy
-msgid ""
-"Hello, %1$s!\n"
-"\n"
-"%2$s has sent you a private message entitled \"%3$s\" on %4$s!\n"
-"\n"
-"To read it now, go to the following address:\n"
-"\n"
-"%5$s\n"
-"\n"
-"Do NOT reply to this message.\n"
-"\n"
-"The contents of the message are:\n"
-"\n"
-"%6$s"
-msgstr "Hej,%1$s!%2$s har sendt dig en privat besked med titlen &quot;%3$s&quot; på%4$s! Du kan læse det nu, gå til følgende adresse:%5$s IKKE svar på dette besked. Indholdet af meddelelse er:%6$s"
-
-#: bbpm.php:872
-#, fuzzy
-msgid "%1$s has added you to a conversation on %2$s: \"%3$s\""
-msgstr "%1$s har tilføjet dig til en samtale på%2$s: &quot;%3$s&quot;"
-
 #: bbpm.php:1193
 msgid "Deleted one thread. "
 msgid_plural "Deleted %s threads. "
 msgstr[0] ""
 msgstr[1] ""
-
-#, fuzzy
-msgid "Ben L."
-msgstr "Ben L."
 
 #: bbpm.php:928 bbpm.php:952 bbpm.php:1365
 msgid "PM this user"
@@ -126,11 +70,6 @@ msgstr "Fjern slettede brugere fra bbPM tråde"
 msgid "Cleaning up bbPM messages&hellip; "
 msgstr "Renser bbPM beskeder&hellip; "
 
-#: bbpm.php:1240
-#, fuzzy
-msgid "Settings updated."
-msgstr "Indstillingerne blev opdateret."
-
 #: bbpm.php:1251
 msgid "Maximum PM threads per user"
 msgstr "Antal PB tråde per bruger"
@@ -142,16 +81,6 @@ msgstr "Automatisk tilføj header link"
 #: bbpm.php:1264
 msgid "You will need to add <code>&lt;?php if ( function_exists( 'bbpm_messages_link' ) ) bbpm_messages_link(); ?&gt;</code> to your template if you disable this."
 msgstr "Du skal tilføje <code>&lt;?php if ( function_exists( 'bbpm_messages_link' ) ) bbpm_messages_link(); ?&gt;</code> til din template hvis du deaktiverer dette."
-
-#: bbpm.php:1270
-#, fuzzy
-msgid "Add static reply form"
-msgstr "Tilføj statiske svar form"
-
-#: bbpm.php:1274
-#, fuzzy
-msgid "If checked, bbPM will add a static reply form that replies to the last message at the end of each PM thread page."
-msgstr "Hvis afkrydset, vil bbPM tilføje en statisk svarformular, at svarene på den sidste besked i slutningen af hver PM tråd side."
 
 #: bbpm.php:1280
 msgid "Email options"
@@ -180,16 +109,6 @@ msgstr "Antal PB tråde per side"
 #: bbpm.php:1296
 msgid "Enter 0 or leave this blank to use your forum's default setting."
 msgstr "Indtast 0 eller lad være blank for at bruge dit forum's standard indstillinger."
-
-#: bbpm.php:1302
-#, fuzzy
-msgid "Maximum users in a PM thread"
-msgstr "Største brugere i en PM tråd"
-
-#: bbpm.php:1306
-#, fuzzy
-msgid "0 means unlimited. 2 will disable the \"add users\" form."
-msgstr "0 betyder ubegrænset. 2 vil deaktivere \"tilføj brugere\" form."
 
 #: bbpm.php:1312
 msgid "Save settings"
@@ -321,7 +240,3 @@ msgstr "http://nightgunner5.wordpress.com/tag/bbpm/"
 
 msgid "Adds the ability for users of a forum to send private messages to each other."
 msgstr "Tilføjer muligheden for at brugere af et forum kan sende private beskeder til hinanden."
-
-#, fuzzy
-msgid "http://nightgunner5.wordpress.com/"
-msgstr "http://nightgunner5.wordpress.com/"

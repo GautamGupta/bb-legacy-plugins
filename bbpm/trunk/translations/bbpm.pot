@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bbPM 1.0.1\n"
 "Report-Msgid-Bugs-To: http://bbpress.org/plugins/topic/bbpm/\n"
-"POT-Creation-Date: 2010-07-23 17:57-0500\n"
+"POT-Creation-Date: 2010-08-01 21:01-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -317,6 +317,7 @@ msgstr ""
 msgid "Sent %s ago"
 msgstr ""
 
+#. Compat with bbPress Smilies
 #: privatemessages.php:225 privatemessages.php:230 threadviewer.php:192
 #: threadviewer.php:230
 msgid "Reply"

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Support forum 3.0.3 Hrvatski\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/support-forum\n"
 "POT-Creation-Date: 2008-05-08 23:54+1000\n"
-"PO-Revision-Date: 2010-08-07 20:02+0100\n"
+"PO-Revision-Date: 2010-08-19 13:24+0100\n"
 "Last-Translator: jurica Zuanović <jurica.zuanovic@gmail.com>\n"
 "Language-Team: Croatian <jurica.zuanovic@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 
 #: support-forum.php:194
 msgid "This version of the <em>Support forum</em> plugin requires bbPress version 0.9"
-msgstr "Ova inačica plugina <em>Forum podrške</em> zahtijeva bbPress inačicu 0.9"
+msgstr "Ova inačica dodatnog modula <em>Forum podrške</em> zahtijeva bbPress inačicu 0.9"
 
 #: support-forum.php:206
 #: support-forum.php:960
@@ -129,7 +129,7 @@ msgstr "Koristi ikonu za ljepljive teme na ljepljivima temama (primjenjuje se na
 
 #: support-forum.php:1021
 msgid "If you used support forum plugin version 1.0, you will need to update existing topics to work with version 2.x"
-msgstr "Ako ste koristili plugin forum podrške inačicu 1.0, trebati ćete ažurirati postojeće teme da bi radile sa inačicom 2.x"
+msgstr "Ako ste koristili dodatni modul forum podrške inačicu 1.0, trebati ćete ažurirati postojeće teme da bi radile sa inačicom 2.x"
 
 #: support-forum.php:1024
 msgid "Update topics to version 2.x"

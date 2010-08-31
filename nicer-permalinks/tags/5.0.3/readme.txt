@@ -44,7 +44,7 @@ Sitemap Generator plugin</a>)
 
 = Version 5.0.2 (2010-08-12) =
 
-* `bb-post.php` editing restored bceause mandatory on bbPress 1.0.2
+* `bb-post.php` editing restored because mandatory on bbPress 1.0.2
 
 = Version 5.0.1 (2010-07-30) =
 

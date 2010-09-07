@@ -41,15 +41,15 @@ $counter=0;  // filter out all backtick code first
 if (preg_match_all("|\<code\>(.*?)\<\/code\>|sim", $text, $backticks)) {foreach ($backticks[0] as $backtick) {++$counter; $text=str_replace($backtick,"_bbcode_lite_".$counter."_",$text);}}
 
 $text=preg_replace('/(\<br \/\>|[\s])*?\[(\*|li)\](.+?)(\<br \/\>|[\s])*?(\[\/(\*|li)\](\<br \/\>|[\s])*?|(?=(\[(\*|li)\](\<br \/\>|[\s])*?|\[\/list\])))/sim','<li>$3</li>',$text); // * = li, a very special case since they may not be closed
-foreach($bbcode_lite['wrap'] as $bbcode=>$html){$text = preg_replace('/\['.$bbcode.'=([^ \'\"]+?)\](.+?)\[\/'.$bbcode.'\]/is','<'.$html[0].' '.$html[1].'="$1">$2</'.$html[0].'>',$text);}
+foreach($bbcode_lite['wrap'] as $bbcode=>$html){$text = preg_replace('/\['.$bbcode.'=([^ \'\"]{0,512}?)\](.+?)\[\/'.$bbcode.'\]/is','<'.$html[0].' '.$html[1].'="$1">$2</'.$html[0].'>',$text);}
 foreach($bbcode_lite['simple'] as $bbcode=>$html){$text = preg_replace('/\['.$bbcode.'\](.+?)\[\/'.$bbcode.'\]/is','<'.$html.'>$1</'.$html.'>',$text);}
 foreach($bbcode_lite['complex'] as $bbcode=>$html){	 	
-	if($bbcode=='url') {$text = preg_replace('/\['.$bbcode.'\]([^ \'\"]+?)\[\/'.$bbcode.'\]/is','<'.$html[0].' '.$html[1].'="$1">$1</'.$html[0].'>',$text);}
+	if($bbcode=='url') {$text = preg_replace('/\['.$bbcode.'\]([^ \'\"]{0,512}?)\[\/'.$bbcode.'\]/is','<'.$html[0].' '.$html[1].'="$1">$1</'.$html[0].'>',$text);}
 	if($bbcode=='quote') {
 	$text = preg_replace('/\['.$bbcode.'=["\']?(.+?)["\']?\](.+?)\[\/'.$bbcode.'\]/is','<'.$html[0].'><'.$html[1].'>$1&nbsp;&raquo;&nbsp;</'.$html[1].'>$2</'.$html[0].'>',$text);
 	// todo: needs callback for post link, post age
 	// $text = preg_replace('/\['.$bbcode.'=["\']?(.+?)["\']?[\:\;]([0-9]+?)\](.+?)\[\/'.$bbcode.'\]/is','<'.$html[0].'><'.$html[1].'>$1&nbsp;&raquo;&nbsp;</'.$html[1].'>$2</'.$html[0].'>',$text);
-	} else {$text = preg_replace('/\['.$bbcode.'\]([^ \'\"]+?)\[\/'.$bbcode.'\]/is','<'.$html[0].' '.$html[1].'="$1">',$text);} 
+	} else {$text = preg_replace('/\['.$bbcode.'\]([^ \'\"]{0,512}?)\[\/'.$bbcode.'\]/is','<'.$html[0].' '.$html[1].'="$1">',$text);} 
 }
 
 if ($counter) {$counter=0; foreach ($backticks[0] as $backtick)  {++$counter; $text=str_replace("_bbcode_lite_".$counter."_",$backtick,$text);}}	// undo backticks

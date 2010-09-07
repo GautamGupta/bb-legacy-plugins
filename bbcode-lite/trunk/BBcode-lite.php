@@ -15,7 +15,7 @@ Donate: http://bbshowcase.org/donate/
 // to force allowing images without extra plugins like "allow images" uncomment the following line:
 // $bbcode_lite['complex']['img'] = array('img','src');
 
-add_filter('bb_init','bbcode_lite_init',255);
+add_filter('bb_init','bbcode_lite_init',9);
 add_filter('post_text', 'bbcode_lite',7);	//  to store bbcode as html permanently,  change 'post_text' to 'pre_post' which is faster but harder for users to edit
 add_filter('pm_text', 'bbcode_lite',7);	// support private message plugin
 add_filter( 'bb_allowed_tags', 'bbcode_lite_extra_tags' );	 // unfortunately to make bbcode fast we need to allow some extra tags like "font"

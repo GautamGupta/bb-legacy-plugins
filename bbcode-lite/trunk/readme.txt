@@ -84,7 +84,10 @@ be sure to let me know if you find some and I will address them as time permits.
 
 * pre tag added
 
+= Version 1.0.5 (2010-09-07) =
+
+* emergency release for security issue - ALL USERS SHOULD IMMEDIATELY UPGRADE ASAP
+
 == To Do ==
 
 * enforce limits for [SIZE] and [COLOR] BBcodes
-

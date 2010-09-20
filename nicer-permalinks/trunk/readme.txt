@@ -31,6 +31,11 @@ $link = get_post_link( $post_id );`
 
 * Check prerequisites and enable the plugin.
 
+== Frequently Asked Questions ==
+
+= Is it possible to show all sub-forums in the URI? =
+In short, <strong>no</strong>. Keeping the rest of the plugin as is, the `.htaccess` would not be able to distinguish between topics and forums.
+
 == License ==
 
 * CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/

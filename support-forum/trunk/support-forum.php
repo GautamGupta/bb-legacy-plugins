@@ -554,7 +554,7 @@ class Support_Forum
 		
 		$topic_id = (integer) $topic_id;
 		
-		apply_filters('topic_resolution', $status, $topic_id);
+		apply_filters('topic_resolution', $resolution, $topic_id);
 		
 		if (!in_array($resolution, array_keys($this->resolutions))) {
 			return false;

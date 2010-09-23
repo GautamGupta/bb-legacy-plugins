@@ -2,7 +2,7 @@
 Tags: _ck_, administration, moderation, tags, tag
 Contributors: _ck_
 Requires at least: 0.9
-Tested up to: 0.9
+Tested up to: 1.1
 Stable tag: trunk
 Donate link: http://bbshowcase.org/donate/
 
@@ -14,7 +14,7 @@ With this plugin administrators may explore the complete tag history of all topi
 
 This can be helpful to make sure spammers have not snuck in any tags or find misbehaving new users.
 
-Currently works only with bbPress 0.9
+Now works with bbPress 1.x starting with version 0.0.4
 
 == Installation ==
 
@@ -26,11 +26,7 @@ Activate and check under the "Manage" menu for the new "Tags" submenu.
 
 = Why doesn't it work in bbPress 1.x =
 
-* bbPress 1.x completely changes the tag structure internally and no longer tracks the tagging date.
-
-They literally downgraded the feature and removed capabilities  to match WordPress's clunky design. 
-
-In theory I could eventually make it work if your database tag table has not been optimized or sorted.
+* Now works with bbPress 1.x starting with version 0.0.4,  however there is no tagging date tracking in 1.x and reversing the tagging order is much slower than 0.9
 
 == License ==
 
@@ -45,6 +41,10 @@ In theory I could eventually make it work if your database tag table has not bee
 = Version 0.0.2 (2010-09-23) =
 
 * first public release
+
+= Version 0.0.4 (2010-09-24) =
+
+* bbPress 1.x support added
 
 == To Do ==
 

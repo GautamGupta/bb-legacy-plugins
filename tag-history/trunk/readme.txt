@@ -14,13 +14,13 @@ With this plugin administrators may explore the complete tag history of all topi
 
 This can be helpful to make sure spammers have not snuck in any tags or find misbehaving new users.
 
-Currently only works with bbPress 0.9
+Currently works only with bbPress 0.9
 
 == Installation ==
 
 Add the entire `tag-history/` directory to the bbPress `my-plugins/` directory.
 
-Activate and check under the "Manage" menu for the new Tags submenu.
+Activate and check under the "Manage" menu for the new "Tags" submenu.
 
 == Frequently Asked Questions ==
 

@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/tag-history
 Description:  Helps administrators figure out who tagged what, when, by exploring tagging history.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.0.2
+Version: 0.0.3
 */
 
 if (defined('BB_IS_ADMIN') && BB_IS_ADMIN) { 

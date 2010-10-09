@@ -1,0 +1,26 @@
+/* 
+    Document   : text_editor.css
+    Created on : 05.10.2010, 11:15:07
+    Author     : main
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+blockquote, .forum_quote
+{
+    background: #F9FaFb;
+    border: 1px solid #add6ff;
+    border-left: 10px solid #add6ff;
+    margin: 5px 0 5px 0px;
+    padding: 10px;
+}
+
+blockquote p
+{
+    margin: 0;
+}

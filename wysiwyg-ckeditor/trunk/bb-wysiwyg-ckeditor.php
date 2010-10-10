@@ -4,7 +4,7 @@ Plugin Name: Wysiwyg CKEditor
 Plugin URI: 
 Description: Add Wysiwyg Editor to Textarea
 Author: Alex Galashov
-Version: 0.2
+Version: 0.3
 */
 
 function bbwe_head()

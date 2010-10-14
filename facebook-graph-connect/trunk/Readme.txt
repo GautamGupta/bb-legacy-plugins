@@ -10,11 +10,12 @@ Users can Register or Login using facebook connect button.
 == Description ==
 Adds facebook connect features to bbpress, so users may Register or Login with facebook connect features.
 
-1. Plugin Should request basic & extended permissions on fbConnect Button Click.
-2. Plugin should create new user or Link existing member of bbpress.
-3. Plugin should retrive firstname, lastname, email address from facebook.
-4. Plugin should send a random password to new user email.
-5. Plugin should auto login a linked facebook user.
+1. Requests basic & extended permissions on fbConnect Button Click.
+2. Creates new user or Link existing member of bbpress.
+3. Retrives firstname, lastname, email address from facebook.
+4. Sends a random password to new user email.
+5. Auto log-in a linked facebook user.
+6. Shows facebook profile picture as avatar in bbpress posts and in profile page.
 
 DEMO WEBSITE :  http://www.aboutconsumer.com
  

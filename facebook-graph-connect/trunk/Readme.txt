@@ -22,19 +22,29 @@ DEMO WEBSITE :  http://www.aboutconsumer.com
 
 * This plugin requires CURL to be installed. Check your PHPINFO for a CURL section.
 
-* COPY "facebook_graph_connect" folder to "root/bb-plugins" directory.
+a) COPY "facebook_graph_connect" folder to "root/bb-plugins" directory.
 
-* COPY "fb_connect.php" file from template directory to "root/bb-templates/YOUR-TEMPLATE".
+b) COPY "fb_connect.php" file from template directory to "root/bb-templates/YOUR-TEMPLATE".
 
-* COPY "bb-fb-connect.php" to root directory "root/".
+c) COPY "bb-fb-connect.php" to root directory "root/".
 
-* EDIT copy & paste this code : <?php fb_get_login_button();?> in templates, Where you want fb-button to apprear. 
+d) EDIT copy & paste this code : <?php fb_get_login_button();?> in templates, Where you want fb-button to apprear. 
 
-* ACTIVATE plugin
+e) ACTIVATE plugin
 
-* IN admin->settings, Click "Facebook connect" and enter facebook App id and App secret. Save Changes!
+f) IN admin->settings, Click "Facebook connect" and enter facebook App id and App secret. Save Changes!
 
 
+* --You may want to show facebook profile images as avatars. But Steps Below are totally Optional.--
+
+a) in "bb-template" folder, inside "your template" folder, edit post.php, paste code below or replace existing avatar code.
+
+	<?php get_fb_avatar(get_post_author_id()); ?>
+
+b) In same "bb-template" sub folder, edit profile.php, paste code below or replace existing code.
+	<?php get_fb_avatar($user->ID,'large'); ?>
+
+c) That's it, your facebook users should able to choose not to use facebook image in profile edit page.
 
 
 == License ==
@@ -45,6 +55,7 @@ DEMO WEBSITE :  http://www.aboutconsumer.com
 
 * 0.0.1	first public beta release for review
 * 0.0.2	public beta release for re-review, as readme text wasn't neat, needed some writing in plugin description.
+* 0.0.3	Added Facebook profile Image as bbpress avatar for your facebook users.
 
 == To Do ==
 

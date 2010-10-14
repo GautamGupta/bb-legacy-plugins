@@ -61,7 +61,7 @@ function fb_add_extra_profile_feild() //show link option on profile page
 list($uid,$me,$session,$access_token,$facebook) = try_connect();
 global $bbdb,$fb_graph_lang;
 
-	if (bb_facebook_location()=="profile.php" && fb_check_local_user() && fb_check_remote_user()) 
+	if (bb_facebook_location()=="profile.php" && fb_check_local_user() && fb_check_remote_user() && fb_get_local_userid($uid)==$_GET["id"]) 
 	{
 	$table_name = $bbdb->prefix . "fbuser";
 	$fb_user_data=$bbdb->get_row("SELECT fb_linked,fb_use_img FROM $table_name WHERE fb_userid=".$uid);

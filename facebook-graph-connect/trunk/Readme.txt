@@ -23,22 +23,24 @@ DEMO WEBSITE :  http://www.aboutconsumer.com
 
 * This plugin requires CURL to be installed. Check your PHPINFO for a CURL section.
 
-a) COPY "facebook_graph_connect" folder to "root/bb-plugins" directory.
+a) In bb-template,  inside "your template" folder, edit "header.php" find "<html" and add line "xmlns:fb="http://www.facebook.com/2008/fbml"
 
-b) COPY "fb_connect.php" file from template directory to "root/bb-templates/YOUR-TEMPLATE".
+b) COPY "facebook_graph_connect" folder to "root/bb-plugins" directory.
 
-c) COPY "bb-fb-connect.php" to root directory "root/".
+c) COPY "fb_connect.php" file from template directory to "root/bb-templates/YOUR-TEMPLATE".
 
-d) EDIT copy & paste this code : <?php fb_get_login_button();?> in templates, Where you want fb-button to apprear. 
+d) COPY "bb-fb-connect.php" to root directory "root/".
 
-e) ACTIVATE plugin
+e) EDIT copy & paste this code : <?php fb_get_login_button();?> in templates, Where you want fb-button to apprear. 
 
-f) IN admin->settings, Click "Facebook connect" and enter facebook App id and App secret. Save Changes!
+f) ACTIVATE plugin
+
+g) IN admin->settings, Click "Facebook connect" and enter facebook App id and App secret. Save Changes!
 
 
 * --You may want to show facebook profile images as avatars. But Steps Below are totally Optional.--
 
-a) in "bb-template" folder, inside "your template" folder, edit post.php, paste code below or replace existing avatar code.
+a) In "bb-template" folder, inside "your template" folder, edit post.php, paste code below or replace existing avatar code.
 
 	<?php get_fb_avatar(get_post_author_id()); ?>
 

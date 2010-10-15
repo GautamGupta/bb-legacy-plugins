@@ -21,33 +21,31 @@ DEMO WEBSITE :  http://www.aboutconsumer.com
  
 == Installation ==
 
-* This plugin requires CURL to be installed. Check your PHPINFO for a CURL section.
+a) This plugin requires CURL to be installed. Check your PHPINFO for a CURL section.
 
-a) In bb-template,  inside "your template" folder, edit "header.php" find "<html" and add line "xmlns:fb="http://www.facebook.com/2008/fbml"
+* COPY "facebook_graph_connect" folder to "root/bb-plugins" directory.
 
-b) COPY "facebook_graph_connect" folder to "root/bb-plugins" directory.
+* COPY "fb_connect.php" file from template directory to "root/bb-templates/YOUR-TEMPLATE".
 
-c) COPY "fb_connect.php" file from template directory to "root/bb-templates/YOUR-TEMPLATE".
+* COPY "bb-fb-connect.php" to root directory "root/".
 
-d) COPY "bb-fb-connect.php" to root directory "root/".
+* EDIT copy & paste this code : <?php fb_get_login_button();?> in templates, Where you want fb-button to apprear. 
 
-e) EDIT copy & paste this code : <?php fb_get_login_button();?> in templates, Where you want fb-button to apprear. 
+* ACTIVATE plugin
 
-f) ACTIVATE plugin
-
-g) IN admin->settings, Click "Facebook connect" and enter facebook App id and App secret. Save Changes!
+* IN admin->settings, Click "Facebook connect" and enter facebook App id and App secret. Save Changes!
 
 
-* --You may want to show facebook profile images as avatars. But Steps Below are totally Optional.--
+b) --You may want to show facebook profile images as avatars. But Steps Below are totally Optional.--
 
-a) In "bb-template" folder, inside "your template" folder, edit post.php, paste code below or replace existing avatar code.
+* In "bb-template" folder, inside "your template" folder, edit post.php, paste code below or replace existing avatar code.
 
 	<?php get_fb_avatar(get_post_author_id()); ?>
 
-b) In same "bb-template" sub folder, edit profile.php, paste code below or replace existing code.
+* In same "bb-template" sub folder, edit profile.php, paste code below or replace existing code.
 	<?php get_fb_avatar($user->ID,'large'); ?>
 
-c) That's it, your facebook users should able to choose not to use facebook image in profile edit page.
+* That's it, your facebook users should able to choose not to use facebook image in profile edit page.
 
 
 == License ==

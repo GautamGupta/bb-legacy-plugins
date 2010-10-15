@@ -31,6 +31,8 @@ a) This plugin requires CURL to be installed. Check your PHPINFO for a CURL sect
 
 * EDIT copy & paste this code : <?php fb_get_login_button();?> in templates, Where you want fb-button to apprear. 
 
+* Since "bb_language_attributes" is deprecated, in bb-template, edit "header.php" find "<html " and add line manually : xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml" 
+
 * ACTIVATE plugin
 
 * IN admin->settings, Click "Facebook connect" and enter facebook App id and App secret. Save Changes!

@@ -556,6 +556,11 @@ function get_fb_avatar($id,$type) // to use with post template.
 		}
 	}
 }
+function fb_schema( $attr ) {
+	$attr .= "\n xmlns:og=\"http://opengraphprotocol.org/schema/\""; 
+	$attr .= "\n xmlns:fb=\"http://www.facebook.com/2008/fbml\""; 
+	return $attr;
+}
 
 add_action('bb_admin-header.php', 'fb_configuration_page_process');
 bb_register_activation_hook(str_replace(array(str_replace("/","\\",BB_PLUGIN_DIR),str_replace("/","\\",BB_CORE_PLUGIN_DIR)),array("user#","core#"),__FILE__), 'fb_install');
@@ -565,7 +570,7 @@ bb_register_activation_hook(str_replace(array(str_replace("/","\\",BB_PLUGIN_DIR
 if ( !bb_get_option( 'fb_app_id' ) || !bb_get_option( 'fb_secret' )) {
 	return;
 }
-
+add_filter( 'bb_language_attributes', 'fb_schema' );
 add_action('bb_init', 'fb_local_session_check');
 add_action('bb_head', 'fb_head_script');
 add_action('bb_foot', 'fb_foot_script');

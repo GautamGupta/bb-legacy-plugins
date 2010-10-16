@@ -23,6 +23,7 @@ $fb_graph_lang['fb_linked_option'] =  'Linked';
 $fb_graph_lang['fb_unlinked_option'] = "Unlinked. (You must log-in using password.)";
 $fb_graph_lang['fb_use_img'] =  'Use Image';
 $fb_graph_lang['fb_dont_use_img'] = "Don't Use Image";
+$fb_graph_lang['credit_txt_align'] = "center"; //footer credit text alignment left,ceter, right
 
 //################# NO NEED TO EDIT BELOW, ENTER YOUR APP DETAILS IN ADMIN PAGE #######################
 
@@ -206,14 +207,29 @@ function return_domain_name()//return trimed domain name.
 	}
 }
 function credit_tx(){
-return 
-'PGRpdiBzdHlsZT0iZm9udC1zaX
-plOjEycHg7dGV4dC1hbGlnbjpjZ
-W50ZXIiPkZhY2Vib29rIGNvbm5l
-Y3QgYnkgPGEgaHJlZj0iaHR0cDo
-vL3d3dy5hYm91dGNvbnN1bWVyLm
-NvbSIgdGFyZ2V0PSJuZXciPkFDP
-C9hPjwvZGl2Pg==';
+return 'PGRpdiBzdHlsZT0iZm9udC1zaXplOiAxMXB
+4O2NvbG9yOiAjNjY2NjY2O3RleHQtYWxpZ246JXM7Ij
+5GYWNlYm9vayBDb25uZWN0IGJ5IDxhIGhyZWY9Imh0d
+HA6Ly93d3cuYWJvdXRjb25zdW1lci5jb20iIHRhcmdl
+dD0iX2JsYW5rIj5BQzwvYT48L2Rpdj4=';
+}
+function switch_aligns($str)
+{
+	switch ($str)
+	{
+	case 'left':
+	  $c_return = 'left';
+	  break; 
+	case 'center':
+	  $c_return = 'center';
+	  break;
+	case 'right':
+	  $c_return = 'right';
+	  break;
+	default:
+	  $c_return = 'center';
+	}
+	return $c_return;
 }
 function fb_local_session_check() //redirect fb user to connect page
 {
@@ -326,11 +342,12 @@ if($bb_userid)
 	{return $bb_userid;}else{return 0;}	
 
 }
-//output head scripts..
+//output fb scripts..
 function fb_foot_script()
 {
+global $fb_graph_lang;
 list($uid,$me,$session,$access_token,$facebook) = try_connect();
-echo base64_decode(credit_tx()).'<script>
+echo sprintf(base64_decode(credit_tx()), switch_aligns($fb_graph_lang['credit_txt_align']) ).'<script>
       window.fbAsyncInit = function() {
         FB.init({
           appId   : \''.APP_ID.'\',
@@ -355,7 +372,6 @@ echo base64_decode(credit_tx()).'<script>
 	 function fb_logout()
 	 {
 		 FB.logout(function(response) {
-			  // user is now logged out
 			  window.location = "bb-login.php?logout=1"
 		});
 	 }
@@ -575,8 +591,8 @@ add_action('bb_init', 'fb_local_session_check');
 add_action('bb_head', 'fb_head_script');
 add_action('bb_foot', 'fb_foot_script');
 add_action('extra_profile_info', 'fb_add_extra_profile_feild',8);	
-if (bb_facebook_location()=='bb-fb-connect.php') {	// determines if we're actually on bb-fb-connect.php and only hooks in that case
-	add_action('bb_send_headers', 'get_post_data');	// check before headers finish sending
+if (bb_facebook_location()=='bb-fb-connect.php') {	
+	add_action('bb_send_headers', 'get_post_data');	
 } 
 
 

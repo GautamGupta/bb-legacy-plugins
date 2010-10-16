@@ -29,7 +29,9 @@ a) This plugin requires CURL to be installed. Check your PHPINFO for a CURL sect
 
 * COPY "bb-fb-connect.php" to root directory "root/".
 
-* EDIT copy & paste this code : <?php fb_get_login_button();?> in templates, Where you want fb-button to apprear. 
+* IMPORTANT : EDIT copy & paste code below in your default templates, Where you want fb-button to apprear, 
+		<?php fb_get_login_button(); ?>
+  If you are using kakumei template, Edit "login-form.php" and paste code just before <input name="remember"
 
 * Since "bb_language_attributes" is deprecated, in bb-template, edit "header.php" find "<html " and add line manually : xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml" 
 

@@ -61,7 +61,7 @@ b) --You may want to show facebook profile images as avatars. But Steps Below ar
 * 0.0.1	first public beta release for review
 * 0.0.2	public beta release for re-review, as readme text wasn't neat, needed some writing in plugin description.
 * 0.0.3	Added Facebook profile Image as bbpress avatar for your facebook users.
-
+* 0.0.4 Added kakumei template edit instruction regarding fb-button in Readme.txt, Fixed footer credit alignment.
 == To Do ==
 
 * check for file duplicates before saving

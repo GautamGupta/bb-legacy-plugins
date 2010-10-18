@@ -65,4 +65,6 @@ b) --You may want to show facebook profile images as avatars. But Steps Below ar
 == To Do ==
 
 * check for file duplicates before saving
+* On activation, plugin creates a table called " bb_fbuser" in your database if table doesn't exist. Please check if plugin succesfully created that table or not.
+
 

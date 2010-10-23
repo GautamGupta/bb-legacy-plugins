@@ -29,7 +29,7 @@ Plugin's terms translation (pot).
 
 = Why this plugin ? =
 
-* to solve a lack of feature when installing [dev.xiligroup support forum](http://forum.dev.xiligroup.com/).
+* to solve a lack of feature when installing [dev.xiligroup support forum](http://forum2.dev.xiligroup.com/).
 * to solve the lack of plugins tested and compatible with latest release of BBpress 1.0.2. Thanks to these previous plugins authors.
 * to discover how to create BBpress plugin (with knowledges of WP plugins as developed in dev.xiligroup.com)...
 
@@ -43,7 +43,7 @@ Plugin's terms translation (pot).
 
 == Changelog ==
 
-= Version 0.9.4 (2010-10-20) =
+= Version 0.9.4 (2010-10-23) =
 * if checked in user profile - send a copy to user (topic is set in bb_favorites)
 * new options saved (as array)
 * new doc

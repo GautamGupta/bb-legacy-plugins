@@ -21,14 +21,14 @@ Simple plugin to send short notification to a choosen email address when a new p
 
 = What about future ? =
 
-[October 2010] Roadmap : add a way for users to subscribe to a topic.
+[October 2010] Roadmap : add a way for users to subscribe to a topic. - see beta [0.9.4](http://bbpress.org/plugins/topic/xili-new-post-notification/download/)
 
 [WordCamp Paris May 8th] BBPress seems resurrect. I will start again devs and answer soon to users and contributors questions…
 
 
 = Why this plugin ? =
 
-* to solve a lack of feature when installing [dev.xiligroup support forum](http://forum.dev.xiligroup.com/).
+* to solve a lack of feature when installing [dev.xiligroup support forum](http://forum2.dev.xiligroup.com/).
 * to solve the lack of plugins tested and compatible with latest release of BBpress 1.0.2. Thanks to these previous plugins authors.
 * to discover how to create BBpress plugin (with knowledges of WP plugins as developed in dev.xiligroup.com)...
 

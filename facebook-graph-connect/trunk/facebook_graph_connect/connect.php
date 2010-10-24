@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Facebook Graph Connect [Beta]
-Plugin URI: http://bbpress.org/
+Plugin URI: http://bbpress.org/plugins/topic/facebook-graph-connect/
 Description: Adds facebook connect features to bbpress, so users may Register or Login with facebook connect features.
 Author: Saran Chamling
 Version: 0.0.5

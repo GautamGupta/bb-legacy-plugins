@@ -21,26 +21,31 @@ DEMO WEBSITE :  http://www.aboutconsumer.com
  
 == Installation ==
 
-a) This plugin requires CURL to be installed. Check your PHPINFO for a CURL section.
+READ CAREFULLY * If you face any problems, please visit http://bbpress.org/plugins/topic/facebook-graph-connect/ and let me know. It will help me update the plugin.
 
-* COPY "facebook_graph_connect" folder to "root/bb-plugins" directory.
+a) This plugin requires CURL to be installed. Check your web host has php curl extension enabled.
 
-* COPY "fb_connect.php" file from template directory to "root/bb-templates/YOUR-TEMPLATE".
+*  1) COPY "facebook_graph_connect" folder to "root/bb-plugins" directory. ("root" folder is where your bbpress is located)
+
+*  2) COPY "fb_connect.php" file from template directory to "root/bb-templates/YOUR-TEMPLATE".
 
 * COPY "bb-fb-connect.php" to root directory "root/".
 
-* IMPORTANT : EDIT copy & paste code below in your default templates, Where you want fb-button to apprear, 
+* IMPORTANT : Copy-paste code below in your templates, WHERE YOU WANT  facebook connect button to apprear,
 		<?php fb_get_login_button(); ?>
   If you are using kakumei template, Edit "login-form.php" and paste code just before <input name="remember"
 
-* Since "bb_language_attributes" is deprecated, in bb-template, edit "header.php" find "<html " and add line manually : xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml" 
+* In bb-template, edit "header.php" find "<html " and add line manually : xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml" 
 
 * ACTIVATE plugin
 
 * IN admin->settings, Click "Facebook connect" and enter facebook App id and App secret. Save Changes!
 
+* Read "To Do" section below for additional notes.
 
-b) --You may want to show facebook profile images as avatars. But Steps Below are totally Optional.--
+
+
+b) OPTIONAL --You may want to show facebook profile images as avatars. But Steps Below are totally Optional.--
 
 * In "bb-template" folder, inside "your template" folder, edit post.php, paste code below or replace existing avatar code.
 
@@ -51,6 +56,11 @@ b) --You may want to show facebook profile images as avatars. But Steps Below ar
 
 * That's it, your facebook users should able to choose not to use facebook image in profile edit page.
 
+== To Do ==
+* check for file duplicates before saving
+* On activation, plugin creates a table called " bb_fbuser" in your database if table doesn't exist. import "mysql.sql" file in your phpmyadmin.
+* Check In some custom templates, <?php do_action('bb_foot'); ?> code may be missing in footer.php template file. 
+* If you face any problems, please visit http://bbpress.org/plugins/topic/facebook-graph-connect/ and let me know. It will help me update the plugin.
 
 == License ==
 
@@ -61,10 +71,5 @@ b) --You may want to show facebook profile images as avatars. But Steps Below ar
 * 0.0.1	first public beta release for review
 * 0.0.2	public beta release for re-review, as readme text wasn't neat, needed some writing in plugin description.
 * 0.0.3	Added Facebook profile Image as bbpress avatar for your facebook users.
-* 0.0.4 Added kakumei template edit instruction regarding fb-button in Readme.txt, Fixed footer credit alignment.
-== To Do ==
-
-* check for file duplicates before saving
-* On activation, plugin creates a table called " bb_fbuser" in your database if table doesn't exist. Please check if plugin succesfully created that table or not.
-
-
+* 0.0.4    Added kakumei template edit instruction regarding fb-button in Readme.txt, Fixed footer credit alignment.
+* 0.0.5    Changed redirect locations to absolute paths, was redirecting users to unknown locations. Added a mysql file for those it didn't create "fbuser" table in database.

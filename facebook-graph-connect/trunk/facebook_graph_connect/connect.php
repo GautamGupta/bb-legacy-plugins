@@ -4,11 +4,11 @@ Plugin Name: Facebook Graph Connect [Beta]
 Plugin URI: http://bbpress.org/
 Description: Adds facebook connect features to bbpress, so users may Register or Login with facebook connect features.
 Author: Saran Chamling
-Version: 0.0.4
+Version: 0.0.5
 Author URI: http://www.aboutconsumer.com/
 */
 
-################# MODIFY PLUGIN LANGUAGE BELOW (IF YOU WANT ;) #########################################
+################# OPTIONAL - MODIFY PLUGIN LANGUAGE BELOW (IF YOU WANT ;) #########################################
 
 $fb_graph_lang['login_button']='<a href="#" onclick="requestExtPerm(); return false;"><img src="http://static.ak.fbcdn.net/rsrc.php/zB6N8/hash/4li2k73z.gif" border="0" />
 </a>';
@@ -242,7 +242,7 @@ global $bbdb, $fb_graph_lang;
  }
 	 if(!fb_check_local_user() && fb_check_remote_user() && bb_facebook_location()!='bb-fb-connect.php') //redirect fb user to connect page
 	 {
-		 bb_safe_redirect('bb-fb-connect.php'); 
+		 bb_safe_redirect(bb_get_option('uri').'bb-fb-connect.php'); 
 		 exit();
 	 }
  if(fb_check_local_user() && fb_check_remote_user() && fb_get_local_fb_status($uid)) //login existing users
@@ -253,9 +253,9 @@ global $bbdb, $fb_graph_lang;
 			//do_action('bb_user_login', (int)fb_get_local_userid($uid));
 			if(bb_facebook_location()=='bb-fb-connect.php')
 				{
-				bb_safe_redirect(bb_get_option('uri'));	//if user is still in connect page send them to main page
+				bb_safe_redirect(bb_get_option('uri').bb_get_option('uri'));	//if user is still in connect page send them to main page
 				}else{
-				bb_safe_redirect('bb-login.php'); //login page checks logged user and sends user back to main page.
+				bb_safe_redirect(bb_get_option('uri').'bb-login.php'); //login page checks logged user and sends user back to main page.
 				}
 		}else{
 			if(bb_facebook_location()=='bb-fb-connect.php')

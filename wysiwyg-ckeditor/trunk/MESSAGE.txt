@@ -1,0 +1,21 @@
+Hello!
+This is open message from author to my plugin's users.
+
+Some users tell that my plugin is not working for them,
+but solo i'm unable to determine why. On my site it works fine.
+
+If the plugin does not work for you - please, help me to fix it!
+
+If you are a programmer - you can try to fix it yourself,
+the plugin is very simple.
+
+If not, but you have a live forum where you tested the plugin -
+please, provide the adress of your forum.
+
+Watch for JavaScript errors in your browser!
+
+also, you may contact me directly, if you want.
+post your ICQ, email or skype in some format that is not readable by bots
+
+post feedback here:
+http://bbpress.org/plugins/topic/wysiwyg-ckeditor/

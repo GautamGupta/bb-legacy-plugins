@@ -27,7 +27,7 @@ GNU General Public License version 3 (GPLv3): http://www.opensource.org/licenses
 
 == Installation ==
 
-1. Upload the extracted `after-the-deadline` folder to the `/my-plugins/` directory
+1. Upload the extracted `xmlrpc-client-info` folder to the `/my-plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in bbPress
 3. Enjoy!
 

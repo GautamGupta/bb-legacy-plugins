@@ -5,7 +5,7 @@ Plugin URI: http://master5o1.com/projects/bbpress-mobile/
 Description: Client Info for interfaces to the forum connecting through XML-RPC api.
 Author: Jason Schwarzenberger
 Author URI: http://master5o1.com/
-Version: 0.1.1
+Version: 0.1
 */
 
 /*

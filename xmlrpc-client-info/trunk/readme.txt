@@ -3,7 +3,7 @@ Contributors: Jason Schwarzenberger
 Tags: xmlrpc, client, info, xmlrpc client info, mobile, master5o1, 5o1
 Requires at least: 1.0
 Tested up to: 1.1
-Stable tag: 0.1.1
+Stable tag: 0.1
 
 == Description ==
 

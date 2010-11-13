@@ -1,5 +1,5 @@
 === XMLRPC Client Info ===
-Contributors: Jason Schwarzenberger
+Contributors: <a href="http://master5o1.com/">master5o1</a>
 Tags: xmlrpc, client, info, xmlrpc client info, mobile, master5o1, 5o1
 Requires at least: 1.0
 Tested up to: 1.1

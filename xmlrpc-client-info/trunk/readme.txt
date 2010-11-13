@@ -5,9 +5,9 @@ Requires at least: 1.0
 Tested up to: 1.1
 Stable tag: 0.1
 
-XMLRPC Client Info gets and displays client info about a post made through XMLRPC API.
-
 == Description ==
+
+XMLRPC Client Info gets and displays client info about a post made through XMLRPC API.
 
 This plugin receives the GET variable $client and $client_uri and stores them as meta data for the post that is being created.  It then allows the data to be displayed (e.g. in the post meta area of the theme) in the format "via Client Name."
 
@@ -18,9 +18,6 @@ To use, put the following into post.php of your template:
 == Other Notes ==
 * Inspired by Facebook's "via Facebook for Android."
 * Created for use by [bbPress Mobile](http://master5o1.com/projects/bbpress-mobile/).
-
-= Thanks/Credits =
-* [Jason Schwarzenberger](http://master5o1.com)
 
 = License =
 GNU General Public License version 3 (GPLv3): http://www.opensource.org/licenses/gpl-3.0.html
@@ -34,7 +31,11 @@ GNU General Public License version 3 (GPLv3): http://www.opensource.org/licenses
 
 == Frequently Asked Questions ==
 
+None
+
 == Screenshots ==
+
+Screenshots can be found [here](http://master5o1.com/projects/bbpress-mobile/).
 
 == Changelog ==
 

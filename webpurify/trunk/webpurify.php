@@ -11,7 +11,7 @@ Author URI: http://www.webpurify.com/
 
 function bb_webpurify_verify_key( $key )
 {
-		$checkurl = "http://www.webpurify.com/services/rest/?method=webpurify.live.check&api_key=".$key."&text=validate";	
+		$checkurl = "http://api1.webpurify.com/services/rest/?method=webpurify.live.check&api_key=".$key."&text=validate";	
 		$response = simplexml_load_file($checkurl,'SimpleXMLElement', LIBXML_NOCDATA);
 	
 		if ( $response['stat'][0] != 'fail' ) {
@@ -138,7 +138,7 @@ function bb_wp_check_post( $post_text )
 #
 # call the API and decode the response
 #
-    $url = "http://www.webpurify.com/services/rest/?".implode('&', $encoded_params);
+    $url = "http://api1.webpurify.com/services/rest/?".implode('&', $encoded_params);
 
 	$response = simplexml_load_file($url,'SimpleXMLElement', LIBXML_NOCDATA);
     $post_text = $response->text;
@@ -172,7 +172,7 @@ function bb_wp_check_title( $topic_title )
 #
 # call the API and decode the response
 #
-    $url = "http://www.webpurify.com/services/rest/?".implode('&', $encoded_params);
+    $url = "http://api1.webpurify.com/services/rest/?".implode('&', $encoded_params);
 
 	$response = simplexml_load_file($url,'SimpleXMLElement', LIBXML_NOCDATA);
     $topic_title = $response->text;

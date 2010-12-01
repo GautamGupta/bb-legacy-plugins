@@ -1,5 +1,5 @@
 === BB-to-WP users copier ===
-Contributors: numediaweb
+Contributors: Abdessamad Idrissi
 Donate link: http://www.numediastudio.com/donate
 Tags:  bbpress, wordpress, user, import, copy, numediastudio, integration, merge
 Requires at least: 1.0

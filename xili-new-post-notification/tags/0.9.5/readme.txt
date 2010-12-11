@@ -26,10 +26,11 @@ Before allowing that the administrator must check the plugin settings ONLY if th
 
 Selection of favorites checked by users for email notification. (not all favorites as yet)
 Plugin's terms translation (pot).
+Add your wishes in [dev.xiligroup support forum](http://forum2.dev.xiligroup.com/)
 
 = Why this plugin ? =
 
-* to solve a lack of feature when installing [dev.xiligroup support forum](http://forum.dev.xiligroup.com/).
+* to solve a lack of feature when installing [dev.xiligroup support forum](http://forum2.dev.xiligroup.com/).
 * to solve the lack of plugins tested and compatible with latest release of BBpress 1.0.2. Thanks to these previous plugins authors.
 * to discover how to create BBpress plugin (with knowledges of WP plugins as developed in dev.xiligroup.com)...
 

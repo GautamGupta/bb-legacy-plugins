@@ -1,0 +1,90 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: xili-new-post-notification\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2010-10-24 12:06+0100\n"
+"Last-Translator: dev.xiligroup <contact@xiligroup.com>\n"
+"Language-Team: dev.xiligroup.com <contact@xiligroup.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-Language: French\n"
+"X-Poedit-Country: FRANCE\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-SearchPath-0: trunk\n"
+
+#
+msgid "New Post Notification Settings"
+msgstr "Réglages de la notification par courriel"
+
+msgid "Email address:"
+msgstr "Adresse Courriel :"
+
+msgid "Save settings &raquo;"
+msgstr "Sauver les réglages &raquo;"
+
+msgid "This email <b>(admin default to change)</b> will receive ID of added posts"
+msgstr "Cette adresse email <b>(admin par défaut)</b> va recevoir les ID des fils actualisés"
+
+msgid "This email (update it if needed) will receive ID of added posts"
+msgstr "Cet email (mettre à jour si nécessaire) va recevoir les ID des fils mis à jour"
+
+msgid "Update settings &raquo;"
+msgstr "Mettre à jour les réglages &raquo;"
+
+msgid "Add content in email:"
+msgstr "Ajouter le contenu de l'article dans le courriel envoyé"
+
+msgid "Each user can choose to receive email when a topic is his favorite and when this topic is updated. <br />Check here if you are sure that your server (and ISP) is not limited and able to send a series of emails:"
+msgstr "Les abonnés peuvent choisir de recevoir des courriels des fils auxquels ils sont abonnés ! <br />Cocher ici si vous êtes sûr que votre serveur (voir votre fournisseur) ne limite les flux de courriels envoyés en série :"
+
+msgid "<strong>Notification email settings saved.</strong>"
+msgstr "<strong>Réglages de l'extension sauvegardés.</strong>"
+
+msgid "There is a new post on: "
+msgstr "Il y a un nouveau texte sur le fil :"
+
+msgid "Hello,"
+msgstr "Bonjour,"
+
+msgid " has posted here:"
+msgstr " a livré ici :"
+
+msgid "Users receive email if topic is favorite."
+msgstr "Les abonnés recoivent un courriel si le fil est choisi comme favori"
+
+msgid "Users do not receive email even if topic is favorite - see plugin settings !"
+msgstr "Selon les réglages de l'extension, les abonnés ne reçoivent pas les courriels des fils auxquels ils sont abonnés !"
+
+msgid "INFOS : %s"
+msgstr "Information : %s"
+
+msgid "Hi Keymaster, don\\'t forget to visit New Post Notification settings in forum admin UI and save a right email."
+msgstr "Hello Mr l'administrateur, n\\'oubliez pas de mettre à jour vos réglages de l'extension New Post Notification"
+
+msgid "You receive this email because you have choosen this topic"
+msgstr "Vous recevez ce courriel parce que vous avez choisi ce fil"
+
+msgid "as favorite"
+msgstr "comme favori"
+
+msgid "New Post Notification"
+msgstr "New Post Notification"
+
+msgid "Email Notification"
+msgstr "Notification par courriel"
+
+msgid "Email Notifications"
+msgstr "Notification par courriel"
+
+msgid "Profile updated"
+msgstr "Profil mis à jour"
+
+msgid "Post notification"
+msgstr "Notification de publication"
+
+msgid "Do you need to receive email for all ?"
+msgstr "Souhaitez-vous être averti par courriel pour tous les favoris ?"
+

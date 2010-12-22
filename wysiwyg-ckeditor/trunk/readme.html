@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="en-us" http-equiv="Content-Language" />
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>Wysiwyg CKEditor Readme</title>
+<style type="text/css">
+/* start of ol code block style */
+ 
+ol.code {
+   margin: 1em 2em;
+   padding: 0em;
+   border: solid 1px #2b91af;
+   font-family: "Courier New" , Courier, serif;
+   font-weight: bold;
+   color: #2b91af;
+   background: #eee;
+   line-height: 100%;
+   overflow: auto; }
+ 
+ol.code pre {
+   margin: 0em;
+   padding: 0.3em 0.5em;
+   border-left: solid 1px #2b91af;
+   font-size: 100%;
+   color: #000;
+   background: #eee;
+   width: auto; }
+ 
+ol.code li {
+   margin: 0em 0em 0em 5em;
+ 
+/* end of ol code block style */
+</style>
+</head>
+
+<body>
+
+<p><h2>Wysiwyg CKEditor v 0.4</h2>
+Changes since 0.3
+<ul>
+<li>Added support for both <b>correct</b> and <b>incorrect</b> installatoin paths</li>
+<li>Added html Readme file to make installation easier</li>
+</ul>
+
+<h3>About</h3>
+<ul>
+<li>Powerful editor with nested quotes support!</li>
+<li>Custom smile pack</li>
+
+</ul>
+
+<h2>Installation</h2>
+<p><img src="readme_files/folders.gif" align="left"/>1) Put <b style="color:blue">bb-wysiwyg-ckeditor</b> folder into <b style="color:red">my-plugins</b> folder<br>
+NOT into <b>bb-plugins</b>! it must be in the <b style="color:red">MY-PLUGINS</b> folder!!!<br>
+2) Put <b style="color:blue">smiles</b> folder into your <b style="color:red">site root</b><br>
+
+3) Activate plugin
+</p>
+<p>That&#39;s all. Enjoy!</p>
+<p style="clear:both">
+<h2>Customization</h2>
+CKEditor is very powerful and feature-rich, you may download examples from it's site<br>
+and see what features you can add. Most are disabled by default.<br>
+<br>
+You may edit supplied text_editor.css for styles inside editor area, customize the toolbar and everything else.<br>
+<h3>Smiles</h3>
+if you wish to use standard smiles of CKEditor, then open bb-wysiwyg-editor.php<br>
+and remove everything between:
+<ol class="code">
+<li><pre>// custom smiles</pre></li>
+<li><pre>...</pre></li>
+<li><pre>// end custom smiles</pre></li>
+</ol>
+there you may also change path to smiles folder and the set of smiles<br>
+<h3>Autogrow</h3>
+wonderful feature - automatically resize the height of editor<br>
+(if your forum theme is simple enough to not break it)<br>
+to try it, uncomment line<br>
+<ol class="code">
+<li><pre>//,extraPlugins : 'autogrow'</pre></li>
+</ol>
+<h3>Other</h3>
+spellcheck plugins are removed by default, by the next line:<br>
+<ol class="code">
+<li><pre>removePlugins : 'scayt,spellchecker',</pre></li>
+</ol>
+default editor height is 350 or 250 px depending on page (defined 
+on line 68)<br>
+
+<h3>Important things to note</h3>
+1) editor has style 'position: relative;'<br>
+otherwise it will not work in IE if put inside layout with "margin:auto"<br>
+<br>
+2) when editing a post, edit-form.php from your theme is used,<br>
+but the contents it puts into the textarea IS ERASED!<br>
+instead, to make editor work properly, text is echoed into JS variable WITHOUT ANY FILTERS:<br>
+<ol class="code">
+<li><pre>$quoted_post = bb_quote_jschars( get_post_text() );</pre></li>
+<li><pre>printf( '&lt;script type="text/javascript"&gt;var bb_quoted_post="%s";&lt;/script&gt;', $quoted_post );</pre></li>
+</ol>
+if this is not done - editor contents is loaded incorrectly, so you can not escape blockquotes<br>
+(maybe, other artifacts are also possible)<br>
+<br>
+3) jQuery is included as a link to google:
+<ol class="code">
+<li><pre>&lt;script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"&gt;&lt;/script&gt;</pre></li>
+</ol>
+<br>
+4) Important note for developers<br>
+the JS function
+<ol class="code">
+<li><pre>CKEDITOR.on( 'instanceReady', function( ev )</pre></li>
+</ol>
+along with right quote formatting<br>
+<ol class="code">
+<li><pre>"&lt;blockquote&gt;&lt;p&gt;&lt;cite&gt;%s &lt;a href=\"%s\"&gt;wrote&lt;/a&gt;:&lt;/cite&gt;%s&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;&lt;/p&gt;"</pre></li>
+</ol>
+and JS vars bb_quoted_post and bb_ckeditor_savedContents<br>
+are base for proper &lt;blockquote&gt; handling and handling of NESTED blockquotes.<br>
+The &lt;p&gt; tag inside blockquote is needed as blockquote must contain only BLOCK elements<br>
+<br>
+if you change any tags there then double check if result is properly formmated<br>
+and you can edit and escape blockquotes and other nested blocks<br>
+Without this mechanism, there WILL be situations, when you will not be able to escape from a blockquote in editor.<br>
+
+<h1 style="color:red">Bugs</h1>
+If it does not work for you - fix it yourself and make a post on bbPress forums:<br>
+<a href="http://bbpress.org/plugins/topic/wysiwyg-ckeditor/">http://bbpress.org/plugins/topic/wysiwyg-ckeditor/</a><br>
+This plugin very simple and much better than original Wysiwyg editor for bbPress.
+</p>
+
+</body>
+
+</html>

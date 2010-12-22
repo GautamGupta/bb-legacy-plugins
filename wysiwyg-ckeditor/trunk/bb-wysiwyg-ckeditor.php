@@ -4,7 +4,7 @@ Plugin Name: Wysiwyg CKEditor
 Plugin URI: 
 Description: Add Wysiwyg Editor to Textarea
 Author: Alex Galashov
-Version: 0.3
+Version: 0.4
 */
 
 function bbwe_head()
@@ -35,9 +35,12 @@ function bbwe_head()
 
     ?>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-<script type="text/javascript" src="<?php echo bb_get_option('url') ?>my-plugins/bb-wysiwyg-ckeditor/ckeditor/ckeditor.js"></script>
+<?php
+$dir = basename(dirname(dirname(__FILE__)));
+?>
+<script type="text/javascript" src="<?php echo bb_get_option('url').$dir ?>/bb-wysiwyg-ckeditor/ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
-var bb_wysiwyg_ckeditor_url = "<?php echo bb_get_option('url') ?>my-plugins/bb-wysiwyg-ckeditor/";
+var bb_wysiwyg_ckeditor_url = "<?php echo bb_get_option('url').$dir ?>/bb-wysiwyg-ckeditor/";
 
 var bb_ckeditor_savedContents = '';
 function EditorInit()

@@ -4,7 +4,7 @@ Plugin Name: Wysiwyg CKEditor
 Plugin URI: 
 Description: Add Wysiwyg Editor to Textarea
 Author: Alex Galashov
-Version: 0.4
+Version: 0.5
 */
 
 function bbwe_head()
@@ -36,11 +36,13 @@ function bbwe_head()
     ?>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 <?php
-$dir = basename(dirname(dirname(__FILE__)));
+$this_dir_path = dirname(__FILE__);
+$this_dir = basename($this_dir_path);
+$dir = basename(dirname($this_dir_path));
 ?>
-<script type="text/javascript" src="<?php echo bb_get_option('url').$dir ?>/bb-wysiwyg-ckeditor/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="<?php echo bb_get_option('url').$dir.'/'.$this_dir ?>/ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
-var bb_wysiwyg_ckeditor_url = "<?php echo bb_get_option('url').$dir ?>/bb-wysiwyg-ckeditor/";
+var bb_wysiwyg_ckeditor_url = "<?php echo bb_get_option('url').$dir.'/'.$this_dir.'/'; ?>";
 
 var bb_ckeditor_savedContents = '';
 function EditorInit()
@@ -183,8 +185,10 @@ function bb_quote_link() {
     $add = topic_pages_add();
     $last_page = get_page_number( $topic->topic_posts + $add );
 
+    $this_dir_path = dirname(__FILE__);
+    $this_dir = basename($this_dir_path);
     if ( $page == $last_page ) {
-        $action_url = bb_nonce_url( BB_PLUGIN_URL . 'bb-wysiwyg-ckeditor/quote.ajax.php', 'quote-' . $post_id );
+        $action_url = bb_nonce_url( BB_PLUGIN_URL . $this_dir.'/quote.ajax.php', 'quote-' . $post_id );
         $action_url = add_query_arg( 'quoted', $post_id, $action_url );
         $link = '<a class="quote_link" href="#post_content" onClick="javascript:quote_user_click(\'' . $action_url . '\')">Quote</a>';
     } else {

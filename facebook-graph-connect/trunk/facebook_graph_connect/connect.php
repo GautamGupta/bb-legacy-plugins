@@ -4,7 +4,7 @@ Plugin Name: Facebook Graph Connect [Beta]
 Plugin URI: http://bbpress.org/plugins/topic/facebook-graph-connect/
 Description: Adds facebook connect features to bbpress, so users may Register or Login with facebook connect features.
 Author: Saran Chamling
-Version: 0.0.5
+Version: 0.0.6
 Author URI: http://www.aboutconsumer.com/
 */
 
@@ -23,7 +23,7 @@ $fb_graph_lang['fb_linked_option'] =  'Linked';
 $fb_graph_lang['fb_unlinked_option'] = "Unlinked. (You must log-in using password.)";
 $fb_graph_lang['fb_use_img'] =  'Use Image';
 $fb_graph_lang['fb_dont_use_img'] = "Don't Use Image";
-$fb_graph_lang['credit_txt_align'] = "center"; //footer credit text alignment left,ceter, right
+$fb_graph_lang['credit_txt_align'] = "center"; // deprecated
 
 //################# NO NEED TO EDIT BELOW, ENTER YOUR APP DETAILS IN ADMIN PAGE #######################
 
@@ -206,7 +206,7 @@ function return_domain_name()//return trimed domain name.
 	 return $_SERVER['HTTP_HOST'];
 	}
 }
-function credit_tx(){
+function credit_tx(){//deprecated
 return 'PGRpdiBzdHlsZT0iZm9udC1zaXplOiAxMXB
 4O2NvbG9yOiAjNjY2NjY2O3RleHQtYWxpZ246JXM7Ij
 5GYWNlYm9vayBDb25uZWN0IGJ5IDxhIGhyZWY9Imh0d
@@ -347,7 +347,7 @@ function fb_foot_script()
 {
 global $fb_graph_lang;
 list($uid,$me,$session,$access_token,$facebook) = try_connect();
-echo sprintf(base64_decode(credit_tx()), switch_aligns($fb_graph_lang['credit_txt_align']) ).'<script>
+echo '<script>
       window.fbAsyncInit = function() {
         FB.init({
           appId   : \''.APP_ID.'\',
@@ -372,7 +372,7 @@ echo sprintf(base64_decode(credit_tx()), switch_aligns($fb_graph_lang['credit_tx
 	 function fb_logout()
 	 {
 		 FB.logout(function(response) {
-			  window.location = "bb-login.php?logout=1"
+			  window.location = "'.bb_get_option('uri').'bb-login.php?logout=1"
 		});
 	 }
    	 function requestExtPerm(){

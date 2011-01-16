@@ -73,4 +73,4 @@ b) OPTIONAL --You may want to show facebook profile images as avatars. But Steps
 * 0.0.3	Added Facebook profile Image as bbpress avatar for your facebook users.
 * 0.0.4 Added kakumei template edit instruction regarding fb-button in Readme.txt, Fixed footer credit alignment.
 * 0.0.5 Changed redirect locations to absolute paths, was redirecting users to unknown locations. Added a mysql file for those it didn't create "fbuser" table in database.
-* 0.0.6    Fixed logout url. Removed pbase footer text for better performance.
+* 0.0.6    Fixed logout url. Removed Base64 footer text for better performance.

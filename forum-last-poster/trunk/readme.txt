@@ -85,6 +85,11 @@ High performance: uses only a single extra query regardless of the number of for
 
 * slightly faster query by only updating for forum affected by new/deleted post
 
+= Version 0.0.6 (2011-01-25) =
+
+* bugfix: updates when topic is deleted (which was bypassing bbpress delete post api)
+* feature: manual update available under admin recount menu
+
 == To Do ==
 
 * nothing yet!

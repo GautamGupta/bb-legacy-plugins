@@ -3,7 +3,7 @@
 Plugin Name: Human Test for bbPress
 Plugin URI:  http://bbpress.org/plugins/topic/77
 Description:  uses various methods to exclude bots from registering (and eventually posting) on bbPress
-Version: 0.9.2
+Version: 0.9.3
 Author: _ck_
 Author URI: http://bbshowcase.org
 
@@ -17,7 +17,7 @@ $human_test['on_for_members']=false;	 // change this to true if you want even lo
 /*  stop editing here  */
 
 // not used yet
-$human_test['stop_forum_spam']=false;	 //  check IP + Email at stopforumspam.com - adds slight delay, may not work if you don't have CURL or fopen url enabled
+// $human_test['stop_forum_spam']=false;	 //  check IP + Email at stopforumspam.com - adds slight delay, may not work if you don't have CURL or fopen url enabled
 
 add_action('bb_init', 'human_test_check',99);	// block check and init sessions if needed
 add_action('post_form_pre_post', 'human_test_post',99);	// new post
@@ -31,12 +31,18 @@ return false;
 
 function human_test_question() {
 	$compare=$_SESSION['HUMAN_TEST'];	// grab correct answer from pre-stored session data	
-	$xht=rand(2,$compare-1); 
+	$xht=intval($compare/10)*10; 
 	$yht=$compare-$xht;
-	$question=human_test_encode(__("How much does")." ".$xht." + ");
-	$question.="<span style='display:none;'>".human_test_encode(rand(0,9))."</span>";
-	$question.="<span style=''>".human_test_encode($yht." = ")."</span>";
-	$question.="<span style='display:none;'>".human_test_encode(rand(0,9))."</span>";	
+	$question=human_test_encode(__("How much does")." ".$xht." ");
+	$question.="<span><span style='display:none;'>".human_test_encode(rand(0,99))."</span></span> ";
+	$question.="<span><span style='display:none;'>".human_test_encode(rand(0,99))."</span></span> ";
+	$question.="<span><span style='font-size:133%'>".human_test_encode('+')."</span></span> ";
+	$question.="<span><span style='display:none;'>".human_test_encode(rand(0,99))."</span></span> ";
+	$question.="<span><span style='display:none;'>".human_test_encode(rand(0,99))."</span></span> ";
+	$question.="<span><span style='display:inline;'>".human_test_encode($yht)."</span></span> ";
+	$question.="<span><span style='font-size:133%'>".human_test_encode('=')."</span></span> ";
+	$question.="<span><span style='display:none;'>".human_test_encode(rand(0,99))."</span></span>";
+	$question.="<span><span style='display:none;'>".human_test_encode(rand(0,99))."</span></span>";	
 	return $question;
 }
 
@@ -53,9 +59,10 @@ if ((empty($human_test['on_for_members']) || bb_current_user_can('moderate')) &&
 	$question=human_test_question();
 	echo '<p><script language="JavaScript" type="text/javascript">document.write("'.$question.'");</script>';	// write question with javascript
 	echo '<noscript><i>'.__("registration requires JavaScript").'</i></noscript>';	// warn no-script users 
-	echo '<input name="ht_test" type="text" id="ht_test" size="15" maxlength="100" value="" autocomplete="off" tabindex="2" /> ';  // answer field
+	echo '<input tabindex="0" name = "htest" id="htest" style="display:none;visibility:hidden;" value = "" />';
+	echo '<input name="htest'.date('j').'" type="text" id="htest'.date('j').'" size="15" maxlength="100" value="" autocomplete="off" tabindex="2" /> ';  // answer field
 	echo '('.__('required').')';
-	echo '<input tabindex="0" name = "ht_confirm" id="ht_confirm" style="display:none;visibility:hidden;" value = "" />';	
+	echo '<input tabindex="0" name = "hconfirm" id="hconfirm" style="display:none;visibility:hidden;" value = "" />';		
 	echo '<input tabindex="0" type="hidden" name = "'.session_name().'" value = "'.session_id().'" /></p>';	// improved session support without cookies or urls
 } 
 
@@ -65,8 +72,10 @@ if (human_test_location()!="register.php") {return;}  //  only display on regist
 	echo '<fieldset><legend>'.__("Please prove you are human").'</legend><table width="100%"><tr class="required"><th scope="row" nowrap>';
 	echo '<script language="JavaScript" type="text/javascript">document.write("'.$question.'");</script>';	// write question with javascript
 	echo '<noscript><i>'.__("registration requires JavaScript").'</i></noscript>';	// warn no-script users 
-	echo '</th><td width="72%"><input name="ht_test" type="text" id="ht_test" size="30" maxlength="100" value="" autocomplete="off" />';	// answer field
-	echo '<input tabindex="0" name = "ht_confirm" id="confirm" style="display:none;visibility:hidden;" value = "" />';	
+	echo '</th><td width="72%">';
+	echo '<input tabindex="0" name = "htest" id="htest" style="display:none;visibility:hidden;" value = "" />';
+	echo '<input name="htest'.date('j').'" type="text" id="htest'.date('j').'" size="30" maxlength="100" value="" autocomplete="off" />';	// answer field
+	echo '<input tabindex="0" name = "hconfirm" id="confirm" style="display:none;visibility:hidden;" value = "" />';	
 	echo '<input tabindex="0" type="hidden" name = "'.session_name().'" value = "'.session_id().'" />';	// improved session support without cookies or urls	
 	echo '</td></tr></table></fieldset>';
 } 
@@ -99,12 +108,12 @@ $last_page = get_page_number( ( isset($topic->topic_posts) ? $topic->topic_posts
 if ( ( is_topic() && bb_current_user_can( 'write_post', $topic->topic_id ) && $page == $last_page ) || ( !is_topic() && bb_current_user_can( 'write_topic', isset($forum->forum_id) ? $forum->forum_id : 0 ) ) ) {
 */
 
-function human_test_check() {
+function human_test_check($override=false) {
 global $bb_current_user, $bb_roles, $human_test;   
 if (!empty($bb_roles->roles['anonymous']['capabilities'])) {$role=$bb_roles->roles['anonymous']['capabilities'];}
 elseif (!empty($bb_roles->role_objects['anonymous']->capabilities)) {$role=$bb_roles->role_objects['anonymous']->capabilities;} 
 $location=human_test_location();  if ($location=='index.php' && !empty($_GET['new'])) {$location='forum.php';}
-if ( !($location=='register.php' || 
+if ( !(!empty($override) || $location=='register.php' || 
        (!empty($human_test['on_for_members']) && !empty($bb_current_user->ID) && !bb_current_user_can('moderate') && in_array($location,array('bb-post.php','forum.php','topic.php','tags.php'))) ||
        (!empty($role) && 
        ($location=='bb-post.php' && is_object($bb_current_user) && $bb_current_user->has_cap('anonymous')) ||
@@ -120,14 +129,14 @@ if ( !($location=='register.php' ||
 	@ini_set("url_rewriter.tags","");
 	@session_start();	// sent with headers - errors masked with @ if sessions started previously - which it actually has to be for the following to 
 	}
-	if (!empty($_POST) || isset($_POST['ht_test'])) { 
-		if (empty($_POST['ht_test'])) {$_POST['ht_test']="";}
-		else {$human_test_post =  stripslashes($_POST['ht_test']);}
+	if (!empty($_POST) || isset($_POST['htest'.date('j')])) { 
+		if (empty($_POST['htest'.date('j')])) {$_POST['htest'.date('j')]="";}
+		else {$human_test_post =  stripslashes($_POST['htest'.date('j')]);}
 		if (empty($_SESSION['HUMAN_TEST'])) {$compare=rand(9,9999999);}	 // this should not happen unless sessions malfunction
 		else {$compare = $_SESSION['HUMAN_TEST'];}
 		// $_SESSION['HUMAN_TEST']=md5(rand());	// destroy answer even when successful to prevent re-use
 		
-		if ($human_test_post !=$compare || !empty($_POST['ht_confirm'])) {				
+		if ($human_test_post !=$compare || !empty($_POST['hconfirm'])) {				
 			// echo $human_test_post." - ".$compare; exit();	// debug
 			// bb_die(__("Humans only please").". ".__("If you are not a bot").", <a href='register.php'>".__("please go back and try again")."</a>.");			
 			bb_send_headers();
@@ -141,7 +150,7 @@ if ( !($location=='register.php' ||
 			// todo: limit registration attempts through session count
 		} else {	
 			 // passed test		
-			$_SESSION['HUMAN_TEST']=rand(3,10);	// set ANOTHER answer, just in case there's a problem and they go back
+			$_SESSION['HUMAN_TEST']=rand(1,9)*pow(10,rand(2,3))+rand(1,19);	// set ANOTHER answer, just in case there's a problem and they go back
 			
 			/*	previous destroyed session - unfortunately cannot do this because there still might be a problem  
 			// stop session entirely to make server a little faster 
@@ -151,7 +160,7 @@ if ( !($location=='register.php' ||
 			*/
 		}
 	} else {	
-	$_SESSION['HUMAN_TEST']=rand(3,10);	// set answer: random math range between 3 and 10 (adjutable but recommended limit)	
+	$_SESSION['HUMAN_TEST']=rand(1,9)*pow(10,rand(2,3))+rand(1,19);	// set answer: random math range between 3 and 10 (adjutable but recommended limit)	
 	}
 } 
 

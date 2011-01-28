@@ -92,6 +92,10 @@ $human_test['on_for_members']=true;
 
 * support annonymous posting on tags.php page
 
+= Version 0.9.3 (2011-01-28) =
+
+* subtle changes to keep bots guessing wrong
+
 == To Do ==
 
 * optionally write questions in captcha-like graphics (tricks spammers to enter graphic as code instead of answer)

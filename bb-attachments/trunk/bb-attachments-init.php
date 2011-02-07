@@ -37,7 +37,7 @@ if (isset($_GET['bb_attachments'])) {
 	}
 }
 
-if (isset($_GET["new"]) || bb_attachments_topic() || is_forum()) {
+if (isset($_GET["new"]) || bb_attachments_active()) {
 	add_action( 'bb_topic.php', 'bb_attachments_cache' );	
 	add_filter('post_text', 'bb_attachments_post_footer',4);
 	add_filter('post_edit_uri', 'bb_attachments_link');
@@ -52,7 +52,7 @@ if (isset($_GET["new"]) || bb_attachments_topic() || is_forum()) {
 			// insane bbPress workaround - adds multipart enctype to the new post form via uri patch
 			function bb_attachments_enctype() {
 			global $topic,$forum;
-				if ( ( bb_attachments_topic() && bb_current_user_can( 'write_post', $topic->topic_id ) ) || ( !bb_attachments_topic() && bb_current_user_can( 'write_topic', $forum->forum_id ) ) ) {					
+				if ( ( bb_attachments_active() && bb_current_user_can( 'write_post', $topic->topic_id ) ) || ( !bb_attachments_active() && bb_current_user_can( 'write_topic', $forum->forum_id ) ) ) {	
 					add_filter( 'bb_get_uri', 'bb_attachments_uri_10',999,3);					
 					add_filter( 'bb_get_option_uri','bb_attachments_uri',999);
 					add_action('post_form','bb_attachments_remove_uri',999);
@@ -114,7 +114,7 @@ if ($post_id && ($bb_attachments['role']['see']=="read" || bb_current_user_can($
 	
 	$time=time()-60; $can_delete=false; $self=false; $admin=false; $filter=true;   // " AND status = 0 "; 	// speedup checks with flag	
 	if ($bb_current_user->ID==get_post_author_id( $post_id )) {$self=true;}
-	if ((!bb_attachments_topic() || isset($_GET['bb_attachments'])) && bb_current_user_can('moderate')) {$filter=""; $admin=bb_current_user_can('administrate');} 	 
+	if ((!bb_attachments_active() || isset($_GET['bb_attachments'])) && bb_current_user_can('moderate')) {$filter=""; $admin=bb_current_user_can('administrate');} 	 
 	if (bb_current_user_can($bb_attachments['role']['delete']) && bb_current_user_can( 'edit_post', $post_id)) {$can_delete=true;}
 	
 	$location = bb_attachments_location();	 $can_inline=true;
@@ -164,7 +164,7 @@ if ($post_id && ($bb_attachments['role']['see']=="read" || bb_current_user_can($
 
 				if ($attachment->status==0 && $location=="edit.php" && $can_inline) {				
 					$fullpath=$bb_attachments['path'].floor($attachment->id/1000)."/".$attachment->id.".".$attachment->filename;
-					if (list($width, $height, $type) = getimagesize($fullpath)) {								
+					if (list($width, $height, $type) = @getimagesize($fullpath)) {								
 						$output.=" [<strong><a href='#' onclick='bbat_inline_insert($attachment->post_id,$attachment->id); return false;'>".__("INSERT")."</a></strong>] ";	
 					}
 				}						

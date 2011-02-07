@@ -87,6 +87,7 @@ http://docs.amazonwebservices.com/AmazonS3/2006-03-01/VirtualHosting.html#Virtua
 * 0.2.7 allow custom table name for multiple installs in same db, 
 	don't use temp area for testing - move to main area and destroy if bad, fixes open_basedir and some safe mode problems
 * 0.2.8 security fix for filenames in bb-attachments-init.php : Everyone should update that file which will not affect your settings
+* 0.2.9 fix for bbPress 1.x topic-edit-page
 	
 == To Do ==
 

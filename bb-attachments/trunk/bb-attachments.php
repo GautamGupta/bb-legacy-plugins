@@ -5,7 +5,7 @@ Plugin URI: http://bbpress.org/plugins/topic/bb-attachments
 Description: Gives members the ability to upload attachments on their posts.
 Author: _ck_
 Author URI: http://bbShowcase.org
-Version: 0.2.8
+Version: 0.2.9
 
 License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
@@ -89,10 +89,12 @@ $bb_attachments['db']="bb_attachments";   //   $bbdb->prefix."attachments";  // 
 
 if (!is_bb_feed()) {
 
-if (is_topic() || isset($_GET['new']) || !empty($_FILES) || strpos($_SERVER['QUERY_STRING'],'bb_attachments')!==false || (defined('BB_IS_ADMIN') && BB_IS_ADMIN)) { 
+function bb_attachments_topic() {static $is_topic; return isset($is_topic)?$is_topic:$is_topic=in_array(bb_get_location(),array('topic-page','topic-edit-page'));}
+
+if (bb_attachments_topic() || isset($_GET['new']) || !empty($_FILES) || strpos($_SERVER['QUERY_STRING'],'bb_attachments')!==false || (defined('BB_IS_ADMIN') && BB_IS_ADMIN)) { 
 	include('bb-attachments-init.php'); 
 } 
-if (!is_topic() && $bb_attachments['title']) {
+if (!bb_attachments_topic() && $bb_attachments['title']) {
 	add_filter('topic_title', 'bb_attachments_title',200); 
 	function bb_attachments_title( $title ) {
 		global $bb_attachments, $topic;

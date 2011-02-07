@@ -11,8 +11,8 @@ if (isset($_FILES['bb_attachments']))  {
 if (defined('BACKPRESS_PATH')) {add_action( 'bb-post.php', 'bb_attachments_process_post');}
 else {add_action( 'bb_post.php', 'bb_attachments_process_post');}
 }
-bb_register_activation_hook(str_replace(array(str_replace("/","\\",BB_PLUGIN_DIR),str_replace("/","\\",BB_CORE_PLUGIN_DIR)),array("user#","core#"),__FILE__), 'bb_attachments_install');
-// bb_register_plugin_activation_hook(__FILE__, 'bb_attachments_install');
+if (defined('BACKPRESS_PATH')) {bb_register_plugin_activation_hook(__FILE__, 'bb_attachments_install');}
+else {bb_register_activation_hook(str_replace(array(str_replace("/","\\",BB_PLUGIN_DIR),str_replace("/","\\",BB_CORE_PLUGIN_DIR)),array("user#","core#"),__FILE__), 'bb_attachments_install');}
 
 function bb_attachments_init() {
 global $bbdb, $bb_attachments;
@@ -37,7 +37,7 @@ if (isset($_GET['bb_attachments'])) {
 	}
 }
 
-if (isset($_GET["new"]) || is_topic() || is_forum()) {
+if (isset($_GET["new"]) || bb_attachments_topic() || is_forum()) {
 	add_action( 'bb_topic.php', 'bb_attachments_cache' );	
 	add_filter('post_text', 'bb_attachments_post_footer',4);
 	add_filter('post_edit_uri', 'bb_attachments_link');
@@ -52,7 +52,7 @@ if (isset($_GET["new"]) || is_topic() || is_forum()) {
 			// insane bbPress workaround - adds multipart enctype to the new post form via uri patch
 			function bb_attachments_enctype() {
 			global $topic,$forum;
-				if ( ( is_topic() && bb_current_user_can( 'write_post', $topic->topic_id ) ) || ( !is_topic() && bb_current_user_can( 'write_topic', $forum->forum_id ) ) ) {					
+				if ( ( bb_attachments_topic() && bb_current_user_can( 'write_post', $topic->topic_id ) ) || ( !bb_attachments_topic() && bb_current_user_can( 'write_topic', $forum->forum_id ) ) ) {					
 					add_filter( 'bb_get_uri', 'bb_attachments_uri_10',999,3);					
 					add_filter( 'bb_get_option_uri','bb_attachments_uri',999);
 					add_action('post_form','bb_attachments_remove_uri',999);
@@ -114,7 +114,7 @@ if ($post_id && ($bb_attachments['role']['see']=="read" || bb_current_user_can($
 	
 	$time=time()-60; $can_delete=false; $self=false; $admin=false; $filter=true;   // " AND status = 0 "; 	// speedup checks with flag	
 	if ($bb_current_user->ID==get_post_author_id( $post_id )) {$self=true;}
-	if ((!is_topic() || isset($_GET['bb_attachments'])) && bb_current_user_can('moderate')) {$filter=""; $admin=bb_current_user_can('administrate');} 	 
+	if ((!bb_attachments_topic() || isset($_GET['bb_attachments'])) && bb_current_user_can('moderate')) {$filter=""; $admin=bb_current_user_can('administrate');} 	 
 	if (bb_current_user_can($bb_attachments['role']['delete']) && bb_current_user_can( 'edit_post', $post_id)) {$can_delete=true;}
 	
 	$location = bb_attachments_location();	 $can_inline=true;

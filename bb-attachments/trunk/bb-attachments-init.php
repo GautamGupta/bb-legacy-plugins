@@ -11,8 +11,10 @@ if (isset($_FILES['bb_attachments']))  {
 if (defined('BACKPRESS_PATH')) {add_action( 'bb-post.php', 'bb_attachments_process_post');}
 else {add_action( 'bb_post.php', 'bb_attachments_process_post');}
 }
-if (defined('BACKPRESS_PATH')) {bb_register_plugin_activation_hook(__FILE__, 'bb_attachments_install');}
-else {bb_register_activation_hook(str_replace(array(str_replace("/","\\",BB_PLUGIN_DIR),str_replace("/","\\",BB_CORE_PLUGIN_DIR)),array("user#","core#"),__FILE__), 'bb_attachments_install');}
+if (defined('BB_IS_ADMIN') && BB_IS_ADMIN) { 
+// $file=str_replace(array(str_replace('/','\\',BB_PLUGIN_DIR),str_replace('/','\\',BB_CORE_PLUGIN_DIR),'-init.php'),array('user#','core#','.php'),__FILE__);
+bb_register_activation_hook(str_replace('-init.php','.php',__FILE__),'bb_attachments_install');
+}
 
 function bb_attachments_init() {
 global $bbdb, $bb_attachments;
@@ -628,7 +630,7 @@ if ((!$mime || strpos($mime,'file -bi')!==false) && function_exists('getimagesiz
 return substr($mime,0,strpos($mime.";",";"));	
 }
 
-function bb_attachments_install() { 
+function bb_attachments_install() {  
 global $bbdb,$bb_attachments; 
 $bbdb->query("CREATE TABLE IF NOT EXISTS ".$bb_attachments['db']." (
 		id		int(10)        UNSIGNED NOT NULL auto_increment,

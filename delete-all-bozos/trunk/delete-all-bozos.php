@@ -5,7 +5,7 @@ Description: Delete all of the bozo users on your forum with just one click.
 Plugin URI: http://nightgunner5.wordpress.com/tag/delete-all-bozos/
 Author: Ben L. (Nightgunner5)
 Author URI: http://nightgunner5.wordpress.com/
-Version: 0.1.1
+Version: 0.2
 Requires at least: 1.0
 Tested up to: trunk
 Text Domain: delete-all-bozos
@@ -25,6 +25,12 @@ function delete_all_bozos() {
 <h2><?php _e( 'Delete All Bozos', 'delete-all-bozos' ); ?></h2>
 <?php if ( !is_array( $bozos ) ) { ?>
 <div id="message" class="updated"><p><?php _e( 'Nice going! Your forum is free of bozos!', 'delete-all-bozos' ); ?></p></div>
+<form class="settings" action="" method="post">
+<fieldset>
+<input type="submit" id="submit-check" class="submit" name="submit-check" value="<?php esc_attr_e( 'Re-Check All Users', 'delete-all-bozos' ); ?>"/>
+<?php bb_nonce_field( 'delete-all-bozos-check' ); ?>
+</fieldset>
+</form>
 <?php } elseif ( !empty( $_POST['submit'] ) ) { // We already checked if the nonce is valid, so let's do this!
 	global $bbdb;
 
@@ -81,6 +87,9 @@ function delete_all_bozos() {
 </tbody>
 </table>
 
+<?php if ( $total_bozos ) { ?>
+<div style="font-size: .75em; float: right;"><?php printf( _n( '%s bozo deleted by Delete All Bozos', '%s bozos deleted by Delete All Bozos', $total_bozos, 'delete-all-bozos' ), bb_number_format_i18n( $total_bozos ) ); ?></div>
+<?php } ?>
 <form class="settings" action="" method="post">
 <fieldset>
 <input type="submit" id="submit" class="submit delete" name="submit" value="<?php esc_attr_e( 'Confirm Deletion', 'delete-all-bozos' ); ?>"/>
@@ -88,14 +97,26 @@ function delete_all_bozos() {
 </fieldset>
 </form>
 <?php }
-if ( $total_bozos ) { ?>
-<div style="font-size: .75em; position: absolute; bottom: 50px; right: 5px"><?php printf( _n( '%s bozo deleted by Delete All Bozos', '%s bozos deleted by Delete All Bozos', $total_bozos, 'delete-all-bozos' ), bb_number_format_i18n( $total_bozos ) ); ?></div>
-<?php }
 }
 
 function dabozos_admin_check() {
 	if ( !empty( $_POST['submit'] ) )
 		bb_check_admin_referer( 'delete-all-bozos' );
+	if ( !empty( $_POST['submit-check'] ) ) {
+		bb_check_admin_referer( 'delete-all-bozos-check' );
+		set_time_limit( 0 );
+		$current_user_id = bb_get_current_user_info( 'ID' );
+
+		global $bbdb;
+		$user_ids = $bbdb->get_col( 'SELECT ID FROM `' . $bbdb->users . '`' );
+
+		foreach ( $user_ids as $id ) {
+			bb_set_current_user( $id );
+			bb_ksd_check_profile( $id );
+		}
+
+		bb_set_current_user( $current_user_id );
+	}
 }
 add_action( 'delete_all_bozos_pre_head', 'dabozos_admin_check' );
 

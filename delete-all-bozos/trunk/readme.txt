@@ -3,7 +3,7 @@ Contributors: Nightgunner5
 Tags: bozo, bozos, spam, mass delete, users, moderation
 Requires at least: 1.0
 Tested up to: trunk
-Stable tag: 0.1
+Stable tag: 0.2
 
 Delete all of the bozo users on your forum with just one click.
 
@@ -23,8 +23,9 @@ If you don't have one, make it at the root of your forum.
 3. If there are no bozos on your forum, you get this message.
 
 == Changelog ==
-= 0.1.1 =
+= 0.2 =
 * Counter of bozos deleted added to admin page
+* Added option to re-check all users
 
 = 0.1 =
 * Initial release

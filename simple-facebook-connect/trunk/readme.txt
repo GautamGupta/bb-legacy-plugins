@@ -32,18 +32,21 @@ Other features:
 
 == Installation ==
 
-Prerequirements:
+= Prerequirements =
+
 1. PHP 5 (tested on 5.2 and 5.3)
 2. PHP CURL and JSON extensions (required by Facebook's PHP connector)
+
+= Installation =
 
 1. Unzip plugin zip to plugin folder. Make sure that the whole simple_facebook_connect folder is there.
 2. Activate plugin in bb-admin
 3. Configure plugin (bb-admin -> Settings -> Facebook Connect)
 4. Edit your theme's header.php:
-   look for `<html>` tag at the top, and add `xmlns:fb="http://www.facebook.com/2008/fbml"` inside the tag
-   the result should look something like: `<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml"<?php bb_language_attributes( '1.1' ); ?>>`
+4.1. look for `<html>` tag at the top, and add `xmlns:fb="http://www.facebook.com/2008/fbml"` inside the tag
+4.2. the result should look something like: `<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml"<?php bb_language_attributes( '1.1' ); ?>>`
 5. Edit your theme, and place the facebook login button on a suitable place. Use the function fb_login_button() to add it:
-   `<?php if ( function_exists ( 'fb_login_button' ) ) { fb_login_button(); } ?>`
+5.1. `<?php if ( function_exists ( 'fb_login_button' ) ) { fb_login_button(); } ?>`
 6. DONE
 
 == Other Notes ==

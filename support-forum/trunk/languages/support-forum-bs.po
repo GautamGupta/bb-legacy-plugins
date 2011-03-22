@@ -1,0 +1,139 @@
+# Translation of Support Forum in Bosnian
+# This file is distributed under the same license as the Support Forum package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2011-02-11 19:28+0100\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: GlotPress/0.1\n"
+"Project-Id-Version: Support Forum\n"
+"POT-Creation-Date: \n"
+"Last-Translator: Kenan Dervisevic <kenan3008@gmail.com>\n"
+"Language-Team: \n"
+"X-Poedit-Language: Bosnian\n"
+"X-Poedit-Country: BOSNIA AND HERZEGOVINA\n"
+
+#: support-forum.php:206
+#: support-forum.php:960
+#: support-forum.php:977
+msgid "resolved"
+msgstr "riješeno"
+
+#: support-forum.php:1084
+msgid "Settings saved"
+msgstr "Podešavanja sačuvana"
+
+#: support-forum.php:1028
+msgid "Save support forum settings"
+msgstr "Sačuvaj postavke foruma"
+
+#: support-forum.php:1024
+msgid "Update topics to version 2.x"
+msgstr "Ažuriraj teme za verziju 2.x"
+
+#: support-forum.php:1021
+msgid "If you used support forum plugin version 1.0, you will need to update existing topics to work with version 2.x"
+msgstr "Ako ste koristili plugin foruma za podršku verzija 1.0, trebat ćete ažurirati postojeće teme da bi radile sa verzijom 2.x"
+
+#: support-forum.php:1006
+msgid "Use sticky icon on sticky topics (applies to all forums)"
+msgstr "Koristi ikonu za važne teme (primjenjuje se na svim forumima)"
+
+#: support-forum.php:999
+msgid "Use lock icon on closed topics (applies to all forums)"
+msgstr "Koristi ikonu za zatvorene teme (primjenjuje se na svim fourmima)"
+
+#: support-forum.php:986
+msgid "Use resolution status icons on topics"
+msgstr "Koristi ikone koje predstavljaju stanje teme"
+
+#: support-forum.php:974
+msgid "Choose which statuses will have a view:"
+msgstr "Izaberite koji statusi će imati pristup:"
+
+#: support-forum.php:969
+msgid "Allow the poster of the topic to set the status at any time"
+msgstr "Dozvoli kreatoru teme da postavi status bilo kada"
+
+#: support-forum.php:967
+msgid "Allow the poster of the topic to set the status on topic creation"
+msgstr "Dozvoli kreatoru teme da postavi status pri kreiranju teme"
+
+#: support-forum.php:958
+msgid "Set the default status for topics:"
+msgstr "Postavi početni status za temu:"
+
+#: support-forum.php:939
+msgid "Enable support forum"
+msgstr "Omogući forum podrške"
+
+#: support-forum.php:924
+msgid "Description"
+msgstr "Opis"
+
+#: support-forum.php:924
+msgid "Name"
+msgstr "Naziv"
+
+#: support-forum.php:872
+msgid "No update required"
+msgstr "Ažuriranje nije potrebno"
+
+#: support-forum.php:870
+msgid "Update performed"
+msgstr "Ažuriranje izvršeno"
+
+#: support-forum.php:821
+#: support-forum.php:918
+msgid "Support forum"
+msgstr "Forum za podršku"
+
+#: support-forum.php:510
+#: support-forum.php:649
+#: support-forum.php:1002
+msgid "closed"
+msgstr "zatvorena"
+
+#: support-forum.php:504
+#: support-forum.php:672
+#: support-forum.php:1009
+msgid "sticky"
+msgstr "važna"
+
+#: support-forum.php:504
+#: support-forum.php:510
+#: support-forum.php:515
+#: support-forum.php:730
+msgid "This topic is"
+msgstr "Ova tema je"
+
+#: support-forum.php:466
+msgid "Change"
+msgstr "Promijeni"
+
+#: support-forum.php:387
+msgid "Support topics that are %s and are more than 2 hours old"
+msgstr "Teme podrške koje su %s i starije su više od 2 sata"
+
+#: support-forum.php:383
+msgid "Support topics that are %s"
+msgstr "Teme podrške koje su %s"
+
+#: support-forum.php:208
+#: support-forum.php:962
+#: support-forum.php:981
+msgid "not a support question"
+msgstr "nije pitanje za podršku"
+
+#: support-forum.php:207
+#: support-forum.php:961
+#: support-forum.php:979
+msgid "not resolved"
+msgstr "nije riješeno"
+
+#: support-forum.php:194
+msgid "This version of the <em>Support forum</em> plugin requires bbPress version 0.9"
+msgstr "Verzija dodatka <em>foruma podrške</em> zahtjeva bbPress verziju 0.9"
+

@@ -4,16 +4,18 @@ Plugin Name: Simple Facebook Connect
 Plugin URI: http://bbpress.org/plugins/topic/simple-facebook-connect/
 Description: Adds a one-click login/registeration integration with Facebook to bbPress.
 Author: moogie 
-Version: 1.0 
+Version: 1.0.1 
 */
-
-require "facebook.php";
 
 $_fb_need_sdk = 0;
 $_fb_need_loginscript = 0;
 
 function try_fb_connect() 
 {
+	if (!class_exists('Facebook')) {
+		include_once('facebook.php');
+	}
+
 	/* We may need to un-sanitize the cookie; bb_global_sanitize creates an unreadable
 	   cookie-string on some environments, by adding extra slashes to it */ 
 	$cookie_name = "fbs_" . bb_get_option( 'fb_app_id' );
@@ -236,7 +238,7 @@ function fb_get_userid_by_facebookid($fb_id)
 {
 	global $bbdb;
 	$fb_id = intval($fb_id);
-	$bb_userid = $bbdb->get_var("SELECT user_id FROM ".$bbdb->prefix."usermeta WHERE meta_key = 'facebook_id' AND meta_value = '".$fb_id."'");
+	$bb_userid = $bbdb->get_var("SELECT user_id FROM `".$bbdb->usermeta."` WHERE meta_key = 'facebook_id' AND meta_value = '".$fb_id."'");
 	return ($bb_userid > 0) ? $bb_userid : 0;
 }
 function fb_get_facebookid_by_userid($u_id)

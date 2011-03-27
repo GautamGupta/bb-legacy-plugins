@@ -72,3 +72,9 @@ This plugin has an option to disable the initialization of the Javascript SDK. T
 = Version 1.0 (2011-03-21) =
 
 * First public release
+
+= Version 1.0.1 (2011-03-26) =
+
+* Fixed facebook.php include conflict
+* Fixed compatibility with wordpress integration
+

@@ -4,7 +4,7 @@ Plugin Name: Simple Facebook Connect
 Plugin URI: http://bbpress.org/plugins/topic/simple-facebook-connect/
 Description: Adds a one-click login/registeration integration with Facebook to bbPress.
 Author: moogie 
-Version: 1.0.1 
+Version: 1.0.2
 */
 
 $_fb_need_sdk = 0;
@@ -65,7 +65,7 @@ function fb_login_button($text = "Login with Facebook", $always_display = false)
 
 function fb_bb_get_avatar($avatar, $id_or_email, $size, $default, $alt)
 {
-	if (intval($id_or_email) != $id_or_email)
+	if (!is_digits($id_or_email))
 		return $avatar;
 
 	$fbid = fb_get_facebookid_by_userid($id_or_email);
@@ -126,8 +126,8 @@ function bb_fb_connect() {
 		exit;
 	}
 
-	$fb_id = intval($me['id']);
-	if (!$fb_id) {
+	$fb_id = $me['id'];
+	if (!$fb_id || !is_digits($fb_id)) {
 		bb_die("Facebook Connect failed, no user id found.");
 		exit;
 	}
@@ -237,7 +237,6 @@ function fb_get_user_displayname($me)
 function fb_get_userid_by_facebookid($fb_id)
 {
 	global $bbdb;
-	$fb_id = intval($fb_id);
 	$bb_userid = $bbdb->get_var("SELECT user_id FROM `".$bbdb->usermeta."` WHERE meta_key = 'facebook_id' AND meta_value = '".$fb_id."'");
 	return ($bb_userid > 0) ? $bb_userid : 0;
 }
@@ -460,5 +459,11 @@ function fb_post_hide_post_login() {
 
 if ( isset( $_REQUEST['fb_bb_connect'] ) ) {
 	add_action('bb_send_headers', 'bb_fb_connect');	
-} 
+}
+
+if (! function_exists( 'is_digits') ) :
+function is_digits($string) {
+        return (preg_match('|[^0-9]|', $string) == 0) ? true : false;
+}
+endif;
 ?>

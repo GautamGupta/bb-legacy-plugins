@@ -78,3 +78,7 @@ This plugin has an option to disable the initialization of the Javascript SDK. T
 * Fixed facebook.php include conflict
 * Fixed compatibility with wordpress integration
 
+= Version 1.0.2 (2011-03-28) =
+
+* Users with a Facebook ID >= 2147483647 would not work properly due to PHP limitation in intval() function. Fixed.
+

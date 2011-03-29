@@ -20,7 +20,7 @@ With this simple plugin, users may include image tags in their posts.
 
 = How to prevent big images to break the forum's layout ? =
 Add this to your CSS:
-#thread .post img {max-width:450px;} 
+\#thread .post img {max-width:450px;} 
 = Is there any restriction on the image url or file extension ? =
 nop. Not anymore.
 = Why isn't &lt;img /&gt; allowed by default in bbpress ? =

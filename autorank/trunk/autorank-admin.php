@@ -216,7 +216,7 @@ function autorank_admin_parse() {
 			if ( !$autorank['use_db'] )
 				return;
 
-			foreach ( array( 'show_score', 'show_stats', 'show_rank', 'rank_replaces_title', 'show_rank_page' ) as $option ) {
+			foreach ( array( 'show_score', 'show_stats', 'show_rank', 'rank_replaces_title', 'rank_before_name', 'show_rank_page' ) as $option ) {
 				if ( isset( $_POST['autorank_' . $option] ) ) {
 					$autorank[$option] = !!$_POST['autorank_' . $option];
 				}
@@ -338,6 +338,16 @@ function autorank_admin_get_options( $autorank ) {
 			'title' => __( 'Change "Member" to the user\'s rank', 'autorank' ),
 			'type'  => 'select',
 			'value' => $autorank['rank_replaces_title'],
+			'options' => array(
+				true  => __( 'Yes', 'autorank' ),
+				false => __( 'No', 'autorank' )
+			)
+		),
+
+		'rank_before_name' => array(
+			'title' => __( 'Put ranks before names instead of below them', 'autorank' ),
+			'type'  => 'select',
+			'value' => $autorank['rank_before_name'],
 			'options' => array(
 				true  => __( 'Yes', 'autorank' ),
 				false => __( 'No', 'autorank' )

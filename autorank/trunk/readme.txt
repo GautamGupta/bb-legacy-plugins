@@ -19,6 +19,9 @@ Give users an automated score based on the posts they make.
 
 == Changelog ==
 
+= 0.1.2 =
+* Ranks can now be displayed before names instead of below names. Props [Adam](http://forums.llamaslayers.net/topic/autorank).
+
 = 0.1.1 =
 * You can now specify ranks that are achieved at specific scores.
 * Post Count Plus importer

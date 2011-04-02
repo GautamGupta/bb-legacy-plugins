@@ -16,6 +16,7 @@ $autorank = array(
 	'show_rank'           => true,
 	'show_rank_page'      => false,
 	'rank_replaces_title' => false,
+	'rank_before_name'    => false,
 	'post_default_score'  => 0.1,
 	'post_modifier_first' => 0.1,
 	'post_modifier_word'  => 0.02,
@@ -64,7 +65,7 @@ function autorank_modify_title( $title, $post_id ) {
 
 	$rank = '';
 	$rank_replaces_title = $autorank['rank_replaces_title'];
-	if ( $autorank['show_rank'] ) {
+	if ( $autorank['show_rank'] && !$autorank['rank_before_name'] ) {
 		list( $user_rank, $rank_score ) = autorank_get_rank( $user );
 
 		if ( $user_rank != '' ) {
@@ -98,11 +99,25 @@ function autorank_modify_title( $title, $post_id ) {
 	return $rank . $title . $score;
 }
 
+function autorank_modify_name( $name, $user_id, $post_id ) {
+	$rank = '';
+	if ( $autorank['show_rank'] && $autorank['rank_before_name'] ) {
+		list( $user_rank, $rank_score ) = autorank_get_rank( $user );
+
+		if ( $user_rank != '' ) {
+			$rank = '<span title="' . sprintf( __( 'Required score: %s', 'autorank' ), bb_number_format_i18n( $rank_score ) ) . '">' . $user_rank . '</span> ';
+		}
+	}
+
+	return $rank . $name;
+}
+
 add_action( 'bb_post.php', 'autorank_start_post' );
 add_action( 'bb_after_post.php', 'autorank_end_post' );
 
 add_filter( 'post_author_title', 'autorank_modify_title', 11, 2 );
 add_filter( 'post_author_title_link', 'autorank_modify_title', 11, 2 );
+add_filter( 'get_post_author', 'autorank_modify_name', 11, 3 );
 
 function autorank_stats_left() {
 	$autorank = autorank_get_settings();

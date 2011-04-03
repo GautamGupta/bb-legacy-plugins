@@ -100,6 +100,8 @@ function autorank_modify_title( $title, $post_id ) {
 }
 
 function autorank_modify_name( $name, $user_id, $post_id ) {
+	$autorank = autorank_get_settings();
+
 	$rank = '';
 	if ( $autorank['show_rank'] && $autorank['rank_before_name'] ) {
 		list( $user_rank, $rank_score ) = autorank_get_rank( $user );

@@ -82,3 +82,7 @@ This plugin has an option to disable the initialization of the Javascript SDK. T
 
 * Users with a Facebook ID >= 2147483647 would not work properly due to PHP limitation in intval() function. Fixed.
 
+= Version 1.0.3 (2011-04-03) =
+
+* Improved user login name sanitization
+* Fixed feature for hiding "You must login" in the post form

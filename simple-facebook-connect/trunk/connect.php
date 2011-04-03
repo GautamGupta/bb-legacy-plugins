@@ -4,7 +4,7 @@ Plugin Name: Simple Facebook Connect
 Plugin URI: http://bbpress.org/plugins/topic/simple-facebook-connect/
 Description: Adds a one-click login/registeration integration with Facebook to bbPress.
 Author: moogie 
-Version: 1.0.2
+Version: 1.0.3
 */
 
 $_fb_need_sdk = 0;
@@ -142,6 +142,10 @@ function bb_fb_connect() {
 		for ($i = 1; ; $i++) {
 			$user_login = strtolower(sanitize_user(fb_get_user_displayname($me), true)); 
 			$user_login = str_replace(' ', '_', $user_login);
+			$user_login = str_replace('__', '_', $user_login);
+
+			if (strlen($user_login) < 2)
+				$user_login = "user";
 
 			if (strlen($user_login) > (50 - strlen($i)))
 				$user_login = substr($user_login, 0, (50 - strlen($i)));
@@ -443,7 +447,7 @@ add_action('bb_foot', 'fb_foot_script');
 
 if ( bb_get_option( 'fb_hide_post_login' ) ) {
 	add_action('pre_post_form', 'fb_pre_hide_post_login');
-	add_action('post_post_fomr', 'fb_post_hide_post_login');
+	add_action('post_post_form', 'fb_post_hide_post_login');
 }
 
 function fb_pre_hide_post_login() {

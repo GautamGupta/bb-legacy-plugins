@@ -3,7 +3,7 @@
 Plugin Name: Nicer Permalinks
 Plugin URI: http://bbpress.org/plugins/topic/nicer-permalinks/
 Description: Rewrites every bbPress URI removing the words "forum" and "topic" and emphasizes forum hierarchy. Based on <a href="http://www.technospot.net/blogs/">Ashish Mohta</a> and <a href="http://markroberthenderson.com/">Mark R. Henderson</a>'s <a href="http://blog.markroberthenderson.com/getting-rid-of-forums-and-topic-from-bbpress-permalinks-updated-plugin/">Remove Forum Topic</a> plugin.
-Version: 5.0.6
+Version: 5.0.7
 Author: mr_pelle
 Author URI: http://scr.im/mrpelle
 */
@@ -27,7 +27,7 @@ bb_load_plugin_textdomain( NICER_PERMALINKS_ID, dirname( __FILE__ ) . '/language
 if ( bb_is_admin() ) // Load admin.php if on admin area
 	require_once( 'includes/admin.php' );
 
-if ( true === (bool) nicer_permalinks_enabled() ) // Load plugin core if plugin is enabled
+if ( nicer_permalinks_enabled() ) // Load plugin core if plugin is enabled
 	require_once( 'includes/nicer-filters.php' );
 
 // Call uninstaller on plugin deactivation

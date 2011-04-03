@@ -9,7 +9,7 @@
  */
 add_action( 'bb_admin_menu_generator', 'nicer_permalinks_configuration_page_add' );
 
-if ( isset( $_GET['plugin'] ) && 'nicer_permalinks_configuration_page' == $_GET['plugin'] ) // Add plugin configuration page head if on plugin configuration page
+if ( !empty( $_GET['plugin'] ) && 'nicer_permalinks_configuration_page' == $_GET['plugin'] ) // Add plugin configuration page head if on plugin configuration page
 	add_action( 'nicer_permalinks_configuration_page_pre_head', 'nicer_permalinks_configuration_page_process' );
 
 
@@ -112,89 +112,85 @@ function nicer_permalinks_configuration_page() {
  * @return void
  */
 function nicer_permalinks_configuration_page_process() {
-	if ( 'post' == strtolower( $_SERVER['REQUEST_METHOD'] ) && $_POST['action'] == 'update-nicer-permalinks-settings' ) {
+	if ( 'post' == strtolower( $_SERVER['REQUEST_METHOD'] ) && !empty( $_POST['action'] ) && 'update-nicer-permalinks-settings' == $_POST['action'] ) {
 		bb_check_admin_referer( 'options-nicer-permalinks-update' );
 
 		$goback = remove_query_arg( array( 'nicer-permalinks-updated', 'error-php', 'error-nbp', 'error-htw', 'error-htb', 'unknown-error' ), wp_get_referer() );
 
-		// Get plugin current status
 		$plugin_current_status = (string) bb_get_option( 'nicer_permalinks_enabled' );
+		$plugin_requested_status = $_POST['nicer_permalinks_enabled'];
 
 		if ( empty( $plugin_current_status ) )
 			$plugin_current_status = 0;
 
-		if ( $plugin_current_status == $_POST['nicer_permalinks_enabled'] ) { // Nothing to do, requested status matches plugin current status
+		if ( $plugin_current_status == $plugin_requested_status ) { // Nothing to do, plugin requested status matches plugin current status
 			bb_safe_redirect( $goback );
 			exit;
 		}
 
-		// Temporary var for errors counting
-		$errors = 0;
+		// Temporary var for error reporting
+		$processing_error = false;
 
 		// Check plugin configuration
-		if ( 1 == $value = $_POST['nicer_permalinks_enabled'] ) { // Check if plugin can be enabled
-			if ( false === (bool) version_compare( '5.0.0', PHP_VERSION, '<' ) ) { // Notice error if PHP version if lower than 5
+		if ( (bool) $plugin_requested_status ) { // Check if plugin can be enabled
+			if ( !version_compare( '5.0.0', PHP_VERSION, '<' ) ) { // Notice error if PHP version if lower than 5
 				$goback = add_query_arg( 'error-php', 'true', $goback );
-				$errors++;
+				$processing_error = true;
 			}
 
-			if ( false === (bool) name_based_permalinks_enabled() ) { // Notice error if name based permalinks are not enabled
+			if ( !name_based_permalinks_enabled() ) { // Notice error if name based permalinks are not enabled
 				$goback = add_query_arg( 'error-nbp', 'true', $goback );
-				$errors++;
+				$processing_error = true;
 			}
 
 			if ( !is_writable( BB_PATH . '.htaccess' ) ) { // Notice error if .htaccess is not writable
 				$goback = add_query_arg( 'error-htw', 'true', $goback );
-				$errors++;
+				$processing_error = true;
 			}
 
 			if ( !file_exists( BB_PATH . 'htaccess.bak' ) ) { // Notice error if there is no htaccess.bak in bbPress root folder
 				$goback = add_query_arg( 'error-htb', 'true', $goback );
-				$errors++;
+				$processing_error = true;
 			} elseif ( !is_writable( BB_PATH . 'htaccess.bak' ) ) { // Notice error if htaccess.bak is not writable
 				$goback = add_query_arg( 'error-htb', 'true', $goback );
-				$errors++;
+				$processing_error = true;
 			}
-		} elseif ( 0 == $value ) { // Check if plugin can be disabled
+		} else { // Check if plugin can be disabled
 			if ( !is_writable( BB_PATH . '.htaccess' ) ) { // Notice error if .htaccess is not writable
 				$goback = add_query_arg( 'error-htw', 'true', $goback );
-				$errors++;
+				$processing_error = true;
 			}
 
 			if ( !file_exists( BB_PATH . 'htaccess.bak' ) ) { // Notice error if there is no htaccess.bak in bbPress root folder
 				$goback = add_query_arg( 'error-htb', 'true', $goback );
-				$errors++;
+				$processing_error = true;
 			}
-		} else { // Should never happen
-			$goback = add_query_arg( 'unknown-error', 'true', $goback );
-			bb_safe_redirect( $goback );
-			exit;
 		}
 
-		if ( 0 < $errors ) { // Report all errors
+		if ( $processing_error ) { // Report all errors
 			bb_safe_redirect( $goback );
 			exit;
 		}
 
 		// Process request
-		if ( 1 == $value ) { // Try to enable the plugin
-			if ( false === (bool) copy_into( BB_PATH . '.htaccess', BB_PATH . 'htaccess.bak' ) ) { // Notice error if there is no htaccess.bak in bbPress root folder or it is not writable
+		if ( (bool) $plugin_requested_status ) { // Try to enable the plugin
+			if ( !(bool) copy_into( BB_PATH . '.htaccess', BB_PATH . 'htaccess.bak' ) ) { // Notice error if there is no htaccess.bak in bbPress root folder or it is not writable
 				$goback = add_query_arg( 'error-htb', 'true', $goback );
 				bb_safe_redirect( $goback );
 				exit;
 			}
 
-			if ( false === (bool) update_htaccess() ) { // Notice error if .htaccess is not writable
+			if ( !(bool) update_htaccess() ) { // Notice error if .htaccess is not writable
 				$goback = add_query_arg( 'error-htw', 'true', $goback );
 				bb_safe_redirect( $goback );
 				exit;
 			}
 
-			bb_update_option( 'nicer_permalinks_enabled', $value );
+			bb_update_option( 'nicer_permalinks_enabled', $plugin_requested_status );
 
 			$goback = add_query_arg( 'nicer-permalinks-updated', 'true', $goback );
-		} elseif ( 0 == $value ) { // Try to disable the plugin
-			if ( false === (bool) copy_into( BB_PATH . 'htaccess.bak', BB_PATH . '.htaccess' ) ) { // Notice error if .htaccess is not writable
+		} else { // Try to disable the plugin
+			if ( !(bool) copy_into( BB_PATH . 'htaccess.bak', BB_PATH . '.htaccess' ) ) { // Notice error if .htaccess is not writable
 				$goback = add_query_arg( 'error-htw', 'true', $goback );
 				bb_safe_redirect( $goback );
 				exit;
@@ -203,8 +199,6 @@ function nicer_permalinks_configuration_page_process() {
 			bb_delete_option( 'nicer_permalinks_enabled' );
 
 			$goback = add_query_arg( 'nicer-permalinks-updated', 'true', $goback );
-		} else { // Should never happen
-			$goback = add_query_arg( 'unknown-error', 'true', $goback );
 		}
 
 		bb_safe_redirect( $goback );
@@ -277,6 +271,8 @@ function name_based_permalinks_enabled() {
 /**
  * Copy first file contents into second file
  *
+ * @access private
+ *
  * @return int|boolean Written bytes|false (error)
  */
 function copy_into( $a, $b ) {
@@ -285,6 +281,8 @@ function copy_into( $a, $b ) {
 
 /**
  * Update .htaccess contents with newly generated rules
+ *
+ * @access private
  *
  * @uses get_nicer_htaccess_contents()
  *
@@ -319,6 +317,8 @@ function update_htaccess() {
 
 /**
  * Generate nicer .htaccess contents
+ *
+ * @access private
  *
  * @global $bb
  *
@@ -404,7 +404,7 @@ EOF;
  * @return void
  */
 function nicer_permalinks_uninstall() {
-	if ( false === (bool) nicer_permalinks_enabled() ) // Plugin is already disabled
+	if ( !nicer_permalinks_enabled() ) // Plugin is already disabled
 		return;
 
 	// Check plugin configuration
@@ -418,7 +418,7 @@ function nicer_permalinks_uninstall() {
 	}
 
 	// Try to restore .htaccess
-	if ( false === (bool) copy_into( BB_PATH . 'htaccess.bak', BB_PATH . '.htaccess' ) ) { // Die if .htaccess is not writable or there is no htaccess.bak in bbPress root folder
+	if ( !(bool) copy_into( BB_PATH . 'htaccess.bak', BB_PATH . '.htaccess' ) ) { // Die if .htaccess is not writable or there is no htaccess.bak in bbPress root folder
 		bb_die( sprintf(
 			__( 'Could not deactivate "%1$s". See <a href="%2$s">"%1$s" configuration page</a> for error details.', NICER_PERMALINKS_ID ),
 			NICER_PERMALINKS_NAME,

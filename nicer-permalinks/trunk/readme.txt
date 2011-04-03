@@ -3,7 +3,7 @@ Contributors: mr_pelle
 Tags: permalinks, mod_rewrite, htaccess, slug, forum, topic
 Plugin Name: Nicer Permalinks
 Plugin URI: http://bbpress.org/plugins/topic/nicer-permalinks/
-Version: 5.0.6
+Version: 5.0.7
 Requires at least: 1.0
 Tested up to: 1.1-alpha
 
@@ -41,6 +41,10 @@ In short, <strong>no</strong>. Keeping the rest of the plugin as is, the `.htacc
 * CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
 == Changelog ==
+
+= Version 5.0.7 (2011-04-03) =
+
+* minor changes
 
 = Version 5.0.6 (2011-01-23) =
 

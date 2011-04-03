@@ -9,7 +9,7 @@
  */
 add_action( 'bb_admin_menu_generator', 'support_forums_configuration_page_add' );
 
-if ( isset( $_GET['plugin'] ) && 'support_forums_configuration_page' == $_GET['plugin'] ) { // Add plugin configuration page head if on plugin configuration page
+if ( !empty( $_GET['plugin'] ) && 'support_forums_configuration_page' == $_GET['plugin'] ) { // Add plugin configuration page head if on plugin configuration page
 	add_action( 'support_forums_configuration_page_pre_head', 'support_forums_configuration_page_process' );
 	add_action( 'bb_admin-header.php',                        'support_forums_configuration_page_head' );
 }
@@ -47,6 +47,7 @@ function support_forums_configuration_page_head() {
  * Display plugin configuration page
  *
  * @global $support_forums_settings
+ *
  * @uses do_action()
  * @uses bb_uri()
  * @uses bb_get_forums()
@@ -96,7 +97,7 @@ function support_forums_configuration_page() {
 		$checked = '';
 		$class = '';
 
-		if ( true === (bool) $support_forums_settings->isEnabled() && in_array( $forum->forum_id, $support_forums_settings->forums ) ) { // Plugin is enabled and forum is a support forum
+		if ( $support_forums_settings->isEnabled() && in_array( $forum->forum_id, $support_forums_settings->forums ) ) { // Plugin is enabled and forum is a support forum
 			$checked = ' checked="checked"';
 			$class = ' class="alt"';
 		}
@@ -155,7 +156,7 @@ function support_forums_configuration_page() {
 		<legend><?php _e( 'Support Views', SUPPORT_FORUMS_ID ); ?></legend>
 		<p><?php _e( 'You may create a view for each of the support statuses.', SUPPORT_FORUMS_ID ); ?></p>
 <?php
-	$views_enabled = (bool) $support_forums_settings->areViewsEnabled();
+	$views_enabled = $support_forums_settings->areViewsEnabled();
 
 	foreach ( $support_forums_settings->statuses as $status => $display ) {
 		$checked = ( $views_enabled && in_array( $status, $support_forums_settings->views ) ) ? ' checked="checked"' : '';
@@ -193,7 +194,7 @@ function support_forums_configuration_page() {
 			<label for="support-forums-settings-icons-dir"><?php _e( 'Icons directory', SUPPORT_FORUMS_ID );  ?></label>
 			<div class="inputs">
 <?php
-	$icons_enabled = (bool) $support_forums_settings->areIconsEnabled();
+	$icons_enabled = $support_forums_settings->areIconsEnabled();
 
 	printf(
 		'<input type="text" value="%1$s" id="support-forums-settings-icons-dir" name="support_forums_settings[icons][dir]" class="text" />%2$s',
@@ -349,15 +350,15 @@ function support_forums_configuration_page() {
  * @return void
  */
 function support_forums_configuration_page_process() {
-	if ( 'post' == strtolower( $_SERVER['REQUEST_METHOD'] ) && $_POST['action'] == 'update-support-forums-settings' ) {
+	if ( 'post' == strtolower( $_SERVER['REQUEST_METHOD'] ) && !empty( $_POST['action'] ) && 'update-support-forums-settings' == $_POST['action'] ) {
 		bb_check_admin_referer( 'options-support-forums-update' );
 
 		$goback = remove_query_arg( array( 'support-forums-updated', 'icons-directory-invalid', 'support-forums-uninstalled', 'support-forum-settings-imported', 'support-forum-settings-import-error' ), wp_get_referer() );
 
-		if ( !isset( $_POST['support_forums_uninstall'] ) )
+		if ( empty( $_POST['support_forums_uninstall'] ) )
 			$_POST['support_forums_uninstall'] = false;
 
-		if ( true === (bool) $_POST['support_forums_uninstall'] ) { // Remove plugin data from database
+		if ( (bool) $_POST['support_forums_uninstall'] ) { // Remove plugin data from database
 			global $bbdb;
 
 			bb_delete_option( 'support_forums_settings' );
@@ -370,14 +371,14 @@ function support_forums_configuration_page_process() {
 			exit;
 		}
 
-		if ( !isset( $_POST['support_forums_import_settings'] ) )
+		if ( empty( $_POST['support_forums_import_settings'] ) )
 			$_POST['support_forums_import_settings'] = false;
 
-		if ( true === (bool) $_POST['support_forums_import_settings'] ) { // Import Support Forum settings
-			if ( !isset( $_POST['support_forums_remove_settings'] ) )
+		if ( (bool) $_POST['support_forums_import_settings'] ) { // Import Support Forum settings
+			if ( empty( $_POST['support_forums_remove_settings'] ) )
 				$_POST['support_forums_remove_settings'] = false;
 
-			$goback = ( true === (bool) import_support_forum_settings( (bool) $_POST['support_forums_remove_settings'] ) ) ?
+			$goback = ( import_support_forum_settings( (bool) $_POST['support_forums_remove_settings'] ) ) ?
 				add_query_arg( 'support-forum-settings-imported', 'true', $goback ) :
 				add_query_arg( 'support-forum-settings-import-error', 'true', $goback );
 
@@ -386,14 +387,14 @@ function support_forums_configuration_page_process() {
 		}
 
 		// Temporary var for options
-		$settings = array();
+		$requested_settings = array();
 
 		foreach ( (array) $_POST as $option => $value ) // $option = ( support_forums_settings | support_forum_#id )
 			if ( !in_array( $option, array( '_wpnonce', '_wp_http_referer', 'action', 'submit' ) ) ) {
 				$option = trim( $option );
 				$value = ( is_array( $value ) ) ? $value : trim( $value );
 
-				if ( !isset( $value ) )
+				if ( empty( $value ) )
 					$value = false;
 
 				if ( $value ) {
@@ -402,7 +403,7 @@ function support_forums_configuration_page_process() {
 							$key = trim( $key );
 							$entry = ( is_array( $entry ) ) ? $entry : trim( $entry );
 
-							if ( !isset( $entry ) )
+							if ( empty( $entry ) )
 								$entry = false;
 
 							if ( $entry ) {
@@ -411,7 +412,7 @@ function support_forums_configuration_page_process() {
 										$_key = trim( $_key );
 										$_entry = ( is_array( $_entry ) ) ? $_entry : trim( $_entry );
 	
-										if ( !isset( $_entry ) )
+										if ( empty( $_entry ) )
 											$_entry = false;
 			
 										if ( $_entry ) { // $_entry could be empty only if ( dir ) was empty
@@ -431,25 +432,25 @@ function support_forums_configuration_page_process() {
 													exit;
 												}
 
-												$settings[$key][$_key] = $_entry;
+												$requested_settings[$key][$_key] = $_entry;
 											} else {
 												// status, closed and sticky are elements of icons[]. views[] follows the same rule
-												$settings[$key][] = $_key;
+												$requested_settings[$key][] = $_key;
 											}
 										}
 									}
 								else // $entry = ( default_status | poster_setable | poster_changeable )
-									$settings[$key] = $entry;
+									$requested_settings[$key] = $entry;
 							}
 						}
 					} else { // $value = ( #id )
 						// Forums ids are elements of forums[]
-						$settings['forums'][] = $value;
+						$requested_settings['forums'][] = $value;
 					}
 				}
 			}
 
-		bb_update_option( 'support_forums_settings', $settings );
+		bb_update_option( 'support_forums_settings', $requested_settings );
 
 		$goback = add_query_arg( 'support-forums-updated', 'true', $goback );
 		bb_safe_redirect( $goback );
@@ -484,6 +485,8 @@ function support_forums_configuration_page_process() {
 /**
  * Whether or not Support Forum settings import was successful
  *
+ * @access private
+ *
  * @param boolean $remove_sf_settings Whether or not remove Support Forum settings after import
  *
  * @global $bbdb
@@ -491,6 +494,7 @@ function support_forums_configuration_page_process() {
  * @uses bb_get_option()
  * @uses support_forums_map_status()
  * @uses bb_update_option()
+ * @uses support_forums_remove_sf_settings()
  *
  * @return boolean
  */
@@ -560,23 +564,16 @@ function import_support_forum_settings( $remove_sf_settings = false ) {
 
 	bb_update_option( 'support_forums_settings', $imported_settings );
 
-	if ( true === (bool) $remove_sf_settings ) { // Remove Support Forum settings
-		bb_delete_option( 'support_forum_enabled' );
-		bb_delete_option( 'support_forum_default_status' );
-		bb_delete_option( 'support_forum_poster_setable' );
-		bb_delete_option( 'support_forum_poster_changeable' );
-		bb_delete_option( 'support_forum_views' );
-		bb_delete_option( 'support_forum_icons_status' );
-		bb_delete_option( 'support_forum_icons_closed' );
-		bb_delete_option( 'support_forum_icons_sticky' );
-		$bbdb->query( $bbdb->prepare( "DELETE FROM $bbdb->meta WHERE meta_key = %s", 'topic_resolved' ) ); // Remove Support Forum inserted topic meta (there could be none)
-	}
+	if ( (bool) $remove_sf_settings ) // Remove Support Forum settings
+		support_forums_remove_sf_settings();
 
 	return true;
 }
 
 /**
- * Map Support Forums statuses into Support Forums ones
+ * Map Support Forum statuses into Support Forums ones
+ *
+ * @access private
  *
  * @param string $sf_status Support Forum status
  *
@@ -596,5 +593,24 @@ function support_forums_map_status( $sf_status ) {
 	}
 
 	return $sf_status;
+}
+
+/**
+ * Remove Support Forum settings
+ *
+ * @access private
+ *
+ * @return void
+ */
+function support_forums_remove_sf_settings() {
+	bb_delete_option( 'support_forum_enabled' );
+	bb_delete_option( 'support_forum_default_status' );
+	bb_delete_option( 'support_forum_poster_setable' );
+	bb_delete_option( 'support_forum_poster_changeable' );
+	bb_delete_option( 'support_forum_views' );
+	bb_delete_option( 'support_forum_icons_status' );
+	bb_delete_option( 'support_forum_icons_closed' );
+	bb_delete_option( 'support_forum_icons_sticky' );
+	$bbdb->query( $bbdb->prepare( "DELETE FROM $bbdb->meta WHERE meta_key = %s", 'topic_resolved' ) ); // Remove Support Forum inserted topic meta (there could be none)
 }
 ?>

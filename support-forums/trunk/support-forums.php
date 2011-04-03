@@ -3,7 +3,7 @@
 Plugin Name: Support Forums
 Plugin URI: http://bbpress.org/plugins/topic/support-forums/
 Description: Turns any number of forums into support forums, where users can mark topics as resolved, not resolved or not a support question. Based on <a href="http://www.adityanaik.com/">so1o</a>, <a href="http://blogwaffe.com/">mdawaffe</a> and <a href="http://profiles.wordpress.org/users/sambauers">SamBauers</a>' <a href="http://bbpress.org/plugins/topic/support-forum/">Support Forum</a> plugin.
-Version: 0.2
+Version: 0.2.1
 Author: so1o, mdawaffe, SamBauers, mr_pelle
 Author URI: http://scr.im/mrpelle
 */
@@ -108,11 +108,11 @@ class Support_Forums_Settings {
 			if ( empty( $this->defaultStatus ) ) // Should never happen
 				$this->defaultStatus = 'not_support';
 
-			$this->views =  ( is_array( $settings['views'] ) ) ? // Get views list
+			$this->views = ( is_array( $settings['views'] ) ) ? // Get views list
 				$settings['views'] :
 				false;
 
-			$this->icons =  ( is_array( $settings['icons'] ) ) ? // Get icons list and directory
+			$this->icons = ( is_array( $settings['icons'] ) ) ? // Get icons list and directory
 				$settings['icons'] :
 				false;
 
@@ -160,10 +160,10 @@ class Support_Forums_Settings {
 	 * @return boolean
 	 */
 	function isStatusSetable() {
-		if ( false === (bool) $this->isEnabled() )
+		if ( !$this->isEnabled() )
 			return false;
 
-		return (bool) $this->posterSetable;
+		return $this->posterSetable;
 	}
 
 	/**
@@ -178,7 +178,7 @@ class Support_Forums_Settings {
 	 * @return boolean
 	 */
 	function isStatusChangeable() {
-		if ( false === (bool) $this->isEnabled() )
+		if ( !$this->isEnabled() )
 			return false;
 
 		if ( !is_topic() )
@@ -192,7 +192,7 @@ class Support_Forums_Settings {
 		if ( $topic->topic_poster != bb_get_current_user_info( 'id' ) ) // Current user is not topic poster
 			return false;
 
-		if ( false === (bool) $this->isStatusSetable() ) // We did not want users to set topic support status on creation, neither do we want them to change it afterwards
+		if ( !$this->isStatusSetable() ) // We did not want users to set topic support status on creation, neither do we want them to change it afterwards
 			return false;
 
 		return (bool) apply_filters( 'support_forums_poster_changeable', $this->posterChangeable, $topic->topic_id );
@@ -206,7 +206,7 @@ class Support_Forums_Settings {
 	 * @return string
 	 */
 	function getTopicStatus() {
-		if ( false === (bool) $this->isEnabled() )
+		if ( !$this->isEnabled() )
 			return;
 
 		global $topic;
@@ -225,12 +225,12 @@ class Support_Forums_Settings {
 	 * @return void
 	 */
 	function supportTopicMeta() {
-		if ( false === (bool) $this->isEnabled() )
+		if ( !$this->isEnabled() )
 			return;
 
 		global $topic;
 
-		if ( true === (bool) $this->areIconsEnabled() ) { // Add closed and sticky statements if icons are enabled
+		if ( $this->areIconsEnabled() ) { // Add closed and sticky statements if icons are enabled
 			$icons_uri = ( array_key_exists( 'dir', $this->icons ) ) ? SUPPORT_FORUMS_ACTIVE_TEMPLATE_IMAGES_URI . $this->icons['dir'] : SUPPORT_FORUMS_ICONS_URI;
 
 			if ( $topic->topic_sticky && in_array( 'sticky', $this->icons ) ) // Add sticky statement
@@ -272,10 +272,10 @@ class Support_Forums_Settings {
 	 * @return void
 	 */
 	function topicStatusDisplay() {
-		if ( false === (bool) $this->isEnabled() )
+		if ( !$this->isEnabled() )
 			return;
 
-		if ( false === (bool) $this->isStatusChangeable() ) // Users cannot change topic support status
+		if ( !$this->isStatusChangeable() ) // Users cannot change topic support status
 			// Just display topic support status statement
 			$this->statusStatement();
 		else
@@ -289,13 +289,13 @@ class Support_Forums_Settings {
 	 * @return void
 	 */
 	function statusStatement() {
-		if ( false === (bool) $this->isEnabled() )
+		if ( !$this->isEnabled() )
 			return;
 
 		if ( !$topic_status = $this->getTopicStatus() ) // Topic is not a support topic
 			return;
 
-		if ( true === (bool) $this->areIconsEnabled() ) // Add icons, if enabled
+		if ( $this->areIconsEnabled() ) // Add icons, if enabled
 			if ( in_array( 'status', $this->icons ) ) { // Add status icon if enabled
 				$icons_uri = ( array_key_exists( 'dir', $this->icons ) ) ? SUPPORT_FORUMS_ACTIVE_TEMPLATE_IMAGES_URI . $this->icons['dir'] : SUPPORT_FORUMS_ICONS_URI;
 
@@ -323,7 +323,7 @@ class Support_Forums_Settings {
 	 * @return void
 	 */
 	function statusesDropdown() {
-		if ( false === (bool) $this->isEnabled() )
+		if ( !$this->isEnabled() )
 			return;
 
 		global $topic;
@@ -331,7 +331,7 @@ class Support_Forums_Settings {
 		if ( !$topic_status = $this->getTopicStatus() ) // Topic is not a support topic
 			return;
 
-		if ( true === (bool) $this->areIconsEnabled() ) // Add icons, if enabled
+		if (  $this->areIconsEnabled() ) // Add icons, if enabled
 			if ( in_array( 'status', $this->icons ) ) { // Add status icon if enabled
 				$icons_uri = ( array_key_exists( 'dir', $this->icons ) ) ? SUPPORT_FORUMS_ACTIVE_TEMPLATE_IMAGES_URI . $this->icons['dir'] : SUPPORT_FORUMS_ICONS_URI;
 
@@ -388,18 +388,18 @@ class Support_Forums_Settings {
 	 * @return void
 	 */
 	function statusesDropdownProcess() {
-		if ( false === (bool) $this->isEnabled() )
+		if ( !$this->isEnabled() )
 			return;
 
-		if ( 'post' == strtolower( $_SERVER['REQUEST_METHOD'] ) && $_POST['action'] == 'update-support-forums-topic-status' && is_topic() ) {
+		if ( 'post' == strtolower( $_SERVER['REQUEST_METHOD'] ) && !empty( $_POST['action'] ) && 'update-support-forums-topic-status' == $_POST['action'] && is_topic() ) {
 			global $topic;
 
 			bb_verify_nonce( 'support-forums-update-status-topic-' . $topic->topic_id );
 
 			$goback = remove_query_arg( array( 'message' ), wp_get_referer() );
 
-			if ( true === (bool) $this->isStatusChangeable() && $_POST['support_forums_statuses_dropdown'] )
-				$goback = ( true === (bool) $this->setTopicStatus( $topic->topic_id, $_POST['support_forums_statuses_dropdown'] ) ) ?
+			if ( $this->isStatusChangeable() && !empty( $_POST['support_forums_statuses_dropdown'] ) )
+				$goback = ( $this->setTopicStatus( $topic->topic_id, $_POST['support_forums_statuses_dropdown'] ) ) ?
 					add_query_arg( 'message', 'support-forums-topic-status-updated', $goback ) :
 					add_query_arg( 'message', 'update-support-forums-topic-status-error', $goback );
 
@@ -419,10 +419,10 @@ class Support_Forums_Settings {
 	 * @return void
 	 */
 	function addJQuery() {
-		if ( false === (bool) $this->isEnabled() )
+		if ( !$this->isEnabled() )
 			return;
 
-		if ( true === (bool) $this->isStatusSetable() && ( ( is_front() && $_GET['new'] ) || is_bb_tag() ) ) { // Script is necessary only when users can select topic destination forum
+		if ( $this->isStatusSetable() && ( ( is_front() && !empty( $_GET['new'] ) ) || is_bb_tag() ) ) { // Script is necessary only when users can select topic destination forum
 			if ( wp_script_is( 'jquery' ) ) // Nothing to do, since jQuery is already included in page head
 				return;
 
@@ -443,10 +443,10 @@ class Support_Forums_Settings {
 	 * @return void
 	 */
 	function newTopicStatusesDropdownJQuery() {
-		if ( false === (bool) $this->isEnabled() )
+		if ( !$this->isEnabled() )
 			return;
 
-		if ( true === (bool) $this->isStatusSetable() && ( ( is_front() && $_GET['new'] ) || is_bb_tag() ) ) { // Script is necessary only when user can select topic destination forum
+		if ( $this->isStatusSetable() && ( ( is_front() && !empty( $_GET['new'] ) ) || is_bb_tag() ) ) { // Script is necessary only when user can select topic destination forum
 			$script = <<<EOF
 <!-- Support Forums dropdown menu jQuery -->
 <script type="text/javascript">
@@ -493,13 +493,13 @@ EOF;
 	 * @return void
 	 */
 	function newTopicStatusesDropdown() {
-		if ( false === (bool) $this->isEnabled() )
+		if ( !$this->isEnabled() )
 			return;
 
-		if ( !is_topic() && true === (bool) $this->isStatusSetable() ) {
+		if ( !is_topic() && $this->isStatusSetable() ) {
 			global $forum;
 
-			if ( !$forum || in_array( $forum->forum_id, $this->forums ) ) { // Check if topic is being created from forum front page or forum is a support forum
+			if ( empty( $forum ) || in_array( $forum->forum_id, $this->forums ) ) { // Check if topic is being created from forum front page or forum is a support forum
 				$menu .= '<p id="post-form-support-status-container">';
 				$menu .= sprintf( '<label for="support-status">%s ', __( 'This topic is:', SUPPORT_FORUMS_ID ) );
 				$menu .= '<select name="support_status" id="support-status">' . "\n";
@@ -528,10 +528,10 @@ EOF;
 	 * @return boolean
 	 */
 	function newTopicStatusesDropdownProcess( $post_id ) {
-		if ( false === (bool) $this->isEnabled() )
+		if ( !$this->isEnabled() )
 			return false;
 
-		if ( true === (bool) $this->isStatusSetable() && $_POST['support_status'] ) {
+		if ( $this->isStatusSetable() && !empty( $_POST['support_status'] ) ) {
 			$topic_id = bb_get_post( $post_id )->topic_id;
 
 			return $this->setTopicStatus( $topic_id, $_POST['support_status'] );
@@ -550,10 +550,10 @@ EOF;
 	 * @return boolean
 	 */
 	function setTopicStatus( $topic_id = 0, $status ) {
-		if ( false === (bool) $this->isEnabled() )
+		if ( !$this->isEnabled() )
 			return false;
 
-		if ( !$topic_id )
+		if ( empty( $topic_id ) )
 			return false;
 
 		// Apply filters, if any
@@ -573,14 +573,14 @@ EOF;
 	 * @return boolean
 	 */
 	function registerSupportViews() {
-		if ( false === (bool) $this->isEnabled() )
+		if ( !$this->isEnabled() )
 			return false;
 
-		if ( false === (bool) $this->areViewsEnabled() )
+		if ( !$this->areViewsEnabled() )
 			return false;
 
-		// Temporary var for function return value
-		$success = true;
+		// Temporary var for error reporting
+		$processing_error = false;
 
 		foreach ( $this->views as $view ) {
 			$additional_meta_value = ( $this->defaultStatus == $view ) ? // Default support status view
@@ -588,7 +588,7 @@ EOF;
 				'';
 
 			$query = array(
-				'sticky' =>    ( true === (bool) SUPPORT_FORUMS_VIEWS_IGNORE_STICKIES_PRIORITY ) ? 'all' : NULL,
+				'sticky' =>    ( (bool) SUPPORT_FORUMS_VIEWS_IGNORE_STICKIES_PRIORITY ) ? 'all' : NULL,
 				'meta_key' =>  'topic_support_status',
 				'meta_value'=> $view . $additional_meta_value,
 				'forum_id' =>  join( ',', $this->forums ) // View must include support forums only
@@ -605,11 +605,14 @@ EOF;
 				);
 			}
 
-			// A single error makes $success false
-			$success = $success && (bool) bb_register_view( 'support-forums-' . str_replace( '_', '-', $view ), sprintf( $title, $this->statuses[$view] ), $query );
+			// A view registration error turns $processing_error true
+			$processing_error = (
+				$processing_error
+				|| !(bool) bb_register_view( 'support-forums-' . str_replace( '_', '-', $view ), sprintf( $title, $this->statuses[$view] ), $query )
+			);
 		}
 
-		return (bool) $success;
+		return !$processing_error;
 	}
 
 	/**
@@ -622,10 +625,10 @@ EOF;
 	 * @return string
 	 */
 	function modifyTopicLabel( $label ) {
-		if ( false === (bool) $this->isEnabled() )
+		if ( !$this->isEnabled() )
 			return $label;
 
-		if ( false === (bool) $this->areIconsEnabled() ) // Icons are disabled
+		if ( !$this->areIconsEnabled() ) // Icons are disabled
 			return $label;
 
 		global $topic;
@@ -676,7 +679,7 @@ EOF;
 	 * @return array
 	 */
 	function addSupportTopicClass( $class ) {
-		if ( false === (bool) $this->isEnabled() )
+		if ( !$this->isEnabled() )
 			return $class;
 
 		global $topic;
@@ -694,22 +697,22 @@ $support_forums_settings = new Support_Forums_Settings();
 if ( bb_is_admin() ) // Load admin.php if on admin area
 	require_once( 'includes/admin.php' );
 
-if ( true === (bool) $support_forums_settings->isEnabled() ) { // Load plugin core if plugin is enabled
+if ( $support_forums_settings->isEnabled() ) { // Load plugin core if plugin is enabled
 	// Add plugin actions
 	add_action( 'topicmeta',              array( $support_forums_settings, 'supportTopicMeta' ) ); // This function includes statusesDropdown()
 	add_action( 'bb_topic.php_pre_db',    array( $support_forums_settings, 'statusesDropdownProcess' ) );
 
-	if ( true === (bool) $support_forums_settings->isStatusSetable() ) { // Add new topics support statuses dropdown menu &co. if status is setable
+	if ( $support_forums_settings->isStatusSetable() ) { // Add new topics support statuses dropdown menu &co. if status is setable
 		add_action( 'bb_init',            array( $support_forums_settings, 'addJQuery' ) );
 		add_action( 'bb_head',            array( $support_forums_settings, 'newTopicStatusesDropdownJQuery' ), 100 );
 		add_action( 'post_form_pre_post', array( $support_forums_settings, 'newTopicStatusesDropdown' ) );	
 		add_action( 'bb-post.php',        array( $support_forums_settings, 'newTopicStatusesDropdownProcess' ) );
 	}
 
-	if ( true === (bool) $support_forums_settings->areViewsEnabled() ) // Add views registration if views are enabled
+	if ( $support_forums_settings->areViewsEnabled() ) // Add views registration if views are enabled
 		add_action( 'bb_init',            array( $support_forums_settings, 'registerSupportViews' ) );
 
-	if ( true === (bool) $support_forums_settings->areIconsEnabled() ) { // Add icons filters if icons are enabled
+	if ( $support_forums_settings->areIconsEnabled() ) { // Add icons filters if icons are enabled
 		// Remove closed and sticky topic label filters
 		remove_filter( 'bb_topic_labels', 'bb_closed_label', 10 );
 		remove_filter( 'bb_topic_labels', 'bb_sticky_label', 20 );

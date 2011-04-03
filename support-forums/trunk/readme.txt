@@ -3,7 +3,7 @@ Contributors: so1o, mdawaffe, SamBauers, mr_pelle
 Tags: support, forums, resolved, question
 Plugin Name: Support Forums
 Plugin URI: http://bbpress.org/plugins/topic/support-forums/
-Version: 0.2
+Version: 0.2.1
 Requires at least: 1.0
 Tested up to: 1.1-alpha
 
@@ -40,6 +40,10 @@ Since version 0.2, you may also <strong>import settings</strong> from Support Fo
 * Copyright (C) 2007 Sam Bauers (http://unlettered.org/)
 
 == Changelog ==
+
+= Version 0.2.1 (2011-04-03) =
+
+* minor changes
 
 = Version 0.2 (2010-09-28) =
 

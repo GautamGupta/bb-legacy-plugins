@@ -9,7 +9,7 @@
  */
 add_action( 'bb_admin_menu_generator', 'swirl_unknowns_configuration_page_add' );
 
-if ( isset( $_GET['plugin'] ) && 'swirl_unknowns_configuration_page' == $_GET['plugin'] ) // Add plugin configuration page head if on plugin configuration page
+if ( !empty( $_GET['plugin'] ) && 'swirl_unknowns_configuration_page' == $_GET['plugin'] ) // Add plugin configuration page head if on plugin configuration page
 	add_action( 'swirl_unknowns_configuration_page_pre_head', 'swirl_unknowns_configuration_page_process' );
 
 
@@ -125,15 +125,15 @@ function swirl_unknowns_configuration_page() {
  * @return void
  */
 function swirl_unknowns_configuration_page_process() {
-	if ( 'post' == strtolower( $_SERVER['REQUEST_METHOD'] ) && 'update-swirl-unknowns-settings' == $_POST['action'] ) {
+	if ( 'post' == strtolower( $_SERVER['REQUEST_METHOD'] ) && !empty( $_POST['action'] ) && 'update-swirl-unknowns-settings' == $_POST['action'] ) {
 		bb_check_admin_referer( 'options-swirl-unknowns-update' );
 
 		$goback = remove_query_arg( array( 'swirl-unknowns-updated', 'swirl-unknowns-uninstalled' ), wp_get_referer() );
 
-		if ( !isset( $_POST['swirl_unknowns_uninstall'] ) )
+		if ( empty( $_POST['swirl_unknowns_uninstall'] ) )
 			$_POST['swirl_unknowns_uninstall'] = false;
 
-		if ( true === (bool) $_POST['swirl_unknowns_uninstall'] ) { // Remove plugin data from database
+		if ( (bool) $_POST['swirl_unknowns_uninstall'] ) { // Remove plugin data from database
 			bb_delete_option( 'swirl_page' );
 
 			$goback = add_query_arg( 'swirl-unknowns-uninstalled', 'true', $goback );

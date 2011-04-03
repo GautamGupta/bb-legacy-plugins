@@ -3,7 +3,7 @@ Contributors: mr_pelle
 Tags: redirect, hidden, private, forum, login
 Plugin Name: Swirl Unknowns
 Plugin URI: http://bbpress.org/plugins/topic/swirl-unknowns/
-Version: 1.1
+Version: 1.1.1
 Requires at least: 1.0
 Tested up to: 1.1-alpha
 
@@ -28,6 +28,10 @@ Based on <a href="http://blogwaffe.com/">Michael D. Adams</a>' <a href="http://b
 * CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 
 == Changelog ==
+
+= Version 1.1.1 (2011-04-03) =
+
+* minor changes
 
 = Version 1.1 (2010-07-12) =
 

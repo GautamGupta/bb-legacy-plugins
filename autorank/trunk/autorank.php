@@ -104,7 +104,7 @@ function autorank_modify_name( $name, $user_id, $post_id ) {
 
 	$rank = '';
 	if ( $autorank['show_rank'] && $autorank['rank_before_name'] ) {
-		list( $user_rank, $rank_score ) = autorank_get_rank( $user );
+		list( $user_rank, $rank_score ) = autorank_get_rank( $user_id );
 
 		if ( $user_rank != '' ) {
 			$rank = '<span title="' . sprintf( __( 'Required score: %s', 'autorank' ), bb_number_format_i18n( $rank_score ) ) . '">' . $user_rank . '</span> ';

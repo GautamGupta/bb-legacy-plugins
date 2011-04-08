@@ -1,12 +1,12 @@
-=== Tapatalk ===
+=== PlaceHolder ===
 Contributors: master5o1
-Tags: tapatalk, android, iphone, mobile, master5o1, 5o1
-Requires at least: 1.0.2
-Tested up to: 1.1
+Tags:m master5o1, 5o1
+Requires at least:
+Tested up to:
 
 == Description ==
 
-This is a plugin for bbPress to enable the forum to be used by Tapatalk mobile interface software.  Currently there is nothing here.
+Placeholder because I'm not sure how to remove a plugin entry.
 
 == Other Notes ==
 
@@ -15,7 +15,6 @@ Not yet
 = License =
 
 Oh, I suppose...
-GNU General Public License version 3 (GPLv3): http://www.opensource.org/licenses/gpl-3.0.html
 
 == Installation ==
 

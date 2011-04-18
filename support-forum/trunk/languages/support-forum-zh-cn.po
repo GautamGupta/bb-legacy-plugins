@@ -1,0 +1,141 @@
+# Chinese (Simplified) Translation for Support Forum Plugin
+# Copyright (C) 2011 <a href="http://www.adityanaik.com/">Aditya Naik</a>, <a href="http://unlettered.org/">Sam Bauers</a>
+# This file is distributed under the same license as the PACKAGE package.
+# Jiehan Zheng <zheng@jiehan.org>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Support forum 3.0.3\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/support-forum\n"
+"POT-Creation-Date: 2008-05-08 23:54+1000\n"
+"PO-Revision-Date: 2011-04-17 02:21+0800\n"
+"Last-Translator: Jiehan Zheng <zheng@jiehan.org>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: support-forum.php:194
+msgid "This version of the <em>Support forum</em> plugin requires bbPress version 0.9"
+msgstr "这个版本的<em>支持论坛</em>插件要求 bbPress 高于 0.9 版本"
+
+#: support-forum.php:206
+#: support-forum.php:960
+#: support-forum.php:977
+msgid "resolved"
+msgstr "已解决"
+
+#: support-forum.php:207
+#: support-forum.php:961
+#: support-forum.php:979
+msgid "not resolved"
+msgstr "未解决"
+
+#: support-forum.php:208
+#: support-forum.php:962
+#: support-forum.php:981
+msgid "not a support question"
+msgstr "不是支持问题"
+
+#: support-forum.php:383
+#, php-format
+msgid "Support topics that are %s"
+msgstr "%s 的支持主题"
+
+#: support-forum.php:387
+#, php-format
+msgid "Support topics that are %s and are more than 2 hours old"
+msgstr "提问两个小时以上的 %s 支持主题"
+
+#: support-forum.php:466
+msgid "Change"
+msgstr "修改"
+
+#: support-forum.php:504
+#: support-forum.php:510
+#: support-forum.php:515
+#: support-forum.php:730
+msgid "This topic is"
+msgstr "这个主题处于"
+
+#: support-forum.php:504
+#: support-forum.php:672
+#: support-forum.php:1009
+msgid "sticky"
+msgstr "置顶"
+
+#: support-forum.php:510
+#: support-forum.php:649
+#: support-forum.php:1002
+msgid "closed"
+msgstr "已关闭"
+
+#: support-forum.php:821
+#: support-forum.php:918
+msgid "Support forum"
+msgstr "支持论坛"
+
+#: support-forum.php:870
+msgid "Update performed"
+msgstr "已完成更新"
+
+#: support-forum.php:872
+msgid "No update required"
+msgstr "无需更新"
+
+#: support-forum.php:924
+msgid "Name"
+msgstr "名称"
+
+#: support-forum.php:924
+msgid "Description"
+msgstr "描述"
+
+#: support-forum.php:939
+msgid "Enable support forum"
+msgstr "启用支持论坛"
+
+#: support-forum.php:958
+msgid "Set the default status for topics:"
+msgstr "设置主题的默认状态："
+
+#: support-forum.php:967
+msgid "Allow the poster of the topic to set the status on topic creation"
+msgstr "允许发帖者在创建时指定状态"
+
+#: support-forum.php:969
+msgid "Allow the poster of the topic to set the status at any time"
+msgstr "一直允许发帖者设置状态"
+
+#: support-forum.php:974
+msgid "Choose which statuses will have a view:"
+msgstr "为如下状态显示特殊标记："
+
+#: support-forum.php:986
+msgid "Use resolution status icons on topics"
+msgstr "为帖子显示解决状况图标"
+
+#: support-forum.php:999
+msgid "Use lock icon on closed topics (applies to all forums)"
+msgstr "为帖子显示关闭状态图标（应用到所有论坛）"
+
+#: support-forum.php:1006
+msgid "Use sticky icon on sticky topics (applies to all forums)"
+msgstr "为帖子显示置顶状态图标（应用到所有论坛）"
+
+#: support-forum.php:1021
+msgid "If you used support forum plugin version 1.0, you will need to update existing topics to work with version 2.x"
+msgstr "如果您使用过支持论坛插件 1.0 版本，您需将现有主题升级，以便于 2.x 版本的插件工作"
+
+#: support-forum.php:1024
+msgid "Update topics to version 2.x"
+msgstr "将主题升级到 2.x 版本"
+
+#: support-forum.php:1028
+msgid "Save support forum settings"
+msgstr "保存支持论坛设置"
+
+#: support-forum.php:1084
+msgid "Settings saved"
+msgstr "设置已保存"
+

@@ -234,7 +234,7 @@ jQuery(document).ready(function() {
 				}
 				?>
 				<p><?php echo sprintf(__("%d sploggers users has been deleted from your site.", "wangguard") , $reportedUsersCount); ?></p>
-			<? } ?>
+			<?php } ?>
 
 			<?php
 			break;

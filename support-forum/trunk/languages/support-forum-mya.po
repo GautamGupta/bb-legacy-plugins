@@ -1,0 +1,144 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR <a href="http://www.adityanaik.com/">Aditya Naik</a>, <a href="http://unlettered.org/">Sam Bauers</a>
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Support forum 3.0.3\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/support-forum\n"
+"POT-Creation-Date: 2008-05-08 23:54+1000\n"
+"PO-Revision-Date: 2011-06-11 02:35+0630\n"
+"Last-Translator: Sithu Thwin <frisithu82@gmail.com>\n"
+"Language-Team: Ayar Translation Project <sithuthwin@ayarunicodegroup.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Language: Burmese\n"
+"X-Poedit-Country: MYANMAR\n"
+
+#: support-forum.php:194
+msgid "This version of the <em>Support forum</em> plugin requires bbPress version 0.9"
+msgstr "ဤ<em> ကူညီပံ့ပိုးမှု ဖိုရမ်</em> ပလပ်အင် ဗားရှင်းသည် bbPress ဗားရှင်း ၀.၉ ကိုလိုအပ်ပါသည်"
+
+#: support-forum.php:206
+#: support-forum.php:960
+#: support-forum.php:977
+msgid "resolved"
+msgstr "ေြဖရှင်းြပီး"
+
+#: support-forum.php:207
+#: support-forum.php:961
+#: support-forum.php:979
+msgid "not resolved"
+msgstr "မေြဖရှင်းရေသး"
+
+#: support-forum.php:208
+#: support-forum.php:962
+#: support-forum.php:981
+msgid "not a support question"
+msgstr "ကူညီပံ့ပိုးမှု ေမးခွန်း မဟုတ်ပါ"
+
+#: support-forum.php:383
+#, php-format
+msgid "Support topics that are %s"
+msgstr "%s ေသာ ကူညီပံ့ပိုးမှု ေဆွးေနွးချက် ေခါင်းစဉ်များ"
+
+#: support-forum.php:387
+#, php-format
+msgid "Support topics that are %s and are more than 2 hours old"
+msgstr "နှစ်နာရီထက်ပိုေသာ ကာလက ေရးသားခဲ့ြပီး %s ေသာ ကူညီပံ့ပိုးမှု ေဆွးေနွးချက် ေခါင်းစဉ်များ"
+
+#: support-forum.php:466
+msgid "Change"
+msgstr "ေြပာင်းရန်"
+
+#: support-forum.php:504
+#: support-forum.php:510
+#: support-forum.php:515
+#: support-forum.php:730
+msgid "This topic is"
+msgstr "ဒီေဆွးေနွးချက် ေခါင်းစဉ်သည်"
+
+#: support-forum.php:504
+#: support-forum.php:672
+#: support-forum.php:1009
+msgid "sticky"
+msgstr "ဦးစားေပး ကိစ္စြဖစ်သည်"
+
+#: support-forum.php:510
+#: support-forum.php:649
+#: support-forum.php:1002
+msgid "closed"
+msgstr "ပိတ်ထားြပီ"
+
+#: support-forum.php:821
+#: support-forum.php:918
+msgid "Support forum"
+msgstr "ကူညီပံ့ပိုးမှု ဖိုရမ်"
+
+#: support-forum.php:870
+msgid "Update performed"
+msgstr "အဆင့်ြမှင့်တင်မှု ြပုလုပ်ခဲ့သည်"
+
+#: support-forum.php:872
+msgid "No update required"
+msgstr "အဆင့်ြမှင့်တင်မှု မလိုအပ်ပါ"
+
+#: support-forum.php:924
+msgid "Name"
+msgstr "အမည်"
+
+#: support-forum.php:924
+msgid "Description"
+msgstr "ရှင်းလင်းေဖာ်ြပချက်"
+
+#: support-forum.php:939
+msgid "Enable support forum"
+msgstr "ကူညီပံ့ပိုးမှု ဖိုရမ်ကို ဖွင့်ပါ"
+
+#: support-forum.php:958
+msgid "Set the default status for topics:"
+msgstr "ေဆွးေနွးချက်ေခါင်းစဉ်များအတွက် အေြခအေန မူလသတ်မှတ်ချက်ကို သတ်မှတ်ထားရန်"
+
+#: support-forum.php:967
+msgid "Allow the poster of the topic to set the status on topic creation"
+msgstr "ေဆွးေနွးချက်ေခါင်းစဉ်ကို စတင်ေရးသားစဉ် ေဆွးေနွးချက်ေခါင်းစဉ်ေရးသားသူ၏ အေြခအေနကို သတ်မှတ်ေပးခွင့်ြပုပါ"
+
+#: support-forum.php:969
+msgid "Allow the poster of the topic to set the status at any time"
+msgstr "မည်သည့်အချိန်၌မဆို ေဆွးေနွးချက်ေခါင်းစဉ် ေရးသာသူ၏ အေြခအေနကို သတ်မှတ်ေပးခွင့် ြပုပါ"
+
+#: support-forum.php:974
+msgid "Choose which statuses will have a view:"
+msgstr "ဘယ် အေြခအေနများက ြမင်ကွင်းတစ်ခုရရှိမည်ကို ေရွးပါ :"
+
+#: support-forum.php:986
+msgid "Use resolution status icons on topics"
+msgstr "ေဆွးေနွးချက်ေခါင်းစဉ်များတွင် အေရးယူ လုပ်ေဆာင်ေနမှု အေြခအေနြပ အိုင်ကွန်များကို သံုးပါ"
+
+#: support-forum.php:999
+msgid "Use lock icon on closed topics (applies to all forums)"
+msgstr "ပိတ်ထားေသာ ေဆွးေနွးချက် ေခါင်းစဉ်များတွင် ေသာ့ခေလာက်ပံုကို သံုးပါ (ဖိုရမ်အားလံုးကို သက်ေရာက်မှုရှိသည် )"
+
+#: support-forum.php:1006
+msgid "Use sticky icon on sticky topics (applies to all forums)"
+msgstr "ဦးစားေပး ေဆွးေနွးချက်ေခါင်းစဉ်များတွင် ကပ်ခွာအိုင်ကွန်ကို သံုးပါ (ဖိုရမ်အားလံုးကို သက်ေရာက်မှုရှိသည်)"
+
+#: support-forum.php:1021
+msgid "If you used support forum plugin version 1.0, you will need to update existing topics to work with version 2.x"
+msgstr "ကူညီပံ့ပိုးမှု ဖိုရမ် ဗားရှင်း ၁.၀ ကို အသံုးြပုထားခဲ့လျှင် လက်ရှိ ရှိေနေသာ ေဆွးေနွးချက်ေခါင်းစဉ်များကို ဗားရှင်း ၂.x နှင့် အလုပ်လုပ်နိုင်ရန် အဆင့်ြမှင့်တင် ြဖည့်စွက်ေပးရပါမည်။"
+
+#: support-forum.php:1024
+msgid "Update topics to version 2.x"
+msgstr "ေဆွးေနွးချက်ေခါင်းစဉ်များကို ဗားရှင်း ၂.x သို့ အဆင့်ြမှင့်တင် ြဖည့်စွက်ပါ"
+
+#: support-forum.php:1028
+msgid "Save support forum settings"
+msgstr "ကူညီပံ့ပိုးမှု ဖိုရမ် အြပင်အဆင်များကို သိမ်းပါ"
+
+#: support-forum.php:1084
+msgid "Settings saved"
+msgstr "အြပင်အဆင်များ သိမ်းြပီးြပီ"
+

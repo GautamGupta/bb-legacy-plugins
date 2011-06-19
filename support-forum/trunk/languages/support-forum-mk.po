@@ -8,28 +8,28 @@ msgstr ""
 "Project-Id-Version: Support forum 3.0.3\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/support-forum\n"
 "POT-Creation-Date: 2008-05-08 23:54+1000\n"
-"PO-Revision-Date: 2011-03-14 12:44+0100\n"
+"PO-Revision-Date: 2011-06-16 22:05+0100\n"
 "Last-Translator: Boris Kuzmanov <boriskuzmanov2@gmail.com>\n"
-"Language-Team: mk_MK\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: support-forum.php:194
 msgid "This version of the <em>Support forum</em> plugin requires bbPress version 0.9"
-msgstr "Оваа верзија на додатокот за <em>Форум поддршка</em> бара bbPress 0.9"
+msgstr "Оваа верзија на <em>форумот за поддршка</em> бара bbPress 0.9"
 
 #: support-forum.php:206
 #: support-forum.php:960
 #: support-forum.php:977
 msgid "resolved"
-msgstr "исполнето"
+msgstr "решено"
 
 #: support-forum.php:207
 #: support-forum.php:961
 #: support-forum.php:979
 msgid "not resolved"
-msgstr "не е исплатно"
+msgstr "не е решено"
 
 #: support-forum.php:208
 #: support-forum.php:962
@@ -40,12 +40,12 @@ msgstr "не е прашање за поддршка"
 #: support-forum.php:383
 #, php-format
 msgid "Support topics that are %s"
-msgstr "Темите за поддршка се %s"
+msgstr "Тема за поддршка кои се %s"
 
 #: support-forum.php:387
 #, php-format
 msgid "Support topics that are %s and are more than 2 hours old"
-msgstr "Темите за поддршка кои се %s и се постари од 2 часа"
+msgstr "Теми за поддршка кои се %s и се постари од 2 часа"
 
 #: support-forum.php:466
 msgid "Change"
@@ -62,13 +62,13 @@ msgstr "Оваа тема е"
 #: support-forum.php:672
 #: support-forum.php:1009
 msgid "sticky"
-msgstr "важна"
+msgstr "леплива"
 
 #: support-forum.php:510
 #: support-forum.php:649
 #: support-forum.php:1002
 msgid "closed"
-msgstr "затворена"
+msgstr "затвоена"
 
 #: support-forum.php:821
 #: support-forum.php:918
@@ -77,11 +77,11 @@ msgstr "Форум за поддршка"
 
 #: support-forum.php:870
 msgid "Update performed"
-msgstr "Надградбата е извршена"
+msgstr "Извршена е надградба"
 
 #: support-forum.php:872
 msgid "No update required"
-msgstr "Нема потреба од надградби"
+msgstr "Нема потреба од надградба"
 
 #: support-forum.php:924
 msgid "Name"
@@ -93,7 +93,7 @@ msgstr "Опис"
 
 #: support-forum.php:939
 msgid "Enable support forum"
-msgstr "Овозможи форум за поддршка"
+msgstr "Овозможи го форумот за поддршка"
 
 #: support-forum.php:958
 msgid "Set the default status for topics:"
@@ -101,41 +101,41 @@ msgstr "Постави стандарден статус за темите:"
 
 #: support-forum.php:967
 msgid "Allow the poster of the topic to set the status on topic creation"
-msgstr "Дозволи му на авторот да постави статус на сопствената тема"
+msgstr "Дозволи му на авторот да постави статус на својата тема"
 
 #: support-forum.php:969
 msgid "Allow the poster of the topic to set the status at any time"
-msgstr "Дозволи му на авторот да може да постави статус на сопствената тема во било кое врее"
+msgstr "Дозволи му на авторот во секое време да го менува статусот на својата тема"
 
 #: support-forum.php:974
 msgid "Choose which statuses will have a view:"
-msgstr "Избери кои статуси ќе бидат прикажани:"
+msgstr "Изберете кои статуси ќе бидат видливи:"
 
 #: support-forum.php:986
 msgid "Use resolution status icons on topics"
-msgstr "Користи статус иконки за темите"
+msgstr "Користи иконки за статусите на темите"
 
 #: support-forum.php:999
 msgid "Use lock icon on closed topics (applies to all forums)"
-msgstr "Користи ја клуч иконката за затворени теми"
+msgstr "Користи клуч иконка за сите затворени теми"
 
 #: support-forum.php:1006
 msgid "Use sticky icon on sticky topics (applies to all forums)"
-msgstr "Користи иконка за важни теми"
+msgstr "Користи леплива иконка за сите лепливи теми"
 
 #: support-forum.php:1021
 msgid "If you used support forum plugin version 1.0, you will need to update existing topics to work with version 2.x"
-msgstr "Доколку го користите додатокот за форумот верзија 1.0, Вие ќе треба да го надградите."
+msgstr "Доколку користите форум за поддршка 1.0, Вие ќе треба да ги надградите постоечките теми на верзијата 2.х"
 
 #: support-forum.php:1024
 msgid "Update topics to version 2.x"
-msgstr "Надгради ги темите во верзија 2.х"
+msgstr "Надгради ги темите на верзија 2.х"
 
 #: support-forum.php:1028
 msgid "Save support forum settings"
-msgstr "Зачувај ги промените"
+msgstr "Зачувај ги поставувањата"
 
 #: support-forum.php:1084
 msgid "Settings saved"
-msgstr "Промените се зачувани"
+msgstr "Поставувањата се зачувани"
 

@@ -47,7 +47,7 @@ jQuery(document).ready(function() {
 
 
 
-<form action="admin.php" method="get" id="wangguard-wizard-form" onsubmit="return wangguard_progress()">
+<form action="admin.php" method="get" id="wangguardWizardForm" name="wangguardWizardForm" onsubmit="return wangguard_progress()">
 	<input type="hidden" name="page" value="wangguard_wizard" />
 		
 	<?php
@@ -57,41 +57,71 @@ jQuery(document).ready(function() {
 			<div id="wangguard-visible-step-status">
 				<h3><?php echo __( "Reporting spam users to WangGuard..." , "wangguard"); ?></h3>
 				<?php
-				$spamUsers = $wpdb->get_col("select ID from $wpdb->users where $sqlSpamWhere");
-				$userCount = count($spamUsers);
-				if ($userCount == 0) {?>
-					<p><?php echo __( "No spam users were found on your site. Click the button below to check your users." , "wangguard") ?></p>
-					<?php
-				}
-				else {?>
-					<p><img id="wangguard-progress-wait" class="wangguard-hidewhendone" style="vertical-align: middle; margin-right: 8px;" src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" alt="..." /><?php echo sprintf(__("The WangGuard wizard is reporting %d spam users as Sploggers.", "wangguard") , $userCount); ?></p>
-					<?php flush(); ?>
-					<?php ob_flush(); ?>
+				$usersPerStint = 100;	//how many users to check on each iteration
+				
+				$fromUser = (int)$_REQUEST['wangguard_wiz_from'];
+				if ($fromUser<0) $fromUser = 0;
+				
+				$spamUsersTotal = $wpdb->get_col("select count(*) from $wpdb->users where $sqlSpamWhere");
+				$spamUsersTotal = $spamUsersTotal[0];
+				
+				$step1Finished = ($fromUser>0) && ($fromUser >= $spamUsersTotal);
+				
+				if (!$step1Finished) {
+					$spamUsers = $wpdb->get_col("select ID from $wpdb->users where $sqlSpamWhere order by ID LIMIT $fromUser , $usersPerStint");
+					$userCount = count($spamUsers);
 
-					<?php 
-					$progress = 0;
-					$reported = 0;
-					$lastProgressSent = 0;
-					foreach ($spamUsers as $userid) {
-						$dummyArr = array();
-						$dummyArr[] = $userid;
-
-						set_time_limit(15);
-						wangguard_report_users($dummyArr , "email" , false);
-
-						$reported++;
+					$reportingUserFrom = $fromUser + $usersPerStint;
+					$reportingUserFrom = ($reportingUserFrom > $spamUsersTotal) ? $spamUsersTotal : $reportingUserFrom;
+				
+					if ($userCount == 0) {?>
+						<p><?php echo __( "No spam users were found on your site. Click the button below to check your users." , "wangguard") ?></p>
+						<input type="hidden" name="wangguard_step" value="2" />
+						<p class="submit"><input type="submit" name="submit" value="<?php _e('Continue', 'wangguard'); ?>" /></p>
+						<?php
 					}
-					?>
+					else {?>
+						<p><img id="wangguard-progress-wait" style="vertical-align: middle; margin-right: 8px;" src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" alt="..." /><?php echo sprintf(__("The WangGuard wizard is reporting %d of %d spam users as Sploggers.", "wangguard") , $reportingUserFrom , $spamUsersTotal); ?></p>
+						<?php flush(); ?>
+						<?php ob_flush(); ?>
 
+						<?php 
+						$progress = 0;
+						$reported = 0;
+						$lastProgressSent = 0;
+						foreach ($spamUsers as $userid) {
+							$dummyArr = array();
+							$dummyArr[] = $userid;
+
+							set_time_limit(15);
+							wangguard_report_users($dummyArr , "email" , false);
+
+							$reported++;
+						}
+						?>
+
+						<input type="hidden" name="wangguard_wiz_from" value="<?php echo $fromUser + $usersPerStint?>" />
+						<script type="text/javascript">
+							document.getElementById('wangguardWizardForm').onsubmit='';
+							jQuery(document).ready(function() {
+								location.href='admin.php?page=wangguard_wizard&wangguard_step=1&wangguard_wiz_from=<?php echo $fromUser + $usersPerStint?>';
+							});
+						</script>
+						<input type="hidden" name="wangguard_step" value="1" />
+
+					<?php }	?>
+					
+				<?php }
+				
+				else {?>
 					<p><?php echo __( "The WangGuard wizard has finished reporting spam users. Click the button below to check the rest of your users." , "wangguard") ?></p>
-
+					<input type="hidden" name="wangguard_step" value="2" />
+					<p class="submit"><input type="submit" name="submit" value="<?php _e('Continue', 'wangguard'); ?>" /></p>
 				<?php }	?>
 
-				<input type="hidden" name="wangguard_step" value="2" />
-				<p class="submit"><input type="submit" name="submit" value="<?php _e('Continue', 'wangguard'); ?>" /></p>
 			</div>
 	
-	
+			<?php if ($step1Finished) {?>
 			<div id="wangguard-hidden-step-status" style="display: none">
 				<h3><?php echo __( "Verifying users against the WangGuard service..." , "wangguard"); ?></h3>
 				<?php
@@ -106,137 +136,224 @@ jQuery(document).ready(function() {
 				}
 				?>
 			</div>
+			<?php }?>
 	
 			<?php
 			break;
 
+			
+			
+			
 			
 			
 			
 			
 		case "2":
 			?>
-			<h3><?php echo __( "Verifying users against the WangGuard service..." , "wangguard"); ?></h3>
-			<?php
-			$goodUsers = $wpdb->get_col("select ID from $wpdb->users where $sqlNoSpamWhere");
-			$userCount = count($goodUsers);
-			if ($userCount == 0) {?>
-				<p><?php echo __( "No users were found on your site." , "wangguard") ?></p>
-				<?php
-			}
-			else {?>
-				<p><img id="wangguard-progress-wait" class="wangguard-hidewhendone" style="vertical-align: middle; margin-right: 8px;" src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" alt="..." /><?php echo sprintf(__("The WangGuard wizard is verifying %d users against the WangGuard service.", "wangguard") , $userCount); ?></p>
-				<?php flush(); ?>
-				<?php ob_flush(); ?>
-
-				<?php 
-				$progress = 0;
-				$verified = 0;
-				$reported = 0;
-				$lastProgressSent = 0;
-				foreach ($goodUsers as $userid) {
-					$dummyArr = array();
-					$dummyArr[] = $userid;
-					$user_object = new WP_User($userid);
-
-					set_time_limit(15);
-					$user_check_status = wangguard_verify_user($user_object);
-
-					if ($user_check_status == "reported") {
-						$reported++;
-						if (function_exists("update_user_status"))
-							update_user_status($userid, $spamFieldName, 1);	//when flagging the user as spam, the wangguard hook is called to report the user
-						else
-							$wpdb->query( $wpdb->prepare("udpate $wpdb->users set $spamFieldName = 1 where ID = %d" , $userid ) );
-					}
-
-					$verified++;
-				}
-				?>
-
-				<p><?php echo sprintf(__( "The WangGuard wizard has finished verifying your users and found <strong>%d</strong> Sploggers." , "wangguard") , $reported) ?></p>
-
-			<?php }	?>
-
-			<input type="hidden" name="wangguard_step" value="3" />
-			<p>&nbsp;</p>
-			<h3><?php echo __("Please tell WangGuard wizard what to do with the garbage and click the Finish button", "wangguard"); ?></h3>
-			
 			<div id="wangguard-visible-step-status">
-				<p><input type="checkbox" value="1" name="wangguard_delete_splogguers" id="wangguard_delete_splogguers" /> <label for="wangguard_delete_splogguers"><?php echo __( "Delete the users marked as Sploggers from my site." , "wangguard") ?></label</p>
-				<p class="submit"><input type="submit" name="submit" value="<?php _e('Finish', 'wangguard'); ?>" /></p>
+				<h3><?php echo __( "Verifying users against the WangGuard service..." , "wangguard"); ?></h3>
+				<?php
+				$usersPerStint = 100;	//how many users to check on each iteration
+
+				$fromUser = (int)$_REQUEST['wangguard_wiz_from'];
+				if ($fromUser<0) $fromUser = 0;
+
+				$goodUsersTotal = $wpdb->get_col("select count(*) from $wpdb->users where $sqlNoSpamWhere");
+				$goodUsersTotal = $goodUsersTotal[0];
+
+				$step2Finished = ($fromUser>0) && ($fromUser >= $goodUsersTotal);
+
+				$reported = (int) $_REQUEST['reported'];
+				
+				$noUsersToCheck = false;
+				
+				if (!$step2Finished) {
+					$goodUsers = $wpdb->get_col("select ID from $wpdb->users where $sqlNoSpamWhere ORDER BY ID LIMIT $fromUser , $usersPerStint");
+					$userCount = count($goodUsers);
+
+					$reportingUserFrom = $fromUser + $usersPerStint;
+					$reportingUserFrom = ($reportingUserFrom > $goodUsersTotal) ? $goodUsersTotal : $reportingUserFrom;
+
+					if ($userCount == 0) {
+						$step2Finished = true;
+						$noUsersToCheck = true;
+						?>
+						<p><?php echo __( "No users were found on your site." , "wangguard") ?></p>
+						<?php
+					}
+					else {?>
+						<p><img id="wangguard-progress-wait" style="vertical-align: middle; margin-right: 8px;" src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" alt="..." /><?php echo sprintf(__("The WangGuard wizard is verifying %d of %d users against the WangGuard service.", "wangguard") , $reportingUserFrom , $goodUsersTotal); ?></p>
+						<?php flush(); ?>
+						<?php ob_flush(); ?>
+
+						<?php 
+						$progress = 0;
+						$verified = 0;
+						$lastProgressSent = 0;
+						foreach ($goodUsers as $userid) {
+							$dummyArr = array();
+							$dummyArr[] = $userid;
+							$user_object = new WP_User($userid);
+
+							set_time_limit(15);
+							$user_check_status = wangguard_verify_user($user_object);
+
+							if ($user_check_status == "reported") {
+								$reported++;
+								if (function_exists("update_user_status"))
+									update_user_status($userid, $spamFieldName, 1);	//when flagging the user as spam, the wangguard hook is called to report the user
+								else
+									$wpdb->query( $wpdb->prepare("udpate $wpdb->users set $spamFieldName = 1 where ID = %d" , $userid ) );
+							}
+
+							$verified++;
+						}
+						?>
+						<input type="hidden" name="wangguard_wiz_from" value="<?php echo $fromUser + $usersPerStint?>" />
+						<script type="text/javascript">
+							document.getElementById('wangguardWizardForm').onsubmit='';
+							jQuery(document).ready(function() {
+								location.href='admin.php?page=wangguard_wizard&wangguard_step=2&reported=<?php echo $reported;?>&wangguard_wiz_from=<?php echo $fromUser + $usersPerStint?>';
+							});
+						</script>
+						<input type="hidden" name="wangguard_step" value="2" />
+
+
+					<?php }
+
+				}
+				
+				if ($step2Finished) {
+					$table_name = $wpdb->base_prefix . "wangguarduserstatus";
+					$reportedUsers = $wpdb->get_col("select count(*) from $table_name where user_status = 'reported'");
+					$reportedUsersCount = $reportedUsers[0];
+				
+					if (!$noUsersToCheck) {?>
+					<p><?php echo sprintf(__( "The WangGuard wizard has finished verifying your users and found <strong>%d</strong> Sploggers." , "wangguard") , $reported) ?></p>
+					<?php }?>
+					
+					<input type="hidden" name="wangguard_step" value="3" />
+					<input type="hidden" name="wangguard_splogcnt" value="<?php echo $reportedUsersCount ?>" />
+					<p>&nbsp;</p>
+					<h3><?php echo __("Please tell WangGuard wizard what to do with the garbage and click the Finish button", "wangguard"); ?></h3>
+
+					<div id="wangguard-visible-step-status">
+						<p><input type="checkbox" value="1" name="wangguard_delete_splogguers" id="wangguard_delete_splogguers" /> <label for="wangguard_delete_splogguers"><?php echo __( "Delete the users marked as Sploggers from my site." , "wangguard") ?></label</p>
+						<p class="submit"><input type="submit" name="submit" value="<?php _e('Finish', 'wangguard'); ?>" /></p>
+					</div>
+
+					<div id="wangguard-hidden-step-status" style="display: none">
+						<p><img id="wangguard-progress-wait" style="vertical-align: middle; margin-right: 8px;" src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" alt="..." /></p>
+					</div>
+				<?php }	?>
 			</div>
 
-			<div id="wangguard-hidden-step-status" style="display: none">
-				<p><img id="wangguard-progress-wait" style="vertical-align: middle; margin-right: 8px;" src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" alt="..." /></p>
-			</div>
-	
-			<?php
+			
+
+			<?php 
 			break;
 
+			
+			
+			
+			
+			
 		
 		
 		
 		case "3":
-			?>
-			<h3><?php echo __( "The WangGuard Wizard has finished" , "wangguard") ?></h3>
 			
-			<p class="wangguard-hidewhendone"><img id="wangguard-progress-wait" style="vertical-align: middle; margin-right: 8px;" src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" alt="..." /></p>
-
-			<?php if ($_REQUEST['wangguard_delete_splogguers'] == 1) { 
+			if ($_REQUEST['wangguard_delete_splogguers'] == 1) { 
+				$usersPerStint = 10;	//how many users to check on each iteration
+				
 				$table_name = $wpdb->base_prefix . "wangguarduserstatus";
-				$reportedUsers = $wpdb->get_col("select ID from $table_name where user_status = 'reported'");
+				$reportedUsers = $wpdb->get_col("select ID from $table_name where user_status = 'reported' LIMIT 0 , $usersPerStint");
 				$reportedUsersCount = count($reportedUsers);
-				foreach ($reportedUsers as $userid) {
+				
+				$reportedUsersTotal = (int)$_REQUEST['wangguard_splogcnt'];
+				$reportingUserFrom = (int)$_REQUEST['wangguard_wiz_from'];
+				$reportingUserFrom = ($reportingUserFrom > $reportedUsersTotal) ? $reportedUsersTotal : $reportingUserFrom;
+
+				$step3Finished = ($reportedUsersCount==0);
+
+				
+				if (!$step3Finished) {
+					?>
+					<h3><?php echo __( "Deleting Splogguers from your site..." , "wangguard"); ?></h3>
+					<p><img id="wangguard-progress-wait" style="vertical-align: middle; margin-right: 8px;" src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" alt="..." /><?php echo sprintf(__("The WangGuard wizard is deleting %d of %d Splogguers from your site.", "wangguard") , $reportingUserFrom , $reportedUsersTotal); ?></p>
+					<?php flush(); ?>
+					<?php ob_flush(); ?>
+					<?php
 					
-					
-					if ((function_exists("get_blogs_of_user")) && (method_exists ($wpdb , 'get_blog_prefix'))) {
-						$blogs = get_blogs_of_user( $userid, true );
-						if (is_array($blogs))
-							foreach ( (array) $blogs as $key => $details ) {
+					foreach ($reportedUsers as $userid) {
+						
+						set_time_limit(15);
+						
+						if ((function_exists("get_blogs_of_user")) && (method_exists ($wpdb , 'get_blog_prefix'))) {
+							$blogs = get_blogs_of_user( $userid, true );
+							if (is_array($blogs))
+								foreach ( (array) $blogs as $key => $details ) {
 
-								$isMainBlog = false;
-								if (isset ($current_site)) {
-									$isMainBlog = ($details->userblog_id != $current_site->blog_id); // main blog not a spam !
+									$isMainBlog = false;
+									if (isset ($current_site)) {
+										$isMainBlog = ($details->userblog_id != $current_site->blog_id); // main blog not a spam !
+									}
+									elseif (defined("BP_ROOT_BLOG")) {
+										$isMainBlog = ( 1 == $details->userblog_id || BP_ROOT_BLOG == $details->userblog_id );
+									}
+									else
+										$isMainBlog = ($details->userblog_id == 1);
+
+									$userIsAuthor = false;
+									if (!$isMainBlog) {
+										//Only works on WP 3+
+										$blog_prefix = $wpdb->get_blog_prefix( $details->userblog_id );
+										$authorcaps = $wpdb->get_var( sprintf("SELECT meta_value as caps FROM $wpdb->users u, $wpdb->usermeta um WHERE u.ID = %d and u.ID = um.user_id AND meta_key = '{$blog_prefix}capabilities'" , $spuserID ));
+
+										$caps = maybe_unserialize( $authorcaps );
+										$userIsAuthor = ( !isset( $caps['subscriber'] ) && !isset( $caps['contributor'] ) );
+									}
+
+									//Update blog to spam if the user is the author and its not the main blog
+									if ((!$isMainBlog) && $userIsAuthor) {
+										@update_blog_status( $details->userblog_id, 'spam', '1' );
+
+										//remove blog from queue
+										$table_name = $wpdb->base_prefix . "wangguardreportqueue";
+										$wpdb->query( $wpdb->prepare("delete from $table_name where blog_id = '%d'" , $details->userblog_id ) );
+									}
 								}
-								elseif (defined("BP_ROOT_BLOG")) {
-									$isMainBlog = ( 1 == $details->userblog_id || BP_ROOT_BLOG == $details->userblog_id );
-								}
-								else
-									$isMainBlog = ($details->userblog_id == 1);
+						}
 
-								$userIsAuthor = false;
-								if (!$isMainBlog) {
-									//Only works on WP 3+
-									$blog_prefix = $wpdb->get_blog_prefix( $details->userblog_id );
-									$authorcaps = $wpdb->get_var( sprintf("SELECT meta_value as caps FROM $wpdb->users u, $wpdb->usermeta um WHERE u.ID = %d and u.ID = um.user_id AND meta_key = '{$blog_prefix}capabilities'" , $spuserID ));
 
-									$caps = maybe_unserialize( $authorcaps );
-									$userIsAuthor = ( !isset( $caps['subscriber'] ) && !isset( $caps['contributor'] ) );
-								}
-
-								//Update blog to spam if the user is the author and its not the main blog
-								if ((!$isMainBlog) && $userIsAuthor) {
-									@update_blog_status( $details->userblog_id, 'spam', '1' );
-
-									//remove blog from queue
-									$table_name = $wpdb->base_prefix . "wangguardreportqueue";
-									$wpdb->query( $wpdb->prepare("delete from $table_name where blog_id = '%d'" , $details->userblog_id ) );
-								}
-							}
+						if (wangguard_is_multisite () && function_exists("wpmu_delete_user"))
+							wpmu_delete_user($userid);
+						else
+							wp_delete_user($userid);
 					}
 					
-					
-					if (wangguard_is_multisite () && function_exists("wpmu_delete_user"))
-						wpmu_delete_user($userid);
-					else
-						wp_delete_user($userid);
+					?>
+					<script type="text/javascript">
+						document.getElementById('wangguardWizardForm').onsubmit='';
+						jQuery(document).ready(function() {
+							location.href='admin.php?page=wangguard_wizard&wangguard_step=3&wangguard_delete_splogguers=1&wangguard_splogcnt=<?php echo $reportedUsersTotal;?>&wangguard_wiz_from=<?php echo $reportingUserFrom + $usersPerStint?>';
+						});
+					</script>
+					<?php
 				}
+				else {
 				?>
-				<p><?php echo sprintf(__("%d sploggers users has been deleted from your site.", "wangguard") , $reportedUsersCount); ?></p>
-			<?php } ?>
+					<h3><?php echo __( "The WangGuard Wizard has finished" , "wangguard") ?></h3>
+					<p><?php echo sprintf(__("%d sploggers users has been deleted from your site.", "wangguard") , $reportedUsersTotal); ?></p>
+			<?php }
+			}
+			
+			else {?>
+				
+				<h3><?php echo __( "The WangGuard Wizard has finished" , "wangguard") ?></h3>
 
 			<?php
+			}
 			break;
 
 		

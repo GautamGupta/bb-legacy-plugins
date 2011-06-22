@@ -3,13 +3,12 @@
 Plugin Name: WangGuard
 Plugin URI: http://www.wangguard.com
 Description: <strong>Stop Sploggers</strong>. It is very important to use <a href="http://www.wangguard.com" target="_new">WangGuard</a> at least for a week, reporting your site's unwanted users as sploggers from the Users panel. WangGuard will learn at that time to protect your site from sploggers in a much more effective way. WangGuard protects each web site in a personalized way using information provided by Administrators who report sploggers world-wide, that's why it's very important that you report your sploggers to WangGuard. The longer you use WangGuard, the more effective it will become.
-Version: 1.1.2
+Version: 1.1.3
 Author: WangGuard
 Author URI: http://www.wangguard.com
 License: GPL2
 */
-?>
-<?php
+
 /*  Copyright 2010  WangGuard (email : info@wangguard.com)
 
     This program is free software; you can redistribute it and/or modify
@@ -25,9 +24,8 @@ License: GPL2
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-?>
-<?php
-define('WANGGUARD_VERSION', '1.1.2');
+
+define('WANGGUARD_VERSION', '1.1.3');
 
 //error_reporting(E_ALL);
 //ini_set("display_errors", 1);

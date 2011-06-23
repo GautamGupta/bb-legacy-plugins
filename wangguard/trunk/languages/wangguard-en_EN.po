@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WangGuard\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-25 11:15-0300\n"
-"PO-Revision-Date: 2011-04-25 11:15-0300\n"
+"POT-Creation-Date: 2011-05-17 10:54-0300\n"
+"PO-Revision-Date: 2011-05-17 10:56-0300\n"
 "Last-Translator: WangGuard <info@wangguard.com>\n"
 "Language-Team: WangGuard <info@wangguard.com>\n"
 "MIME-Version: 1.0\n"
@@ -16,179 +16,182 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../wangguard-admin.php:135
-#: ../wangguard-admin.php:191
-#: ../wangguard-admin.php:241
+#: ../wangguard-admin.php:138
+#: ../wangguard-admin.php:194
+#: ../wangguard-admin.php:244
 msgid "<strong>ERROR</strong>: The answer to the security question is invalid."
 msgstr "<strong>ERROR</strong>: The answer to the security question is invalid."
 
-#: ../wangguard-admin.php:141
-#: ../wangguard-admin.php:197
-#: ../wangguard-admin.php:247
+#: ../wangguard-admin.php:144
+#: ../wangguard-admin.php:200
+#: ../wangguard-admin.php:250
 msgid "<strong>ERROR</strong>: Banned by WangGuard <a href=\"http://www.wangguard.com/faq\" target=\"_new\">Is a mistake?</a>."
 msgstr "<strong>ERROR</strong>: Banned by WangGuard <a href=\"http://www.wangguard.com/faq\" target=\"_new\">Is a mistake?</a>."
 
-#: ../wangguard-admin.php:478
-msgid "Do you confirm to report the user?"
-msgstr "Do you confirm to report the user?"
-
-#: ../wangguard-admin.php:501
-msgid "The user was reported."
-msgstr "The user was reported."
-
-#: ../wangguard-admin.php:509
-msgid "Do you confirm to report the blog and authors?"
-msgstr "Do you confirm to report the blog and authors?"
-
-#: ../wangguard-admin.php:532
-msgid "The blog was reported."
-msgstr "The blog was reported."
-
-#: ../wangguard-admin.php:648
-msgid "Do you confirm to flag this user as Splogger? This operation is IRREVERSIBLE and will DELETE the user."
-msgstr "Do you confirm to flag this user as Splogger? This operation is IRREVERSIBLE and will DELETE the user."
-
-#: ../wangguard-admin.php:659
-#: ../wangguard-admin.php:782
-#: ../wangguard-admin.php:821
-msgid "The selected user couldn't be found on the users table."
-msgstr "The selected user couldn't be found on the users table."
-
-#: ../wangguard-admin.php:663
-#: ../wangguard-admin.php:703
-#: ../wangguard-admin.php:785
-#: ../wangguard-admin.php:825
-#: ../wangguard-wizard.php:226
+#: ../wangguard-admin.php:285
+#: ../wangguard-admin.php:678
+#: ../wangguard-admin.php:718
+#: ../wangguard-admin.php:800
+#: ../wangguard-admin.php:840
+#: ../wangguard-wizard.php:376
 msgid "Your WangGuard API KEY is invalid."
 msgstr "Your WangGuard API KEY is invalid."
 
-#: ../wangguard-admin.php:667
-#: ../wangguard-admin.php:707
-#: ../wangguard-admin.php:788
-#: ../wangguard-admin.php:829
+#: ../wangguard-admin.php:491
+msgid "Do you confirm to report the user?"
+msgstr "Do you confirm to report the user?"
+
+#: ../wangguard-admin.php:514
+msgid "The user was reported."
+msgstr "The user was reported."
+
+#: ../wangguard-admin.php:523
+msgid "Do you confirm to report the blog and authors?"
+msgstr "Do you confirm to report the blog and authors?"
+
+#: ../wangguard-admin.php:546
+msgid "The blog was reported."
+msgstr "The blog was reported."
+
+#: ../wangguard-admin.php:663
+msgid "Do you confirm to flag this user as Splogger? This operation is IRREVERSIBLE and will DELETE the user."
+msgstr "Do you confirm to flag this user as Splogger? This operation is IRREVERSIBLE and will DELETE the user."
+
+#: ../wangguard-admin.php:674
+#: ../wangguard-admin.php:797
+#: ../wangguard-admin.php:836
+msgid "The selected user couldn't be found on the users table."
+msgstr "The selected user couldn't be found on the users table."
+
+#: ../wangguard-admin.php:682
+#: ../wangguard-admin.php:722
+#: ../wangguard-admin.php:803
+#: ../wangguard-admin.php:844
 #: ../wangguard-conf.php:81
 msgid "There was a problem connecting to the WangGuard server. Please check your server configuration."
 msgstr "There was a problem connecting to the WangGuard server. Please check your server configuration."
 
-#: ../wangguard-admin.php:688
+#: ../wangguard-admin.php:703
 msgid "Do you confirm to flag this blog's author(s) as Splogger(s)? This operation is IRREVERSIBLE and will DELETE the user(s)."
 msgstr "Do you confirm to flag this blog's author(s) as Splogger(s)? This operation is IRREVERSIBLE and will DELETE the user(s)."
 
-#: ../wangguard-admin.php:699
+#: ../wangguard-admin.php:714
 msgid "The selected blog couldn't be found."
 msgstr "The selected blog couldn't be found."
 
-#: ../wangguard-admin.php:723
+#: ../wangguard-admin.php:738
 msgid "Do you confirm to remove the blog from the Moderation Queue?"
 msgstr "Do you confirm to remove the blog from the Moderation Queue?"
 
-#: ../wangguard-admin.php:744
+#: ../wangguard-admin.php:759
 msgid "Do you confirm to remove the user from the Moderation Queue?"
 msgstr "Do you confirm to remove the user from the Moderation Queue?"
 
-#: ../wangguard-admin.php:771
+#: ../wangguard-admin.php:786
 msgid "Do you confirm to flag this user domain as Splogger? This operation is IRREVERSIBLE and will DELETE the users that shares this domain."
 msgstr "Do you confirm to flag this user domain as Splogger? This operation is IRREVERSIBLE and will DELETE the users that shares this domain."
 
-#: ../wangguard-admin.php:803
+#: ../wangguard-admin.php:818
 msgid "There was a problem connecting to your WordPress server."
 msgstr "There was a problem connecting to your WordPress server."
 
-#: ../wangguard-admin.php:847
+#: ../wangguard-admin.php:862
 msgid "Do you confirm to delete this question?."
 msgstr "Do you confirm to delete this question?."
 
-#: ../wangguard-admin.php:884
+#: ../wangguard-admin.php:899
 #: ../wangguard-conf.php:134
 #: ../wangguard-conf.php:144
 msgid "Question"
 msgstr "Question"
 
-#: ../wangguard-admin.php:885
+#: ../wangguard-admin.php:900
 #: ../wangguard-conf.php:135
 #: ../wangguard-conf.php:146
 msgid "Answer"
 msgstr "Answer"
 
-#: ../wangguard-admin.php:886
+#: ../wangguard-admin.php:901
 #: ../wangguard-conf.php:137
 msgid "delete question"
 msgstr "delete question"
 
-#: ../wangguard-admin.php:905
+#: ../wangguard-admin.php:920
 msgid "Bulk check Sploggers"
 msgstr "Bulk check Sploggers"
 
-#: ../wangguard-admin.php:906
+#: ../wangguard-admin.php:921
 msgid "Bulk report Sploggers"
 msgstr "Bulk report Sploggers"
 
-#: ../wangguard-admin.php:937
+#: ../wangguard-admin.php:952
 msgid "Do you confirm to flag the selected users as Sploggers? This operation is IRREVERSIBLE and will DELETE the users."
 msgstr "Do you confirm to flag the selected users as Sploggers? This operation is IRREVERSIBLE and will DELETE the users."
 
-#: ../wangguard-admin.php:1106
-#: ../wangguard-core.php:676
+#: ../wangguard-admin.php:1121
+#: ../wangguard-core.php:736
 msgid "No status"
 msgstr "No status"
 
-#: ../wangguard-admin.php:1113
-#: ../wangguard-core.php:682
+#: ../wangguard-admin.php:1128
+#: ../wangguard-core.php:742
 msgid "Reported as Splogger"
 msgstr "Reported as Splogger"
 
-#: ../wangguard-admin.php:1116
-#: ../wangguard-core.php:688
+#: ../wangguard-admin.php:1131
+#: ../wangguard-core.php:748
 msgid "Checked"
 msgstr "Checked"
 
-#: ../wangguard-admin.php:1119
-#: ../wangguard-core.php:691
+#: ../wangguard-admin.php:1134
+#: ../wangguard-core.php:751
 msgid "Error"
 msgstr "Error"
 
-#: ../wangguard-admin.php:1122
-#: ../wangguard-core.php:679
+#: ../wangguard-admin.php:1137
+#: ../wangguard-core.php:739
 msgid "Not checked"
 msgstr "Not checked"
 
-#: ../wangguard-admin.php:1158
 #: ../wangguard-admin.php:1173
-#: ../wangguard-admin.php:1199
-#: ../wangguard-admin.php:1200
+#: ../wangguard-admin.php:1188
+#: ../wangguard-admin.php:1214
+#: ../wangguard-admin.php:1215
 msgid "Report user"
 msgstr "Report user"
 
-#: ../wangguard-admin.php:1227
-#: ../wangguard-admin.php:1276
-#: ../wangguard-admin.php:1278
-#: ../wangguard-admin.php:1317
-#: ../wangguard-admin.php:1318
+#: ../wangguard-admin.php:1252
+#: ../wangguard-admin.php:1329
+#: ../wangguard-admin.php:1365
+#: ../wangguard-admin.php:1366
 msgid "WangGuard"
 msgstr "WangGuard"
 
-#: ../wangguard-admin.php:1238
-#: ../wangguard-admin.php:1288
+#: ../wangguard-admin.php:1260
+#: ../wangguard-admin.php:1292
+#: ../wangguard-admin.php:1332
+#: ../wangguard-admin.php:1341
 msgid "Report blog and author"
 msgstr "Report blog and author"
 
-#: ../wangguard-admin.php:1246
-#: ../wangguard-admin.php:1291
+#: ../wangguard-admin.php:1269
+#: ../wangguard-admin.php:1335
 msgid "Moderation queue"
 msgstr "Moderation queue"
 
-#: ../wangguard-admin.php:1251
-#: ../wangguard-admin.php:1292
-#: ../wangguard-admin.php:1344
+#: ../wangguard-admin.php:1275
+#: ../wangguard-admin.php:1337
+#: ../wangguard-admin.php:1405
 msgid "Wizard"
 msgstr "Wizard"
 
-#: ../wangguard-admin.php:1256
-#: ../wangguard-admin.php:1293
+#: ../wangguard-admin.php:1280
+#: ../wangguard-admin.php:1338
+#: ../wangguard-admin.php:1400
 msgid "Configuration"
 msgstr "Configuration"
 
-#: ../wangguard-admin.php:1343
+#: ../wangguard-admin.php:1403
 msgid "Moderation Queue"
 msgstr "Moderation Queue"
 
@@ -212,8 +215,8 @@ msgid "Reported blogs <span class=\"count\">(%s)</span>"
 msgstr "Reported blogs <span class=\"count\">(%s)</span>"
 
 #: ../wangguard-class-wp-queue.php:87
-#: ../wangguard-class-wp-queue.php:160
-#: ../wangguard-class-wp-queue.php:199
+#: ../wangguard-class-wp-queue.php:161
+#: ../wangguard-class-wp-queue.php:202
 msgid "Remove from Queue"
 msgstr "Remove from Queue"
 
@@ -222,58 +225,58 @@ msgid "Report as Splogger"
 msgstr "Report as Splogger"
 
 #: ../wangguard-class-wp-queue.php:107
-#: ../wangguard-core.php:639
+#: ../wangguard-core.php:698
 msgid "Username"
 msgstr "Username"
 
 #: ../wangguard-class-wp-queue.php:108
-#: ../wangguard-core.php:640
+#: ../wangguard-core.php:699
 msgid "Type"
 msgstr "Type"
 
 #: ../wangguard-class-wp-queue.php:109
-#: ../wangguard-core.php:641
+#: ../wangguard-core.php:700
 msgid "E-mail"
 msgstr "E-mail"
 
 #: ../wangguard-class-wp-queue.php:110
-#: ../wangguard-core.php:642
+#: ../wangguard-core.php:701
 msgid "Reported by"
 msgstr "Reported by"
 
 #: ../wangguard-class-wp-queue.php:111
-#: ../wangguard-core.php:643
+#: ../wangguard-core.php:702
 msgid "Reported on"
 msgstr "Reported on"
 
-#: ../wangguard-class-wp-queue.php:194
+#: ../wangguard-class-wp-queue.php:197
 msgid "Authors: "
 msgstr "Authors: "
 
-#: ../wangguard-class-wp-queue.php:207
+#: ../wangguard-class-wp-queue.php:210
 msgid "Report authors as Sploggers"
 msgstr "Report authors as Sploggers"
 
-#: ../wangguard-class-wp-queue.php:208
+#: ../wangguard-class-wp-queue.php:211
 msgid "Open blog"
 msgstr "Open blog"
 
-#: ../wangguard-class-wp-queue.php:240
+#: ../wangguard-class-wp-queue.php:243
 #, php-format
 msgid "E-mail: %s"
 msgstr "E-mail: %s"
 
-#: ../wangguard-class-wp-queue.php:413
+#: ../wangguard-class-wp-queue.php:414
 msgid "User"
 msgstr "User"
 
-#: ../wangguard-class-wp-queue.php:428
+#: ../wangguard-class-wp-queue.php:429
 msgid "Blog"
 msgstr "Blog"
 
 #: ../wangguard-conf.php:8
 #: ../wangguard-queue.php:9
-#: ../wangguard-wizard.php:8
+#: ../wangguard-wizard.php:20
 msgid "Cheatin&#8217; uh?"
 msgstr "Cheatin&#8217; uh?"
 
@@ -472,52 +475,52 @@ msgstr "Last checked %s ago."
 msgid "Check network status &raquo;"
 msgstr "Check network status &raquo;"
 
-#: ../wangguard-core.php:143
+#: ../wangguard-core.php:186
 msgid "Settings"
 msgstr "Settings"
 
-#: ../wangguard-core.php:590
+#: ../wangguard-core.php:649
 msgid "WangGuard is almost ready."
 msgstr "WangGuard is almost ready."
 
-#: ../wangguard-core.php:590
+#: ../wangguard-core.php:649
 #, php-format
 msgid "You must <a href=\"%1$s\">enter your WangGuard API key</a> for it to work."
 msgstr "You must <a href=\"%1$s\">enter your WangGuard API key</a> for it to work."
 
-#: ../wangguard-core.php:598
+#: ../wangguard-core.php:657
 msgid "WangGuard has detected a problem."
 msgstr "WangGuard has detected a problem."
 
-#: ../wangguard-core.php:598
+#: ../wangguard-core.php:657
 #, php-format
 msgid "A server or network problem is preventing WangGuard from working correctly.  <a href=\"%1$s\">Click here for more information</a> about how to fix the problem."
 msgstr "A server or network problem is preventing WangGuard from working correctly.  <a href=\"%1$s\">Click here for more information</a> about how to fix the problem."
 
-#: ../wangguard-core.php:614
+#: ../wangguard-core.php:673
 #, php-format
 msgid "WangGuard has checked %d users, and detected %d Sploggers."
 msgstr "WangGuard has checked %d users, and detected %d Sploggers."
 
-#: ../wangguard-core.php:644
-#: ../wangguard-core.php:660
+#: ../wangguard-core.php:703
+#: ../wangguard-core.php:720
 msgid "WangGuard Status"
 msgstr "WangGuard Status"
 
-#: ../wangguard-core.php:685
+#: ../wangguard-core.php:745
 msgid "Automatically reported as Splogger"
 msgstr "Automatically reported as Splogger"
 
-#: ../wangguard-core.php:704
-#: ../wangguard-core.php:740
+#: ../wangguard-core.php:764
+#: ../wangguard-core.php:800
 msgid "Splogger"
 msgstr "Splogger"
 
-#: ../wangguard-core.php:706
+#: ../wangguard-core.php:766
 msgid "Recheck"
 msgstr "Recheck"
 
-#: ../wangguard-core.php:707
+#: ../wangguard-core.php:767
 msgid "Open Web"
 msgstr "Open Web"
 
@@ -545,97 +548,120 @@ msgstr "%d user(s) were reported as Splogger(s) and deleted"
 msgid "WangGuard Moderation Queue"
 msgstr "WangGuard Moderation Queue"
 
-#: ../wangguard-wizard.php:18
+#: ../wangguard-wizard.php:33
 msgid "WangGuard Wizard"
 msgstr "WangGuard Wizard"
 
-#: ../wangguard-wizard.php:39
-msgid "No spam users were found on your site. Click the button below to check your users."
-msgstr "No spam users were found on your site. Click the button below to check your users."
-
-#: ../wangguard-wizard.php:43
+#: ../wangguard-wizard.php:58
+#: ../wangguard-wizard.php:391
 msgid "Reporting spam users to WangGuard..."
 msgstr "Reporting spam users to WangGuard..."
 
-#: ../wangguard-wizard.php:44
-#, php-format
-msgid "The WangGuard wizard is reporting %d spam users as Sploggers."
-msgstr "The WangGuard wizard is reporting %d spam users as Sploggers."
+#: ../wangguard-wizard.php:78
+msgid "No spam users were found on your site. Click the button below to check your users."
+msgstr "No spam users were found on your site. Click the button below to check your users."
 
-#: ../wangguard-wizard.php:74
-msgid "The WangGuard wizard has finished reporting spam users. Click the button below to check the rest of your users."
-msgstr "The WangGuard wizard has finished reporting spam users. Click the button below to check the rest of your users."
-
-#: ../wangguard-wizard.php:79
+#: ../wangguard-wizard.php:80
+#: ../wangguard-wizard.php:119
 msgid "Continue"
 msgstr "Continue"
 
-#: ../wangguard-wizard.php:91
-msgid "No users were found on your site."
-msgstr "No users were found on your site."
+#: ../wangguard-wizard.php:84
+#, php-format
+msgid "The WangGuard wizard is reporting %d of %d spam users as Sploggers."
+msgstr "The WangGuard wizard is reporting %d of %d spam users as Sploggers."
 
-#: ../wangguard-wizard.php:95
+#: ../wangguard-wizard.php:117
+msgid "The WangGuard wizard has finished reporting spam users. Click the button below to check the rest of your users."
+msgstr "The WangGuard wizard has finished reporting spam users. Click the button below to check the rest of your users."
+
+#: ../wangguard-wizard.php:126
+#: ../wangguard-wizard.php:154
 msgid "Verifying users against the WangGuard service..."
 msgstr "Verifying users against the WangGuard service..."
 
-#: ../wangguard-wizard.php:96
+#: ../wangguard-wizard.php:134
 #, php-format
 msgid "The WangGuard wizard is verifying %d users against the WangGuard service."
 msgstr "The WangGuard wizard is verifying %d users against the WangGuard service."
 
-#: ../wangguard-wizard.php:133
+#: ../wangguard-wizard.php:181
+msgid "No users were found on your site."
+msgstr "No users were found on your site."
+
+#: ../wangguard-wizard.php:185
+#, php-format
+msgid "The WangGuard wizard is verifying %d of %d users against the WangGuard service."
+msgstr "The WangGuard wizard is verifying %d of %d users against the WangGuard service."
+
+#: ../wangguard-wizard.php:232
 #, php-format
 msgid "The WangGuard wizard has finished verifying your users and found <strong>%d</strong> Sploggers."
 msgstr "The WangGuard wizard has finished verifying your users and found <strong>%d</strong> Sploggers."
 
-#: ../wangguard-wizard.php:139
+#: ../wangguard-wizard.php:238
 msgid "Please tell WangGuard wizard what to do with the garbage and click the Finish button"
 msgstr "Please tell WangGuard wizard what to do with the garbage and click the Finish button"
 
-#: ../wangguard-wizard.php:140
+#: ../wangguard-wizard.php:241
 msgid "Delete the users marked as Sploggers from my site."
 msgstr "Delete the users marked as Sploggers from my site."
 
-#: ../wangguard-wizard.php:141
+#: ../wangguard-wizard.php:242
 msgid "Finish"
 msgstr "Finish"
 
-#: ../wangguard-wizard.php:150
+#: ../wangguard-wizard.php:282
+msgid "Deleting Splogguers from your site..."
+msgstr "Deleting Splogguers from your site..."
+
+#: ../wangguard-wizard.php:283
+#, php-format
+msgid "The WangGuard wizard is deleting %d of %d Splogguers from your site."
+msgstr "The WangGuard wizard is deleting %d of %d Splogguers from your site."
+
+#: ../wangguard-wizard.php:346
+#: ../wangguard-wizard.php:353
 msgid "The WangGuard Wizard has finished"
 msgstr "The WangGuard Wizard has finished"
 
-#: ../wangguard-wizard.php:203
+#: ../wangguard-wizard.php:347
 #, php-format
 msgid "%d sploggers users has been deleted from your site."
 msgstr "%d sploggers users has been deleted from your site."
 
-#: ../wangguard-wizard.php:214
+#: ../wangguard-wizard.php:365
 msgid "Welcome to the WangGuard Wizard"
 msgstr "Welcome to the WangGuard Wizard"
 
-#: ../wangguard-wizard.php:215
+#: ../wangguard-wizard.php:366
 msgid "This wizard will perform the following actions on your WordPress installation"
 msgstr "This wizard will perform the following actions on your WordPress installation"
 
-#: ../wangguard-wizard.php:217
+#: ../wangguard-wizard.php:368
 msgid "It will report to WangGuard all users you have flagged as 'spam' on your site."
 msgstr "It will report to WangGuard all users you have flagged as 'spam' on your site."
 
-#: ../wangguard-wizard.php:218
+#: ../wangguard-wizard.php:369
 msgid "For the rest of the users, it will check against WangGuard service if any of them was reported as Splogger."
 msgstr "For the rest of the users, it will check against WangGuard service if any of them was reported as Splogger."
 
-#: ../wangguard-wizard.php:219
+#: ../wangguard-wizard.php:370
 msgid "It will let you know how many Sploggers the wizard found (if any) and, optionally, will let you delete your spam users and Sploggers from your site."
 msgstr "It will let you know how many Sploggers the wizard found (if any) and, optionally, will let you delete your spam users and Sploggers from your site."
 
-#: ../wangguard-wizard.php:231
+#: ../wangguard-wizard.php:381
 msgid "Click the button below when you're ready to clean your site!."
 msgstr "Click the button below when you're ready to clean your site!."
 
-#: ../wangguard-wizard.php:233
+#: ../wangguard-wizard.php:383
 msgid "Start cleaning my site!"
 msgstr "Start cleaning my site!"
+
+#: ../wangguard-wizard.php:399
+#, php-format
+msgid "The WangGuard wizard is reporting %d spam users as Sploggers."
+msgstr "The WangGuard wizard is reporting %d spam users as Sploggers."
 
 #~ msgid "<a href=\"%1$s\">Click here</a> to change this setting."
 #~ msgstr "<a href=\"%1$s\">Click here</a> to change this setting."

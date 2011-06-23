@@ -11,10 +11,19 @@ require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 class WangGuard_Queue_Table extends WP_List_Table {
 
 	function WangGuard_Queue_Table() {
-		parent::WP_List_Table( array(
-			'singular' => 'report',
-			'plural'   => 'reports'
-		) );
+		
+		if (method_exists(parent,'WP_List_Table' )) {
+			parent::WP_List_Table( array(
+				'singular' => 'report',
+				'plural'   => 'reports'
+			) );
+		}
+		else {
+			parent::__construct( array(
+				'singular' => 'report',
+				'plural'   => 'reports'
+			) );
+		}
 	}
 
 	function prepare_items() {
@@ -379,7 +388,7 @@ class WangGuard_Queue_Query {
 				$this->query_limit = $wpdb->prepare("LIMIT %d", $qv['number']);
 		}
 
-		_parse_meta_query( $qv );
+		//_parse_meta_query( $qv );
 	}
 
 	/**
@@ -389,15 +398,22 @@ class WangGuard_Queue_Query {
 		global $wpdb;
 
 		$this->results = $wpdb->get_results("
-				SELECT $this->query_fields_u $this->query_from_u $this->query_where_u 
+				SELECT $this->query_fields_u $this->query_from_u $this->query_where_u " .
+				(!empty ($wpdb->blogs) ?
+				"
 				UNION ALL
-				SELECT $this->query_fields_b $this->query_from_b $this->query_where_b 
-				$this->query_orderby $this->query_limit");
+				SELECT $this->query_fields_b $this->query_from_b $this->query_where_b " : "") .
+				" $this->query_orderby $this->query_limit");
+
 
 		
 		if ( $this->query_vars['count_total'] ) {
 			$this->total_users = $wpdb->get_var("SELECT COUNT(*) $this->query_from_u $this->query_where_u");
-			$this->total_blogs = $wpdb->get_var("SELECT COUNT(*) $this->query_from_b $this->query_where_b");
+			if (!empty ($wpdb->blogs))
+				$this->total_blogs = $wpdb->get_var("SELECT COUNT(*) $this->query_from_b $this->query_where_b");
+			else
+				$this->total_blogs = 0;
+			
 			$this->total_users += $this->total_blogs;
 		}
 

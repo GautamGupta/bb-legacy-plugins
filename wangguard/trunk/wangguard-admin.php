@@ -25,7 +25,7 @@ License: GPL2
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('WANGGUARD_VERSION', '1.1.3');
+define('WANGGUARD_VERSION', '1.1.4');
 
 //error_reporting(E_ALL);
 //ini_set("display_errors", 1);

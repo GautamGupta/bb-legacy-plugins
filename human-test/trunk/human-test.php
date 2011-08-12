@@ -3,7 +3,7 @@
 Plugin Name: Human Test for bbPress
 Plugin URI:  http://bbpress.org/plugins/topic/77
 Description:  uses various methods to exclude bots from registering (and eventually posting) on bbPress
-Version: 0.9.3
+Version: 0.9.4
 Author: _ck_
 Author URI: http://bbshowcase.org
 
@@ -33,16 +33,16 @@ function human_test_question() {
 	$compare=$_SESSION['HUMAN_TEST'];	// grab correct answer from pre-stored session data	
 	$xht=intval($compare/10)*10; 
 	$yht=$compare-$xht;
-	$question=human_test_encode(__("How much does")." ".$xht." ");
-	$question.="<span><span style='display:none;'>".human_test_encode(rand(0,99))."</span></span> ";
-	$question.="<span><span style='display:none;'>".human_test_encode(rand(0,99))."</span></span> ";
+	$question=human_test_encode(__("How much does"));	
+	for ($i = 1; $i <= rand(1,9); $i++) {$question.="<span><span style='display:none;'>".human_test_encode(rand(0,99))."</span></span> ";}
+	$question.="<span><span style='display:none;display:inline;'>".human_test_encode($xht)."</span></span> ";
+	for ($i = 1; $i <= rand(1,9); $i++) {$question.="<span><span style='display:none;'>".human_test_encode(rand(0,99))."</span></span> ";}	
 	$question.="<span><span style='font-size:133%'>".human_test_encode('+')."</span></span> ";
-	$question.="<span><span style='display:none;'>".human_test_encode(rand(0,99))."</span></span> ";
-	$question.="<span><span style='display:none;'>".human_test_encode(rand(0,99))."</span></span> ";
-	$question.="<span><span style='display:inline;'>".human_test_encode($yht)."</span></span> ";
+	for ($i = 1; $i <= rand(1,9); $i++) {$question.="<span><span style='display:none;'>".human_test_encode(rand(0,99))."</span></span> ";}
+	$question.="<span><span style='display:none;display:inline;'>".human_test_encode($yht)."</span></span> ";
+	for ($i = 1; $i <= rand(1,9); $i++) {$question.="<span><span style='display:none;'>".human_test_encode(rand(0,99))."</span></span> ";}	
 	$question.="<span><span style='font-size:133%'>".human_test_encode('=')."</span></span> ";
-	$question.="<span><span style='display:none;'>".human_test_encode(rand(0,99))."</span></span>";
-	$question.="<span><span style='display:none;'>".human_test_encode(rand(0,99))."</span></span>";	
+	for ($i = 1; $i <= rand(1,9); $i++) {$question.="<span><span style='display:none;'>".human_test_encode(rand(0,99))."</span></span> ";}
 	return $question;
 }
 
@@ -59,23 +59,23 @@ if ((empty($human_test['on_for_members']) || bb_current_user_can('moderate')) &&
 	$question=human_test_question();
 	echo '<p><script language="JavaScript" type="text/javascript">document.write("'.$question.'");</script>';	// write question with javascript
 	echo '<noscript><i>'.__("registration requires JavaScript").'</i></noscript>';	// warn no-script users 
-	echo '<input tabindex="0" name = "htest" id="htest" style="display:none;visibility:hidden;" value = "" />';
-	echo '<input name="htest'.date('j').'" type="text" id="htest'.date('j').'" size="15" maxlength="100" value="" autocomplete="off" tabindex="2" /> ';  // answer field
+	echo '<input tabindex="0" name = "test4h" id="test4h" style="display:none;visibility:hidden;" value = "" />';
+	echo '<input name="test4h'.date('j').'" type="text" id="test4h'.date('j').'" size="15" maxlength="100" value="" autocomplete="off" tabindex="2" /> ';  // answer field
 	echo '('.__('required').')';
-	echo '<input tabindex="0" name = "hconfirm" id="hconfirm" style="display:none;visibility:hidden;" value = "" />';		
+	echo '<input tabindex="0" name = "confirm4h" type="text" id="confirm4h" style="display:none;visibility:hidden;" value = "" />';		
 	echo '<input tabindex="0" type="hidden" name = "'.session_name().'" value = "'.session_id().'" /></p>';	// improved session support without cookies or urls
 } 
 
 function human_test_registration() {
 if (human_test_location()!="register.php") {return;}  //  only display on register.php and hide on profile page
 	$question=human_test_question();
-	echo '<fieldset><legend>'.__("Please prove you are human").'</legend><table width="100%"><tr class="required"><th scope="row" nowrap>';
+	echo '<fieldset><legend>'.__("Please prove you are human (and not a robot)").'</legend><table width="100%"><tr class="required"><th scope="row" nowrap>';
 	echo '<script language="JavaScript" type="text/javascript">document.write("'.$question.'");</script>';	// write question with javascript
-	echo '<noscript><i>'.__("registration requires JavaScript").'</i></noscript>';	// warn no-script users 
+	echo '<noscript><i>'.__("sorry, JavaScript required").'</i></noscript>';	// warn no-script users 
 	echo '</th><td width="72%">';
-	echo '<input tabindex="0" name = "htest" id="htest" style="display:none;visibility:hidden;" value = "" />';
-	echo '<input name="htest'.date('j').'" type="text" id="htest'.date('j').'" size="30" maxlength="100" value="" autocomplete="off" />';	// answer field
-	echo '<input tabindex="0" name = "hconfirm" id="confirm" style="display:none;visibility:hidden;" value = "" />';	
+	echo '<input tabindex="0" name = "test4h" id="test4h" style="display:none;visibility:hidden;" value = "" />';
+	echo '<input name="test4h'.date('j').'" type="text" id="test4h'.date('j').'" size="30" maxlength="100" value="" autocomplete="off" />';	// answer field
+	echo '<input tabindex="0" name = "confirm4h" type="text" id="confirm" style="display:none;visibility:hidden;" value = "" />';	
 	echo '<input tabindex="0" type="hidden" name = "'.session_name().'" value = "'.session_id().'" />';	// improved session support without cookies or urls	
 	echo '</td></tr></table></fieldset>';
 } 
@@ -129,14 +129,14 @@ if ( !(!empty($override) || $location=='register.php' ||
 	@ini_set("url_rewriter.tags","");
 	@session_start();	// sent with headers - errors masked with @ if sessions started previously - which it actually has to be for the following to 
 	}
-	if (!empty($_POST) || isset($_POST['htest'.date('j')])) { 
-		if (empty($_POST['htest'.date('j')])) {$_POST['htest'.date('j')]="";}
-		else {$human_test_post =  stripslashes($_POST['htest'.date('j')]);}
+	if (!empty($_POST) || isset($_POST['test4h'.date('j')])) { 
+		if (empty($_POST['test4h'.date('j')])) {$_POST['test4h'.date('j')]="";}
+		else {$human_test_post =  stripslashes($_POST['test4h'.date('j')]);}
 		if (empty($_SESSION['HUMAN_TEST'])) {$compare=rand(9,9999999);}	 // this should not happen unless sessions malfunction
 		else {$compare = $_SESSION['HUMAN_TEST'];}
 		// $_SESSION['HUMAN_TEST']=md5(rand());	// destroy answer even when successful to prevent re-use
 		
-		if ($human_test_post !=$compare || !empty($_POST['hconfirm'])) {				
+		if ($human_test_post !=$compare || !empty($_POST['confirm4h']) || !empty($_POST['test4h'])) {				
 			// echo $human_test_post." - ".$compare; exit();	// debug
 			// bb_die(__("Humans only please").". ".__("If you are not a bot").", <a href='register.php'>".__("please go back and try again")."</a>.");			
 			bb_send_headers();

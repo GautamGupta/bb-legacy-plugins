@@ -55,7 +55,7 @@ function human_test_encode($question) {
 
 function human_test_post() {
 global $bb_current_user, $human_test;
-if ((empty($human_test['on_for_members']) || bb_current_user_can('moderate')) && !$bb_current_user->has_cap('anonymous')) {return;}	
+if ((empty($human_test['on_for_members']) || bb_current_user_can('moderate')) && (!empty($bb_current_user) && !$bb_current_user->has_cap('anonymous'))) {return;}	
 	$question=human_test_question();
 	echo '<p><script language="JavaScript" type="text/javascript">document.write("'.$question.'");</script>';	// write question with javascript
 	echo '<noscript><i>'.__("registration requires JavaScript").'</i></noscript>';	// warn no-script users 

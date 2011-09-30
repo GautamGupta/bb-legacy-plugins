@@ -125,7 +125,8 @@ function bb_wp_check_post( $post_text )
       'api_key' => $API_KEY,
       'method' => 'webpurify.live.replace',
       'text' => $post_text,
-      'replacesymbol' => '*'
+      'replacesymbol' => '*',
+      'cdata' => '1'
     );
 
 
@@ -159,7 +160,8 @@ function bb_wp_check_title( $topic_title )
       'api_key' => $API_KEY,
       'method' => 'webpurify.live.replace',
       'text' => $topic_title,
-      'replacesymbol' => '*'
+      'replacesymbol' => '*',
+      'cdata' => '1'
     );
 
 

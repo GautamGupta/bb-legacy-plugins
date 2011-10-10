@@ -142,10 +142,13 @@ function bb_wp_check_post( $post_text )
     $url = "http://api1.webpurify.com/services/rest/?".implode('&', $encoded_params);
 
 	$response = simplexml_load_file($url,'SimpleXMLElement', LIBXML_NOCDATA);
-    $post_text = $response->text;
-	
+    $post_text2 = $response->text;
 
-	return $post_text;
+	if ($post_text2 == '') {
+		$post_text2 = $post_text;
+	}	
+
+	return $post_text2;
 }
 add_action( 'pre_post', 'bb_wp_check_post', 1 );
 
@@ -177,10 +180,13 @@ function bb_wp_check_title( $topic_title )
     $url = "http://api1.webpurify.com/services/rest/?".implode('&', $encoded_params);
 
 	$response = simplexml_load_file($url,'SimpleXMLElement', LIBXML_NOCDATA);
-    $topic_title = $response->text;
+    $topic_title2 = $response->text;
 	
+	if ($topic_title2 == '') {
+		$topic_title2 = $topic_title;
+	}
 
-	return $topic_title;
+	return $topic_title2;
 }
 add_action( 'pre_topic_title', 'bb_wp_check_title', 1 );
 

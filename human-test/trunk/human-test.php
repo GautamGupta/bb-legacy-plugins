@@ -3,7 +3,7 @@
 Plugin Name: Human Test for bbPress
 Plugin URI:  http://bbpress.org/plugins/topic/77
 Description:  uses various methods to exclude bots from registering (and eventually posting) on bbPress
-Version: 0.9.4
+Version: 0.9.5
 Author: _ck_
 Author URI: http://bbshowcase.org
 
@@ -13,15 +13,39 @@ Donate: http://bbshowcase.org/donate/
 */ 
 
 $human_test['on_for_members']=false;	 // change this to true if you want even logged in members to be challenged when posting
+$human_test['stop_forum_spam']=true;	 //  check IP + Email at stopforumspam.com - adds slight delay, may not work if you don't have CURL or fopen url enabled
 
 /*  stop editing here  */
-
-// not used yet
-// $human_test['stop_forum_spam']=false;	 //  check IP + Email at stopforumspam.com - adds slight delay, may not work if you don't have CURL or fopen url enabled
 
 add_action('bb_init', 'human_test_check',99);	// block check and init sessions if needed
 add_action('post_form_pre_post', 'human_test_post',99);	// new post
 add_action( 'extra_profile_info', 'human_test_registration',11); // registration
+
+if (!empty($human_test['stop_forum_spam'])) {
+	add_action('bb_new_user', 'human_test_stopforumspam');
+	function human_test_stopforumspam($user_id) {			
+		$user=bb_get_user( $user_id );
+		$url='http://www.stopforumspam.com/api?ip='.$_SERVER['REMOTE_ADDR'].'&email='.rawurlencode($user->user_email);
+		if (function_exists('curl_exec')) {
+			$ch = curl_init(); curl_setopt($ch, CURLOPT_URL, $url); curl_setopt($ch, CURLOPT_RETURNTRANSFER , TRUE); $result=curl_exec($ch); curl_close($ch);
+		} else {
+			$timeout=stream_context_create(array('http' => array('timeout' => 5))); $result=file_get_contents($url,0,$timeout);  // if you don't have curl, try this instead
+		}
+		if ($result && preg_match("/<appears>yes<\/appears>/si", $result)) {
+			global $bbdb;
+			bb_update_usermeta( $user_id, $bbdb->prefix . 'capabilities', array('inactive' => true) );
+
+			$message  = sprintf(__('Stop Forum Spam blocked user on %s:'), $forum=bb_get_option('name')) . "\r\n\r\n";
+			$message .= sprintf(__('Username: %s'), stripslashes($user->user_login)) . "\r\n\r\n";
+			$message .= sprintf(__('E-mail: %s'), stripslashes($user->user_email)) . "\r\n\r\n";			
+			$message .= sprintf(__('Agent: %s'), substr(stripslashes($_SERVER["HTTP_USER_AGENT"]),0,255)) . "\r\n\r\n";
+			$message .= sprintf(__('IP: %s'), $_SERVER['REMOTE_ADDR']) . "\r\n\r\n";	
+			$message .= sprintf(__('Profile: %s'), get_user_profile_link($user_id)) . "\r\n\r\n";		
+			$to=bb_get_option('from_email'); if (!$to) {$to=bb_get_option('admin_email');}
+			@bb_mail($to , sprintf(__('[%s] user blocked by Stop Forum Spam'), $forum), $message, '' );
+		}
+	}
+}	// stop_forum_spam
 
 function human_test_location() {	// 0.8.3 cannot determine certain locations, none can see bb-post.php
 $resource=array($_SERVER['PHP_SELF'], $_SERVER['SCRIPT_FILENAME'], $_SERVER['SCRIPT_NAME']);
@@ -69,7 +93,7 @@ if ((empty($human_test['on_for_members']) || bb_current_user_can('moderate')) &&
 function human_test_registration() {
 if (human_test_location()!="register.php") {return;}  //  only display on register.php and hide on profile page
 	$question=human_test_question();
-	echo '<fieldset><legend>'.__("Please prove you are human (and not a robot)").'</legend><table width="100%"><tr class="required"><th scope="row" nowrap>';
+	echo '<fieldset><legend>'.__("Please prove you are human").'</legend><table width="100%"><tr class="required"><th scope="row" nowrap>';
 	echo '<script language="JavaScript" type="text/javascript">document.write("'.$question.'");</script>';	// write question with javascript
 	echo '<noscript><i>'.__("sorry, JavaScript required").'</i></noscript>';	// warn no-script users 
 	echo '</th><td width="72%">';
@@ -80,25 +104,6 @@ if (human_test_location()!="register.php") {return;}  //  only display on regist
 	echo '</td></tr></table></fieldset>';
 } 
 
-
-function human_test_stopforumspam() {
-	$check['ip']=$_SERVER['REMOTE_ADDR']; 
-	if (!empty($_POST["user_login"])) {$check['username']=$_POST["user_login"];}
-	if (!empty($_POST["user_email"])) {$check['email']=$_POST["user_email"];}
-	foreach ($check as $type=>$data) {
-		$data=urlencode(substr(strip_tags(stripslashes($data)),0,50));
-		$url = "http://www.stopforumspam.com/api?".$type."=".$data;
-		if (!function_exists('curl_exec')) {
-		$timeout=stream_context_create(array('http' => array('timeout' => 5))); 
-		$content=file_get_contents($url,0,$timeout);	// if you don't have curl, try this instead
-		} else {
-		$ch = curl_init(); curl_setopt($ch, CURLOPT_URL, $url);	curl_setopt($ch, CURLOPT_HEADER, 1);	curl_setopt($ch, CURLOPT_RETURNTRANSFER , TRUE); 
-		$content = curl_exec($ch); curl_close($ch);
-		}
-		if (preg_match("/<appears>yes<\/appears>/si", $content, $tmp)) {return true;}
-	}
-return false;	
-}
 
 /*
 global $page, $topic, $forum;
@@ -163,5 +168,3 @@ if ( !(!empty($override) || $location=='register.php' ||
 	$_SESSION['HUMAN_TEST']=rand(1,9)*pow(10,rand(2,3))+rand(1,19);	// set answer: random math range between 3 and 10 (adjutable but recommended limit)	
 	}
 } 
-
-?>

@@ -96,6 +96,11 @@ $human_test['on_for_members']=true;
 
 * subtle changes to keep bots guessing wrong
 
+= Version 0.9.5 (2012-03-22) =
+
+* now tries to use StopForumSpam.com to check IP and email during registration and sets user inactive if blacklisted, with email alert
+
+
 == To Do ==
 
 * optionally write questions in captcha-like graphics (tricks spammers to enter graphic as code instead of answer)

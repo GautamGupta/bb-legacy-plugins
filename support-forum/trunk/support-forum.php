@@ -333,23 +333,21 @@ class Support_Forum
 	function getChangeableStatus($topic_id = 0)
 	{
 		$this->posterChangeable = false;
-		if (is_topic()) {
-			if (bb_current_user_can('edit_others_topics', $topic_id)) {
+		if ( $topic_id ) {
+			$topic = get_topic( $topic_id );
+		} else {
+			global $topic;
+		}
+
+		if ( $topic ) {
+			if (bb_current_user_can('edit_others_topics', $topic->topic_id)) {
 				$this->posterChangeable = true;
-			} else if (bb_get_option('support_forum_poster_changeable')) {
-				if (!$topic_id) {
-					global $topic;
-				} else {
-					$topic = get_topic($topic_id);
-				}
-				
-				if ($topic->topic_poster == bb_get_current_user_info('id')) {
-					$this->posterChangeable = true;
-				}
+			} elseif (bb_get_option('support_forum_poster_changeable') && $topic->topic_poster == bb_get_current_user_info('id')) {
+				$this->posterChangeable = true;
 			}
 		}
-		
-		$this->posterChangeable = apply_filters( 'poster_changeable', $this->posterChangeable, $topic_id );
+
+		$this->posterChangeable = apply_filters( 'poster_changeable', $this->posterChangeable, $topic->topic_id );
 		return $this->posterChangeable;
 	}
 	

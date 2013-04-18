@@ -100,6 +100,10 @@ $human_test['on_for_members']=true;
 
 * now tries to use StopForumSpam.com to check IP and email during registration and sets user inactive if blacklisted, with email alert
 
+= Version 0.9.6 (2013-04-18) =
+
+* now will prevent all additional new user processes from executing if StopForumSpam flags as bad registration
+
 
 == To Do ==
 

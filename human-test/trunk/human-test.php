@@ -144,6 +144,8 @@ if ( !(!empty($override) || $location=='register.php' ||
 		$_POST = stripslashes_deep( $_POST );
 		$user_email = trim(preg_replace('/[\t\r\n\0\x0B]/','',substr($_POST['user_email'],0,128))); 
 		if (strpos($user_email,'@')===false) {exit;}
+		global $bbdb; 
+		if ($bbdb->get_var($bbdb->prepare("SELECT ID FROM $bbdb->users WHERE user_email = %s", $user_email))) {return;}	// duplicate email
 		$url='http://www.stopforumspam.com/api?ip='.$_SERVER['REMOTE_ADDR'].'&email='.rawurlencode($user_email); 
 		if (function_exists('curl_exec')) {
 			$ch = curl_init(); curl_setopt($ch, CURLOPT_URL, $url); curl_setopt($ch, CURLOPT_RETURNTRANSFER , TRUE); $result=curl_exec($ch); curl_close($ch);
@@ -160,7 +162,6 @@ if ( !(!empty($override) || $location=='register.php' ||
 			$user_url   = bb_fix_link( $_POST['user_url'] );
 			$user_registered = bb_current_time('mysql');
  			$user_pass = wp_hash_password( wp_generate_password() );
-			global $bbdb; 
 			@$bbdb->insert( $bbdb->users, compact( 'user_login', 'user_pass', 'user_nicename', 'user_email', 'user_url', 'user_registered', 'user_status' ));
 			$user_id = intval($bbdb->insert_id);
 			if ($user_id) bb_update_usermeta( $user_id, $bbdb->prefix . 'capabilities', array('inactive' => true) );

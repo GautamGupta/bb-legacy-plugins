@@ -3,7 +3,7 @@
 Plugin Name: Human Test for bbPress
 Plugin URI:  http://bbpress.org/plugins/topic/77
 Description:  uses various methods to exclude bots from registering (and eventually posting) on bbPress
-Version: 0.9.5
+Version: 0.9.6
 Author: _ck_
 Author URI: http://bbshowcase.org
 
@@ -12,40 +12,15 @@ License: CC-GNU-GPL http://creativecommons.org/licenses/GPL/2.0/
 Donate: http://bbshowcase.org/donate/
 */ 
 
+global $human_test;
 $human_test['on_for_members']=false;	 // change this to true if you want even logged in members to be challenged when posting
-$human_test['stop_forum_spam']=true;	 //  check IP + Email at stopforumspam.com - adds slight delay, may not work if you don't have CURL or fopen url enabled
+$human_test['stop_forum_spam']=true; 	//  check IP + Email at stopforumspam.com - adds slight delay, may not work if you don't have CURL or fopen url enabled
 
 /*  stop editing here  */
 
 add_action('bb_init', 'human_test_check',99);	// block check and init sessions if needed
 add_action('post_form_pre_post', 'human_test_post',99);	// new post
 add_action( 'extra_profile_info', 'human_test_registration',11); // registration
-
-if (!empty($human_test['stop_forum_spam'])) {
-	add_action('bb_new_user', 'human_test_stopforumspam');
-	function human_test_stopforumspam($user_id) {			
-		$user=bb_get_user( $user_id );
-		$url='http://www.stopforumspam.com/api?ip='.$_SERVER['REMOTE_ADDR'].'&email='.rawurlencode($user->user_email);
-		if (function_exists('curl_exec')) {
-			$ch = curl_init(); curl_setopt($ch, CURLOPT_URL, $url); curl_setopt($ch, CURLOPT_RETURNTRANSFER , TRUE); $result=curl_exec($ch); curl_close($ch);
-		} else {
-			$timeout=stream_context_create(array('http' => array('timeout' => 5))); $result=file_get_contents($url,0,$timeout);  // if you don't have curl, try this instead
-		}
-		if ($result && preg_match("/<appears>yes<\/appears>/si", $result)) {
-			global $bbdb;
-			bb_update_usermeta( $user_id, $bbdb->prefix . 'capabilities', array('inactive' => true) );
-
-			$message  = sprintf(__('Stop Forum Spam blocked user on %s:'), $forum=bb_get_option('name')) . "\r\n\r\n";
-			$message .= sprintf(__('Username: %s'), stripslashes($user->user_login)) . "\r\n\r\n";
-			$message .= sprintf(__('E-mail: %s'), stripslashes($user->user_email)) . "\r\n\r\n";			
-			$message .= sprintf(__('Agent: %s'), substr(stripslashes($_SERVER["HTTP_USER_AGENT"]),0,255)) . "\r\n\r\n";
-			$message .= sprintf(__('IP: %s'), $_SERVER['REMOTE_ADDR']) . "\r\n\r\n";	
-			$message .= sprintf(__('Profile: %s'), get_user_profile_link($user_id)) . "\r\n\r\n";		
-			$to=bb_get_option('from_email'); if (!$to) {$to=bb_get_option('admin_email');}
-			@bb_mail($to , sprintf(__('[%s] user blocked by Stop Forum Spam'), $forum), $message, '' );
-		}
-	}
-}	// stop_forum_spam
 
 function human_test_location() {	// 0.8.3 cannot determine certain locations, none can see bb-post.php
 $resource=array($_SERVER['PHP_SELF'], $_SERVER['SCRIPT_FILENAME'], $_SERVER['SCRIPT_NAME']);
@@ -163,6 +138,46 @@ if ( !(!empty($override) || $location=='register.php' ||
 			if (isset($_COOKIE[session_name()])) {@setcookie(session_name(), session_id(), 1, '/');}	// kill session cookie if any
 			@session_destroy();		// this might affect other plugins that want sessions always, so maybe check other data before killing
 			*/
+
+	if (!empty($human_test['stop_forum_spam']) && $location=='register.php') {		
+		if (empty($_POST['user_login']) || empty($_POST['user_email'])) {exit;}
+		$_POST = stripslashes_deep( $_POST );
+		$user_email = trim(preg_replace('/[\t\r\n\0\x0B]/','',substr($_POST['user_email'],0,128))); 
+		if (strpos($user_email,'@')===false) {exit;}
+		$url='http://www.stopforumspam.com/api?ip='.$_SERVER['REMOTE_ADDR'].'&email='.rawurlencode($user_email); 
+		if (function_exists('curl_exec')) {
+			$ch = curl_init(); curl_setopt($ch, CURLOPT_URL, $url); curl_setopt($ch, CURLOPT_RETURNTRANSFER , TRUE); $result=curl_exec($ch); curl_close($ch);
+		} else {
+			$timeout=stream_context_create(array('http' => array('timeout' =>15))); $result=file_get_contents($url,0,$timeout); 
+		}
+		if ($result && strpos($result,'<appears>yes</appears>')) {		
+			$user_status = 9;
+			$user_login = sanitize_user( trim(preg_replace('/[\t\r\n\0\x0B]/','',substr($_POST['user_login'],0,128))), true );
+			$user_nicename = $_user_nicename = bb_user_nicename_sanitize( $user_login );
+			if ( strlen( $_user_nicename ) < 1 ) { $user_nicename = $_user_nicename = 'sfs';}
+			while ( is_numeric($user_nicename) || $existing_user = bb_get_user_by_nicename( $user_nicename ) )
+			$user_nicename = bb_slug_increment($_user_nicename, $existing_user->user_nicename, 50);			
+			$user_url   = bb_fix_link( $_POST['user_url'] );
+			$user_registered = bb_current_time('mysql');
+ 			$user_pass = wp_hash_password( wp_generate_password() );
+			global $bbdb; 
+			@$bbdb->insert( $bbdb->users, compact( 'user_login', 'user_pass', 'user_nicename', 'user_email', 'user_url', 'user_registered', 'user_status' ));
+			$user_id = intval($bbdb->insert_id);
+			if ($user_id) bb_update_usermeta( $user_id, $bbdb->prefix . 'capabilities', array('inactive' => true) );
+			$message  = sprintf(__('Stop Forum Spam blocked user on %s:'), $forum=bb_get_option('name')) . "\r\n\r\n";
+			$message .= sprintf(__('Username: %s'), stripslashes($user_login)) . "\r\n\r\n";
+			$message .= sprintf(__('E-mail: %s'), stripslashes($user_email)) . "\r\n\r\n";			
+			$message .= sprintf(__('Agent: %s'), substr(stripslashes($_SERVER["HTTP_USER_AGENT"]),0,255)) . "\r\n\r\n";
+			$message .= sprintf(__('IP: %s'), $_SERVER['REMOTE_ADDR']) . "\r\n\r\n";	
+			$message .= sprintf(__('Profile: %s'), get_user_profile_link($user_id)) . "\r\n\r\n";
+			$to=bb_get_option('from_email'); if (!$to) {$to=bb_get_option('admin_email');}
+			bb_mail($to , sprintf(__('[%s] user blocked by Stop Forum Spam'), $forum), $message, '' );			
+			bb_load_template( 'register-success.php', array('user_login'=>$user_login) );
+			exit;
+		}
+	}	// stop_forum_spam
+
+
 		}
 	} else {	
 	$_SESSION['HUMAN_TEST']=rand(1,9)*pow(10,rand(2,3))+rand(1,19);	// set answer: random math range between 3 and 10 (adjutable but recommended limit)	
